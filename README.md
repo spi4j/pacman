@@ -7,7 +7,7 @@ Spi4J est composé d'une partie principale et de modules optionnels. Une applica
 
 Ces projets sont opensource en licence Apache (ASL v2).
 
-Ces projets ont été créés avec la participation de **[Bull]** et sont encore en cours en décembre 2016 (version courante : Pacman 1.8.2 & Spi4J 1.7.2).
+Ces projets ont été créés avec la participation de **[Bull]** et sont encore en cours en avril 2017 (version courante : Pacman 1.8.2 & Spi4J 1.7.2).
 
 ### Principaux éléments techniques directeurs de l'architecture ###
   * Architecture JavaEE
