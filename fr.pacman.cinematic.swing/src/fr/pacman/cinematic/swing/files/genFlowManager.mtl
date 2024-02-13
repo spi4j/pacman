@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genFlowManager('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::swing::client::ui::pkg::flowManager /]
+[import fr::pacman::commons::common::properties /]
+
+[template public genFlowManager(flow : Flow)]
+[file (filename(getClientSwingSourceDir(), flow.namePackageFlowManager(), flow.nameFlow() + '.java'), false, 'UTF-8')]
+[flowManager(flow)/]
+[/file]
+[/template]
+

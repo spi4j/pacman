@@ -1,0 +1,300 @@
+[comment encoding = UTF-8 /]
+[module referentielReference('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::classesEntity /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::entity::api::sql::common/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+[template public referentielReference(r : Reference, b : Namespace)]
+[licence()/]
+package  [buildPackagePersistenceReferentielReference(r)/];
+
+// [protected ('for imports')]
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
+
+[if r.hasExcludeCriteria() or r.hasIncludeCriteria()]
+import java.util.Collection;
+import org.apache.commons.collections4.MultiMap;
+[/if]
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import fr.spi4j.persistence.dao.Operator_Enum;
+import fr.spi4j.persistence.dao.TableCriteria;
+
+import fr.spi4j.exception.Spi4jValidationException;
+
+import [buildPackagePersistenceReferentiel()/].[buildReferentielClassName(b)/];
+import [buildPackagePersistence()/].[buildParamPersistenceClassName()/];
+
+import [buildPackagePersistenceReferentiel()/].ReferentielUtils;
+
+import [buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity))/].[r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName()/];
+import [buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity))/].[buildEntityInterfaceName(r.containingType.oclAsType(entity::Entity))/];
+import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity))/].[buildEntityColumnEnumName(r.containingType.oclAsType(entity::Entity))/];
+import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity))/].[r.referencedType.oclAsType(entity::Entity).buildDaoInterfaceName()/];
+import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity))/].[buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))/];
+import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity))/].[buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity))/];
+
+// [/protected]
+
+[comClass(roleReferentielReference())/]
+public final class [buildReferentielReferenceClassName(r)/] 
+{
+
+	// CONSTANTES
+
+	/** Le formater des dates pour les noms des fichiers d erreur */
+	private static final DateFormat [apply_attributeFinalStatic('date format err')/] = new SimpleDateFormat( "yyyyMMdd" );
+
+	/** Le logger de la classe */
+    private static final Logger [apply_attributeFinalStatic('LOG')/] = LogManager.getLogger( [buildReferentielReferenceClassName(r)/].class );
+
+	/** Le dao de l'entite [ r.containingType.oclAsType(entity::Entity).name/] */
+    private static final [r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName()/] [apply_attributeFinalStatic(r.containingType.oclAsType(entity::Entity).name + ' dao')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildDaoName(r.containingType.oclAsType(entity::Entity)))/]();
+
+	/** Le dao de l'entite [r.referencedType.oclAsType(entity::Entity).name/] */
+    private static final [r.referencedType.oclAsType(entity::Entity).buildDaoInterfaceName()/] [apply_attributeFinalStatic(r.referencedType.oclAsType(entity::Entity).name + ' dao')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildDaoName(r.referencedType.oclAsType(entity::Entity)))/]();
+
+
+	// ATTRIBUTS
+
+    // Attributs [buildReferentielReferenceClassName(r)/]
+    // [protected (r.getUserCodeId('Attributs ' + buildReferentielReferenceClassName(r)))]
+
+    // [/protected]
+
+
+	// METHODES  
+
+    /**
+     * Constructeur.
+     */
+	private [buildReferentielReferenceClassName(r)/] ()
+	{
+	}
+
+   /**
+    * Maj des relations de [r.containingType.name/] vers  [r.referencedType.name/].
+    */
+   public static void [apply_methodDefault('maj fk')/] ()
+   {
+	  /** Initialisations, Log de début de traitement */	
+ 	  long  [apply_variableDefault('nb lignes traitees')/] = 0;
+	  long  [apply_variableDefault('nb lignes filtrees')/] = 0;
+ 	  long  [apply_variableDefault('nb lignes updates')/] = 0;
+ 	  long  [apply_variableDefault('nb lignes cle vide')/] = 0;
+ 	  long  [apply_variableDefault('nb lignes cle non trouvee')/] = 0;
+	  [buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity))/] [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/] = null;
+	  [buildEntityColumnEnumName(r.containingType.oclAsType(entity::Entity))/] [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/] = null;
+	  List <String> [apply_variableDefault('liste cle non trouvee')/] = new ArrayList <String> ();
+	  String [apply_variableDefault('nom col fk critere')/] = "[fkCritere(r)/]";
+		  [for (att : Attribute | r.referencedType.oclAsType(entity::Entity).attributes )]
+		    [if (physicalName(att).equalsIgnoreCase(fkCritere(r)))]
+	  [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/] = [buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity))/].[apply_attributeEnum(att.nameSimpleProperty())/];
+		    [/if]
+          [/for]
+		  [for (att : Attribute | r.containingType.oclAsType(entity::Entity).attributes )]
+		    [if (physicalName(att).equalsIgnoreCase(fkCritere(r)))]
+	  [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/] = [buildEntityColumnEnumName(r.containingType.oclAsType(entity::Entity))/].[apply_attributeEnum(att.nameSimpleProperty())/];
+		    [/if]
+          [/for]
+      Date [apply_variableDefault('today')/] = new Date();
+	  String [apply_variableDefault('nom fic erreur fk')/] = [apply_attributeFinalStatic('date format err')/].format([apply_variableDefault('today')/]) + "_[apply_methodDefault('referentiel Reference ' + r.containingType.name + ' to ' + r.referencedType.name) + '.key.err'/]";
+    [if r.hasExcludeCriteria()]
+
+	  /** Ajout d'un exclude criteria : [excludeCriteria(r)/] */
+	  String [apply_variableDefault('exclude criteria')/] = "[excludeCriteria(r)/]";
+	  MultiMap <String,String> [apply_variableDefault('map exclude criteria')/] = [apply_classDefault('referentiel utils')/].[apply_methodDefault('split filter criteria')/] ([apply_variableDefault('exclude criteria')/]);
+	[/if]
+    [if r.hasIncludeCriteria()]
+
+	  /** Ajout d'un include criteria : [includeCriteria(r)/] */
+	  String [apply_variableDefault('include criteria')/] = "[includeCriteria(r)/]";
+	  MultiMap <String,String> [apply_variableDefault('map include criteria')/] = [apply_classDefault('referentiel utils')/].[apply_methodDefault('split filter criteria')/] ([apply_variableDefault('include criteria')/]);
+	[/if]
+
+	  [apply_attributeFinalStatic('LOG')/].info( "/** DEBUT Import Referentiel Relation [r.name/], update de [r.containingType.name/] depuis [r.referencedType.name/] **/" );
+	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation de [r.containingType.name/] depuis [r.referencedType.name/], nom du fkCritere: " + [apply_variableDefault('nom col fk critere')/] );
+
+   	  // PreTraitement [buildReferentielReferenceClassName(r)/]
+   	  // [protected (r.getUserCodeId('PreTraitement ' + buildReferentielReferenceClassName(r)))]
+
+   	  // [/protected]
+
+	  try
+      {	
+		/** Traitement uniquement si le Fk Critere est correctement renseigné */
+	  	if ( ( [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/] != null ) && ( [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/]  != null ) )
+		{
+		  /** On parcourt les [r.containingType.oclAsType(entity::Entity).name/] pour les mettre à jour */
+		  final List <[buildEntityInterfaceName(r.containingType.oclAsType(entity::Entity))/]> [apply_variableFinal('all entities to update')/] = [apply_attributeFinalStatic(r.containingType.name + ' dao')/].findAll();
+          for ( [buildEntityInterfaceName(r.containingType.oclAsType(entity::Entity))/] [apply_variableDefault('entity to update')/] : [apply_variableFinal('all entities to update')/] )
+		  {
+	      	final TableCriteria <[r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/]> [apply_variableFinal('tableCriteria ' + r.referencedType.name)/] = new TableCriteria <> ( "find by criteria en cherchant sur [r.referencedType.name/]" );
+    	    /** on applique un order by date desc sur le table criteria pour que la premiere ligne lue soit la plus recente */
+			[apply_variableFinal('tableCriteria ' + r.referencedType.name)/].addOrderByDesc( [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeEnum('date de debut')/] );
+
+			/** on positionne la foreign keys selon l'attribut correspondant au fkcritere*/ 				
+			String [apply_variableFinal('value code')/] = null;
+		  [for (att : Attribute | r.referencedType.oclAsType(entity::Entity).attributes )]
+		    [if (physicalName(att).equalsIgnoreCase(fkCritere(r)))]
+		    [apply_variableFinal('value code')/] =  [apply_variableDefault('entity to update')/].[apply_methodGet(nameSimpleProperty(att))/]() ;
+		    [/if]
+          [/for]
+
+			/**Ajout du critere de recherche sur le champ fkcriteria avant le find byCriteria */
+       		[apply_variableFinal('tableCriteria ' + r.referencedType.name)/].addCriteria( [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/], Operator_Enum.equals, [apply_variableFinal('value code')/] );
+
+		  [if r.hasExcludeCriteria() or r.hasIncludeCriteria()]
+			/** par défaut, pas de filtre sur la ligne traitee */
+		  	boolean [apply_variableDefault('filter enregistrement')/] = false;
+
+			[for (a : Attribute | r.containingType.oclAsType(entity::Entity).attributesNoPk())]	
+	   			[if r.hasExcludeCriteria()]
+         			[if r.excludeCriteria().contains(a.physicalName().toString())]
+			/** filtrage conditionnel de la ligne selon un exclude criteria */
+		 	@SuppressWarnings("unchecked")	
+		  	Collection <String> [apply_variableDefault('values exclude ' + a.nameSimpleProperty())/] = (Collection <String>) [apply_variableDefault('map exclude criteria')/].get( "[a.physicalName()/]" );
+		  	if ( [apply_variableDefault('values exclude ' + a.nameSimpleProperty())/].contains( [apply_variableDefault('entity to update')/].[apply_methodGet(nameSimpleProperty(a))/]() ) ) 
+		  	{
+		  		[apply_variableDefault('filter enregistrement')/] = true;
+		  	}	
+         			[/if]
+	   			[/if]
+	   			[if r.hasIncludeCriteria()]
+         			[if r.includeCriteria().contains(a.physicalName().toString())]
+			/** filtrage conditionnel de la ligne selon un include criteria */
+		  	@SuppressWarnings("unchecked")	
+		  	Collection <String> [apply_variableDefault('values include ' + a.nameSimpleProperty())/] = (Collection <String>) [apply_variableDefault('map include criteria')/].get( "[a.physicalName()/]" );
+		  	if ( ![apply_variableDefault('values include ' + a.nameSimpleProperty())/].contains( [apply_variableDefault('entity to update')/].[apply_methodGet(nameSimpleProperty(a))/]() ) ) 
+		  	{
+		  		[apply_variableDefault('filter enregistrement')/] = true;
+		  	}	
+         			[/if]
+	   			[/if]
+			[/for]
+		  [/if]
+
+   		  	// PreUpdate [buildReferentielReferenceClassName(r)/]
+   		  	// [protected (r.getUserCodeId('PreUpdate ' + buildReferentielReferenceClassName(r)))]
+
+   		  	// [/protected]
+
+          	/** Maj de la foreign key de [r.containingType.name/] vers  [r.referencedType.name/] */
+			if ( !"".equals([apply_variableFinal('value code')/]) )
+			{
+			[if r.hasExcludeCriteria() or r.hasIncludeCriteria()]
+				/** si la ligne est filtree, on ne met pas à jour la foreign key */
+				if ([apply_variableDefault('filter enregistrement')/] )
+				{
+					[apply_variableDefault('nb lignes filtrees')/] ++;
+				}
+				/** si la ligne n est pas filtree, on met à jour la foreign key */
+				else
+				{
+			[/if]
+
+	        		final List <[buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))/]> [apply_variableFinal('list fk' + r.referencedType.name)/] =  [apply_attributeFinalStatic(r.referencedType.name + ' dao')/].findByCriteria( [apply_variableFinal('tableCriteria ' + r.referencedType.name)/] );		  	
+					/** Si on trouve au mois une ligne dans l'entite referencee, on update la fk avec l'id de la l'enregistrement trouve*/
+					if ( [apply_variableFinal('list fk' + r.referencedType.name)/].size() > 0) 
+					{
+        				[apply_variableDefault('entity to update')/].[apply_methodSet(nameSimpleProperty(r))/]( [apply_variableFinal('list fk' + r.referencedType.name)/].get(0).getId() );
+						[apply_attributeFinalStatic(r.containingType.oclAsType(entity::Entity).name + ' dao')/].update( [apply_variableDefault('entity to update')/]);
+						[apply_variableDefault('nb lignes updates')/] ++;
+		  			}
+					/** Si on ne trouve pas de ligne dans l'entite referencee, on ajoute la ligne dans la liste de cles non trouvees*/
+					else
+					{
+						[apply_variableDefault('liste cle non trouvee')/].add( [apply_variableFinal('value code')/] + "; " + [apply_variableDefault('entity to update')/] );
+						[apply_variableDefault('nb lignes cle non trouvee')/] ++;
+					}
+			[if r.hasExcludeCriteria() or r.hasIncludeCriteria()]
+				}
+			[/if]
+			}
+			else
+			{
+				[apply_variableDefault('nb lignes cle vide')/] ++;
+			}
+		    [apply_variableDefault('nb lignes traitees')/] ++;
+
+   		    // PostUpdate [buildReferentielReferenceClassName(r)/]
+   		    // [protected (r.getUserCodeId('PostUpdate ' + buildReferentielReferenceClassName(r)))]
+
+   		    // [/protected]
+
+ 		  }
+	    }
+        else
+        {
+		  /** Envoi d'une exception si le fkCritere est mal renseigné */	
+		  throw new Spi4jValidationException( "Metadata FK_CRITERE mal renseignée dans la relation de [r.containingType.name/] vers  [r.referencedType.name/]" );
+	    }
+	  }
+	  /** En cas d erreur, on affiche dans la log, et on positionne le flag de transaction à rollback */
+      catch (Exception  [apply_variableDefault('exception')/])
+      {
+		[apply_attributeFinalStatic('LOG')/].error ( [apply_variableDefault('exception')/] );
+		[buildReferentielClassName(b)/].[apply_methodDefault('set commit traitement')/](false);	  
+	  }
+
+      /** Affichage des count en fin de traitement*/
+	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/],  nombre de relations traitees: " + [apply_variableDefault('nb lignes traitees')/] );
+	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/],  nombre de ligne(s) filtree(s): " + [apply_variableDefault('nb lignes filtrees')/] );
+	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/],  nombre de relations updatees: " + [apply_variableDefault('nb lignes updates')/] );
+	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/],  nombre de relations cle vide: " + [apply_variableDefault('nb lignes cle vide')/] );
+	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/],  nombre de relations cle non trouvee: " + [apply_variableDefault('nb lignes cle non trouvee')/] );
+
+	  /** Remplissage du fichier des reference non trouvees, affichage dans la log */	
+	  if ( [apply_variableDefault('liste cle non trouvee')/].size() > 0 )
+      {
+		 String [apply_variableDefault('entete fichier rejet')/] = "Colonne [fkCritere(r)/]; Entite [r.containingType.name/]";
+		 [apply_classDefault('referentiel utils')/].[apply_methodDefault('store list')/] ( [apply_variableDefault('entete fichier rejet')/] ,  [apply_variableDefault('liste cle non trouvee')/], [apply_classDefault( r.ancestors(Namespace).oclAsType(Namespace).name  + ' referentiel')/].[apply_methodDefault('get rep logs')/]() + [apply_variableDefault('nom fic erreur fk')/] );
+		 [apply_attributeFinalStatic('LOG')/].error ( "Présence de reference cle non trouvee; Détail dans le fichier " + [apply_classDefault( r.ancestors(Namespace).oclAsType(Namespace).name  + ' referentiel')/].[apply_methodDefault('get rep logs')/]() + [apply_variableDefault('nom fic erreur fk')/] );
+		 [buildReferentielClassName(b)/].[apply_methodDefault('set commit traitement')/](false);
+	  }		
+
+	  /** Log de fin du traitement */
+	  [apply_attributeFinalStatic('LOG')/].info( "/** FIN Import Referentiel Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/]  **/\n" );
+
+   	  // PostTraitement [buildReferentielReferenceClassName(r)/]
+   	  // [protected (r.getUserCodeId(r.getUserCodeId('PostTraitement ' + buildReferentielReferenceClassName(r))))]
+
+   	  // [/protected]
+
+   }
+
+   // [protected ('Methodes ' + buildReferentielReferenceClassName(r))]
+
+   // [/protected]
+
+}
+[/template]
+
+[query public roleReferentielReference(r : Reference) : String = 'Classe de maj des foreign key dans la reference ' +  r.containingType.name + ' vers ' + r.referencedType.name   /]
+

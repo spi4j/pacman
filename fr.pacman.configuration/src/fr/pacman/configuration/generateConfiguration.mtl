@@ -1,0 +1,49 @@
+[comment encoding = UTF-8 /]
+[module generateConfiguration(	'http://www.eclipse.org/ocl/1.1.0/Ecore',
+								'http://www.obeonetwork.org/dsl/environment/3.0.0', 
+								'http://www.obeonetwork.org/dsl/entity/3.0.0', 
+								'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::configuration::files::genServer /]
+[import fr::pacman::configuration::files::genWebapp /]
+[import fr::pacman::configuration::files::genRoot /]
+[import fr::pacman::configuration::files::genCommon /]
+[import fr::pacman::configuration::files::genClient /]
+[import fr::pacman::configuration::files::genModel /]
+[import fr::pacman::configuration::files::genLivraisonHebergement /]
+
+[comment : Point d'entree par le generateur Java./]
+[template public generateRootConfiguration(r : Root)]
+[comment @main /]
+[r.genRootConfig(false) /]
+[/template]
+
+[comment : Point d'entree par le generateur Java./]
+[template public generateRootConfiguration(m : System)]
+[comment @main /]
+[m.genRootConfig(false) /]
+[/template]
+
+[comment : Point d'entree direct par le starter (creation nouveau projet) /]
+[template public genRootConfig(any : OclAny, fromStarter : Boolean)]
+[comment : Generation des fichiers pour la racine xxx /]
+[any.genRoot(fromStarter) /]
+
+[comment : Generation des fichiers XML pour la partie xxx-common /]
+[any.genCommon(fromStarter) /]
+
+[comment : Generation du repertoire des fichier .properties pour la partie xxx-model /]
+[any.genModel() /]
+
+[comment : Generation des fichiers et classes pour la partie xxx-server /]
+[any.genServer(fromStarter) /]
+
+[comment : Generation des fichiers XML pour la partie xxx-LivraisonHebergement /]
+[any.genLivraisonHebergement() /]
+
+[comment : Generation des fichiers XML pour la partie xxx-webapp /]
+[any.genWebapp(fromStarter) /]
+
+[comment : Generation pour xxx-client/]
+[any.genClient(fromStarter) /]
+[/template]

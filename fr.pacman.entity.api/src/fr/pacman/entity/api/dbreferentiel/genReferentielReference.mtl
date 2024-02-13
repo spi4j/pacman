@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genReferentielReference('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::api::block::daoItf /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::dbreferentiel::block::referentielReference/]
+
+[template public genReferentielReference(ref : Reference, b : Namespace)]
+[file (filename(getServerSourceDir(), buildPackagePersistenceReferentielReference(ref), buildReferentielReferenceClassName(ref) + '.java'), false, 'UTF-8')]
+[referentielReference(ref,b)/]
+[/file]
+[/template]
+

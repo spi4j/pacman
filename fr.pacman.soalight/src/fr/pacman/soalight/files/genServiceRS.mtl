@@ -1,0 +1,12 @@
+[comment encoding = UTF-8 /]
+[module genServiceRS('http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::soa::common::classes /]
+[import fr::pacman::soalight::server::ws::rs::impl::category::serviceFacade /]
+
+[template public genServiceRS(s : Service)]
+[file (filename(getServerSourceDir(), buildPackageImplWs(s), s.buildServiceFacadeRSClassName(null) + '.java'), false, 'UTF-8')]
+[serviceFacade(s)/]
+[/file]
+[/template]

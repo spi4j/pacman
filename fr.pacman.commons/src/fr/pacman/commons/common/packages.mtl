@@ -1,0 +1,659 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.eclipse.org/ocl/1.1.0/Ecore',
+                 'http://www.obeonetwork.org/dsl/entity/3.0.0',
+                 'http://www.obeonetwork.org/dsl/environment/3.0.0',
+				 'http://www.obeonetwork.org/dsl/soa/4.0.0',
+                 'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+
+
+[query public getApplicationPackage(any : OclAny) : String =
+    getApplicationPackage_invoke().trim().toLower()
+/]
+
+[query private getApplicationPackage_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getApplicationPackage()', Sequence{})
+/]
+
+[query public getModelPropertiesDir(any : OclAny) : String =
+	dirProperties().trim().toLower()
+/]
+
+[query public getClientJsfSourceDir(any : OclAny) : String =
+	getClientJsfSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJsfSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfSourceDir()', Sequence{})
+/]
+
+[query public getClientJsfResourcesDir(any : OclAny) : String =
+	getClientJsfResourcesDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJsfResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfResourcesDir()', Sequence{})
+/]
+
+[query public getClientJsfWebappDir(any : OclAny) : String =
+	getClientJsfWebappDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJsfWebappDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfWebappDir()', Sequence{})
+/]
+
+[query public getClientJsfWebDir(any : OclAny) : String =
+	getClientJsfWebDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientJsfWebDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfWebDir()', Sequence{})
+/]
+
+[query public getClientJsfTestDir(any : OclAny) : String =
+	getClientJsfTestDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJsfTestDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfTestDir()', Sequence{})
+/]
+
+[query public getClientJsfContextDir(any : OclAny) : String =
+	getClientJsfContextDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJsfContextDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfContextDir()', Sequence{})
+/]
+
+[query public getClientJspSourceDir(any : OclAny) : String =
+	getClientJspSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJspSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspSourceDir()', Sequence{})
+/]
+
+[query public getClientJspResourcesDir(any : OclAny) : String =
+	getClientJspResourcesDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJspResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspResourcesDir()', Sequence{})
+/]
+
+[query public getClientJspWebappDir(any : OclAny) : String =
+	getClientJspWebappDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJspWebappDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspWebappDir()', Sequence{})
+/]
+
+[query public getClientJspWebDir(any : OclAny) : String =
+	getClientJspWebDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientJspWebDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspWebDir()', Sequence{})
+/]
+
+[query public getClientJspTestDir(any : OclAny) : String =
+	getClientJspTestDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJspTestDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspTestDir()', Sequence{})
+/]
+
+[query public getClientGwtSourceDir(any : OclAny) : String =
+	getClientGwtSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientGwtSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtSourceDir()', Sequence{})
+/]
+
+[query public getClientGwtResourcesDir(any : OclAny) : String =
+	getClientGwtResourcesDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientGwtResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtResourcesDir()', Sequence{})
+/]
+
+[query public getClientGwtWebappDir(any : OclAny) : String =
+	getClientGwtWebappDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientGwtWebappDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtWebappDir()', Sequence{})
+/]
+
+[query public getClientGwtWebDir(any : OclAny) : String =
+	getClientGwtWebDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientGwtWebDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtWebDir()', Sequence{})
+/]
+
+[query public getClientGwtTestDir(any : OclAny) : String =
+	getClientGwtTestDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientGwtTestDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtTestDir()', Sequence{})
+/]
+
+[query public getClientIntegrationSourceDir(any : OclAny) : String =
+	getClientIntegrationSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientIntegrationSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientIntegrationSourceDir()', Sequence{})
+/]
+
+[query public getClientIntegrationLauncherPackage(any : OclAny) : String =
+	getClientIntegrationLauncherPackage_invoke().trim().toLower()
+/]
+
+[query private getClientIntegrationLauncherPackage_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientIntegrationLauncherPackage()', Sequence{})
+/]
+
+[query public getClientJWebStartWebDir(any : OclAny) : String =
+	getClientJWebStartWebDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientJWebStartWebDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJWebStartWebDir()', Sequence{})
+/]
+
+[query public getClientJWebStartSourceDir(any : OclAny) : String =
+	getClientJWebStartSourceDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientJWebStartSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJWebStartSourceDir()', Sequence{})
+/]
+
+[query public getClientJWebStartResourcesDir(any : OclAny) : String =
+	getClientJWebStartResourcesDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientJWebStartResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJWebStartResourcesDir()', Sequence{})
+/]
+
+[query public getClientJWebStartKeyDir(any : OclAny) : String =
+	getClientJWebStartKeyDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getClientJWebStartKeyDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJWebStartKeyDir()', Sequence{})
+/]
+
+[query public getServerSourceDir(any : OclAny) : String =
+	getServerSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getServerSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerSourceDir()', Sequence{})
+/]
+
+[query public getServerResourcesDir(any : OclAny) : String =
+	getServerResourcesDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getServerResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerResourcesDir()', Sequence{})
+/]
+
+[query public getServerTestDir(any : OclAny) : String =
+	getServerTestDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getServerTestDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerTestDir()', Sequence{})
+/]
+
+[query public getServerSQLDir(any : OclAny) : String =
+	getServerSQLDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getServerSQLDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerSQLDir()', Sequence{})
+/]
+
+[query public getServerXMIDir(any : OclAny) : String =
+	getServerXMIDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getServerXMIDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerXMIDir()', Sequence{})
+/]
+
+[query public getCommonsSourceDir(any : OclAny) : String =
+	getCommonsSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getCommonsSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonsSourceDir()', Sequence{})
+/]
+
+[query public getCommonsConfDir(any : OclAny) : String =
+	getCommonsConfDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getCommonsConfDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonsConfDir()', Sequence{})
+/]
+
+[query public getCommonsTestDir(any : OclAny) : String =
+	getCommonsTestDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getCommonsTestDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonsTestDir()', Sequence{})
+/]
+
+[query public getCommonsTestResourceDir(any : OclAny) : String =
+	getCommonsTestResourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getCommonsTestResourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonsTestResourceDir()', Sequence{})
+/]
+
+[query public getWebappResourceDir(any : OclAny) : String =
+	getWebappResourceDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getWebappResourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getWebappResourceDir()', Sequence{})
+/]
+
+[query public getWebappSourceDir(any : OclAny) : String =
+	getWebappSourceDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getWebappSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getWebappSourceDir()', Sequence{})
+/]
+
+[query public getWebappDir(any : OclAny) : String =
+	getWebappDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getWebappDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getWebappDir()', Sequence{})
+/]
+
+[query public getWebappWebDir(any : OclAny) : String =
+	getWebappWebDir_invoke().trim().ensureTrailingSlash()
+/]
+
+[query private getWebappWebDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getWebappWebDir()', Sequence{})
+/]
+
+[query public getClientSwingSourceDir(any : OclAny) : String =
+	getClientSwingSourceDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientSwingSourceDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientSwingSourceDir()', Sequence{})
+/]
+
+[query public getClientSwingResourcesDir(any : OclAny) : String =
+	getClientSwingResourcesDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientSwingResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientSwingResourcesDir()', Sequence{})
+/]
+
+[query public getClientJavaWebStartResourcesDir(any : OclAny) : String =
+	getClientJavaWebStartResourcesDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientJavaWebStartResourcesDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJWebStartResourcesDir()', Sequence{})
+/]
+
+[query public getClientSwingTestDir(any : OclAny) : String =
+	getClientSwingTestDir_invoke().trim().toLower().ensureTrailingSlash()
+/]
+
+[query private getClientSwingTestDir_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientSwingTestDir()', Sequence{})
+/]
+
+[query public getPackageCFXServer(any : OclAny) : String =
+	getPackageCFXServer_invoke().trim().toLower()
+/]
+
+[query private getPackageCFXServer_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getPackageCFXServer()', Sequence{})
+/]
+
+[query public getPackageBusiness(any : OclAny) : String =
+    getPackageBusiness_invoke().trim().toLower()
+ /]
+
+[query private getPackageBusiness_invoke(any : OclAny) : String =
+    invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageBusiness()', Sequence{})
+ /]
+
+[query public getPackagePersistence(any : OclAny) : String =
+    getPackagePersistence_invoke().trim().toLower()
+ /]
+
+[query private getPackagePersistence_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackagePersistence()', Sequence{})
+ /]
+
+[query public getPackageApi(any : OclAny) : String =
+    getPackageApi_invoke().trim().toLower()
+ /]
+
+[query private getPackageApi_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageApi()', Sequence{})
+ /]
+
+[query public getPackageOverload(any : OclAny) : String =
+    getPackageOverload_invoke().trim().toLower()
+ /]
+
+[query private getPackageOverload_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageOverload()', Sequence{})
+ /]
+
+[query public getPackageReferentiel(any : OclAny) : String =
+    getPackageReferentiel_invoke().trim().toLower()
+ /]
+
+[query private getPackageReferentiel_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageReferentiel()', Sequence{})
+ /]
+
+[query public getPackageRequirement(any : OclAny) : String =
+    getPackageRequirement_invoke().trim().toLower()
+ /]
+
+[query private getPackageRequirement_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageRequirement()', Sequence{})
+ /]
+
+[query public getPackagePgeSwing(any : OclAny) : String =
+    getPackagePgeSwing_invoke().trim().toLower()
+ /]
+
+[query private getPackagePgeSwing_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackagePgeSwing()', Sequence{})
+ /]
+
+[query public getPackagePgeGwt(any : OclAny) : String =
+    getPackagePgeGwt_invoke().trim().toLower()
+ /]
+
+[query private getPackagePgeGwt_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackagePgeGwt()', Sequence{})
+ /]
+
+[query public getPackagePgeJsf(any : OclAny) : String =
+    getPackagePgeJsf_invoke().trim().toLower()
+ /]
+
+[query private getPackagePgeJsf_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackagePgeJsf()', Sequence{})
+ /]
+
+[query public getPackageMatching(any : OclAny) : String =
+    getPackageMatching_invoke().trim().toLower()
+ /]
+
+[query private getPackageMatching_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageMatching()', Sequence{})
+ /]
+
+[query public getPackageImplJdbc(any : OclAny) : String =
+    getPackageImplJdbc_invoke().trim().toLower()
+ /]
+
+[query private getPackageImplJdbc_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageImplemJdbc()', Sequence{})
+ /]
+
+[query public getPackageImplServer(any : OclAny) : String =
+    getPackageImplServer_invoke().trim().toLower()
+ /]
+
+[query private getPackageImplServer_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.rule.PackageRule','getPackageImplemServer()', Sequence{})
+ /]
+
+[query private hasSpecificPackage(d : DTO) : Boolean =
+    invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotationBodyRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', Sequence{d, 'PACKAGE'}) <> null
+ /]
+
+[query private specificPackage(d : DTO) : String =
+    invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotationBodyRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', Sequence{d, 'PACKAGE'})
+/]
+
+[query public dirProperties(any : OclAny) : String =
+	dirProperties_invoke().trim().toLower()
+/]
+
+[query private dirProperties_invoke(any : OclAny) : String =
+    invoke('fr.pacman.commons.properties.PacmanPropertiesManager', 'getDirProperties()', Sequence{})
+/]
+
+[query public buildPackageBusinessApi(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageBusiness() + '.' + getPackageApi()
+/]
+
+[query public buildPackageBusiness(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageBusiness()
+ /]
+
+[query public buildPackagePersistence(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackagePersistence()
+ /]
+
+[query public buildPackagePersistenceApi(any : OclAny) : String =
+    buildPackagePersistence() + '.' + getPackageApi()
+ /]
+
+[query public buildPackagePersistenceOverload(any : OclAny) : String =
+    buildPackagePersistence() + '.' + getPackageOverload()
+ /]
+
+[query public buildPackagePersistenceReferentiel(any : OclAny) : String =
+    buildPackagePersistence() + '.' + getPackageReferentiel()
+ /]
+
+[query public buildPackagePgeSwing(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackagePgeSwing()
+ /]
+
+[query public buildPackageRequirement(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageRequirement()
+ /]
+
+[query public buildPackageCXF(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageCFXServer()
+ /]
+
+[query public buildPackageWsApiEntity(e : Entity) : String =
+    buildPackageWs() + '.' + getPackageApi() + categoryHierarchy(e)
+/]
+
+[query public buildPackageServiceApiEntity(e : Entity) : String =
+    getApplicationPackage() + '.' + getPackageBusiness() + '.' + getPackageApi() + categoryHierarchy(e)
+/]
+
+[query public buildPackageImplBusiness(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageBusiness() + '.' + getPackageImplServer()
+/]
+
+[query public buildPackageClientIntegrationLauncher(any : OclAny) : String =
+    getApplicationPackage() + '.' +  getClientIntegrationLauncherPackage()
+/]
+
+[query public buildPackagePersistenceImplJdbc(any : OclAny) : String =
+    buildPackagePersistence() + '.' + getPackageImplJdbc()
+ /]
+
+[query public buildPackagePersistenceImplJdbc(e : Entity) : String =
+    buildPackagePersistence() + '.' + getPackageImplJdbc()
+ /]
+
+[query public buildPackageMatching(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageMatching(any)
+/]
+
+[query public buildPackageImplWs(s : Service) : String =
+    buildPackageWs() + '.' + getPackageImplServer()  + s.getPackageComponentName()
+/]
+
+[query public buildPackageWsApi(s : Service) : String =
+    buildPackageWs() + '.' + getPackageApi() + s.getPackageComponentName()
+/]
+
+[query private getPackageComponentName (s : Service) : String = 
+	if not s.oclIsUndefined() then '.' + s.getComponentName() else '.administration' endif
+/]
+
+[comment : A voir si on fait passer dans le fichier de proprietes .../]
+[query public buildBeanPackage(any : OclAny) : String =
+     getApplicationPackage() + '.beans'
+/]
+
+[query public buildPackageJspController(any : OclAny) : String =
+	getApplicationPackage() + '.controller' 
+/]
+
+[query public buildJsfCommonPackage(any : OclAny) : String =
+     getApplicationPackage() + '.common'
+/]
+
+[query public buildJBehaveUiPackage(any : OclAny) : String =
+	getApplicationPackage() + '.client.ui'
+/]
+
+[query public buildJBehaveStepPackage(any : OclAny) : String =
+	getApplicationPackage() + '.steps'
+/]
+
+[query public buildJBehaveStoriesPackage(any : OclAny) : String =
+	getApplicationPackage() + '.stories'
+/]
+
+[query public buildPackageCXFServlet(any : OclAny) : String =
+    getApplicationPackage() +'.ws.servlet'
+ /]
+
+[query public buildPackageRS(any : OclAny) : String =
+    getApplicationPackage() +'.ws.rs'
+ /]
+
+[comment : b : if 'true' then create a package for crud operations. /]
+[query public buildPackageRsResources(any : OclAny, b : Boolean) : String =
+    buildPackageRS() + '.resources' + if b then '.administration' else '' endif
+ /]
+
+[query public buildPackageRsFrontResources(any : OclAny) : String =
+    buildPackageRsFront() +'.resources'
+ /]
+
+[query public buildPackageRsFrontDelegates(any : OclAny) : String =
+    buildPackageRsFront() +'.delegates'
+ /]
+
+[query public buildPackageRsFront(any : OclAny) : String =
+    buildPackageRS() +'.front'
+ /]
+
+[query public buildPackageRsFrontExceptions(any : OclAny) : String =
+    buildPackageRsFront() +'.exceptions'
+ /]
+
+[query public buildPackageMapper(any : OclAny) : String =
+    getApplicationPackage() + '.mapper'
+/]
+
+[query public buildPackageWs(any : OclAny) : String =
+    getApplicationPackage() + '.ws'
+/]
+
+[query public buildPackageStories(any : OclAny) : String =
+    getApplicationPackage() + 'stories'
+/]
+
+[query public getPackageSteps(any : OclAny) : String =
+    'steps'
+/]
+
+[query public getPackageMockitoViews(any : OclAny) : String =
+    'client.ui'
+/]
+
+[query public getPackageGwtUserBusinessIntegration(any : OclAny) : String =
+    'client.ui'
+/]
+
+[comment !!!!!!!!!!!!!! VERIFIER CE PARAMETRE !!!!!!!!!!!!!!!!!!!!/]
+[query public buildPackageRequirementForCategory(cat : Category) : String =
+    if (cat.parentCategory.oclIsUndefined()) then
+        buildPackageRequirement(cat.repository)
+    else
+        getApplicationPackage(cat) + '.' + getPackageRequirement(cat) + requirementCategoryHierarchy(cat)
+    endif
+ /]
+
+[query private requirementCategoryHierarchy(cat : Category) : String =
+    if (cat.oclIsUndefined()) then
+        ''
+    else
+        '.' + cat.ancestors(Category)->reverse().id.sanitize().toLower()->sep('.')
+    endif
+/]
+
+[query public mainPackage(d : DTO) : String =
+    if hasSpecificPackage(d) then
+        specificPackage(d)
+    else
+        getApplicationPackage()
+    endif
+/]
+
+
+[query private categoryHierarchy(e : Entity) : String =
+    if (e.ancestors(Namespace)->size() < 1) then
+        ''
+    else
+        '.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+/]
+
+[query public getEntityItfSourceDir(any : OclAny) : String =
+	if (useMatching()) then
+    	getServerSourceDir()
+	else
+		getCommonsSourceDir()
+	endif
+/]
+
+[query public filename(projectName : String, packageName : String, fileName : String) : String =
+    projectName.ensureTrailingSlash() + packageName.toPath().ensureTrailingSlash() + fileName
+/]
+
+[query public filename(projectName : String, dirName : String,  packageName : String, fileName : String) : String =
+    projectName.ensureTrailingSlash() + dirName.ensureTrailingSlash() + packageName.toPath().ensureTrailingSlash() + fileName
+/]

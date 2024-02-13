@@ -1,0 +1,88 @@
+[comment encoding = UTF-8 /]
+[module serviceRequirements('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                            'http://www.obeonetwork.org/dsl/environment/3.0.0',
+                            'http://www.obeonetwork.org/dsl/requirement/1.0',
+					        'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::attributes /]
+[import fr::pacman::soalight::common::methodes /]
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::classes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+
+[comment] le Service existe sans Entity [/comment]
+[template public serviceRequirements(s : Service)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else 'PACKAGE NOT FOUND FOR SERVICE' endif]
+package [buildPackageBusinessImplementationService(s)/];		
+
+// [protected ('for imports')]
+
+[if not getAllRequirementsForService(s)->isEmpty()]
+[if requirementBaseCategoryLevel() = 0]
+import [buildPackageRequirement()/].[apply_classAnnotation('requirement')/];
+import [buildPackageRequirement()/].[apply_classEnum('requirement')/];
+[else]
+[for (req : Requirement | getAllRequirementsForService(s))]
+[getImportRequirement(req)/]
+[/for]
+[/if]
+import fr.spi4j.requirement.RequirementException;
+[/if]
+
+// [/protected]
+
+/**
+ * Implémentations des exigences métiers de '[buildServiceClassName(s)/]'.
+ * @author [getAuthorName()/]
+ */
+public class [buildServiceRequirementsClassName(s)/]
+{
+[if not s.oclIsUndefined()]
+[for (req : Requirement | getAllRequirementsForService(s))]
+   /**
+    * Test de l'exigence [getServiceRequirementsPrefix()/][req.id /]. <br>
+    * [req.statement.replaceAll('\r\n', ' <br>\r\n    * ') /]
+    */
+   [annotationRequirement(req)/]
+   // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id))]
+   public void [apply_methodDefault('exigence')/][getServiceRequirementsPrefix()/][req.id /] ()
+   {
+      throw new RequirementException([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id /], "Exigence non implémentée");
+   }
+
+   // [/protected]
+
+[/for]
+[/if]
+
+   // [buildServiceRequirementsClassName(s)/]
+   // [protected (s.getUserCodeId(buildServiceRequirementsClassName(s)))]
+
+   // [/protected]
+
+}[/let]
+[/template]
+
+[query private getAllRequirementsForService(s : Service) : Set(Requirement) =
+invoke('fr.pacman.soalight.services.RequirementUtils', 'getAllRequirementsForService(org.obeonetwork.dsl.soa.Service)', Sequence{s})
+ /]
+
+[template private annotationRequirement(req : Requirement)]
+[if requirementBaseCategoryLevel() = 0]
+@[apply_classAnnotation('requirement')/]([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id /])[else]
+@[apply_classAnnotation('requirement ' + getBaseCategoryForRequirement(req).id)/]([apply_classEnum('requirement ' + getBaseCategoryForRequirement(req).id)/].[getServiceRequirementsPrefix()/][req.id /])[/if]
+[/template]

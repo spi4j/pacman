@@ -1,0 +1,436 @@
+[comment encoding = UTF-8 /]
+[module dtoParent('http://www.obeonetwork.org/dsl/soa/4.0.0',
+            'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::requests::counterQueries /]
+
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::soa::common::comments /]
+[import fr::pacman::commons::soa::common::references /]
+[import fr::pacman::commons::soa::common::attributes /]
+[import fr::pacman::commons::soa::common::packages /]
+[import fr::pacman::commons::soa::common::methods /]
+[import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::utils /]
+
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::methodes /]
+[import fr::pacman::soa::common::outils /]
+
+[import fr::pacman::commons::services::SecurityUtils /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[template public getExternalUserBusinessGen(d : DTO)]
+[for (r : Reference | d.references)]
+[if r.referencedType.oclAsType(DTO)<> null and not buildImportUserBusinessGen(r.referencedType.oclAsType(DTO)).toString().contains(d.buildImportUserBusinessGen())]
+[buildImportUserBusinessGen(r.referencedType.oclAsType(DTO))/][/if][/for]
+[/template]
+
+[template public dtoParent(d : DTO)]
+[licence()/]
+package [buildPackageBusinessApiDto(d)/];
+// [protected ('for imports')]
+[comment : appel à cette méthode pour charger les attributs hérités de l'entité dans le DTO ???????/]
+[let attributs : OrderedSet(Attribute) = d.getAttributes()/]
+[comment : Write all required imports. /]
+[d.writeImports()/]
+
+// [/protected]
+
+/**
+ * DTO abstrait '[d.nameClassDto()/]'.
+ * @author [getAuthorName()/]
+ */
+public abstract class [d.buildDtoClassName()/] implements [getClassNameForDto_Itf()/]<[genPkType()/]>[if (useSpi4jSecurity() and dtoIsUser(d))], User_Itf[/if]
+{
+   /**
+    * SerialUid.
+    */
+   private static final long serialVersionUID = -1;
+
+   // ATTRIBUTS
+
+   /** L'identifiant. */
+   private [genPkType()/] [namePK_ID()/];
+
+[comment] On ne génére que les attributs qui ne possèdent pas de méta-donnée Annotation de titre "COMPUTED" [/comment]
+[for (a : Attribute | d.attributesNotComputed())]
+   /** [a.description/]. */
+   [a.getProperty()/];
+
+[/for]
+[for (r : Reference | d.referencesNoStar())]
+[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
+   /** La FK sur le Type '[r.nameClassDto()/]'. */
+   [r.getDtoReferenceId()/]
+
+[/if]
+   /** L'instance de '[r.referencedType.oclAsType(DTO).genTypeName()/]' associee a  l'instance de '[d.nameClassDto()/]' courante. */
+   [r.getDtoReference()/]
+
+[/for]
+[for (r : Reference | d.referencesStarStar())]
+   /** La liste de type '[r.nameClassDto()/]' associee a  l'instance de '[d.nameClassDto()/]' courante. */
+   [r.getRefListe()/]
+
+[/for]
+[for (r : Reference | d.referencesStarNoStar())]
+   /** La liste de type '[r.nameClassDto()/]' associee a  l'instance de '[d.nameClassDto()/]' courante. */
+   [r.getRefListe()/]
+
+[/for]
+[for (r : Reference | d.referencingStar())]
+   /** La FK sur le type '[r.containingType.oclAsType(DTO).nameBaseDtoUP()/]'. */
+   [r.getDtoReferenceInverseId()/]
+
+[/for]
+[if not d.isNotPersistent() and d.hasEntityWithVersion()]
+   /** La valeur de la version. */
+   @SuppressWarnings("all")
+   private Serializable [apply_attributeDefault('version value')/];
+
+[/if]
+   // METHODES
+
+   /**
+    * Constructeur sans paramètre du dto '[d.nameClassDto()/]'.
+    */
+   public [d.buildDtoClassName()/] ()
+   {
+      super();
+   }
+
+   @Override
+   public [genPkType()/] getId ()
+   {
+      return [namePK_ID()/];
+   }
+
+   @Override
+   public void setId (final [genPkType()/] [apply_parameterMethodClassicIn(nameENUM_PK_ID())/])
+   {
+      [getAffectationPrefix()/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameENUM_PK_ID())/];
+   }
+
+[for (a : Attribute | d.getAttributes())]
+   /**
+[comPrefix(a, 'Obtenir')/]
+[comReturn(a)/]
+    */
+[if (useSpi4jSecurity() and dtoIsUser(d) and a.name = 'identifiant')]
+   @Override
+   public String getIdentifiant ()
+[else]
+   [a.getGetter()/]
+[/if]
+   {
+   [comment]
+   Si un attribut possède une méta-donnée Annotation de titre "COMPUTED"
+   alors le getter retourne null par défaut et devra être implémenté par le développeur
+   sinon le getter retourne l'attribut.
+   [/comment]
+   [if (a.isComputed())]
+      // [apply_attributeDefault(a.name)/]
+      // [protected (a.getUserCodeId(apply_attributeDefault(a.name)))]
+      // TODO Calculer l'attribut
+      return null;
+      // [/protected]
+   [else]
+      return [apply_attributeDefault(a.name.normalize())/];
+    [/if]
+   }
+
+[comment] Le setter n'est généré que si l'attribut ne possède pas de méta-donnée Annotation de titre "COMPUTED". [/comment]
+[if (not a.isComputed())]
+   /**
+[comPrefix(a, 'Affecter')/]
+[a.getComParamIn()/]
+    */
+[comment]Cas particulier pour l'attribut identifiant qui ne suit pas la convention de nommage.[/comment]
+[if (useSpi4jSecurity() and dtoIsUser(d) and a.name = 'identifiant')]
+   public void setIdentifiant (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(a.name.normalize())/])
+[else]
+   [a.getSetter()/]
+[/if]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(a.name.normalize())/] = [apply_parameterMethodClassicIn(a.name.normalize())/];
+   }
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesNoStar())]
+[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
+   /**
+[comPrefix(r, 'Obtenir')/]
+[comReturn(r)/]
+    */
+   [r.getGetterIdDto()/]
+   {
+      if ([apply_attributeDefault(r.name.normalize())/] != null)
+      {
+         [apply_attributeDefault(r.name.normalize())/][namePK_ID()/] = [apply_attributeDefault(r.name.normalize())/].getId();
+      }
+      return [apply_attributeDefault(r.name.normalize())/][namePK_ID()/];
+   }
+
+   /**
+[comPrefix(r, 'Affecter')/]
+[r.getComParamIdIn()/]
+    */
+   [r.getSetterIdDto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.normalize())/][namePK_ID()/] = [apply_parameterMethodClassicIn(r.name.normalize())/][namePK_ID()/];
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.normalize())/] = null;
+   }
+
+[/if]
+   /**
+[comPrefix(r, 'Obtenir')/]
+[comReturn(r)/]
+    */
+   [r.getGetter()/]
+   {
+[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
+      if ([apply_attributeDefault(r.name.normalize())/][namePK_ID()/] != null && [apply_attributeDefault(r.name.normalize())/] == null)
+      {
+         [apply_attributeDefault(r.name.normalize())/] = [buildAppliUserBusinessGenClassName(r.referencedType.oclAsType(DTO))/].[apply_methodDefault('get '+ r.referencedType.oclAsType(DTO).buildSimpleDtoName() + ' service')/]().findById([apply_attributeDefault(r.name.normalize())/][namePK_ID()/]);
+      }
+[/if]
+      return [apply_attributeDefault(r.name.normalize())/];
+   }
+
+   /**
+[comPrefix(r, 'Affecter')/]
+[r.getComParamIn()/]
+    */
+   [r.getSetterDtoReference()/]
+   {
+[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
+      if ([apply_parameterMethodClassicIn(r.name.normalize())/] == null)
+      {
+         [apply_methodSet(r.name.normalize())/][namePK_ID()/](null);
+      }
+      else
+      {
+         [apply_methodSet(r.name.normalize())/][namePK_ID()/]([apply_parameterMethodClassicIn(r.name.normalize())/].getId());
+      }
+[/if]
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.normalize())/] = [apply_parameterMethodClassicIn(r.name.normalize())/];
+   }
+
+[/for]
+[for (r : Reference | d.referencesStarStar())]
+   /**
+[comPrefix(r, 'Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
+[comReturn(r)/]
+    */
+   [r.getGetterListDto()/]
+   {
+      if ([namePK_ID()/] != null && [apply_attributeMultiple(r.name.normalize())/] == null)
+      {
+         [comment] Pour les relations N-N on appelle le getterInstanceService() sur dto lui même : d.getterInstanceService()[/comment]
+         [apply_attributeMultiple(r.name.normalize())/] = [buildAppliUserBusinessGenClassName(r.referencedType.oclAsType(DTO))/].[apply_methodDefault('get '+ d.buildSimpleDtoName() + ' service')/]().[r.getFindListRefByDto(d)/]([namePK_ID()/]);
+      }
+      return [apply_attributeMultiple(r.name.normalize())/];
+   }
+
+   /**
+[comPrefix(r, 'Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
+[r.getComParamTabIn()/]
+    */
+   [r.getSetterListDto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.normalize())/] = [apply_parameterMethodMultiple(r.referencedType.name.normalize())/];
+   }
+
+[/for]
+[for (r : Reference | d.referencesStarNoStar())]
+   /**
+[comPrefix(r, 'Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
+[comReturn(r)/]
+    */
+   [r.getGetterListDto()/]
+   {
+      [if not r.containingType.oclAsType(DTO).isNotPersistent()]
+      if ([namePK_ID()/] != null && [apply_attributeMultiple(r.name.normalize())/] == null)
+      {
+         [comment] Pour les relations 1-N on appelle le getterInstanceService() sur la référence du dto : r.getterInstanceService()[/comment]
+         [apply_attributeMultiple(r.name.normalize())/] = [buildAppliUserBusinessGenClassName(r.referencedType.oclAsType(DTO))/].[apply_methodDefault('get '+ r.referencedType.oclAsType(DTO).buildSimpleDtoName() + ' service')/]().[r.getFindListRefInverseByDto(d)/]([namePK_ID()/]);
+      }
+      [/if]
+      return [apply_attributeMultiple(r.name.normalize())/];
+   }
+
+   /**
+[comPrefix(r, 'Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
+[r.getComParamTabIn()/]
+    */
+   [r.getSetterListDto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.normalize())/] = [apply_parameterMethodMultiple(r.referencedType.name.normalize())/];
+   }
+
+[/for]
+[for (r : Reference | d.referencingStar())]
+   /**
+    * Obtenir [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
+[r.comReturnInverse()/]
+    */
+   [r.getGetterInverseIdDto()/]
+   {
+      return [apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/];
+   }
+
+   /**
+    * Affecter [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
+[r.getComParamInverseIdIn()/]
+    */
+   [r.getSetterInverseIdDto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/] = [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/];
+   }
+
+[/for]
+[for (r : Reference | d.referencesComputedNoStar())]
+   /**
+[comPrefix(r, 'Obtenir l\'instance de \'' + r.nameClassDto() + '\' calculee :')/]
+[comReturn(r)/]
+    */
+   [r.getGetter()/]
+   {
+      // [apply_methodGet(r.name.normalize())/]
+      // [protected (r.getUserCodeId(apply_methodGet(r.name.normalize())))]
+      // TODO Calculer la référence
+      return null;
+      // [/protected]
+   }
+
+[/for]
+[for (r : Reference | d.referencesComputedStar())]
+   /**
+[comPrefix(r, 'Obtenir la liste de \'' + r.nameClassDto() + '\' calculee :')/]
+[comReturn(r)/]
+    */
+   [r.getGetterListDto()/]
+   {
+      // [apply_methodDefault('get'+ apply_attributeMultiple(r.name.normalize()))/]
+      // [protected (r.getUserCodeId(apply_methodDefault('get'+ apply_attributeMultiple(r.name.normalize()))))]
+      // TODO Calculer la référence
+      return null;
+      // [/protected]
+   }
+
+[/for]
+   /**
+    * Vérifie la validité des champs factorisés du DTO parent.
+    * @return La liste des champs invalides (null si aucun champ n'est invalide)
+    */
+   protected List<String> prepareValidate ()
+   {
+[if d.hasMandatoryFields() or d.hasStringFieldWithSize()]
+      // valide les attributs
+      List<String> [apply_variableDefault('champs invalides')/] = null;
+[for (a : Attribute | d.attributesNotComputed())]
+[validProperty(d, a)/][/for]
+[for (r : Reference | d.referencesNoStar())]
+[if (r.oppositeOf.oclIsUndefined()) or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable)]
+[validProperty(d, r)/][/if][/for]
+[for (r : Reference | d.referencingStar())]
+[validPropertyInverse(d, r)/][/for]
+      return [apply_variableDefault('champs invalides')/];
+[else]
+      // aucun champ obligatoire
+      return null;
+[/if]
+   }
+
+}
+[/template]
+
+[template private validProperty(d : DTO, p : Attribute)]
+[if isMandatory(p)]
+      [apply_variableDefault('champs invalides')/] = DtoUtil.checkMandatoryField("[nameBase(p)/]", [apply_attributeDefault(p.name.normalize())/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[if p.oclIsTypeOf(Attribute)]
+[validateSize(d, p.oclAsType(Attribute))/][/if]
+[/template]
+
+[template private validProperty(d : DTO, p : Reference)]
+[if isMandatory(p)]
+[if not p.referencedType.oclAsType(DTO).isNotPersistent()]
+      [apply_variableDefault('champs invalides')/] = DtoUtil.checkMandatoryField("[nameBase(p)/]", [apply_attributeDefault(p.name.normalize())/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
+[else]
+      [apply_variableDefault('champs invalides')/] = DtoUtil.checkMandatoryField("[nameBase(p)/]", [apply_attributeDefault(p.name.normalize())/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[/if]
+[/template]
+
+[template private validPropertyInverse(d : DTO, r : Reference)]
+[if isMandatory(r)]
+      [apply_variableDefault('champs invalides')/] = DtoUtil.checkMandatoryField("[nameBaseReferenceInverse(r)/]", [apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[template private nameBase(p : Property)]
+[if (p.oclIsTypeOf(Attribute))]
+[nameBaseAttribute(p.oclAsType(Attribute))/][else]
+[if (p.oclIsTypeOf(Reference))]
+[nameBaseReference(p.oclAsType(Reference))/][/if]
+[/if]
+[/template]
+
+[template private validateSize(d : DTO, a : Attribute)]
+[if hasSize(a) and a.type.name = 'String']
+      [apply_variableDefault('champs invalides')/] = DtoUtil.checkFieldSize("[nameBase(a)/]", [apply_attributeDefault(a.name.normalize())/], [d.buildAttributesEnumName()/].[apply_attributeEnum(a.name.normalize())/].getSize(), [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (d : DTO) post(trim())]
+[d.initImports()/]
+[d.addImport('fr.spi4j.business.dto.DtoUtil')/]
+[d.addImport(getImportForDto_Itf(), useSpi4jSecurity() and d.dtoIsUser())/]
+[d.addImport('fr.spi4j.lib.security.User_Itf')/]
+[d.addImport(buildImportUserBusinessGen(), d.references->size() > 0)/]
+[d.addImport(d.getExternalUserBusinessGen(), d.references->size() > 0)/]
+[d.addImport('java.io.Serializable', not d.isNotPersistent() and d.hasEntityWithVersion())/]
+
+[comment : List all reference to detected relational DTOs. /]
+[for (r : Reference | d.references)]
+[if (r.referencedType.oclAsType(DTO) <> null and buildPackageBusinessApiDto(r.referencedType.oclAsType(DTO)) <> buildPackageBusinessApiDto(d))]
+[d.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
+[/if]
+[/for]
+
+[comment : List all reference to detected relational DTOs. /]
+[for (r : Reference | d.referencingStar())]
+[if (r.referencedType.oclAsType(DTO) <> null and buildPackageBusinessApiDto(r.containingType.oclAsType(DTO)) <> buildPackageBusinessApiDto(d))]
+[d.addImport(buildImportDto(r.containingType.oclAsType(DTO)))/]
+[/if]
+[/for]
+
+[comment : List all reference to detected enumerations. /]
+[for (enum: Enumeration | d.getRoot().eAllContents(Enumeration))]
+[d.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+[d.flushImports()/]
+[/template]

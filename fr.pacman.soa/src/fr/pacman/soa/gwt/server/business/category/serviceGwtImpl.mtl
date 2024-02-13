@@ -1,0 +1,187 @@
+[comment encoding = UTF-8 /]
+[module serviceGwtImpl('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                       'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::comments /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::soa::common::methods /]
+[import fr::pacman::commons::soa::common::references /]
+[import fr::pacman::commons::soa::common::names /]
+
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::commons::soa::common::comments /]
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::methodes /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+
+[comment] le Service existe sans DTO [/comment]
+[template public serviceGwtImpl(s : Service)]
+[serviceGwtImpl(s, dtoFromService(s), true)/]
+[/template]
+
+[template public serviceGwtImpl(d : DTO)]
+[serviceGwtImpl(serviceFromDto(d), d, false)/]
+[/template]
+
+[comment] le Service et le DTO existent [/comment]
+[template public serviceGwtImpl(s : Service, d : DTO)]
+[serviceGwtImpl(s, d, false)/]
+[/template]
+
+[template public serviceGwtImpl(s : Service, d : DTO, serviceSeul : Boolean)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+package [buildPackageBusinessGwtServerServiceDto(s, d)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[s.writeImports(d, serviceSeul)/]
+
+// [/protected]
+
+/**
+ * Interface de services appelables par le client.
+ * @author [getAuthorName()/]
+ */
+public class [buildServiceGwtImplementationName(s, d)/][if not serviceSeul] extends GwtRemoteServiceImpl<[genPkType()/], [buildXtoClassNameFromDto(d)/], [buildDtoClassName(d)/]>[else] extends SpiRemoteServiceImpl[/if] implements [buildServiceGwtInterfaceName(s, d)/]
+{
+
+   private static final long serialVersionUID = 1L;
+
+[if not serviceSeul]
+   @Override
+   protected [buildMapperInterfaceName(d)/] getMapper ()
+   {
+      // Mapper
+      // [protected (s.getUserCodeId('Mapper'))]
+      // Le Mapper n'est peut-être pas dans [d.specificOrDefaultIdAppli().toUpperFirst() /], il est peut-être dans un autre domaine qui contient les XTO
+      return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildMapperClassName(d))/]();
+      // [/protected]
+   }
+
+   @Override
+   protected [buildServiceInterfaceName(s, d)/] getService ()
+   {
+      // Service
+      // [protected (s.getUserCodeId('Service'))]
+      return [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s, d))/]();
+      // [/protected]
+   }
+[else]
+   /**
+    * @return le service réel
+    */
+   protected [buildServiceInterfaceName(s, null)/] getService ()
+   {
+      return [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s, null))/]();
+   }
+[/if]
+
+   @Override
+   protected SerializationPolicy doGetSerializationPolicy (final HttpServletRequest request,
+            final String moduleBaseURL, final String strongName)
+   {
+      // TODO Auto-generated method stub
+      return super.doGetSerializationPolicy (request, getServletContext().getInitParameter("moduleBaseURL"), strongName);
+   }
+
+[if not serviceSeul]
+[for (r : Reference | d.referencingStar())]
+   @Override
+   public List<[buildXtoClassNameFromDto(d)/]> [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/])
+   {
+      return getMapper().convertListDtoToListXto(
+               getService ().[apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/]([apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/]));
+   }
+
+[/for]
+[for (r : Reference | d.referencesStarStar())]
+   @Override
+   public List<[buildXtoClassNameFromDto(r.referencedType.oclAsType(DTO))/]> [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamId(r.containingType.oclAsType(DTO)))/])
+   {
+      return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + r.referencedType.oclAsType(DTO).buildMapperClassName())/] ().convertListDtoToListXto(
+               getService ().[apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/]([apply_parameterMethodClassicIn(nameParamId(r.containingType.oclAsType(DTO)))/]));
+   }
+
+[/for]
+[/if]
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+   // [userCodeForOperation(o)/]
+   // [protected (o.getUserCodeId(userCodeForOperation(o)))]
+
+   @Override
+   public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/])
+   {
+[if o.paramOutXto() <> 'void']
+      return [if o.output->first().type.oclIsTypeOf(DTO)]
+      [let return : DTO = o.output->first().type.oclAsType(DTO)]
+[buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + return.buildMapperClassName())/] ().convert[if isMultiple(o.output->first())]List[/if]DtoTo[if isMultiple(o.output->first())]List[/if]Xto( [buildAppliUserBusinessGenClassName()/].get[nameService(s, null)/] ().[o.nameOperation()/] ([o.input.parametersXtoFromDto()->sep(', ') /]));
+      [/let]
+[else]null; /* @TODO : vérifier Pb Type retour inconnu */
+ [/if]
+[else]
+	 getService ().[o.nameOperation()/] ([o.input.parametersXtoFromDto()->sep(', ') /]);
+[/if]
+
+   }
+
+   // [/protected]
+
+[/for]
+[/if]
+   // [nameServiceInterfaceGwt(s, d)/]
+   // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s, d)))]
+
+   // [/protected]
+}[/let]
+[/template]
+
+[template private parametersInXto (p : Parameter)]
+      [apply_parameterMethodClassicIn(p.name)/]
+[/template]
+
+[comment : Write all required imports. (beware d is null not safe (legacy) ..???)/]
+[template private writeImports (s : Service, d : DTO, serviceSeul : Boolean) post(trim())]
+[s.initImports()/]
+[s.addImport('jakarta.servlet.http.HttpServletRequest')/]
+[s.addImport('com.google.gwt.user.server.rpc.SerializationPolicy')/]
+[s.addImport(buildPackageBusiness() + '.' + buildAppliUserBusinessGenClassName())/]
+[s.addImport(buildPackageMapper() + '.' + buildAppliUserMapperGenClassName())/]
+[s.addImport(buildPackageBusinessGwtClientServiceDto(s, d) + '.' + buildServiceGwtInterfaceName(s, d))/]
+[s.addImport(buildPackageBusinessApiServiceDto(s, d) + '.' + buildServiceInterfaceName(s, d))/]
+[s.addImport('fr.spi4j.ui.gwt.server.SpiRemoteServiceImpl', serviceSeul)/]
+[s.addImport('fr.spi4j.ui.gwt.server.GwtRemoteServiceImpl', not serviceSeul)/]
+[s.addImport(buildPackageMapperDto(d) + '.' + buildMapperInterfaceName(d), not serviceSeul)/]
+
+[comment : d may be null but not tested for previous imports . /]
+[if d <> null]
+	[s.addImport(d.buildImportXtoGwt())/]
+	[s.addImport(d.buildImportDto())/]
+  	[for (r : Reference | d.referencesStarStar())]
+		[s.addImport(buildImportXtoGwt(r.referencedType.oclAsType(DTO)))/]
+  	[/for]
+[/if]
+
+[s.flushImports()/]
+[/template]
+
+
+
+
+
+
+

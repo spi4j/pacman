@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module commons('http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[query public findRequirements (categories : Sequence(Category), profondeurMax : Integer) : Sequence(Requirement) =
+    if (profondeurMax < 0) then
+        categories.eAllContents(Requirement)
+    else
+        if (profondeurMax > 1) then
+            categories.eContents(Requirement)->union(findRequirements(categories.eContents(Category), profondeurMax - 1))
+        else
+            categories.eContents(Requirement)
+        endif
+    endif
+/]

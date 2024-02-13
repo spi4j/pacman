@@ -1,0 +1,395 @@
+/**
+ * (C) Copyright Ministere des Armees (France)
+ *
+ * Apache License 2.0
+ */
+package fr.application.business.api.annuaire.fetching;
+// Start of user code for imports
+
+import fr.application.business.api.annuaire.PersonneAttributes_Enum;
+import fr.application.business.api.annuaire.PersonneDto;
+import fr.application.business.api.ref.fetching.GradeFetchingStrategy;
+import fr.spi4j.business.dto.AttributesNames_Itf;
+import fr.spi4j.business.dto.Dto_Itf;
+import fr.spi4j.business.fetching.FetchingStrategy_Abs;
+import jakarta.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+// End of user code
+
+/**
+ * FetchingStrategy 'Personne'
+ * @author safr@n
+ */
+public class PersonneFetchingStrategy extends FetchingStrategy_Abs<Long, PersonneDto>
+{
+   private static final long serialVersionUID = 1L;
+
+   @XmlElement(name = "grade")
+   private PersonneGradeFetchingStrategy _gradeFetchingStrategy;
+
+   @XmlElement(name = "marieAvec")
+   private PersonneMarieAvecFetchingStrategy _marieAvecFetchingStrategy;
+
+   @XmlElement(name = "tab_adresses")
+   private PersonneAdressesFetchingStrategy _tab_adressesFetchingStrategy;
+
+   @XmlElement(name = "tab_parentDe")
+   private PersonneParentDeFetchingStrategy _tab_parentDeFetchingStrategy;
+
+   @XmlElement(name = "tab_pays")
+   private PersonnePaysFetchingStrategy _tab_paysFetchingStrategy;
+
+   /**
+    * Constructeur.
+    */
+   public PersonneFetchingStrategy ()
+   {
+      super();
+   }
+
+   /**
+    * Constructeur.
+    * @param p_name
+    *           Nom
+    * @param p_parent
+    *           Parent
+    */
+   protected PersonneFetchingStrategy (final AttributesNames_Itf p_name, final FetchingStrategy_Abs<?, ?> p_parent)
+   {
+      super(p_name, p_parent);
+   }
+
+   /**
+    * FetchingStrategy 'PersonneAdresses'.
+    * @author safr@n
+    */
+   public static class PersonneAdressesFetchingStrategy extends AdresseFetchingStrategy
+   {
+      private static final long serialVersionUID = 1L;
+
+      /**
+       * Constructeur.
+       * @param p_name
+       *           Nom
+       * @param p_parent
+       *           Parent
+       */
+      protected PersonneAdressesFetchingStrategy (final PersonneAttributes_Enum p_name, final PersonneFetchingStrategy p_parent)
+      {
+         super(p_name, p_parent);
+      }
+
+      /**
+       * Remonte au parent.
+       * @return PersonneFetchingStrategy
+       */
+      public PersonneFetchingStrategy endTabAdresses ()
+      {
+         return (PersonneFetchingStrategy) getParent();
+      }
+   }
+
+   /**
+    * FetchingStrategy 'PersonneMarieAvec'.
+    * @author safr@n
+    */
+   public static class PersonneMarieAvecFetchingStrategy extends PersonneFetchingStrategy
+   {
+      private static final long serialVersionUID = 1L;
+
+      /**
+       * Constructeur.
+       * @param p_name
+       *           Nom
+       * @param p_parent
+       *           Parent
+       */
+      protected PersonneMarieAvecFetchingStrategy (final PersonneAttributes_Enum p_name, final PersonneFetchingStrategy p_parent)
+      {
+         super(p_name, p_parent);
+      }
+
+      /**
+       * Remonte au parent.
+       * @return PersonneFetchingStrategy
+       */
+      public PersonneFetchingStrategy endMarieAvec ()
+      {
+         return (PersonneFetchingStrategy) getParent();
+      }
+   }
+
+   /**
+    * FetchingStrategy 'PersonneParentDe'.
+    * @author safr@n
+    */
+   public static class PersonneParentDeFetchingStrategy extends PersonneFetchingStrategy
+   {
+      private static final long serialVersionUID = 1L;
+
+      /**
+       * Constructeur.
+       * @param p_name
+       *           Nom
+       * @param p_parent
+       *           Parent
+       */
+      protected PersonneParentDeFetchingStrategy (final PersonneAttributes_Enum p_name, final PersonneFetchingStrategy p_parent)
+      {
+         super(p_name, p_parent);
+      }
+
+      /**
+       * Remonte au parent.
+       * @return PersonneFetchingStrategy
+       */
+      public PersonneFetchingStrategy endTabParentDe ()
+      {
+         return (PersonneFetchingStrategy) getParent();
+      }
+   }
+
+   /**
+    * FetchingStrategy 'PersonnePays'.
+    * @author safr@n
+    */
+   public static class PersonnePaysFetchingStrategy extends PaysFetchingStrategy
+   {
+      private static final long serialVersionUID = 1L;
+
+      /**
+       * Constructeur.
+       * @param p_name
+       *           Nom
+       * @param p_parent
+       *           Parent
+       */
+      protected PersonnePaysFetchingStrategy (final PersonneAttributes_Enum p_name, final PersonneFetchingStrategy p_parent)
+      {
+         super(p_name, p_parent);
+      }
+
+      /**
+       * Remonte au parent.
+       * @return PersonneFetchingStrategy
+       */
+      public PersonneFetchingStrategy endTabPays ()
+      {
+         return (PersonneFetchingStrategy) getParent();
+      }
+   }
+
+   /**
+    * FetchingStrategy 'PersonneGrade'.
+    * @author safr@n
+    */
+   public static class PersonneGradeFetchingStrategy extends GradeFetchingStrategy
+   {
+      private static final long serialVersionUID = 1L;
+
+      /**
+       * Constructeur.
+       * @param p_name
+       *           Nom
+       * @param p_parent
+       *           Parent
+       */
+      protected PersonneGradeFetchingStrategy (final PersonneAttributes_Enum p_name, final PersonneFetchingStrategy p_parent)
+      {
+         super(p_name, p_parent);
+      }
+
+      /**
+       * Remonte au parent.
+       * @return PersonneFetchingStrategy
+       */
+      public PersonneFetchingStrategy endGrade ()
+      {
+         return (PersonneFetchingStrategy) getParent();
+      }
+   }
+
+   /**
+    * Fetch de la relation 'grade'.
+    * @return PersonneGradeFetchingStrategy
+    */
+   public PersonneGradeFetchingStrategy withGrade ()
+   {
+      getPersonneGradeFetchingStrategy().setFetch(true);
+      return getPersonneGradeFetchingStrategy();
+   }
+
+   /**
+    * Equivalent à withGrade().endGrade().
+    * @return PersonneFetchingStrategy
+    */
+   public PersonneFetchingStrategy fetchGrade ()
+   {
+      getPersonneGradeFetchingStrategy().setFetch(true);
+      return this;
+   }
+
+   /**
+    * @return PersonneGradeFetchingStrategy
+    */
+   protected PersonneGradeFetchingStrategy getPersonneGradeFetchingStrategy ()
+   {
+      if (_gradeFetchingStrategy == null)
+      {
+         // Instancier la FetchingStrategy
+         _gradeFetchingStrategy = new PersonneGradeFetchingStrategy(PersonneAttributes_Enum.grade, this);
+      }
+      return _gradeFetchingStrategy;
+   }
+
+   /**
+    * Fetch de la relation 'marieAvec'.
+    * @return PersonneMarieAvecFetchingStrategy
+    */
+   public PersonneMarieAvecFetchingStrategy withMarieAvec ()
+   {
+      getPersonneMarieAvecFetchingStrategy().setFetch(true);
+      return getPersonneMarieAvecFetchingStrategy();
+   }
+
+   /**
+    * Equivalent à withMarieAvec().endMarieAvec().
+    * @return PersonneFetchingStrategy
+    */
+   public PersonneFetchingStrategy fetchMarieAvec ()
+   {
+      getPersonneMarieAvecFetchingStrategy().setFetch(true);
+      return this;
+   }
+
+   /**
+    * @return PersonneMarieAvecFetchingStrategy
+    */
+   protected PersonneMarieAvecFetchingStrategy getPersonneMarieAvecFetchingStrategy ()
+   {
+      if (_marieAvecFetchingStrategy == null)
+      {
+         // Instancier la FetchingStrategy
+         _marieAvecFetchingStrategy = new PersonneMarieAvecFetchingStrategy(PersonneAttributes_Enum.marieAvec, this);
+      }
+      return _marieAvecFetchingStrategy;
+   }
+
+   /**
+    * Fetch de la relation 'tab_adresses'.
+    * @return PersonneAdressesFetchingStrategy
+    */
+   public PersonneAdressesFetchingStrategy withTabAdresses ()
+   {
+      getTabPersonneAdressesFetchingStrategy().setFetch(true);
+      return getTabPersonneAdressesFetchingStrategy();
+   }
+
+   /**
+    * Equivalent à withTabAdresses().endTabAdresses().
+    * @return PersonneFetchingStrategy
+    */
+   public PersonneFetchingStrategy fetchTabAdresses ()
+   {
+      getTabPersonneAdressesFetchingStrategy().setFetch(true);
+      return this;
+   }
+
+   /**
+    * @return PersonneAdressesFetchingStrategy
+    */
+   protected PersonneAdressesFetchingStrategy getTabPersonneAdressesFetchingStrategy ()
+   {
+      // Si pas de FetchingStrategy
+      if (_tab_adressesFetchingStrategy == null)
+      {
+         // Instancier la FetchingStrategy
+         _tab_adressesFetchingStrategy = new PersonneAdressesFetchingStrategy(PersonneAttributes_Enum.tab_adresses, this);
+      }
+      return _tab_adressesFetchingStrategy;
+   }
+
+   /**
+    * Fetch de la relation 'tab_parentDe'.
+    * @return PersonneParentDeFetchingStrategy
+    */
+   public PersonneParentDeFetchingStrategy withTabParentDe ()
+   {
+      getTabPersonneParentDeFetchingStrategy().setFetch(true);
+      return getTabPersonneParentDeFetchingStrategy();
+   }
+
+   /**
+    * Equivalent à withTabParentDe().endTabParentDe().
+    * @return PersonneFetchingStrategy
+    */
+   public PersonneFetchingStrategy fetchTabParentDe ()
+   {
+      getTabPersonneParentDeFetchingStrategy().setFetch(true);
+      return this;
+   }
+
+   /**
+    * @return PersonneParentDeFetchingStrategy
+    */
+   protected PersonneParentDeFetchingStrategy getTabPersonneParentDeFetchingStrategy ()
+   {
+      // Si pas de FetchingStrategy
+      if (_tab_parentDeFetchingStrategy == null)
+      {
+         // Instancier la FetchingStrategy
+         _tab_parentDeFetchingStrategy = new PersonneParentDeFetchingStrategy(PersonneAttributes_Enum.tab_parentDe, this);
+      }
+      return _tab_parentDeFetchingStrategy;
+   }
+
+   /**
+    * Fetch de la relation 'tab_pays'.
+    * @return PersonnePaysFetchingStrategy
+    */
+   public PersonnePaysFetchingStrategy withTabPays ()
+   {
+      getTabPersonnePaysFetchingStrategy().setFetch(true);
+      return getTabPersonnePaysFetchingStrategy();
+   }
+
+   /**
+    * Equivalent à withTabPays().endTabPays().
+    * @return PersonneFetchingStrategy
+    */
+   public PersonneFetchingStrategy fetchTabPays ()
+   {
+      getTabPersonnePaysFetchingStrategy().setFetch(true);
+      return this;
+   }
+
+   /**
+    * @return PersonnePaysFetchingStrategy
+    */
+   protected PersonnePaysFetchingStrategy getTabPersonnePaysFetchingStrategy ()
+   {
+      // Si pas de FetchingStrategy
+      if (_tab_paysFetchingStrategy == null)
+      {
+         // Instancier la FetchingStrategy
+         _tab_paysFetchingStrategy = new PersonnePaysFetchingStrategy(PersonneAttributes_Enum.tab_pays, this);
+      }
+      return _tab_paysFetchingStrategy;
+   }
+
+   @Override
+   public List<FetchingStrategy_Abs<Long, ? extends Dto_Itf<Long>>> getChildren ()
+   {
+      final List<FetchingStrategy_Abs<Long, ? extends Dto_Itf<Long>>> v_list = new ArrayList<>();
+      v_list.add(_gradeFetchingStrategy);
+      v_list.add(_marieAvecFetchingStrategy);
+      v_list.add(_tab_adressesFetchingStrategy);
+      v_list.add(_tab_parentDeFetchingStrategy);
+      v_list.add(_tab_paysFetchingStrategy);
+      return v_list;
+   }
+}

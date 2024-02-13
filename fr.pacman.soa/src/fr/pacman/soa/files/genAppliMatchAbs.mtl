@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genAppliMatchAbs('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                     'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::server::matching::appliMatchAbs /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genAppliMatchAbs(n : Namespace)]
+[file (filename(getServerSourceDir(), buildPackageMatching(), buildAppliMatchAbstractName() + '.java'), false, 'UTF-8')]
+[appliMatchAbs(n)/]
+[/file]
+[/template]

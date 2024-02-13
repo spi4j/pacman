@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genUserMapper('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                      'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::server::mapper::userMapper /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genUserMapper(xtoAGenerer : Set(DTO), n : Namespace)]
+[file (filename(n.getServerSourceDir(), n.buildPackageMapper(), n.buildAppliUserMapperGenClassName() + '.java'), false, 'UTF-8')]
+[userMapper(xtoAGenerer, n)/]
+[/file]
+[/template]

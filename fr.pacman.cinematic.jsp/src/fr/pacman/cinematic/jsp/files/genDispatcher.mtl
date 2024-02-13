@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genDispatcher('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+
+[import fr::pacman::cinematic::jsp::client::ui::pkg::dispatcher]
+
+[comment : Creation de l'enumeration pour le dispatcher general de l'application. /]
+[template public genApplicationDispatcher(root : CinematicRoot)]
+[file (filename(getClientJspSourceDir(), getApplicationPackage(), buildJspDispatcherClassName() + '.java'), false, 'UTF-8')]
+[root.applicationDispatcher() /]
+[/file]
+[/template]

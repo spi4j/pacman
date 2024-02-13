@@ -1,0 +1,574 @@
+package fr.appwhite2.business.api.annuaire;
+
+// Start of user code for imports
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+
+import fr.appwhite2.business.Appli1UserBusiness;
+import fr.appwhite2.persistence.Appli1ParamPersistence;
+import fr.appwhite2.persistence.Appli1UserPersistence;
+import fr.appwhite2.persistence.api.annuaire.AdresseEntity_Itf;
+import fr.appwhite2.persistence.api.annuaire.CompetenceEntity_Itf;
+import fr.appwhite2.persistence.api.annuaire.PersonneColumns_Enum;
+import fr.appwhite2.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.appwhite2.persistence.impl_jdbc.annuaire.AdresseEntity;
+import fr.appwhite2.persistence.impl_jdbc.annuaire.CompetenceEntity;
+import fr.appwhite2.persistence.impl_jdbc.annuaire.PersonneEntity;
+import fr.referentiel.business.Referentiel1UserBusiness;
+import fr.referentiel.persistence.Referentiel1ParamPersistence;
+import fr.referentiel.persistence.api.ref.GradeEntity_Itf;
+import fr.spi4j.business.DefaultServerProxyFactory;
+import fr.spi4j.business.ServiceLogProxy;
+import fr.spi4j.business.UserBusiness_Abs;
+import fr.spi4j.business.dto.DtoUtil;
+import fr.spi4j.exception.Spi4jEntityNotFoundException;
+import fr.spi4j.exception.Spi4jValidationException;
+import fr.spi4j.persistence.entity.Spi4jLockException;
+
+// End of user code
+
+/**
+ * Classe de test du service 'PersonneService_Itf'.
+ * @author MINARM
+ */
+public class PersonneService_Test
+{
+
+   /** Le 'UserPersistence' de l'application. */
+   private static Appli1UserPersistence userPersistence;
+
+   /** Le 'PersonneService_Itf' testé. */
+   private static PersonneService_Itf service;
+
+   /** L'id du 'PersonneEntity' stocké en base. */
+   private static Long crudId;
+
+   /**
+    * Définition du crudId.
+    * @param p_crudId
+    *           le crudId
+    */
+   public static void setCrudId (final Long p_crudId)
+   {
+      PersonneService_Test.crudId = p_crudId;
+   }
+
+   /**
+    * Méthode d'initialisation de la classe de tests.
+    */
+   @BeforeClass
+   public static void setUpBeforeClass ()
+   {
+      userPersistence = Appli1ParamPersistence.getUserPersistence();
+      service = Appli1UserBusiness.getPersonneService();
+   }
+
+   /**
+    * Méthode d'initialisation de tests.
+    */
+   @Before
+   public void setUp ()
+   {
+      userPersistence.begin();
+   }
+
+   /**
+    * Test de recherche de toutes les entitys.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testFindAll () throws Throwable
+   {
+      testCreate();
+
+      final List<PersonneEntity_Itf> v_all = service.findAll();
+      Assert.assertNotNull("Le entity n'a pas été trouvé dans la liste de tous les dto",
+               DtoUtil.findInCollectionById(v_all, crudId));
+
+      // Start of user code findAll assertions
+
+      // End of user code
+   }
+
+   /**
+    * Test de création de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testCreate () throws Throwable
+   {
+      final PersonneEntity_Itf v_entity = new PersonneEntity();
+
+      // Start of user code create
+      v_entity.set_nom("NOM1");
+      v_entity.set_prenom("PRENOM1");
+      v_entity.set_civil(true);
+      v_entity.set_xtopsup(false);
+      v_entity.set_xdmaj(new Date());
+      final List<GradeEntity_Itf> v_grades = Referentiel1ParamPersistence.getUserPersistence().getGradeDao().findAll();
+      Assert.assertFalse("Aucun grade trouvé dans le référentiel", v_grades.isEmpty());
+
+      //v_entity.set_grade(v_grades.get(new Random().nextInt(v_grades.size())));
+      v_entity.set_grade_id(v_grades.get(new Random().nextInt(v_grades.size())).getId());
+
+      // ajout des competences
+      final CompetenceEntity_Itf v_competence1 = new CompetenceEntity();
+      v_competence1.set_libelle("COMP1");
+      v_competence1.set_xtopsup(false);
+      v_competence1.set_xdmaj(new Date());
+      Appli1UserBusiness.getCompetenceService().save(v_competence1);
+      final CompetenceEntity_Itf v_competence2 = new CompetenceEntity();
+      v_competence2.set_libelle("COMP2");
+      v_competence2.set_xtopsup(false);
+      v_competence2.set_xdmaj(new Date());
+      Appli1UserBusiness.getCompetenceService().save(v_competence2);
+//      v_entity.set_tab_competences(Arrays.asList(v_competence1, v_competence2));
+      // End of user code
+
+      final PersonneEntity_Itf v_createdEntity = service.save(v_entity);
+
+      setCrudId(v_createdEntity.getId());
+
+      Assert.assertNotNull("Le dto créé devrait avoir une clé primaire renseignée", v_createdEntity.getId());
+
+      // Start of user code create assertions
+      Assert.assertEquals("Le nom de la personne est incorrect", "NOM1", v_createdEntity.get_nom());
+      Assert.assertEquals("Le prénom de la personne est incorrect", "PRENOM1", v_createdEntity.get_prenom());
+      Assert.assertNotNull("La personne devrait avoir un grade", v_createdEntity.get_grade_id());
+  //    Assert.assertEquals("La personne devrait avoir 2 compétences", 2, v_createdEntity.get_tab_competences().size());
+      // End of user code
+   }
+
+   /**
+    * Test de recherche par identifiant de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testFindById () throws Throwable
+   {
+      testCreate();
+
+      final PersonneEntity_Itf v_entity = service.findById(crudId);
+      Assert.assertNotNull("Le entity devrait exister dans le référentiel", v_entity);
+      Assert.assertNotNull("Le entity créé devrait avoir une clé primaire renseignée", v_entity.getId());
+      Assert.assertNotNull("Le entity créé devrait avoir un toString", v_entity.toString());
+
+      // Start of user code findById assertions
+      Assert.assertEquals("Le nom de la personne est incorrect", "NOM1", v_entity.get_nom());
+      Assert.assertEquals("Le prénom de la personne est incorrect", "PRENOM1", v_entity.get_prenom());
+      // End of user code
+   }
+
+   /**
+    * Test de mise à jour de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testUpdate () throws Throwable
+   {
+      testCreate();
+
+      final PersonneEntity_Itf v_entity = service.findById(crudId);
+
+      // Start of user code update
+      v_entity.set_prenom("PRENOM2");
+
+      final CompetenceEntity_Itf v_competence3 = new CompetenceEntity();
+      v_competence3.set_libelle("COMP3");
+      v_competence3.set_xtopsup(false);
+      v_competence3.set_xdmaj(new Date());
+      Appli1UserBusiness.getCompetenceService().save(v_competence3);
+      //v_entity.get_tab_competences().add(v_competence3);
+      // End of user code
+
+      final PersonneEntity_Itf v_updatedEntity = service.save(v_entity);
+
+      Assert.assertNotNull("Le entity mis à jour devrait avoir une clé primaire renseignée", v_updatedEntity.getId());
+
+      // Start of user code update assertions
+      Assert.assertEquals("Le nom de la personne est incorrect", "NOM1", v_updatedEntity.get_nom());
+      Assert.assertEquals("Le prénom de la personne est incorrect", "PRENOM2", v_updatedEntity.get_prenom());
+//      Assert.assertEquals("La personne devrait avoir 3 compétences", 3, v_updatedEntity.get_tab_competences().size());
+      // End of user code
+   }
+
+   /**
+    * Test de suppression de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testDelete () throws Throwable
+   {
+      testCreate();
+
+      final PersonneEntity_Itf v_entity = service.findById(crudId);
+
+      service.delete(v_entity);
+      final List<PersonneEntity_Itf> v_all = service.findAll();
+      Assert.assertNull("Le entity ne devrait plus exister dans la liste de tous les dto",
+               DtoUtil.findInCollectionById(v_all, crudId));
+
+      // Start of user code delete assertions
+
+      // End of user code
+   }
+
+   /**
+    * Test de la méthode 'getColumn'.
+    */
+   @Test
+   public void testGetColumn ()
+   {
+     // Appli1UserMatching.getPersonneMatch().getColumn(PersonneAttributes_Enum.id);
+      PersonneColumns_Enum.valueOf("Personne_id");
+      // Start of user code getColumn
+      //Appli1UserMatching.getPersonneMatch().getColumn(PersonneAttributes_Enum.nom);
+      PersonneColumns_Enum.valueOf("nom");
+      // End of user code
+   }
+
+   /**
+    * Test de l'opération 'findListPersonneByGrade'.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testFindListPersonneByGradeGradePersonne () throws Throwable
+   {
+      // Start of user code findListPersonneByGrade_Grade_Personne
+      try
+      {
+         final PersonneEntity_Itf v_entity = new PersonneEntity();
+         v_entity.set_nom("NOM1");
+         v_entity.set_prenom("PRENOM1");
+         v_entity.set_civil(true);
+         v_entity.set_xtopsup(false);
+         v_entity.set_xdmaj(new Date());
+         final List<GradeEntity_Itf> v_grades = Referentiel1ParamPersistence.getUserPersistence().getGradeDao().findAll();
+         Assert.assertFalse("Aucun grade trouvé dans le référentiel", v_grades.isEmpty());
+        v_entity.set_grade_id(v_grades.get(new Random().nextInt(v_grades.size())).getId());
+         final PersonneEntity_Itf v_createdEntity = service.save(v_entity);
+         final List<PersonneEntity_Itf> v_personnes = service.findListPersonneByGrade(v_grades.get(new Random().nextInt(v_grades.size())));
+         final boolean v_found = DtoUtil.findInCollectionById(v_personnes, v_createdEntity.getId()) != null;
+
+         Assert.assertTrue("La personne créée n'a pas été trouvée", v_found);
+      }
+      catch (final Spi4jValidationException v_e)
+      {
+         Assert.fail(v_e.getMessage());
+      }
+      // End of user code
+   }
+
+   /**
+    * Test de l'opération 'findAllFetchAdresses'.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testFindAllFetchAdressesPersonne () throws Throwable
+   {
+      // Start of user code findAllFetchAdresses_Personne
+      final PersonneEntity_Itf v_entity = new PersonneEntity();
+
+      v_entity.set_nom("NOM1");
+      v_entity.set_prenom("PRENOM1");
+      v_entity.set_civil(false);
+      v_entity.set_xtopsup(false);
+      v_entity.set_xdmaj(new Date());
+
+      final PersonneEntity_Itf v_createdEntity = service.save(v_entity);
+
+      final AdresseService_Itf v_realAdresseService = Appli1UserBusiness.getAdresseService();
+ //     final AdresseEntity_Itf v_adresse = new AdresseEntity(null, "rue des récollets", 78000, "Versailles", v_createdEntity.getId());
+      final AdresseEntity_Itf v_adresse = new AdresseEntity();
+      v_adresse.set_codePostal(78000);
+      v_adresse.set_ville("Versailles");
+      v_adresse.set_rue("rue des récollets");
+      v_adresse.set_proprietaire_id(v_createdEntity.getId());
+      v_adresse.set_xtopsup(false);
+      v_adresse.set_xdmaj(new Date());
+      v_realAdresseService.save(v_adresse);
+
+      try
+      {
+         // mock them
+         final AdresseService_Itf v_mockAdresseService = Mockito.mock(AdresseService_Itf.class);
+         injectMockAdresseService(ServiceLogProxy.createProxy(AdresseService_Itf.class, v_mockAdresseService));
+
+         // given (pas le bon tableau d'adresses par rapport à la personne mais au moins il n'est pas null et donc le lazy-loading fait bien un load de quelque chose)
+         BDDMockito.given(v_mockAdresseService.findListAdressesByPersonne(Matchers.anyLong())).willReturn(
+                  Arrays.asList(v_adresse));
+
+         //final List<PersonneEntity_Itf> v_personnes = service.findAllFetchAdresses();
+         final List<PersonneEntity_Itf> v_personnes = service.findAll();
+
+         // service should be called during eager fetching
+         Mockito.verify(v_mockAdresseService, Mockito.atLeastOnce()).findListAdressesByPersonne(Matchers.anyLong());
+
+         Mockito.reset(v_mockAdresseService); // reset the counter to make sure service is not called from getter
+         for (final PersonneEntity_Itf v_personne : v_personnes)
+         {
+            final List<AdresseEntity_Itf> v_adresses = v_mockAdresseService.findListAdressesByPersonne(v_personne.getId());
+            for (final AdresseEntity_Itf v_adresse1 : v_adresses)
+            {
+               v_adresse1.get_proprietaire_id();
+            }
+         }
+         // verify that grade is not lazily fetched
+         Mockito.verify(v_mockAdresseService, Mockito.times(0)).findById(Matchers.anyLong());
+      }
+      finally
+      {
+         final Appli1UserBusiness v_userBusinessAppli1 = Appli1UserBusiness.getSingleton();
+         v_userBusinessAppli1.setProxyFactory(new DefaultServerProxyFactory(v_userBusinessAppli1));
+         final PersonneEntity_Itf v_entityTest = new PersonneEntity();
+         v_entityTest.set_nom("NOM1");
+         v_entityTest.set_prenom("PRENOM1");
+         v_entityTest.set_civil(false);
+         v_entityTest.set_xtopsup(false);
+         v_entityTest.set_xdmaj(new Date());
+         final PersonneEntity_Itf v_createdentityTest = service.save(v_entityTest);
+         Assert.assertNotNull("La personne créée ne devrait pas être nulle", v_createdentityTest);
+      //   Assert.assertEquals("La personne ne devrait pas avoir d'adresses", 0, v_createdentityTest.get_tab_adresses().size());
+      }
+      // End of user code
+   }
+
+   /**
+    * Méthode de fin de test : rollback.
+    */
+   @After
+   public void tearDown ()
+   {
+      userPersistence.rollback();
+   }
+
+   // Start of user code specific service test
+
+   /**
+    * Test de suppression en cascade.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testDeleteCascade () throws Throwable
+   {
+      // creation de la personne
+      final PersonneEntity_Itf v_entity = new PersonneEntity();
+
+      v_entity.set_nom("NOM1");
+      v_entity.set_prenom("PRENOM1");
+      v_entity.set_civil(false);
+      v_entity.set_xtopsup(false);
+      v_entity.set_xdmaj(new Date());
+
+      final List<GradeEntity_Itf> v_grades = Referentiel1UserBusiness.getGradeService().findAll();
+      Assert.assertFalse("Aucun grade trouvé dans le référentiel", v_grades.isEmpty());
+      v_entity.set_grade_id(v_grades.get(new Random().nextInt(v_grades.size())).getId());
+
+      final PersonneEntity_Itf v_createdEntity = service.save(v_entity);
+
+      Assert.assertEquals("Le nom de la personne est incorrect", "NOM1", v_createdEntity.get_nom());
+      Assert.assertEquals("Le prénom de la personne est incorrect", "PRENOM1", v_createdEntity.get_prenom());
+      Assert.assertNotNull("La personne devrait avoir un grade", v_createdEntity.get_grade_id());
+
+      // récupération du AdresseService_Itf
+      final AdresseService_Itf v_adresseService = Appli1UserBusiness.getAdresseService();
+
+      // creation et association des adresses
+      final AdresseEntity_Itf v_adresse1 = new AdresseEntity();
+      v_adresse1.set_proprietaire_id(v_createdEntity.getId());
+      v_adresse1.set_rue("1 boulevard Haussmann");
+      v_adresse1.set_codePostal(75000);
+      v_adresse1.set_ville("Paris");
+      v_adresse1.set_xtopsup(false);
+      v_adresse1.set_xdmaj(new Date());
+      final AdresseEntity_Itf v_createdAdresse1 = v_adresseService.save(v_adresse1);
+
+      final AdresseEntity_Itf v_adresse2 = new AdresseEntity();
+      v_adresse2.set_proprietaire_id(v_createdEntity.getId());
+      v_adresse2.set_rue("2 boulevard Haussmann");
+      v_adresse2.set_codePostal(75000);
+      v_adresse2.set_ville("Paris");
+      v_adresse2.set_xtopsup(false);
+      v_adresse2.set_xdmaj(new Date());
+      final AdresseEntity_Itf v_createdAdresse2 = v_adresseService.save(v_adresse2);
+      v_adresseService.findListAdressesByPersonne(v_createdEntity.getId());
+      Assert.assertEquals("La personne " + v_createdEntity.getId() + " devrait avoir 2 adresses", 2, v_adresseService.findListAdressesByPersonne(v_createdEntity.getId()).size());
+
+      service.deleteCascade(v_createdEntity);
+
+      try
+      {
+         service.findById(v_createdEntity.getId());
+         Assert.fail("La personne aurait dû être supprimée");
+      }
+      catch (final Spi4jEntityNotFoundException v_e)
+      {
+         Assert.assertNotNull("erreur attendue", v_e);
+      }
+
+      // on réinitialise la transaction mise en rollback only suite à l'exception ci-dessus
+      userPersistence.rollback();
+      userPersistence.begin();
+
+      try
+      {
+         v_adresseService.findById(v_createdAdresse1.getId());
+         Assert.fail("L'adresse aurait dû être supprimée");
+      }
+      catch (final Spi4jEntityNotFoundException v_e)
+      {
+         Assert.assertNotNull("erreur attendue", v_e);
+      }
+
+      // on réinitialise la transaction mise en rollback only suite à l'exception ci-dessus
+      userPersistence.rollback();
+      userPersistence.begin();
+
+      try
+      {
+         v_adresseService.findById(v_createdAdresse2.getId());
+         Assert.fail("L'adresse aurait dû être supprimée");
+      }
+      catch (final Spi4jEntityNotFoundException v_e)
+      {
+         Assert.assertNotNull("erreur attendue", v_e);
+      }
+
+   }
+
+   /**
+    * Méthode de test de recherche de compétence par personne, cas d'une relation N - N.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void testFindCompetencesByPersonne () throws Throwable
+   {
+      testCreate();
+      final PersonneEntity_Itf v_personne = service.findById(crudId);
+      final List<CompetenceEntity_Itf> v_competences = service.findListCompetencesByPersonne(v_personne.getId());
+      Assert.assertNotNull("Aucune competence trouvée", v_competences);
+      Assert.assertEquals("Mauvais nombre de competences remonté", 2, v_competences.size());
+      for (final CompetenceEntity_Itf v_competence : v_competences)
+      {
+         Assert.assertTrue("Mauvaise competence remontée",
+                  "COMP1".equals(v_competence.get_libelle()) || "COMP2".equals(v_competence.get_libelle()));
+      }
+   }
+
+   /**
+    * Injecte un mock de adresseService dans l'annuaire des services.
+    * @param p_mockAdresseService
+    *           AdresseService_Itf
+    */
+   private void injectMockAdresseService (final AdresseService_Itf p_mockAdresseService)
+   {
+      final Appli1UserBusiness v_userBusinessAppli1 = Appli1UserBusiness.getSingleton();
+      final DefaultServerProxyFactory v_injectMockAdresseServiceFactory = new InjectAdresseServiceProxyFactory(
+               v_userBusinessAppli1, p_mockAdresseService);
+      v_userBusinessAppli1.setProxyFactory(v_injectMockAdresseServiceFactory);
+   }
+
+   /**
+    * Méthode de test du Lock.
+    * @throws Throwable
+    *            e
+    */
+   @Test
+   public void testLock () throws Throwable
+   {
+      testCreate();
+      final PersonneEntity_Itf v_personne1 = service.findById(crudId);
+      final PersonneEntity_Itf v_personne2 = service.findById(crudId);
+
+      try
+      {
+         // attente d'une seconde entre la création et la modification de l'objet de test
+         Thread.sleep(1000);
+      }
+      catch (final InterruptedException v_e)
+      {
+         // RAS
+      }
+
+      v_personne1.set_nom("Personne1");
+      v_personne1.set_xtopsup(false);
+      v_personne1.set_xdmaj(new Date());
+      service.save(v_personne1);
+
+      Assert.assertEquals("La personne n'a pas pu être enregistrée comme attendue", "Personne1",
+               service.findById(crudId).get_nom());
+
+      v_personne2.set_nom("Personne2");
+      v_personne2.set_xtopsup(false);
+      v_personne2.set_xdmaj(new Date());
+      try
+      {
+         service.save(v_personne2);
+         Assert.fail("Erreur de lock attendue");
+      }
+      catch (final Spi4jLockException v_e)
+      {
+         Assert.assertNotNull("Erreur de lock attendue", v_e);
+      }
+   }
+
+   /**
+    * ProxyFactory pour injecter un mock de gradeService dans le userBusiness.
+    * @author MINARM
+    */
+   private static class InjectAdresseServiceProxyFactory extends DefaultServerProxyFactory
+   {
+
+      private final AdresseService_Itf _mockAdresseService;
+
+      /**
+       * Constructeur.
+       * @param p_userBusiness_Abs
+       *           UserBusiness_Abs
+       * @param p_mockAdresseService
+       *           AdresseService_Itf
+       */
+      InjectAdresseServiceProxyFactory (final UserBusiness_Abs p_userBusiness_Abs,
+               final AdresseService_Itf p_mockAdresseService)
+      {
+         super(p_userBusiness_Abs);
+         _mockAdresseService = p_mockAdresseService;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public <TypeService> TypeService getProxiedService (final Class<TypeService> p_interfaceService,
+               final TypeService p_service)
+      {
+         if (AdresseService_Itf.class.equals(p_interfaceService))
+         {
+            return (TypeService) _mockAdresseService;
+         }
+         return super.getProxiedService(p_interfaceService, p_service);
+      }
+   }
+
+   // End of user code
+
+}

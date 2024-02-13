@@ -1,0 +1,258 @@
+[comment encoding = UTF-8 /]
+[module surcouche('http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[query public getImportForService_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForService_Abs()', Sequence{})
+ /]
+
+[query public getImportForEntityService_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForEntityService_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForService_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForService_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForEntityService_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForEntityService_Abs()', Sequence{})
+ /]
+
+[query public getImportForApplicationService_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForApplicationService_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForApplicationService_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForApplicationService_Itf()', Sequence{})
+ /]
+
+[query public getImportForUserBusiness_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForUserBusiness_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForUserBusiness_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForUserBusiness_Abs()', Sequence{})
+ /]
+
+
+[query public getImportForService_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForService_Itf()', Sequence{})
+ /]
+
+[query public getImportForEntityService_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForEntityService_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForService_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForService_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForEntityService_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForEntityService_Itf()', Sequence{})
+ /]
+
+[query public getImportForServiceReferentiel_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForServiceReferentiel_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForServiceReferentiel_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForServiceReferentiel_Itf()', Sequence{})
+ /]
+
+[query public getImportForAttributesNames_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForAttributesNames_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForAttributesNames_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForAttributesNames_Itf()', Sequence{})
+ /]
+
+[query public getImportForDto_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForDto_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForDto_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForDto_Itf()', Sequence{})
+ /]
+
+[query public getImportForMapper_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForMapper_Abs()', Sequence{})
+ /]
+
+[query public getImportForEntityMapper_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForMapper_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForMapper_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForMapper_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForEntityMapper_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForEntityMapper_Abs()', Sequence{})
+ /]
+
+[query public getImportForMapper_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForMapper_Itf()', Sequence{})
+ /]
+
+[query public getImportForEntityMapper_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForEntityMapper_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForMapper_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForMapper_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForEntityMapper_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForEntityMapper_Itf()', Sequence{})
+ /]
+
+[query public getImportForMatch_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForMatch_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForMatch_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForMatch_Abs()', Sequence{})
+ /]
+
+[query public getImportForMatch_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForMatch_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForMatch_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForMatch_Itf()', Sequence{})
+ /]
+
+[query public getImportForUserPersistence_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForUserPersistence_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForUserPersistence_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForUserPersistence_Abs()', Sequence{})
+ /]
+
+[query public getImportForDao_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForDao_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForDao_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForDao_Itf()', Sequence{})
+ /]
+
+[query public getImportForDaoJdbc_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForDaoJdbc_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForDaoJdbc_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForDaoJdbc_Abs()', Sequence{})
+ /]
+
+[query public getImportForColumnsNames_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForColumnsNames_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForColumnsNames_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForColumnsNames_Itf()', Sequence{})
+ /]
+
+[query public getImportForEntity_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForEntity_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForEntity_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForEntity_Itf()', Sequence{})
+ /]
+
+[query public getImportForBeanTester_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForBeanTester_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForBeanTester_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForBeanTester_Abs()', Sequence{})
+ /]
+
+[query public getImportForFetchingStrategyTester_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForFetchingStrategyTester_Abs()', Sequence{})
+ /]
+
+[query public getImportForFetchingStrategyEntityTester_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForFetchingStrategyEntityTester_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForFetchingStrategyTester_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForFetchingStrategyTester_Abs()', Sequence{})
+ /]
+
+[query public getClassNameForFetchingStrategyEntityTester_Abs(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForFetchingStrategyEntityTester_Abs()', Sequence{})
+ /]
+
+[query public getImportForXto_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForXto_Itf()', Sequence{})
+ /]
+
+[query public getImportForRsXto_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForRsXto_Itf()', Sequence{})
+ /]
+
+[query public getClassNameForXto_Itf(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForXto_Itf()', Sequence{})
+ /]
+
+[query public getImportForBinary(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getImportForBinary()', Sequence{})
+ /]
+
+[query public getClassNameForBinary(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.Spi4jProperties',
+	'getClassNameForBinary()', Sequence{})
+ /]

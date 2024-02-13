@@ -1,0 +1,175 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.obeonetwork.org/dsl/soa/4.0.0',
+			  'http://www.obeonetwork.org/dsl/entity/3.0.0',
+              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+[comment : /]
+[template public nameBaseDtoUP(r : Reference)]
+[r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseXtoUP(d : DTO)]
+[d.buildSimpleDtoName().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameClassXto(r : Reference)]
+[r.nameBaseXto().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseXto(r : Reference)]
+[r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template public nameClassXto(d : DTO)]
+[d.nameBaseXto().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseXto(d : DTO)]
+[d.buildSimpleDtoName().toLowerFirst()/]
+[/template]
+
+[comment :/]
+[template public nameClassDto(d : DTO)]
+[d.nameBaseDto().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseAttribute(a : Attribute)]
+[a.name.sanitize().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template public nameClassDto(r : Reference)]
+[r.nameBaseDto().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameParam(p : Property)]
+[nameBaseProperty(p)/]
+[/template]
+
+[comment : /]
+[template public nameParamTab(r : Reference)]
+[nameBaseDto(r)/]
+[/template]
+
+[comment : /]
+[template public nameParamInverseId(r : Reference)]
+[nameBaseReferenceInverse(r)/] id
+[/template]
+
+[comment : /]
+[template public nameParam(p : Parameter)]
+[nameBaseParameter(p)/]
+[/template]
+
+[comment : /]
+[template private nameBaseParameter(p : Parameter)]
+[p.name.sanitize().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template private nameBaseProperty(p : Property)]
+[p.name.sanitize().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template public nameParamInverse(r : Reference)]
+[nameBaseReferenceInverse(r)/]
+[/template]
+
+[comment : /]
+[template public nameParamId(r : Reference)]
+[nameBaseReference(r)/] id
+[/template]
+
+[comment  : /]
+[template public nameBaseReference(r : Reference)]
+[r.name.sanitize().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseReferenceTab(r : Reference)]
+[if ((getListPrefix()).size() = 0)][r.nameBaseReference()/][else]
+[getListPrefix()/]_[r.nameBaseReference()/][/if]
+[/template]
+
+[comment  : /]
+[template public nameBaseReferenceUpperFirst(r : Reference)]
+[r.referencedType.oclAsType(DTO).name.sanitize().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseDto(r : Reference)]
+[r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseReferenceInverse(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(DTO).nameBaseDto() + r.name.toUpperFirst()/][else]
+[nameBaseReference(r.oppositeOf)/][/if]
+[/template]
+
+[comment : /]
+[template public nameBaseReferenceInverseUpperFirst(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(DTO).nameBaseDtoUP()/][else]
+[nameBaseReference(r.oppositeOf).toString().toUpperFirst()/][/if]
+[/template]
+
+[comment  : /]
+[template public nameBaseDto(d : DTO)]
+[d.buildSimpleDtoName().toLowerFirst()/]
+[/template]
+
+[comment : /]
+[template public nameBaseDtoUP(d : DTO)]
+[d.buildSimpleDtoName().toUpperFirst()/]
+[/template]
+
+[comment : /]
+[template public getNameSetterListDto(r : Reference)]
+[apply_methodDefault('set '+ 
+(r.name.normalize()) )/]
+[/template]
+
+[comment : /]
+[template public getNameGetterListDto(r : Reference)]
+[apply_methodDefault('get '+ apply_attributeMultiple(r.name.normalize()) )/]
+[/template]
+
+[comment : Recuperation du nom pour un champ additionnel./]
+[template public getNameColumn(columnProp : String)]
+[getConfigValue(nameColumnProperty(columnProp)).toLower() /]
+[/template]
+
+[comment : /]
+[query public nameSimpleProperty(p : Property) : String =
+    if (p.oclIsKindOf(Reference)) then
+        if (p.name.oclIsUndefined() or p.name.size() = 0) then
+            if (p.oclAsType(Reference).containingType.oclIsUndefined()) then
+                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
+            else
+                'ref' + p.oclAsType(Reference).containingType.name.sanitize().toUpperFirst() + namePK_ID()
+            endif
+        else
+            p.name.sanitize().toLowerFirst() + namePK_ID()
+        endif
+    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
+        'XXXattribut sans nomXXX'
+    else
+        p.oclAsType(Reference).nameBaseReference()
+    endif endif
+/]

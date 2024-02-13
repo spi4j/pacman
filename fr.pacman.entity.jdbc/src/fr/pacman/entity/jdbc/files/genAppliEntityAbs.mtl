@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genAppliEntityAbs('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::jdbc::jdbc::appliEntityAbs /]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::entity::jdbc::common::packages /]
+
+[template public genAppliEntityAbs(r : Root)]
+[file (filename(getServerSourceDir(), buildPackagePersistenceImplJdbc(), buildAppliEntityAbstractClassName() + '.java'), false, 'UTF-8')]
+[r.appliEntityAbs()/]
+[/file]
+[/template]

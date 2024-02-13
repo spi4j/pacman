@@ -1,0 +1,84 @@
+[comment encoding = UTF-8 /]
+[module parameterRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::utils]
+
+[template public apply_parameterMethodClassicIn(value : String)]
+[norme_parameterMethodClassicIn(value)/]
+[/template]
+
+[query private norme_parameterMethodClassicIn(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodClassicIn(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodMultiple(value : String)]
+[norme_parameterMethodMultiple(value)/]
+[/template]
+
+[query private norme_parameterMethodMultiple(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodMultiple(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodMultipleMap(value : String)]
+[norme_parameterMethodMultipleMap(value)/]
+[/template]
+
+[query private norme_parameterMethodMultipleMap(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodMultipleMap(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodObjectIn(value : String)]
+[norme_parameterMethodObjectIn(value)/]
+[/template]
+
+[query private norme_parameterMethodObjectIn(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodObjectIn(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodClassicInOut(value : String)]
+[norme_parameterMethodClassicInOut(value)/]
+[/template]
+
+[query private norme_parameterMethodClassicInOut(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodClassicInOut(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodObjectInOut(value : String)]
+[norme_parameterMethodObjectInOut(value)/]
+[/template]
+
+[query private norme_parameterMethodObjectInOut(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodObjectInOut(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodClassicOut(value : String)]
+[norme_parameterMethodClassicOut(value)/]
+[/template]
+
+[query private norme_parameterMethodClassicOut(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodClassicOut(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodObjectOut(value : String)]
+[norme_parameterMethodObjectOut(value)/]
+[/template]
+
+[query private norme_parameterMethodObjectOut(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodObjectOut(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodReset(value : String)]
+[norme_parameterMethodReset(value)/]
+[/template]
+
+[query private norme_parameterMethodReset(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodReset(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_parameterMethodSetter(value : String)]
+[norme_parameterMethodSetter(value)/]
+[/template]
+
+[query private norme_parameterMethodSetter(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_parameterMethodSetter(java.lang.String)', Sequence{value})
+ /]

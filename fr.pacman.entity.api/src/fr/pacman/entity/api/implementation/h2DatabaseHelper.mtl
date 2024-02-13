@@ -1,0 +1,109 @@
+[comment encoding = UTF-8 /]
+[module h2DatabaseHelper('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::sql::common /]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+[template public h2DatabaseHelper(r : Root)]
+[licence()/]
+package [buildPackagePersistence()/];
+// [protected ('for imports')]
+
+[if useH2EmbeddedDatabase()]
+import java.io.File;
+[/if]
+import fr.spi4j.persistence.H2DatabaseHelper;
+
+// [/protected]
+
+[comClass('Classe utilitaire d''initialisation de la base de données à partir des scripts générés (pour H2 a priori)')/]
+public final class [buildH2DatabaseHelperClassName()/] extends H2DatabaseHelper
+{
+
+   private static final [buildH2DatabaseHelperClassName()/] [apply_attributeFinalStatic('instance')/] = new [buildH2DatabaseHelperClassName()/]();
+
+   /**
+    * Constructeur.
+    */
+   private [buildH2DatabaseHelperClassName()/] ()
+   {
+      super([buildParamPersistenceClassName()/].getUserPersistence());
+   }
+
+   @Override
+   protected void init ()
+   {
+      // Ajout de scripts
+      // [protected (r.getUserCodeId('Ajout de scripts'))]
+      // Il est possible d'aller chercher les scripts SQL en fonction de leur emplacement par rapport au code source de cette classe, avec le code suivant :
+      // (Il faut utiliser autant de fois getParentFile() qu'il n'existe de répertoires entre la racine des sources et la racine du projet)
+      // (Exemple : 2 fois getParentFile() pour des sources dans src/main/java)
+      // final String [apply_variableFinal('sqlPath')/] = new File((new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile().getParentFile()), "[getServerSQLDir()/]").getPath();
+      // addScript([apply_variableFinal('sqlPath')/] + "/create_tables_[getApplicationName()/]_H2.sql");
+      // addScript([apply_variableFinal('sqlPath')/] + "/init_data_[getApplicationName()/].sql");
+
+      // on ajoute ../[(if (getServerProjectName() <> null ) then r.getServerProjectName() else '' endif)/] pour que les scripts soient visibles de tous les sous-projets
+
+	  [if useH2EmbeddedDatabase()]
+	  String sqlPath = new File((new File(getClass().getProtectionDomain().getCodeSource()
+			  .getLocation().getFile()).getParentFile().getParentFile()), "src/main/sql/").getPath();
+
+	  // Permet de retrouver la racine du répertoire une fois l'application déployée,
+	  // sachant que pour l'instant, le seul serveur embarqué pleinement fonctionnel 
+	  // est le serveur tomcat.
+	  if (sqlPath.indexOf("tomcat.") > 0) {
+		   sqlPath = sqlPath.substring(0, sqlPath.indexOf("tomcat.")) + "conf";
+	  }
+	   	
+	  addScript(sqlPath + "/create_tables_[getApplicationName()/]_H2.sql");
+	  addScript(sqlPath +  "/init_data_[getApplicationName()/].sql");
+	  [else]
+	  [if hasAdditionnalLibraries()]
+	  // TODO ajouter les initialisation des scripts des librairies.
+      [for (prop : String | getAdditionnalLibraries())]
+      // [getLibraryName(prop)/]
+      // addScript("../[(if (getServerProjectName() <> null ) then getServerProjectName().trim().ensureTrailingSlash() else '' endif)/][getServerSQLDir()/]create_tables_[getLibraryName(prop)/]_H2.sql");
+      // addScript("../[(if (getServerProjectName() <> null ) then getServerProjectName().trim().ensureTrailingSlash() else '' endif)/][getServerSQLDir()/]init_data_[getLibraryName(prop)/].sql");
+	  [/for]
+	  [/if]	
+
+      // [getApplicationName()/]
+      addScript("../[(if (getServerProjectName() <> null ) then getServerProjectName().trim().ensureTrailingSlash() else '' endif)/][getServerSQLDir()/]create_tables_[getApplicationName()/]_H2.sql");
+      addScript("../[(if (getServerProjectName() <> null ) then getServerProjectName().trim().ensureTrailingSlash() else '' endif)/][getServerSQLDir()/]init_data_[getApplicationName()/].sql");
+	  [/if]
+
+      // [/protected]
+   }
+
+   /**
+    * Méthode d'initialisation de la base de données.
+    */
+   public static void [apply_methodDefault('initialize database')/] ()
+   {
+      [apply_attributeFinalStatic('instance')/].initDatabase();
+   }
+
+   // Methodes
+   // [protected (r.getUserCodeId('Methodes'))]
+
+   // [/protected]
+
+}
+[/template]
+

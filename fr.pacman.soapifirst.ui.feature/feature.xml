@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.pacman.soapifirst.ui.feature"
+      label="PacMan - SOA ApiFirst"
+      version="4.4.0.qualifier"
+      provider-name="Safr@n"
+      plugin="fr.pacman.branding">
+      
+   <includes
+      id="fr.pacman.commons.soa.feature"
+      version="0.0.0"/>
+         
+   <plugin
+         id="fr.pacman.soapifirst"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
+         id="fr.pacman.soapifirst.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

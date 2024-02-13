@@ -1,0 +1,167 @@
+[comment encoding = UTF-8 /]
+[module fetchingStrategyTest('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+
+[import fr::pacman::commons::soa::common::references /]
+
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+
+[template public fetchingStrategyTest(d : DTO)]
+[licence()/]
+package [d.buildPackageFetchingStrategyDto()/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[d.writeImports()/]
+
+// [/protected]
+
+/**
+ * Suite de test '[d.buildFetchingStrategyClassName()/]'.
+ * @author [getAuthorName()/]
+ */
+// Annotation for class
+// [protected (d.getUserCodeId('Annotation for class'))]
+// [/protected]
+public class [d.buildFetchingStrategyTestClassName()/] extends [getClassNameForFetchingStrategyTester_Abs()/]
+{
+
+[for (r : Reference | d.referencesNoStar())]
+   /**
+    * Test de [apply_methodDefault('fetch ' + r.name)/].
+    */
+   @Test
+   public void [apply_methodDefault('test fetch ' + r.name)/] ()
+   {
+      final [d.nameClassFetchingStrategy()/] [apply_variableFinal('fs')/] = new [d.nameClassFetchingStrategy()/]().[apply_methodDefault('fetch ' + r.name)/]();
+      assertFetched([apply_variableFinal('fs')/]);
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[for (nr : Reference | d.referencesNoStar())][if (nr <> r)]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + nr.name + ' fetching strategy'))/]());
+[/if][/for]
+[for (lr : Reference | d.referencesStar())]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + lr.name + ' fetching strategy'))/]());
+[/for]
+   }
+
+   /**
+    * Test de [apply_methodDefault('with ' + r.name)/].
+    */
+   @Test
+   public void [apply_methodDefault('test with ' + r.name)/] ()
+   {
+      final [d.nameClassFetchingStrategy()/] [apply_variableFinal('fs')/] = new [d.buildFetchingStrategyClassName()/]().[apply_methodDefault('with ' + r.name)/]().[apply_methodDefault('end ' + r.name)/]();
+      assertFetched([apply_variableFinal('fs')/]);
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[for (nr : Reference | d.referencesNoStar())][if (nr <> r)]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + nr.name + ' fetching strategy'))/]());
+[/if][/for]
+[for (lr : Reference | d.referencesStar())]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + lr.name + ' fetching strategy'))/]());
+[/for]
+   }
+
+[/for]
+[for (r : Reference | d.referencesStar())]
+   /**
+    * Test de [apply_methodDefault('fetch ' + getListPrefix() + ' ' + r.name)/].
+    */
+   @Test
+   public void [apply_methodDefault('test fetch ' + getListPrefix() + ' ' + r.name)/] ()
+   {
+      final [d.nameClassFetchingStrategy()/] [apply_variableFinal('fs')/] = new [d.nameClassFetchingStrategy()/]().[apply_methodDefault('fetch ' + getListPrefix() + ' ' + r.name)/]();
+      assertFetched([apply_variableFinal('fs')/]);
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[for (nr : Reference | d.referencesNoStar())]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + nr.name + ' fetching strategy'))/]());
+[/for]
+[for (lr : Reference | d.referencesStar())][if (lr <> r)]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + lr.name + ' fetching strategy'))/]());
+[/if][/for]
+   }
+
+   /**
+    * Test de [apply_methodDefault('with ' + r.name)/].
+    */
+   @Test
+   public void [apply_methodDefault('test with ' + r.name)/] ()
+   {
+      final [d.nameClassFetchingStrategy()/] [apply_variableFinal('fs')/] = new [d.nameClassFetchingStrategy()/]().[apply_methodDefault('with ' + getListPrefix() + ' ' + r.name)/]().[apply_methodDefault('end ' + getListPrefix() + ' ' + r.name)/]();
+      assertFetched([apply_variableFinal('fs')/]);
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[for (nr : Reference | d.referencesNoStar())]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + nr.name + ' fetching strategy'))/]());
+[/for]
+[for (lr : Reference | d.referencesStar())][if (lr <> r)]
+      assertNotFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + lr.name + ' fetching strategy'))/]());
+[/if][/for]
+   }
+
+[/for]
+   /**
+    * Test de [apply_methodDefault('fetch all')/].
+    */
+   @Test
+   public void [apply_methodDefault('fetch all')/] ()
+   {
+      final [d.nameClassFetchingStrategy()/] [apply_variableFinal('fs')/] = new [d.nameClassFetchingStrategy()/]()[for (r : Reference | d.referencesNoStar())].[apply_methodDefault('fetch ' + r.name)/]()[/for][for (r : Reference | d.referencesStar())].[apply_methodDefault('fetch ' + getListPrefix() + ' ' + r.name)/]()[/for];
+      assertNotNull([apply_variableFinal('fs')/].getChildren());
+      assertFetched([apply_variableFinal('fs')/]);
+[for (r : Reference | d.referencesNoStar())]
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[/for]
+[for (r : Reference | d.referencesStar())]
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[/for]
+   }
+
+   /**
+    * Test de [apply_methodDefault('with all')/].
+    */
+   @Test
+   public void [apply_methodDefault('with all')/] ()
+   {
+      final [d.nameClassFetchingStrategy()/] [apply_variableFinal('fs')/] = new [d.nameClassFetchingStrategy()/]()[for (r : Reference | d.referencesNoStar())].[apply_methodDefault('with ' + r.name)/]().[apply_methodDefault('end ' + r.name)/]()[/for][for (r : Reference | d.referencesStar())].[apply_methodDefault('with ' + getListPrefix() + ' ' + r.name)/]().[apply_methodDefault('end ' + getListPrefix() + ' ' + r.name)/]()[/for];
+      assertFetched([apply_variableFinal('fs')/]);
+[for (r : Reference | d.referencesNoStar())]
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[/for]
+[for (r : Reference | d.referencesStar())]
+      assertFetched([apply_variableFinal('fs')/].[apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]());
+[/for]
+   }
+
+   // specific methods
+   // [protected (d.getUserCodeId('specific methods'))]
+
+   // [/protected]
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (d : DTO) post(trim())]
+[d.initImports()/]
+[d.addImport('org.junit.jupiter.api.Test')/]
+[d.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+[d.addImport(getImportForFetchingStrategyTester_Abs())/]
+[d.flushImports()/]
+[/template]

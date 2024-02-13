@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genReport('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::start::project::Report /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+
+[template public genReport(any : OclAny)]
+[comment : Creation du pom de xxx-Report /]
+[file (filename(getReportProjectName(), '', 'pom.xml'), false, 'UTF-8')]
+[ReportPom() /]
+[/file]
+[/template]
+

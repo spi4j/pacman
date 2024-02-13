@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin> 
+    <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.obeonetwork.dsl.is.ui.categoryID"
+            class="fr.pacman.start.ui.AcceleoGenrateStartAction"
+            helpHref="https://github.com/spi4j/spi4j"
+            icon="icons/safran.png"
+            id="fr.pacman.start.ui.wizard"
+            name="Projet Safr@n"
+            preferredPerspectives="fr.obeo.dsl.viewpoint.ui.tools.perspective.modeling"
+            project="true">
+         <description>
+            Création d'un nouveau projet Safr@n.
+         </description>
+      </wizard>
+   </extension>
+</plugin>

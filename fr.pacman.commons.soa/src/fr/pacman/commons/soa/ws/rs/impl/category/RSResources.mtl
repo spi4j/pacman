@@ -1,0 +1,131 @@
+[comment encoding = UTF-8 /]
+[module RSResources('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                    'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::commons::soa::common::classes /]
+[import fr::pacman::commons::soa::common::services /]
+[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+
+[comment : ****************************************************************/]
+[comment : Generate the facade factory for RS services facade (no @Inject)./]
+[comment : ****************************************************************/]
+[template public RSServicesFacadeFactory(m : System)]
+[licence()/]
+package [buildPackageRS()/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[m.writeImports('RSServicesFacadeFactory')/]
+
+// [/protected]
+
+/**
+ *  Fabrique pour l'ensemble des facades internes.
+ *
+ * @author [getAuthorName()/]
+ */
+public class [buildRSServicesFacadeFactoryClassName()/]
+{
+
+[if not m.oclIsUndefined()]
+[for (s : Service | m.eAllContents(Service))]
+	[if s.hasRSOperations()]
+	/**
+	 * Récupération de l'interface pour la facade du service : [s.name/]. 
+	 * @return [s.buildServiceFacadeRSInterfaceName(null)/] : L'interface pour le service.
+	 */
+	public static [s.buildServiceFacadeRSInterfaceName(null)/] [apply_methodGet(s.buildServiceFacadeRSInterfaceName(null))/](){
+		
+		return [s.buildServiceFacadeRSClassName(null)/].[apply_attributeFinal('instance')/];
+	}
+
+	[/if]
+[/for]
+[if m.isCrudApplication()]
+[for (d : DTO | m.eAllContents(DTO))]
+	/**
+	 * Récupération de l'interface pour la facade du service : [d.name/]. 
+	 * @return [buildServiceFacadeRSInterfaceName(null, d)/] : L'interface pour le service.
+	 */
+	public static [buildServiceFacadeRSInterfaceName(null, d)/] [apply_methodGet(buildServiceFacadeRSInterfaceName(null, d))/](){
+		
+		return [buildServiceFacadeRSClassName(null, d)/].[apply_attributeFinal('instance')/];
+	}
+[/for]
+[/if][/if]
+}
+[/template]
+
+
+
+[comment : ***********************************************************************/]
+[comment : Generate the binding hk2 / cdi injection for services facade (@Inject)./]
+[comment : ***********************************************************************/]
+[template public RSApplicationConfig(m : System)]
+[licence()/]
+package [buildPackageRS()/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[m.writeImports('RSApplicationConfig')/]
+
+// [/protected]
+/**
+ * Enregistrement des liaisons (implémentation / interface) dans le cadre 
+ * de l'injection CDI / HK2 pour Jersey.
+ *
+ * @author [getAuthorName()/].
+ */
+public class [buildRSApplicationConfigClassName()/] extends ResourceConfig
+{
+	public [buildRSApplicationConfigClassName()/]() {
+
+		packages("[m.writePackagesToScan()/]");
+
+		register(new AbstractBinder() {
+			@Override
+			protected void configure() {
+
+				[for (s : Service | m.eAllContents(Service))][if s.hasRSOperations()]
+				bind([s.buildServiceFacadeRSClassName(null)/].class).to([s.buildServiceFacadeRSInterfaceName(null)/].class);
+				[/if][/for]
+				[if m.isCrudApplication()][for (d : DTO | m.eAllContents(DTO))]
+				bind([buildServiceFacadeRSClassName(null, d)/].class).to([buildServiceFacadeRSInterfaceName(null, d)/].class);
+				[/for][/if]
+			}
+		});
+	}
+}
+[/template]
+
+[comment : Write the list of packages to scan for jersey. /]
+[template private writePackagesToScan(m : System) post(trim())]
+[m.buildPackageRsResources(false)/][if m.isCrudApplication()],[m.buildPackageRsResources(true)/][/if]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (m : System, s : String) post(trim())]
+[m.initImports()/]
+[if not m.oclIsUndefined()]
+[if 'RSApplicationConfig'.equalsIgnoreCase(s)]
+	[m.addImport('org.glassfish.jersey.internal.inject.AbstractBinder')/]
+	[m.addImport('org.glassfish.jersey.server.ResourceConfig')/]
+[/if]
+
+[comment : Iterate over all operations. /]
+[for (s : Service | m.eAllContents(Service))][if s.hasRSOperations()]
+	[m.addImport(s.buildPackageImplWs() + '.' + s.buildServiceFacadeRSClassName(null))/]
+	[m.addImport(s.buildPackageWsApi() + '.' + s.buildServiceFacadeRSInterfaceName(null))/]
+[/if][/for][/if]
+[m.flushImports()/]
+[/template]

@@ -1,0 +1,377 @@
+[comment encoding = UTF-8 /]
+[module serviceTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                    'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::attributes /]
+
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::services::SecurityUtils]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::serviceutils /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+[comment] le Entity existent [/comment]
+[template public serviceTest(e : Entity, referentiel : Boolean)]
+[licence()/]
+[let self : OclAny = if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR Entity NULL' endif]
+package [buildPackageBusinessApiService(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports(referentiel)/]
+
+// [/protected]
+
+/**
+ * Classe de test du service '[buildServiceInterfaceName(e)/]'.
+ * @author [getAuthorName()/]
+ */
+// Annotation for class
+// [protected (e.getUserCodeId('Annotation for class'))]
+// [/protected]
+public class [buildServiceTestClassName(e)/]
+{
+[if not e.isNotPersistent()]
+   /** Le 'UserPersistence' de l'application. */
+   private static [buildUserPersistenceAppClassName()/] [apply_attributeStatic('user persistence')/];
+[/if]
+
+   /** Le '[buildServiceInterfaceName(e)/]' testé. */
+[if not useTestsCRUD()]
+   @SuppressWarnings("all")
+[/if]
+   private static [buildServiceInterfaceName(e)/] [apply_attributeStatic('service')/];
+
+[if not e.isNotPersistent()]
+[if useTestsCRUD()]
+   // Spécifique
+   // [protected (e.getUserCodeId('Spécifique'))]
+
+   /** L'id du '[buildEntityInterfaceName(e)/]' stocké en base. */
+   private static [genPkType()/] [apply_attributeStatic('crud id')/];
+
+   /**
+    * Définition du [apply_attributeStatic('crud id')/].
+    * @param [apply_parameterMethodClassicIn('crud id')/]
+    *           le [apply_attributeStatic('crud id')/]
+    */
+   public static void [apply_methodDefault('set crud id')/] (final Long [apply_parameterMethodClassicIn('crud id')/])
+   {
+      [buildServiceTestClassName(e)/].[apply_attributeStatic('crud id')/] = [apply_parameterMethodClassicIn('crud id')/];
+   }
+	
+	// [/protected]
+[/if]
+
+   /**
+    * Méthode d'initialisation de la classe de tests.
+    */
+   @BeforeAll
+   public static void [apply_methodDefault('set up before all')/] ()
+   {
+      Parameters.setH2Database();
+      [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
+      [apply_attributeStatic('service')/] = [buildAppliUserBusinessEntityGenClassName()/].[apply_methodDefault('get ' + buildServiceClassName(e))/]();
+
+      // set up before all
+      // [protected (e.getUserCodeId('set up before all'))]
+      // [/protected]
+   }
+
+   /**
+    * Méthode d'initialisation de tests.
+    */
+   @BeforeEach
+   public void [apply_methodDefault('set up')/] ()
+   {
+      [apply_attributeStatic('user persistence')/].begin();
+
+      // set up
+      // [protected (e.getUserCodeId('set up'))]
+      // [/protected]
+   }
+
+	/**
+    * Méthode de fin de test : rollback.
+    */
+   @AfterEach
+   public void [apply_methodDefault('tear down')/] ()
+   {
+      [apply_attributeStatic('user persistence')/].rollback ();
+
+      // tear down
+      // [protected (e.getUserCodeId('tear down'))]
+      // [/protected]
+   }
+	
+	// Methodes [buildServiceTestClassName(e)/]
+	// [protected (e.getUserCodeId('Methodes ' + buildServiceTestClassName(e)))]
+
+
+    // [/protected]
+
+[if useTestsCRUD()]
+   /**
+    * Test de recherche de toutes les entitys.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void [apply_methodDefault('test find all')/] () throws Throwable
+   {
+[if referentiel]
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('service')/].findAll();
+
+      assertTrue(![apply_variableFinal('all')/].isEmpty(), "Aucun dto n'a été trouvé dans le référentiel");
+
+      final [buildEntityImplClassName(e)/] [apply_variableFinal('first')/] = [apply_variableFinal('all')/].get(0);
+      [apply_methodDefault('set crud id')/]([apply_variableFinal('first')/].getId());
+
+      assertNotNull([apply_attributeStatic('crud id')/], "Le premier dto trouvé dans le référentiel n'a pas de clé primaire");
+[else]
+      [apply_methodDefault('test create')/]();
+
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('service')/].findAll();
+      assertNotNull(EntityUtil.findInCollectionById([apply_variableFinal('all')/], [apply_attributeStatic('crud id')/]), 
+			"Le entity n'a pas été trouvé dans la liste de tous les entity");
+[/if]
+
+   }
+
+[if not referentiel]
+   /**
+    * Test de création de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void [apply_methodDefault('test create')/] () throws Throwable
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('entity')/] = new [buildEntityImplClassName(e)/]();
+
+      // create
+      // [protected (e.getUserCodeId('create'))]
+      // TODO renseigner données de test
+[for (a : Attribute | e.attributes)]
+[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
+      [apply_variableFinal('entity')/].setIdentifiant([defaultValueForColumnType(a.genPropertyType())/]);
+[else]
+   [if (not a.isComputed())]
+      [apply_variableFinal('entity')/].[a.getNameSetter()/] ([if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][defaultValueForColumnType(a.genPropertyType())/][/if]);
+   [/if]
+[/if]
+[/for]
+[for (r : Reference | e.referencesNoStar())]
+   [if (not r.isComputed())]
+      [apply_variableFinal('entity')/].[r.getNameSetterEntityId()/](1L);
+   [/if]
+[/for]
+[for (r : Reference | e.referencingStar())]
+   [if (not r.isComputed())]
+      [apply_variableFinal('entity')/].[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/] (1L);
+   [/if]
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+
+      /* ajout d une entite pour la référence [r.name/] */
+      final [buildServiceInterfaceName(r.referencedType.oclAsType(Entity))/]  [apply_variableFinal(r.referencedType.oclAsType(Entity).name + ' service' + r.name )/];
+      [apply_variableFinal(r.referencedType.oclAsType(Entity).name + ' service' + r.name )/] = [buildAppliUserBusinessEntityGenClassName()/].[apply_methodDefault('get ' + r.referencedType.oclAsType(Entity).name + ' service' )/] ();
+      final [buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/] [apply_variableFinal(buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name ) /] = new [buildEntityImplClassName(r.referencedType.oclAsType(Entity))/] ();
+  [for (a : Attribute | r.referencedType.oclAsType(Entity).attributes())]
+[if (useSpi4jSecurity() and not useMatching() and entityIsUser(r.referencedType.oclAsType(Entity)) and a.name = 'identifiant')]
+      [apply_variableFinal(buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name )/].setIdentifiant ([defaultValueForColumnType(a.genPropertyType())/]);
+[else]
+      [apply_variableFinal(buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name )/].[a.getNameSetter()/] ([if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][defaultValueForColumnType(a.genPropertyType())/][/if]);
+[/if]
+  [/for]
+      final [buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/] [apply_variableFinal('created ' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name ) /] = [apply_variableFinal(r.referencedType.oclAsType(Entity).name + ' service' + r.name )/].save ([apply_variableFinal(buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name )/]);
+      final List <[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> [apply_variableFinal('list ' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name) /] = new ArrayList <[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> ();
+      [apply_variableFinal('list ' + buildEntityInterfaceName (r.referencedType.oclAsType(Entity)) + r.name )/].add([apply_variableFinal('created ' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name )/]);
+      [apply_variableFinal('entity')/].[r.getNameSetterListEntity()/]([apply_variableFinal('list ' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name )/]);
+[/for]
+
+      // [/protected]
+
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('created entity')/] = [apply_attributeStatic('service')/].save ([apply_variableFinal('entity')/]);
+
+      [apply_methodDefault('set crud id')/] ([apply_variableFinal('created entity')/].getId ());
+
+      assertNotNull ([apply_variableFinal('created entity')/].getId (), "Le entity créé devrait avoir une clé primaire renseignée");
+
+      // create assertions
+      // [protected (e.getUserCodeId('create assertions'))]
+
+[for (r : Reference | e.referencesStarStar())]
+
+      /* test de la bonne insertion de la référence [r.name/] */
+      final List <[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> [apply_variableFinal('list ' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name + ' read') /] = [apply_attributeStatic('service')/].[apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).name)/] ([apply_attributeStatic('crud id')/]);
+      assertTrue(![apply_variableFinal('list ' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)) + r.name + ' read') /].isEmpty(), "La relation [r.name/] a bien été créée");
+[/for]
+
+      // [/protected]
+
+   }
+
+[/if]
+   /**
+    * Test de recherche par identifiant de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void [apply_methodDefault('test find by id')/] () throws Throwable
+   {
+[if referentiel]
+      [apply_methodDefault('test find all')/] ();
+[else]
+      [apply_methodDefault('test create')/] ();
+[/if]
+
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('entity')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
+      assertNotNull ([apply_variableFinal('entity')/], "L'Entity devrait exister dans le référentiel");
+      assertNotNull ([apply_variableFinal('entity')/].getId (), "L'Entity créée devrait avoir une clé primaire renseignée");
+      assertNotNull ([apply_variableFinal('entity')/].toString (), "L'Entity créée devrait avoir un toString");
+
+   }
+
+[if not referentiel]
+   /**
+    * Test de mise à jour de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void [apply_methodDefault('test update')/] () throws Throwable
+   {
+      [apply_methodDefault('test create')/]();
+
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('entity')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('updated entity')/] = [apply_attributeStatic('service')/].save ([apply_variableFinal('entity')/]);
+
+      assertNotNull ([apply_variableFinal('updated entity')/].getId (), "L'Entity mis à jour devrait avoir une clé primaire renseignée");
+   }
+
+   /**
+    * Test de suppression de l'entity.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void [apply_methodDefault('test delete')/] () throws Throwable
+   {
+      [apply_methodDefault('test create')/]();
+
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('entity')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
+
+      [apply_attributeStatic('service')/].delete ([apply_variableFinal('entity')/]);
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('service')/].findAll ();
+      assertNull(EntityUtil.findInCollectionById ([apply_variableFinal('all')/], crudId), 
+			"L'Entity ne devrait plus exister dans la liste de tous les entitées");
+
+   }
+
+[/if]
+    /**
+    * Test de la méthode 'getColumn'.
+    */
+    @Test
+    public void [apply_methodDefault('test get column')/] ()
+    {
+
+    }
+[/if]
+
+[/if]
+}[/let]
+[/template]
+
+[template private defaultValueForColumnType(type : String)]
+[if type.equalsIgnoreCase('String')]
+"s"[elseif type.equalsIgnoreCase('Boolean')]
+false[elseif type.equalsIgnoreCase('Integer')]
+1[elseif type.equalsIgnoreCase('Long')]
+1L[elseif type.equalsIgnoreCase('Float')]
+1F[elseif type.equalsIgnoreCase('Double')]
+1D[elseif type.equalsIgnoreCase('Date')]
+new Date()[elseif 'Binary'.equalsIgnoreCase(type)]
+getRandomBinary()[elseif type.equalsIgnoreCase('Char')]
+'c'[/if]
+[/template]
+
+[template public getSetterInverseEntityId(r : Reference)]
+[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/]
+[/template]
+
+[template public nameBaseReferenceInverse(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][ r.containingType.oclAsType(Entity).nameSimpleEntity().toLowerFirst()  + r.name.toUpperFirst()/][else]
+[nameBaseReference(r.oppositeOf)/][/if]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity, referentiel : Boolean) post(trim())]
+[e.initImports('java.util.List')/]
+[e.addImport('java.util.Date')/]
+[e.addImport('org.junit.jupiter.api.BeforeEach')/]
+[e.addImport('fr.spi4j.persistence.entity.EntityUtil')/]
+[e.addImport('import fr.spi4j.Parameters')/]
+[e.addImport('org.junit.jupiter.api.AfterEach')/]
+[e.addImport('org.junit.jupiter.api.BeforeAll')/]
+[e.addImport('org.junit.jupiter.api.BeforeEach')/]
+[e.addImport('org.junit.jupiter.api.Test')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertTrue')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.fail')/]
+[e.addImport(buildPackagePersistenceImplementationJdbcEntity(e) + '.' + buildEntityImplClassName(e))/]
+[e.addImport(buildPackageServiceApiEntity(e) + '.' + buildServiceInterfaceName(e))/]
+[e.addImport(buildPackagePersistenceApiEntity(e) +' .' + buildEntityInterfaceName(e))/]
+[e.addImport(buildPackagePersistence() + '.' + buildUserPersistenceAppClassName())/]
+[e.addImport(buildPackagePersistence() + '.' + buildParamPersistenceClassName())/]
+[e.addImport(buildPackageBusiness() + '.' + buildAppliUserBusinessEntityGenClassName())/]
+
+[comment : List references. /]
+[for (r : Reference | e.referencesNoStar())]
+[e.addImport(buildPackagePersistenceImplementationJdbcEntity(r.referencedType.oclAsType(Entity)) + '.' + r.referencedType.oclAsType(Entity).buildEntityImplClassName())/]
+[/for]
+
+[comment : List references. /]
+[for (r : Reference | e.referencesStarStar())]
+[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
+[e.addImport(buildPackagePersistenceImplementationJdbcEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityImplClassName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List references. /]
+[for (r : Reference | e.referencesStarNoStar())]
+[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
+[e.addImport(buildPackagePersistenceImplementationJdbcEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityImplClassName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List enumerations. /]
+[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
+[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+
+[e.flushImports()/]
+[/template]
+
+
+

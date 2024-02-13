@@ -1,0 +1,76 @@
+[comment encoding = UTF-8 /]
+[module userMatching('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                     'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::commons::soa::common::utils /]
+
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[template public userMatching(m : System)]
+[licence()/]
+package [buildPackageMatching()/]; // NOPMD
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[m.writeImports()/]
+
+// [/protected]
+
+/**
+ * Factory permettant de récupérer les instances de classes de matching.
+ * @author [getAuthorName()/]
+*/
+public final class [buildUserMatchingGenClassName()/]
+{
+   /**
+    * Constructeur privé.
+    */
+   private [buildUserMatchingGenClassName()/] ()
+   {
+      super();
+   }
+[comment for (d : DTO | s.eAllContents(DTO))/]
+[for (d : DTO | m.listeDtosFromSystem())]
+[if not d.isNotPersistent() and not d.isParent()]
+   /**
+    * Obtenir la façade de services '[buildAppliMatchInterfaceName(d)/]'.
+    * @return L'instance désirée.
+    */
+   public static [buildAppliMatchInterfaceName(d)/] [apply_methodDefault('get ' + buildAppliMatchName(d))/] ()
+   {
+      return new [buildAppliMatchClassName(d)/]();
+   }
+
+[/if]
+[/for]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(m : System) post(trim())]
+[m.initImports(true)/]
+[comment : List all DTO. /]
+[for (d : DTO | m.listeDtosFromSystem())]
+	[if not d.isNotPersistent() and not d.isParent()]
+		[m.addImport(buildPackageMatchingInterfaceDto(d) + '.' + buildAppliMatchInterfaceName(d))/]
+		[m.addImport(buildPackageMatchingInterfaceDto(d) + '.' + buildAppliMatchClassName(d))/]
+	[/if]
+[/for]
+[m.flushImports()/]
+[/template]
+
+

@@ -1,0 +1,344 @@
+package fr.appwhite1.client.ui.gwt.annuaire;
+
+// Start of user code for imports
+
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.gwt.client.SpiViewPanel;
+
+import fr.appwhite1.client.ui.annuaire.DetailPersonneView_Itf;
+import fr.appwhite1.client.ui.annuaire.DetailPersonnePresenter;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+import fr.spi4j.ui.gwt.client.SpiViewPanel;
+
+import fr.spi4j.ui.HasString_Itf;
+import fr.spi4j.ui.HasBoolean_Itf;
+import fr.spi4j.ui.HasSelection_Itf;
+import fr.spi4j.ui.HasDate_Itf;
+import fr.spi4j.ui.HasDouble_Itf;
+import fr.spi4j.ui.HasString_Itf;
+
+import fr.referentiel.ws.api.ref.GradeXto;
+
+import fr.spi4j.ui.gwt.client.SpiButton;
+import fr.spi4j.ui.gwt.client.SpiCheckBox;
+import fr.spi4j.ui.gwt.client.SpiComboBox;
+import fr.spi4j.ui.gwt.client.SpiDateField;
+import fr.spi4j.ui.gwt.client.SpiDoubleField;
+import fr.spi4j.ui.gwt.client.SpiStringField;
+
+import fr.referentiel.ws.api.ref.GradeXto;
+
+
+
+// End of user code
+
+public class DetailPersonneViewGwt extends SpiViewPanel<DetailPersonnePresenter> implements DetailPersonneView_Itf
+{
+
+   // Start of user code Déclaration btAnnuler_SpiButton
+
+   private final SpiButton _btAnnuler;
+
+   // End of user code
+
+   // Start of user code Déclaration btEnregistrer_SpiButton
+
+   private final SpiButton _btEnregistrer;
+
+   // End of user code
+
+   // Start of user code Déclaration txtNom_SpiStringField
+
+   private final SpiStringField _txtNom;
+
+   // End of user code
+
+   // Start of user code Déclaration txtPrenom_SpiStringField
+
+   private final SpiStringField _txtPrenom;
+
+   // End of user code
+
+   // Start of user code Déclaration cbGrade_SpiComboBox<GradeXto>
+
+   private final SpiComboBox<GradeXto> _cbGrade;
+
+   // End of user code
+
+   // Start of user code Déclaration dateNaissance_SpiDateField
+
+   private final SpiDateField _dateNaissance;
+
+   // End of user code
+
+   // Start of user code Déclaration chkCivil_SpiCheckBox
+
+   private final SpiCheckBox _chkCivil;
+
+   // End of user code
+
+   // Start of user code Déclaration txtSalaire_SpiDoubleField
+
+   private final SpiDoubleField _txtSalaire;
+
+   // End of user code
+
+   // Start of user code Attributs
+   private final VerticalPanel _content;
+
+   // End of user code
+   /**
+    * Constructeur de la vue.
+    * @param p_presenter
+    *           le présenteur de la vue
+    */
+   public DetailPersonneViewGwt (final DetailPersonnePresenter p_presenter)
+   {
+      super(p_presenter);
+
+      // Start of user code avant initialisation
+      _content = new VerticalPanel();
+      _content.add(new HTML("<h1>DetailPersonne</h1>"));
+
+      // End of user code
+
+      // initialisation des composants
+      // Start of user code Paramétrage btAnnuler_SpiButton
+
+      _btAnnuler = new SpiButton();
+      _btAnnuler.setText("btAnnuler");
+      _content.add(_btAnnuler);
+
+      // End of user code
+
+      _btAnnuler.addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick (final ClickEvent p_event)
+         {
+            getPresenter().annuler();
+         }
+      });
+
+      // Start of user code Paramétrage btEnregistrer_SpiButton
+
+      _btEnregistrer = new SpiButton();
+      _btEnregistrer.setText("btEnregistrer");
+      _content.add(_btEnregistrer);
+
+      // End of user code
+
+      _btEnregistrer.addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick (final ClickEvent p_event)
+         {
+            getPresenter().enregistrer();
+         }
+      });
+
+      // Start of user code Paramétrage txtNom_SpiStringField
+
+      _txtNom = new SpiStringField();
+      _content.add(_txtNom);
+
+      // End of user code
+
+      // Start of user code Paramétrage txtPrenom_SpiStringField
+
+      _txtPrenom = new SpiStringField();
+      _content.add(_txtPrenom);
+
+      // End of user code
+
+      // Start of user code Paramétrage cbGrade_SpiComboBox<GradeXto>
+
+      _cbGrade = new SpiComboBox<GradeXto>();
+      _content.add(_cbGrade);
+
+      // End of user code
+
+      _cbGrade.addValueChangeHandler(new ValueChangeHandler<GradeXto>()
+      {
+         @Override
+         public void onValueChange (final ValueChangeEvent<GradeXto> p_event)
+         {
+         }
+      });
+
+      // Start of user code Paramétrage dateNaissance_SpiDateField
+
+      _dateNaissance = new SpiDateField();
+      _content.add(_dateNaissance);
+
+      // End of user code
+
+      // Start of user code Paramétrage chkCivil_SpiCheckBox
+
+      _chkCivil = new SpiCheckBox();
+      _content.add(_chkCivil);
+
+      // End of user code
+
+      // Start of user code Paramétrage txtSalaire_SpiDoubleField
+
+      _txtSalaire = new SpiDoubleField();
+      _content.add(_txtSalaire);
+
+      // End of user code
+
+      // Start of user code après initialisation
+      add(_content);
+
+
+      // End of user code
+   }
+
+   @Override
+   public void addView (final View_Itf p_view)
+   {
+      // Start of user code addView
+      if (p_view instanceof IsWidget)
+      {
+         if (p_view instanceof DialogBox)
+         {
+            ((DialogBox) p_view).center();
+         }
+         else
+         {
+            _content.add((IsWidget) p_view);
+         }
+      }
+      else
+      {
+         Window.alert("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   @Override
+   public void restoreView (final View_Itf p_view)
+   {
+      // Start of user code restoreView
+
+      // End of user code
+   }
+
+   @Override
+   public void removeView (final View_Itf p_view)
+   {
+      // Start of user code removeView
+      if (p_view instanceof IsWidget)
+      {
+         if (p_view instanceof DialogBox)
+         {
+            ((DialogBox) p_view).hide();
+         }
+         else
+         {
+            _content.remove((IsWidget) p_view);
+         }
+      }
+      else
+      {
+         Window.alert("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   // Start of user code Getter btAnnuler_SpiButton
+
+   @Override
+   public HasString_Itf get_btAnnuler ()
+   {
+      return _btAnnuler;
+   }
+
+   // End of user code
+
+   // Start of user code Getter btEnregistrer_SpiButton
+
+   @Override
+   public HasString_Itf get_btEnregistrer ()
+   {
+      return _btEnregistrer;
+   }
+
+   // End of user code
+
+   // Start of user code Getter txtNom_SpiStringField
+
+   @Override
+   public HasString_Itf get_txtNom ()
+   {
+      return _txtNom;
+   }
+
+   // End of user code
+
+   // Start of user code Getter txtPrenom_SpiStringField
+
+   @Override
+   public HasString_Itf get_txtPrenom ()
+   {
+      return _txtPrenom;
+   }
+
+   // End of user code
+
+   // Start of user code Getter cbGrade_SpiComboBox<GradeXto>
+
+   @Override
+   public HasSelection_Itf<GradeXto> get_cbGrade ()
+   {
+      return _cbGrade;
+   }
+
+   // End of user code
+
+   // Start of user code Getter dateNaissance_SpiDateField
+
+   @Override
+   public HasDate_Itf get_dateNaissance ()
+   {
+      return _dateNaissance;
+   }
+
+   // End of user code
+
+   // Start of user code Getter chkCivil_SpiCheckBox
+
+   @Override
+   public HasBoolean_Itf get_chkCivil ()
+   {
+      return _chkCivil;
+   }
+
+   // End of user code
+
+   // Start of user code Getter txtSalaire_SpiDoubleField
+
+   @Override
+   public HasDouble_Itf get_txtSalaire ()
+   {
+      return _txtSalaire;
+   }
+
+   // End of user code
+
+   // Start of user code DetailPersonneViewGwt
+
+   // End of user code
+
+}

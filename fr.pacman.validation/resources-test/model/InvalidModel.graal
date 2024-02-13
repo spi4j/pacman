@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graal:System xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graal="http://org.obeonetwork.graal/1.0" xmi:id="_rccBIePxEeKs9PFxCwBwLw" createdOn="2013-07-03T17:03:11.666+0200" modifiedOn="2013-07-12T14:58:37.623+0200" name="InvalidModel">
+  <tasks xsi:type="graal:Task" xmi:id="_hFij0OVnEeKSIYhOS4GhCA" createdOn="2013-07-05T13:39:47.306+0200" modifiedOn="2013-07-12T14:58:37.623+0200" name="tache1">
+    <subActivities xsi:type="graal:Loop" xmi:id="_HowuoOohEeKr1du59-6l0A" createdOn="2013-07-11T13:58:07.889+0200" modifiedOn="2013-07-12T14:58:37.623+0200">
+      <subActivities xsi:type="graal:Loop" xmi:id="_JrcYEOohEeKr1du59-6l0A" createdOn="2013-07-11T13:58:33.279+0200" modifiedOn="2013-07-12T14:58:37.623+0200">
+        <subActivities xsi:type="graal:Loop" xmi:id="_2J7NQOrxEeKq8KzJCCDu6Q" createdOn="2013-07-12T14:55:23.967+0200" modifiedOn="2013-07-12T14:58:37.623+0200">
+          <subActivities xsi:type="graal:Loop" xmi:id="_lnsUkOryEeKq8KzJCCDu6Q" createdOn="2013-07-12T14:57:36.060+0200" modifiedOn="2013-07-12T14:57:39.685+0200">
+            <nodes xsi:type="graal:InitialNode" xmi:id="_n-yHwOryEeKq8KzJCCDu6Q"/>
+            <nodes xsi:type="graal:FinalNode" xmi:id="_ohWpUOryEeKq8KzJCCDu6Q"/>
+          </subActivities>
+          <subActivities xsi:type="graal:Loop" xmi:id="_sUZdIOryEeKq8KzJCCDu6Q"/>
+          <subActivities xsi:type="graal:Loop" xmi:id="_s0R3EOryEeKq8KzJCCDu6Q" createdOn="2013-07-12T14:58:37.623+0200" modifiedOn="2013-07-12T14:58:37.623+0200">
+            <subActivities xsi:type="graal:Loop" xmi:id="_xJ5McOryEeKq8KzJCCDu6Q"/>
+          </subActivities>
+        </subActivities>
+      </subActivities>
+    </subActivities>
+  </tasks>
+  <tasks xsi:type="graal:Task" xmi:id="_QsOvsOogEeKr1du59-6l0A" createdOn="2013-07-11T13:52:03.514+0200" modifiedOn="2013-07-11T13:52:03.514+0200" name="tache1"/>
+  <tasks xsi:type="graal:Task" xmi:id="_aFD-0OlFEeKD5eZoT3k_0Q" createdOn="2013-07-10T11:45:14.387+0200" modifiedOn="2013-07-11T13:51:16.561+0200" name="tache2"/>
+  <tasks xsi:type="graal:Task" xmi:id="_RUK5cOogEeKr1du59-6l0A" createdOn="2013-07-11T13:51:53.732+0200" modifiedOn="2013-07-11T13:51:57.795+0200" name="tache2"/>
+</graal:System>

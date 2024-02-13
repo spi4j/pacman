@@ -1,0 +1,102 @@
+[comment encoding = UTF-8 /]
+[module serviceRequirements('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                            'http://www.obeonetwork.org/dsl/environment/3.0.0',
+                            'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::methodes /]
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[comment] le Service existe sans DTO [/comment]
+[template public serviceRequirements(s : Service)]
+[serviceRequirements(s, dtoFromService(s), true)/]
+[/template]
+
+[template public serviceRequirements(d : DTO)]
+[serviceRequirements(serviceFromDto(d), d, false)/]
+[/template]
+
+[comment] le Service et le DTO existent [/comment]
+[template public serviceRequirements(s : Service, d : DTO)]
+[serviceRequirements(s, d, false)/]
+[/template]
+
+[template public serviceRequirements(s : Service, d : DTO, serviceSeul : Boolean)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+package [buildPackageBusinessImplementationServiceDto(s, d)/];
+
+// [protected ('for imports')]
+
+[if not getAllRequirementsForService(s)->isEmpty()]
+[if requirementBaseCategoryLevel() = 0]
+import [buildPackageRequirement()/].[apply_classAnnotation('requirement')/];
+import [buildPackageRequirement()/].[apply_classEnum('requirement')/];
+[else]
+[for (req : Requirement | getAllRequirementsForService(s))]
+[buildImportRequirement(req)/]
+[/for]
+[/if]
+import fr.spi4j.requirement.RequirementException;
+[/if]
+
+// [/protected]
+
+/**
+ * Implémentations des exigences métiers de '[buildServiceClassName(s, d)/]'.
+ * @author [getAuthorName()/]
+ */
+public class [buildServiceRequirementsClassName(s, d)/]
+{
+
+[if not s.oclIsUndefined()]
+[for (req : Requirement | getAllRequirementsForService(s))]
+   // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id + '_javadoc'))]
+   /**
+    * Test de l'exigence [getServiceRequirementsPrefix()/][req.id /]. <br>
+    * [req.statement.replaceAll('\r\n', ' <br>\r\n    * ') /]
+    */
+   // [/protected]
+   [annotationRequirement(req)/]
+   // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id))]
+   public void [apply_methodDefault('exigence')/][getServiceRequirementsPrefix()/][req.id /] ()
+   {
+      throw new RequirementException([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id /], "Exigence non implémentée");
+   }
+
+   // [/protected]
+
+[/for]
+[/if]
+   // [nameServiceRequirements(s, d)/]
+   // [protected (s.getUserCodeId(nameServiceRequirements(s, d)))]
+
+   // [/protected]
+
+}[/let]
+[/template]
+
+[query private getAllRequirementsForService(s : Service) : Set(Requirement) =
+invoke('fr.pacman.soa.services.RequirementUtils', 'getAllRequirementsForService(org.obeonetwork.dsl.soa.Service)', Sequence{s})
+ /]
+
+[template private annotationRequirement(req : Requirement)]
+[if requirementBaseCategoryLevel() = 0]
+@[apply_classAnnotation('requirement')/]([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id /])[else]
+@[apply_classAnnotation('requirement ' + getBaseCategoryForRequirement(req).id)/]([apply_classEnum('requirement ' + getBaseCategoryForRequirement(req).id)/].[getServiceRequirementsPrefix()/][req.id /])[/if]
+[/template]

@@ -1,0 +1,530 @@
+[comment encoding = UTF-8 /]
+[module entity('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::requests::counterQueries /]
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::services::SecurityUtils /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::classesEntity /]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::serviceutils /]
+
+[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+
+
+[comment sur la base de PersonneEntity en r97 /]
+[template public entityJdbc(e : Entity)]
+[licence()/]
+package [buildPackagePersistenceImplementationJdbcEntity(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+[comClass(roleEntity())/]
+public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [buildAppliEntityAbstractClassName()/]<[genPkType()/]> [/if]implements [buildEntityInterfaceName(e)/][if hasVersion()], JdbcOptimistLocked_Itf[/if]
+{
+   // CONSTANTES
+
+   /**
+    * SerialUid.
+    */
+   private static final long serialVersionUID = -1;
+
+   // Constantes [buildEntityImplClassName(e)/]
+   // [protected (e.getUserCodeId('Constantes ' + buildEntityImplClassName(e)))]
+
+   // [/protected]
+
+   // ATTRIBUTS
+
+   /** Id. */
+   private [genPkType()/] [apply_attributeDefault(nameSimplePropertyID(e))/];
+
+[for (a : Attribute | e.attributesNoPk())]
+   /** [description(a, false)/] */
+[if a.isVersion()]
+   @JdbcVersion
+[/if]
+   [getProperty(a)/];
+
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+   /** [description(a, false)/] */
+[if a.isVersion()]
+   @JdbcVersion
+[/if]
+   [getProperty(a)/];
+
+[/for]
+
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+   /** [description(r, true)/] */
+   [getProperty(r)/];
+
+[/if]
+[/for]
+
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+   /** [descriptionInverse(r, true)/] */
+   [getPropertyInverse(r)/];
+
+[/if]
+[/for]
+
+[for (r : Reference | e.referencesStarStar())]
+   /** La liste de type '[r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/]' associee a  l'instance de '[e.buildEntityInterfaceName()/]' courante. */
+   [r.getRefListe()/]
+
+[/for]
+
+[for (r : Reference | e.referencesStarNoStar())]
+   /** La liste de type '[r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/]' associee a  l'instance de '[e.buildEntityInterfaceName()/]' courante. */
+   [r.getRefListe()/]
+
+[/for]
+
+   // Attributs [buildEntityImplClassName(e)/]
+   // [protected (e.getUserCodeId('Attributs ' + buildEntityImplClassName(e)))]
+
+   // [/protected]
+
+   // METHODES
+
+   /**
+    * Constructeur sans paramètre de l'entite '[nameSimpleEntity(e)/]'. <br>
+    * Attention a ne pas appeler ce constructeur directement, mais a bien passer par UserPersistence.
+    */
+   public [buildEntityImplClassName(e)/] ()
+   {
+      super();
+   }
+
+   @Override
+   public [genPkType()/] getId ()
+   {
+      return [apply_attributeDefault(nameSimplePropertyID(e))/];
+   }
+
+   @Override
+   public void setId (final [genPkType()/] [apply_parameterMethodClassicIn('id')/])
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimplePropertyID(e))/] = [apply_parameterMethodClassicIn('id')/];
+   }
+
+[for (a : Attribute | e.attributesIncludingComputedNoPk())]
+
+    [if (useSpi4jSecurity() and not useMatching() and (entityIsUser(e) and a.name = 'identifiant'))]
+   @Override
+   public String getIdentifiant (){
+      return [apply_attributeDefault(nameSimpleProperty(a))/];
+   }
+
+    [else]
+   @Override
+   [gen_getter(a)/]
+   {
+    [if (not a.isComputed() or useMatching())]
+      return [apply_attributeDefault(nameSimpleProperty(a))/];
+    [else]
+      // Code User [gen_getter(a)/]
+      // [protected (a.getUserCodeId('Code User ' + gen_getter(a)))]
+       return null;
+      // [/protected]
+    [/if]
+   }
+    [/if]
+    [if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
+   @Override
+   public void setIdentifiant (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimpleProperty(a))/]){
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(a))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(a))/];
+   }
+
+    [else]
+    [if (not a.isComputed() or useMatching())]
+   @Override
+   [gen_setter(a)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(a))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(a))/];
+   }
+    [/if]
+ [/if]
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+
+    [if (useSpi4jSecurity() and not useMatching() and (entityIsUser(e) and a.name = 'identifiant'))]
+   @Override
+   public String getIdentifiant (){
+      return [apply_attributeDefault(nameSimpleProperty(a))/];
+   }
+
+     [else]
+    @Override
+   [gen_getter(a)/]
+   {
+    [if (not a.isComputed() or useMatching())]
+      return [apply_attributeDefault(nameSimpleProperty(a))/];
+    [else]
+      // [protected (a.getUserCodeId('Code User ' + gen_getter(a)) )]
+      return null;
+      // [/protected]
+    [/if]
+   }
+    [/if]
+    [if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
+   @Override
+   public void setIdentifiant (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimpleProperty(a))/]){
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(a))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(a))/];
+   }
+
+    [else]
+    [if (not a.isComputed() or useMatching())]
+   @Override
+   [gen_setter(a)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(a))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(a))/];
+   }
+
+[/if]
+ [/if]
+[/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+
+    @Override
+   [gen_getter(r)/]
+   {
+    [if (not r.isComputed() or useMatching())]
+      return [apply_attributeDefault(nameSimpleProperty(r))/];
+    [else]
+      // Code User [gen_getter(r)/]
+      // [protected (r.getUserCodeId('Code User ' + gen_getter(r)))]
+      return null;
+      // [/protected]
+    [/if]
+   }
+
+    [if (not r.isComputed() or useMatching())]
+   @Override
+   [gen_setter(r)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(r))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(r))/];
+   }
+    [/if]
+
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+   @Override
+   [gen_getterInverse(r)/]
+   {
+    [if (not r.isComputed() or useMatching())]
+      return [apply_attributeDefault(r.nameSimplePropertyInverse())/][namePK_ID()/];
+    [else]
+      // Code User [gen_getterInverse(r)/]
+      // [protected (r.getUserCodeId('Code User ' + gen_getterInverse(r)))]
+      return null;
+      // [/protected]
+    [/if]
+   }
+
+    [if (not r.isComputed() or useMatching())]
+   @Override
+   [gen_setterInverse(r)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.nameSimplePropertyInverse())/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameSimplePropertyInverse(r))/][namePK_ID()/];
+   }
+    [/if]
+
+[/if]
+[/for]
+
+[for (r : Reference | e.referencesStarStar())]
+   @Override
+   [r.getGetterListEntity()/]
+   {
+      if ([apply_attributeDefault(nameSimplePropertyID(e))/] != null && [apply_attributeMultiple(r.name.toLowerFirst())/] == null)
+      {
+         [comment] Pour les relations N-N on appelle le getterInstanceService() sur dto lui même : d.getterInstanceService()[/comment]
+         [apply_attributeMultiple(r.name.toLowerFirst())/] = [buildAppliUserBusinessEntityGenClassName(r.referencedType.oclAsType(Entity))/].[apply_methodDefault('get '+ e.name + ' service')/]().[r.getFindListRefByEntity(e)/]([apply_attributeDefault(nameSimplePropertyID(e))/]);
+      }
+      return [apply_attributeMultiple(r.name.toLowerFirst())/];
+   }
+
+   @Override
+   [r.getSetterListEntity()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.toLowerFirst())/] = [apply_parameterMethodMultiple(r.referencedType.oclAsType(Entity).name.toLowerFirst())/];
+   }
+
+[/for]
+
+   @Override
+   public String toString ()
+   {
+      return super.toString() + " : " + [apply_attributeDefault(nameSimplePropertyID(e))/][for (a : Attribute | e.attributesNoPk())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (a : Attribute | e.getInheritDtoAttributes())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (r : Reference | e.referencesNoStar())] + ", " + [apply_attributeDefault(nameSimpleProperty(r))/][/for][for (r : Reference | e.referencingStar())] + ", " + [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/][/for];
+   }
+[if not e.isNotPersistent()]
+
+   public void [apply_methodReset(buildEntityImplClassName(e))/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameENUM_PK_ID())/][e.getResetAttributes()/][e.getResetEntityParameters()/][e.getResetEntityReferencingParams()/])
+   {
+      setId([apply_parameterMethodClassicIn(nameENUM_PK_ID())/]);
+      [for (a : Attribute | e.attributesIncludingComputedNoPk())]
+[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
+      setIdentifiant([apply_parameterMethodClassicIn(a.name.normalize())/]);
+[else]
+    [if (not a.isComputed() or useMatching())]
+      [apply_methodSet(a.name.normalize())/]([apply_parameterMethodClassicIn(a.name.toLowerFirst())/]);
+    [/if]
+[/if]
+      [/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+    [if (not r.isComputed() or useMatching())]
+      [apply_methodSet(nameSimpleProperty(r))/] ([apply_parameterMethodClassicIn(r.name.toLowerFirst())/]);
+    [/if]
+[/if]
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+      [apply_attributeMultiple(r.name.toLowerFirst())/] = null;
+[/for]
+[for (r : Reference | e.referencesStarNoStar())]
+      [apply_attributeMultiple(r.name.toLowerFirst())/] = null;
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+    [if (not r.isComputed() or useMatching())]
+      [apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/] ( [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/]);
+    [/if]
+[/if]
+[/for]
+[if e.hasVersion()]
+      [apply_attributeDefault('version value')/] = null;
+[/if]
+   }
+
+[/if]
+[if hasAutomaticColumns()]
+   @Override
+   public void validate () throws Spi4jValidationException
+   {
+      [if not e.hasMandatoryFields()]final [/if]List<String> [apply_variableDefault('champs invalides')/] = [apply_methodDefault('prepare validate')/]();
+[if e.hasMandatoryFields()][initCounter('validate '.concat(e.name))/]
+[for (a : Attribute | e.attributesNoPkNoVersion())]
+[validPropertyWhenHasAutomaticColumns(e, a)/][/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+[validPropertyWhenHasAutomaticColumns(e, a)/][/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+[validPropertyWhenHasAutomaticColumns(e, r)/][/if][/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+[validInversePropertyWhenHasAutomaticColumns(e, r)/][/if][/for]
+[/if]
+      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      if ([apply_variableDefault('champs invalides')/] != null)
+      {
+         throw new Spi4jValidationException(this, [apply_variableDefault('champs invalides')/].toArray(new String['[' + apply_variableDefault('champs invalides') + '.size()]'/]));
+      }
+   }
+[else]
+   @Override
+   public void validate () throws Spi4jValidationException
+   {
+[if e.hasMandatoryFields() or e.hasStringFieldWithSize()]
+      List<String> [apply_variableDefault('champs invalides')/] = null;[initCounter('validate '.concat(e.name))/]
+[for (a : Attribute | e.attributesNoPkNoVersion())]
+[validProperty(e, a)/][/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+[validProperty(e, a)/][/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+[validProperty(e, r)/][/if][/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+[validInverseProperty(e, r)/][/if][/for]
+      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      if ([apply_variableDefault('champs invalides')/] != null)
+      {
+         throw new Spi4jValidationException(this, [apply_variableDefault('champs invalides')/].toArray(new String['[' + apply_variableDefault('champs invalides') + '.size()]'/]));
+      }
+[else]
+      // aucun champ obligatoire
+[/if]
+   }
+[/if]
+
+   // Methodes [buildEntityImplClassName(e)/]
+   // [protected (e.getUserCodeId('Methodes ' + buildEntityImplClassName(e)))]
+
+    /**
+    * Implementea
+    * @param obj
+    * @return
+    */
+   @Override
+   public boolean equals(final Object obj)
+   {
+
+      if (!(obj instanceof [buildEntityImplClassName(e)/]))
+      {
+         return false;
+      }
+      else
+      {
+         return  ((([buildEntityImplClassName(e)/])obj).getId().longValue() == this.getId().longValue());
+      }
+   }
+
+   // [/protected]
+
+}
+[/template]
+
+[template private validProperty(e : Entity, p : Property)]
+[if isMandatory(p)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimpleProperty(p)/]", [apply_attributeDefault(nameSimpleProperty(p))/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[if p.oclIsTypeOf(Attribute)]
+[validateSize(e, p.oclAsType(Attribute))/][/if]
+[/template]
+
+[template private validInverseProperty(e : Entity, r : Reference)]
+[if isMandatory(r)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimplePropertyInverse(r)/]", [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[template private validPropertyWhenHasAutomaticColumns(e : Entity, p : Property)]
+[if isMandatory(p)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimpleProperty(p)/]", [apply_attributeDefault(nameSimpleProperty(p))/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[if p.oclIsTypeOf(Attribute)]
+[validateSize(e, p.oclAsType(Attribute))/][/if]
+[/template]
+
+[template private validInversePropertyWhenHasAutomaticColumns(e : Entity, r : Reference)]
+[if isMandatory(r)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimplePropertyInverse(r)/]", [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[query public roleEntity(e : Entity) : String = 'Entité du type ' + nameSimpleEntity(e) /]
+
+[template private validateSize(e : Entity, a : Attribute)]
+[if hasSize(a.metadatas) and a.type.name = 'String']
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkFieldSize("[nameSimpleProperty(a)/]", [apply_attributeDefault(nameSimpleProperty(a))/], [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize(), [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+
+
+
+  [*******************
+  * Paramétrage début
+  */]
+
+[template public getResetAttributes(e : Entity)]
+[for (a : Attribute | e.attributes())], final [a.genPropertyType()/] [apply_parameterMethodClassicIn(a.nameSimpleProperty())/] [/for]
+[/template]
+
+[template public getResetEntityParameters(e : Entity)]
+[for (r : Reference | e.referencesNoStar())], final [genPkType()/] [apply_parameterMethodClassicIn(r.name.toLowerFirst())/][/for]
+[/template]
+
+[template public getResetEntityParametersId(e : Entity)]
+[for (r : Reference | e.referencesNoStar())], final [genPkType()/] [apply_parameterMethodClassicIn(r.name.toLowerFirst())/][namePK_ID()/][/for]
+[/template]
+
+[template public getResetEntityReferencingParams(e : Entity)]
+[for (r : Reference | e.referencingStar())], final [genPkType()/] [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][/for]
+[/template]
+
+[template public gresetEntityReferencingParams(e : Entity)]
+[for (r : Reference | e.referencingStar())], final [genPkType()/] [r.nameParamInverse()/][/for]
+[/template]
+
+[template public getResetEntityReferencingParamsId(e : Entity)]
+[for (r : Reference | e.referencingStar())], final [genPkType()/] [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/][/for]
+[/template]
+
+[**
+ * Calls
+*/]
+
+[template public getResetCallEntityParametersId(e : Entity)]
+[for (r : Reference | e.referencesNoStar())], [apply_parameterMethodClassicIn(nameBaseReference(r))/][namePK_ID()/][/for]
+[/template]
+
+[template public getResetCallAttributes(e : Entity)]
+[for (a : Attribute | e.attributes())], [apply_parameterMethodClassicIn(a.name.normalize())/][/for]
+[/template]
+
+[template public getResetCallEntityReferencingParams(e : Entity)]
+[for (r : Reference | e.referencingStar())], [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][/for]
+[/template]
+
+[template public getResetCallEntityReferencingParamsId(e : Entity)]
+[for (r : Reference | e.referencingStar())], [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/][/for]
+[/template]
+
+[template public getResetCallEntityParameters(e : Entity)]
+[for (r : Reference | e.referencesNoStar())], [apply_parameterMethodClassicIn(nameBaseReference(r))/][/for]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity) post(trim())]
+[e.initImports()/]
+[e.addImport('java.util.List')/]
+[e.addImport('fr.spi4j.persistence.entity.EntityUtil')/]
+[e.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e))/]
+[e.addImport('fr.spi4j.persistence.dao.jdbc.JdbcOptimistLocked_Itf', e.hasVersion())/]
+[e.addImport('fr.spi4j.persistence.dao.jdbc.JdbcVersion', e.hasVersion())/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + e.buildEntityColumnEnumName(), e.hasEnumImport())/]
+[e.addImport(buildPackagePersistenceImplJdbc() + '.' + buildAppliEntityAbstractClassName(), e.hasAutomaticColumns())/]
+[e.addImport(buildPackageBusiness() + '.' + buildAppliUserBusinessEntityGenClassName(), e.hasReferencesStarStar())/]
+
+[comment : List references for relational entities. /]
+[for (r : Reference | e.referencesStarStar())]
+	[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List references for relational entities. /]
+[for (r : Reference | e.referencesStarNoStar())]
+	[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List enumerations. /]
+[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
+	[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+
+[e.flushImports()/]
+[/template]

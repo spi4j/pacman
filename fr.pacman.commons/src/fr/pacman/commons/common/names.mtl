@@ -1,0 +1,188 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.eclipse.org/ocl/1.1.0/Ecore',
+			  'http://www.obeonetwork.org/dsl/environment/3.0.0',
+			  'http://www.obeonetwork.org/dsl/entity/3.0.0',
+              'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+
+[query public getApplicationName(any : OclAny) : String = 
+	getApplicationName_invoke().trim()
+/]
+
+[query public getApplicationNameUpperFirst(any : OclAny) : String =
+   	getApplicationName().toUpperFirst()
+/]
+
+[query private getApplicationName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getApplicationName()', Sequence{})
+/]
+
+[query public getAuthorName(any : OclAny) : String =
+   	getAuthorName_invoke().trim()
+/]
+
+[query private getAuthorName_invoke(any : OclAny) : String =
+   invoke('fr.pacman.commons.convention.project.ProjectProperties','getAuthorName()', Sequence{})
+/]
+
+[query public getReportProjectName(any : OclAny) : String = 
+	getReportProjectName_invoke().trim()
+/]
+
+[query private getReportProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getReportProjectName()', Sequence{})
+/]
+
+[query public getModelProjectName(any : OclAny) : String = 
+	getModelProjectName_invoke().trim()
+/]
+
+[query private getModelProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getModelProjectName()', Sequence{})
+/]
+
+[query public getClientJavaWebStartProjectName(any : OclAny) : String = 
+	getClientJavaWebStartProjectName_invoke().trim()
+/]
+
+[query private getClientJavaWebStartProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJavaWebStartProjectName()', Sequence{})
+/]
+
+[query public getClientSwingProjectName(any : OclAny) : String = 
+	getClientSwingProjectName_invoke().trim()
+/]
+
+[query private getClientSwingProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientSwingProjectName()', Sequence{})
+/]
+
+[query public getClientIntegrationProjectName(any : OclAny) : String = 
+	getClientIntegrationProjectName_invoke().trim()
+/]
+
+[query private getClientIntegrationProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientIntegrationProjectName()', Sequence{})
+/]
+
+[query public getClientJsfProjectName(any : OclAny) : String = 
+	getClientJsfProjectName_invoke().trim()
+/]
+
+[query private getClientJsfProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfProjectName()', Sequence{})
+/]
+
+[query public getClientJspProjectName(any : OclAny) : String = 
+	getClientJspProjectName_invoke().trim()
+/]
+
+[query private getClientJspProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspProjectName()', Sequence{})
+/]
+
+[query public getClientGwtProjectName(any : OclAny) : String = 
+	getClientGwtProjectName_invoke().trim()
+/]
+
+[query private getClientGwtProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtProjectName()', Sequence{})
+/]
+
+[query public getCommonProjectName(any : OclAny) : String =
+    getCommonProjectName_invoke().trim()
+/]
+
+[query private getCommonProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonProjectName()', Sequence{})
+/]
+
+[query public getDeliveryProjectName(any : OclAny) : String =
+	getDeliveryProjectName_invoke().trim()
+/]
+
+[query private getDeliveryProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getDeliveryProjectName()', Sequence{})
+/]
+
+[query public getServerProjectName(any : OclAny) : String =
+    getServerProjectName_invoke().trim()
+/]
+
+[query private getServerProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerProjectName()', Sequence{})
+/]
+
+[query public getWebappProjectName(any : OclAny) : String = 
+	getWebappProjectName_invoke().trim()
+/]
+
+[query private getWebappProjectName_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getWebappProjectName()', Sequence{})
+/]
+
+[query public getComponentName(s : Service) : String = 
+	s.eContainer(Component).name.sanitize().toLower()
+/]
+
+[**
+ * On enlève le 'DTO' en fin de nom
+*/]
+[query public buildSimpleDtoName(d : DTO) : String =
+if (d.name.size() > 3 and d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto')) then
+    d.name.substring(1, d.name.size() - 3).sanitize()
+else
+    d.name.sanitize()
+endif
+/]
+
+[**
+ * On enlève le 'DTOS' en fin de nom
+*/]
+
+[query public buildSimpleRelationName(r : Reference) : String =
+if (r.name.size() > 4 and r.name.substring(r.name.size() - 3).equalsIgnoreCase('dtos')) then
+    r.name.substring(1, r.referencedType.oclAsType(DTO).name.size() - 4).sanitize()
+else
+    r.name.sanitize()
+endif
+/]
+
+[**
+ * On enlève le 'Entity' en fin de nom
+*/]
+[query public buildSimpleEntityName(e : Entity) : String =
+if (e.name.size() > 6 and e.name.substring(e.name.size() - 5).equalsIgnoreCase('entity')) then
+    e.name.substring(1, e.name.size() - 6).sanitize()
+else
+    e.name.sanitize()
+endif
+/]
+
+[**
+ * On enlève le 'Service' en fin de nom
+*/]
+[query public buildSimpleServiceName(s : Service) : String =
+if (s.name.size() > 7 and s.name.substring(s.name.size() - 6).equalsIgnoreCase('service')) then
+    s.name.substring(1, s.name.size() - 7).sanitize()
+else
+    s.name.sanitize()
+endif
+/]
+
+[comment : Get and write the name for the primary key. /]
+[template public namePK_ID(any : OclAny)]
+_id
+[/template]
+
+[comment : get and write the name for the primary key in enum./]
+[template public nameENUM_PK_ID(any : OclAny)]
+id
+[/template]
+
+[comment : Get and write the name for the reference key. /]
+[template public nameSQL_REF_ID(any : OclAny)]
+[any.namePK_ID().toUpperCase() /]
+[/template]
+

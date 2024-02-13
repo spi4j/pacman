@@ -1,0 +1,22 @@
+[comment encoding = UTF-8 /]
+[module gwt-commons('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[query public getRootPresenter(any : OclAny) : ViewContainer =
+    if (hasRootPresenter(any)) then
+        any.eContainer(CinematicRoot).eAllContents(ViewContainer)
+            ->select(view : ViewContainer | not view.widget.oclIsUndefined() and 'MainPanel'.equalsIgnoreCase(view.widget.name))->first()
+    else
+        null
+    endif
+/]
+
+[query public hasRootPresenter(any : OclAny) : Boolean =
+    not any.eContainer(CinematicRoot).eAllContents(ViewContainer)
+        ->select(view : ViewContainer | not view.widget.oclIsUndefined() and 'MainPanel'.equalsIgnoreCase(view.widget.name))->isEmpty()
+/]
+
+[query public flowHasMainPanel(flow : Flow) : Boolean =
+    flow.states->filter(ViewState)
+        ->exists(viewState : ViewState | viewState.viewContainers
+            ->exists(view : ViewContainer | not view.widget.oclIsUndefined() and 'MainPanel'.equalsIgnoreCase(view.widget.name)))
+/]

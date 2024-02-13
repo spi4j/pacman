@@ -1,0 +1,51 @@
+[comment encoding = UTF-8 /]
+[module genBDD('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+
+[import fr::pacman::commons::common::packages / ]
+[import fr::pacman::commons::common::names / ]
+[import fr::pacman::configuration::project::ClientBDD /]
+[import fr::pacman::configuration::common::names /]
+[import fr::pacman::commons::common::properties / ]
+
+[comment : Creation des fichiers pour les tests JBehave /]
+[template public genBDD(project : String, testDir : String)]
+
+[comment : Creation du fichier /client/ui/AppliMockitoViews.java /]
+[file (filename(project, testDir, buildJBehaveUiPackage(), buildMockitoViewsClassName() + '.java'), false, 'UTF-8')]
+[jBehaveMockitoViews() /]
+[/file]
+
+[comment : Creation du fichier /steps/AppliStepsGiven.java /]
+[file (filename(project, testDir, buildJBehaveStepPackage(), buildStepsGivenClassName() + '.java'), false, 'UTF-8')]
+[jBehaveStepsGiven() /]
+[/file]
+
+[comment : Creation du fichier /steps/AppliStepsThen.java /]
+[file (filename(project, testDir, buildJBehaveStepPackage(), buildStepsThenClassName() + '.java'), false, 'UTF-8')]
+[jBehaveStepsThen() /]
+[/file]
+
+[comment : Creation du fichier /stories/AppliStoryAbs.java/]
+[file (filename(project, testDir, buildJBehaveStepPackage(),  buildStoryAbstractClassName() + '.java'), false, 'UTF-8')]
+[jBehaveStory() /]
+[/file]
+
+[comment : Creation du fichier /stories/Applixxx_Story.java /]
+[file (filename(project, testDir, buildJBehaveStoriesPackage(), buildXXXStoryClassName() + '.java'), false, 'UTF-8')]
+[jBehaveStorySample() /]
+[/file]
+
+[comment : Creation du fichier /stories/Applixxx_Story.story /]
+[file (filename(project, testDir, buildJBehaveStoriesPackage(), buildXXXStory() + '.story'), false, 'UTF-8')]
+Scenario: Placer ici le scenario JBehave. 
+[/file]
+
+[comment /]
+[if getClient().equalsIgnoreCase('gwt')]
+[file (filename(project, testDir, buildJBehaveUiPackage(), buildGwtUserBusinessIntegration() + '.java'), false, 'UTF-8')]
+[jBehaveGwtUserBusinessIntegration() /]
+[/file]
+[/if]
+
+[/template]

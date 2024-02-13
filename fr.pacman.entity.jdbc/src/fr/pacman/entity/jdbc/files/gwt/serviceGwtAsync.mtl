@@ -1,0 +1,82 @@
+[comment encoding = UTF-8 /]
+[module serviceGwtAsync('http://www.obeonetwork.org/dsl/entity/3.0.0',
+                        'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::common::xtoutils /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::names /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[comment] le Service existe sans Entity [/comment]
+[template public serviceGwtAsync(e : Entity)]
+[licence()/]
+[let self : OclAny = if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR SERVICE AND Entity NULL' endif]
+package [buildPackageBusinessGwtClientService(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+/**
+ * Interface de services appelables par le client.
+ * @author [getAuthorName()/]
+ */
+public interface [buildServiceGwtAsyncClassName(e)/] extends GwtRemoteServiceAsync<[genPkType()/], [buildXtoClassNameFromEntity(e)/]>
+{
+
+[for (r : Reference | e.referencingStar())]
+   /**
+    * Obtenir la liste d'objets de type '[buildEntityImplClassName(e)/]' associés à l'instance de type '[buildEntityImplClassName(r.containingType.oclAsType(Entity))/]'.
+[getComParamInverseIdIn(r)/]
+    * @param callback
+    *           le callback pour retourner une liste de [buildXtoClassNameFromEntity(e)/] ayant [apply_attributeDefault(nameBaseReferenceInverse(r))/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/]
+    */
+   void [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/], final AsyncCallback<List<[buildXtoClassNameFromEntity(e)/]>> callback);
+
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+   /**
+    * Obtenir la liste d'objets de type '[buildSimpleEntityName(r.referencedType.oclAsType(Entity))/]' associés à l'instance de type '[buildSimpleEntityName(r.containingType.oclAsType(Entity))/]'.
+    * @param [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/]
+    *           (In)(*) [buildSimpleEntityName(r.containingType.oclAsType(Entity))/].
+    * @param callback
+    *           le callback pour retourner une liste de [buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity))/]
+    */
+   void [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/], final AsyncCallback<List<[buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity))/]>> callback);
+
+[/for]
+   // [buildServiceGwtAsyncClassName(e)/]
+   // [protected (e.getUserCodeId(buildServiceGwtAsyncClassName(e)))]
+
+   // [/protected]
+}[/let]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity) post(trim())]
+[e.initImports()/]
+[e.addImport('java.util.List')/]
+[e.addImport('com.google.gwt.user.client.rpc.AsyncCallback')/]
+[e.addImport('fr.spi4j.ui.gwt.client.services.GwtRemoteServiceAsync')/]
+[if not e.oclIsUndefined()]
+	[e.addImport(e.getImportXtoGwt())/]
+  	[for (r : Reference | e.referencesStarStar())]
+		[e.addImport(getImportXtoGwt(r.referencedType.oclAsType(Entity)))/]
+  	[/for]
+[/if]
+[e.flushImports()/]
+[/template]
+

@@ -1,0 +1,153 @@
+[comment encoding = UTF-8 /]
+[module flowManager('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::model /]
+[import fr::pacman::cinematic::swing::common::name /]
+[import fr::pacman::cinematic::swing::client::ui::pkg::manageEvent /]
+[import fr::pacman::cinematic::swing::common::swing-commons /]
+
+[template public flowManager(flow : Flow)]
+[licence()/]
+package [namePackageFlowManager(flow)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[flow.writeImports()/]
+
+// [/protected]
+
+/**
+ * Flow [flow.name/].
+ * @author [getAuthorName()/]
+ */
+public class [nameFlow(flow)/] extends SpiFlowManager_Abs
+{
+
+   // Attributs [nameFlow(flow)/]
+   // [protected (flow.getUserCodeId('Attributs ' + nameFlow(flow)))]
+
+   // [/protected]
+
+[if flowHasMainPanel(flow)]
+   /**
+    * Constructeur du flow.
+    */
+   public [nameFlow(flow)/] ()
+   {
+      this(null);
+   }
+
+[/if]
+   /**
+    * Constructeur du flow.
+    * @param p_previousPresenter
+    *           le présenteur en amont de ce flow
+    */
+   public [nameFlow(flow)/] (final Presenter_Abs<?, ?> p_previousPresenter)
+   {
+      super(p_previousPresenter);
+   }
+
+   @Override
+   public void onStart ()
+   {
+      // Pre onStart
+      // [protected (flow.getUserCodeId('Pre onStart'))]
+      // [/protected]
+
+[for (state : FlowState | Sequence{(flow.getInitialState())}->union((flow.getInitialState()).getAllFollowingStatesWithoutGardOrEvent(false)))]
+   [if state.oclIsKindOf(ViewState)]
+      // [protected (state.getUserCodeId('onStart' + ' : Affichage de ' + state.oclAsType(ViewState).name))]
+      [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
+         [if flowHasMainPanel(flow)]
+      @SuppressWarnings("unused")
+      [namePresenter(getRootPresenter(nextView))/] v_main;[comment Changer main!!! /]
+      try
+      {
+         v_main = new [namePresenter(getRootPresenter(nextView))/]();
+      }
+      catch (ViewAlreadyRegisteredException v_e)
+      {
+         v_main = getViewManager().getPresenter([namePresenter(getRootPresenter(nextView))/].class);
+      }
+         [else]
+      final [getRootPresenterName(flow)/] v_rootPresenter = getViewManager().getPresenter([getRootPresenterName(flow)/].class);
+      // affichage de l'écran [nextView.name/]
+      [namePresenter(nextView)/] v_[namePresenter(nextView).toLowerFirst()/];
+      try
+      {
+         // on tente d'instancier un nouvel écran
+            [if flowHasMainPanel(flow)]
+         v_[namePresenter(nextView).toLowerFirst()/] = new [namePresenter(nextView)/]();
+            [else]
+         v_[namePresenter(nextView).toLowerFirst()/] = new [namePresenter(nextView)/](v_rootPresenter);
+         v_rootPresenter.getView().addView(v_[namePresenter(nextView).toLowerFirst()/].getView());
+            [/if]
+      }
+      catch (ViewAlreadyRegisteredException v_e)
+      {
+         // si l'écran existe déjà on le récupère dans le gestionnaire de vues
+         v_[namePresenter(nextView).toLowerFirst()/] = getViewManager().getPresenter([namePresenter(nextView)/].class);
+            [if not flowHasMainPanel(flow)]
+         v_rootPresenter.getView().restoreView(v_[namePresenter(nextView).toLowerFirst()/].getView());
+            [/if]
+      }
+         [/if]
+      [/for]
+
+      // [/protected]
+   [elseif state.oclIsKindOf(SubflowState)]
+      // [protected (state.getUserCodeId('onStart' + ' : Démarrage du Flow ' + state.oclAsType(SubflowState).name))]
+      final [nameFlow(state.oclAsType(SubflowState).subflow)/] v_[nameFlow(state.oclAsType(SubflowState).subflow).toLowerFirst()/] = new [nameFlow(state.oclAsType(SubflowState).subflow)/](this);
+      v_[nameFlow(state.oclAsType(SubflowState).subflow).toLowerFirst()/].start();
+      // [/protected]
+   [elseif state.oclIsKindOf(ActionState)]
+      // [protected (state.getUserCodeId('onStart' + ' : Action ' + state.oclAsType(ActionState).name))]
+      // TODO [state.oclAsType(ActionState).name/]
+      // [/protected]
+
+   [/if]
+[/for]
+      // Post onStart
+      // [protected (flow.getUserCodeId('Post onStart'))]
+
+      // [/protected]
+
+   }
+
+   // Méthodes [nameFlow(flow)/]
+   // [protected (flow.getUserCodeId('Méthodes ' + nameFlow(flow)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(f : Flow) post(trim())]
+[f.initImports()/]
+[f.addImport('fr.spi4j.ui.mvp.Presenter_Abs')/]
+[f.addImport('fr.spi4j.ui.mvp.SpiFlowManager_Abs')/]
+[f.addImport('fr.spi4j.ui.mvp.ViewAlreadyRegisteredException')/]
+
+[for (state : FlowState | f.getInitialState().getAllFollowingStatesWithoutGardOrEvent(false))]
+  [if state.oclIsKindOf(ViewState)]
+    [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
+		[f.addImport(namePackageViewContainerPresenter(nextView) + '.' + namePresenter(nextView))/]
+		[if (namePackageViewContainerPresenter(nextView) <> namePackageViewContainerPresenter(getRootPresenter(nextView)))]
+			[f.addImport(namePackageViewContainerPresenter(getRootPresenter(nextView)) + '.' + namePresenter(getRootPresenter(nextView)))/]
+		[/if]
+   [/for]
+ [elseif state.oclIsKindOf(SubflowState)]
+		[f.addImport(namePackageFlowManager(state.oclAsType(SubflowState).subflow) + '.' + nameFlow(state.oclAsType(SubflowState).subflow))/]
+ [/if]
+[/for]
+
+[f.flushImports()/]
+[/template]

@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genService('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                   'http://www.obeonetwork.org/dsl/soa/4.0.0',
+				   'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::server::business::impl::category::service /]
+[import fr::pacman::soalight::common::classes /]
+
+[template public genService(s : Service)]
+[file (filename(getServerSourceDir(), buildPackageBusinessImplementationService(s), buildServiceClassName(s) + '.java'), false, 'UTF-8')]
+[service(s)/]
+[/file]
+[/template]

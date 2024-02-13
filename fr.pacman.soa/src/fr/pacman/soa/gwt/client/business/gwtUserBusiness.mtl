@@ -1,0 +1,115 @@
+[comment encoding = UTF-8 /]
+[module gwtUserBusiness('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                        'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::attributes /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::common::names /]
+
+[template public gwtUserBusiness(n : Namespace)]
+[licence()/]
+package [buildPackageBusinessGwtClient()/]; // NOPMD
+
+// [protected ('for imports')]
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gwt.core.shared.GWT;
+
+
+[for (srv : Service | n.eAllContents(Service))]
+[if serviceSeul(srv)]
+[buildImportServiceInterfaceGwt(srv, null)/]
+[buildImportServiceInterfaceGwtAsync(srv, null)/]
+[/if]
+[/for]
+
+import fr.spi4j.ui.gwt.client.services.GwtUserBusiness_Abs;
+
+// [/protected]
+
+/**
+ * Classe permettant de centraliser les factories business de l'application.
+ * @author [getAuthorName()/]
+ */
+public class [buildGwtUserBusinessClassName()/] extends GwtUserBusiness_Abs
+{
+
+   /** Singleton. */
+   private static [buildGwtUserBusinessClassName()/] [apply_attributeStatic('singleton')/] = new [buildGwtUserBusinessClassName()/]();
+
+   /**
+    * Constructeur privé.
+    */
+   protected [buildGwtUserBusinessClassName()/] ()
+   {
+      super();
+   }
+
+
+[for (srv : Service | n.eAllContents(Service))]
+[if serviceSeul(srv)]
+
+   /**
+    * Obtenir la façade de services '[buildServiceName(srv, null)/]'.
+    * @return L'instance désirée.
+    */
+   public static [buildServiceGwtAsyncClassName(srv, null)/] [apply_methodDefault('get ' + buildServiceName(srv, null))/] ()
+   {
+      return ([buildServiceGwtAsyncClassName(srv, null)/]) [apply_attributeStatic('singleton')/].getBinding([buildServiceGwtInterfaceName(srv, null)/].class);
+   }
+[/if]
+[/for]
+
+   /**
+    * @return le singleton de cette factory
+    */
+   public static [buildGwtUserBusinessClassName()/] [apply_methodDefault('get singleton')/] ()
+   {
+      return [apply_attributeStatic('singleton')/];
+   }
+
+   // CHECKSTYLE:OFF
+   @Override
+   // CHECKSTYLE:ON
+   public void initBindings ()
+   {
+
+[for (srv : Service | n.eAllContents(Service))]
+[if serviceSeul(srv)]
+      bind([buildServiceGwtInterfaceName(srv, null)/].class, GWT.create([buildServiceGwtInterfaceName(srv, null)/].class));
+[/if]
+[/for]
+   }
+
+   // Methodes
+   // [protected (n.getUserCodeId('Methodes'))]
+
+   /**
+    * Affecte un singleton dans le cas des tests d'intégration, qui renverra directement l'instance du service (sans passer par GWT).
+    * @param [apply_parameterMethodClassicIn('singleton')/]
+    *           le singleton pour les tests d'intégration
+    */
+   public static void [apply_methodDefault('set singleton')/] (final [buildGwtUserBusinessClassName()/] [apply_parameterMethodClassicIn('singleton')/])
+   {
+      [buildGwtUserBusinessClassName()/].[apply_attributeStatic('singleton')/] = [apply_parameterMethodClassicIn('singleton')/];
+   }
+
+   // [/protected]
+
+}
+[/template]

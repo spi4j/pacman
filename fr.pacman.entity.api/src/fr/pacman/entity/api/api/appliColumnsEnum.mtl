@@ -1,0 +1,161 @@
+[comment encoding = UTF-8 /]
+[module appliColumnsEnum('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::sql::common/]
+
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+[template public enumStruct (void : OclAny, columnProp : String)]
+[if (columnProp.hasToWriteColumn())]
+   /** [get_nameEnumField(columnProp)/] */
+   [get_nameEnumField(columnProp)/]("[get_nameEnumField(columnProp)/]", "[get_nameColumn(columnProp)/]", [get_typeColumn(columnProp)/].class, [columnNotNull(columnProp).toString()/], [if columnHasSize(columnProp)][get_sizeColumn(columnProp)/][else]-1[/if], false)[/if]
+[/template]
+
+[template public appliColumnsEnum(r : Root)]
+[licence()/]
+package [buildPackagePersistenceApi()/];
+
+[comment : Write all required imports. /]
+[r.writeImports()/]
+
+/**
+ * L'enumeration definissant les attributs additionels
+ * @author [getAuthorName()/]
+ */
+public enum [buildAppliColumnClassName()/] implements [getClassNameForColumnsNames_Itf()/]
+{
+[for (prop : String | get_automaticColumnsProperties())]
+[if (r.get_automaticColumnsProperties()->last().equalsIgnoreCase(prop))]
+[r.enumStruct(prop)/];
+[else]
+[r.enumStruct(prop)/],
+[/if]
+[/for]
+
+   /**
+    * Le nom physique de la table.
+    */
+   public static final String [apply_attributeFinalStatic('table name')/] = "";
+
+   /** Le nom logique de la colonne. */
+   private final String [apply_attributeFinal('logical column name')/];
+
+   /** Le nom physique de la colonne. */
+   private final String [apply_attributeFinal('physical column name')/];
+
+   /** Le type associe a la colonne. */
+   private final Class<?> [apply_attributeFinal('type column')/];
+
+   /** Est-ce que la saisie de la valeur est obligatoire pour cette colonne ? */
+   private final boolean [apply_attributeFinal('mandatory')/];
+
+   /** La taille de la colonne. */
+   private final int [apply_attributeFinal('size')/];
+
+   /** Est-ce que la colonne est la cle primaire ? */
+   private final boolean [apply_attributeFinal('id')/];
+
+   /**
+    * Constructeur permettant de spécifier le type de la colonne.
+    * @param [apply_parameterMethodClassicIn('logical column name')/]
+    *           (In)(*) Le nom logique de la colonne.
+    * @param [apply_parameterMethodClassicIn('physical column name')/]
+    *           (In)(*) Le nom physique de la colonne.
+    * @param [apply_parameterMethodObjectIn('class type')/]
+    *           (In)(*) Le type de la colonne.
+    * @param [apply_parameterMethodClassicIn('mandatory')/]
+    *           (In)(*) Est-ce que la saisie de la valeur est obligatoire pour cette colonne?
+    * @param [apply_parameterMethodClassicIn('size')/]
+    *           (In)(*) La taille de la colonne
+    * @param [apply_parameterMethodClassicIn('id')/]
+    *           (In)(*) Est-ce que la colonne est la clé primaire?
+    */
+   private [buildAppliColumnClassName()/] (final String [apply_parameterMethodClassicIn('logical column name')/], final String [apply_parameterMethodClassicIn('physical column name')/],
+            final Class<?> [apply_parameterMethodObjectIn('class type')/], final boolean [apply_parameterMethodClassicIn('mandatory')/], final int [apply_parameterMethodClassicIn('size')/], final boolean [apply_parameterMethodClassicIn('id')/])
+   {
+      [getAffectationPrefix()/][apply_attributeFinal('logical column name')/] = [apply_parameterMethodClassicIn('logical column name')/];
+      [getAffectationPrefix()/][apply_attributeFinal('physical column name')/] = [apply_parameterMethodClassicIn('physical column name')/];
+      [getAffectationPrefix()/][apply_attributeFinal('type column')/] = [apply_parameterMethodObjectIn('class type')/];
+      [getAffectationPrefix()/][apply_attributeFinal('mandatory')/] = [apply_parameterMethodClassicIn('mandatory')/];
+      [getAffectationPrefix()/][apply_attributeFinal('size')/] = [apply_parameterMethodClassicIn('size')/];
+      [getAffectationPrefix()/][apply_attributeFinal('id')/] = [apply_parameterMethodClassicIn('id')/];
+   }
+
+   @Override
+   public String getLogicalColumnName ()
+   {
+      return [apply_attributeFinal('logical column name')/];
+   }
+
+   @Override
+   public String getPhysicalColumnName ()
+   {
+      return [apply_attributeFinal('physical column name')/];
+   }
+
+   @Override
+   public boolean isMandatory ()
+   {
+      return [apply_attributeFinal('mandatory')/];
+   }
+
+   @Override
+   public int getSize ()
+   {
+      return [apply_attributeFinal('size')/];
+   }
+
+   @Override
+   public boolean isId ()
+   {
+      return [apply_attributeFinal('id')/];
+   }
+
+   @Override
+   public Class<?> getTypeColumn ()
+   {
+      return [apply_attributeFinal('type column')/];
+   }
+
+   @Override
+   public String toString ()
+   {
+      return [apply_attributeFinal('physical column name')/];
+   }
+
+   @Override
+   public String getTableName ()
+   {
+      return [apply_attributeFinalStatic('table name')/];
+   }
+
+   @Override
+   public String getCompletePhysicalName ()
+   {
+      return getTableName() + '.' + getPhysicalColumnName();
+   }
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(r : Root) post(trim())]
+[r.initImports()/]
+[r.addImport('fr.spi4j.type.XtopSup')/]
+[r.addImport(getImportForColumnsNames_Itf())/]
+[r.flushImports()/]
+[/template]

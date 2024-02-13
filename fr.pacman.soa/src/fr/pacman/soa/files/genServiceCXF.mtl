@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genServiceCXF('http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::server::ws::impl::category::serviceFacade /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genServiceCXF(s : Service)]
+[file (filename(getServerSourceDir(), buildPackageImplWs(s), s.buildServiceFacadeCXFClassName() + '.java'), false, 'UTF-8')]
+[serviceFacade(s)/]
+[/file]
+[/template]

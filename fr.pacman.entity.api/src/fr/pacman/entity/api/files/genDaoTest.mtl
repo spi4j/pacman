@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genDaoTest('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::api::block::daoTest/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[template public genDaoTest (e : Entity)]
+[file (filename(getServerTestDir(), buildPackagePersistenceApiEntity(e), buildDaoTestClassName(e) + '.java'), false, 'UTF-8')]
+[daoTest(e, isReferentiel(e.oclAsType(ObeoDSMObject)))/]
+[/file]
+[/template]

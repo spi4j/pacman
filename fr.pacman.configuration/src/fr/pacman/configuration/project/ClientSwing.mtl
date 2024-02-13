@@ -1,0 +1,411 @@
+[comment encoding = UTF-8 /]
+[module ClientSwing('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::configuration::common::webXml /]
+
+[template public clientSwingPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>[getApplicationPackage()/]</groupId>
+        <artifactId>[getApplicationName()/]</artifactId>
+        <version>[getVersion()/]</version>
+    </parent>
+    <artifactId>[getClientSwingProjectName()/]</artifactId>
+    <packaging>jar</packaging>
+    <name>[getApplicationName()/] - Partie cliente</name>
+
+	<!--
+	// [protected ('for custom code')]
+	-->
+	
+	<!--
+	// [/protected]
+	-->
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getApplicationName()/]-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		[if hasAdditionnalLibraries()]
+		[for (prop : String | getAdditionnalLibraries())]
+		<!-- Librairie additionnelle utilisateur. -->
+		<dependency>
+			<groupId>[getLibraryPackage(prop)/]</groupId>
+			<artifactId>[getLibraryName(prop)/]-commons</artifactId>
+			<version>${user-library-[getLibraryName(prop)/].version}</version>
+		</dependency>
+		[/for][/if]
+        <dependency>
+            <groupId>fr.spi4j</groupId>
+            <artifactId>spi4j-swing</artifactId>
+            <version>${spi4j.version}</version>
+        </dependency>
+        <!-- Dependance iText pour exports PDF -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>${itext.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcmail-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bcprov-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bctsp-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Dependance iText-RTF pour exports RTF -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext-rtf</artifactId>
+            <version>${itext-rtf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcmail-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bcprov-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bctsp-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Dependance pour afficher les exceptions du serveur comme jakarta.transaction.SystemException -->
+		<dependency>
+			<groupId>jakarta.transaction</groupId>
+			<artifactId>jakarta.transaction-api</artifactId>
+			<version>${jakarta-transaction-api.version}</version>
+		</dependency>
+		[comment : si Jbehave on utilise le jupiter de jbehave. /]
+		[if not useTestBDD()]
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+		[/if]
+		[if useTestBDD()]
+        <dependency>
+            <groupId>fr.spi4j</groupId>
+            <artifactId>spi4j-lib-jbehave</artifactId>
+            <version>${spi4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+		[/if]
+		<!--
+		// [protected ('for dependencies')]
+		-->
+		
+		<!--
+		// [/protected]
+		-->
+    </dependencies>
+</project>
+[/template]
+
+[template public javaWebStartBuildJwsXml(any : OclAny) post (trim())]
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-jws">
+    <description>
+        Construction pour JavaWebStart
+    </description>
+
+    <target name="javawebstart" description="Construction pour JavaWebStart">
+
+<property name="tmp.dir" value="target/tmp"/>
+<property name="client.warlib.dir" value="${tmp.dir}/war-lib"/>
+<property name="sign.keystore" value="key/[getApplicationName()/]keystore"/>
+<property name="sign.storepass" value="[getApplicationName()/]client"/>
+<property name="sign.alias" value="[getApplicationName()/]client"/>
+<property name="sign.enabled" value="true"/>
+<property name="pack.enabled" value="true"/>
+<property name="livraison.dir" value="target"/>
+<property name="client.war" value="target/${project.artifactId}-${project.version}.war"/>
+<property name="client.war.dir" value="${tmp.dir}/dist"/>
+<property name="client.war.excludes" value=""/>
+<property name="resources.dir" value="src/main/webapp"/>
+<property name="jnlp.name" value="client.jnlp"/>
+
+<!-- affichage proprietes systemes -->
+<echo message="-- Script Ant --" level="info"/>
+<tstamp>
+    <format property="TODAY_FR" pattern="dd MMMM yyyy HH:mm:ss" locale="fr,FR"/>
+</tstamp>
+
+<!-- creation des repertoires de construction si necessaire -->
+<mkdir dir="${tmp.dir}"/>
+<mkdir dir="${client.war.dir}"/>
+<mkdir dir="${client.warlib.dir}"/>
+<mkdir dir="${livraison.dir}"/>
+<touch file="${tmp.dir}/listofjars.txt" />
+
+<!-- initialisation du fichier temporaire de liste des dependances -->
+<echo file="${tmp.dir}/listofjars.txt">
+<!['['/]CDATA['['/]
+<!-- DEBUT DE LA LISTE DES DEPENDANCES -->
+<
+]]>
+</echo>
+
+<copy todir="${client.warlib.dir}" preservelastmodified="true">
+    <fileset dir="target/${project.artifactId}-${project.version}/WEB-INF/lib" excludes="jnlp-servlet.jar,javamelody*.jar,jrobin*.jar"/>
+</copy>
+<!-- Definition des tasks if, for et pack200 -->
+<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="lib/ant-contrib-0.6.jar"/>
+<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="lib/Pack200Task.jar"/>
+<taskdef name="setmodificationtime" classname="fr.spi4j.ant.setmodificationtime.SetModificationTimeAntTask" classpath="lib/setModificationTimeAntTask.jar"/>
+<macrodef name="mysign">
+    <attribute name="file"/>
+    <sequential>
+        <echo message="Mise à jour de @{file}" level="info"/>
+        <!-- sauvegarde du jar initial -->
+        <move file="@{file}" tofile="@{file}.ini" />
+        <!-- repacking du jar avant signature -->
+        <!-- segmentlimit=-1 est necessaire pour eviter pb de signature (dans XXX.jar) -->
+        <pack200 src="@{file}.ini" destfile="@{file}" repack="true" segmentlimit="-1"/>
+        <!-- signature du jar XXX.jar -->
+        <signjar jar="@{file}" keystore="${sign.keystore}" storepass="${sign.storepass}" alias="${sign.alias}" />
+        <!-- Packing du jar signe -->
+        <!-- (l'ajout de stripdebug=true reduirait la taille des jars en eliminant les infos de debug, au prix de stack-traces moins utiles) -->
+        <pack200 src="@{file}" destfile="@{file}.pack.gz" gzipoutput="true" modificationtime="latest" deflatehint="true" unknownattribute="strip" segmentlimit="-1"/>
+        <!-- modifier la date de derniere modification du jar signe et du jar packe en mettant la date du fichier initial -->
+        <setmodificationtime file="@{file}" fromFile="@{file}.ini" />
+        <setmodificationtime file="@{file}.pack.gz" fromFile="@{file}.ini" />
+        <!-- deplacement du jar signe XXX.jar et du jar packe dans le dossier destination -->
+        <move file="@{file}" todir="${client.war.dir}"/>
+        <move file="@{file}.pack.gz" todir="${client.war.dir}"/>
+        <!-- restauration du jar initial -->
+        <move file="@{file}.ini" tofile="@{file}" />
+        <basename property="@{file}.filename" file="@{file}" />
+        <echo file="${tmp.dir}/listofjars.txt" append="true">
+<!['['/]CDATA['['/]
+jar href="${@{file}.filename}" />
+<
+]]>
+        </echo>
+    </sequential>
+</macrodef>
+
+<!-- pack et signature des jars du projet (avec dependances) -->
+<for param="file">
+    <path>
+        <fileset dir="${client.warlib.dir}" includes="*.jar" />
+    </path>
+    <sequential>
+        <mysign file="@{file}"/>
+    </sequential>
+</for>
+
+<!-- finalisation du fichier temporaire de liste des dependances -->
+<echo file="${tmp.dir}/listofjars.txt" append="true">
+<!['['/]CDATA['['/]
+!-- FIN DE LA LISTE DES DEPENDANCES -->
+]]>
+        </echo>
+
+<!-- copie des fichiers de resources dans le dossier destination -->
+<copy todir="${client.war.dir}">
+    <fileset dir="${resources.dir}" includes="**/*" />
+</copy>
+<copy todir="${client.war.dir}/WEB-INF/lib">
+    <fileset file="target/${project.artifactId}-${project.version}/WEB-INF/lib/javamelody*.jar" />
+    <fileset file="target/${project.artifactId}-${project.version}/WEB-INF/lib/jrobin*.jar" />
+    <fileset file="target/${project.artifactId}-${project.version}/WEB-INF/lib/log4j*.jar" />
+</copy>
+
+<!-- construction du jnlp -->
+<loadfile property="list.of.jars" srcFile="${tmp.dir}/listofjars.txt" />
+<replace file="${client.war.dir}/${jnlp.name}" token="##RESOURCES##" value="${list.of.jars}" />
+
+<!-- creation du manifest -->
+<manifest file="${tmp.dir}/manifest.mf">
+    <attribute name="Built-By" value="${user.name}" />
+    <attribute name="Built-Date" value="${TODAY_FR}" />
+</manifest>
+
+<!-- suppression du war construit par defaut -->
+<delete file="target/${project.artifactId}-${project.version}.war" />
+<delete dir="target/${project.artifactId}-${project.version}" />
+<delete dir="target/war" />
+
+<!-- compilation des classes -->
+<mkdir dir="${client.war.dir}/WEB-INF/classes" />
+<copy todir="${client.war.dir}/WEB-INF/classes">
+    <fileset dir="target/classes" />
+</copy>
+
+<!-- construction du war -->
+<jar destfile="${client.war}" basedir="${client.war.dir}" excludes="${client.war.excludes}" manifest="${tmp.dir}/manifest.mf" />
+<!-- Pour avoir en plus un nom de fichier war independant de la version Maven et qui servira comme nom de webapp dans Tomcat via la configuration de deploiement automatique dans Jenkins -->
+<copy file="target/${project.artifactId}-${project.version}.war" tofile="target/[getApplicationName()/]-client.war"/>
+
+    </target>
+
+</project>
+[/template]
+
+[template public javaWebStartWebXml(any : OclAny) post (trim())]
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app>
+    <display-name>Client [getApplicationName()/]</display-name>
+    <distributable />
+
+	[melodyFilters()/]
+
+	[securityInitialization()/]
+	[configFilesInitialization()/]
+
+    <!-- these are for JavaWebStart -->
+    <servlet>
+        <servlet-name>JnlpDownloadServlet</servlet-name>
+        <servlet-class>jnlp.sample.servlet.JnlpDownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JnlpDownloadServlet</servlet-name>
+        <url-pattern>*.jnlp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>JnlpDownloadServlet</servlet-name>
+        <url-pattern>*.jar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>JnlpDownloadServlet</servlet-name>
+        <url-pattern>*.pack.gz</url-pattern>
+    </servlet-mapping>
+    <mime-mapping>
+        <extension>jnlp</extension>
+        <mime-type>application/x-java-jnlp-file</mime-type>
+    </mime-mapping>
+
+	[basicAuth()/]
+	[userCode()/]
+</web-app>
+[/template]
+
+[template public javaWebStartIndexHtml(any : OclAny) post (trim())]
+<html>
+<head>
+<title>[getApplicationName()/]</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link type="image/png" rel="shortcut icon" href="safran-small.png" />
+<style type="text/css">
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #F5F5F5;
+    }
+    img {
+        border: 0px;
+    }
+    h3 {
+        text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.75);
+    }
+    blockquote {
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+<div align="center"><h3>Bienvenue dans l'application [getApplicationName()/]</h3></div>
+<h4>[getApplicationName()/] c'est quoi ?</h4>
+<blockquote>
+  A rediger.
+</blockquote>
+
+<br/>
+Pour lancer l'application, veuillez cliquer sur <a href='client.jnlp'>ce lien</a>.
+<br>
+<blockquote>
+  Une version 7 de JAVA (JRE) doit être installee sur votre poste informatique.
+  <br><br>
+  Le support de niveau 1 est assure en local par l'administrateur fonctionnel.
+</blockquote>
+
+<br>
+<div align='right'>
+   <font size='-2'>
+      <a href='player.jnlp'>Gestion des applications integrees</a>
+   </font>
+</div>
+</body>
+</html>
+[/template]
+
+[template public javaWebStartClientJnlp(any : OclAny) post (trim())]
+<jnlp spec="1.0+" codebase="$$codebase" href="$$context/$$name">
+   <information>
+      <title>Application [getApplicationName()/]</title>
+      <vendor>Ministere des Armees</vendor>
+      <homepage href="$$site"/>
+
+      <icon href="safran.png"/>
+
+      <!--
+      <description>Description de [getApplicationName()/]</description>
+      <icon href="[getApplicationName()/]-64.png"/>
+      <icon kind="splash" href="[getApplicationName()/]-big.gif"/>
+
+      <shortcut>
+         <desktop/>
+         <menu submenu="[getApplicationName()/]"/>
+      </shortcut>
+      <related-content href="$$site/exemple">
+         <title>Page d'information pour exemple</title>
+         <description>Information sur l'application [getApplicationName()/]</description>
+         <icon href="[getApplicationName()/]-64.png"/>
+      </related-content>
+      -->
+
+   </information>
+   <security>
+      <all-permissions/>
+   </security>
+   <update check="always" policy="always"/>
+   <resources>
+      <j2se version="[getJavaStringVersion()/]+" max-heap-size="300m"/>
+##RESOURCES##
+<!-- Ce parametre necessite que la webapp [getWebappProjectName()/] soit deployee sur le 
+ serveur dans le chemin "[getWebappProjectName()/]", et si ce n'est pas le cas il faut 
+ modifier le chemin ci-dessous -->
+      <property name="jnlp.serverUrl" value="$$site/[getWebappProjectName()/]/remoting"/>
+   </resources>
+
+   <application-desc main-class="[getApplicationPackage()/].client.ui.main.SwingLanceur"/>
+</jnlp>
+[/template]
+
+[template public javaWebStartPlayerJnlp(any : OclAny) post (trim())]
+<!-- Fichier jnlp permettant d'ouvrir le gestionnaire d'applications JavaWebStart sur le poste client -->
+<player/>
+[/template]
+
+[template public javaWebStartReadmeTxt(any : OclAny) post (trim())]
+Pour que le packaging du war JavaWebStart fonctionne avec pom.xml et build-jws.xml, il faut un fichier [getApplicationName()/]keystore afin de signer les fichiers dans ce war.
+Ce fichier [getApplicationName()/]keystore avec son certificat auto-signe doit être genere en ligne de commande par :
+%JDK_HOME%\bin\keytool -genkey -alias [getApplicationName()/]client -keyalg RSA -keystore [getApplicationName()/]keystore -storepass "[getApplicationName()/]client" -validity 360
+
+Pour voir le resultat :
+%JDK_HOME%\bin\keytool -list -v -alias [getApplicationName()/]client -keystore [getApplicationName()/]keystore -storepass "[getApplicationName()/]client"
+
+Le fichier [getApplicationName()/]keystore, avec son mot de passe et l'alias du certificat seront utilises pour signer les fichiers dans le war JavaWebStart.
+[/template]

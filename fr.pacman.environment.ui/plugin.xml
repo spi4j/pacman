@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.environment"
+            id="fr.pacman.environment.ui.popup.contribution.IFile">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.environment.ui.popup.AcceleoGenerateEnvironmentAction"
+               enablesFor="+"
+               id="fr.pacman.environment.ui.popup.acceleoGenerateEnvironmentAction"
+               icon="icons/safran.png"
+               label="Génération Types personnalisés"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"/>
+      </objectContribution>
+      
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.emf.cdo.eresource.CDOResource"
+            nameFilter="*"
+            id="fr.pacman.environment.ui.popup.contribution.CDOResource">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.environment.ui.popup.AcceleoGenerateEnvironmentActionCDOResource"               										 
+               enablesFor="+"
+               id="fr.pacman.environment.ui.popup.acceleoGenerateEnvironmentActionCDOResource"
+               icon="icons/safran.png"
+               label="Génération Types personnalisés"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"/>
+      </objectContribution>
+   </extension>
+</plugin>

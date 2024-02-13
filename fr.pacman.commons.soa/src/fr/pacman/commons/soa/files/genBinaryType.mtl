@@ -1,0 +1,11 @@
+[comment encoding = UTF-8 /]
+[module genBinaryType('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import  fr::pacman::commons::common::packages/ ]
+[import  fr::pacman::commons::soa::ws::category::binary/ ]
+
+[template public genBinaryType(any : OclAny)]
+[file (filename(getCommonsSourceDir(), getApplicationPackage(), 'Binary.java'), false, 'UTF-8')]
+[any.binary()/]
+[/file]
+[/template]

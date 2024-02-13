@@ -1,0 +1,98 @@
+package fr.appwhite1.client.ui.main;
+
+// Start of user code for imports
+
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+
+import fr.spi4j.Parameters;
+import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+import fr.spi4j.lib.security.client.Spi4jClientSecurity;
+import fr.spi4j.ui.mvp.MVPUtils;
+import fr.spi4j.ui.mvp.rda.RichViewManager;
+import fr.spi4j.ui.swing.ShadowPopupFactory;
+import fr.spi4j.ui.swing.SpiSwingUtilities;
+
+import fr.appwhite1.business.Appli1UserBusiness;
+import fr.appwhite1.client.ui.MainFlowManager;
+import fr.appwhite1.client.ui.swing.SwingViews;
+
+// End of user code
+
+/**
+ * Point d'entrée de l'application Swing.
+ * @author Pacman
+ */
+public final class SwingLanceur
+{
+   /**
+    * Constructeur privé.
+    */
+   private SwingLanceur ()
+   {
+      super();
+   }
+
+   /**
+    * Lanceur.
+    * 
+    * @param p_args
+    *            .
+    */
+   public static void main (final String[] p_args)
+   {
+      init(p_args);
+      start();
+   }
+
+   /**
+    * init.
+    * 
+    * @param p_args
+    *            .
+    */
+   public static void init (final String[] p_args)
+   {
+      // Start of user code Initialisation
+      // Look and feel Nimbus plutôt qu'Ocean par défaut
+      for (final LookAndFeelInfo v_info : UIManager.getInstalledLookAndFeels())
+      {
+         if ("Nimbus".equals(v_info.getName()))
+         {
+            try
+            {
+               UIManager.setLookAndFeel(v_info.getClassName());
+               break;
+            }
+            catch (final Exception v_e)
+            {
+               throw new RuntimeException(v_e);
+            }
+         }
+      }
+
+      SpiSwingUtilities.initEscapeClosesDialogs();
+      ShadowPopupFactory.install();
+      Spi4jSecurity_Abs.setInstance(new Spi4jClientSecurity());
+
+      MVPUtils.setViewManager(new RichViewManager());
+      MVPUtils.getInstance().getViewManager().setViewsAssociation(new SwingViews());
+
+      final String v_defaultServerUrl = "http://localhost:8080/appli1-webapp/remoting";
+      final String v_serverUrl = Parameters.getParameter("jnlp.serverUrl", v_defaultServerUrl);
+      Appli1UserBusiness.getSingleton().initImplClient(v_serverUrl);
+
+      // End of user code
+   }
+
+   /**
+    * start.
+    */
+   public static void start ()
+   {
+      // Start of user code Initialisation du flow main
+      final MainFlowManager v_mainFlowManager = new MainFlowManager();
+      v_mainFlowManager.start();
+      // End of user code
+   }
+}

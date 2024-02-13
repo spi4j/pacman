@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.popupMenus">
+
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.*"
+            id="fr.pacman.soa.ui.popup.contribution.IFile">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soa.ui.popup.AcceleoGenerateSoaAction"
+               enablesFor="+"
+               id="fr.pacman.soa.ui.popup.acceleoGenerateSoaAction"
+               icon="icons/safran.png"
+               label="Génération Soa"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"/>
+      </objectContribution>
+
+      <!-- Gestion CDO -->
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.emf.cdo.eresource.CDOResource"
+            nameFilter="*"
+            id="fr.pacman.soa.ui.popup.contribution.CDOResource">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soa.ui.popup.AcceleoGenerateSoaActionCDOResource"
+               enablesFor="+"
+               id="fr.pacman.soa.ui.popup.acceleoGenerateSoaActionCDOResource"
+               icon="icons/safran.png"
+               label="Génération Soa"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"/>
+      </objectContribution>
+
+      <!-- Génération à partir d'un package DTO (Category) -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.environment.Namespace"
+            nameFilter="*"
+            id="fr.pacman.soa.ui.popup.contribution.Namespace">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soa.ui.popup.AcceleoGenerateSoaActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soa.ui.popup.acceleoGenerateSoaActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle Package DTO SOA"
+               overrideActionId="fr.pacman.soa.ui.popup.acceleoGenerateSoaAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+
+      <!-- Génération à partir d'un DTO -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.environment.DTO"
+            nameFilter="*"
+            id="fr.pacman.soa.ui.popup.contribution.DTO">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soa.ui.popup.AcceleoGenerateSoaActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soa.ui.popup.acceleoGenerateSoaActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle DTO SOA"
+               overrideActionId="fr.pacman.soa.ui.popup.acceleoGenerateSoaAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+
+      <!-- Génération à partir d'un package services (Component) -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.soa.Component"
+            nameFilter="*"
+            id="fr.pacman.soa.ui.popup.contribution.Component">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soa.ui.popup.AcceleoGenerateSoaActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soa.ui.popup.acceleoGenerateSoaActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle Package Services SOA"
+               overrideActionId="fr.pacman.soa.ui.popup.acceleoGenerateSoaAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+
+      <!-- Génération à partir d'un service -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.soa.Service"
+            nameFilter="*"
+            id="fr.pacman.soa.ui.popup.contribution.Service">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soa.ui.popup.AcceleoGenerateSoaActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soa.ui.popup.acceleoGenerateSoaActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle Service SOA"
+               overrideActionId="fr.pacman.soa.ui.popup.acceleoGenerateSoaAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+   </extension>
+</plugin>

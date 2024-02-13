@@ -1,0 +1,143 @@
+[comment encoding = UTF-8 /]
+[module serviceTest('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                    'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::attributes /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+[import fr::pacman::soalight::common::secu /]
+
+
+[comment] le Service existe [/comment]
+[template public serviceTest(s : Service)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else 'PACKAGE NOT FOUND FOR SERVICE ' endif]
+package [buildPackageBusinessApiService(s)/];
+
+// [protected ('for imports')]
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Date;
+import java.util.List;
+import fr.spi4j.Parameters;
+
+[getImportUserBusinessGen()/]
+[getImportParamPersistenceClass()/]
+[getImportUserPersistenceClass()/]
+import [getImportForBeanTester_Abs()/];
+
+// [/protected]
+
+/**
+ * Classe de test du service '[buildServiceInterfaceName(s)/]'.
+ * @author [getAuthorName()/]
+ */
+// Annotation for class
+// [protected (s.getUserCodeId('Annotation for class'))]
+// [/protected]
+public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_Abs()/]
+{
+
+   /** Le 'UserPersistence' de l'application. */
+   private static [buildUserPersistenceAppClassName()/] [apply_attributeStatic('user persistence')/];
+
+   /** Le '[buildServiceInterfaceName(s)/]' testé. */
+
+   @SuppressWarnings("all")
+   private static [buildServiceInterfaceName(s)/] [apply_attributeStatic('service')/];
+
+    // Spécifique
+    // [protected (s.getUserCodeId('Spécifique'))]
+
+    // [/protected]
+
+   /**
+    * Méthode d'initialisation de la classe de tests.
+    */
+   @BeforeClass
+   public static void [apply_methodDefault('set up before class')/] ()
+   {
+      Parameters.setH2Database();
+      [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
+      [apply_attributeStatic('service')/] = [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s))/]();
+
+      // set up before class
+      // [protected (s.getUserCodeId('set up before class'))]
+      // [/protected]
+   }
+
+   /**
+    * Méthode d'initialisation de tests.
+    */
+   @Before
+   public void [apply_methodDefault('set up')/] ()
+   {
+      [apply_attributeStatic('user persistence')/].begin();
+
+      // set up
+      // [protected (s.getUserCodeId('set up'))]
+      // [/protected]
+   }
+
+    /**
+    * Méthode de fin de test : rollback.
+    */
+   @After
+   public void [apply_methodDefault('tear down')/] ()
+   {
+      [apply_attributeStatic('user persistence')/].rollback();
+
+      // tear down
+      // [protected (s.getUserCodeId('tear down'))]
+      // [/protected]
+   }
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+   /**
+    * Test de l'opération '[o.name/]'.
+    * @throws Throwable
+    *            exception
+    */
+   @Test
+   public void [apply_methodDefault('test ' + o.name.replaceAll('_', ' '))/] () throws Throwable
+   {
+      // [userCodeForOperation(o).replaceAll('Dto', ' ')/]
+      // [protected (o.getUserCodeId(userCodeForOperation(o).replaceAll('Dto', ' ')))]
+      // TODO : A Implémenter
+      fail("Test non implémenté");
+      // [/protected]
+   }
+
+[/for]
+[/if]
+
+   // Methodes [buildServiceTestClassName(s)/]
+   // [protected (s.getUserCodeId('Methodes ' + buildServiceTestClassName(s)))]
+
+   // [/protected]
+
+}[/let]
+[/template]
+

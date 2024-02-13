@@ -1,0 +1,218 @@
+[comment encoding = UTF-8 /]
+[module presenter('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+                  'http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::model /]
+[import fr::pacman::cinematic::swing::common::name /]
+[import fr::pacman::cinematic::swing::common::packages /]
+[import fr::pacman::cinematic::swing::client::ui::pkg::manageEvent /]
+[import fr::pacman::cinematic::swing::common::swing-commons /]
+
+[template public presenter(viewContainer : ViewContainer)]
+[licence()/]
+package [namePackageViewContainerPresenter(viewContainer)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[comment viewContainer.writeImports()/]
+
+// [/protected]
+
+/**
+ * Presenter.
+ * @author [getAuthorName()/]
+ */
+// Class definition
+// [protected (viewContainer.getUserCodeId('Class definition'))]
+public class [namePresenter(viewContainer)/] extends Presenter_Abs<[nameViewInterface(viewContainer)/], [getTypePresenter(viewContainer)/]>
+// [/protected]
+{
+
+   // Constructeur(s)
+   // [protected (viewContainer.getUserCodeId('Constructeur(s)'))]
+   /**
+    * Constructeur.
+    */
+   public [namePresenter(viewContainer)/] ()
+   {
+      super(null);
+   }
+
+   /**
+    * Constructeur avec présenteur parent.
+    * @param p_parent
+    *           le présenteur parent
+    */
+   public [namePresenter(viewContainer)/] (final Presenter_Abs<? extends View_Itf, ?> p_parent)
+   {
+      super(p_parent);
+   }
+   [if getTypePresenter(viewContainer) <> 'Object']
+
+   /**
+    * Constructeur avec présenteur parent et DTO/Entity (dans le cas d'une interface en swing, les présenteurs et vues manipulent des DTO ou des Entities ).
+    * @param p_parent
+    *           le présenteur parent
+    * @param p_object
+    *           le dto/entity de ce présenteur
+    */
+   public [namePresenter(viewContainer)/] (final Presenter_Abs<? extends View_Itf, ?> p_parent, final [getTypePresenter(viewContainer)/] p_object)
+   {
+      super(p_parent, p_object);
+   }
+   [/if]
+
+   // [/protected]
+
+   @Override
+   public void initView ()
+   {
+      // Initialisation de la vue
+      // [protected (viewContainer.getUserCodeId('Initialisation de la vue'))]
+
+      // [/protected]
+   }
+
+   @Override
+   protected String doGenerateTitle ()
+   {
+      // Titre de l\'écran
+      // [protected (viewContainer.getUserCodeId('Titre de l\'écran'))]
+      return "[viewContainer.name/]";
+      // [/protected]
+   }
+
+[for (viewState : ViewState | viewContainer.getViewStatesForViewContainer())]
+  [for (transition : Transition | viewState.getTransitionsFromState(true)->orderTransitions())]
+    [for (event : Event | transition.on)]
+      [if event.name.oclIsUndefined()]
+   // FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements des transitions issues de l'état [viewState.name/]
+      [else]
+   /**
+    * Gestion de l'événément [event.name/].
+    */
+        [if event.getViewEvents()->exists(viewEvent : ViewEvent | 'onClick'.equalsIgnoreCase(viewEvent.type.name))]
+   @UserAction(UserAction.c_BOUTON + "[event.name/]")
+        [else]
+   // [protected (event.getUserCodeId('Annotation ' + event.name))]
+   // [/protected]
+        [/if]
+   public void [event.nameActionPresenteur()/] ()
+   {
+      // [protected (event.getUserCodeId('Pre ' + event.name))]
+      // [/protected]
+
+[if not transition.to.oclIsUndefined()]
+[gestionTransition(transition.to, event.name, false)/]
+[/if]
+      // [protected (event.getUserCodeId('Post ' + event.name))]
+
+      // [/protected]
+   }
+      [/if]
+
+    [/for]
+  [/for]
+[/for]
+   // [namePresenter(viewContainer)/]
+   // [protected (viewContainer.getUserCodeId(namePresenter(viewContainer)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(v : ViewContainer) post(trim())]
+[v.initImports()/]
+[v.addImport('fr.spi4j.ui.graal.UserAction')/]
+[v.addImport('fr.spi4j.ui.mvp.Presenter_Abs')/]
+[v.addImport('fr.spi4j.ui.mvp.View_Itf')/]
+
+[comment : Bug with view implementation, for now let do the 'CTRL + SHIFT + O'/]
+[comment][for (viewState : ViewState | v.getViewStatesForViewContainer())]
+  [for (transition : Transition | viewState.getTransitionsFromState(true)->orderTransitions())]
+    [for (event : Event | transition.on)]
+      [if not event.name.oclIsUndefined() and not transition.to.oclIsUndefined()]
+        [for (state : FlowState | transition.to.getAllFollowingStatesWithoutGardOrEvent(true)->union(Sequence{transition.to}))]
+          [if state.oclIsKindOf(ViewState)]
+            [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
+				[v.addImport(namePackageViewContainerPresenter(nextView) + '.' + namePresenter(nextView))/]
+            [/for]
+          [elseif state.oclIsKindOf(SubflowState)]
+				[v.addImport(namePackageFlowManager(state.oclAsType(SubflowState).subflow) + '.' + nameFlow(state.oclAsType(SubflowState).subflow))/]
+          [/if]
+        [/for]
+      [/if]
+    [/for]
+  [/for]
+[/for][/comment]
+
+[v.flushImports()/]
+[/template]
+
+[query private getTypePresenter(viewContainer : ViewContainer) : String =
+	if (useMatching()) then
+    	if (searchBindingFor(viewContainer).oclIsUndefined()) then
+        	'Object'
+    	else
+        	if (searchBindingFor(viewContainer).oclIsKindOf(DTO)) then
+				    buildDtoClassName(searchBindingFor(viewContainer).oclAsType(DTO))
+			else
+            	'Object'
+			endif	
+		endif	
+	else 	
+		if (searchBindingForEntity(viewContainer).oclIsUndefined()) then
+        	'Object'
+    	else        
+        	buildEntityClassName(searchBindingForEntity(viewContainer))      	
+		endif	        
+	endif
+ /]
+
+[query private getTypeBeanEntity(viewContainer : ViewContainer) : String =	
+    	if (searchBindingForEntity(viewContainer) = null) then
+        	'Undefined'
+    	else        
+        	buildEntityClassName(searchBindingForEntity(viewContainer))      	
+		endif
+ /]
+
+[query private orderTransitions(transitions : Set(Transition)) : OrderedSet(Transition) =
+transitions->sortedBy(t : Transition | transitionComparator(t))
+/]
+
+[query private transitionComparator(transition : Transition) : String =
+    if not transition.on->isEmpty() then
+        '' + transition.on.name
+    else
+        if transition.to.oclIsUndefined() then
+            ''
+        else
+            if transition.to.oclIsKindOf(NamedFlowState) then
+                transition.to.oclAsType(NamedFlowState).name
+            else
+                if transition.to.oclIsKindOf(SubflowState) then
+                    transition.to.oclAsType(SubflowState).name
+                else
+                    transition.to.toString()
+                endif
+            endif
+        endif
+    endif
+/]
+
+[query private shouldClosePresenter(viewContainer : ViewContainer, transition : Transition) : Boolean =
+    (viewContainer.widget.oclIsUndefined() or viewContainer.widget.name <> 'MainPanel') and
+        not transition.to.getAllFollowingStatesWithoutGardOrEvent(true)->union(Sequence{transition.to})->filter(ViewState)->isEmpty() and
+        not transition.to.getAllFollowingStatesWithoutGardOrEvent(true)->union(Sequence{transition.to})->filter(ViewState).viewContainers->includes(viewContainer)
+/]

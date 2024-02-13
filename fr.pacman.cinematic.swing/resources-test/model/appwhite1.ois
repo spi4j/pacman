@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overview:Root xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.obeonetwork.dsl.soa="http://www.obeonetwork.org/dsl/soa/2.0.0" xmlns:overview="http://www.obeonetwork.org/dsl/overview/2.0.0" xmi:id="_XN8hMa4nEeGcVP1rrBsv1Q" modifiedOn="2012-10-01T10:31:13.880+0200">
+  <ownedElements href="entity/appwhite1.entity#_z6QBIGG9EeCHXp28f7kSY0"/>
+  <ownedElements xsi:type="org.obeonetwork.dsl.soa:System" xmi:id="_XOFrIa4nEeGcVP1rrBsv1Q" modifiedOn="2012-10-01T10:31:13.880+0200">
+    <ownedNamespaces href="soa/services.soa#_zvaqYHI1EeC5bZvKOWww9B"/>
+    <ownedDtoRegistry href="soa/dto.soa#_5JDokHI1EeC5bZvKOWww9B"/>
+  </ownedElements>
+  <ownedElements href="cinematic/appwhite1.cinematic#_FDHo0Z5rEeGr5amF9i2zgA"/>
+</overview:Root>

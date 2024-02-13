@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="safranProduct"
+         point="org.eclipse.core.runtime.products">
+         <product
+            application="org.eclipse.ui.ide.workbench"
+            description="Plugins du programme Safr@n"
+            name="Safr@n">
+	         <property
+	               name="windowImages"
+	               value="safran.png">
+         	</property>
+	         <property
+	               name="aboutImage"
+	               value="safran.png">
+	         </property>
+	         <property
+	               name="appName"
+	               value="Safr@n">
+	         </property>
+	         <property
+	               name="aboutText"
+	               value="Plugins du programme Safr@n">
+	         </property>
+      </product>
+   </extension>
+</plugin>

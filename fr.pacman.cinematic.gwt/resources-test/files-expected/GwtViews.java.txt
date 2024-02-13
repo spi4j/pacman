@@ -1,0 +1,75 @@
+package fr.appwhite1.client.ui.gwt; // NOPMD
+
+// Start of user code for imports
+
+import fr.appwhite1.client.ui.annuaire.DetailPersonnePresenter;
+import fr.appwhite1.client.ui.gwt.annuaire.DetailPersonneViewGwt;
+import fr.appwhite1.client.ui.annuaire.ListePersonnesPresenter;
+import fr.appwhite1.client.ui.gwt.annuaire.ListePersonnesViewGwt;
+import fr.appwhite1.client.ui.LoginPresenter;
+import fr.appwhite1.client.ui.gwt.LoginViewGwt;
+import fr.appwhite1.client.ui.MainPresenter;
+import fr.appwhite1.client.ui.gwt.MainViewGwt;
+
+import fr.spi4j.exception.Spi4jRuntimeException;
+import fr.spi4j.ui.mvp.Presenter_Abs;
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.mvp.ViewsAssociation;
+
+// End of user code
+
+/**
+ * Association des vues pour GWT.
+ * @author Pacman
+ */
+public class GwtViews extends ViewsAssociation
+{
+
+   // CHECKSTYLE:OFF
+   @SuppressWarnings("unchecked")
+   @Override
+   // CHECKSTYLE:ON
+   public <TypeView extends View_Itf> TypeView getViewForPresenter (final Presenter_Abs<TypeView, ?> p_presenter)
+   {
+      if (p_presenter == null)
+      {
+         throw new Spi4jRuntimeException("Le paramètre presenter ne peut pas être null",
+               "Précisez un présenteur non null dont vous cherchez la vue");
+      }
+      else if (p_presenter instanceof DetailPersonnePresenter)
+      {
+         return (TypeView) new DetailPersonneViewGwt((DetailPersonnePresenter) p_presenter);
+      }
+      else if (p_presenter instanceof ListePersonnesPresenter)
+      {
+         return (TypeView) new ListePersonnesViewGwt((ListePersonnesPresenter) p_presenter);
+      }
+      else if (p_presenter instanceof LoginPresenter)
+      {
+         return (TypeView) new LoginViewGwt((LoginPresenter) p_presenter);
+      }
+      else if (p_presenter instanceof MainPresenter)
+      {
+         return (TypeView) new MainViewGwt((MainPresenter) p_presenter);
+      }
+      // Start of user code Vues supplémentaires
+
+      // End of user code
+
+      throw new Spi4jRuntimeException("Vue inconnue pour le presenteur : " + p_presenter.getClass().getName(),
+               "Ajouter une association dans GWTViews");
+   }
+
+   @Override
+   public Presenter_Abs<? extends View_Itf, ?> getPresenterForAnnotatedView (final String p_userView)
+   {
+      throw new Spi4jRuntimeException(
+               "Cette méthode devrait être utilisée uniquement lors des tests JBehave, hors cette classe n'est utilisée qu'en production",
+               "Ne recherchez pas un présenteur selon son annotation @UserView dans vos écrans");
+   }
+
+   // Start of user code GwtViews
+
+   // End of user code
+
+}

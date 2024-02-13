@@ -1,0 +1,71 @@
+[comment encoding = UTF-8 /]
+[module serviceGwtItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                      'http://www.obeonetwork.org/dsl/environment/3.0.0',
+					   'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::commentaires /]
+[import fr::pacman::soalight::common::attributes /]
+[import fr::pacman::soalight::common::methodes /]
+[import fr::pacman::soalight::common::classes /]
+
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[comment] le Service existe sans Entity [/comment]
+
+[template public serviceGwtItf(s : Service)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else 'PACKAGE NOT FOUND FOR SERVICE' endif]
+package [buildPackageBusinessGwtClientService(s)/];
+
+// [protected ('for imports')]
+
+import java.util.List;
+import java.util.Date;
+
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
+
+import com.google.gwt.user.client.rpc.RemoteService;
+
+// [/protected]
+
+/**
+ * Interface de services appelables par le client.
+ * @author [getAuthorName()/]
+ */
+@RemoteServiceRelativePath("../[getApplicationName()/]/[buildServiceName(s)/]")
+public interface [buildServiceGwtInterfaceName(s)/] extends RemoteService
+{
+
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+   // [userCodeForOperation(o)/]
+   // [protected (o.getUserCodeId(userCodeForOperation(o)))]
+
+   /**
+    * [o.description/].
+[getComParamsIn(o)/][comParamOut(o)/]    */
+   [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/]);
+
+   // [/protected]
+
+[/for]
+[/if]
+   // [nameServiceInterfaceGwt(s)/]
+   // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s)))]
+
+   // [/protected]
+}[/let]
+[/template]

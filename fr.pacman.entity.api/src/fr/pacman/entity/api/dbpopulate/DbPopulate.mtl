@@ -1,0 +1,273 @@
+[comment encoding = UTF-8 /]
+[module DbPopulate('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::requests::counterQueries /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::classesEntity /]
+
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::dbpopulate::annotationsUtilOverLoad/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+
+[template public populate(b : environment::Namespace)]
+[file (filename(getServerSourceDir(), buildPackagePersistenceOverload(), apply_classDefault(b.name + ' populate') + '.java'), false, 'UTF-8')]
+[licence()/]
+package [buildPackagePersistenceOverload()/];
+
+// [protected ('for imports')]
+
+import java.util.Date;
+import java.sql.Timestamp;
+import java.sql.Time;
+
+import [buildPackagePersistence()/].[buildParamPersistenceClassName()/];
+[for (e : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+import [buildPackagePersistenceApiEntity(e)/].[e.buildDaoInterfaceName()/];
+import [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/];
+[/for]
+[for (e : Entity | getListEntityOfBlockAndReferencedEntities_sce(b))]
+import [buildPackagePersistenceApiEntity(e)/].[buildEntityColumnEnumName(e)/];
+   [if e.eContainer() <> b]
+import [buildPackagePersistenceApiEntity(e)/].[e.buildDaoInterfaceName()/];
+import [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/];
+   [/if]
+[/for]
+import fr.spi4j.type.XtopSup;
+import fr.spi4j.exception.Spi4jValidationException;
+import fr.spi4j.persistence.ParamPersistence_Abs;
+import fr.spi4j.persistence.dbpopulate.RepartitionPopulateData;
+
+// [/protected]
+
+/**
+ * Permet d'effectuer le remplissage du Namespace '[b.name/]'.
+ */
+public class [apply_classDefault(b.name + ' populate')/]
+{
+
+   /**
+    * Executable.
+    * @param [apply_parameterMethodClassicIn('args')/]
+    *           arguments
+    * @throws Throwable
+    *            exception
+    */
+   public static void main (final String['['/]] [apply_parameterMethodClassicIn('args')/]) throws Throwable
+   {
+      // possibilité de faire un insert en précisant l'id de l'entité
+      ParamPersistence_Abs.enableInsertWithId(true);
+      [buildParamPersistenceClassName()/].getUserPersistence().begin();
+
+     [for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+         [if (not isReferentiel(it.oclAsType(environment::ObeoDSMObject)))]
+      final int [apply_variableDefault('nb max ' + it.name)/] = [getAnnotation_VOL_NB_ROWS(it)/];[if (getAnnotation_VOL_NB_ROWS(it) = -1)] // TODO Renseigner l'annotation VOL_NB_ROWS sur l'entité [it.name/][/if]
+         [/if]
+     [/for]
+
+     [for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+         [if (not isReferentiel(it.oclAsType(environment::ObeoDSMObject)))]
+      [apply_methodDefault('init ' + it.name)/]([apply_variableDefault('nb max ' + it.name)/]);
+         [/if]
+     [/for]
+
+      [buildParamPersistenceClassName()/].getUserPersistence().commit();
+      [buildParamPersistenceClassName()/].getUserPersistence().begin();
+
+     [for (it : Entity | getListEntityOfBlockAndReferencedEntities_sce(b))]
+      final [it.buildDaoInterfaceName()/] [apply_variableDefault(it.name + ' dao')/] = [it.buildParamPersistenceClassName()/].getUserPersistence().get[it.buildDaoName()/]();
+     [/for]
+
+[for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+   [for (r : Reference | it.references)]
+      [if (r.navigable)]
+      // [r.name/]
+      RepartitionPopulateData.repartition_[getOppositeMultiplicityKind(r)/]_[r.MultiplicityKind()/](
+[if (isRelationNN(r))]
+         [getAnnotation_VOL_MIN_OCCURS(r.oppositeOf)/], [getAnnotation_VOL_MAX_OCCURS(r.oppositeOf)/], [getAnnotation_VOL_MIN_OCCURS(r)/], [getAnnotation_VOL_MAX_OCCURS(r)/], [apply_variableDefault(it.name + ' dao')/], [apply_variableDefault(r.containingType.name + ' dao')/], [buildEntityColumnEnumName(it)/].[apply_attributeFinalStatic('table name ' + nameSimpleReference(r))/], "[namePK(r.containingType.oclAsType(entity::Entity))/]", "[namePK(r.referencedType.oclAsType(entity::Entity))/]", [r.containingType.oclAsType(environment::ObeoDSMObject).isReferentiel()/]);
+[elseif (isRelationN1(r))]
+         [getAnnotation_VOL_MIN_OCCURS(r)/], [getAnnotation_VOL_MAX_OCCURS(r)/], [apply_variableDefault(r.referencedType.name + ' dao')/], [apply_variableDefault(it.name + ' dao')/], [buildEntityColumnEnumName(it)/].[apply_attributeEnum(r.nameSimpleProperty())/], [r.referencedType.isReferentiel()/]);
+[elseif (isRelation1N(r))]
+         [getAnnotation_VOL_MIN_OCCURS(r)/], [getAnnotation_VOL_MAX_OCCURS(r)/], [apply_variableDefault(it.name + ' dao')/], [apply_variableDefault(r.referencedType.name + ' dao')/], [buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity))/].[r.nameSimplePropertyInverse()/][namePK_ID()/], [r.referencedType.isReferentiel()/]);
+[else]
+// Cas non géré[/if]
+         [comment][if (not r.oppositeOf.oclIsUndefined())]
+      RepartitionPopulateData.repartition_[r.oppositeOf.MultiplicityKind()/]_[r.MultiplicityKind()/][if (not isReferentiel(r.type))]([getAnnotation_VOL_MIN_OCCURS(r)/],[getAnnotation_VOL_MAX_OCCURS(r)/],[getAnnotation_VOL_MIN_OCCURS(r.oppositeOf)/],[getAnnotation_VOL_MAX_OCCURS(r.oppositeOf)/],[apply_variableDefault(it.name + ' dao')/], [apply_variableDefault(r.type.name + ' dao')/],[if (getAnnotation_VOL_MAX_OCCURS(r.oppositeOf) > 1)]
+"set_tab_[r.name/]","get_tab_[r.name/]" ,"rien");
+[else]"set_[r.oppositeOf.name/][namePK_ID()/]","get_tab_[r.name/]", "set_tab_[r.name/]");
+[/if]
+               [else]([getAnnotation_VOL_MIN_OCCURS(r.oppositeOf)/],[getAnnotation_VOL_MAX_OCCURS(r.oppositeOf)/], [apply_variableDefault(r.type.name + ' dao')/], [apply_variableDefault(it.name + ' dao')/], "set_[r.name/]");[/if]
+      [else]
+      RepartitionPopulateData.repartition_[select01N(getAnnotation_VOL_MIN_OCCURS(r))/][select01N(getAnnotation_VOL_MAX_OCCURS(r))/]_[r.MultiplicityKind()/][if (not isReferentiel(r.type))]([getAnnotation_VOL_MIN_OCCURS(r)/],[getAnnotation_VOL_MAX_OCCURS(r)/],[r.getMinMultiplicity()/],[r.getMaxMultiplicity()/],[apply_variableDefault(it.name + ' dao')/], [apply_variableDefault(r.type.name + ' dao')/],  TODO , TODO , TODO);[else]([getAnnotation_VOL_MIN_OCCURS(r)/],[getAnnotation_VOL_MAX_OCCURS(r)/], [apply_variableDefault(r.type.name + ' dao')/], [apply_variableDefault(it.name + ' dao')/], "set_[r.name/]");[/if]
+      [/if][/comment]
+      [/if]
+   [/for]
+[/for]
+
+      [buildParamPersistenceClassName()/].getUserPersistence().commit();
+   }
+
+[for (e : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+[if (not isReferentiel(e.oclAsType(environment::ObeoDSMObject)))]
+   /**
+    * Initialisation de l'entité '[e.name/]'.
+    * @param [apply_parameterMethodClassicIn('nb max ' + e.name)/]
+    *           le nombre d'instances à initialiser
+    * @throws Spi4jValidationException
+    *            erreur de validation
+    */
+   public static void [apply_methodDefault('init ' + e.name)/] (final int [apply_parameterMethodClassicIn('nb max ' + e.name)/]) throws Spi4jValidationException
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault(e.name + ' cour')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildEntityName(e))/]();
+      final [e.buildDaoInterfaceName()/] [apply_variableDefault(e.name + ' dao')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildDaoName(e))/]();
+      [apply_variableDefault(e.name + ' dao')/].deleteAll();
+
+      for (long [apply_variableDefault('i')/] = 0; [apply_variableDefault('i')/] < [apply_parameterMethodClassicIn('nb max ' + e.name)/]; [apply_variableDefault('i')/]++)
+      {
+         // [protected (e.getUserCodeId('for Initialization : ' + e.name))]
+         // TODO renseigner données de test
+         // Affecter l'identifiant
+         [apply_variableDefault(e.name + ' cour')/].setId([apply_variableDefault('i')/]);
+  [for (a : Attribute | e.attributesNoPk())]
+         [apply_variableDefault(e.name + ' cour')/].[apply_methodSet(nameSimpleProperty(a))/]([if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][defaultValueForColumnType(a, a.genPropertyType())/][/if]);
+  [/for]
+  [for (a : Attribute | e.getInheritDtoAttributes())]
+         [apply_variableDefault(e.name + ' cour')/].[apply_methodSet(nameSimpleProperty(a))/]([if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][defaultValueForColumnType(a, a.genPropertyType())/][/if]);
+  [/for]
+  [if hasAutomaticColumns()]
+  [for (columnProp : String | get_automaticColumnsProperties())]
+         [apply_variableDefault(e.name + ' cour')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]([defaultValueForColumnType(e, e.get_typeColumn(columnProp))/]);
+  [/for]
+  [/if]
+  [for (r : Reference | e.referencesNoStar())]
+         [apply_variableDefault(e.name + ' cour')/].[apply_methodSet(nameSimpleProperty(r))/](null);
+  [/for]
+  [for (r : Reference | e.referencingStar())]
+         [apply_variableDefault(e.name + ' cour')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/](1L);
+  [/for]
+         // [/protected]
+         [apply_variableDefault(e.name + ' dao')/].create([apply_variableDefault(e.name + ' cour')/]);
+      }
+   }
+
+   [/if]
+[/for]
+}
+[/file]
+
+
+[/template]
+
+[template private defaultValueForColumnType(o : OclAny, type : String)]
+[if type.equalsIgnoreCase('String')]
+"s" + [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Boolean')]
+false[elseif type.equalsIgnoreCase('Integer')]
+(int) [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Long')]
+[apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Float')]
+(float) [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Double')]
+(double) [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('XtopSup')]
+new XtopSup(DatabaseLineStatus_Enum.active)[elseif type.equalsIgnoreCase('Date')]
+new Date()[elseif type.equalsIgnoreCase('Timestamp')]
+new Timestamp( new Date().getTime() )[elseif type.equalsIgnoreCase('Time')]
+new Time( new Date().getTime() )[elseif type.equalsIgnoreCase('Char')]
+'c'[elseif type.equalsIgnoreCase('byte[]')]
+new byte['['/]0[']'/][/if]
+[/template]
+
+[template public MultiplicityKind (arg : Reference)]
+[if (arg.multiplicity = environment::MultiplicityKind::ONE)]
+11[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]
+01[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_STAR)]
+0N[elseif (arg.multiplicity = environment::MultiplicityKind::ONE_STAR)]
+1N[/if]
+[/template]
+
+[template public getOppositeMultiplicityKind(r : Reference)]
+[if (not r.oppositeOf.oclIsUndefined())]
+[MultiplicityKind(r.oppositeOf)/][elseif (r.multiplicity = environment::MultiplicityKind::ONE)]
+0N[elseif (r.multiplicity = environment::MultiplicityKind::ZERO_ONE)]
+0N[elseif (r.multiplicity = environment::MultiplicityKind::ZERO_STAR)]
+01[elseif (r.multiplicity = environment::MultiplicityKind::ONE_STAR)]
+01[/if]
+[/template]
+
+[query private isRelationNN(r : Reference) : Boolean =
+    if (r.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+        if (not r.oppositeOf.oclIsUndefined()) then
+            if (r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+                true
+            else
+                false
+            endif
+        else
+            false
+        endif
+    else
+        false
+    endif
+/]
+
+[query private isRelationN1(r : Reference) : Boolean =
+    if (r.multiplicity = environment::MultiplicityKind::ZERO_ONE or r.multiplicity = environment::MultiplicityKind::ONE) then
+        if (not r.oppositeOf.oclIsUndefined()) then
+            if (r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+                true
+            else
+                false
+            endif
+        else
+            true
+        endif
+    else
+        false
+    endif
+/]
+
+[query private isRelation1N(r : Reference) : Boolean =
+    if (r.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+        if (not r.oppositeOf.oclIsUndefined()) then
+            if (r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_ONE or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE) then
+                true
+            else
+                false
+            endif
+        else
+            true
+        endif
+    else
+        false
+    endif
+/]
+
+[template public getMinMultiplicity(arg : Reference)]
+[if (arg.multiplicity = environment::MultiplicityKind::ONE)]
+1[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]
+0[/if]
+[/template]
+
+[template public getMaxMultiplicity(arg : Reference)]
+[if (arg.multiplicity = environment::MultiplicityKind::ONE) or (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]
+1[/if]
+[/template]
+
+[query public getListEntityOfBlockAndReferencedEntities_sce(p_Namespace : Namespace) : Sequence(Entity) =
+  invoke('fr.pacman.entity.api.dbpopulate.Overload_Sce', 'getListEntityOfBlockAndReferencedEntities(org.obeonetwork.dsl.environment.Namespace)', Sequence{p_Namespace}) /]

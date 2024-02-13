@@ -1,0 +1,129 @@
+[comment encoding = UTF-8 /]
+[module mapper('http://www.obeonetwork.org/dsl/soa/4.0.0',
+               'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::soa::common::comments /]
+[import fr::pacman::commons::soa::common::packages /]
+[import fr::pacman::commons::soa::common::references /]
+[import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::utils /]
+
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::commons::business::api::category::dto /]
+
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[template public mapper(d : DTO)]
+[licence()/]
+package [buildPackageMapperDto(d)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[d.writeImports()/]
+
+// [/protected]
+
+/**
+ * Implémentation pour le Mapper (= Dto <-> Xto) sur le type '[nameClassDto(d)/]'.
+ * @author [getAuthorName()/]
+ */
+public class [buildMapperClassName(d)/] extends [getClassNameForMapper_Abs()/]<[buildDtoClassName(d)/], [buildXtoClassNameFromDto(d)/]> implements [buildMapperInterfaceName(d)/]
+{
+
+   @Override
+   public [buildXtoClassNameFromDto(d)/] convertDtoToXto (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/])
+   {
+      final [buildXtoClassNameFromDto(d)/] [apply_variableFinal('xto')/] = super.convertDtoToXto([apply_parameterMethodClassicIn('dto')/]);
+
+      // convertDtoToXto
+      // [protected (d.getUserCodeId('convertDtoToXto'))]
+
+      // [/protected]
+
+      return [apply_variableFinal('xto')/];
+   }
+
+   @Override
+   public [buildDtoClassName(d)/] convertXtoToDto (final [buildXtoClassNameFromDto(d)/] [apply_parameterMethodClassicIn('xto')/])
+   {
+      final [buildDtoClassName(d)/] [apply_variableFinal('dto')/] = super.convertXtoToDto([apply_parameterMethodClassicIn('xto')/]);
+
+      // convertXtoToDto
+      // [protected (d.getUserCodeId('convertXtoToDto'))]
+
+      // [/protected]
+
+      return [apply_variableFinal('dto')/];
+   }
+
+   @Override
+   protected [buildDtoClassName(d)/] getInstanceOfDto ()
+   {
+      return new [buildDtoClassName(d)/]();
+   }
+
+   @Override
+   protected [buildXtoClassNameFromDto(d)/] getInstanceOfXto ()
+   {
+      return new [buildXtoClassNameFromDto(d)/]();
+   }
+
+   @Override
+   protected [getClassNameForMapper_Itf()/]<? extends [getClassNameForDto_Itf()/]<?>, ? extends [getClassNameForXto_Itf()/]<?>> getSpecificMapper (final String [apply_parameterMethodClassicIn('field name')/])
+   {
+[for (r : Reference | d.referencesNoStar())]
+      if ("[apply_attributeDefault(r.name)/]".equals([apply_parameterMethodClassicIn('field name')/]))
+      {
+         return [buildAppliUserMapperGenClassName(r.referencedType.oclAsType(DTO))/].[apply_methodDefault('get ' + buildMapperClassName(r.referencedType.oclAsType(DTO)))/]();
+      }
+[/for]
+[for (r : Reference | d.referencesStarStar())]
+      if ("[apply_attributeMultiple(r.name)/]".equals([apply_parameterMethodClassicIn('field name')/]))
+      {
+         return [buildAppliUserMapperGenClassName(r.referencedType.oclAsType(DTO))/].[apply_methodDefault('get ' + buildMapperClassName(r.referencedType.oclAsType(DTO)))/]();
+      }
+[/for]
+[for (r : Reference | d.referencesStarNoStar())]
+      if ("[apply_attributeMultiple(r.name)/]".equals([apply_parameterMethodClassicIn('field name')/]))
+      {
+         return [buildAppliUserMapperGenClassName(r.referencedType.oclAsType(DTO))/].[apply_methodDefault('get ' + buildMapperClassName(r.referencedType.oclAsType(DTO)))/]();
+      }
+[/for]
+      return super.getSpecificMapper([apply_parameterMethodClassicIn('field name')/]);
+   }
+
+   // [nameMapper(d)/]
+   // [protected (d.getUserCodeId(nameMapper(d)))]
+
+   // [/protected]
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(d : DTO) post(trim())]
+[d.initImports()/]
+[d.addImport(getImportForDto_Itf())/]
+[d.addImport(getImportForMapper_Abs())/]
+[d.addImport(getImportForMapper_Itf())/]
+[d.addImport(getImportForXto_Itf())/]
+[d.addImport(d.buildPackageBusinessApiDto() + '.' + d.buildDtoClassName())/]
+[d.addImport(d.buildPackageWsApiDto() + '.' + d.buildXtoClassNameFromDto())/]
+[d.addImport(buildPackageMapper() + '.' + buildAppliUserMapperGenClassName(), d.references->exists(r : Reference | r.navigable))/]
+[d.flushImports()/]
+[/template]

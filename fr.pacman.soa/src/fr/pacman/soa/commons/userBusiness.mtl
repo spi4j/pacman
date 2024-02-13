@@ -1,0 +1,167 @@
+[comment encoding = UTF-8 /]
+[module userBusiness('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                     'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::commons::soa::common::utils /]
+
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::attributes /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[template public userBusiness(m : System)]
+[licence()/]
+// CHECKSTYLE:OFF
+package [buildPackageBusiness()/]; // NOPMD
+// CHECKSTYLE:ON
+// [protected ('for imports')]
+
+[comment : Write all required imports foe the class. /]
+[m.writeImporsForBusiness()/]
+
+// [/protected]
+
+/**
+ * Classe permettant de centraliser les factories business de l'application.
+ * @author [getAuthorName()/]
+ */
+public final class [buildAppliUserBusinessGenClassName()/] extends [getClassNameForUserBusiness_Abs()/]
+{
+
+   /** Singleton. */
+   private static [buildAppliUserBusinessGenClassName()/] [apply_attributeStatic('singleton')/] = new [buildAppliUserBusinessGenClassName()/]();
+
+   /**
+    * Constructeur privé.
+    */
+   private [buildAppliUserBusinessGenClassName()/] ()
+   {
+      super();
+   }
+
+[for (d : DTO | listeDtosFromSystem(m))]
+[if ((not d.isNotPersistent() and not d.isParent()) or serviceFromDto(d) <> null)]
+   /**
+    * Obtenir la façade de services '[buildServiceInterfaceName(null, d)/]'.
+    * @return L'instance désirée.
+    */
+   public static [buildServiceInterfaceName(null, d)/] [apply_methodDefault('get ' + buildServiceName(null, d))/] ()
+   {
+      return [apply_attributeStatic('singleton')/].getBinding([buildServiceInterfaceName(null, d)/].class);
+   }
+
+[/if]
+[/for]
+[for (srv : Service | listeServicesFromSystem(m))]
+[if serviceSeulFromSystem(srv, m)]
+
+   /**
+    * Obtenir la façade de services '[buildServiceInterfaceName(srv, null)/]'.
+    * @return L'instance désirée.
+    */
+   public static [buildServiceInterfaceName(srv, null)/] [apply_methodDefault('get ' + buildServiceName(srv, null))/] ()
+   {
+      return [apply_attributeStatic('singleton')/].getBinding([buildServiceInterfaceName(srv, null)/].class);
+   }
+[/if]
+[/for]
+
+   /**
+    * @return le [apply_attributeStatic('singleton')/] de cette factory
+    */
+   public static [buildAppliUserBusinessGenClassName()/] getSingleton ()
+   {
+      return [apply_attributeStatic('singleton')/];
+   }
+
+   @Override
+   protected [getClassNameForUserPersistence_Abs()/] getUserPersistence ()
+   {
+	  [if usePersistence()]
+      // dans cette factory de la partie commune entre un client et le serveur
+      // on ne référence pas les classes d'implémentations "serveur" des services
+      // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
+
+      try
+      {
+         return ([getClassNameForUserPersistence_Abs()/]) Class.forName("[buildPackagePersistence()/].[buildParamPersistenceClassName()/]")
+                  .getMethod("[apply_methodDefault('get user persistence')/]").invoke(null);
+      }
+      catch (final Exception [apply_variableFinal('ex')/])
+      {
+         // ne devrait jamais arriver grâce à la génération de code
+         throw new Spi4jRuntimeException([apply_variableFinal('ex')/], [apply_variableFinal('ex')/].toString(), "???");
+      }
+	  [else]
+	  	// Pas de persistance pour cette application.
+		// Cette méthode n'a aucunne raison d'être appelée par spi4j.
+	  	return null;
+	  [/if]
+   }
+
+   // CHECKSTYLE:OFF
+   @Override
+   // CHECKSTYLE:ON
+   public void initBindings () // NOPMD
+   {
+      // dans cette factory de la partie commune entre un client et le serveur
+      // on ne référence pas les classes d'implémentations "serveur" des services
+      // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
+[for (d : DTO | listeDtosFromSystem(m))]
+[if ((not d.isNotPersistent() and not d.isParent()) or serviceFromDto(d) <> null)]
+      final [buildServiceInterfaceName(null, d)/] [apply_variableObjectDefault(buildServiceName(null, d))/] = wrapService([buildServiceInterfaceName(null, d)/].class, "[buildPackageBusinessImplementationServiceDto(serviceFromDto(d), d)/].[buildServiceClassName(null, d)/]");
+      bind([buildServiceInterfaceName(null, d)/].class, [apply_variableObjectDefault(buildServiceName(null, d))/]);
+
+[/if]
+[/for]
+[for (srv : Service | listeServicesFromSystem(m))]
+[if serviceSeulFromSystem(srv, m)]
+      final [buildServiceInterfaceName(srv, null)/] [apply_variableObjectDefault(buildServiceName(srv, null))/] = wrapService([buildServiceInterfaceName(srv, null)/].class, "[buildPackageBusinessImplementationServiceDto(srv, null)/].[buildServiceClassName(srv, null)/]");
+      bind([buildServiceInterfaceName(srv, null)/].class, [apply_variableObjectDefault(buildServiceName(srv, null))/]);
+
+[/if]
+[/for]
+   }
+}
+[/template]
+
+[comment : write all required imports for the class. /]
+[template private writeImporsForBusiness(m : System) post(trim())]
+[m.initImports()/]
+[m.addImport('fr.spi4j.exception.Spi4jRuntimeException')/]
+[m.addImport(getImportForUserBusiness_Abs())/]
+[m.addImport(getImportForUserPersistence_Abs())/]
+
+[comment : List all services to get service interface. /]
+[for (srv : Service | listeServicesFromSystem(m) )]
+	[if serviceSeulFromSystem(srv, m)]
+		[m.addImport(buildImportServiceInterface(srv, null))/]
+	[/if]
+[/for]
+
+[comment : List all DTOs to get .... /]
+[for (d : DTO | listeDtosFromSystem(m))]
+	[if ((not d.isNotPersistent() and not d.isParent()) or serviceFromDto(d) <> null)]
+		[m.addImport(buildPackageBusinessApiServiceDto(serviceFromDto(d),d) + '.' + buildServiceInterfaceName(null, d))/]
+	[/if]
+[/for]
+
+[m.flushImports()/]
+[/template]

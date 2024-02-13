@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requirement:Repository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:requirement="http://www.obeonetwork.org/dsl/requirement/1.0" xmi:id="_psTf8GqQEeCeeZbkeMH_VQ" name="Appwhite1">
+  <mainCategories xmi:id="_q4IZ4GqQEeCeeZbkeMH_VQ" name="Module Personne" id="MPers">
+    <requirements xmi:id="_xwW18GqQEeCeeZbkeMH_VQ" name="FCT_PERS_01" id="FCT_PERS_01" statement="Lors d'une recherche de personnes par grade, les personnes trouvées ont toutes le même grade&#xD;&#xA;Le grade peut être &quot;Lieutenant&quot;, &quot;Colonel&quot;, ...&#xD;&#xA;Statement sur plusieurs lignes !" rationale="" subtype="">
+      <referencedObject href="soa/services.soa#_zvaqZHI1EeC5bZvKOWww9A"/>
+    </requirements>
+    <requirements xmi:id="_9b-AcbdbEeC5moPQMyY3Gw" name="TEC_PERS_02" id="TEC_PERS_02" statement="Exigence technique sur une ligne" type="technical" status="">
+      <referencedObject href="soa/services.soa#_zvaqZHI1EeC5bZvKOWww9A"/>
+      <referencedObject href="soa/services.soa#_zvaqaXI1EeC5bZvKOWww9A"/>
+      <referencedObject href="soa/services.soa#_zvaqb3I1EeC5bZvKOWww9A"/>
+      <referencedObject href="soa/services.soa#_zvaqcnI1EeC5bZvKOWww9A"/>
+    </requirements>
+  </mainCategories>
+</requirement:Repository>

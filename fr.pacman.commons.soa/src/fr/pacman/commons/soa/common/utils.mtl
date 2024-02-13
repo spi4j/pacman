@@ -1,0 +1,73 @@
+[comment encoding = UTF-8 /]
+[module utils ( 'http://www.obeonetwork.org/dsl/soa/4.0.0',
+				'http://www.obeonetwork.org/dsl/entity/3.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+
+[import fr::pacman::commons::soa::common::attributes/]
+[import fr::pacman::commons::common::names /]
+
+[comment : /]
+[query public isParent(d : DTO) : Boolean =
+    not systemeRacine(d).oclIsUndefined() and systemeRacine(d).eAllContents(DTO)->exists(child : DTO | child.supertype = d)
+/]
+
+[comment : /]
+[query public hasParent(d : DTO) : Boolean =
+    not d.supertype.oclIsUndefined()
+/]
+
+[comment : /]
+[query public isPropertyFromParent(p : Property, d : DTO) : Boolean =
+    d.hasParent() and d.supertype.properties->exists(parentProp : Property | parentProp.name = p.name)
+/]
+
+[comment] Détermine si un attribut ou une référence possède une méta-donnée Annotation de titre "COMPUTED". [/comment]
+[query public isComputed(p : Property) : Boolean =
+    not p.metadatas.oclIsUndefined()
+    and p.metadatas.metadatas->
+        exists(m : MetaData |
+            not m.oclIsUndefined()
+            and not m.oclAsType(Annotation).title.oclIsUndefined()
+            and m.oclAsType(Annotation).title.equalsIgnoreCase('COMPUTED'))
+/]
+
+[comment] Renvoie sous la forme d'un OrderedSet la liste des attributs d'un DTO qui possèdent une méta-donnée Annotation de titre "COMPUTED". [/comment]
+[query public attributesNotComputed(s : DTO) : OrderedSet(Attribute) =
+    (s.getAttributes()->select(a : Attribute | not a.isComputed())->asOrderedSet())
+/]
+
+[comment : ??????????????????????????????!!!!!!!!!!!!/]
+[template public mandatory(p : Property)]
+[if isMandatory(p)]true[else]false[/if]
+[/template]
+
+[comment : Teste si une propriété (attribut ou référence) est obligatoire. /]
+[query public isMandatory(p : Property) : Boolean =
+invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatorySoa(org.obeonetwork.dsl.environment.Property)', Sequence{p})
+/]
+
+[query public serviceFromDto(d : DTO) : Service =
+if (not systemeRacine(d).oclIsUndefined() and systemeRacine(d).eAllContents(Service)->exists(s : Service | d.buildSimpleDtoName() = s.buildSimpleServiceName())) then
+    systemeRacine(d).eAllContents(Service)->select(s : Service | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first()
+else
+    null
+endif
+/]
+
+[comment : /]
+[query public systemeRacine(o : ObeoDSMObject) : System =
+if (o.oclIsUndefined()) then
+    null
+else
+    if (o.oclIsKindOf(System)) then
+        o.oclAsType(System)
+    else
+        if (o.oclIsKindOf(Root)) then
+           null
+        else
+           systemeRacine(o.eContainer(System))
+        endif
+    endif
+endif
+/]

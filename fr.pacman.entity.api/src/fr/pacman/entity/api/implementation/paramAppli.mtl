@@ -1,0 +1,36 @@
+[comment encoding = UTF-8 /]
+[module paramAppli('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::common::classes /]
+
+[template public paramAppli(r : Root)]
+[licence()/]
+package [getApplicationPackage()/];
+// [protected ('for imports')]
+
+// [/protected]
+
+[comClass('Paramétrage de l\'application')/]
+public interface [buildParamAppliClassName()/]
+{
+
+   /** L'identifiant de l'application. */
+   String [apply_attributeFinalStatic('id appli')/] = "[getApplicationName()/]";
+
+   // Constantes
+   // [protected (r.getUserCodeId('Constantes'))]
+
+   // [/protected]
+
+}
+[/template]

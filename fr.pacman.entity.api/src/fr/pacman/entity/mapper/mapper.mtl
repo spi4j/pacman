@@ -1,0 +1,121 @@
+[comment encoding = UTF-8 /]
+[module mapper('http://www.obeonetwork.org/dsl/environment/3.0.0',
+			    'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+
+[template public mapper(e : Entity)]
+[licence()/]
+package [buildPackageEntityMapper(e)/];
+
+// [protected ('for imports')]
+
+import fr.spi4j.mapper.EntityMapper_Abs;
+import fr.spi4j.mapper.EntityMapper_Itf;
+import fr.spi4j.ws.xto.Xto_Itf;
+import fr.spi4j.persistence.entity.Entity_Itf;
+
+import [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/];
+import [buildPackagePersistenceImplementationJdbcEntity(e)/].[buildEntityImplClassName(e)/];
+import [buildPackageWsApiEntity(e)/].[buildXtoClassNameFromEntity(e)/];
+
+[if e.references->exists(r : Reference | r.navigable)]
+import [buildPackageMapper()/].[buildAppliUserMapperGenClassName()/];
+[/if]
+
+// [/protected]
+
+/**
+ * Implémentation pour le Mapper (= Entity <-> Xto) sur le type '[buildEntityImplClassName(e)/]'.
+ * @author [getAuthorName()/]
+ */
+public class [buildEntityMapperImplClassName(e)/] extends [getClassNameForEntityMapper_Abs()/]<[buildEntityInterfaceName(e)/], [buildXtoClassNameFromEntity(e)/]> implements [buildEntityMapperInterfaceName(e)/]
+{
+
+   @Override
+   public [buildXtoClassNameFromEntity(e)/] convertEntityToXto (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/])
+   {
+      final [buildXtoClassNameFromEntity(e)/] [apply_variableFinal('xto')/] = super.convertEntityToXto([apply_parameterMethodClassicIn('entity')/]);
+
+      // convertEntityToXto
+      // [protected (e.getUserCodeId('convertEntityToXto'))]
+
+      // [/protected]
+
+      return [apply_variableFinal('xto')/];
+   }
+
+   @Override
+   public [buildEntityInterfaceName(e)/] convertXtoToEntity (final [buildXtoClassNameFromEntity(e)/] [apply_parameterMethodClassicIn('xto')/])
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('entity')/] = super.convertXtoToEntity([apply_parameterMethodClassicIn('xto')/]);
+
+      // convertXtoToEntity
+      // [protected (e.getUserCodeId('convertXtoToEntity'))]
+
+      // [/protected]
+
+      return [apply_variableFinal('entity')/];
+   }
+
+   @Override
+   protected [buildEntityImplClassName(e)/] getInstanceOfEntity ()
+   {
+      return new [buildEntityImplClassName(e)/]();
+   }
+
+   @Override
+   protected [buildXtoClassNameFromEntity(e)/] getInstanceOfXto ()
+   {
+      return new [buildXtoClassNameFromEntity(e)/]();
+   }
+
+   @Override
+   protected [getClassNameForEntityMapper_Itf()/]<? extends [getClassNameForEntity_Itf()/]<?>, ? extends [getClassNameForXto_Itf()/]<?>> getSpecificMapper (final String [apply_parameterMethodClassicIn('field name')/])
+   {
+[for (r : Reference | e.referencesNoStar())]
+      if ("[apply_attributeDefault(r.name)/]".equals([apply_parameterMethodClassicIn('field name')/]))
+      { 
+         return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildEntityMapperImplClassName(r.containingType.oclAsType(entity::Entity)))/]();
+      }
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+      if ("[apply_attributeMultiple(r.name)/]".equals([apply_parameterMethodClassicIn('field name')/]))
+      { 
+         return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildEntityMapperImplClassName(r.containingType.oclAsType(entity::Entity)))/]();
+      }
+[/for]
+[for (r : Reference | e.referencesStarNoStar())]
+      if ("[apply_attributeMultiple(r.name)/]".equals([apply_parameterMethodClassicIn('field name')/]))
+      { 
+         return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildEntityMapperImplClassName(r.containingType.oclAsType(entity::Entity)))/]();
+      }
+[/for]
+      return super.getSpecificMapper([apply_parameterMethodClassicIn('field name')/]);
+   }
+
+   // [nameMapper(e)/]
+   // [protected (e.getUserCodeId(e.getUserCodeId(nameMapper(e))))]
+
+   // [/protected]
+}
+[/template]

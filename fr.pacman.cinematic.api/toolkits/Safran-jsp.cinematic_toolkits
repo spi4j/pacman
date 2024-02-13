@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cinematic-toolkits:Toolkit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cinematic-toolkits="http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0" xmi:id="_jIrpcK8aEeGs4sAdxwacjg" technicalid="_mO1soGBFEe2pbbWWOVDFxA" name="Safran JSP">
+  <widgets xmi:id="_SZ1REK8bEeGs4sAdxwacjg" technicalid="_mO5-EGBFEe2pbbWWOVDFxA" name="CheckBox" icon="/fr.pacman.cinematic.api/icons/Checkbox.gif">
+    <possibleEvents xmi:id="_6AJ7AK8bEeGs4sAdxwacjg" technicalid="_mO-2kGBFEe2pbbWWOVDFxA" name="onClick"/>
+    <possibleEvents xmi:id="_t6DuEGBUEe2wPIzd36qDKg" technicalid="_tUQSUGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_ugXgIGBUEe2wPIzd36qDKg" technicalid="_uGTaUGBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_6gYyAGsAEe2DmIjdPzrWsw" technicalid="_56xjgWsAEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Checkbox.svg" bordered="false" defaultWidth="300" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_lSBU4GpSEe2yBNyzTTvPcQ" technicalid="_kplb4GpSEe2yBNyzTTvPcQ" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_VC6lkG_PEe2Y552iT6IWaA" technicalid="_UYZo8m_PEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_UXTDUK8bEeGs4sAdxwacjg" technicalid="_mO-2kWBFEe2pbbWWOVDFxA" name="ComboBox" icon="/fr.pacman.cinematic.api/icons/Combo.gif">
+    <possibleEvents xmi:id="_5VGL0K8bEeGs4sAdxwacjg" technicalid="_mO-2kmBFEe2pbbWWOVDFxA" name="onChange"/>
+    <possibleEvents xmi:id="_zWEq0GBUEe2wPIzd36qDKg" technicalid="_yxnS4GBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_zWEq0WBUEe2wPIzd36qDKg" technicalid="_yxn58GBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_9FEf0GsBEe2DmIjdPzrWsw" technicalid="_8ykakWsBEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Combo.svg" defaultWidth="300" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_s7QTsW_PEe2Y552iT6IWaA" technicalid="_sQ8LYG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_EMu2IW_QEe2Y552iT6IWaA" technicalid="_DzfPsG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_WUw1kK8bEeGs4sAdxwacjg" technicalid="_mO-2k2BFEe2pbbWWOVDFxA" name="Date" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_5OiQ0K8bEeGs4sAdxwacjg" technicalid="_mO-2lGBFEe2pbbWWOVDFxA" name="onChange"/>
+    <possibleEvents xmi:id="_z3UWsGBUEe2wPIzd36qDKg" technicalid="_zWEDwGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_z3UWsWBUEe2wPIzd36qDKg" technicalid="_zWEDwWBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_5ii6oGsJEe2DmIjdPzrWsw" technicalid="_5T9sEWsJEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/date.svg" defaultWidth="300" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_urjzsW_PEe2Y552iT6IWaA" technicalid="_s7QTsG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_EjZpsW_QEe2Y552iT6IWaA" technicalid="_EMu2IG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_YTa6oK8bEeGs4sAdxwacjg" technicalid="_mO-2lWBFEe2pbbWWOVDFxA" name="Double" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_5Ibo0K8bEeGs4sAdxwacjg" technicalid="_mO-2lmBFEe2pbbWWOVDFxA" name="onChange"/>
+    <possibleEvents xmi:id="_09VjkGBUEe2wPIzd36qDKg" technicalid="_z3TvoGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_09VjkWBUEe2wPIzd36qDKg" technicalid="_z3TvoWBUEe2wPIzd36qDKg" name="onBlur"/>
+    <metadataDefinitions xmi:id="_wUeSQW_PEe2Y552iT6IWaA" technicalid="_urjzsG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_E46msG_QEe2Y552iT6IWaA" technicalid="_EjZpsG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_aMackK8bEeGs4sAdxwacjg" technicalid="_mO-2l2BFEe2pbbWWOVDFxA" name="Integer" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_5DNxoK8bEeGs4sAdxwacjg" technicalid="_mO-2mGBFEe2pbbWWOVDFxA" name="onChange"/>
+    <possibleEvents xmi:id="_25PPkGBUEe2wPIzd36qDKg" technicalid="_09U8gGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_25PPkWBUEe2wPIzd36qDKg" technicalid="_09U8gWBUEe2wPIzd36qDKg" name="onBlur"/>
+    <metadataDefinitions xmi:id="_xmGSMW_PEe2Y552iT6IWaA" technicalid="_wUeSQG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_FPLxoW_QEe2Y552iT6IWaA" technicalid="_E45_oG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_bn6KMK8bEeGs4sAdxwacjg" technicalid="_mO-2mWBFEe2pbbWWOVDFxA" name="Password" icon="/fr.pacman.cinematic.api/icons/Password.gif">
+    <possibleEvents xmi:id="_49s_gK8bEeGs4sAdxwacjg" technicalid="_mO-2mmBFEe2pbbWWOVDFxA" name="onChange"/>
+    <possibleEvents xmi:id="_3azrkmBUEe2wPIzd36qDKg" technicalid="_25OogGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_3azrk2BUEe2wPIzd36qDKg" technicalid="_25OogWBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_pU8HwGsCEe2DmIjdPzrWsw" technicalid="_ohR2MWsCEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Password.svg" defaultWidth="300" defaultHeight="50" exampleExpression=""/>
+    <metadataDefinitions xmi:id="_QxHGIGBNEe2LccU4anA4wg" technicalid="_NMfI0mBNEe2LccU4anA4wg" title="MAXLENGTH" help="Taille maximale pour la saisie du champ."/>
+    <metadataDefinitions xmi:id="_yqOBoW_PEe2Y552iT6IWaA" technicalid="_xmGSMG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_F1aEIW_QEe2Y552iT6IWaA" technicalid="_FPLxoG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_dMCPYK8bEeGs4sAdxwacjg" technicalid="_mO-2m2BFEe2pbbWWOVDFxA" name="Text" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_41gFwK8bEeGs4sAdxwacjg" technicalid="_mO-2nGBFEe2pbbWWOVDFxA" name="onChange"/>
+    <possibleEvents xmi:id="_3-Zg0mBUEe2wPIzd36qDKg" technicalid="_3azrkGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_3-Zg02BUEe2wPIzd36qDKg" technicalid="_3azrkWBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_r6lUUGsCEe2DmIjdPzrWsw" technicalid="_rg1XkWsCEe2DmIjdPzrWsw" defaultWidth="300" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_He5T4GBNEe2LccU4anA4wg" technicalid="_GiFGUmBNEe2LccU4anA4wg" title="MAXLENGTH" body="50" help="Taille maximale pour la saisie du champ."/>
+    <metadataDefinitions xmi:id="_zsdhwG_PEe2Y552iT6IWaA" technicalid="_yqOBoG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_Gjt7oW_QEe2Y552iT6IWaA" technicalid="_F1aEIG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_e3BxkK8bEeGs4sAdxwacjg" technicalid="_mO-2nWBFEe2pbbWWOVDFxA" name="Table" icon="/fr.pacman.cinematic.api/icons/Table.gif" isContainer="true">
+    <possibleEvents xmi:id="_4JGSwK8bEeGs4sAdxwacjg" technicalid="_mO-2nmBFEe2pbbWWOVDFxA" name="onChange"/>
+    <style xmi:id="_VsYTIGsKEe2DmIjdPzrWsw" technicalid="_UQRhgWsKEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Table.svg" decoratorPosition="NORTH_WEST" decoratorVFill="false" defaultWidth="400" defaultHeight="200"/>
+    <metadataDefinitions xmi:id="_n6ADwWpSEe2yBNyzTTvPcQ" technicalid="_nLKn0GpSEe2yBNyzTTvPcQ" title="CUSTOM_CODE" help="Code libre a attacher au widget"/>
+  </widgets>
+  <widgets xmi:id="_gcf6kK8bEeGs4sAdxwacjg" technicalid="_mO-2n2BFEe2pbbWWOVDFxA" name="ViewDialog" icon="/fr.pacman.cinematic.api/icons/Panel.gif" isContainer="true">
+    <possibleEvents xmi:id="_0-5noK8bEeGs4sAdxwacjg" technicalid="_mO-2oGBFEe2pbbWWOVDFxA" name="onClose"/>
+  </widgets>
+  <widgets xmi:id="_nAGxgK8bEeGs4sAdxwacjg" technicalid="_mO-2oWBFEe2pbbWWOVDFxA" name="ViewPanel" icon="/fr.pacman.cinematic.api/icons/Panel.gif" isContainer="true">
+    <possibleEvents xmi:id="_y-cy0K8bEeGs4sAdxwacjg" technicalid="_mPArwGBFEe2pbbWWOVDFxA" name="onClose"/>
+    <possibleEvents xmi:id="_aionYGK6Ee2c5udcIsfnYg" technicalid="_aIwu0GK6Ee2c5udcIsfnYg" name="onLoad"/>
+  </widgets>
+  <widgets xmi:id="_qOeyAK8bEeGs4sAdxwacjg" technicalid="_mPArwWBFEe2pbbWWOVDFxA" name="MainPanel" icon="/fr.pacman.cinematic.api/icons/Window.gif" implementation="" isContainer="true">
+    <possibleEvents xmi:id="_xQomIK8bEeGs4sAdxwacjg" technicalid="_mPArwmBFEe2pbbWWOVDFxA" name="onClose"/>
+    <possibleEvents xmi:id="_gw0n8GK6Ee2c5udcIsfnYg" technicalid="_fUE9IGK6Ee2c5udcIsfnYg" name="onLoad"/>
+  </widgets>
+  <widgets xmi:id="_suab0GPtEe2oDv2f7L34LQ" technicalid="_rtoUQGPtEe2oDv2f7L34LQ" name="ReferentialPanel" icon="/fr.pacman.cinematic.api/icons/Window.gif" implementation="" isContainer="true">
+    <possibleEvents xmi:id="_suab0WPtEe2oDv2f7L34LQ" technicalid="_rtoUQWPtEe2oDv2f7L34LQ" name="onClose"/>
+    <possibleEvents xmi:id="_xbQlcGPtEe2oDv2f7L34LQ" technicalid="_w05wEGPtEe2oDv2f7L34LQ" name="onLoad"/>
+  </widgets>
+  <widgets xmi:id="_DXrHMmBKEe2LccU4anA4wg" technicalid="_C4GPQGBKEe2LccU4anA4wg" name="HeaderPanel" icon="/fr.pacman.cinematic.api/icons/Window.gif" implementation="" isContainer="true">
+    <possibleEvents xmi:id="_DXrHM2BKEe2LccU4anA4wg" technicalid="_C4GPQWBKEe2LccU4anA4wg" name="onClose"/>
+    <possibleEvents xmi:id="_i6nmAGK6Ee2c5udcIsfnYg" technicalid="_ieLhoGK6Ee2c5udcIsfnYg" name="onLoad"/>
+  </widgets>
+  <widgets xmi:id="_Ft5XsmBKEe2LccU4anA4wg" technicalid="_FYdTMGBKEe2LccU4anA4wg" name="FooterPanel" icon="/fr.pacman.cinematic.api/icons/Window.gif" implementation="" isContainer="true">
+    <possibleEvents xmi:id="_Ft5Xs2BKEe2LccU4anA4wg" technicalid="_FYdTMWBKEe2LccU4anA4wg" name="onClose"/>
+  </widgets>
+  <widgets xmi:id="_SQ2PAmBXEe2-l5DMiYqvTg" technicalid="_RovGIGBXEe2-l5DMiYqvTg" name="FormPanel" icon="/fr.pacman.cinematic.api/icons/Panel.gif" isContainer="true">
+    <possibleEvents xmi:id="_SQ2PA2BXEe2-l5DMiYqvTg" technicalid="_RovGIWBXEe2-l5DMiYqvTg" name="onClose"/>
+    <style xmi:id="_fYdkoGsPEe2DmIjdPzrWsw" technicalid="_da_yYWsPEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Form.svg" decoratorPosition="NORTH_WEST" decoratorVFill="false" defaultWidth="500" defaultHeight="300"/>
+    <metadataDefinitions xmi:id="_9wmgMW_PEe2Y552iT6IWaA" technicalid="_7kvsoG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+  </widgets>
+  <widgets xmi:id="_KPvLMmBKEe2LccU4anA4wg" technicalid="_J2kdQGBKEe2LccU4anA4wg" name="SubmitButton" icon="/fr.pacman.cinematic.api/icons/Button.gif">
+    <possibleEvents xmi:id="_KPvLM2BKEe2LccU4anA4wg" technicalid="_J2kdQWBKEe2LccU4anA4wg" name="onClick"/>
+    <possibleEvents xmi:id="__VEzcmBUEe2wPIzd36qDKg" technicalid="_3-Zg0GBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="__VEzc2BUEe2wPIzd36qDKg" technicalid="_3-Zg0WBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_uvTesGsCEe2DmIjdPzrWsw" technicalid="_ud_sQWsCEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Button.svg" defaultWidth="200" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_-751sW_PEe2Y552iT6IWaA" technicalid="_9wmgMG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+  </widgets>
+  <widgets xmi:id="_sdOhgK8bEeGs4sAdxwacjg" technicalid="_mPArw2BFEe2pbbWWOVDFxA" name="SimpleButton" icon="/fr.pacman.cinematic.api/icons/Button.gif">
+    <possibleEvents xmi:id="_vf1W4K8bEeGs4sAdxwacjg" technicalid="_mPArxGBFEe2pbbWWOVDFxA" name="onClick"/>
+    <possibleEvents xmi:id="__3Bp8WBUEe2wPIzd36qDKg" technicalid="__VEzcGBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="__3Bp8mBUEe2wPIzd36qDKg" technicalid="__VEzcWBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_0AXvsGsCEe2DmIjdPzrWsw" technicalid="_zwguwWsCEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Button.svg" defaultWidth="200" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_AVZYMW_QEe2Y552iT6IWaA" technicalid="_-751sG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+  </widgets>
+  <widgets xmi:id="_U6FYkmBLEe2LccU4anA4wg" technicalid="_UY-PkGBLEe2LccU4anA4wg" name="Label" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_U6FYk2BLEe2LccU4anA4wg" technicalid="_UY-PkWBLEe2LccU4anA4wg" name="onChange"/>
+    <style xmi:id="_qa0mMGsMEe2DmIjdPzrWsw" technicalid="_plWWwWsMEe2DmIjdPzrWsw" defaultWidth="200" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_C84X0G_QEe2Y552iT6IWaA" technicalid="_AVZYMG_QEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+  </widgets>
+  <widgets xmi:id="_W0w8kmBLEe2LccU4anA4wg" technicalid="_U6FYkGBLEe2LccU4anA4wg" name="Radio" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_W0w8k2BLEe2LccU4anA4wg" technicalid="_U6FYkWBLEe2LccU4anA4wg" name="onChange"/>
+    <possibleEvents xmi:id="_BAXQkGBVEe2wPIzd36qDKg" technicalid="__3BC4GBUEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_BAXQkWBVEe2wPIzd36qDKg" technicalid="__3Bp8GBUEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_G4zqwGsCEe2DmIjdPzrWsw" technicalid="_GlBzIWsCEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Radio.svg" bordered="false" defaultWidth="300" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_2MbkIW_PEe2Y552iT6IWaA" technicalid="_zsc6sG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_Iv44QW_QEe2Y552iT6IWaA" technicalid="_Gjt7oG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_a6_LEmBLEe2LccU4anA4wg" technicalid="_W0w8kGBLEe2LccU4anA4wg" name="Textarea" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_a6_LE2BLEe2LccU4anA4wg" technicalid="_W0w8kWBLEe2LccU4anA4wg" name="onChange"/>
+    <possibleEvents xmi:id="_BrHdwmBVEe2wPIzd36qDKg" technicalid="_BAWpgGBVEe2wPIzd36qDKg" name="onFocus"/>
+    <possibleEvents xmi:id="_BrHdw2BVEe2wPIzd36qDKg" technicalid="_BAWpgWBVEe2wPIzd36qDKg" name="onBlur"/>
+    <style xmi:id="_t0w9gGsMEe2DmIjdPzrWsw" technicalid="_tXnugWsMEe2DmIjdPzrWsw" defaultWidth="300" defaultHeight="150"/>
+    <metadataDefinitions xmi:id="_3m7MMW_PEe2Y552iT6IWaA" technicalid="_2MbkIG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_JRXNoG_QEe2Y552iT6IWaA" technicalid="_Iv44QG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+  </widgets>
+  <widgets xmi:id="_gn5qkmBLEe2LccU4anA4wg" technicalid="_a6_LEGBLEe2LccU4anA4wg" name="Link" icon="/fr.pacman.cinematic.api/icons/Link.gif">
+    <possibleEvents xmi:id="_gn5qk2BLEe2LccU4anA4wg" technicalid="_a6_LEWBLEe2LccU4anA4wg" name="onClick"/>
+    <style xmi:id="_w8b5EGsMEe2DmIjdPzrWsw" technicalid="_wtOYYWsMEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Link.svg" defaultWidth="300" defaultHeight="50"/>
+    <metadataDefinitions xmi:id="_4zOAMW_PEe2Y552iT6IWaA" technicalid="_3m7MMG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+    <metadataDefinitions xmi:id="_KBWgIW_QEe2Y552iT6IWaA" technicalid="_JRWmkG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
+    <metadataDefinitions xmi:id="_vgbccHJoEe6Ef8-GTx5aTQ" technicalid="_u5-gcnJoEe6Ef8-GTx5aTQ" title="CUSTOM_URL_PARAMS" help="Des paramètres supplémentaires pour l'url."/>
+    <metadataDefinitions xmi:id="_5CN7wHJoEe6Ef8-GTx5aTQ" technicalid="_4cKBUnJoEe6Ef8-GTx5aTQ" title="URL" help="Url directe (débranchement vers un autre site, etc...)."/>
+  </widgets>
+  <widgets xmi:id="_iyc2kmBLEe2LccU4anA4wg" technicalid="_gn5qkGBLEe2LccU4anA4wg" name="Image" icon="/fr.pacman.cinematic.api/icons/Image.gif">
+    <possibleEvents xmi:id="_Ee34cWBNEe2LccU4anA4wg" technicalid="_D67d4GBNEe2LccU4anA4wg" name="onChange"/>
+    <style xmi:id="_1N9eQGqAEe2k1fp9EIYqPQ" technicalid="_y3HisWqAEe2k1fp9EIYqPQ" decorator="/fr.pacman.cinematic.api/icons/Image.svg" decoratorHFill="true" defaultWidth="200" defaultHeight="200"/>
+    <metadataDefinitions xmi:id="_wgOIkGT1Ee2FR98yzZD0Qw" technicalid="_v3n3gWT1Ee2FR98yzZD0Qw" title="IMAGE_NAME" help="Le nom de l'image."/>
+    <metadataDefinitions xmi:id="_6UzuwW_PEe2Y552iT6IWaA" technicalid="_4zOAMG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+  </widgets>
+  <widgets xmi:id="_oie7gmBLEe2LccU4anA4wg" technicalid="_iyc2kGBLEe2LccU4anA4wg" name="ImageLink" icon="/fr.pacman.cinematic.api/icons/Image.gif">
+    <possibleEvents xmi:id="_oie7g2BLEe2LccU4anA4wg" technicalid="_iyc2kWBLEe2LccU4anA4wg" name="onClick"/>
+    <style xmi:id="_4CFtIGsMEe2DmIjdPzrWsw" technicalid="_3t93QWsMEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Image.svg" decoratorHFill="true" defaultWidth="200" defaultHeight="200"/>
+    <metadataDefinitions xmi:id="_z7K1wGBxEe2UVd0q44omjQ" technicalid="_zQmOwmBxEe2UVd0q44omjQ" title="IMAGE_NAME" help="Le nom pour le fichier de l'image."/>
+    <metadataDefinitions xmi:id="_7kvsoW_PEe2Y552iT6IWaA" technicalid="_6UzuwG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
+  </widgets>
+  <widgets xmi:id="_i0yDQHy7Ee6rHt35bjQ-hg" technicalid="_ikVzgHy7Ee6rHt35bjQ-hg" name="ErrorPanel" icon="/fr.pacman.cinematic.api/icons/Window.gif" isContainer="true">
+    <possibleEvents xmi:id="_z0zOsHy7Ee6rHt35bjQ-hg" technicalid="_wwvn0Hy7Ee6rHt35bjQ-hg" name="onClose"/>
+    <possibleEvents xmi:id="_5ATqQHy7Ee6rHt35bjQ-hg" technicalid="_4oIa0Hy7Ee6rHt35bjQ-hg" name="onLoad"/>
+  </widgets>
+</cinematic-toolkits:Toolkit>

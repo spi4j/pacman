@@ -1,0 +1,163 @@
+[comment encoding = UTF-8 /]
+[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+			 'http://www.obeonetwork.org/dsl/entity/3.0.0', 	
+             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+
+[query public buildEntityClassName(e : Entity) : String =
+	apply_classDefault(buildSimpleEntityName(e) + ' entity')
+ /]
+
+[query public buildAppliEventGlobalAttributesItf(any : OclAny) : String =
+    apply_classInterface(getApplicationName() + ' Event Global Attributes')
+ /]
+
+[query public buildAppliEventTypeEnum(any : OclAny) : String =
+    apply_classEnum(getApplicationName() + ' Event Type')
+ /]
+
+[query public nameViewInterface(viewContainer : ViewContainer) : String =
+    apply_classInterface(viewContainer.name + ' View')
+/]
+
+[query public namePresenter(viewContainer : ViewContainer) : String =
+    apply_classDefault(viewContainer.name + ' Presenter')
+/]
+
+[query public nameBean(viewContainer : ViewContainer) : String =
+    apply_classDefault(viewContainer.name + ' Bean')
+/]
+
+[query public nameBeanFirstLower(viewContainer : ViewContainer) : String =
+    apply_classDefault(viewContainer.name + ' Bean').toLowerFirst()
+/]
+
+[query public nameFieldFirstLower(viewContainer : ViewContainer) : String =
+    apply_classDefault(viewContainer.name).toLowerFirst()
+/]
+
+[query public nameFieldFirstLower(element : ViewElement) : String =
+    apply_classDefault(element.name).toLowerFirst()
+/]
+
+[query public nameGetterBeanElement(element : ViewElement) : String =
+   'get' + element.name.sanitize().toUpperFirst()
+/]
+
+[query public nameSetterBeanElement(element : ViewElement) : String =
+   'set' + element.name.sanitize().toUpperFirst()
+/]
+
+[query public nameGetterViewElement(element : ViewElement) : String =
+   'get_' + element.name.sanitize().toLowerFirst()
+/]
+
+[query public nameImplementation(viewContainer : ViewContainer) : String =
+    if (not viewContainer.widget.oclIsUndefined()) then
+        if (not viewContainer.widget.implementation.oclIsUndefined() and viewContainer.widget.implementation.trim().size() > 0) then
+            if (widget.implementation.contains('.')) then
+                genericType(viewContainer, widget.implementation.substring(widget.implementation.lastIndex('.') + 1))
+            else
+                genericType(viewContainer, widget.implementation)
+            endif
+        else
+            'ERROR : [L\'implémentation du widget' + viewContainer.widget.name + 'n\'a pas été définie]'
+        endif
+    else
+        'ERROR : [Cette vue n\'a pas défini de type]'
+    endif
+/]
+
+[query public genericType(viewContainer : ViewContainer, implementation : String) : String =
+    if (implementation.endsWith('<T>')) then
+        implementation.replace('<T>', '<' + namePresenter(viewContainer) + '>')
+    else
+        implementation
+    endif
+/]
+
+[comment][query public nameImplementation(viewElement : ViewElement) : String =
+    if (not viewElement.widget.oclIsUndefined()) then
+        if (not widget.implementation.oclIsUndefined() and widget.implementation.trim().size() > 0) then
+            if (widget.implementation.contains('.')) then
+                genericType(viewElement, widget.implementation.substring(widget.implementation.lastIndex('.') + 1))
+            else
+                genericType(viewElement, widget.implementation)
+            endif
+        else
+            'ERROR : [L\'implémentation du widget "' + widget.name + '" n\'a pas été définie]'
+        endif
+    else
+        'ERROR : [Cet élément n\'a pas défini de type]'
+    endif
+/][/comment]
+
+[query public genericType(viewElement : ViewElement, implementation : String, IsDto : Boolean) : String =
+    if (implementation.endsWith('<T>')) then
+        if (viewElement.type.oclIsUndefined()) then
+            'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]'
+        else
+            if viewElement.type.oclIsKindOf(DTO) then
+                if (IsDto) then
+                    implementation.replace('<T>', '<' + buildDtoClassName(viewElement.type.oclAsType(DTO)) + '>')
+                else
+                    implementation.replace('<T>', '<' + buildXtoClassNameFromDto(viewElement.type.oclAsType(DTO)) + '>')
+                endif
+            else
+                if viewElement.type.oclIsKindOf(PrimitiveType) then
+                    implementation.replace('<T>', '<' + viewElement.type.oclAsType(PrimitiveType).name + '>')
+                else
+                    implementation.replace('<T>', '<TODO>')
+                endif
+            endif
+        endif
+    else
+        implementation
+    endif
+/]
+
+[query public genericTypeEntity(viewElement : ViewElement, implementation : String) : String =
+    if (implementation.endsWith('<T>')) then
+        if (viewElement.type.oclIsUndefined()) then
+            'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]'
+        else if (viewElement.type.oclIsKindOf(DTO)) then
+                    implementation.replace('<T>', '<' + buildDtoClassName(viewElement.type.oclAsType(DTO)) + '>')                
+            else
+                if viewElement.type.oclIsKindOf(PrimitiveType) then
+                    implementation.replace('<T>', '<' + viewElement.type.oclAsType(PrimitiveType).name + '>')
+                else if viewElement.type.oclIsKindOf(Entity) then
+						implementation.replace('<T>', '<' + buildEntityClassName(viewElement.type.oclAsType(Entity)) + '>')
+                    else implementation.replace('<T>', '<TODO>')
+					endif
+                endif
+        	endif    
+        endif
+    else
+        implementation
+    endif
+/]
+
+[query public nameActionPresenteur(event : Event) : String =
+    event.name.sanitize().toLowerFirst()
+/]
+
+[query public nameActionBean(event : Event) : String =
+    event.name.sanitize().toLowerFirst()
+/]
+
+[query public nameFlow(flow : Flow) : String =
+    apply_classDefault(flow.name + ' Flow Manager')
+/]
+
+[query public projectName(any : OclAny) : String =
+    getApplicationName()
+ /]
+
+[query public clientType(any : OclAny) : String = 
+    getClient()
+ /]

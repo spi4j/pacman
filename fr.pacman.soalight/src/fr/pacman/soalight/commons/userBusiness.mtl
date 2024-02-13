@@ -1,0 +1,130 @@
+[comment encoding = UTF-8 /]
+[module userBusiness('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                     'http://www.obeonetwork.org/dsl/environment/3.0.0',
+                     'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::attributes /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[template public userBusiness(n : Namespace)]
+[licence()/]
+// CHECKSTYLE:OFF
+package [buildPackageBusiness()/]; // NOPMD
+// CHECKSTYLE:ON
+
+// [protected ('for imports')]
+
+import [getImportForUserBusiness_Abs()/];
+import fr.spi4j.exception.Spi4jRuntimeException;
+import [getImportForUserPersistence_Abs()/];
+import [buildPackageBusiness()/].[buildAppliUserBusinessEntityGenClassName()/];
+[for (srv : Service | listeServicesFromSystem(n) )]
+[if (serviceSeul(srv) and ( not isFromEntityService(srv))) ]
+import [buildPackageBusinessImplementationService(srv)/].[buildServiceInterfaceName(srv)/];
+[/if]
+[/for]
+
+// [/protected]
+
+/**
+ * Classe permettant de centraliser les factories business de l'application.
+ * @author [getAuthorName()/]
+ */
+public final class [buildAppliUserBusinessGenClassName()/] extends [buildAppliUserBusinessEntityGenClassName()/]
+{
+
+   /** Singleton. */
+   private static [buildAppliUserBusinessGenClassName()/] [apply_attributeStatic('singleton')/] = new [buildAppliUserBusinessGenClassName()/]();
+
+   /**
+    * Constructeur privé.
+    */
+   private [buildAppliUserBusinessGenClassName()/] ()
+   {
+      super();
+   }
+[comment]	// [protected ('Getter de services')][/comment]
+[for (srv : Service | listeServicesFromSystem(n))]
+[if (serviceSeul(srv) and ( not isFromEntityService(srv))) ]
+
+   /**
+    * Obtenir la façade de services '[buildServiceInterfaceName(srv)/]'.
+    * @return L'instance désirée.
+    */
+   public static [buildServiceInterfaceName(srv)/] [apply_methodDefault('get ' + buildServiceName(srv))/] ()
+   {
+      return [apply_attributeStatic('singleton')/].getBinding([buildServiceInterfaceName(srv)/].class);
+   }
+[/if]
+[/for]
+    [comment]// [/protected][/comment]
+
+   /**
+    * @return le [apply_attributeStatic('singleton')/] de cette factory
+    */
+   public static [buildAppliUserBusinessGenClassName()/] getSingleton ()
+   {
+      return [apply_attributeStatic('singleton')/];
+   }
+
+   @Override
+   protected [getClassNameForUserPersistence_Abs()/] getUserPersistence ()
+   {
+      // dans cette factory de la partie commune entre un client et le serveur
+      // on ne référence pas les classes d'implémentations "serveur" des services
+      // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
+
+      try
+      {
+         return ([getClassNameForUserPersistence_Abs()/]) Class.forName("[buildPackagePersistence()/].[buildParamPersistenceClassName()/]")
+                  .getMethod("[apply_methodDefault('get user persistence')/]").invoke(null);
+      }
+      catch (final Exception [apply_variableFinal('ex')/])
+      {
+         // ne devrait jamais arriver grâce à la génération de code
+         throw new Spi4jRuntimeException([apply_variableFinal('ex')/], [apply_variableFinal('ex')/].toString(), "???");
+      }
+   }
+
+   // CHECKSTYLE:OFF
+   @Override
+   // CHECKSTYLE:ON
+   public void initBindings () // NOPMD
+   {
+      // dans cette factory de la partie commune entre un client et le serveur
+      // on ne référence pas les classes d'implémentations "serveur" des services
+      // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
+	
+      super.initBindingsEntities();
+
+[for (srv : Service | listeServicesFromSystem(n))]
+[if (serviceSeul(srv) and ( not isFromEntityService(srv))) ]
+      // Binding correspondant au Service [buildServiceInterfaceName(srv)/]
+      // [protected (srv.getUserCodeId('Binding correspondant au Service ' + buildServiceInterfaceName(srv)))]
+      final [buildServiceInterfaceName(srv)/] [apply_variableObjectDefault(buildServiceName(srv))/] = wrapService([buildServiceInterfaceName(srv)/].class, "[buildPackageBusinessImplementationService(srv)/].[buildServiceClassName(srv)/]");
+      bind([buildServiceInterfaceName(srv)/].class, [apply_variableObjectDefault(buildServiceName(srv))/]);
+      // [/protected]
+
+[/if]
+[/for]
+	
+   }
+}
+[/template]

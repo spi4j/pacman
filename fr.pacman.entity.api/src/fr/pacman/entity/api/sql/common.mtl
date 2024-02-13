@@ -1,0 +1,314 @@
+[comment encoding = UTF-8 /]
+[module common('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+
+
+[********************
+ * Paramétrage PacMan
+*/]
+
+[comment : Retourne le nom de la table avec le schema en prefixe. /]
+[template public nameTableWithSchema(e : Entity)]
+[e.get_schema()/][e.nameTable()/]
+[/template]
+
+[comment : Retourne le nom de la table dans la librairie avec le schema en prefixe. /]
+[template public nameLibraryTableWithSchema(e : Entity) post (trim())]
+[let libName : String = e.getLibraryNameForEntity(getApplicationName())]
+[for (prop : String | getAdditionnalLibraries())][if prop.indexOf(libName) > 0]
+[e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][physicalName(e).first(maxTableSize(e))/][/if][/for][/let]
+[/template]
+
+[comment : Retourne le nom de la table sans le schema en prefixe. /]
+[template public nameTable(e : Entity)]
+[get_prefix(e)/][physicalName(e).first(maxTableSize(e))/]
+[/template]
+
+[comment : Retourne le prefixe pour l'ensemble des tables. /]
+[template public get_prefix(e : Entity)]
+[getSQLTablePrefix()/]
+[/template]
+
+[comment : getSQLTableSchema() ne peut pas être null ou non défini (on peut enlever le test..). /]
+[template private get_schema(e : Entity)]
+[if hasSQLTableSchema()][getSQLTableSchema()/][/if]
+[/template]
+
+[template public nameTableJointureWithSchema(r : Reference)]
+[get_schema(r.get_entity())/][nameTableJointure(r)/]
+[/template]
+
+[comment : ??? /]
+[template public nameTableJointureWithSchema(r : Reference, compteur : Integer)]
+[get_schema(r.get_entity())/][nameTableJointure(r, compteur)/]
+[/template]
+
+[template public nameTableJointure(r : Reference)]
+[get_prefix(r.get_entity())/][physicalNameJointure(r).first(maxTableSize(r.get_entity()))/]
+[/template]
+
+[comment : ??? /]
+[template public nameTableJointure(r : Reference, compteur : Integer)]
+[get_prefix(r.get_entity())/][physicalNameJointure(r).first(maxTableSize(r.get_entity()))/]
+[/template]
+
+[comment : Get the entity from the reference. /]
+[query private get_entity(r : Reference) : Entity = 
+r.containingType.oclAsType(entity::Entity)
+/]
+
+[comment : Get the counter for foreign keys. /]
+[query public get_counterFK(e : Entity, nbRef : Integer) : Integer =
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForFK(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
+/]
+
+[comment : Get the counter or the indexs. /]
+[query public get_counterIDX(e : Entity, nbRef : Integer) : Integer =
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForIDX(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
+/]
+
+[comment : Get the counter for the indexs of unicity. /]
+[query public get_counterUN(e : Entity, nbRef : Integer) : Integer =
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForUN(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
+/]
+
+[comment : Get the counter for CK./]
+[query public get_counterCK(e : Entity) : Integer =
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForCK(org.obeonetwork.dsl.entity.Entity)', Sequence{e})
+/]
+
+[comment :  reset the counters. /]
+[query public releaseCounterForConstraints(any : OclAny) : String = 
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'resetCounterForConstraints(java.lang.Boolean)', Sequence{true})
+/]
+
+[comment : get the number of columns for the unicity constrainte. /]
+[query public get_nbColumnsInUniqueConstraint(void : OclAny, lstColumns : String) : Integer =
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNbColumnsInUniqueIndex(java.lang.String)', Sequence{lstColumns})
+/]
+
+[query public get_hasXtopsup(any : OclAny) : Boolean =
+	get_automaticColumnsProperties().contains('xtopsup') <> false
+/]
+
+[query public get_nameEnumField(void : OclAny, columnProp : String) : String =
+    get_nameColumn(columnProp).toLower()
+/]
+
+[query public get_nameColumn(void : OclAny, columnProp : String) : String =
+    getConfigValue(nameColumnProperty(columnProp))
+/]
+
+[query public get_nameColumn(columnProp : String, void : OclAny ) : String =
+    get_nameColumn(void,columnProp)
+/]
+
+[query public get_defaultColumn(void : OclAny, columnProp : String) : String =
+    getConfigValue(defaultColumnProperty(columnProp))
+/]
+
+[query public get_typeColumn(void : OclAny, columnProp : String) : String =
+    getConfigValue(typeColumnProperty(columnProp))
+/]
+
+[query public get_typeColumn(columnProp : String, any : OclAny) : String =
+    get_typeColumn(any,columnProp)
+/]
+
+[query public get_sizeColumn(any : OclAny, columnProp : String) : String =
+    getConfigValue(sizeColumnProperty(columnProp))
+/]
+
+[query public get_sizeColumn(columnProp : String, any : OclAny) : String =
+    get_sizeColumn(any,columnProp)
+/]
+
+[query public get_hasAutomaticColumnWithDate(any : OclAny) : Boolean =
+	hasAutomaticColumns() and get_automaticColumnsProperties()->exists(columnProp : String | get_typeColumn(columnProp).toString().equalsIgnoreCase('Date'))
+/]
+
+[query private get_maxTableNameSize(e : Entity) : Integer = 30 - get_prefix(e).toString().size() /]
+
+[******************
+ * Fin Paramétrage
+*/]
+
+[query public sizeHeader(any : OclAny) : Integer = 63 /]
+[query public headerTable(e : Entity) : String = 'Table: ' + nameTableWithSchema(e) /]
+[query public headerTableJointure(r : Reference) : String = 'Table: ' + nameTableJointureWithSchema(r) /]
+
+
+[query public nameTableShort(e : Entity) : String =
+if hasPhysicalShortName(e) then
+    physicalShortName(e)
+else
+    nameTable(e)
+endif
+/]
+
+[query public nameTableShortWithoutPrefix(e : Entity) : String =
+if hasPhysicalShortName(e) then
+    physicalShortName(e)
+else
+    physicalName(e)
+endif
+/]
+
+[template public nameColumn(a : Attribute)]
+[physicalName(a).first(maxColumnSize())/]
+[/template]
+
+[template public nameColumn(r : Reference)]
+[physicalName(r) /]
+[/template]
+
+[template public nameColumn(r : Reference, compteur : Integer)]
+[physicalName(r, compteur) /]
+[/template]
+
+[template public nameColumnId(r : Reference)]
+[physicalNameId(r) /]
+[/template]
+
+[template public nameColumnId(r : Reference, compteur : Integer)]
+[physicalNameId(r, compteur) /]
+[/template]
+
+[template public nameColumnReferencing(r : Reference)]
+[physicalNameReferencing(r) /]
+[/template]
+
+[template public nameColumnReferencing(r : Reference, compteur : Integer)]
+[physicalNameReferencing(r,compteur) /]
+[/template]
+
+[template public nameColumnReferencingId(r : Reference)]
+[physicalNameReferencingId(r) /]
+[/template]
+
+[template public nameColumnReferencingId(r : Reference, compteur : Integer)]
+[physicalNameReferencingId(r, compteur) /]
+[/template]
+
+[template public nameSequence(e : Entity)]
+[get_schema(e)/][get_prefix(e)/][physicalName(e).first(maxSequenceSize(e))/]_SEQ
+[/template]
+
+[template public nameSequenceReference(r : Reference)]
+[get_prefix(r.referencedType.oclAsType(entity::Entity)
+)/][nameTableJointure(r)/]_SEQ
+[/template]
+
+[template public nameConstraint(eFrom : Entity, r : Reference, compteur : Integer)]
+[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1' + '_' + compteur/]
+[/template]
+
+[template public nameConstraint(eFrom : Entity, r : Reference)]
+[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1'/]
+[/template]
+
+[template public nameConstraintInverse(eFrom : Entity, r : Reference, compteur : Integer)]
+[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1' + '_' + compteur  /]
+[/template]
+
+[template public nameConstraintCK(eFrom : Entity, compteur : Integer)]
+[nameTable(eFrom).first(maxConstraintSize())/]_CK1_[compteur/]
+[/template]
+
+[template public nameConstraintInverse(eFrom : Entity, r : Reference)]
+[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1'/]
+[/template]
+
+[template public nameConstraintJointure1(r : Reference)]
+[nameTableJointure(r).first(maxJointureSize()) + '_FK1_1' /]
+[/template]
+
+[template public nameConstraintJointure2(r : Reference)]
+[nameTableJointure(r).first(maxJointureSize()) + '_FK1_2' /]
+[/template]
+
+[comment : unicity also relies to mandatory property (ONE_LITERAL | ONE_STAR_LITERAL). /]
+[template public nameUniqueIndex(e: Entity, compteurX : Integer, compteurY : Integer)]
+[nameTable(e)/][if e.isMandatory(e.uniqueIndex())]_UN[else]_IDX[/if][compteurX/]_[compteurY/]
+[/template]
+
+[comment : unicity also relies to mandatory property (ONE_LITERAL | ONE_STAR_LITERAL). /]
+[template public nameUniqueIndex(e: Entity, a: Attribute,  compteurX : Integer, compteurY : Integer)]
+[nameTable(e)/][if a.isMandatory()]_UN[else]_IDX[/if][compteurX/]_[compteurY/]
+[/template]
+
+[template public namePK(e : Entity)]
+[if e.ownedAttributes->exists(a : environment::Attribute | a.isIdentifier)]
+[e.ownedAttributes->select(a : environment::Attribute | a.isIdentifier).nameColumn()/][else]
+[nameEntityPK(e)/][/if]
+[/template]
+
+[template public nameReferenceID(r : Reference)]
+[nameTableJointure(r)+'_ID'/]
+[/template]
+
+[template public nameEntityPK(e : Entity)]
+[physicalName(e).first(maxColumnPKSize()) + '_ID' /]
+[/template]
+
+[template public nameIndex(r : Reference, compteur : Integer )]
+[if r.isMultiple()]
+[nameTableShort(r.referencedType.oclAsType(entity::Entity)).first(maxIndexSize())/]_IDX1_[compteur/][else]
+[nameTableShort(r.containingType.oclAsType(entity::Entity)).first(maxIndexSize())/]_IDX1_[compteur/][/if]
+[/template]
+
+
+[comment : Old = 26 - get_prefix(e).toString().size() /]
+[query private maxSequenceSize(e : Entity) : Integer = 
+    e.maxTableSize() - 4         
+/]
+
+[comment : Old = 27. /]
+[query private maxColumnPKSize(e : Entity) : Integer = 
+	calculMaxSize(0,3)
+/]
+
+[comment : Old = 30 - get_prefix(e).toString().size() /]
+[query private maxTableSize(e : Entity) : Integer = 
+	calculMaxSize(e.get_prefix().size(), 0)
+/]
+
+[comment : Old = 13. /]
+[query private maxIndexSize(any : OclAny) : Integer = 
+	calculMaxSize(0, 8) 
+/]
+
+[comment : Old = 11. /]
+[query private maxConstraintSize(any : OclAny) : Integer = 
+	calculMaxSize(0, 7) 
+/]
+
+[comment : Pour les jointures on fait une seconde passe en enlevant cette fois le suffixe. /]
+[query private maxJointureSize(any : OclAny) : Integer = 
+	calculMaxSize(0, 6)
+/]
+
+[comment : Old = 30. /]
+[query private maxColumnSize(any : OclAny) : Integer = 
+   calculMaxSize(0, 0)
+/]
+
+[comment : Old = 27. /]
+[query private maxColumnReferenceSize(any : OclAny) : Integer = 
+	calculMaxSize(0, 0)
+/]
+
+[comment : Calcul de la taille maximale en fonction de la base de données et de la cible. /]
+[comment : !!!! Attention aux problemes de performance on doit appeler a chaque fois le service Java..
+ce qui n'est absolument pas optimise. /]
+[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = 
+	if isDbOracle32() then
+		32 - (prefix + suffix) 
+	else 
+		128
+	endif
+/]

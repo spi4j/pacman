@@ -1,0 +1,270 @@
+package fr.appwhite1.client.ui.swing.annuaire;
+
+// Start of user code for imports
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.swing.SpiFrame;
+import fr.spi4j.ui.swing.SpiPanel;
+import fr.spi4j.ui.swing.SpiSwingUtilities;
+import fr.spi4j.ui.swing.SpiViewPanel;
+
+import fr.appwhite1.client.ui.annuaire.ListePersonnesView_Itf;
+import fr.appwhite1.client.ui.annuaire.ListePersonnesPresenter;
+
+import fr.spi4j.ui.HasString_Itf;
+import fr.spi4j.ui.HasSelection_Itf;
+import fr.spi4j.ui.HasSelection_Itf;
+
+import fr.referentiel.business.api.ref.GradeDto;
+import fr.appwhite1.business.api.annuaire.PersonneDto;
+
+import fr.spi4j.ui.swing.SpiButton;
+import fr.spi4j.ui.swing.fields.SpiComboBox;
+import fr.spi4j.ui.swing.table.SpiTable;
+
+import fr.referentiel.business.api.ref.GradeDto;
+import fr.appwhite1.business.api.annuaire.PersonneDto;
+
+
+// End of user code
+
+/**
+ * Screen ListePersonnesViewSwing.
+ * @author Pacman
+ */
+public class ListePersonnesViewSwing extends SpiViewPanel<ListePersonnesPresenter> implements ListePersonnesView_Itf
+{
+
+   private static final long serialVersionUID = 1L;
+
+   // Start of user code Déclaration cbGrade_SpiComboBox<GradeDto>
+
+   private final SpiComboBox<GradeDto> _cbGrade;
+
+   // End of user code
+
+   // Start of user code Déclaration table_SpiTable<PersonneDto>
+
+   private final SpiTable<PersonneDto> _table;
+
+   // End of user code
+
+   // Start of user code Déclaration btActualiser_SpiButton
+
+   private final SpiButton _btActualiser;
+
+   // End of user code
+
+   // Start of user code Déclaration btCreer_SpiButton
+
+   private final SpiButton _btCreer;
+
+   // End of user code
+
+   // Start of user code Déclaration btModifier_SpiButton
+
+   private final SpiButton _btModifier;
+
+   // End of user code
+
+   // Start of user code Déclaration btVisualiser_SpiButton
+
+   private final SpiButton _btVisualiser;
+
+   // End of user code
+
+   // Start of user code Déclaration btSupprimer_SpiButton
+
+   private final SpiButton _btSupprimer;
+
+   // End of user code
+
+
+   // initialisation des composants
+
+   // Start of user code Paramétrage btActualiser_SpiButton
+   private transient final ActionListener _btActualiserAction = new ActionListener()
+   {
+      @Override
+      public void actionPerformed (final ActionEvent p_event)
+      {
+         getPresenter().actualiser();
+      }
+   };
+   // End of user code
+   // Start of user code Paramétrage btCreer_SpiButton
+   private transient final ActionListener _btCreerAction = new ActionListener()
+   {
+      @Override
+      public void actionPerformed (final ActionEvent p_event)
+      {
+         getPresenter().creer();
+      }
+   };
+   // End of user code
+   // Start of user code Paramétrage btModifier_SpiButton
+   private transient final ActionListener _btModifierAction = new ActionListener()
+   {
+      @Override
+      public void actionPerformed (final ActionEvent p_event)
+      {
+         getPresenter().modifier();
+      }
+   };
+   // End of user code
+   // Start of user code Paramétrage btVisualiser_SpiButton
+   private transient final ActionListener _btVisualiserAction = new ActionListener()
+   {
+      @Override
+      public void actionPerformed (final ActionEvent p_event)
+      {
+         getPresenter().visualiser();
+      }
+   };
+   // End of user code
+   // Start of user code Paramétrage btSupprimer_SpiButton
+   private transient final ActionListener _btSupprimerAction = new ActionListener()
+   {
+      @Override
+      public void actionPerformed (final ActionEvent p_event)
+      {
+         getPresenter().supprimer();
+      }
+   };
+   // End of user code
+
+   /**
+    * Constructeur.
+    * @param p_presenter
+    *           le présenteur
+    */
+   public ListePersonnesViewSwing (final ListePersonnesPresenter p_presenter)
+   {
+      super(p_presenter);
+      // Start of user code initialize
+      final SpiPanel v_buttonsPanel = new SpiPanel(new GridLayout(7, 1));
+      _cbGrade = new SpiComboBox<GradeDto>();
+      v_buttonsPanel.add(_cbGrade);
+      _table = new SpiTable<PersonneDto>();
+      v_buttonsPanel.add(_table);
+      _btActualiser = new SpiButton("btActualiser");
+      _btActualiser.addActionListener(_btActualiserAction);
+      v_buttonsPanel.add(_btActualiser);
+      _btCreer = new SpiButton("btCreer");
+      _btCreer.addActionListener(_btCreerAction);
+      v_buttonsPanel.add(_btCreer);
+      _btModifier = new SpiButton("btModifier");
+      _btModifier.addActionListener(_btModifierAction);
+      v_buttonsPanel.add(_btModifier);
+      _btVisualiser = new SpiButton("btVisualiser");
+      _btVisualiser.addActionListener(_btVisualiserAction);
+      v_buttonsPanel.add(_btVisualiser);
+      _btSupprimer = new SpiButton("btSupprimer");
+      _btSupprimer.addActionListener(_btSupprimerAction);
+      v_buttonsPanel.add(_btSupprimer);
+
+      setLayout(new BorderLayout());
+      setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         @Override
+         public void run ()
+         {
+            SpiSwingUtilities.getAncestorOfClass(JFrame.class, ListePersonnesViewSwing.this).setDefaultCloseOperation(
+                     WindowConstants.DISPOSE_ON_CLOSE);
+         }
+      });
+      add(v_buttonsPanel, BorderLayout.CENTER);
+      // End of user code
+   }
+
+   @Override
+   public void addView (final View_Itf p_view)
+   {
+      // Start of user code addView
+      if (p_view instanceof SpiViewPanel)
+      {
+         SpiFrame.open((SpiViewPanel<?>) p_view);
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   @Override
+   public void restoreView (final View_Itf p_view)
+   {
+      // Start of user code restoreView
+      if (p_view instanceof SpiViewPanel)
+      {
+         final SpiFrame v_frame = SpiSwingUtilities.getAncestorOfClass(SpiFrame.class, (SpiViewPanel<?>) p_view);
+         v_frame.toFront();
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   @Override
+   public void removeView (final View_Itf p_view)
+   {
+      // Start of user code removeView
+      if (p_view instanceof SpiViewPanel)
+      {
+         final SpiFrame v_frame = SpiSwingUtilities.getAncestorOfClass(SpiFrame.class, (SpiViewPanel<?>) p_view);
+         v_frame.dispose();
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   // Start of user code Getter cbGrade_SpiComboBox<GradeDto>
+
+   @Override
+   public HasSelection_Itf<GradeDto> get_cbGrade ()
+   {
+      return _cbGrade;
+   }
+
+   // End of user code
+
+   // Start of user code Getter table_SpiTable<PersonneDto>
+
+   @Override
+   public HasSelection_Itf<PersonneDto> get_table ()
+   {
+      return _table;
+   }
+
+   // End of user code
+
+   @Override
+   public void beforeClose ()
+   {
+      disposeWindow();
+      super.beforeClose();
+   }
+
+   // Start of user code ListePersonnesViewSwing
+
+   // End of user code
+
+}

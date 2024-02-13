@@ -1,0 +1,44 @@
+[comment encoding = UTF-8 /]
+[module appliEventGlobalAttributesItf('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::packages /]
+
+[template public appliEventGlobalAttributesItf(any : OclAny)]
+[licence()/]
+package [namePackageClient()/];
+// [protected ('for imports')]
+
+// [/protected]
+
+/**
+ * Classe de constantes utilisées dans les attributs des événements. D'autres clés d'attributs peuvent être définies dans les présenteurs. Ici se trouvent les clés qui ont leur place dans plusieurs présenteurs.
+ * @author [getAuthorName()/]
+ */
+public interface [buildAppliEventGlobalAttributesItf()/]
+{
+
+   // [buildAppliEventGlobalAttributesItf()/]
+   // [protected (any.getUserCodeId(buildAppliEventGlobalAttributesItf()))]
+
+   /** La clé contenant le DTO */
+   String c_keyAttributeDto = "dto";
+
+	/** La clé contenant l'Entity */
+   String c_keyAttributeEntity = "entity";
+
+   /** La clé contenant l'erreur */
+   String c_keyAttributeError = "error";
+
+   /** La clé contenant l'information */
+   String c_keyAttributeInformation = "information";
+
+   // [/protected]
+
+}
+[/template]

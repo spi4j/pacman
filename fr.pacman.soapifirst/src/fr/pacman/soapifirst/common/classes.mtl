@@ -1,0 +1,28 @@
+[comment encoding = UTF-8 /]
+[module classes ('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[comment : Get the name for the delegate front resource. /]
+[query public buildRSFrontDelegateClassName(s : Service) : String =
+apply_classDefault(s.name + ' delegate')
+ /]
+
+[comment : Get the name for the client front resource. /]
+[query public buildRSFrontResourceClassName(s : Service) : String =
+apply_classDefault(s.name + ' front resources')
+ /]
+
+[comment : Get the name for the JUnit test. /]
+[query public buildRSFrontResourceTestClassName(s : Service) : String =
+apply_classTest(buildSimpleServiceName(s) + ' front resources')
+ /]
+
+[comment : Get the name for the Helper classe for the JUnit test. /]
+[query public buildRSFrontResourceTestHelperClassName(any : OclAny) : String =
+apply_classDefault(getApplicationName() + ' front resources test helper')
+ /]

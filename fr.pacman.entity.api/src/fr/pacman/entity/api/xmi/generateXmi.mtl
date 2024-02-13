@@ -1,0 +1,376 @@
+[comment encoding = UTF-8 /]
+[module generateXmi('http://www.obeonetwork.org/dsl/entity/3.0.0',
+                    'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::packages/]
+
+[template public fullName(e : Entity)]
+[e.eContents(Namespace).name->sep('.')/].[e.name/]
+[/template]
+
+[template public fullName(t : Type)]
+[if t.oclIsTypeOf(Entity)]
+[fullName(t.oclAsType(Entity))/]
+[elseif (t.oclIsTypeOf(Attribute))]
+[fullName(t.oclAsType(Attribute))/]
+[elseif (t.oclIsTypeOf(Reference))]
+[fullName(t.oclAsType(Reference))/]
+[/if]
+[/template]
+
+[template public fullName(r : Reference)]
+[r.containingType.oclAsType(Entity).fullName()/].[r.name/]
+[/template]
+
+[template public fullName(a : Attribute)]
+[a.containingType.oclAsType(Entity).fullName()/].[a.name/]
+[/template]
+
+[template public fullName(s : String, e : Entity)]
+[e.fullName()/].[s/]
+[/template]
+
+[template public attribute(a : Attribute)]
+                            <UML:Attribute name = "[a.physicalName()/]" xmi.id = "{[nameUUID(a.fullName())/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">[a.attributeMultiplicity()/]
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "[typeXmiRef(a.type.name, a.metadatas.size())/]"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+[/template]
+
+[template public genXmiPK(e : Entity)]
+[if e.ownedAttributes->exists(a : Attribute | a.isIdentifier)]
+[e.ownedAttributes->select(a : Attribute | a.isIdentifier).attributePK()/][else]
+[e.entityPK()/][/if]
+[/template]
+
+[template public attributePK(a : Attribute)]
+                            <UML:Attribute name = "[a.nameColumn()/]" xmi.id = "{[nameUUID(a.fullName())/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                                <UML:StructuralFeature.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:StructuralFeature.multiplicity>
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "type[genPkType()/]"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+                            <UML:Stereotype xmi.id = "{[nameUUID(a.fullName()+'_PK')/]}" name = "PK" extendedElement="{[nameUUID(a.fullName())/]}">
+                            </UML:Stereotype>
+[/template]
+
+[template public entityPK(e : Entity)]
+                            <UML:Attribute name = "[nameEntityPK(e)/]" xmi.id = "{[nameUUID(e.fullName()+'ID')/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                                <UML:StructuralFeature.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:StructuralFeature.multiplicity>
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "type[genPkType()/]"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+                            <UML:Stereotype xmi.id = "{[nameUUID(e.fullName()+'ID_PK')/]}" name = "PK" extendedElement="{[nameUUID(e.fullName()+'ID')/]}">
+                            </UML:Stereotype>
+[/template]
+
+[template public class(e : Entity)]
+                    <UML:Class name = "[get_prefix(e)/][e.physicalName()/]" isLeaf = "false" xmi.id = "{[nameUUID(e.fullName())/]}" isAbstract = "false" visibility = "public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag = "strictfp" value = "false"/>
+                        </UML:ModelElement.taggedValue>
+                        <UML:Classifier.feature>
+[e.genXmiPK()->sep('\r\n')/]
+[e.attributesNoPk().attribute()->sep('\r\n')/]
+[e.getInheritDtoAttributes().attribute()->sep('\r\n')/]
+[if e.hasAutomaticColumns()][e.genAutomaticColumns()/][/if]                        </UML:Classifier.feature>
+                    </UML:Class>
+[/template]
+
+[template public attributeMultiplicity(a : Attribute)]
+[if (a.multiplicity = environment::MultiplicityKind::ONE or a.multiplicity = environment::MultiplicityKind::ONE_STAR)]
+
+    <UML:StructuralFeature.multiplicity>
+        <UML:Multiplicity>
+            <UML:Multiplicity.range>
+                <UML:MultiplicityRange>
+                    <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                    <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                </UML:MultiplicityRange>
+            </UML:Multiplicity.range>
+        </UML:Multiplicity>
+    </UML:StructuralFeature.multiplicity>[/if]
+[/template]
+
+[template public multi(r : environment::MultiplicityKind)]
+[if (r = environment::MultiplicityKind::ONE)]
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>[/if]
+[if (r = environment::MultiplicityKind::ONE_STAR)]
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>-1</UML:MultiplicityRange.upper>[/if]
+[if (r = environment::MultiplicityKind::ZERO_ONE)]
+                                                <UML:MultiplicityRange.lower>0</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>[/if]
+[if (r = environment::MultiplicityKind::ZERO_STAR)]
+                                                <UML:MultiplicityRange.lower>0</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>-1</UML:MultiplicityRange.upper>[/if]
+[/template]
+
+[template public association(r : Reference)]
+                    <UML:Association name = "[r.physicalName()/]" xmi.id = "{[nameUUID(r.fullName())/]}">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag = "roleAContainer" value = "&lt;None&gt;"/>
+                            <UML:TaggedValue tag = "roleAImplementationClass" value = "&lt;None&gt;"/>
+                            <UML:TaggedValue tag = "roleBContainer" value = "&lt;None&gt;"/>
+                            <UML:TaggedValue tag = "roleBImplementationClass" value = "&lt;None&gt;"/>
+                        </UML:ModelElement.taggedValue>
+                        <UML:Association.connection>
+                            <UML:AssociationEnd xmi.id = "{[nameUUID(r.fullName())/]}a" visibility = "public">
+                                <UML:AssociationEnd.aggregation xmi.value = "none"/>
+                                <UML:AssociationEnd.changeability xmi.value = "changeable"/>
+                                <UML:AssociationEnd.isNavigable xmi.value = "false"/>
+                                <UML:AssociationEnd.ordering xmi.value = "unordered"/>
+                                <UML:AssociationEnd.type>
+                                    <UML:Classifier xmi.idref = "{[nameUUID(r.containingType.oclAsType(Entity).fullName())/]}"/>
+                                </UML:AssociationEnd.type>
+                                <UML:AssociationEnd.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:AssociationEnd.multiplicity>
+                            </UML:AssociationEnd>
+                            <UML:AssociationEnd xmi.id = "{[nameUUID(r.fullName())/]}b" visibility = "public">
+                                <UML:AssociationEnd.aggregation xmi.value = "none"/>
+                                <UML:AssociationEnd.changeability xmi.value = "changeable"/>
+                                <UML:AssociationEnd.isNavigable xmi.value = "[if (r.navigable)]true[else]false[/if]"/>
+                                <UML:AssociationEnd.ordering xmi.value = "unordered"/>
+                                <UML:AssociationEnd.type>
+                                    <UML:Classifier xmi.idref = "{[nameUUID(r.referencedType.oclAsType(Entity).fullName())/]}"/>
+                                </UML:AssociationEnd.type>
+                                <UML:AssociationEnd.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+[r.multiplicity.multi()/]
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:AssociationEnd.multiplicity>
+                            </UML:AssociationEnd>
+                        </UML:Association.connection>
+                    </UML:Association>
+[/template]
+
+[template public generate(r : Root)]
+[comment @main /]
+
+[for (b : environment::Namespace | r.eAllContents(Namespace))]
+[file (getServerXMIDir() + b.name + '.xml', false, 'UTF-8')]
+<?xml version='1.0' encoding='UTF-8' ?>
+    <XMI xmlns:UML = "//org.omg/UML/1.3" xmi.version = "1.1">
+        <XMI.header>
+            <XMI.documentation>
+                <XMI.exporter>PowerAMC</XMI.exporter>
+            </XMI.documentation>
+            <XMI.metamodel xmi.name = "UML" xmi.version = "1.3"/>
+        </XMI.header>
+        <XMI.content>
+            <UML:Model name = "[b.name/]" xmi.id = "{[nameUUID(b.name)/]}">
+                <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue tag = "SchemaNamespace" value = "http://www.w3.org/2001/XMLSchema"/>
+                    <UML:TaggedValue tag = "SoapBindingTransport" value = "http://schemas.xmlsoap.org/soap/http"/>
+                </UML:ModelElement.taggedValue>
+                <UML:Namespace.ownedElement>
+[b.eAllContents(Entity).class()->sep('\r\n')/]
+[b.eAllContents(Reference).association()->sep('\r\n')/]
+                </UML:Namespace.ownedElement>
+            </UML:Model>
+[b.comments()/]            <UML:DataType name = "java.lang.String" xmi.id = "typeString"/>
+            <UML:DataType name = "java.lang.Integer" xmi.id = "typeInteger"/>
+            <UML:DataType name = "java.lang.Float" xmi.id = "typeFloat"/>
+            <UML:DataType name = "java.lang.Double" xmi.id = "typeDouble"/>
+            <UML:DataType name = "java.util.Date" xmi.id = "typeDate"/>
+            <UML:DataType name = "java.lang.Boolean" xmi.id = "typeBoolean"/>
+            <UML:DataType name = "java.lang.[genPkType()/]" xmi.id = "type[genPkType()/]"/>
+[for (s : String | b.getSizeIntegerAttributes())]
+            <UML:DataType name = "number([s/])" xmi.id = "typeNumber['['/][s/][']'/]"/>
+[/for]
+[for (s : String | b.getSizeStringAttributes())]
+            <UML:DataType name = "[varchar(s)/]" xmi.id = "typeString['['/][s/][']'/]"/>
+[/for]
+[for (s : String | b.getSizeFloatsAndDoubleAttributes())]
+            <UML:DataType name = "float([s/])" xmi.id = "typeFloat['['/][s/][']'/]"/>
+[/for]
+[for (e : Entity | b.eAllContents(Entity))]
+            <UML:TaggedValue tag = "persistence" value = "persistent" xmi.id = "Tag[e.fullName()/]" modelElement = "{[nameUUID(e.fullName())/]}"/>
+[/for]
+[for (a : Attribute | b.eAllContents(Attribute))]
+            <UML:TaggedValue tag = "persistence" value = "persistent" xmi.id = "Tag[a.fullName()/]" modelElement = "{[nameUUID(a.fullName())/]}"/>
+[/for]
+        </XMI.content>
+    </XMI>
+[/file]
+[/for]
+[/template]
+
+[comment]Récupère les différentes tailles d'Integer du modèle[/comment]
+[query public getSizeIntegerAttributes(b : Namespace) : Sequence(String) =
+b.eAllContents(Attribute)->select(a : Attribute | a.type.name.equalsIgnoreCase('Integer')
+    and a.metadatas.hasSize()).metadatas.size()->union(b.eAllContents(Entity).getSizeIntegerAttributesDefaultColumns())->asOrderedSet()->asSequence()
+/]
+
+[comment]Récupère les différentes tailles de String du modèle[/comment]
+[query public getSizeStringAttributes(b : Namespace) : Sequence(String) =
+b.eAllContents(Attribute)->select(a : Attribute | a.type.name.equalsIgnoreCase('String')
+    and a.metadatas.hasSize()).metadatas.size()->union(b.eAllContents(Entity).getSizeStringAttributesDefaultColumns())->asOrderedSet()->asSequence()
+/]
+
+[comment]Récupère les différentes tailles de Float et Doubles du modèle[/comment]
+[query public getSizeFloatsAndDoubleAttributes(b : Namespace) : Sequence(String) =
+b.eAllContents(Attribute)->select(a : Attribute | (a.type.name.equalsIgnoreCase('Float')
+    or a.type.name.equalsIgnoreCase('Double'))
+    and a.metadatas.hasSize()).metadatas.size()->union(b.eAllContents(Entity).getSizeFloatsAndDoubleAttributesDefaultColumns())->asOrderedSet()->asSequence()
+/]
+
+[comment]Récupère les différentes tailles de Float et Doubles du modèle dans les colonnes automatiques[/comment]
+[query public getSizeFloatsAndDoubleAttributesDefaultColumns(e : Entity) : Sequence(String) =
+if e.hasAutomaticColumns() then
+e.get_automaticColumnsProperties()->select(s : String | (s.get_typeColumn(e).equalsIgnoreCase('Float')
+    or s.get_typeColumn(e).equalsIgnoreCase('Double'))
+    and s.get_sizeColumn(e) <> null).get_sizeColumn(e)->asOrderedSet()->asSequence()
+else
+Sequence{}
+endif
+/]
+
+[comment]Récupère les différentes tailles de Integer du modèle dans les colonnes automatiques[/comment]
+[query public getSizeIntegerAttributesDefaultColumns(e : Entity) : Sequence(String) =
+if e.hasAutomaticColumns() then
+e.get_automaticColumnsProperties()->select(s : String | s.get_typeColumn(e).equalsIgnoreCase('Integer')
+    and e.get_sizeColumn(s) <> null).get_sizeColumn(e)->asOrderedSet()->asSequence()
+else
+Sequence{}
+endif
+/]
+
+[comment]Récupère les différentes tailles de String du modèle dans les colonnes automatiques[/comment]
+[query public getSizeStringAttributesDefaultColumns(e : Entity) : Sequence(String) =
+if e.hasAutomaticColumns() then
+e.get_automaticColumnsProperties()->select(s : String | s.get_typeColumn(e).equalsIgnoreCase('String')
+    and s.get_sizeColumn(e) <> null).get_sizeColumn(e)->asOrderedSet()->asSequence()
+else
+Sequence{}
+endif
+/]
+
+[query public nameUUID(msg : String) : String =
+    invoke('fr.pacman.commons.services.UuidUtils', 'name(java.lang.String)', Sequence{msg})
+/]
+
+[query public randomUUID(any : OclAny) : String =
+    invoke('fr.pacman.commons.services.UuidUtils', 'unique()', Sequence{})
+/]
+
+[template public physicalName(e : Entity)]
+[if (e.metadatas.annotationsPN()->size() > 0)]
+[e.metadatas.annotationsPN()->at(1)._body/][else]
+[e.name/][/if]
+[/template]
+
+[template public physicalName(p : Property)]
+[if (p.metadatas.annotationsPN()->size() > 0)]
+[p.metadatas.annotationsPN()->at(1)._body/][else]
+[p.name/][/if]
+[/template]
+
+[query public annotationsPN(m : MetaDataContainer) : OrderedSet(Annotation) =
+if (m.oclIsUndefined()) then OrderedSet{}
+else
+m.metadatas->select(m : MetaData |
+    not m.oclAsType(Annotation).title.oclIsUndefined()
+    and m.oclAsType(Annotation).title.equalsIgnoreCase('PHYSICAL_NAME')
+    and not m.oclAsType(Annotation)._body.oclIsUndefined()
+    and (m.oclAsType(Annotation)._body <> '')).oclAsType(Annotation)
+endif
+/]
+
+[template public genAutomaticColumns(e : Entity)]
+[for (columnProp : String | get_automaticColumnsProperties())]
+[if (e.columnHasName(columnProp) and e.columnHasType(columnProp))]
+                            <UML:Attribute name = "[e.get_nameColumn(columnProp)/]" xmi.id = "{[nameUUID(fullName(e.get_nameColumn(columnProp), e))/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">[if e.columnNotNull(columnProp)]
+                                <UML:StructuralFeature.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:StructuralFeature.multiplicity>[/if]
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "[xmiIdRefAutoColumns(e,columnProp)/]"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+[/if][/for]
+[/template]
+
+[template public xmiIdRefAutoColumns(e : Entity,s : String)]
+type[e.get_typeColumn(s)/][if (e.columnHasSize(s))][e.get_sizeColumn(s)/][/if]
+[/template]
+
+[template public typeXmiRef(type : String, size : String) post(trim())]
+[if (size = null or size.equalsIgnoreCase(''))]type[type/]
+[elseif type.equalsIgnoreCase('Integer')]
+typeNumber['['/][size/][']'/]
+[elseif type.equalsIgnoreCase('Double')]
+typeFloat['['/][size/][']'/]
+[else]type[type/]['['/][size/][']'/]
+[/if]
+[/template]
+
+[template public comments(b : Namespace)]
+[comment]Ecrit les descriptions des entitées en tant que commentaires de tables[/comment]
+[for (t : Type | b.eAllContents(Type)->select(t : Type | not t.description.oclIsUndefined() and t.description.size() > 0))]
+            <UML:Comment name="[t.description/]" xmi.id="[nameUUID(t.description.normalize())/]">
+                <UML:Comment.annotatedElement>
+                    <UML:ModelElement xmi.idref="{[nameUUID(t.fullName())/]}"/>
+                </UML:Comment.annotatedElement>
+            </UML:Comment>
+[/for]
+[comment]Ecrit les descriptions des attributs des entitées en tant que commentaires de colonnes[/comment]
+[for (a : Attribute | b.eAllContents(Attribute)->select(a : Attribute | not a.description.oclIsUndefined() and a.description.size() > 0))]
+            <UML:Comment name="[a.description/]" xmi.id="[nameUUID(a.description.normalize())/]">
+                <UML:Comment.annotatedElement>
+                    <UML:ModelElement xmi.idref="{[nameUUID(a.fullName())/]}"/>
+                </UML:Comment.annotatedElement>
+            </UML:Comment>
+[/for]
+[/template]
+
+[comment] specifique Oracle [/comment]
+[template private varchar(e : String)]
+varchar([e/])
+[/template]

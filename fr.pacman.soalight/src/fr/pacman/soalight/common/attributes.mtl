@@ -1,0 +1,98 @@
+[comment encoding = UTF-8 /]
+[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0',
+					'http://www.obeonetwork.org/dsl/entity/3.0.0',
+                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::classes /]
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[*******************
+ * Paramétrage début
+*/]
+
+[template public getProperty(a : Attribute) post (trim())]
+private [a.getTypeAndName()/]
+[/template]
+
+[template public getTypeAndName(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.apply_attributeDefault(a.name.normalize())/]
+[/template]
+
+[template public getTypeAndNameParam(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.apply_parameterMethodClassicIn(a.name.normalize())/]
+[/template]
+
+[*******************
+ * Paramétrage fin
+*/]
+
+[template public genTypeName(t : Type)]
+[if t.oclIsKindOf(Enumeration)]
+[apply_classEnum(t.name)/][t.name.sanitize()/][/if]
+[/template]
+
+[template public genTypeAndName(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.nameProperty()/]
+[/template]
+
+[template public gentTypeAndNameParam(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.nameParam()/]
+[/template]
+
+[template public genProperty(a : Attribute) post (trim())]
+private [a.genTypeAndName()/]
+[/template]
+
+[template public genPropertyTypeValid(a : Attribute)]
+[if (a.type = null or a.type.oclIsInvalid() or a.type.oclIsUndefined())]
+String
+[else][a.type.genTypeName()/]
+[/if]
+[/template]
+
+[template public genPropertyType(a : Attribute) post (trim())]
+[if (isMultiple(a))]
+List<[genPropertyTypeValid(a)/]>
+[else]
+[genPropertyTypeValid(a)/]
+[/if]
+[/template]
+
+[template public genPropertyTypeNoGenerics(a : Attribute) post (trim())]
+[if (isMultiple(a))]
+List
+[else][genPropertyTypeValid(a)/]
+[/if]
+[/template]
+
+[comment constructon générique avec des noms de propriétés /]
+[template public genProperty(l : Sequence(Property), prefix : String, suffix : String, se : String)]
+[l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)/]
+[/template]
+
+[template public genAttribute(l : OrderedSet(Attribute), prefix : String, suffix : String, se : String)]
+[l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)/]
+[/template]
+
+[query public isMultiple(p : Property) : Boolean =
+    (p.multiplicity = environment::MultiplicityKind::ONE_STAR)
+    or (p.multiplicity = environment::MultiplicityKind::ZERO_STAR)
+/]
+
+[comment] les références avec multiplicité vers une entité [/comment]
+[query public referencingStar(e : Entity) : OrderedSet(Reference) =
+if (e.eContainer(Root).oclIsUndefined()) then
+    Sequence{}->asOrderedSet()
+else
+    e.eContainer(Root).eAllContents(Reference)
+            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and r.navigable and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()))
+    ->asOrderedSet()->sortedBy(name.toLower())
+endif
+/]

@@ -1,0 +1,74 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::entity::api::common::names /]
+
+[**
+ * Paramétrage début
+*/]
+
+[query public buildPackagePersistenceApiEntity(e : Entity) : String =
+    buildPackagePersistenceApi() + blockHierarchy(e)
+ /]
+
+[query public buildPackagePersistenceImplementationJdbcEntity(e : Entity) : String =
+    buildPackagePersistence()+ '.' + getPackageImplJdbc() + blockHierarchy(e)
+ /]
+
+[query public buildPackageEntityMapper(e : Entity) : String =
+    buildPackageMapper() + blockHierarchy(e)
+/]
+
+[query public buildPackageWsApiEntity(e : Entity) : String =
+    buildPackageWs() + '.' + getPackageApi() + blockHierarchy(e)
+/]
+
+[query public buildPackagePersistenceReferentielEntity(e : Entity) : String =
+    buildPackagePersistenceReferentiel() + blockHierarchy(e)
+ /]
+
+[query public buildPackagePersistenceReferentielReference(r : Reference) : String =
+    buildPackagePersistenceReferentiel() + blockHierarchy(r)
+ /]
+
+[query public buildPackageBusinessImplementationServiceEntity(e : Entity) : String =
+    if not e.oclIsUndefined() then
+        buildPackageImplBusiness(e) + categoryHierarchy(e)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL'
+    endif 
+/]
+
+[query public buildPackageBusinessApiService(e : Entity) : String =        
+	if not e.oclIsUndefined() then buildPackageBusinessApiEntity(e)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL'
+    endif
+/]
+
+[query public buildPackageBusinessApiEntity(e : Entity) : String =
+    buildPackageBusinessApi(e) + categoryHierarchy(e)
+/]
+
+
+[**
+ * Paramétrage Fin
+*/]
+
+[template public blockHierarchy(e : Entity) post (trim())]
+[if (e.ancestors(Namespace)->size() < 1)]
+[else]
+.[e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')/]
+[/if]
+[/template]
+
+[template public blockHierarchy(r : Reference) post (trim())]
+[if (r.ancestors(Namespace)->size() < 1)]
+[else]
+.[r.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')/]
+[/if]
+[/template]

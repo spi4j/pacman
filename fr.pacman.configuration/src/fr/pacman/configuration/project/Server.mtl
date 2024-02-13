@@ -1,0 +1,486 @@
+[comment encoding = UTF-8 /]
+[module Server('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::configuration::common::names /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+[template public serverPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>[getApplicationPackage()/]</groupId>
+        <artifactId>[getApplicationName()/]</artifactId>
+        <version>[getVersion()/]</version>
+    </parent>
+    <artifactId>[getServerProjectName()/]</artifactId>
+    <packaging>jar</packaging>
+    <name>[getApplicationName()/] - Partie serveur</name>
+
+	<!--
+	// [protected ('for custom code')]
+		
+	// [/protected]
+	-->
+    <dependencies>
+		[if(useSpi4jSecurity())]
+        <dependency>		
+            <groupId>fr.spi4j</groupId>
+			<artifactId>spi4j-lib-security-server</artifactId>
+            <version>${spi4j.version}</version>
+        </dependency>
+		[/if]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getCommonProjectName()/]</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		[if useWS()]
+        <!-- Desactive car aucun webservice par defaut -->
+      	<dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>stax2-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>woodstox-core-asl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>stax2-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>woodstox-core-asl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+		[/if]
+		[if useWS()]
+		<dependency>
+    		<groupId>jakarta.ws.rs</groupId>
+    		<artifactId>jakarta.ws.rs-api</artifactId>
+    		<version>${jakarta-ws-rs-api.version}</version>
+		</dependency>
+		[/if]
+		[if useWS() or isLibraryRS()]
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.glassfish.jersey.media</groupId>
+    		<artifactId>jersey-media-multipart</artifactId>
+   			<version>${jersey.version}</version>
+		</dependency>
+		[if isLibraryRS()]
+		<dependency>
+   			<groupId>org.glassfish.jersey.connectors</groupId>
+    		<artifactId>jersey-apache-connector</artifactId>
+    		<version>${jersey-apache-connector.version}</version>
+		</dependency>
+		<!-- Uniquement pour affichage dans les tests JUnit. -->
+		<dependency>
+    		<groupId>com.google.code.gson</groupId>
+    		<artifactId>gson</artifactId>
+    		<version>${gson.version}</version>
+		</dependency>
+		<!-- Uniquement pour affichage dans les tests JUnit. -->
+        <dependency>
+    		<groupId>commons-io</groupId>
+    		<artifactId>commons-io</artifactId>
+    		<version>${commons-io.version}</version>
+		</dependency>
+		[/if]
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt-jackson</artifactId>
+    		<version>${jwt.version}</version>
+    		<scope>runtime</scope>
+    		<exclusions>
+        		<exclusion>
+            		<artifactId>jackson-databind</artifactId>
+            		<groupId>com.fasterxml.jackson.core</groupId>
+        		</exclusion>
+    		</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>${jwt.version}</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+    		<version>${json.version}</version>
+		</dependency>
+		[/if]
+		[if isDbOracle() or isDbOracle32()]
+        <dependency>
+            <groupId>${oracle-group-id}</groupId>
+            <artifactId>${oracle-artifact-id}</artifactId>
+            <version>${oracle.version}</version>
+        </dependency>
+		[/if]
+		[if isDbMySql()]
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+		[/if]
+		[if isDbMariaDB()]
+        <dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.version}</version>
+        </dependency>
+		[/if]
+		[if isDbPostgresql()]
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+        <!-- Dependance commons-dbcp pour utiliser ResourceType_Enum.ressourceDbcpNonXA: -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${commons-dbcp.version}</version>
+        </dependency>
+		[/if]
+		[if isDbSqlServer()]
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>${sqljdbc4.version}</version>
+        </dependency>
+		[/if]
+		[if hasAdditionnalLibraries()]
+		[for (prop : String | getAdditionnalLibraries())]
+		<!-- Librairie additionnelle utilisateur. -->
+		<dependency>
+			<groupId>[getLibraryPackage(prop)/]</groupId>
+			<artifactId>[getLibraryName(prop)/]-server</artifactId>
+			<version>${user-library-[getLibraryName(prop)/].version}</version>
+		</dependency>
+		[/for][/if]
+		[if not isLibraryRS()]
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>${jakarta-servlet-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.transaction</groupId>
+			<artifactId>jakarta.transaction-api</artifactId>
+			<version>${jakarta-transaction-api.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${opencsv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${mail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+		[/if]
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+		<!--
+		// [protected ('for dependencies')]
+		
+		// [/protected]
+		-->
+    </dependencies>
+
+    <build>
+		[if isLibraryRS()]
+		<!-- Inclusion des sources et donc de la Javadoc. -->
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+			</resource>
+			<!-- Ne pas effacer cette ligne sinon le 
+			repertoire n'est plus dans le classpath au design-time. -->
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		[/if]
+        <plugins>
+            <!-- Rapport pmd sans CPD sur Columns_Enum et Entity -->
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*Columns*.java</exclude>
+                        <exclude>**/*Entity*.java</exclude>
+                        <exclude>**/*Match*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+			<!--
+			// [protected ('for plugins')]
+		
+			// [/protected]
+			-->
+        </plugins>
+    </build>
+</project>
+[/template]
+
+[template public rsWebFragment(any : OclAny) post(trim())]
+<web-fragment metadata-complete="true" version="6.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+    http://java.sun.com/xml/ns/javaee/web-fragment_6_0.xsd">
+
+	<name>rest-mapping-fragment</name>
+
+  	<servlet-mapping>
+    	<servlet-name>RSServlet</servlet-name>
+    	<url-pattern>/api/*</url-pattern>
+  	</servlet-mapping>
+
+</web-fragment>
+[/template]
+
+[template public initialization(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+// [protected ('for imports')]
+
+import jakarta.servlet.ServletContext;
+
+import fr.spi4j.Parameters;
+import fr.spi4j.business.DefaultServerProxyFactory;
+import fr.spi4j.lib.security.SecurityProxy;
+import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+import fr.spi4j.lib.security.Spi4jServerSecurity;
+
+// [/protected]
+
+/**
+ * Initialisation de l'application serveur.
+ * @author [getAuthorName()/]
+ */
+public final class [buildSecurityInitializationClassName()/]
+{
+	/**
+	* Constructeur prive : pas d'instance.
+	*/
+	private [buildSecurityInitializationClassName()/] ()
+	{
+		super();
+	}
+
+   /**
+    * Initialisation.
+    * @param [apply_parameterMethodClassicIn('servlet context')/]
+    *           ServletContext
+    */
+  	public static void [apply_methodDefault('initialize')/] (final ServletContext [apply_parameterMethodClassicIn('servlet context')/])
+  	{
+		// security initialization
+		// [protected (any.getUserCodeId('security initialization'))]
+
+		Parameters.initServletContext( [apply_parameterMethodClassicIn('servlet context')/]);
+
+		// [/protected]
+	}
+
+	/**
+	* Initialisation de la securite serveur.
+	*/
+	public static void [apply_methodDefault('initialize server security')/] ()
+	{
+		Spi4jSecurity_Abs.setInstance(new Spi4jServerSecurity());
+		Spi4jSecurity_Abs.getInstance().setAuthorizationService(new [buildSecurityManagerClassName()/]());
+		Spi4jSecurity_Abs.getInstance().enable();
+
+		/**
+		* Decommenter cette partie de code pour activer la securite sur le gestionnaire
+		* de persistance de l'application une fois que la generation de la persistance
+		* aura ete effectuee (click droit 'Generer persistance JDBC' dans le projet de
+		* modelisation). Repeter la proxyfication pour chaque gestionnaire que l'on desire
+		* securiser.
+		*/
+
+		//final [apply_classDefault(getApplicationNameUpperFirst() + 'UserBusiness')/] [apply_variableFinal(apply_classDefault(getApplicationNameUpperFirst() + 'UserBusiness'))/] = [apply_classDefault(getApplicationNameUpperFirst() + 'UserBusiness')/].getSingleton();
+		//[apply_variableFinal(apply_classDefault(getApplicationNameUpperFirst() + 'UserBusiness'))/].setProxyFactory(new DefaultServerProxyFactory([apply_variableFinal(apply_classDefault(getApplicationNameUpperFirst() + 'UserBusiness'))/])
+		//{
+		//	@Override
+		//	public <TypeService> TypeService getProxiedService (final Class<TypeService> [apply_parameterMethodClassicIn('interface service')/],
+		//		final TypeService [apply_parameterMethodClassicIn('service')/])
+		//	{
+		//		final TypeService [apply_variableFinal('proxy')/] = SecurityProxy.createProxy([apply_parameterMethodClassicIn('service')/]);
+		//		return super.getProxiedService([apply_parameterMethodClassicIn('interface service')/], [apply_variableFinal('proxy')/]);
+		//	}
+		//});
+
+		// security server
+		// [protected (any.getUserCodeId('security server'))]
+
+		// [/protected]
+	}
+}
+[/template]
+
+[template public securityManager(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+// [protected ('for imports')]
+
+import java.util.HashSet;
+import java.util.Set;
+
+import fr.spi4j.lib.security.AuthorizationService_Itf;
+import fr.spi4j.lib.security.PermissionContainer;
+import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+import fr.spi4j.lib.security.User_Itf;
+
+// [/protected]
+
+/**
+ * Gestion des permissions cote serveur.
+ * @author [getAuthorName()/]
+ */
+public class [buildSecurityManagerClassName()/] implements AuthorizationService_Itf
+{
+	@Override
+	public PermissionContainer getPermissionsOfCurrentUser ()
+	{
+		final Set<String> [apply_variableFinal('list perm')/] = new HashSet<>();
+      	boolean [apply_variableDefault('is super admin')/] = Boolean.FALSE;
+
+		// security manager
+		// [protected (any.getUserCodeId('security manager'))]
+
+		final User_Itf [apply_variableDefault('user')/] = Spi4jSecurity_Abs.getInstance().getCurrentUser();
+		//if ([apply_variableDefault('user')/] instanceof UtilisateurDto) {
+		// final UtilisateurDto [apply_variableDefault('user dto')/] = (UtilisateurDto) [apply_variableDefault('user')/];
+		//}
+
+		// [/protected]
+
+		return new PermissionContainer([apply_variableFinal('list perm')/], [apply_variableDefault('is super admin')/]);
+	}
+}
+[/template]
+
+[template public securityListener(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+
+/**
+ * Initialisation du listener pour la gestion des permissions.
+ * @author [getAuthorName()/]
+ */
+public class [buildSecurityListenerClassName()/] implements ServletContextListener
+{
+	@Override
+	public void contextInitialized(ServletContextEvent [apply_parameterMethodClassicIn('event')/]) {
+
+		[buildSecurityInitializationClassName()/].[apply_methodDefault('initialize')/]([apply_parameterMethodClassicIn('event')/].getServletContext());
+		[buildSecurityInitializationClassName()/].[apply_methodDefault('initialize server security')/]();
+
+		// initialization listener
+		// [protected (any.getUserCodeId('initialization listener'))]
+
+		// [/protected]
+	}
+
+	@Override
+	public void contextDestroyed(final ServletContextEvent [apply_parameterMethodClassicIn('event')/]) {
+
+		//RAS.
+	}
+}
+[/template]

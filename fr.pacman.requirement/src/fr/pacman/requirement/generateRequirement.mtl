@@ -1,0 +1,53 @@
+[comment encoding = UTF-8 /]
+[module generateRequirement('http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::requirement::commons /]
+[import fr::pacman::requirement::files::genRequirementEnum /]
+[import fr::pacman::requirement::files::genRequirementVersionTest /]
+[import fr::pacman::requirement::files::genAnnotationRequirement /]
+
+
+[template public generateRequirement(repo : Repository)]
+[comment @main /]
+[comment dans tous les cas on génère l'annotation et l'énumération de plus haut niveau (pour les exigences transverses /]
+[if not findRequirements(repo.mainCategories->asSequence(), requirementBaseCategoryLevel() - 1)->isEmpty()]
+    [genRequirementEnum(repo)/]
+    [genAnnotationRequirement(repo)/]
+    [genRequirementVersionTest(repo)/]
+[/if]
+[if requirementBaseCategoryLevel() > 0]
+    [generateRequirementsByLevel(repo)/]
+[/if]
+[/template]
+
+[template private generateRequirementsByLevel(repo : Repository)]
+[for (cat : Category | repo.mainCategories)]
+[generateRequirements(cat, 1)/]
+[/for]
+[/template]
+
+[**
+ * Cherche le niveau de découpage récursivement
+ * pour se positionner sur le bon niveau pour la génération.
+*/]
+[template private generateRequirements(cat : Category, currentLevel : Integer)]
+[if currentLevel < requirementBaseCategoryLevel()]
+    [generateRecursiveRequirements(cat, currentLevel)/]
+[else]
+    [if not findRequirements(Sequence{cat}, -1)->isEmpty()]
+        [genRequirementEnum(cat)/]
+        [genAnnotationRequirement(cat)/]
+        [genRequirementVersionTest(cat)/]
+    [/if]
+[/if]
+[/template]
+
+[**
+ * Cherche le niveau de découpage pour la génération récursivement.
+*/]
+[template private generateRecursiveRequirements(cat : Category, currentLevel : Integer)]
+[for (subcat : Category | cat.subCategories)]
+[generateRequirements(subcat, currentLevel + 1)/]
+[/for]
+[/template]

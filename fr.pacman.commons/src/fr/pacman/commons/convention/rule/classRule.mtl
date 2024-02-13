@@ -1,0 +1,61 @@
+[comment encoding = UTF-8 /]
+[module classRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::utils /]
+
+[template public apply_classDefault(value : String)]
+[norme_classDefault(value.normalize())/]
+[/template]
+
+[query private norme_classDefault(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_classDefault(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_classAnnotation(value : String)]
+[norme_classAnnotation(value.normalize())/]
+[/template]
+
+[query private norme_classAnnotation(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_classAnnotation(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_classAbstract(value : String)]
+[norme_classAbstract(value.normalize())/]
+[/template]
+
+[query private norme_classAbstract(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_classAbstract(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_classEnum(value : String)]
+[norme_classEnum(value.normalize())/]
+[/template]
+
+[query private norme_classEnum(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_classEnum(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_classImplem(value : String)]
+[norme_classImplem(value.normalize())/]
+[/template]
+
+[query private norme_classImplem(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme','norme_classImplem(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_classInterface(value : String)]
+[norme_classInterface(value.normalize())/]
+[/template]
+
+[query private norme_classInterface(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_classInterface(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_classTest(value : String)]
+[norme_classTest(value.normalize())/]
+[/template]
+
+[query private norme_classTest(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_classTest(java.lang.String)', Sequence{value})
+ /]
+

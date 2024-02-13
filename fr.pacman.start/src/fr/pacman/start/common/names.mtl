@@ -1,0 +1,41 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::names /]
+
+
+[query public buildOisName(any : OclAny) : String =
+   getApplicationName() + '-model.ois'
+/]
+
+[query public buildEntityModelName(any : OclAny) : String =
+   getApplicationName() + '-model.entity'
+/]
+
+[query public buildSoaModelName(any : OclAny) : String =
+   getApplicationName() + '-model.soa'
+/]
+
+[query public buildDatabaseModelName(any : OclAny) : String =
+   getApplicationName() + '-model.database'
+/]
+
+[query public buildDatabaseModelNameWithoutExt(any : OclAny) : String =
+   getApplicationName() + '-model'
+/]
+
+[query public buildCinematicModelName(any : OclAny) : String =
+   getApplicationName() + '-model.cinematic'
+/]
+
+[query public buildCinematicModelNameWithoutExt(any : OclAny) : String =
+   getApplicationName() + '-model'
+/]
+
+[query public buildRequirementModelName(any : OclAny) : String =
+   getApplicationName() + '-model.requirement'
+/]
+
+[query public buildRequirementModelNameWithoutExt(any : OclAny) : String =
+   getApplicationName() + '-model'
+/]

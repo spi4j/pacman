@@ -1,0 +1,70 @@
+package fr.appwhite2.business.impl_server.annuaire;
+
+// Start of user code for imports
+
+import java.util.List;
+
+import fr.appwhite2.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.appwhite2.requirement.Requirement;
+import fr.appwhite2.requirement.Requirement_Enum;
+import fr.spi4j.requirement.RequirementException;
+
+// End of user code
+
+/**
+ * Implémentations des exigences métiers de 'PersonneService'.
+ * @author MINARM
+ */
+public class PersonneServiceRequirements
+{
+
+   // Start of user code REQ_FCT_PERS_01
+
+   /**
+    * Test de l'exigence REQ_FCT_PERS_01. <br/>
+    * Lors d'une recherche de personnes par grade, les personnes trouvées ont toutes le même grade <br/>
+    * Le grade peut être "Lieutenant", "Colonel", ... <br/>
+    * Statement sur plusieurs lignes !
+    * @param p_personnes
+    *           les personnes qui doivent avoir le même grade
+    * @param p_grade
+    *           Le grade demandé
+    * @see fr.appwhite2.requirement.RequirementVersion_Test#testVersion_REQ_FCT_PERS_01()
+    */
+   @Requirement(Requirement_Enum.REQ_FCT_PERS_01)
+   public void exigenceREQ_FCT_PERS_01 (final List<PersonneEntity_Itf> p_personnes, final Long p_grade_id)
+   {
+      // throw new RequirementException(Requirement_Enum.REQ_FCT_PERS_01, "Exigence non implémentée");
+
+    //  final Long v_gradeId = p_grade.getId();
+      for (final PersonneEntity_Itf v_personne : p_personnes)
+      {
+         if (!p_grade_id.equals(v_personne.get_grade_id()))
+         {
+            throw new RequirementException(Requirement_Enum.REQ_FCT_PERS_01, "Echec de l'exigence "
+                     + Requirement_Enum.REQ_FCT_PERS_01);
+         }
+      }
+   }
+
+   // End of user code
+
+   // Start of user code REQ_TEC_PERS_02
+
+   /**
+    * Test de l'exigence REQ_TEC_PERS_02. <br/>
+    * Exigence technique sur une ligne
+    */
+   @Requirement(Requirement_Enum.REQ_TEC_PERS_02)
+   public void exigenceREQ_TEC_PERS_02 ()
+   {
+      throw new RequirementException(Requirement_Enum.REQ_TEC_PERS_02, "Exigence non implémentée");
+   }
+
+   // End of user code
+
+   // Start of user code PersonneServiceRequirements
+
+   // End of user code
+
+}

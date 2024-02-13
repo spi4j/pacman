@@ -1,0 +1,142 @@
+package fr.appwhite2.server.business.annuaire;
+
+// Start of user code for imports
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import fr.appwhite2.business.Appli1UserBusiness;
+import fr.appwhite2.business.api.annuaire.PersonneService_Itf;
+import fr.appwhite2.client.business.annuaire.PersonneGwtService;
+import fr.appwhite2.mapper.Appli1UserMapper;
+import fr.appwhite2.mapper.annuaire.PersonneMapper_Itf;
+import fr.appwhite2.persistence.Appli1ParamPersistence;
+import fr.appwhite2.persistence.api.annuaire.AdresseColumns_Enum;
+import fr.appwhite2.persistence.api.annuaire.AdresseEntity_Itf;
+import fr.appwhite2.persistence.api.annuaire.PersonneColumns_Enum;
+import fr.appwhite2.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.appwhite2.ws.api.annuaire.CompetenceXto;
+import fr.appwhite2.ws.api.annuaire.PersonneXto;
+import fr.referentiel.ws.api.ref.GradeXto;
+import fr.spi4j.business.dto.DtoUtil;
+import fr.spi4j.persistence.dao.TableCriteria;
+import fr.spi4j.ui.gwt.server.EntityGwtRemoteServiceImpl;
+
+// End of user code
+
+/**
+ * Interface de services appelables par le client.
+ * @author MINARM
+ */
+public class PersonneGwtServiceImpl extends EntityGwtRemoteServiceImpl<Long, PersonneXto, PersonneEntity_Itf> implements
+         PersonneGwtService
+{
+
+   private static final long serialVersionUID = 1L;
+
+   @Override
+   protected PersonneMapper_Itf getMapper ()
+   {
+      // Start of user code Mapper
+      return Appli1UserMapper.getPersonneMapper();
+      // End of user code
+   }
+
+   @Override
+   protected PersonneService_Itf getService ()
+   {
+      // Start of user code Service
+      return Appli1UserBusiness.getPersonneService();
+      // End of user code
+   }
+
+   @Override
+   public List<CompetenceXto> findListCompetencesByPersonne (final Long p_personneId)
+   {
+      return Appli1UserMapper.getCompetenceMapper().convertListEntityToListXto(
+               getService().findListCompetencesByPersonne(p_personneId));
+   }
+
+   // Start of user code findListPersonneByGrade_Grade_Personne
+
+   @Override
+   public List<PersonneXto> findListPersonneByGrade (final GradeXto p_grade)
+   {
+      final List<PersonneEntity_Itf> v_personnes = getService().findListPersonneByGrade(
+p_grade.getId());
+
+      // chargement du grade dans la personne (et initialisation des adresses pour éviter lazy loading)
+      for (final PersonneEntity_Itf v_personneEntity : v_personnes)
+      {
+         v_personneEntity.get_grade();
+         // v_personneEntity.set_tab_adresses(new ArrayList<AdresseEntity_Itf>());
+      }
+
+      // chargement des adresses dans la personne (requête avec jointure)
+      final TableCriteria<AdresseColumns_Enum> v_adressesParGradeCriteria = new TableCriteria<AdresseColumns_Enum>(
+               "Recherche d'adresses de personnes par grade");
+      v_adressesParGradeCriteria.addInnerJoin(AdresseColumns_Enum.proprietaire_id, PersonneColumns_Enum.Personne_id,
+               PersonneColumns_Enum.grade_id + " = :grade");
+      final Map<String, Object> v_parameters = new HashMap<String, Object>(v_adressesParGradeCriteria.getMapValue());
+      v_parameters.put("grade", p_grade.getId());
+      final List<AdresseEntity_Itf> v_adressesDeGrade = Appli1ParamPersistence.getUserPersistence().getAdresseDao()
+               .findByCriteria(
+               v_adressesParGradeCriteria.getCriteriaSql(), v_parameters);
+      final Map<Long, PersonneEntity_Itf> v_mapPersonnesId = DtoUtil.createMapById(v_personnes);
+      for (final AdresseEntity_Itf v_adresse : v_adressesDeGrade)
+      {
+         final PersonneEntity_Itf v_personne = v_mapPersonnesId.get(v_adresse.get_proprietaire_id());
+         v_personne.get_tab_adresses().add(v_adresse);
+      }
+
+      return getMapper().convertListEntityToListXto(v_personnes);
+   }
+
+   // End of user code
+
+   // Start of user code findAllFetchAdresses_Personne
+
+   @Override
+   public List<PersonneXto> findAllFetchAdresses ()
+   {
+      return Appli1UserMapper.getPersonneMapper().convertListEntityToListXto(
+               Appli1UserBusiness.getPersonneService().findAllFetchAdresses(
+      ));
+   }
+
+   // End of user code
+
+   // Start of user code PersonneService
+
+   @Override
+   public void deleteCascade (final PersonneXto p_Personne)
+   {
+      getService().deleteCascade(getMapper().convertXtoItfToEntity(p_Personne));
+   }
+
+   @Override
+   public PersonneXto findById (final Long p_id)
+   {
+      final PersonneEntity_Itf v_personne = getService().findById(p_id);
+      // chargement du grade
+      v_personne.get_grade();
+      // chargement des adresses
+      v_personne.get_tab_adresses();
+      return getMapper().convertEntityItfToXto(v_personne);
+   }
+
+   @Override
+   public List<PersonneXto> findAll ()
+   {
+      final List<PersonneEntity_Itf> v_personnes = getService().findAll();
+      for (final PersonneEntity_Itf v_personne : v_personnes)
+      {
+         // chargement du grade (référentiel mis en cache)
+         v_personne.get_grade();
+      }
+      return getMapper().convertListEntityToListXto(v_personnes);
+   }
+
+   // End of user code
+}

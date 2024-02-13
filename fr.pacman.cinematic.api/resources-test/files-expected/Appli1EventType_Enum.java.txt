@@ -1,0 +1,26 @@
+package fr.appwhite1.client.ui;
+
+// Start of user code for imports
+
+import fr.spi4j.ui.mvp.EventType;
+
+// End of user code
+
+/**
+ * Enumération des types d'événements possibles dans l'application.
+ * @author Pacman
+ */
+public enum Appli1EventType_Enum implements EventType
+{
+
+   // Start of user code Appli1EventType_Enum
+
+   /** Erreur */
+   ERREUR,
+
+   /** Information */
+   INFORMATION;
+
+   // End of user code
+
+}

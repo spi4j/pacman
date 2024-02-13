@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genRoot('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::start::project::Root /]
+
+[template public genRoot(any : OclAny) post (trim())]
+[comment : Creation du build.xml de xxx /]
+[file ('build.xml', false, 'UTF-8')]
+[RootBuild() /]
+[/file]
+[comment : Creation du assembly.xml de xxx /]
+[file ('assembly.xml', false, 'UTF-8')]
+[RootAssembly() /]
+[/file]
+[/template]
+

@@ -1,0 +1,139 @@
+[comment encoding = UTF-8 /]
+[module genInitData('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+
+
+
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::sql::typeSQL /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::sql::dropConstraint /]
+[import fr::pacman::entity::api::sql::genConstraint /]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::utils /]
+
+[template public genInitData(r : Root, databaseType : String)]
+[releaseCounterForConstraints()/]
+[file (getServerSQLDir() + 'init_data_' + getApplicationName() + '.sql', false, 'UTF-8')]
+/*
+Ne pas décommenter ce code. Copier ce code d'exemple dans les balises User Code en fin de fichier.
+
+[releaseCounterForConstraints()/]
+[dropConstraintWithoutComment(r, databaseType)/]
+
+[for (n : environment::Namespace | r.ownedNamespaces)]
+[genInitData(n)/][/for]
+
+[genConstraintWithoutHeader(r)/]
+*/
+
+/*
+[protected ('init data')]
+*/
+
+[releaseCounterForConstraints()/]
+[dropConstraint(r, databaseType)/]
+
+[for (n : environment::Namespace | r.ownedNamespaces)]
+[genInitData(n)/][/for]
+
+[genConstraint(r)/]
+
+/*
+[/protected]
+*/
+[/file]
+[/template]
+
+[template public genInitData(n : environment::Namespace)]
+[releaseCounterForConstraints()/]
+[for (sb : environment::Namespace | n.ownedNamespaces)]
+[genInitData(sb)/]
+[/for]
+[for (e : Entity | n.types->select(el |el.oclIsKindOf(entity::Entity)))]
+[if not e.isNotPersistent() or useMatching()]
+insert into [nameTableWithSchema(e)/] ([columnsEntity(e)/])
+values ([valuesEntity(e)/]);
+[/if]
+[/for]
+[for (e : Entity | n.types->select(el |el.oclIsKindOf(entity::Entity)))]
+[if not e.isNotPersistent() or useMatching()]
+[for (r : Reference | e.referencesStarStarOwned())]
+insert into [nameTableJointureWithSchema(r)/] ([namePK(r.containingType.oclAsType(Entity))/], [namePK(r.referencedType.oclAsType(Entity))/][writeAdditionnalFields()/])
+values (1, 1[writeAdditionnalValues()/]);
+[/for]
+[/if]
+[/for]
+[/template]
+
+[template private writeAdditionnalFields(any : OclAny)]
+[if hasXtopSup()], [get_nameColumn(getXtopSuppKey())/][/if][if hasXdMaj()], [get_nameColumn(getXdmajKey())/][/if]
+[/template]
+
+[template private writeAdditionnalValues(any : OclAny)]
+[if hasXtopSup()], '0'[/if][if hasXdMaj()], current_date[/if]
+[/template]
+
+[template private columnsEntity(e : Entity)]
+[namePK(e)/][if not e.attributesNoPk()->isEmpty()], [e.attributesNoPk().nameColumn()->sep(', ')/][/if][if not e.getInheritDtoAttributes()->isEmpty()], [e.getInheritDtoAttributes().nameColumn()->sep(', ')/][/if][for (ent : Entity | entitiesReferencedOrReferencing() )][if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1][for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))][if r.containingType.oclAsType(Entity) = e], [nameColumnId(r,i)/][elseif (r.oppositeOf.oclIsUndefined())], [nameColumnReferencingId(r,i)/][/if][/for][else][for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))][if r.containingType.oclAsType(Entity) = e], [nameColumnId(r)/][elseif (r.oppositeOf.oclIsUndefined())], [nameColumnReferencingId(r)/][/if][/for][/if][/for][if hasAutomaticColumns()], [get_automaticColumnsProperties().get_nameColumn(e)->sep(', ')/][/if]
+[/template]
+
+[template private valuesEntity(e : Entity)]
+1[if not e.attributesNoPk()->isEmpty()], [e.attributesNoPk().defaultSQLValue()->sep(', ')/][/if][if not e.getInheritDtoAttributes()->isEmpty()], [e.getInheritDtoAttributes().defaultSQLValue()->sep(', ')/][/if][for (ent : Entity | entitiesReferencedOrReferencing() )][for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))][if r.containingType.oclAsType(Entity) = e], 1[elseif (r.oppositeOf.oclIsUndefined())], 1[/if][/for][/for][if hasAutomaticColumns()], [get_automaticColumnsProperties().get_typeColumn(e).defaultSQLValue()->sep(', ')/][/if]
+[/template]
+
+[template private defaultSQLValue(type : environment::Type)]
+[if type.name.equalsIgnoreCase('String')]
+'S'[elseif type.name.equalsIgnoreCase('Boolean')]
+false[elseif 'Binary'.equalsIgnoreCase(type.name)]
+rawtohex('Test')[elseif type.name.equalsIgnoreCase('Integer')]
+0[elseif type.name.equalsIgnoreCase('Long')]
+0[elseif type.name.equalsIgnoreCase('Float')]
+0[elseif type.name.equalsIgnoreCase('Double')]
+0[elseif type.name.equalsIgnoreCase('Date')]
+current_date[elseif type.name.equalsIgnoreCase('Timestamp')]
+current_timestamp[elseif type.name.equalsIgnoreCase('Time')]
+current_timestamp[elseif (type.oclIsTypeOf(Enumeration))]
+'DEFAULTENUM'[elseif type.name.equalsIgnoreCase('Char')]
+'C'[elseif type.name.equalsIgnoreCase('XtopSup')]
+'0'[/if]
+[/template]
+
+[template private defaultSQLValue(a : Attribute)]
+[if a.type.name.equalsIgnoreCase('String')]
+'S'[elseif a.type.name.equalsIgnoreCase('Boolean')]
+false[elseif 'Binary'.equalsIgnoreCase(a.type.name)]
+rawtohex('Test')[elseif a.type.name.equalsIgnoreCase('Integer')]
+0[elseif a.type.name.equalsIgnoreCase('Long')]
+0[elseif a.type.name.equalsIgnoreCase('Float')]
+0[elseif a.type.name.equalsIgnoreCase('Double')]
+0[elseif a.type.name.equalsIgnoreCase('Date')]
+current_date[elseif type.name.equalsIgnoreCase('Timestamp')]
+current_timestamp[elseif type.name.equalsIgnoreCase('Time')]
+current_timestamp[elseif (a.type.oclIsTypeOf(Enumeration))]
+'[a.type.oclAsType(Enumeration).literals->first().name/]'[elseif a.type.name.equalsIgnoreCase('Char')]
+'C'[elseif type.name.equalsIgnoreCase('XtopSup')]
+'0'[/if]
+[/template]
+
+[template private defaultSQLValue(type : String)]
+[if type.equalsIgnoreCase('String')]
+'S'[elseif type.equalsIgnoreCase('Boolean')]
+false[elseif 'Binary'.equalsIgnoreCase(type)]
+rawtohex('Test')[elseif type.equalsIgnoreCase('Integer')]
+0[elseif type.equalsIgnoreCase('Long')]
+0[elseif type.equalsIgnoreCase('Float')]
+0[elseif type.equalsIgnoreCase('Double')]
+0[elseif type.equalsIgnoreCase('Date')]
+current_date[elseif type.equalsIgnoreCase('Timestamp')]
+current_timestamp[elseif type.equalsIgnoreCase('Time')]
+current_timestamp[elseif type.equalsIgnoreCase('Char')]
+'C'[elseif type.equalsIgnoreCase('XtopSup')]
+'0'[else]'NULL'[/if]
+[/template]

@@ -1,0 +1,18 @@
+[comment encoding = UTF-8 /]
+[module genLivraisonHebergement('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::configuration::project::LivraisonHebergement /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+
+[template public genLivraisonHebergement(any : OclAny)]
+[comment : Creation du pom de xxx-LivraisonHebergement /]
+[file (filename(getDeliveryProjectName(), '', 'pom.xml'), false, 'UTF-8')]
+[livraisonHebergementPom() /]
+[/file]
+[comment : Creation du fichier assembly.xml /]
+[file (filename(getDeliveryProjectName(), '', 'assembly.xml'), false, 'UTF-8')]
+[livraisonHebergementAssembly() /]
+[/file]
+[/template]
+

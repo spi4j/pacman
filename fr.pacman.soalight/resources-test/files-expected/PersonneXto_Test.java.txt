@@ -1,0 +1,71 @@
+package fr.appwhite2.ws.api.annuaire;
+
+// Start of user code for imports
+
+import java.util.Collections;
+import java.util.Date;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import fr.spi4j.tua.BeanTester_Abs;
+
+// End of user code
+
+/**
+ * Classe de test pour le XTO 'Personne'.
+ * @author MINARM
+ */
+public class PersonneXto_Test extends BeanTester_Abs
+{
+
+   /**
+    * Test des attributs.
+    */
+   @SuppressWarnings("unchecked")
+   @Test
+   public void testXto ()
+   {
+      // instanciation du xto
+      final PersonneXto v_xto = new PersonneXto();
+
+      // génération des champs
+      final Long v_id = getRandomLong();
+      final String v_nom = getRandomString();
+      final String v_prenom = getRandomString();
+      final Boolean v_civil = getRandomBoolean();
+      final Date v_dateNaissance = getRandomDate();
+      final Double v_salaire = getRandomDouble();
+      final Long v_grade = getRandomLong();
+
+      // remplissage du Xto
+      v_xto.setId(v_id);
+      v_xto.set_nom(v_nom);
+      v_xto.set_prenom(v_prenom);
+      v_xto.set_civil(v_civil);
+      v_xto.set_dateNaissance(v_dateNaissance);
+      v_xto.set_salaire(v_salaire);
+      v_xto.set_grade_id(v_grade);
+
+      // test des valeurs
+      Assert.assertEquals("Champ id incorrect", v_id, v_xto.getId());
+      Assert.assertEquals("Champ nom incorrect", v_nom, v_xto.get_nom());
+      Assert.assertEquals("Champ prenom incorrect", v_prenom, v_xto.get_prenom());
+      Assert.assertEquals("Champ civil incorrect", v_civil, v_xto.get_civil());
+      Assert.assertEquals("Champ dateNaissance incorrect", v_dateNaissance, v_xto.get_dateNaissance());
+      Assert.assertEquals("Champ salaire incorrect", v_salaire, v_xto.get_salaire());
+      Assert.assertEquals("Champ grade_id incorrect", v_grade, v_xto.get_grade_id());
+
+      // appel du toString
+      Assert.assertNotNull("toString incorrect", v_xto.toString());
+
+      // déréférencement
+      v_xto.set_grade(null);
+      Assert.assertNull("Champ grade_id incorrect", v_xto.get_grade());
+      v_xto.set_tab_adresses(Collections.EMPTY_LIST);
+      Assert.assertNotNull("Champ adresses_id incorrect", v_xto.get_tab_adresses());
+      v_xto.set_tab_competences(Collections.EMPTY_LIST);
+      Assert.assertNotNull("Champ competences_id incorrect", v_xto.get_tab_competences());
+
+   }
+}

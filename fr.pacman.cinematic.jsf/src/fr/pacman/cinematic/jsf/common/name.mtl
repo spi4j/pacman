@@ -1,0 +1,44 @@
+[comment encoding = UTF-8 /]
+[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+			'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::jsf::common::jsf-commons /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::pageRule /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+
+
+[query public getRootBeanName(object : OclAny) : String = 
+    nameBean(getRootBean(object))
+/]
+
+[query public buildAppliUserBusinessGenClassName(flowAction : FlowAction) : String =
+apply_classDefault(getApplicationName() + ' user business')
+ /]
+
+[query public nameViewImplementation(viewContainer : ViewContainer) : String =
+	  apply_pageDefault(viewContainer.name)
+/]
+
+[query public getProjectName(any : OclAny) : String =
+	getClientJsfProjectName()
+ /]
+
+[query public transformList(chaine  : String) : String =
+if (chaine.indexOf('HasList_Itf') > 0) then 
+	chaine.replace('HasList_Itf', 'List')
+else if (chaine.indexOf('HasSelection_Itf') > 0) then	
+	chaine.replace('HasSelection_Itf', 'List')
+else if (chaine.indexOf('HasMultipleSelection_Itf') > 0) then 
+	chaine.replace('HasMultipleSelection_Itf', 'List')
+else 
+	chaine
+endif endif endif
+/]
+
+[template public getLabel(anAVE : AbstractViewElement) post(trim())]
+[if (not(anAVE.label.oclIsUndefined()) and anAVE.label.size() > 0)][anAVE.label/][else][anAVE.name/][/if]
+[/template]
+

@@ -1,0 +1,88 @@
+[comment encoding = UTF-8 /]
+[module referenceEntityItf('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[template public referenceEntityItf(r : Reference)]
+[licence()/]
+package [buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity))/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[r.writeImports()/]
+
+// [/protected]
+
+[comClass(roleEntityItf())/]
+public interface [buildReferenceEntityInterfaceName(r)/] extends [if hasAutomaticColumns()][buildAppliEntityInterfaceName()/]<[genPkType()/]>[else][getClassNameForEntity_Itf()/]<[genPkType()/]>[/if]
+{
+   // CONSTANTES
+
+   // Constantes [buildReferenceEntityInterfaceName(r)/]
+   // [protected (r.getUserCodeId('Constantes ' + buildReferenceEntityInterfaceName(r)))]
+
+   // [/protected]
+
+   // METHODES ABSTRAITES	
+
+	/**
+		Obtenir [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/] 
+		@return [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/] 	
+    */
+	[genPkType()/]  [apply_methodGet(apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))) /]();
+	
+
+	/**
+		Obtenir [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/] 
+		@return [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/] 
+		
+    */
+	[genPkType()/] [apply_methodGet(apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))) /]();
+	
+	
+	
+   /**
+		Affecter [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/] 						
+    */
+	
+	public void [apply_methodSet(apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))) /]([genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]);
+
+	
+   /**
+		Affecter [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/] 
+					
+    */
+
+	public void [apply_methodSet(apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))) /]([genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/]);
+
+  
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (r : Reference) post(trim())]
+[r.initImports()/]
+[r.addImport(buildPackagePersistenceApi() + '.' + buildAppliEntityInterfaceName(), r.hasAutomaticColumns())/]
+[r.addImport(getImportForEntity_Itf(), not r.hasAutomaticColumns())/]
+[r.flushImports()/]
+[/template]
+
+[query public roleEntityItf(r : Reference) : String = 'L\'interface définissant le contrat de persistance pour le type ' + buildReferenceEntityInterfaceName(r) /]

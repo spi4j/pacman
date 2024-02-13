@@ -1,0 +1,234 @@
+[comment encoding = UTF-8 /]
+[module dao('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::services::SecurityUtils /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::sql::common/]
+
+[import fr::pacman::entity::jdbc::common::packages /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[comment sur la base de PersonneDao en r97 /]
+[template public daoJdbc(e : Entity)]
+[licence()/]
+package [buildPackagePersistenceImplementationJdbcEntity(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+[comClass(roleDao())/]
+public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]<[buildEntityInterfaceName(e)/], [buildEntityColumnEnumName(e)/]> implements [buildDaoInterfaceName(e)/]
+{
+   // CONSTANTES
+
+   // Constantes [buildDaoImplClassName(e)/]
+   // [protected (e.getUserCodeId('Constantes ' + buildDaoImplClassName(e)))]
+
+   // [/protected]
+
+   // ATTRIBUTS
+
+   // Attributs [buildDaoImplClassName(e)/]
+   // [protected (e.getUserCodeId('Attributs ' + buildDaoImplClassName(e)))]
+
+   // [/protected]
+
+   // METHODES
+
+   /**
+    * Constructeur par défaut.
+    */
+   public [buildDaoImplClassName(e)/] ()
+   {
+[if hasAutomaticColumns()]
+      super ([buildEntityColumnEnumName(e)/].[apply_attributeFinalStatic('table name')/], [buildEntityColumnEnumName(e)/].values (), [buildAppliColumnClassName()/].values ());
+[else]
+      super ([buildEntityColumnEnumName(e)/].[apply_attributeFinalStatic('table name')/], [buildEntityColumnEnumName(e)/].values ());
+[/if]
+   }
+
+[for (r : Reference | e.referencesStarStarOwned())]
+
+   @Override
+   public List<[buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))/]> [apply_methodDefault('find list '+  r.name.normalize() +' by ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)))/] (final [genPkType()/] [apply_parameterMethodObjectIn(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/])
+   {
+      // utilisation de la table de jointure de la relation N-N
+      [comment]// Note pour Pacman : le nom "aw_personnecompetence" de la table de jointure est déterminé par défaut par le préfix + les 2 noms d'entités en relation N-N
+      // et ce nom peut être surchargé par une Annotation PHYSICAL_NAME sur la relation N-N dans le modéle[/comment]
+      final String [apply_variableFinal('jointure sql')/] = " inner join " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +   r.name.sanitize())/] + " on "
+               + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name')/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity))/] + " = "
+               + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +  r.name.sanitize())/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[ nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity))/]
+               + " where " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +  r.name.sanitize())/] + "." + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/] + " = :[nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/]";
+      final Map<String, Long> [apply_variableFinal('params')/] = Collections.singletonMap ("[nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/]", [apply_parameterMethodObjectIn(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]);
+      return [buildParamPersistenceClassNameForEntity(r.referencedType.oclAsType(entity::Entity))/].[apply_methodDefault('get user persistence')/]().[apply_methodDefault('get '+ buildDaoName(r.referencedType.oclAsType(entity::Entity)))/]().findByCriteria ([apply_variableFinal('jointure sql')/], [apply_variableFinal('params')/]);
+   }
+
+[/for]
+   @Override
+   protected Map<String, Object> getMapValueByLogicalNameFromEntity (final [buildEntityInterfaceName(e)/] [apply_parameterMethodObjectIn('entity')/])
+   {
+      final Map<String, Object> [e.apply_variableMultipleMap('value by column name')/] = new LinkedHashMap<>();
+      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].getId());
+[for (a : Attribute | e.attributesNoPk())]
+[comment test is computed sert dans le cas de génération dsans matching/]
+[if (not a.isComputed())]
+     [if a.type.genTypeName()='Binary']
+      if ([apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()==null)
+      {
+         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), null);
+      }
+      else
+      {
+         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if a.type.genTypeName()='Binary'].getInputStream()[/if]);
+      }
+     [else]
+      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if (a.type.oclIsTypeOf(Enumeration))].getValue()[/if]);
+     [/if]
+[/if]
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+     [if a.type.genTypeName()='Binary']
+      if ([apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()==null)
+      {
+         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), null);
+      }
+      else
+      {
+         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if (a.type.oclIsTypeOf(Enumeration))].getValue()[/if][if a.type.genTypeName() ='Binary'].getInputStream()[/if]);
+      }
+     [else]
+      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]());
+     [/if]
+[/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.containingType.oclAsType(entity::Entity) = e)]
+      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(r))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(r))/]());
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.oppositeOf.oclIsUndefined())]
+      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
+[/if]
+[/for]
+[if hasAutomaticColumns()]
+[for (columnProp : String | get_automaticColumnsProperties())]
+[if (e.columnHasName(columnProp) and e.columnHasType(columnProp))]
+      [e.apply_variableMultipleMap('value by column name')/].put([e.buildAppliColumnClassName()/].[e.get_nameEnumField(columnProp)/].getLogicalColumnName(), [e.apply_parameterMethodObjectIn('entity')/].[e.apply_methodGet(e.get_nameColumn(columnProp).toLower())/]()[e.completeXtopSupValue(columnProp)/]);
+[/if]
+[/for]
+[/if]
+      return [e.apply_variableMultipleMap('value by column name')/];
+   }
+
+   @Override
+   protected [buildEntityInterfaceName(e)/] getEntityFromMapValueByLogicalName (final Map<String, Object> [apply_parameterMethodMultipleMap('value by column name')/])
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = new [buildEntityImplClassName(e)/] ();
+      [apply_variableDefault('entity')/].setId(([genPkType()/]) [apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/].getLogicalColumnName()));
+[for (a : Attribute | e.attributesNoPk())]
+[if (not a.isComputed())]
+     [if (useSpi4jSecurity() and not useMatching() and (entityIsUser(e) and a.name = 'identifiant'))]
+      [apply_variableDefault('entity')/].setIdentifiant([if (a.type.oclIsTypeOf(Enumeration))] [a.genPropertyType()/].valueOf ((String)[else]([genPropertyType(a)/]) [/if][apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName ()))[if (a.type.oclIsTypeOf(Enumeration))])[/if];
+     [else]
+      [apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(a))/]([if (a.type.oclIsTypeOf(Enumeration))] [a.genPropertyType()/].[apply_methodDefault('get enum by value')/] ((String)[else]([genPropertyType(a)/]) [/if][apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName ()))[if (a.type.oclIsTypeOf(Enumeration))])[/if];
+     [/if]
+[/if]
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+[if (not a.isComputed())]
+      [apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(a))/](([genPropertyType(a)/]) [apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName()));
+[/if]
+[/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.containingType.oclAsType(entity::Entity) = e)]
+    [if (not r.isComputed())]
+      [apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(r))/](([genPkType()/]) [apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(r))/].getLogicalColumnName()));
+    [/if]
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.oppositeOf.oclIsUndefined())]
+    [if (not r.isComputed())]
+      [apply_variableDefault('entity')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/](([genPkType()/]) [apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/].getLogicalColumnName()));
+    [/if]
+[/if]
+[/for]
+[if hasAutomaticColumns()]
+[for (columnProp : String | get_automaticColumnsProperties())]
+[if (e.columnHasName(columnProp) and e.columnHasType(columnProp))]
+      [e.apply_variableDefault('entity')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/](([e.get_typeColumn(columnProp)/]) [e.apply_parameterMethodMultipleMap('value by column name')/].get([e.buildAppliColumnClassName()/].[e.get_nameEnumField(columnProp)/].getLogicalColumnName()));
+[/if]
+[/for]
+[/if]
+      return [apply_variableDefault('entity')/];
+   }
+
+   // Methodes [buildDaoImplClassName(e)/]
+   // [protected (e.getUserCodeId('Methodes ' + buildDaoImplClassName(e)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Build the name for persistance class, depends from entity position (project or library). /]
+[template private buildParamPersistenceClassNameForEntity (e : Entity) post(trim())]
+[if e.isLibraryEntity(getApplicationName())][buildParamPersistenceLibraryClassName(e.getLibraryNameForEntity(getApplicationName()))/]
+[else][buildParamPersistenceClassName()/][/if]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity) post(trim())]
+[e.initImports()/]
+[e.addImport(buildPackagePersistenceApi() + '.' + buildAppliColumnClassName(), e.hasAutomaticColumns())/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildEntityColumnEnumName(e))/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildDaoInterfaceName(e))/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e))/]
+[e.addImport(getImportForDaoJdbc_Abs())/]
+[e.addImport('java.util.LinkedHashMap')/]
+[e.addImport('java.util.Map')/]
+[if not e.referencesStarStarOwned()->isEmpty()]
+	[e.addImport(buildPackagePersistence() + '.' + buildParamPersistenceClassName())/]
+	[e.addImport('java.util.Collections')/]
+	[e.addImport('java.util.List')/]
+
+	[for (r : Reference | e.referencesStarStarOwned())]
+		[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity)) + '.' + buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity)))/]
+		[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity)))/]
+	[/for]
+[/if]
+
+[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
+	[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+
+[e.flushImports()/]
+[/template]
+
+[query public roleDao(e : Entity) : String = 'Implémentation JDBC du DAO ' + nameSimpleEntity(e) /]

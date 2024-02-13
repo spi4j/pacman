@@ -1,0 +1,134 @@
+[comment encoding = UTF-8 /]
+[module reqEnum('http://www.eclipse.org/emf/2002/Ecore',
+                'http://www.obeonetwork.org/dsl/requirement/1.0',
+                'http://www.obeonetwork.org/dsl/soa/4.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::requirement::commons /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+
+[comment]Encode une propriété en Javadoc[/comment]
+[query private encodeJavadoc(label : String, attribute : EString) : String =
+    if not attribute.oclIsUndefined() and attribute.size() > 0 then
+        ' <br>\r\n    * ' + label + attribute.replaceAll('\r\n', ' <br>\r\n    * ').replaceAll('\t', '   ').trim()
+    else
+        ''
+    endif
+/]
+
+[template public reqEnum(racine : Repository)]
+[reqEnumGenerique(racine, buildPackageRequirement(), 'Enumération des exigences.', apply_classEnum('requirement'), apply_classTest('requirement version'), racine.mainCategories->asSequence(), requirementBaseCategoryLevel() - 1)/]
+[/template]
+
+[template public reqEnum(cat : Category)]
+[reqEnumGenerique(cat, buildPackageRequirementForCategory(cat), 'Enumération des exigences : ' + cat.name + '.', apply_classEnum('requirement ' + cat.id), apply_classTest('requirement ' + cat.id + ' version'), Sequence{cat}, -1)/]
+[/template]
+
+[template private reqEnumGenerique(void : OclAny, pkg : String, javadoc : String, nomEnum : String, nomVersionTest : String, categories : Sequence(Category), profondeurMax : Integer)]
+[licence()/]
+// CHECKSTYLE:OFF
+package [pkg/];
+// CHECKSTYLE:ON
+
+import fr.spi4j.requirement.Requirement_Itf;
+import fr.spi4j.requirement.RequirementsUtil;
+
+/**
+ * [javadoc/]
+ * @author [getAuthorName()/]
+ */
+public enum [nomEnum/] implements Requirement_Itf
+{
+[for (req : Requirement | findRequirements(categories, profondeurMax))]
+   /**
+    * [req.name /] :[encodeJavadoc('', req.statement)/][encodeJavadoc('Provenance : ', req.rationale)/][encodeJavadoc('Critère d\'acceptance : ', req.acceptanceCriteria)/]<br>
+    * Voir [nomVersionTest/]#testVersion_[getServiceRequirementsPrefix()/][req.id /]()
+    */
+[for (o : EObject | req.referencedObject)]
+[if o.oclIsKindOf(Operation)]
+   // Exigence utilisée dans : [o.ancestors(Service)->first().name/]Service.[o.oclAsType(Operation).name/]
+[/if]
+[/for]
+   [comment]L'énumération doit avoir peu de paramètres car sinon il y a une erreur de compilation à partir d'un certain nombre de requirements[/comment]
+   [comment](The code for the static initializer is exceeding the 65535 bytes limit),[/comment]
+   [comment]donc l'id sera déterminé dynamiquement et les attributs statement, rationale et acceptanceCriteria sont seulement dans la javadoc[/comment]
+   [getServiceRequirementsPrefix()/][req.id /]("[req.name.escape() /]", "[req.version/]")[if req <> categories.eAllContents(Requirement)->last()],[else];[/if]
+
+[/for]
+   /** Id. */
+   private final String [apply_attributeFinal('id')/];
+
+   /** Nom. */
+   private final String [apply_attributeFinal('name')/];
+
+   /** La version de l'exigence dans le modèle Requirement */
+   private final String [apply_attributeFinal('version model')/];
+
+   /** La version implémentée. */
+   private String [apply_attributeDefault('version implem')/];
+
+   /**
+    * Constructeur de l'énumeration de l'exigence.
+    * @param [apply_parameterMethodClassicIn('name')/]
+    *           le nom.
+    * @param [apply_parameterMethodClassicIn('version model')/]
+    *           La version de l'exigence dans la modélisation.
+    */
+   private [nomEnum/] (final String [apply_parameterMethodClassicIn('name')/], final String [apply_parameterMethodClassicIn('version model')/])
+   {
+      [getAffectationPrefix()/][apply_attributeFinal('id')/] = toString().substring("[getServiceRequirementsPrefix()/]".length());
+      [getAffectationPrefix()/][apply_attributeFinal('name')/] = [apply_parameterMethodClassicIn('name')/];
+      [getAffectationPrefix()/][apply_attributeFinal('version model')/] = [apply_parameterMethodClassicIn('version model')/];
+   }
+
+   @Override
+   public String getId ()
+   {
+      return [apply_attributeFinal('id')/];
+   }
+
+   @Override
+   public String getName ()
+   {
+      return [apply_attributeFinal('name')/];
+   }
+
+   @Override
+   public void set_versionImplem ()
+   {
+      set_versionImplem(c_notImplemented);
+   }
+
+   @Override
+   public String get_versionImplem ()
+   {
+      return [apply_attributeDefault('version implem')/];
+   }
+
+   @Override
+   public void set_versionImplem (final String [apply_parameterMethodClassicIn('version implem')/])
+   {
+      // Vérifier que la version implémentée est égale à celle de la modélisation
+      RequirementsUtil.checkRequirementVersion(this, [apply_parameterMethodClassicIn('version implem')/]);
+      // Si version pas encore affectée
+      [getAffectationPrefix()/][apply_attributeDefault('version implem')/] = [apply_parameterMethodClassicIn('version implem')/];
+   }
+
+   @Override
+   public String get_versionModel ()
+   {
+      return [apply_attributeFinal('version model')/];
+   }
+}
+[/template]

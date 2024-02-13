@@ -1,0 +1,18 @@
+[comment encoding = UTF-8 /]
+[module genServiceTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                       'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::jdbc::service::serviceTest /]
+[import fr::pacman::entity::api::common::classesEntity /]
+
+[comment] le Service à partir d'entity [/comment]
+[template public genServiceTest(e : Entity)]
+[file (filename(getServerTestDir(), buildPackageBusinessApiService(e), buildServiceTestClassName(e) + '.java'), false, 'UTF-8')]
+[serviceTest(e, isReferentiel(e))/]
+[/file]
+[/template]

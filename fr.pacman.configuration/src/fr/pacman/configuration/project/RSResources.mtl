@@ -1,0 +1,465 @@
+[comment encoding = UTF-8 /]
+[module RSResources('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+
+[comment : ***************************************************************************/]
+[comment : Create an "addOn" for environment (Map<String, String> for HEAD operation. /]
+[comment : ***************************************************************************/]
+[template public specificRsEnvironment (any : OclAny)]
+<?xml version="1.0" encoding="ASCII"?>
+<oenv:Environment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oenv="http://www.obeonetwork.org/dsl/environment/3.0.0" xmi:id="_MiUQwDR1EeuqW_sLnF83jw" technicalid="_MiSbkDR1EeuqW_sLnF83jw" createdOn="2020-12-02T09:05:52.201+0100" name="api-first">
+  <priorityDefinitions xmi:id="_MiU30DR1EeuqW_sLnF83jw" technicalid="_MiSbkjR1EeuqW_sLnF83jw" createdOn="2020-12-02T09:05:52.201+0100"/>
+  <typesDefinition xmi:id="_MiU30TR1EeuqW_sLnF83jw" technicalid="_MiSbkTR1EeuqW_sLnF83jw" createdOn="2020-12-02T09:05:52.201+0100" modifiedOn="2020-12-02T10:55:55.190+0100">
+    <types xsi:type="oenv:PrimitiveType" xmi:id="_eCUj0TR1EeuqW_sLnF83jw" technicalid="_eCUj0DR1EeuqW_sLnF83jw" description="" createdOn="2020-12-02T09:07:49.645+0100" modifiedOn="2020-12-02T10:55:44.303+0100" name="Map&lt;String, String>">
+      <metadatas xmi:id="_f_VqITR1EeuqW_sLnF83jw" technicalid="_f_VqIDR1EeuqW_sLnF83jw">
+        <metadatas xsi:type="oenv:Annotation" xmi:id="_f_WRMTR1EeuqW_sLnF83jw" technicalid="_f_WRMDR1EeuqW_sLnF83jw" title="Headers" body="Map"/>
+      </metadatas>
+    </types>
+    <types xsi:type="oenv:PrimitiveType" xmi:id="_kdTFYDSEEeuqW_sLnF83jw" technicalid="_jF_7QTSEEeuqW_sLnF83jw" createdOn="2020-12-02T10:55:55.190+0100" modifiedOn="2020-12-02T10:56:06.086+0100" name="Map&lt;String, Object>"/>
+  </typesDefinition>
+</oenv:Environment>
+[/template]
+
+
+[comment : *********************************************************************************************/]
+[comment : Create a simple README.txt file with the name of the sys var to find the filter config file. /]
+[comment : *********************************************************************************************/]
+[template public rsReadMeFile (any : OclAny)]
+Placer le chemin complet du répertoire de stockage pour la configuration de l'application 
+dans la variable système suivante (Par défaut, le préfixe est le nom de l'application, 
+modifier selon convenance): 
+
+--------------------------------------------------------------------------------------------------------
+[getApplicationName().toUpper()/]_REST_CONFIG_FILES = Chemin complet du répertoire pour le(s) fichier(s)de configuration.
+--------------------------------------------------------------------------------------------------------
+
+Un fichier de configuration par défaut pour l'application a été créé dans : 
+
+--------------------------------------------------------------------------------------------------------
+[getServerResourcesDir()/][getApplicationName()/]Application.properties
+--------------------------------------------------------------------------------------------------------
+
+Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA dans : 
+
+--------------------------------------------------------------------------------------------------------
+[getServerResourcesDir()/][getApplicationName()/]Tokens.properties
+--------------------------------------------------------------------------------------------------------
+
+[/template]
+
+
+
+[comment : *********************************************************/]
+[comment : Create a default configuration file for the application. /]
+[comment : *********************************************************/]
+[template public rsConfigurationFile (any : OclAny)]
+# ********************************************************************
+# Fichier de configuration pour l'application : [getApplicationName().toUpperFirst()/].
+# Ne pas mettre de caracteres accentues dans ce fichier (non UTF8).
+# ********************************************************************
+# ----------------------------------------------------------------------------
+# Liste des cles relatives a la PES.
+# ----------------------------------------------------------------------------
+filter.pes.header.token.key = 
+filter.pes.header.app.key = 
+filter.pes.header.secu.key = 
+filter.pes.header.mention.key = 
+filter.pes.header.constraint.key = 
+filter.pes.header.dlpp.key = 
+# ----------------------------------------------------------------------------
+# Liste des valeurs pour les cles relatives a la PES.
+# ----------------------------------------------------------------------------
+filter.pes.header.app = [getApplicationName()/]
+filter.pes.header.secu = 
+filter.pes.header.mention =   
+filter.pes.header.constraint = 
+# ----------------------------------------------------------------------------
+# Mode de routage de l'application : 
+# - standalone : (defaut).
+# - api _gateway :
+# - pem _gateway :
+# - papi_gateway :
+# ----------------------------------------------------------------------------
+filter.routing.strategy = standalone
+# ----------------------------------------------------------------------------
+# Le mode operatoire pour le filtre.
+# - debug : (defaut).
+# - test : 
+# - integ : 
+# - prod :
+# ----------------------------------------------------------------------------
+filter.mode.operating = debug
+# ----------------------------------------------------------------------------
+# Affichage des en-tetes lors du debogage de l'application.
+# ----------------------------------------------------------------------------
+debug.display.headers = true
+[/template]
+
+
+
+[comment : ***************************************************************/]
+[comment : Generate the default application context resolver for Jackson ./]
+[comment : ***************************************************************/]
+[template public rsContextResolver(any : OclAny)]
+[licence()/]
+package [buildPackageRS()/];
+// [protected ('for imports')]
+
+import jakarta.ws.rs.ext.Provider;
+
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+
+import fr.spi4j.ws.rs.RsDefaultContextResolver;
+
+// [/protected]
+
+/**
+ * Enregistrement du "context resolver" pour les services REST.
+ * @author [getAuthorName()/].
+ */
+@Provider
+public class [buildRSContextResolverClassName()/] extends RsDefaultContextResolver
+{
+   /**
+    * Constructeur.
+    * @throws Exception
+    */
+   public [buildRSContextResolverClassName()/]  () throws Exception
+   {
+      // Par defaut, on demande à Jackson de ne pas prendre en compte
+      // les annotations JAXB afin de pouvoir bénéficier du même objet XTO,
+      // à la fois dans le cadre des services SOAP et REST. Les annotations
+      // JAXB sont donc utilisées uniquement dans le cadre de SOAP et les
+      // annotations JSON dans le cadre des services REST ce qui permet de
+      // traiter le même objet différemment selon qu'il soit utilisé en SOAP
+      // ou REST.
+
+      // [buildRSContextResolverClassName()/]
+      // [protected (any.getUserCodeId(buildRSContextResolverClassName()))]
+
+      super(new JacksonAnnotationIntrospector());
+
+      // [/protected]
+   }
+}
+[/template]
+
+
+
+[comment : ************************************************************/]
+[comment : Generate the default exception handler for the application. /]
+[comment : ************************************************************/]
+[template public rsExceptionHandler(any : OclAny)]
+[licence()/]
+package [buildPackageRS()/];
+// [protected ('for imports')]
+
+import jakarta.ws.rs.ext.Provider;
+
+[if (useSpi4jSecurity())]
+import fr.spi4j.lib.security.exception.Spi4jSecurityException;
+import fr.spi4j.ws.rs.exception.RsUnauthorizedException;
+[/if]
+import fr.spi4j.ws.rs.exception.RsExceptionHandler_Abs;
+
+// [/protected]
+
+/**
+ * Mappeur d'exceptions pour les services REST.
+ * @author [getAuthorName()/].
+ */
+@Provider
+public class [buildRSExceptionHandlerClassName()/] extends RsExceptionHandler_Abs
+{
+
+	/**
+	 * Permet d'obtenir l'exception initiale avant qu'elle soit traitée par le
+	 * framework SPI4J.
+	 *
+	 * @param p_exception : L'exception initiale.
+	 */
+	@Override
+	protected void handleException (final Exception [apply_parameterMethodClassicIn('exception')/])
+	{
+		// [buildRSExceptionHandlerClassName()/]
+		// [protected (any.getUserCodeId(buildRSExceptionHandlerClassName()))]
+
+		// [/protected]
+	}
+
+	/**
+	 * Permet de définir un mapping entre l'exception initiale et une exception de
+	 * type RS (exception enrichie).
+	 *
+	 * @param p_exception : L'exception initiale.
+	 * @return L'exception de type RS (exception enrichie pour pouvoir être
+	 *         retournée par la ressource).
+	 */
+	@Override
+	protected Exception convertToSpi4jRestException (final Exception [apply_parameterMethodClassicIn('exception')/])
+	{
+	  	[if (useSpi4jSecurity())]
+		if ([apply_parameterMethodClassicIn('exception')/] instanceof Spi4jSecurityException)
+		{
+			return new RsUnauthorizedException([apply_parameterMethodClassicIn('exception')/]);
+		}
+	  	[/if]
+      	// convertToSpi4jRestException
+      	// [protected (any.getUserCodeId('convertToSpi4jRestException'))]
+
+      	// [/protected]
+
+      	return [apply_parameterMethodClassicIn('exception')/];
+	}
+}
+[/template]
+
+
+
+[comment : *************************************************************************************/]
+[comment : Generate the default empty binding hk2 / cdi injection for services facade (@Inject)./]
+[comment : *************************************************************************************/]
+[template public rsApplicationConfig(any : OclAny)]
+[licence()/]
+package [buildPackageRS()/];
+
+import org.glassfish.jersey.server.ResourceConfig;
+
+public class [buildRSApplicationConfigClassName()/] extends ResourceConfig
+{
+	//RAS.
+}
+[/template]
+
+[comment : **********************************************************/]
+[comment : Generate the configurator to define all required tokens  ./]
+[comment : **********************************************************/]
+
+[template public rsTokensConfigurator(any : OclAny)]
+[licence()/]
+package [buildPackageRS()/];
+
+import fr.spi4j.ws.rs.RsTokensConfigurator_Itf;
+import fr.spi4j.ws.rs.RsTokensContainer;
+
+/**
+ * Paramétrage des différents jetons utilisés par l'application.
+ * @author [getAuthorName()/].
+ */
+public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigurator_Itf {
+
+	/**
+	 * Insérer dans le conteneur de jetons la liste des différents jetons à faire
+	 * automatiquement contrôler par le filtre.
+	 * 
+	 * Toute erreur de validation sur un des paramètres définis dans cette méthode
+	 * entrainera la non validation du jeton et, selon le protocole utilisé un
+	 * routage vers le serveur d'authentification / une erreur d'authentification 
+     * ou, plus simplement, une erreur de validation.
+	 * 
+	 * Pour simplement contrôler la présence du paramètre (et non son contenu),
+	 * utiliser le joker "*" en valeur de paramètre.
+	 */
+	@Override
+	public void defineRequiredTokens(final RsTokensContainer p_tokensContainer) 
+	{
+		//RAS.
+	}
+}
+[/template]
+
+[comment : ******************************************************************/]
+[comment : Generate the application filter for handling unsecured resources ./]
+[comment : ******************************************************************/]
+[template public rsGenericFilter(any : OclAny)]
+[licence()/]
+package [buildPackageRS()/];
+// [protected ('for imports')]
+
+import jakarta.annotation.Priority;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.ext.Provider;
+
+[if useSpi4jSecurity()]import fr.spi4j.lib.security.Spi4jSecurity_Abs;[/if]
+import fr.spi4j.ws.rs.RsFilter_Abs;
+import fr.spi4j.ws.rs.RsFilterConfigurator;
+import fr.spi4j.ws.rs.RsAuthTokenXtoWrapper;
+import fr.spi4j.ws.rs.RsTokensConfigurator_Itf;
+import fr.spi4j.ws.rs.RsXto_Itf;
+import io.jsonwebtoken.Claims;
+
+// [/protected]
+
+/**
+ * Filtre pour l'ensemble des resources de l'application. Ce filtre permet entre
+ * autres, de gérer les en-têtes nécessaires pour la passerelle du Ministère des
+ * Armées et de gérer la sécurisation des API (quel que soit le protocol
+ * utilisé).
+ * 
+ * IMPORTANT : Ne jamais mettre d'annotation @PreMatching sur ce filtre. Ce
+ * filtre nécessite la présence du matching afin de détecter la sécurisation
+ * éventuelle d'une opération. Par ailleurs il s'occupe aussi du rajout
+ * automatique des en-têtes du MINARM si besoin, et d'opérations de post appel
+ * pour la ressource.
+ *
+ * @author [getAuthorName()/].
+ */
+@Provider
+@Priority(Priorities.AUTHENTICATION)
+public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
+{
+
+	/**
+	 * Récupération des clés pour les paramètres d'en-tête dans le cadre de la
+	 * pagination. Par souci de simplification aucune Map n'est utilisée, mais cela
+	 * implique de transmettre les éléments dans le bon ordre. Cet ordre est donc le
+	 * suivant :
+	 * 
+	 * @apiNote Le nombre total d'éléments pour la requête.
+	 * @apiNote Le nombre total de pages pour la requête.
+	 * @apiNote Le nombre d'élements pour la page en cours.
+	 * @apiNote Le numéro de la page courante.
+	 * 
+	 * @return Le tableau avec l'ensemble des éléments.
+	 */
+	@Override
+	protected String['[]'/] initPaginatorHeaderKeys() {
+		
+		return new String['[]'/] {"[getPagingTotalCountKey()/]","[getPagingPageCountKey()/]",
+			"[getPagingCurrentPageSizeKey()/]","[getPagingCurrentPageIdxKey()/]"};
+	}
+
+	/**
+	 * Récupération de la configuration pour le filtre de l'application.
+	 *
+	 * Il est possible de positionner l'application derrière une passerelle d'API.
+	 * Par défaut le filtre est configuré pour fonctionner en mode standalone.
+	 * Modifier l'énumération selon le besoin dans le fichier de configuration.
+	 * 
+	 * Il est possible de définir un préfixe pour l'ensemble des fichiers de
+	 * configuration. Par défaut, le préfixe est le nom de l'application. A modifier
+	 * selon la convenance.
+	 * 
+	 * @return Le chemin pour le(s) fichier(s) de configuration.
+	 */
+ 	@Override
+   	protected RsFilterConfigurator initFilterConfig ()
+   	{
+		// init filter config
+		// [protected (any.getUserCodeId('init filter config'))]
+
+		return new RsFilterConfigurator("[getApplicationName().toUpper()/]").set_debugMode();
+
+		// [/protected]
+	}
+
+	/**
+	 * Récupération du configurateur pour l'ensemble des jetons utilisés par
+	 * l'application. Le configurateur est transmis au framework spi4j pour
+	 * traitement automatique des jetons.
+	 * 
+	 * @return Le configurateur de jetons.
+	 */
+	@Override
+	protected RsTokensConfigurator_Itf initTokensConfig() 
+	{
+		// init tokens config
+		// [protected (any.getUserCodeId('init tokens config'))]
+		
+		return new [buildRSTokensConfiguratorClassName()/]();
+
+		// [/protected]
+	}
+
+	/**
+	 * Appliquer ici le code pour la récupération de l'ensemble de informations qui
+	 * ont été transférées par le biais des jetons (quelle que soit leur nature).
+	 * Cette méthode est appelée uniquement une fois le(s) jeton(s) vérifié(s) et
+	 * validé(s). Cette méthode est appelée a chaque traitement de jeton, utiliser
+	 * l'identifiant interne du jeton pour différencier les traitements.
+	 * 
+	 * Dans le cas d'un jeton de rafraîchissement, si ce dernier a été falsifié,
+	 * lancer une exception 'Runtime' de type RsUnexpectedException (par
+	 * exemple...).
+	 *
+	 * @param [apply_parameterMethodClassicIn('spi4j id')/] : Identifiant interne (spi4j) du jeton.
+	 * @param [apply_parameterMethodClassicIn('claims')/] : L'ensemble des informations stockées dans le jeton.
+	 */
+	@Override
+	protected void provideClaimsToApplication(final String [apply_parameterMethodClassicIn('spi4j id')/], final Claims [apply_parameterMethodClassicIn('claims')/])
+	{
+      	// provide claims application
+      	// [protected (any.getUserCodeId('provide claims application'))]
+
+ 		// [/protected]
+	}
+
+	/**
+	 * Appliquer ici le code nécessaire pour formaliser et renvoyer l'objet Json de
+	 * retour pour le jeton d'accès qui a été regénéré.
+	 * 
+	 * A utiliser uniquement dans le cadre d'une sécurité de type API KEY !
+	 *
+	 * @return Le nouveau jeton d'accès.
+	 */
+	@Override
+	protected RsXto_Itf buildRefreshedTokenResponse(RsAuthTokenXtoWrapper p_tokenWrapper) {
+		
+	    // build refreshed token reponse
+	    // [protected (any.getUserCodeId('build refreshed token reponse'))]
+
+		return null;
+
+ 		// [/protected]	
+	}
+	
+	/**
+	 * Appliquer ici du code spécifique pour l'applicatif si besoin.
+	 * Cette méthode est appelée avant l'execution de la ressource.
+	 *
+	 * @param : [apply_parameterMethodClassicIn('request ctx')/] :
+	 * 					Le contexte de la requête.
+	 */
+	@Override
+	protected void beforeFilter (final ContainerRequestContext [apply_parameterMethodClassicIn('request ctx')/])
+	{
+		// before filter
+		// [protected (any.getUserCodeId('before filter'))]
+
+ 		// [/protected]
+	}
+
+	/**
+	 * Appliquer ici du code spécifique pour l'applicatif si besoin.
+	 * Cette méthode est appelée après l'execution de la ressource.
+	 *
+	 * @param [apply_parameterMethodClassicIn('response ctx')/] :
+	 * 					Le contexte de la réponse.
+	 */
+	@Override
+	protected void afterFilter (final ContainerResponseContext [apply_parameterMethodClassicIn('response ctx')/])
+	{
+      	// after filter
+      	// [protected (any.getUserCodeId('after filter'))]
+
+ 		// [/protected]
+		[if (useSpi4jSecurity())]
+		Spi4jSecurity_Abs.getInstance().deconnexion();
+		[/if]
+	}
+}
+[/template]

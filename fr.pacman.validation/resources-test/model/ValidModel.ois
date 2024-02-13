@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overview:Root xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cinematic="http://www.obeonetwork.org/dsl/cinematic/3.0.0" xmlns:oent="http://www.obeonetwork.org/dsl/entity/2.0.0" xmlns:oenv="http://www.obeonetwork.org/dsl/environment/2.0.0" xmlns:org.obeonetwork.dsl.soa="http://www.obeonetwork.org/dsl/soa/3.0.0" xmlns:overview="http://www.obeonetwork.org/dsl/overview/2.0.0" xmi:id="_xVCNUN18EeKh6qxc4ERsCQ" createdOn="2013-06-25T11:51:13.061+0200" modifiedOn="2013-06-26T14:43:28.582+0200">
+  <ownedElements xsi:type="oent:Root" xmi:id="_xVCNUd18EeKh6qxc4ERsCQ" createdOn="2013-06-25T14:12:07.194+0200" modifiedOn="2013-06-25T15:22:33.553+0200">
+    <blocks xmi:id="_dF7fod2QEeKTlNjbsdvsMA" createdOn="2013-06-25T14:12:13.709+0200" modifiedOn="2013-06-25T15:22:33.553+0200" name="block">
+      <entities xmi:id="_eS96gN2QEeKTlNjbsdvsMA" description="l'entite" createdOn="2013-06-25T14:12:15.272+0200" modifiedOn="2013-06-25T15:22:33.553+0200" name="entite">
+        <ownedAttributes xmi:id="_fOtxEN2QEeKTlNjbsdvsMA" description="first attribute" createdOn="2013-06-25T14:12:21.537+0200" modifiedOn="2013-06-25T15:21:56.181+0200" name="att1">
+          <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5FXAawKEd2XLNOhkJIazw"/>
+        </ownedAttributes>
+        <ownedAttributes xmi:id="_ie36QN2QEeKTlNjbsdvsMA" description="second attribute" createdOn="2013-06-25T14:12:43.364+0200" modifiedOn="2013-06-25T15:22:02.056+0200" name="att2">
+          <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5FXAqwKEd2XLNOhkJIazw"/>
+        </ownedAttributes>
+      </entities>
+    </blocks>
+  </ownedElements>
+  <ownedElements xsi:type="org.obeonetwork.dsl.soa:System" xmi:id="_xVCNUt18EeKh6qxc4ERsCQ" createdOn="2013-06-25T14:37:53.228+0200" modifiedOn="2013-06-26T14:43:28.582+0200">
+    <ownedComponents xmi:id="_DeDwwN2UEeKTlNjbsdvsMA" createdOn="2013-06-25T14:37:57.040+0200" modifiedOn="2013-06-26T14:43:28.582+0200">
+      <ownedServices xmi:id="_ECabAN2UEeKTlNjbsdvsMA" createdOn="2013-06-25T14:38:00.493+0200" modifiedOn="2013-06-26T14:43:28.582+0200">
+        <ownedInterface xmi:id="_EjV90N2UEeKTlNjbsdvsMA" createdOn="2013-06-25T14:38:02.805+0200" modifiedOn="2013-06-26T14:43:28.582+0200" name="interface">
+          <ownedOperations xmi:id="_E5ZGUN2UEeKTlNjbsdvsMA" description="desc" createdOn="2013-06-25T14:38:09.055+0200" modifiedOn="2013-06-26T14:43:28.582+0200" name="op">
+            <input xmi:id="_F0_y8N2UEeKTlNjbsdvsMA" description="desc" createdOn="2013-06-25T14:38:36.022+0200" modifiedOn="2013-06-26T14:42:48.864+0200" name="in">
+              <type xsi:type="oenv:PrimitiveType" href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5FXAqwKEd2XLNOhkJIazw"/>
+            </input>
+            <output xmi:id="_e9m2IN2UEeKTlNjbsdvsMA" description="desc" createdOn="2013-06-25T14:41:04.010+0200" modifiedOn="2013-06-25T15:56:33.162+0200" name="out">
+              <type xsi:type="oenv:PrimitiveType" href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EawKEd2XLNOhkJIazw"/>
+            </output>
+          </ownedOperations>
+        </ownedInterface>
+      </ownedServices>
+    </ownedComponents>
+  </ownedElements>
+  <ownedElements xsi:type="cinematic:CinematicRoot" xmi:id="_xVCNU918EeKh6qxc4ERsCQ"/>
+</overview:Root>

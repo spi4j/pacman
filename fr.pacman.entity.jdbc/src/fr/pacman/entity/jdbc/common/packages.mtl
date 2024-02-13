@@ -1,0 +1,17 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::packages /]
+
+[********************
+ * Paramétrage PacMan
+*/]
+
+[query public buildPackagePersistenceImplementationJdbcEntity(e : Entity) : String =
+    buildPackagePersistenceImplJdbc() + blockHierarchy(e)
+/]
+
+[*****************
+ * Fin Paramétrage
+*/]

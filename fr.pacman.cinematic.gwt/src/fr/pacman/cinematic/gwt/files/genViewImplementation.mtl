@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genViewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::cinematic::gwt::common::packages /]
+[import fr::pacman::cinematic::gwt::common::name /]
+[import fr::pacman::cinematic::gwt::client::ui::gwt::pkg::viewImplementation /]
+
+[template public genViewImplementation(viewContainer : ViewContainer)]
+[file (filename(getClientGwtSourceDir(), viewContainer.namePackageViewContainerImplementation(), viewContainer.nameViewImplementation() + '.java'), false, 'UTF-8')]
+[viewImplementation(viewContainer)/]
+[/file]
+[/template]
+

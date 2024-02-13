@@ -1,0 +1,213 @@
+[comment encoding = UTF-8 /]
+[module generateCommonSoa('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                          'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::commons::soa::common::services /]
+[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::soa::files::genXto /]
+[import fr::pacman::commons::soa::files::genXtoTest /]
+
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::files::genServiceItf/]
+[import fr::pacman::soa::files::genServiceCXFItf /]
+[import fr::pacman::soa::files::genServiceRSItf /]
+[import fr::pacman::soa::files::genUserBusiness /]
+[import fr::pacman::soa::files::genDto /]
+[import fr::pacman::soa::files::genDtoParent /]
+[import fr::pacman::soa::files::genDtoTest /]
+[import fr::pacman::soa::files::genAttributesEnum /]
+[import fr::pacman::soa::files::genPermissionsItf /]
+[import fr::pacman::soa::files::genFetchingStrategy /]
+[import fr::pacman::soa::files::genLog4j /]
+
+[comment : ****************************************************************/]
+[comment : En OCL on a toujours pris une seule lettre pour les parametres. /]
+[comment : pour eviter de confondre avec les services, System = m.         /]
+[comment : ****************************************************************/]
+[comment : Generation complete a partir du systeme.                        /]
+[comment : ****************************************************************/]
+[template public GenerateCommonSystem(m : System)]
+[comment @main /]
+
+	[comment : Generation du fichier log4j. /]
+    [m.genLog4j()/]
+	[comment : Generation des interfaces generiques. /]
+	[m.genPermissionsItf()/]
+	[comment : Generation des fabriques generiques. /]
+	[m.genUserBusiness()/]	
+    [comment : Generation des XTO. /]
+	[m.genXtos()/]
+    [comment : Generation des interfaces de service. /]
+    [m.genServicesItfs()/]
+    [comment : Generation des DTO (+ services rest lies aux DTO si crud). /]
+	[m.genDtos()/]
+	[comment : Generation des champs additionnels DTO (si besoin)./]
+	[m.genAppliDtoAbs()/]
+	[comment : Generation des champs additionnels XTO(si besoin)./]
+	[m.genAppliXtoAbs()/]
+
+[/template]
+
+[comment : Generation de la classe regroupant les champs additionnels (DTO). /]
+[template private genAppliDtoAbs (m : System)]
+
+[if hasAutomaticColumns()][m.genDtoAppliAbs()/][/if]
+
+[/template]
+
+[comment : Generation de la classe regroupant les champs additionnels (XTO). /]
+[template private genAppliXtoAbs (m : System)]
+
+[if (clientNeedXto() or useWS()) and hasAutomaticColumns()][m.genXtoAppliAbs()/][/if]
+
+[/template]
+
+[comment : Generation du fichier log4j dans les ressources. /]
+[comment : On remplace le  log4j existant (entity) par une version SOA. /]
+[template private genLog4j (m : System)]
+
+[if (useLog4J())][m.genLog4j('commons')/][/if]
+
+[/template]
+
+[comment : Generation des XTOs (On recupere tous les XTO pour la selection). /]
+[template private genXtos (n : Namespace)]
+
+[if clientNeedXto() or isWSCrudApplication()]
+	[comment : Selon le client (GWT par exemple), on peut avoir besoin de generer la totalite des XTO. /]
+	[comment : De meme si l'option CRUD est cochee on doit generer la totalité des XTO. /]
+	[genSelectedXtos(n.eAllContents(DTO)->asSet())/]
+[else]
+	[comment : On ne genere que les XTO utilises (modelisation) dans les services web. /] 
+	[if useWS()][genSelectedXtos(n.xtoAGenerer())/][/if]
+[/if]
+
+[/template]
+
+[comment : Generation des Xtos (On recupere tous les XTO pour la selection). /]
+[template private genSelectedXtos(xtos : Set(DTO))]
+
+[for (d : DTO | xtos)]
+	[if not d.isParent()][d.genXtoTest()/][/if]
+    [d.genXto()/]
+[/for]
+
+[/template]
+
+[comment : Generation des interfaces des services (On recupere tous les services pour la selection).. /]
+[template private genServicesItfs (m : System)]
+
+[for (s : Service | m.eAllContents(Service))][s.genServiceItfs()/][/for]
+
+[/template]
+
+[comment : Generation des DTO (On recupere tous les DTO pour la selection). /]
+[template private genDtos (n : Namespace)]
+
+[for (d : DTO | n.listeDtos())][d.genSelectedDto()/][/for]
+
+[/template]
+
+[comment : Generation des interfaces pour un seul service. /]
+[comment : Generation des services web (SOAP = CXF RS = REST). /]
+[comment : Important d'essayer de recuperer le DTO, cela permet d'ecrire /]
+[comment : le crud en plus des autres operations (si option crud active)./]
+[template private genServiceItfs (s : Service)]
+
+[if s.serviceSeul()][s.genServiceItf()/][/if]
+[if s.hasRSOperations()][s.genServiceRSItf(s.dtoFromService())/][/if]
+[if s.hasCXFOperations()][s.genServiceCXFItf()/][/if]
+
+[/template]
+
+[comment : Generation pour un seul DTO (+ service si option crud active). /]
+[template private genSelectedDto (d : DTO)]
+
+[if ((not d.isNotPersistent() and not d.isParent()) or d.serviceFromDto() <> null)]
+	[d.serviceFromDto().genServiceItf(d)/]
+[/if]
+[comment : Si option cru active, on doit generer un service crud pour tous les dtos. /]
+[if (d.isWSCrudApplication() and (not d.isNotPersistent() and not d.isParent()))]
+	[genServiceRSItf(null, d)/]
+[/if]
+[if d.isParent()]
+	[d.genDtoParent()/]
+[else]
+	[d.genDto()/]
+	[d.genDtoTest()/]
+	[d.genAttributesEnum()/]
+	[if useFetchingStrategy()][d.genFetchingStrategy()/][/if]
+[/if]
+
+[/template]
+
+
+[comment : ****************************/]
+[comment : Les generations partielles. /]
+[comment : ****************************/]
+
+
+[comment : Generation partielle pour un service. /]
+[template public GenerateCommonService(s : Service)]
+[comment @main /]
+
+[s.genServiceItfs()/]
+
+[/template]
+
+
+[comment : Generation partielle pour un composant. /]
+[template public GenerateCommonComponent(component : Component)]
+[comment @main /]
+
+[for (s : Service | component.eAllContents(Service))]
+[s.genServiceItfs()/]
+[/for]
+
+[/template]
+
+
+[comment : Generation partielle pour un DTO. /]
+[template public GenerateCommonDto(d : DTO)]
+[comment @main /]
+
+[d.genSelectedDto()/]
+
+[if clientNeedXto() or (not d.systemeRacine().oclIsUndefined() 
+						and xtoAGenerer(d.systemeRacine())->includes(d) 
+						and useWS())]
+	[genSelectedXtos(Sequence{d}->asSet())/]
+[/if]
+ 
+[if d.systemeRacine().oclIsUndefined() 
+		and not d.isNotPersistent() 
+		and not d.isParent() 
+		and d.serviceFromDto().oclIsUndefined()]
+	[genServiceItf(d.serviceFromDto(), d)/]
+[/if]
+
+[/template]
+
+[comment : Generation partielle pour un namespace. /]
+[template public GenerateCommonPackage(n : Namespace)]
+[comment @main /]
+
+[if clientNeedXto() or (not systemeRacine(n).oclIsUndefined() 
+						and useWS())]
+	[genSelectedXtos(xtoAGenerer(systemeRacine(n))->select(d : DTO | n.eAllContents(DTO)->includes(d)))/]
+[/if]
+    
+[for (d : DTO | n.eAllContents(DTO))]
+	[if not n.systemeRacine().oclIsUndefined()]
+		[if (not d.isNotPersistent() and not d.isParent() and d.serviceFromDto().oclIsUndefined())]
+                [genServiceItf(serviceFromDto(d), d)/]
+		[/if]
+	[/if]
+	[d.genSelectedDto()/]
+[/for]
+
+[/template]

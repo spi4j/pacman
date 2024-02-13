@@ -1,0 +1,17 @@
+[comment encoding = UTF-8 /]
+[module genServiceGwtItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                         'http://www.obeonetwork.org/dsl/soa/4.0.0',
+						 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::gwt::client::business::category::serviceGwtItf /]
+[import fr::pacman::soalight::common::classes /]
+
+[template public genServiceGwtItf(s : Service)]
+[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtClientService(s), buildServiceGwtInterfaceName(s) + '.java'), false, 'UTF-8')]
+[serviceGwtItf(s)/]
+[/file]
+[/template]
+

@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genXtoTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
+				   'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::entity::ws::api::xtoTest /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::xtoutils /]
+[import fr::pacman::commons::common::classes /]
+
+[template public genXtoTest(s : Entity)]
+[file (filename(getCommonsTestDir(), buildPackageWsApiEntity(s), s.buildXtoTestClassName() + '.java'), false, 'UTF-8')]
+[xtoTest(s)/]
+[/file]
+[/template]

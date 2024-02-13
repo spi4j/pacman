@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genMapperItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                     'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::server::mapper::category::mapperItf /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genMapperItf(d : DTO)]
+[file (filename(getServerSourceDir(), buildPackageMapperDto(d), buildMapperInterfaceName(d) + '.java'), false, 'UTF-8')]
+[mapperItf(d)/]
+[/file]
+[/template]

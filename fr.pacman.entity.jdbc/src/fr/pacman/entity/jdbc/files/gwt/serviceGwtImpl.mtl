@@ -1,0 +1,155 @@
+[comment encoding = UTF-8 /]
+[module serviceGwtImpl('http://www.obeonetwork.org/dsl/environment/3.0.0',
+						'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[comment] le Service existe sans Entity [/comment]
+
+[template public serviceGwtImpl(e : Entity)]
+[licence()/]
+[let self : OclAny = if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR SERVICE' endif]
+package [buildPackageBusinessGwtServerService(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+/**
+ * Interface de services appelables par le client.
+ * @author [getAuthorName()/]
+ */
+public class [buildServiceGwtImplementationName(e)/] extends SpiRemoteServiceImpl implements [buildServiceGwtInterfaceName(e)/]
+{
+
+   private static final long serialVersionUID = 1L;
+
+   protected [buildMapperInterfaceName(e)/] getMapper ()
+   {
+      // Mapper
+      // [protected (e.getUserCodeId('Mapper'))]
+
+      return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildMapperClassName(e))/]();
+      // [/protected]
+   }
+
+   protected [buildServiceInterfaceName(e)/] getService ()
+   {
+      // Service
+      // [protected (e.getUserCodeId('Service'))]
+      return [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceClassName(e))/]();
+      // [/protected]
+   }
+
+	@Override
+   protected SerializationPolicy doGetSerializationPolicy (final HttpServletRequest request,
+            final String moduleBaseURL, final String strongName)
+   {
+      // TODO Auto-generated method stub
+      return super.doGetSerializationPolicy(request, getServletContext().getInitParameter("moduleBaseURL"), strongName);
+   }
+
+[for (r : Reference | e.referencingStar())]
+   @SuppressWarnings("unchecked")
+   @Override
+   public List<[buildXtoClassNameFromEntity(e)/]> [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/])
+   {
+      return getMapper().convertListEntityToListXto((List<[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]>)(List<?>) 
+               getService().[apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/]([apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/]));
+   }
+
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public List<[buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity))/]> [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamId(r.containingType.oclAsType(Entity)))/])
+   {
+      return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + r.referencedType.oclAsType(Entity).buildMapperClassName())/]().convertListEntityToListXto((List<[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]>)(List<?>) 
+               getService().[apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/]([apply_parameterMethodClassicIn(nameParamId(r.containingType.oclAsType(Entity)))/]));
+   }
+[/for]
+
+   @Override
+	public [buildXtoClassNameFromEntity(e)/] save([e.buildXtoClassNameFromEntity()/] [apply_parameterMethodClassicIn('xto')/]) throws Spi4jValidationException 
+	{
+
+	 	return getMapper().convertEntityItfToXto(getService().save(getMapper().convertXtoItfToEntity([apply_parameterMethodClassicIn('xto')/])));
+
+	}
+
+	@Override
+	public [e.buildXtoClassNameFromEntity()/] findById(Long [apply_parameterMethodClassicIn('id')/]) 
+	{
+		return getMapper().convertEntityItfToXto(getService().findById([apply_parameterMethodClassicIn('id')/]));
+	}
+
+	@Override
+	public List<[e.buildXtoClassNameFromEntity()/]> findAll()
+	{
+		return getMapper().convertListEntityToListXto(getService().findAll());
+	}
+
+	@Override
+	public void delete([e.buildXtoClassNameFromEntity()/] [apply_parameterMethodClassicIn('xto')/]) throws Spi4jValidationException 
+    {
+		getService().delete(getMapper().convertXtoItfToEntity([apply_parameterMethodClassicIn('xto')/]));		
+	}
+
+   // [nameServiceInterfaceGwt(e)/]
+   // [protected (e.getUserCodeId(nameServiceInterfaceGwt(e)))]
+
+   // [/protected]
+}[/let]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(e : Entity) post(trim())]
+[e.initImports()/]
+[e.addImport('fr.spi4j.ui.gwt.server.SpiRemoteServiceImpl')/]
+[e.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+[e.addImport('jakarta.servlet.http.HttpServletRequest')/]
+[e.addImport('com.google.gwt.user.server.rpc.SerializationPolicy')/]
+[e.addImport(buildPackageBusinessApiService(e) + '.' + buildServiceInterfaceName(e))/]
+[e.addImport(buildPackageEntityMapper(e) + '.' + buildMapperInterfaceName(e))/]
+[e.addImport(buildPackageBusinessGwtClientService(e) + '.' + buildServiceGwtInterfaceName(e))/]
+[e.addImport(buildPackageBusiness() + '.' + buildAppliUserBusinessGenClassName())/]
+[e.addImport(buildPackageMapper() + '.' + buildAppliUserMapperGenClassName())/]
+[e.addImport(buildPackageWsApiEntity(e) + '.' + e.buildXtoClassNameFromEntity())/]
+
+[comment : List references. /]
+[for (r : Reference | e.referencesStarStar())]
+	[e.addImport(buildPackageWsApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity)))/]
+	[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List references. /]
+[for (r : Reference | e.referencingStar())]
+	[e.addImport(buildPackageWsApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity)))/]
+	[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[e.flushImports()/]
+[/template]
+
+
+
+
+

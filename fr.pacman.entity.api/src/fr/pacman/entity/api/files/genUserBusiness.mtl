@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genUserBusiness('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::service::userBusiness /]
+
+
+[template public genUserBusiness(r : Root)]
+[file (filename(getCommonsSourceDir(), buildPackageBusiness(), buildAppliUserBusinessGenClassName() + '.java'), false, 'UTF-8')]
+[userBusiness()/]
+[/file]
+[/template]

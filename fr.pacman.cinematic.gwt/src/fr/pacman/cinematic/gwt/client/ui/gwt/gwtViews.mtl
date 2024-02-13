@@ -1,0 +1,88 @@
+[comment encoding = UTF-8 /]
+[module gwtViews('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::gwt::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::gwt::common::name /]
+
+
+[template public gwtViews(r : CinematicRoot, viewContainers : Sequence(ViewContainer))]
+[licence()/]
+package [namePackageGwt()/]; // NOPMD
+// [protected ('for imports')]
+
+[comment : List all required imports. /]
+[r.writeImports()/]
+
+// [/protected]
+
+/**
+ * Association des vues pour GWT.
+ * @author [getAuthorName()/]
+ */
+public class [nameGwtViews()/] extends ViewsAssociation
+{
+
+   // CHECKSTYLE:OFF
+   @SuppressWarnings("unchecked")
+   @Override
+   // CHECKSTYLE:ON
+   public <TypeView extends View_Itf> TypeView getViewForPresenter (final Presenter_Abs<TypeView, ?> p_presenter)
+   {
+      if (p_presenter == null)
+      {
+         throw new Spi4jRuntimeException("Le paramètre presenter ne peut pas être null",
+               "Précisez un présenteur non null dont vous cherchez la vue");
+      }
+[for (viewContainer : ViewContainer | viewContainers)]
+      else if (p_presenter instanceof [namePresenter(viewContainer)/])
+      {
+         return (TypeView) new [nameViewImplementation(viewContainer)/](([namePresenter(viewContainer)/]) p_presenter);
+      }
+[/for]
+      // Vues supplémentaires
+      // [protected (r.getUserCodeId('Vues supplémentaires'))]
+
+      // [/protected]
+
+      throw new Spi4jRuntimeException("Vue inconnue pour le presenteur : " + p_presenter.getClass().getName(),
+               "Ajouter une association dans GWTViews");
+   }
+
+   @Override
+   public Presenter_Abs<? extends View_Itf, ?> getPresenterForAnnotatedView (final String p_userView)
+   {
+      throw new Spi4jRuntimeException(
+               "Cette méthode devrait être utilisée uniquement lors des tests JBehave, hors cette classe n'est utilisée qu'en production",
+               "Ne recherchez pas un présenteur selon son annotation @UserView dans vos écrans");
+   }
+
+   // GwtViews
+   // [protected (r.getUserCodeId('GwtViews'))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(r : CinematicRoot) post(trim())]
+[r.initImports()/]
+[r.addImport('fr.spi4j.ui.mvp.ViewsAssociation')/]
+[r.addImport('fr.spi4j.ui.mvp.View_Itf')/]
+[r.addImport('fr.spi4j.ui.mvp.Presenter_Abs')/]
+[r.addImport('fr.spi4j.exception.Spi4jRuntimeException')/]
+
+[comment : List all viewContainers. /]
+[for (viewContainer : ViewContainer | viewContainers)]
+	[r.addImport(namePackageViewContainerPresenter(viewContainer) + '.' + namePresenter(viewContainer))/]
+	[r.addImport(namePackageViewContainerImplementation(viewContainer) + '.' + nameViewImplementation(viewContainer))/]
+[/for]
+
+[r.flushImports()/]
+[/template]

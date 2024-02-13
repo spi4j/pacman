@@ -1,0 +1,64 @@
+[comment encoding = UTF-8 /]
+[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+[comment : /]
+[query public getAttributes(d : DTO) : OrderedSet(Attribute) =
+    invoke('fr.pacman.commons.services.DtoFromEntityUtils', 'getAttributes(org.obeonetwork.dsl.environment.DTO)', Sequence{d})
+/]
+
+[comment : /]
+[template public genPropertyType(a : Attribute) post (trim())]
+[if (isMultiple(a))]
+List<[genPropertyTypeValid(a)/]>
+[else]
+[genPropertyTypeValid(a)/]
+[/if]
+[/template]
+
+[comment : /]
+[template public genPropertyTypeValid(a : Attribute) post(trim())]
+[if (a.type = null or a.type.oclIsInvalid() or a.type.oclIsUndefined())]
+String[else][a.type.genTypeName()/][/if]
+[/template]
+
+[comment  : /]
+[template public genTypeName(t : Type)]
+[if t.oclIsKindOf(Enumeration)]
+[apply_classEnum(t.name)/][else][t.name.sanitize()/][/if]
+[/template]
+
+[comment : /]
+[template public getProperty(a : Attribute) post (trim())]
+private [a.getTypeAndName()/]
+[/template]
+
+[comment : /]
+[template public getTypeAndName(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.apply_attributeDefault(a.name.normalize())/]
+[/template]
+
+[comment : /]
+[template public genPropertyTypeNoGenerics(a : Attribute) post (trim())]
+[if (isMultiple(a))]
+List
+[else][genPropertyTypeValid(a)/]
+[/if]
+[/template]
+
+[comment: bricolage pour supprimer le typage dans le cas d'une Map. /]
+[comment: pour l'instant utilisé dans le cas des méthodes de test. /]
+[template public mapTypeFilter (s : String) post (trim())]
+[if (s.indexOf('Map') > 0)]Map[else][s/][/if]
+[/template]
+
+[comment : Recuperation du type pour un champ additionnel./]
+[template public getTypeColumn(columnProp : String)]
+[getConfigValue(typeColumnProperty(columnProp))/]
+[/template]

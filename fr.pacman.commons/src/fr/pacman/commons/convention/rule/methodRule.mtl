@@ -1,0 +1,44 @@
+[comment encoding = UTF-8 /]
+[module methodRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::utils]
+
+[template public apply_methodDefault(value : String)]
+[norme_methodDefault(value)/]
+[/template]
+
+[query private norme_methodDefault(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodDefault(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_methodMultiple(value : String)]
+[norme_methodMultiple(value)/]
+[/template]
+
+[query private norme_methodMultiple(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodMultiple(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_methodGet(value : String)]
+[norme_methodGet(value)/]
+[/template]
+
+[query private norme_methodGet(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodGet(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_methodReset(value : String)]
+[norme_methodReset(value)/]
+[/template]
+
+[query private norme_methodReset(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodReset(java.lang.String)', Sequence{value})
+ /]
+
+[template public apply_methodSet(value : String)]
+[norme_methodSet(value)/]
+[/template]
+
+[query private norme_methodSet(value : String) : String =
+	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodSet(java.lang.String)', Sequence{value})
+ /]

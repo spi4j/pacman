@@ -1,0 +1,30 @@
+[comment encoding = UTF-8 /]
+[module generateValidation('http://www.obeonetwork.org/dsl/requirement/1.0',
+                           'http://www.obeonetwork.org/dsl/soa/4.0.0',
+                           'http://www.obeonetwork.org/dsl/graal/2.0.0',
+                           'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::validation::files::genValidationOperations /]
+[import fr::pacman::validation::files::genValidationEntities /]
+[import fr::pacman::validation::files::genValidationGraal /]
+
+[template public generateValidationGraal(system : graal::System)]
+[comment @main /]
+[genValidationGraal(system) /]
+[/template]
+
+[template public generateValidationRequirement(repo : Repository)]
+[comment @main /]
+
+[/template]
+
+[template public generateValidationSoa(s : soa::System)]
+[comment @main /]
+[genValidationOperations(s) /]
+[/template]
+
+[template public generateValidationEntity(r : Root)]
+[comment @main /]
+[genValidationEntities(r) /]
+[/template]

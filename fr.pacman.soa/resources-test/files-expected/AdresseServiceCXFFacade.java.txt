@@ -1,0 +1,54 @@
+/**
+ * (C) Copyright Ministere des Armees (France)
+ *
+ * Apache License 2.0
+ */
+package fr.application.ws.impl_server.annuaire;
+// Start of user code for imports
+
+import fr.application.business.ApplicationUserBusiness;
+import fr.application.mapper.ApplicationUserMapper;
+import fr.application.ws.api.annuaire.AdresseServiceCXFFacade_Itf;
+import fr.application.ws.api.annuaire.AdresseXto;
+import java.util.Date;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+// End of user code
+
+
+/**
+ * Implémentation de la façade du web service.
+ * @author safr@n
+ */
+@WebService(serviceName = "AdresseService", portName = "AdresseServicePort", targetNamespace = "http://annuaire.api.ws.application.fr/")
+public class AdresseServiceCXFFacade implements AdresseServiceCXFFacade_Itf
+{
+
+	// Start of user code attributs
+
+    // End of user code
+    /**
+    * 
+    * @param p_personneId
+    *           (In)(*) personneId.
+    * @param p_adresse
+    *           (In)(*) adresse.
+    * @return adresseAjoutee.
+
+	*/
+   @WebMethod
+   @Override
+   public Boolean ajouterAdresseToPersonne (final Long p_personneId, final AdresseXto p_adresse)
+   {
+	// Start of user code ajouterAdresseToPersonne_Boolean_adresseAjoutee_Long_personneId_Adresse_adresse
+
+      return ApplicationUserBusiness.getAdresseService ().ajouterAdresseToPersonne (p_personneId, ApplicationUserMapper.getAdresseMapper ().convertXtoToDto (p_adresse));
+
+	// End of user code
+   }
+
+   // Start of user code AdresseServiceCXFFacade
+
+   // End of user code
+}

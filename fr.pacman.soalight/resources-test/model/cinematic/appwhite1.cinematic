@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cinematic:CinematicRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cinematic="http://www.obeonetwork.org/dsl/cinematic/3.0.0" xmlns:cinematic-flow="http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0" xmlns:cinematic-view="http://www.obeonetwork.org/dsl/cinematic/view/1.0.0" xmlns:org.obeonetwork.dsl.soa="http://www.obeonetwork.org/dsl/soa/2.0.0" xmi:id="_FDHo0Z5rEeGr5amF9i2zgA" name="appwhite1">
+  <flows xmi:id="_64DmMJ5uEeGr5amF9i2zgA" name="main">
+    <states xsi:type="cinematic-flow:InitialState" xmi:id="_JeTd4J5vEeGr5amF9i2zgA" name="Initial"/>
+    <states xsi:type="cinematic-flow:ViewState" xmi:id="_LevroJ5vEeGr5amF9i2zgA" name="Login" viewContainers="_95gBIJ5yEeGr5amF9i2zgA"/>
+    <states xsi:type="cinematic-flow:ViewState" xmi:id="_ObYb4J5vEeGr5amF9i2zgA" name="Home"/>
+    <states xsi:type="cinematic-flow:ActionState" xmi:id="_QwiVYJ5vEeGr5amF9i2zgA" name="Connexion">
+      
+    </states>
+    <states xsi:type="cinematic-flow:SubflowState" xmi:id="_6tRdEJ5vEeGr5amF9i2zgA" subflow="_ybHZoJ5vEeGr5amF9i2zgA"/>
+    <states xsi:type="cinematic-flow:ViewState" xmi:id="_lZ8KoKQHEeGSM5U_l0STNg" name="MainView" viewContainers="_3YrfwJ8zEeGYg8O9wr_9Jw"/>
+    <transitions xmi:id="_NMtCQJ5vEeGr5amF9i2zgA" from="_JeTd4J5vEeGr5amF9i2zgA" to="_lZ8KoKQHEeGSM5U_l0STNg"/>
+    <transitions xmi:id="_Wi8_8J5vEeGr5amF9i2zgA" modal="true" from="_LevroJ5vEeGr5amF9i2zgA" to="_ObYb4J5vEeGr5amF9i2zgA" on="_dew0EJ82EeGYg8O9wr_9Jw"/>
+    <transitions xmi:id="_geTOwJ5vEeGr5amF9i2zgA" from="_LevroJ5vEeGr5amF9i2zgA" to="_QwiVYJ5vEeGr5amF9i2zgA" on="_CxwrYJ6FEeGr5amF9i2zgA"/>
+    <transitions xmi:id="_7UTn4J5vEeGr5amF9i2zgA" from="_QwiVYJ5vEeGr5amF9i2zgA" to="_6tRdEJ5vEeGr5amF9i2zgA"/>
+    <transitions xmi:id="_laF7oKQHEeGSM5U_l0STNg" from="_lZ8KoKQHEeGSM5U_l0STNg" to="_ObYb4J5vEeGr5amF9i2zgA" on="_6SLk0KQHEeGSM5U_l0STNg"/>
+    <transitions xmi:id="_36MZwKQHEeGSM5U_l0STNg" from="_lZ8KoKQHEeGSM5U_l0STNg" to="_LevroJ5vEeGr5amF9i2zgA" on="_83ahsKQHEeGSM5U_l0STNg"/>
+    <events xmi:id="_6SLk0KQHEeGSM5U_l0STNg" name="déconnexion" binds="_9OZrEJ81EeGYg8O9wr_9Jw"/>
+    <events xmi:id="_83ahsKQHEeGSM5U_l0STNg" name="connexion" binds="_8fgkwJ81EeGYg8O9wr_9Jw"/>
+  </flows>
+  <viewContainers xmi:id="_95gBIJ5yEeGr5amF9i2zgA" name="Login">
+    <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_lxZHsJ8tEeGYg8O9wr_9Jw"/>
+    <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_Rbrx4J50EeGr5amF9i2zgA" name="txtLogin" required="true">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_rnibsJ8tEeGYg8O9wr_9Jw"/>
+    </ownedElements>
+    <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_S_XLIJ50EeGr5amF9i2zgA" name="txtPassword" required="true">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_sXNlIJ8tEeGYg8O9wr_9Jw"/>
+    </ownedElements>
+    <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_5mcloJ50EeGr5amF9i2zgA" name="btConnecter" label="Connexion">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+      <events xmi:id="_CxwrYJ6FEeGr5amF9i2zgA" name="onClicConnecter">
+        <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+      </events>
+    </ownedElements>
+    <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_9a9ZEJ50EeGr5amF9i2zgA" name="btAnnuler" label="Annuler">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+      <events xmi:id="_dew0EJ82EeGYg8O9wr_9Jw" name="onClicAnnuler">
+        <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+      </events>
+    </ownedElements>
+  </viewContainers>
+  <viewContainers xmi:id="_3YrfwJ8zEeGYg8O9wr_9Jw" name="Main" label="">
+    <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_5NYBUKWmEeGyivPCv5p57Q"/>
+    <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_Jl3B4J80EeGYg8O9wr_9Jw" name="btConnexion" label="Connexion">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+      <events xmi:id="_8fgkwJ81EeGYg8O9wr_9Jw" name="onClicConnexion">
+        <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+      </events>
+    </ownedElements>
+    <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_zPrYIJ81EeGYg8O9wr_9Jw" name="btDeconnexion" label="Déconnexion">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+      <events xmi:id="_9OZrEJ81EeGYg8O9wr_9Jw" name="onClicDeconnexion">
+        <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+      </events>
+    </ownedElements>
+  </viewContainers>
+  <subPackages xmi:id="_DfxU0J5tEeGr5amF9i2zgA" name="annuaire">
+    <flows xmi:id="_ybHZoJ5vEeGr5amF9i2zgA" name="annuaire">
+      <states xsi:type="cinematic-flow:InitialState" xmi:id="_BLy_sJ5wEeGr5amF9i2zgA" name="Initial"/>
+      <states xsi:type="cinematic-flow:ViewState" xmi:id="_F7BH4J5wEeGr5amF9i2zgA" name="ListePersonnes" viewContainers="_qWrMQKV5EeGyivPCv5p57Q"/>
+      <states xsi:type="cinematic-flow:ActionState" xmi:id="_IX6oIJ5wEeGr5amF9i2zgA" name="ListerPersonnes"/>
+      <states xsi:type="cinematic-flow:ActionState" xmi:id="_oU1QsJ5wEeGr5amF9i2zgA" name="RecupererPersonne"/>
+      <states xsi:type="cinematic-flow:ViewState" xmi:id="_qqHtEJ5wEeGr5amF9i2zgA" name="DetailPersonne" viewContainers="_hxnnsKMYEeGvLvQj0vT2Nw"/>
+      <states xsi:type="cinematic-flow:ActionState" xmi:id="_6djwoJ5wEeGr5amF9i2zgA" name="SupprimerPersonne"/>
+      <states xsi:type="cinematic-flow:ActionState" xmi:id="_YcK5cJ5xEeGr5amF9i2zgA" name="Enregistrer"/>
+      <transitions xmi:id="_E-E-gJ5wEeGr5amF9i2zgA" from="_BLy_sJ5wEeGr5amF9i2zgA" to="_IX6oIJ5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_ctA5AJ5wEeGr5amF9i2zgA" from="_IX6oIJ5wEeGr5amF9i2zgA" to="_F7BH4J5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_jm1QgJ5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_sEy7UJ5wEeGr5amF9i2zgA" from="_F7BH4J5wEeGr5amF9i2zgA" to="_oU1QsJ5wEeGr5amF9i2zgA" on="_x4le4J5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_tHnDMJ5wEeGr5amF9i2zgA" from="_F7BH4J5wEeGr5amF9i2zgA" to="_oU1QsJ5wEeGr5amF9i2zgA" on="_w_BZoJ5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_ttohYJ5wEeGr5amF9i2zgA" from="_F7BH4J5wEeGr5amF9i2zgA" to="_qqHtEJ5wEeGr5amF9i2zgA" on="_vVvHoJ5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_uYcY8J5wEeGr5amF9i2zgA" from="_oU1QsJ5wEeGr5amF9i2zgA" to="_qqHtEJ5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_7jy_8J5wEeGr5amF9i2zgA" from="_F7BH4J5wEeGr5amF9i2zgA" to="_6djwoJ5wEeGr5amF9i2zgA" on="_8LBYAJ5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_74FN4J5wEeGr5amF9i2zgA" from="_6djwoJ5wEeGr5amF9i2zgA" to="_F7BH4J5wEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_Kk-gIJ5xEeGr5amF9i2zgA" from="_F7BH4J5wEeGr5amF9i2zgA" to="_IX6oIJ5wEeGr5amF9i2zgA" on="_LFo9MJ5xEeGr5amF9i2zgA _L1OAAJ5xEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_Zglj0J5xEeGr5amF9i2zgA" from="_qqHtEJ5wEeGr5amF9i2zgA" to="_IX6oIJ5wEeGr5amF9i2zgA" on="_bwkpcJ5xEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_aI1PkJ5xEeGr5amF9i2zgA" from="_qqHtEJ5wEeGr5amF9i2zgA" to="_YcK5cJ5xEeGr5amF9i2zgA" on="_bCNuoJ5xEeGr5amF9i2zgA"/>
+      <transitions xmi:id="_anPC0J5xEeGr5amF9i2zgA" from="_YcK5cJ5xEeGr5amF9i2zgA" to="_IX6oIJ5wEeGr5amF9i2zgA"/>
+      <events xmi:id="_vVvHoJ5wEeGr5amF9i2zgA" name="créer" binds="_ue8z8KWfEeGyivPCv5p57Q"/>
+      <events xmi:id="_w_BZoJ5wEeGr5amF9i2zgA" name="modifier" binds="_vpTHMKWfEeGyivPCv5p57Q"/>
+      <events xmi:id="_x4le4J5wEeGr5amF9i2zgA" name="visualiser" binds="_wXoz4KWfEeGyivPCv5p57Q"/>
+      <events xmi:id="_8LBYAJ5wEeGr5amF9i2zgA" name="supprimer" binds="_xGkWcKWfEeGyivPCv5p57Q"/>
+      <events xmi:id="_LFo9MJ5xEeGr5amF9i2zgA" name="actualiser" binds="_r65i0KWfEeGyivPCv5p57Q"/>
+      <events xmi:id="_L1OAAJ5xEeGr5amF9i2zgA" name="selectGrade" binds="_ww6rAKWpEeGyivPCv5p57Q"/>
+      <events xmi:id="_bCNuoJ5xEeGr5amF9i2zgA" name="enregistrer" binds="_GR2ocKWgEeGyivPCv5p57Q"/>
+      <events xmi:id="_bwkpcJ5xEeGr5amF9i2zgA" name="annuler" binds="_EoNKEKWgEeGyivPCv5p57Q"/>
+    </flows>
+    <viewContainers xmi:id="_hxnnsKMYEeGvLvQj0vT2Nw" name="DetailPersonne">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_c7VF8J8tEeGYg8O9wr_9Jw"/>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_iggE8KWfEeGyivPCv5p57Q" name="btAnnuler">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_EoNKEKWgEeGyivPCv5p57Q" name="onClicAnnuler">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_kkOQMKWfEeGyivPCv5p57Q" name="btEnregistrer">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_GR2ocKWgEeGyivPCv5p57Q" name="onClicEnregistrer">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+    </viewContainers>
+    <viewContainers xmi:id="_qWrMQKV5EeGyivPCv5p57Q" name="ListePersonnes">
+      <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_c7VF8J8tEeGYg8O9wr_9Jw"/>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_s1kPwKWpEeGyivPCv5p57Q" name="cbGrade">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_pvcRoJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_ww6rAKWpEeGyivPCv5p57Q" name="onSelectGrade">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_CSoqwKWpEeGyivPCv5p57Q"/>
+        </events>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_k9cNAKWVEeGyivPCv5p57Q" name="table">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_1mTx8J8tEeGYg8O9wr_9Jw"/>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_oKA2sKWVEeGyivPCv5p57Q" name="btActualiser">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_r65i0KWfEeGyivPCv5p57Q" name="onClicActualiser">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_qXkTYKWVEeGyivPCv5p57Q" name="btCreer">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_ue8z8KWfEeGyivPCv5p57Q" name="onClicCreer">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_sIDZkKWVEeGyivPCv5p57Q" name="btModifier">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_vpTHMKWfEeGyivPCv5p57Q" name="onClicModifier">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_t2dcIKWVEeGyivPCv5p57Q" name="btVisualiser">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_wXoz4KWfEeGyivPCv5p57Q" name="onClicVisualiser">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+      <ownedElements xsi:type="cinematic-view:ViewElement" xmi:id="_1n0foKWVEeGyivPCv5p57Q" name="btSupprimer">
+        <widget href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_3EUoEJ8tEeGYg8O9wr_9Jw"/>
+        <events xmi:id="_xGkWcKWfEeGyivPCv5p57Q" name="onClicSupprimer">
+          <type href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_4aTjkJ8tEeGYg8O9wr_9Jw"/>
+        </events>
+      </ownedElements>
+    </viewContainers>
+  </subPackages>
+  <toolkits href="platform:/resource/fr.pacman.cinematic.gwt/toolkits/gwt.cinematic_toolkits#_YYoW0J8tEeGYg8O9wr_9Jw"/>
+</cinematic:CinematicRoot>

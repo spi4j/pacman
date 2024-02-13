@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genEnum('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::types::enum /]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[template public genEnum(e : Enumeration)]
+[file (filename(getCommonsSourceDir(e), buildPackageEnum(e), buildEnumName(e) + '.java'), false, 'UTF-8')]
+[enum(e)/]
+[/file]
+[/template]

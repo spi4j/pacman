@@ -1,0 +1,1831 @@
+[comment encoding = UTF-8 /]
+[module RsFrontResources('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+
+[comment : **********************************************************/]
+[comment : Create the client factory for the import front resources. /]
+[comment : **********************************************************/]
+[template public rsDefaultClientFactory(any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response.Status;
+
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+
+import [buildPackageRsFrontExceptions()/].[buildRSFrontExceptionClassName()/];
+
+// [/protected]
+
+/**
+ * Fabrique pour le pool de connexion des clients http (Jersey).
+ *
+ * @author [getAuthorName()/].
+ */
+public final class [buildRSClientFactoryClassName() /]
+{
+	/**
+	* Le pool de connexions clients REST Jersey.
+	*/
+	private static Client [apply_attributeStatic('http client pool')/];
+
+	/**
+	 * Création d'un pool de connexions pour le client HTTP Jersey.
+	 *
+	 * @return le pool de connexions.
+	 */
+	public static Client [apply_methodGet('client')/]() {
+
+		// Si le pool est déja créé on le retourne directement.
+		if (null != [apply_attributeStatic('http client pool')/]) {
+			return [apply_attributeStatic('http client pool')/];
+		}
+
+		// L'implémentation par défaut du connecteur Jersey utilise la classe
+		// HttpURLConnection du JDK. Cette classe restreint l'utilisation de
+		// quelques en-têtes. Pour éviter cette restriction, mise en place de
+		// cette propriété système.
+
+		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+
+		// Configuration par défaut très permissive dans le cadre du débogage pour
+		// la déséralisation Json. Modifier selon convenance pour la mise en production.
+
+    	JacksonJsonProvider [apply_variableDefault('jackson json provider')/] = new JacksonJaxbJsonProvider()
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, Boolean.FALSE)
+			.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, Boolean.FALSE)
+			.configure(DeserializationFeature.FAIL_ON_UNRESOLVED_OBJECT_IDS, Boolean.FALSE)
+			.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, Boolean.TRUE)
+			.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, Boolean.TRUE)
+			.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, Boolean.TRUE);
+
+		// Initialisation du pool de connexions pour le client.
+		PoolingHttpClientConnectionManager [apply_variableDefault('connection manager')/] = new PoolingHttpClientConnectionManager();
+		[apply_variableDefault('connection manager')/].setMaxTotal([buildRSFrontConfigClassName()/].[apply_methodGet('max pool clients')/]());
+
+		// Le client Jersey 2.1 est "thread-safe" et devrait toujours l'être dans les futures
+		// versions de Jersey. Il est possible de créer plusieurs WebTarget à partir d'une
+		// seule instance du client, et ainsi d'appeller plusieurs requêtes sur la "WebTarget".
+
+		// Pour enregistrer des composants supplémentaires, faites-le sur le client déjà créé
+		// (et non la cible) afin d'empêcher une autre création du "runtime" client.
+
+		// Pour le fonctionnement d'un service derrière HTTPS, il est nécessaire de créer
+		// un client qui prenne en charge une connexion chiffrée. La configuration par
+		// défaut est minimale et permet de passer l'ensemble des fournisseurs de ressources.
+		// A Modifier pour une solution plus sécurisée en production.
+
+		// Configuration du client.
+		ClientConfig [apply_variableDefault('client config')/] = new ClientConfig();
+		ApacheConnectorProvider [apply_variableDefault('connector')/] = new ApacheConnectorProvider();
+
+		[apply_variableDefault('client config')/].property(ClientProperties.READ_TIMEOUT, 
+			[buildRSFrontConfigClassName()/].[apply_methodGet('read timeout')/]());
+
+		[apply_variableDefault('client config')/].property(ClientProperties.CONNECT_TIMEOUT, 
+			[buildRSFrontConfigClassName()/].[apply_methodGet('connect timeout')/]());
+
+		[apply_variableDefault('client config')/].property(ApacheClientProperties.CONNECTION_MANAGER, 
+			[apply_variableDefault('connection manager')/]);
+
+		[apply_variableDefault('client config')/].register([buildRSFrontResourcesDefaultFilter()/].class);
+		[apply_variableDefault('client config')/].register([buildRSFrontResourcesDefaultInterceptor()/].class);
+		[apply_variableDefault('client config')/].register(MultiPartFeature.class);
+		[apply_variableDefault('client config')/].register([apply_variableDefault('jackson json provider')/]);
+		[apply_variableDefault('client config')/].connectorProvider([apply_variableDefault('connector')/]);
+
+		// Configuration du proxy si necessaire.
+		if(null != [buildRSFrontConfigClassName()/].[apply_methodGet('proxy url')/]()
+			&& ! [buildRSFrontConfigClassName()/].[apply_methodGet('proxy url')/]().isEmpty()) {
+
+			[apply_variableDefault('client config')/].property(ClientProperties.PROXY_URI, 
+					[buildRSFrontConfigClassName()/].[apply_methodGet('proxy url')/]());
+			[apply_variableDefault('client config')/].property(ClientProperties.PROXY_USERNAME,
+					[buildRSFrontConfigClassName()/].[apply_methodGet('proxy user')/]());
+			[apply_variableDefault('client config')/].property(ClientProperties.PROXY_PASSWORD,
+					[buildRSFrontConfigClassName()/].[apply_methodGet('proxy passwd')/]());
+		}
+
+		// Initialisation du Builder.
+		ClientBuilder [apply_variableDefault('client builder')/] = ClientBuilder.newBuilder();
+	
+		// Si demande de sécurisation pour SSL.
+		if([buildRSFrontConfigClassName()/].[apply_methodDefault('is socket secured')/]()) {
+			[apply_variableDefault('client builder')/].sslContext([apply_methodGet(' SSL context')/]())
+			.hostnameVerifier(new [buildInternalHostnameVerifier()/]());
+		}
+
+		// Création du client à partir du "Builder".
+		[apply_attributeStatic('http client pool')/] = [apply_variableDefault('client builder')/].withConfig([apply_variableDefault('client config')/]).build();
+
+		// retourne le pool nouvellement créé.
+		return [apply_attributeStatic('http client pool')/];
+	}
+
+	/**
+	* Récupération du contexte SSL.
+	*
+	* @return Le contexte SSL.
+	* @throws NoSuchAlgorithmException
+	* @throws KeyManagementException
+	*/
+	public static SSLContext [apply_methodGet(' SSL context')/]() {
+
+		//[apply_methodGet('SSL context')/]
+		//[protected (any.getUserCodeId(apply_methodGet('SSL context')))]
+
+		SSLContext [apply_variableDefault('ssl context')/] = null;
+
+		try {
+
+			// A modifier selon les versions TLSv1 / TLSv1.2...
+			[apply_variableDefault('ssl context')/] = SSLContext.getInstance("TLSv1.2");
+
+			final KeyManager['[]'/] [apply_variableFinal('key manager')/] = null;
+			final TrustManager['[]'/] [apply_variableFinal('trust manager')/] = { new [buildInternalTrustManager()/]() };
+			final SecureRandom [apply_variableFinal('secure random')/] = new SecureRandom();
+
+			[apply_variableDefault('ssl context')/].init([apply_variableFinal('key manager')/],
+				[apply_variableFinal('trust manager')/], [apply_variableFinal('secure random')/]);
+
+		} catch (NoSuchAlgorithmException e) {
+
+			throw new [buildRSFrontExceptionClassName()/](
+				Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+				"Impossible de charger le gestionnaire de sécurité.");
+
+		} catch (KeyManagementException e) {
+
+			throw new [buildRSFrontExceptionClassName()/](
+				Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+				"Impossible de charger le gestionnaire de sécurité.");
+		}
+		return [apply_variableDefault('ssl context')/];
+
+		//[/protected]
+	}
+
+	/**
+	* Vérification des certificats.
+	*/
+	private static class [buildInternalTrustManager()/] implements X509TrustManager {
+
+		//[buildInternalTrustManager()/]
+		//[protected (any.getUserCodeId(buildInternalTrustManager()))]
+
+		@Override
+		public void checkClientTrusted(X509Certificate['[]'/] [apply_parameterMethodClassicIn('x509 certificates')/],
+			String [apply_parameterMethodClassicIn('s')/]) {
+		}
+
+		@Override
+		public void checkServerTrusted(X509Certificate['[]'/]  [apply_parameterMethodClassicIn('x509 certificates')/],
+			String [apply_parameterMethodClassicIn('s')/]) {
+		}
+
+		@Override
+		public X509Certificate['[]'/] getAcceptedIssuers() {
+			return new X509Certificate['[0]'/];
+		}
+
+		//[/protected]
+	}
+
+	/**
+	* Vérification des noms d'hôte.
+	*/
+	private static class [buildInternalHostnameVerifier()/] implements HostnameVerifier {
+
+		//[buildInternalHostnameVerifier()/]
+		//[protected (any.getUserCodeId(buildInternalHostnameVerifier()))]
+
+		@Override
+		public boolean verify(String [apply_parameterMethodClassicIn('s')/], SSLSession [apply_parameterMethodClassicIn('ssl session')/]) {
+			return Boolean.TRUE;
+		}
+
+		//[/protected]
+	}
+}
+[/template]
+
+
+
+[comment : ***********************************************************/]
+[comment : Create a standard class exception for the front resources. /]
+[comment : ***********************************************************/]
+[template public rsFrontStandardException (any : OclAny)]
+[licence()/]
+package [buildPackageRsFrontExceptions()/];
+// [protected ('for imports')]
+
+import [buildPackageRsFront()/].[buildRSFrontConfigClassName()/];
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.ProcessingException;
+import java.net.URI;
+
+// [/protected]
+
+/**
+ * Exception générique pour l'application : [getApplicationName()/].
+ * <p>
+ * Dans le cas ou cette classe est utilisée avec un frontal jsp et/ou avec des
+ * services web de type Rest, il est fortement conseillé d'importer la librairie
+ * Spi4j et d'ajouter une implémentation de type "implements RsFrontException"
+ * afin de pouvoir bénéficier d'une remontée d'information plus importante au
+ * niveau des exceptions.
+ *
+ * @author [getAuthorName()/].
+ */
+
+// [buildRSFrontExceptionClassName()/]
+// [protected(any.getUserCodeId(buildRSFrontExceptionClassName()))]
+
+public class [buildRSFrontExceptionClassName()/] extends RuntimeException {
+
+// [/protected]
+
+	/**
+	* L'ID de série par défaut.
+	*/
+	private static final long serialVersionUID = -3077568312514165073L;
+
+	/**
+	* Le code de retour d'état HTTP pour l'opération.
+	*/
+	private final int [apply_attributeFinal('status code')/];
+
+	/**
+	* Informations supplémentaires pour l'erreur (si existe).
+	*/
+	private String [apply_attributeDefault('additional info')/];
+
+	/**
+	* L'URI appelée ayant généré l'exception.
+	*/
+	private URI [apply_attributeDefault('called Uri')/];
+
+	/**
+	* Constructeur.
+	*
+	* @param [apply_parameterMethodClassicIn('exception')/] :
+	* 			L'exception initiale.
+	*/
+	public [buildRSFrontExceptionClassName()/](final Exception [apply_parameterMethodClassicIn('exception')/]){
+
+		super([apply_parameterMethodClassicIn('exception')/]);
+		[apply_attributeFinal('status code')/] = Status.INTERNAL_SERVER_ERROR.getStatusCode();
+	}
+
+	/**
+	* Constructeur.
+	*
+	* @param [apply_parameterMethodClassicIn('statut code')/] :
+	* 			Le code de retour d'état HTTP pour l'opération.
+	*/
+	public [buildRSFrontExceptionClassName()/](final int [apply_parameterMethodClassicIn('statut code')/]){
+
+		[getAffectationPrefix()/][apply_attributeFinal('status code')/] = [apply_parameterMethodClassicIn('statut code')/];
+	}
+
+	/**
+	* Constructeur.
+	*
+	* @param [apply_parameterMethodClassicIn('statut code')/] :
+	* 			Le code de retour d'état HTTP pour l'opération.
+	* @param [apply_parameterMethodClassicIn('reason')/] :
+	* 			The message associated to the HTTP return code.
+	*/
+	public [buildRSFrontExceptionClassName()/](final int [apply_parameterMethodClassicIn('statut code')/], final String [apply_parameterMethodClassicIn('reason')/]){
+
+		super([apply_parameterMethodClassicIn('reason')/]);
+		[getAffectationPrefix()/][apply_attributeFinal('status code')/] = [apply_parameterMethodClassicIn('statut code')/];
+	}
+
+	/**
+	* Constructeur.
+	*
+	* @param [apply_parameterMethodClassicIn('response context')/] :
+	* 			Le contexte de la réponse.
+	*/
+	public [buildRSFrontExceptionClassName()/](final ClientResponseContext [apply_parameterMethodClassicIn('response context')/]){
+
+		super([apply_parameterMethodClassicIn('response context')/].getStatusInfo().getReasonPhrase());
+		[apply_attributeFinal('status code')/] = [apply_parameterMethodClassicIn('response context')/].getStatus();
+	}
+
+	/**
+	* Récupération de l'exception encapsulée dans la "processingException" de Jersey afin que l'API 
+	* puisse toujours renvoyer une [buildRSFrontExceptionClassName()/].
+	*
+	* @param [apply_parameterMethodClassicIn('exception')/] :
+	* 			L'exception à traiter.
+	*/
+	public static [buildRSFrontExceptionClassName()/] [apply_methodDefault('cast')/](final ProcessingException [apply_parameterMethodClassicIn('exception')/]) {
+		
+		if([apply_parameterMethodClassicIn('exception')/].getCause() instanceof [buildRSFrontExceptionClassName()/]) {
+			return ([buildRSFrontExceptionClassName()/])[apply_parameterMethodClassicIn('exception')/].getCause();
+		}
+		return new [buildRSFrontExceptionClassName()/]([apply_parameterMethodClassicIn('exception')/]);
+	}
+
+	/**
+	* Récupération du code de retour HTTP
+	*
+	* @return Le code d'état.
+	*/
+	public int [apply_methodGet('status code')/]() {
+
+		return [apply_attributeFinal('status code')/];
+	}
+
+	/**
+	* Récupération de l'URI ayant généré l'exception.
+	*
+	* @return L'URI.
+	*/
+	public URI [apply_methodGet('called uri')/]() {
+	
+		return [apply_attributeDefault('called uri')/];
+	}
+
+	/**
+	* Mise à jour de l'URI ayant généré l'exception.
+	*
+	* @param [apply_attributeDefault('called uri')/] : 
+	* 					L'URI ayant généré l'exception.
+	*/
+	public void [apply_methodSet('called uri')/](URI [apply_parameterMethodClassicIn('called uri')/]) {
+	
+		// Uniquement si mode debug !
+		if (![buildRSFrontConfigClassName()/].[apply_methodDefault('is debug mode')/]()) {
+				return;
+		}
+
+		[getAffectationPrefix()/][apply_attributeDefault('called uri')/] = [apply_parameterMethodClassicIn('called uri')/];
+	}
+
+	/**
+	* Récupération des éventuelles informations supplémentaires pour l'erreur.
+	* 
+	* @return Les informations supplémentaires.
+	*/
+	public String [apply_methodGet('additional info')/]() {
+
+		return [apply_attributeDefault('additional info')/];
+	}
+
+	/**
+	* Mise à jour des informations supplémentaires pour l'erreur.
+	* 
+	* @param [apply_parameterMethodClassicIn('additional info')/] : 
+    * 					La ou les informations supplémentaires.
+	*/
+	public void [apply_methodSet('additional info')/](final String [apply_parameterMethodClassicIn('additional info')/]) {
+	
+		[getAffectationPrefix()/][apply_attributeDefault('additional info')/] = [apply_parameterMethodClassicIn('additional info')/];
+	}
+}
+[/template]
+
+
+
+[comment : ********************************************************************/]
+[comment : Create a default interceptor for the jersey client (front resource). /]
+[comment : ********************************************************************/]
+[template public rsFrontResourceDefaultInterceptor (any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import java.io.IOException;
+
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
+
+// [/protected]
+/**
+ * Intercepteur vide par défaut pour l'application : [getApplicationName()/].
+ *
+ * Les intercepteurs sont principalement utilisés pour modifier les flux d'entrée et 
+ * de sortie des entités. Il est possible d'utiliser des intercepteurs, par exemple, pour 
+ * compresser et décompresser les flux d'entités de sortie et d'entrée.
+ * 
+ * Garder à l'esprit qu'un intercepteur est toujours exécuté après les filtres et 
+ * uniquement si un corps de message est présent.
+ *
+ * @author [getAuthorName()/].
+ */
+public class [buildRSFrontResourcesDefaultInterceptor()/] implements WriterInterceptor, ReaderInterceptor  {
+
+	@Override
+	public Object aroundReadFrom(ReaderInterceptorContext [apply_parameterMethodClassicIn('context')/]) 
+			throws IOException, WebApplicationException {
+		
+		 //[protected (any.getUserCodeId(buildRSFrontResourcesDefaultInterceptor() + '_aroundReadFrom'))]
+		
+		return [apply_parameterMethodClassicIn('context')/].proceed();
+
+		//[/protected] 
+	}
+
+	@Override
+	public void aroundWriteTo(WriterInterceptorContext [apply_parameterMethodClassicIn('context')/]) 
+			throws IOException, WebApplicationException {
+
+		//[protected (any.getUserCodeId(buildRSFrontResourcesDefaultInterceptor() + '_aroundWriteTo'))]
+		
+		[apply_parameterMethodClassicIn('context')/].proceed();
+			
+		//[/protected] 
+	}
+}
+[/template]
+
+
+
+[comment : ****************************************************************/]
+[comment : Create a default filter for the jersey client (front resource). /]
+[comment : ****************************************************************/]
+[template public rsFrontResourceDefaultFilter (any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Locale;
+
+import org.apache.commons.io.IOUtils;
+
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientResponseFilter;
+import jakarta.ws.rs.core.Response.Status.Family;
+import jakarta.ws.rs.core.HttpHeaders;
+
+import org.glassfish.jersey.client.ClientResponse;
+
+import [buildPackageRsFrontExceptions()/].[buildRSFrontExceptionClassName()/];
+
+// [/protected]
+
+/**
+ * Filtre par défaut pour l'application.
+ * Placer ici l'ensemble du code pour gérer les exceptions, modifier les en-têtes
+ * en fonction des différents routages possibles etc..
+ *
+ * @author [getAuthorName()/].
+ */
+public class [buildRSFrontResourcesDefaultFilter()/] implements ClientRequestFilter, ClientResponseFilter  {
+
+	/**
+	* Stockage du jeton spécifique pour une passerelle API. 
+	* (Hors jeton applicatif).
+	*/
+	private static String [apply_attributeStatic('auth gateway token')/];
+
+	/**
+	* Enregistre le jeton spécifique pour la passerelle API (si derrière passerelle).
+	* En l'état actuel du PES, ce jeton est UNIQUE pour l'ensemble de l'application.
+	* Ici l'assesseur sert simplement de "passe-plat" et est synchronisé lors 
+	* du changement de jeton uniquement si ce dernier est périmé.
+	*
+	* @param [apply_parameterMethodClassicIn('gateway token')/] : 
+	*				Le jeton pour la passerelle d'API.
+	*/
+	public static synchronized void [apply_methodDefault('register auth gateway token')/](final String [apply_parameterMethodClassicIn('auth gateway token')/]){
+		
+		[buildRSFrontResourcesDefaultFilter()/].[apply_attributeStatic('auth gateway token')/] = [apply_parameterMethodClassicIn('auth gateway token')/];
+	}
+
+	/**
+	* Avant appel du client.
+	*
+	* @param [apply_parameterMethodClassicIn('request context')/] :
+	*			L'objet de contexte pour la requête.
+	*/
+	@Override
+	public void filter(ClientRequestContext [apply_parameterMethodClassicIn('request context')/]) throws IOException {
+
+		// [protected (any.getUserCodeId(buildRSFrontResourcesDefaultFilter() + '_ClientRequestContext'))]
+
+		// Indique que le client converse en Français (si possible).
+		[apply_parameterMethodClassicIn('request context')/].getHeaders().add(HttpHeaders.ACCEPT_LANGUAGE, Locale.FRENCH);
+
+		// Ajout des en-têtes pour la Passerelle PES (si besoin).
+		[apply_methodDefault('add PES headers')/]([apply_parameterMethodClassicIn('request context')/]);
+
+		// Si mode débug, on stocke les en-têtes dans le ThreadLocal.
+		[buildRSFrontResourcesContextHolder()/].[apply_methodSet('headers')/]([apply_parameterMethodClassicIn('request context')/].getHeaders());
+
+		// [/protected]
+	}
+
+	/**
+	* Après appel du client et avant traitement de la réponse.
+	* 
+	* La réponse implémente AutoCloseable depuis 1.7 donc pas besoin de fermer 
+	* si une exception technique est levée pendant la désérialisation. Ici ne 
+	* sont traitées que des exceptions fonctionnelles, il ne devrait donc pas 
+	* y pas y avoir besoin de finally pour la fermeture des ressources (s'il y 
+  	* a tout de même une entité dans le corps du message). 
+	*
+	* @param [apply_parameterMethodClassicIn('request context')/] :
+	*			L'objet de contexte pour la requête.
+	* @param [apply_parameterMethodClassicIn('response context')/] :
+	* 			L'objet de contexte pour la réponse.
+	*/
+	@Override
+	public void filter(ClientRequestContext [apply_parameterMethodClassicIn('request context')/],
+		ClientResponseContext [apply_parameterMethodClassicIn('response context')/]) throws IOException {
+
+		// [protected (any.getUserCodeId(buildRSFrontResourcesDefaultFilter() + '_ClientResponseFilter'))]
+
+		// Si mode débug, on stocke les en-têtes dans le ThreadLocal.
+		[buildRSFrontResourcesContextHolder()/].[apply_methodDefault('update with headers')/]([apply_parameterMethodClassicIn('response context')/].getHeaders());
+
+		// Vérification du statut pour la réponse.
+		if([apply_parameterMethodClassicIn('response context')/].getStatusInfo().getFamily()!= Family.SUCCESSFUL) {
+
+			// On crée une exception contenant le code de retour du service.
+			final [buildRSFrontExceptionClassName()/] [apply_variableFinal('rs exception')/] = new [buildRSFrontExceptionClassName()/]([apply_parameterMethodClassicIn('response context')/]);
+
+			// Récupère des informations supplémentaires dans le corps de la réponse (si besoin).
+			[apply_variableFinal('rs exception')/].[apply_methodSet('additional info')/]([apply_methodGet('error entity stream')/]([apply_parameterMethodClassicIn('response context')/]));
+
+			// On demande expressement la fermeture pour le contexte.
+			((ClientResponse)[apply_parameterMethodClassicIn('response context')/]).close();
+			
+			// Si mode debug, on rajoute l'URI.
+			[apply_variableFinal('rs exception')/].[apply_methodSet('called uri')/]([apply_parameterMethodClassicIn('request context')/].getUri());
+			
+			// On lance l'exception.
+			throw [apply_variableFinal('rs exception')/];
+		}
+
+		// [/protected]
+	}
+
+	/**
+	 * Ajout des en-têtes spécifiques pour la Passerelle PES. 
+	 * Dans le cas ou le jeton d'authentification pour la passerelle est "null",
+	 * on ne fait aucun test, c'est la passerelle qui doit renvoyer l'erreur.
+	 *
+	 * @param [apply_parameterMethodClassicIn('request context')/] :
+	 *			L'objet de contexte pour la requête.
+	 */
+	private void [apply_methodDefault('add PES headers')/]( final ClientRequestContext [apply_parameterMethodClassicIn('request context')/]) {
+
+		if([buildRSFrontConfigClassName()/].[apply_methodDefault('is pes headers required')/]()) {
+			[apply_parameterMethodClassicIn('request context')/].getHeaders().add(
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header secu key')/](),
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header secu')/]());
+			[apply_parameterMethodClassicIn('request context')/].getHeaders().add(
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header mention key')/](),
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header mention')/]());
+			[apply_parameterMethodClassicIn('request context')/].getHeaders().add(
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header constraint key')/](),
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header constraint')/]());
+			[apply_parameterMethodClassicIn('request context')/].getHeaders().add(
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header app key')/](),
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes application name')/]());
+			[apply_parameterMethodClassicIn('request context')/].getHeaders().add(
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header dlpp key')/](),
+				[apply_parameterMethodClassicIn('request context')/].getUri().getPath());
+			[apply_parameterMethodClassicIn('request context')/].getHeaders().add(
+				[buildRSFrontConfigClassName()/].[apply_methodGet('pes header token key')/](),
+				[apply_attributeStatic('auth gateway token')/]);
+		}
+	}
+
+	/**
+	 * Récupération des informations éventuellement présentes dans l'entité si le
+	 * fournisseur d'API a choisi d'envoyer aussi des informations dans le corps du
+	 * message.
+	 * 
+	 * @param [apply_parameterMethodClassicIn('response context')/] :
+	 * @throws IOException 
+	 */
+	private String [apply_methodGet('error entity stream')/](final ClientResponseContext [apply_parameterMethodClassicIn('response context')/]) throws IOException {
+
+		if ([apply_parameterMethodClassicIn('response context')/].hasEntity()){
+			try ( InputStream [apply_variableDefault('entity stream')/] = [apply_parameterMethodClassicIn('response context')/].getEntityStream()) {
+				byte['[]'/] bytes = IOUtils.toByteArray([apply_variableDefault('entity stream')/]);
+				[apply_parameterMethodClassicIn('response context')/].setEntityStream(new ByteArrayInputStream(bytes));
+				return new String(bytes).replaceAll("['[{}]'/]", "");
+
+			} catch (Exception e) {
+				return "Erreur de lecture pour les informations complémentaires !";
+			} 
+		}
+		return "Aucune information complémentaire pour l'erreur.";
+	}
+}
+[/template]
+
+
+
+[comment : ***************************************************************************/]
+[comment : Create a Holder for ThreadLocal storage of the request / response context. /]
+[comment : ***************************************************************************/]
+[template public rsFrontResourceContextHolder (any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import jakarta.ws.rs.core.MultivaluedMap;
+
+// [/protected]
+
+/**
+ * Cette classe permet de stocker temporairement (ThreadLocal) les données des en-têtes 
+ * à partir du filtre pour les tests JUnit si le développeur désire afficher les en-têtes 
+ * pour déboger l'Api.
+ *
+ * @author [getAuthorName()/]
+ */
+public class [buildRSFrontResourcesContextHolder()/] {
+	
+	/**
+	* ThreadLocal pour le stockage temporaire des en-têtes. 
+	* (dans le cadre du debogage).
+	*/
+	private static ThreadLocal<Headers> [apply_attributeStatic('headers _thread _local')/] = new ThreadLocal<Headers>();
+
+	/**
+	 * Initialisation pour le stockage des en-têtes.
+	 *
+	 * @param [apply_parameterMethodClassicIn('map')/] : 
+	 * 					La map de stockage des indormations en-tête pour la requête.
+	 */
+	public static void [apply_methodSet('headers')/](MultivaluedMap<String, Object> [apply_parameterMethodClassicIn('map')/]) {
+
+		// Uniquement si mode debug !
+		if (![buildRSFrontConfigClassName()/].[apply_methodDefault('is debug mode')/]()) {
+				return;
+		}
+
+		[getAffectationPrefix()/].[apply_attributeStatic('headers _thread _local')/]
+				.set(new Headers([apply_parameterMethodClassicIn('map')/]));
+	}
+
+	/**
+	 * Mise à jour du ThreadLocal avec les données en-tête de la réponse.
+	 *
+	 * @param [apply_parameterMethodClassicIn('map')/] : 
+	 * 					La map de stockage des indormations en-tête pour la réponse.
+	 */
+	public static void [apply_methodDefault('update with headers')/](MultivaluedMap<String, String> [apply_parameterMethodClassicIn('map')/]) {
+
+		// Uniquement si mode debug !
+		if (![buildRSFrontConfigClassName()/].[apply_methodDefault('is debug mode')/]()) {
+				return;
+		}
+
+		[buildRSFrontResourcesContextHolder()/].[apply_methodGet('headers')/]()
+			.[apply_methodDefault('update with response headers')/]([apply_parameterMethodClassicIn('map')/]);
+	}
+
+	/**
+	 * Récupération des ent-têtes (request + response).
+	 *
+	 * @return l'objet contenant les en-têtes.
+	 */
+	public static Headers [apply_methodGet('headers')/]() {
+		
+		return [getAffectationPrefix()/][apply_attributeStatic('headers _thread _local')/].get();
+	}
+
+	/**
+	 * Suppression des en-têtes dans le ThreadLocal.
+	 */
+	public static void [apply_methodDefault('remove')/]() {
+		
+		[getAffectationPrefix()/][apply_attributeStatic('headers _thread _local')/].remove();
+		[getAffectationPrefix()/].[apply_attributeStatic('headers _thread _local')/] = null;
+	}
+	
+	/**
+	 * Conteneur pour les information des en-têtes.
+	 *
+	 * @author [getAuthorName()/]
+	 */
+	public static class Headers {
+	
+		/**
+		* Stocke les en-têtes de la requête.
+		*/
+		private MultivaluedMap<String, Object> [apply_attributeDefault('request headers')/];
+
+		/**
+		* Stocke les en-têtes de la réponse.
+		*/
+		private MultivaluedMap<String, String> [apply_attributeDefault('response headers')/];
+
+		/**
+		 * Constructeur.
+		 * 
+		 * @param [apply_parameterMethodClassicIn('request headers')/] : 
+		 *					La liste des en-têtes pour le contexte de la requête.
+		 */
+		public Headers(MultivaluedMap<String, Object> [apply_parameterMethodClassicIn('request headers')/]) {
+
+			[getAffectationPrefix()/][apply_attributeDefault('request headers')/] = 
+					[apply_parameterMethodClassicIn('request headers')/];
+		}
+
+		/**
+		 * Mise à jour des informations avec les en-têtes de la réponse.
+		 *
+		 * @param [apply_parameterMethodClassicIn('response headers')/] : 
+		 * 					La liste des en-têtes pour le contexte de la réponse.
+		 */
+		public void [apply_methodDefault('update with response headers')/](
+				MultivaluedMap<String, String> [apply_parameterMethodClassicIn('response headers')/]) {
+
+			[getAffectationPrefix()/][apply_attributeDefault('response headers')/] = 
+				[apply_parameterMethodClassicIn('response headers')/];
+		}
+
+		/**
+		 * Récupération des en-têtes dans le contexte de la requête.
+		 *
+		 * @return La liste des en-têtes pour le contexte de la requête.
+		 */
+		public MultivaluedMap<String, Object> [apply_methodGet('request headers')/]() {
+			
+			return [apply_attributeDefault('request headers')/];
+		}
+
+		/**
+		 * Récupération des ent-têtes dans le contexte de la réponse.
+		 *
+		 * @return La liste des en-têtes pour le contexte de la réponse.
+		 */
+		public MultivaluedMap<String, String> [apply_methodGet('response headers')/]() {
+			
+			return [apply_attributeDefault('response headers')/];
+		}
+	}
+}
+[/template]
+
+
+[comment : ***************************************************************/]
+[comment : Create the class for tokens configuration loading and storage. /]
+[comment : ***************************************************************/]
+[template public rsFrontTokensConfiguration (any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import java.util.Properties;
+
+// [/protected]
+
+/**
+* Classe détenant les informations des jetons.
+*
+* @author [getAuthorName()/].
+*/
+public class [buildRSFrontTokensConfigClassName()/] {
+ 	/**
+   	* Chargement de la configuration des jetons pour l'application.
+   	*
+   	* @param [apply_parameterMethodClassicIn('properties')/] :
+   	* 				Le chargeur pour la configuration des jetons.
+   	*/
+	static void loadConfiguration(final Properties [apply_parameterMethodClassicIn('properties')/]){
+		
+		//RAS.
+	}
+}
+[/template]
+
+
+[comment : ********************************************************/]
+[comment : Create the class for configuration loading and storage. /]
+[comment : ********************************************************/]
+[template public rsFrontConfiguration (any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.net.URI;
+
+import jakarta.ws.rs.core.Response.Status;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import [buildPackageRsFrontExceptions()/].[buildRSFrontExceptionClassName()/];
+
+// [/protected]
+
+/**
+ * Classe détenant les informations nécessaires pour la configuration générale
+ * de l'application. Comme la configuration doit être chargée au niveau du filtre
+ * ET de la classe "Utilitaire" spécifique à chaque ressource ET de la classe Helper 
+ * pour les tests JUnit (qui contient des méthodes 'static'), l'ensemble de la configuration 
+ * est donc 'static' pour plus de simplicité, il ne s'agit pas d'un singleton, un simple
+ * booléen évite le chargement multiple de la configuration (équivaut à instance != null).
+ *
+ * @author [getAuthorName()/]
+ */
+public class [buildRSFrontConfigClassName()/] {
+
+	/**
+	 * Le logger pour le chargement de la configuration.
+	 */
+	private final static Logger [apply_attributeFinalStatic('config log')/] = LogManager.getLogger([buildRSFrontConfigClassName()/].class);
+
+	private static final String [apply_attributeFinalStatic('conf _filter _props _file')/]  = "_REST_CONFIG_FILES";
+  	private static final String [apply_attributeFinalStatic('conf _filter _pes _header _constraint')/] = "filter.pes.header.constraint";
+  	private static final String [apply_attributeFinalStatic('conf _filter _pes _header _mention')/] = "filter.pes.header.mention";
+  	private static final String [apply_attributeFinalStatic('conf _filter _pes _header _secu')/] = "filter.pes.header.secu";
+  	private static final String [apply_attributeFinalStatic('conf _filter _pes _header _app')/] = "filter.pes.header.app";
+  	private static final String [apply_attributeFinalStatic('conf _filter _routing _strategy')/] = "filter.routing.strategy";
+  	private static final String [apply_attributeFinalStatic('conf _filter _operating _mode')/] = "filter.mode.operating";
+  	private static final String [apply_attributeFinalStatic('conf _filter _base _url')/] = "filter.server.url"; 
+	private static final String [apply_attributeFinalStatic('conf _filter _proxy _url')/] = "filter.proxy.url"; 
+	private static final String [apply_attributeFinalStatic('conf _filter _proxy _user')/] = "filter.proxy.user";
+	private static final String [apply_attributeFinalStatic('conf _filter _proxy _passwd')/] = "filter.proxy.passwd";
+  	private static final String [apply_attributeFinalStatic('conf _filter _socket _secured')/] = "filter.socket.secured";
+	private static final String [apply_attributeFinalStatic('conf _client _connect _timeout')/] = "client.timeout.connect";
+	private static final String [apply_attributeFinalStatic('conf _client _read _timeout')/] = "client.timeout.read";
+	private static final String [apply_attributeFinalStatic('conf _client _pool _max')/] = "client.pool.max";
+	private static final String [apply_attributeFinalStatic('conf _debug _display _attr _upper')/] = "debug.display.attr.upper";
+	private static final String [apply_attributeFinalStatic('conf _debug _display _headers')/] = "debug.display.headers";
+
+  	static final String [apply_attributeFinalStatic('auth _header _pes _secu')/] = "filter.pes.header.secu.key";
+  	static final String [apply_attributeFinalStatic('auth _header _pes _mention')/] = "filter.pes.header.mention.key";
+  	static final String [apply_attributeFinalStatic('auth _header _pes _constraint')/] = "filter.pes.header.constraint.key";
+  	static final String [apply_attributeFinalStatic('auth _header _pes _app _name')/] = "filter.pes.header.app.key";
+  	static final String [apply_attributeFinalStatic('auth _header _pes _dlpp ')/] = "filter.pes.header.dlpp.key";
+	static final String [apply_attributeFinalStatic('auth _header _pes _token')/] = "filter.pes.header.token.key";
+
+  	/**
+   	* Verifie si la demande de chargement a déjà été effectuée.
+   	*/
+  	private static boolean [apply_attributeStatic('loaded')/];
+
+  	/**
+   	* Le mode de routage pour les ressources.
+   	*/
+  	private static [apply_classEnum('routing strategy')/] [apply_attributeStatic('routing strategy')/];
+
+  	/**
+   	* Le mode de fonctionnement pour les ressources (DEBUG, etc..).
+   	*/
+  	private static [apply_classEnum('operating mode')/] [apply_attributeStatic('operating mode')/];
+
+  	/**
+   	* L'URL de base pour le serveur du fournisseur de ressources (http(s)://xxx.xxx.xxx/).
+   	*/
+  	private static String [apply_attributeStatic('base url')/];
+
+	/**
+	* L'URL complete pour un proxy (si besoin) (http(s)://xxx.xxx.xxx(:xxx)).
+	*/
+	private static String [apply_attributeStatic('proxy url')/];
+
+	/**
+	* L'utilisateur pour un proxy (si besoin)).
+	*/
+	private static String [apply_attributeStatic('proxy user')/];
+
+	/**
+	* Le mot de passe pour un proxy (si besoin)).
+	*/
+	private static String [apply_attributeStatic('proxy passwd')/];
+
+	/*
+	* Nombre maximum de clients http jersey dans le pool.
+	*/
+  	private static int [apply_attributeStatic('max pool clients')/];
+
+	/*
+	* Utilisation de SSL (OUI / NON).
+	*/
+  	private static boolean [apply_attributeStatic('socket secured')/];
+
+	/**
+	* Timeout pour la récupération des informations à partir du service.
+	*/
+	private static int [apply_attributeStatic('read timeout')/];
+
+	/**
+	* Timout pour la connexion au service.
+	*/
+	private static int [apply_attributeStatic('connect timeout')/];
+
+  	/**
+   	* Information spécifique pour la PES (DR).
+   	*/
+  	private static String [apply_attributeStatic('pes application name')/];
+
+  	/**
+   	* Information spécifique pour la PES (DR).
+   	*/
+  	private static String [apply_attributeStatic('pes header secu')/];
+
+  	/**
+   	* Information spécifique pour la PES (DR).
+   	*/
+  	private static String [apply_attributeStatic('pes header mention')/];
+
+  	/**
+   	* Information spécifique pour la PES (DR).
+   	*/
+  	private static String [apply_attributeStatic('pes header constraint')/];
+
+	/**
+	* Affichage console en majuscule des attributs dans le cadre du debogage. 
+	*/
+	private static boolean [apply_attributeStatic('debug display attr upper')/];
+
+	/**
+	* Affichage console des en-têtes dans le cadre du debogage.
+	*/
+	private static boolean [apply_attributeStatic('debug display headers')/];
+
+	/**
+	* Clé en-tête pour information spécifique PES (DR).
+	*/
+	private static String [apply_attributeStatic('pes application name key')/];
+
+	/**
+	* Clé en-tête pour information spécifique PES (DR).
+	*/
+	private static String [apply_attributeStatic('pes header secu key')/];
+
+	/**
+	* Clé en-tête pour information spécifique PES (DR).
+	*/
+	private static String [apply_attributeStatic('pes header mention key')/];
+
+	/**
+	* Clé en-tête pour information spécifique PES (DR).
+	*/
+	private static String [apply_attributeStatic('pes header constraint key')/];
+
+	/**
+	* Clé en-tête pour information spécifique PES (DR).
+	*/
+	private static String [apply_attributeStatic('pes header dlpp key')/];
+
+	/**
+	* Clé en-tête pour information spécifique PES (DR).
+	*/
+	private static String [apply_attributeStatic('pes header token key')/];
+	
+  	/**
+   	* Chargement de la configuration pour l'application (option 1).
+   	*
+   	* @param [apply_parameterMethodClassicIn('config file path')/] :
+   	* 				Le chemin complet du fichier de configuration.
+   	*/
+  	public static void [apply_methodGet('configuration')/](final URI [apply_parameterMethodClassicIn('config file path')/]) {
+
+    	[apply_methodDefault('load configuration')/]([apply_parameterMethodClassicIn('config file path')/].getPath());
+  	}
+
+
+  	/**
+   	* Chargement de la configuration pour l'application (option 2).
+   	*
+   	* @param [apply_parameterMethodClassicIn('application name')/] :
+   	* 				Le nom de la variable système pour récupérer le
+   	*               chemin du répertoire de stockage pour le(s) fichier(s) de configuration.
+   	*/
+  	public static void [apply_methodGet('configuration')/](final String [apply_parameterMethodClassicIn('application name')/]) {
+
+    	final String [apply_variableFinal('config file path')/] = System.getenv([apply_parameterMethodClassicIn('application name')/].toUpperCase()
+        	+ [apply_attributeFinalStatic('conf _filter _props _file')/]) + File.separator + "[getApplicationName()/]Application.properties";
+
+    	[apply_methodDefault('load configuration')/]([apply_variableFinal('config file path')/]);
+  	}
+
+  	/**
+   	* Récupération du mode de routage pour l'ensemble des ressources.
+  	*
+   	* @return Le mode de routage pour les ressources.
+   	*/
+  	public static [apply_classEnum('routing strategy')/] [apply_methodGet('routing strategy')/]() {
+
+    	return [apply_attributeStatic('routing strategy')/];
+  	}
+
+  	/**
+   	* Paramétrage de la stratégie de routage pour l'ensemble des ressources.
+   	*
+   	* @param [apply_parameterMethodClassicIn('routing strategy')/] :
+   	* 				La stratégie de routage pour le filtre de l'application.
+   	*/
+  	public static void [apply_methodSet('routing strategy')/](final [apply_classEnum('routing strategy')/] [apply_parameterMethodClassicIn('routing strategy')/]) {
+
+   		[buildRSFrontConfigClassName()/].[apply_attributeStatic('routing strategy')/] = [apply_parameterMethodClassicIn('routing strategy')/];
+  	}
+
+  	/**
+   	* Récupération du mode de fonctionnement pour l'ensemble des ressources.
+   	*
+   	* @return Le mode de fonctionnement pour les ressources.
+   	*/
+  	public static [apply_classEnum('operating mode')/] [apply_methodGet('operating mode')/]() {
+
+    	return [apply_attributeStatic('operating mode')/];
+  	}
+
+  	/**
+   	* Paramétrage du mode de fonctionnement pour l'ensemble des ressources.
+   	*
+   	* @param [apply_parameterMethodClassicIn('operating mode')/] :
+   	* 				Le mode de fonctionnement pour les ressources.
+   	*/
+  	public static void [apply_methodSet('operating mode')/](final [apply_classEnum('operating mode')/] [apply_parameterMethodClassicIn('operating mode')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('operating mode')/] = [apply_parameterMethodClassicIn('operating mode')/];
+  	}
+
+  	/**
+   	* Récupération de l'URL de base pour le serveur du fournisseur de ressources.
+   	*
+   	* @return L'URL de base pour le serveur du fournisseur de ressources.
+   	* @throws [buildRSFrontExceptionClassName()/] : L'URL de base ne peut pas être nulle.
+   	*/
+  	public static String [apply_methodGet('base url')/]() {
+
+    	if (null == [apply_attributeStatic('base url')/]) {
+      		throw new [buildRSFrontExceptionClassName()/](Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+          		"Aucune URL trouvée pour le serveur hébergeant les services REST !");
+		}
+
+    	return [apply_attributeStatic('base url')/];
+  	}
+
+  	/**
+   	* Paramétrage de l'URL pour le serveur hébergeant les ressources.
+   	*
+   	* @param [apply_parameterMethodClassicIn('base url')/] :
+   	* 					l'URL pour le serveur hébergeant les ressources.
+   	*/
+  	public static void [apply_methodSet('base url')/](final String [apply_parameterMethodClassicIn('base url')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('base url')/] = [apply_parameterMethodClassicIn('base url')/];
+  	}
+
+  	/**
+   	* Récupération de l'URL du proxy (si besoin).
+   	*
+   	* @return L'URL du proxy avant appel du serveur du fournisseur de ressources.
+   	*/
+  	public static String [apply_methodGet('proxy url')/]() {
+
+    	return [apply_attributeStatic('proxy url')/];
+  	}
+
+  	/**
+   	* Paramétrage de l'URL du proxy (si besoin).
+   	*
+   	* @param [apply_parameterMethodClassicIn('proxy url')/] :
+   	* 					L'URL du proxy avant appel du serveur hébergeant les ressources.
+   	*/
+  	public static void [apply_methodSet('proxy url')/](final String [apply_parameterMethodClassicIn('proxy url')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('proxy url')/] = [apply_parameterMethodClassicIn('proxy url')/];
+  	}
+
+  	/**
+   	* Récupération de l'utilisateur du proxy (si besoin).
+   	*
+   	* @return L'utilisateur pour le proxy.
+   	*/
+  	public static String [apply_methodGet('proxy user')/]() {
+
+    	return [apply_attributeStatic('proxy user')/];
+  	}
+
+  	/**
+   	* Paramétrage de l'utilisateur pour le proxy (si besoin).
+   	*
+   	* @param [apply_parameterMethodClassicIn('proxy user')/] :
+   	* 					L'utilisateur pour le proxy.
+   	*/
+  	public static void [apply_methodSet('proxy user')/](final String [apply_parameterMethodClassicIn('proxy user')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('proxy user')/] = [apply_parameterMethodClassicIn('proxy user')/];
+  	}
+
+  	/**
+   	* Récupération du mot de passe pour le proxy (si besoin).
+   	*
+   	* @return Le mot de passe pour le proxy.
+   	*/
+  	public static String [apply_methodGet('proxy passwd')/]() {
+
+    	return [apply_attributeStatic('proxy passwd')/];
+  	}
+
+  	/**
+   	* Paramétrage du mot de passe pour le proxy (si besoin).
+   	*
+   	* @param [apply_parameterMethodClassicIn('proxy passwd')/] :
+   	* 				 Le mot de passe pour le proxy.
+   	*/
+  	public static void [apply_methodSet('proxy passwd')/](final String [apply_parameterMethodClassicIn('proxy passwd')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('proxy passwd')/] = [apply_parameterMethodClassicIn('proxy passwd')/];
+  	}
+
+  	/**
+   	* Vérifie si l'application est située derrière la PES.
+   	*
+   	* @return True si le filtre doit être derrière la PES.
+   	*/
+  	public static boolean [apply_methodDefault('is pes headers required')/]() {
+
+     	return [apply_attributeStatic('routing strategy')/] ==  [apply_classEnum('routing strategy')/].[apply_attributeEnum('pem _gateway')/]
+              || [apply_attributeStatic('routing strategy')/] == [apply_classEnum('routing strategy')/].[apply_attributeEnum('papi _gateway')/];
+  	}
+
+  	/**
+   	* Récupération d'un paramètre en-tête pour la PES (DR).
+   	*
+   	* @return Le paramètre.
+   	*/
+  	public static String [apply_methodGet('pes application name')/]() {
+
+    	return [apply_attributeStatic('pes application name')/];
+  	}
+
+  	/**
+   	* Paramètrage pour la PES.
+	*
+   	* @param [apply_parameterMethodClassicIn('pes application name')/] : 
+	* 				Le paramètre.
+   	*/
+  	public static void [apply_methodSet('pes application name')/](final String [apply_parameterMethodClassicIn('pes application name')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes application name')/] = [apply_parameterMethodClassicIn('pes application name')/];
+  	}
+
+  	/**
+   	* Récupération d'un paramètre en-tête pour la PES (DR).
+   	*
+   	* @return Le paramètre.
+   	*/
+  	public static String [apply_methodGet('pes header secu')/]() {
+
+    	return [apply_attributeStatic('pes header secu')/];
+  	}
+
+  	/**
+   	* Paramètrage pour la PES (DR)
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header secu')/] :
+	* 				Le paramètre.
+   	*/
+  	public static void [apply_methodSet('pes header secu')/](final String [apply_parameterMethodClassicIn('pes header secu')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header secu')/] = [apply_parameterMethodClassicIn('pes header secu')/];
+  	}
+
+  	/**
+   	* Récupération d'un paramètre en-tête pour la PES (DR).
+   	*
+   	* @return Le paramètre.
+   	*/
+  	public static String [apply_methodGet('pes header mention')/]() {
+
+    	return [apply_attributeStatic('pes header mention')/];
+  	}
+
+  	/**
+   	* Paramètrage pour la PES (DR).
+	*
+  	* @param [apply_parameterMethodClassicIn('pes header mention')/] : 
+	* 				Le paramètre.
+   	*/
+  	public static void [apply_methodSet('pes header mention')/](final String [apply_parameterMethodClassicIn('pes header mention')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header mention')/] = [apply_parameterMethodClassicIn('pes header mention')/];
+  	} 
+
+  	/**
+   	* Récupération d'un paramètre en-tête pour la PES (DR).
+   	*
+   	* @return Le paramètre.
+   	*/
+  	public static String [apply_methodGet('pes header constraint')/]() {
+
+    	return [apply_attributeStatic('pes header constraint')/];
+  	}
+
+  	/**
+   	* Paramètrage pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header constraint')/] : 
+	* 				Le paramètre.
+   	*/
+  	public static void [apply_methodSet('pes header constraint')/](final String [apply_parameterMethodClassicIn('pes header constraint')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header constraint')/] = [apply_parameterMethodClassicIn('pes header constraint')/];
+  	}
+
+  	/**
+   	* Récupération d'une clé pour paramètre en-tête pour la PES (DR).
+   	*
+   	* @return La clé.
+   	*/
+  	public static String [apply_methodGet('pes header constraint key')/]() {
+
+    	return [apply_attributeStatic('pes header constraint key')/];
+  	}
+
+  	/**
+   	* Paramètrage de la clé pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header constraint key')/] : 
+	* 				La clé.
+   	*/
+  	public static void [apply_methodSet('pes header constraint key')/](final String [apply_parameterMethodClassicIn('pes header constraint key')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header constraint key')/] = [apply_parameterMethodClassicIn('pes header constraint key')/];
+  	}
+
+  	/**
+   	* Récupération d'une clé pour paramètre en-tête pour la PES (DR).
+   	*
+   	* @return La clé.
+   	*/
+  	public static String [apply_methodGet('pes header app key')/]() {
+
+    	return [apply_attributeStatic('pes application name key')/];
+  	}
+
+  	/**
+   	* Paramètrage de la clé pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header app key')/] : 
+	* 				La clé.
+   	*/
+  	public static void [apply_methodSet('pes header app key')/](final String [apply_parameterMethodClassicIn('pes application name key')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes application name key')/] = [apply_parameterMethodClassicIn('pes application name key')/];
+  	}
+
+  	/**
+   	* Récupération d'une clé pour paramètre en-tête pour la PES (DR).
+   	*
+   	* @return La clé.
+   	*/
+  	public static String [apply_methodGet('pes header secu key')/]() {
+
+    	return [apply_attributeStatic('pes header secu key')/];
+  	}
+
+  	/**
+   	* Paramètrage de la clé pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header secu key')/] : 
+	* 				La clé.
+   	*/
+  	public static void [apply_methodSet('pes header secu key')/](final String [apply_parameterMethodClassicIn('pes header secu key')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header secu key')/] = [apply_parameterMethodClassicIn('pes header secu key')/];
+  	}
+
+  	/**
+   	* Récupération d'une clé pour paramètre en-tête pour la PES (DR).
+   	*
+   	* @return La clé.
+   	*/
+  	public static String [apply_methodGet('pes header mention key')/]() {
+
+    	return [apply_attributeStatic('pes header mention key')/];
+  	}
+
+  	/**
+   	* Paramètrage de la clé pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header mention key')/] : 
+	* 				La clé.
+   	*/
+  	public static void [apply_methodSet('pes header mention key')/](final String [apply_parameterMethodClassicIn('pes header mention key')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header mention key')/] = [apply_parameterMethodClassicIn('pes header mention key')/];
+  	}
+
+  	/**
+   	* Récupération d'une clé pour paramètre en-tête pour la PES (DR).
+   	*
+   	* @return La clé.
+   	*/
+  	public static String [apply_methodGet('pes header dlpp key')/]() {
+
+    	return [apply_attributeStatic('pes header dlpp key')/];
+  	}
+
+  	/**
+   	* Paramètrage de la clé pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header dlpp key')/] : 
+	* 				La clé.
+   	*/
+  	public static void [apply_methodSet('pes header dlpp key')/](final String [apply_parameterMethodClassicIn('pes header dlpp key')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header dlpp key')/] = [apply_parameterMethodClassicIn('pes header dlpp key')/];
+  	}
+
+  	/**
+   	* Récupération d'une clé pour paramètre en-tête pour la PES (DR).
+   	*
+   	* @return La clé.
+   	*/
+  	public static String [apply_methodGet('pes header token key')/]() {
+
+    	return [apply_attributeStatic('pes header token key')/];
+  	}
+
+  	/**
+   	* Paramètrage de la clé pour la PES (DR).
+	*
+   	* @param [apply_parameterMethodClassicIn('pes header token key')/] : 
+	* 				La clé.
+   	*/
+  	public static void [apply_methodSet('pes header token key')/](final String [apply_parameterMethodClassicIn('pes header token key')/]) {
+
+    	[buildRSFrontConfigClassName()/].[apply_attributeStatic('pes header token key')/] = [apply_parameterMethodClassicIn('pes header token key')/];
+  	}
+
+	/**
+	* Récupération pour la sécurisation du transfert des données (SSL).
+	*
+	* @return true si l'API fonctionne sous SSL.
+	*/
+	public static boolean [apply_methodDefault('is socket secured')/]() {
+
+		return [apply_attributeStatic('socket secured')/];
+	}
+
+	/**
+	* Paramétrage pour la sécurisation du transfert des données (SSL).
+	*
+	* @param [apply_parameterMethodClassicIn('socket secured')/] : 
+	* 					true ou false selon que l'API fonctionne ou non en mode SSL.
+	*/
+	public static void [apply_methodSet('socket secured')/](final boolean [apply_parameterMethodClassicIn('socket secured')/]){
+
+		[buildRSFrontConfigClassName()/].[apply_attributeStatic('socket secured')/] = [apply_parameterMethodClassicIn('socket secured')/];
+	}
+
+	/**
+	* Récupération du timout de connexion pour le client.
+	*
+	* @return la valeur en millisecondes du timeout de connexion.
+	*/
+	public static int [apply_methodGet('connect timeout')/]() {
+	
+		if(0 == [apply_attributeStatic('connect timeout')/]) {
+			return 500; //TODO passer en constante.
+		}
+
+		return [apply_attributeStatic('connect timeout')/];
+	}
+
+	/**
+	* Paramétrage du timout de connexion pour le client.
+	*
+	* @param [apply_parameterMethodClassicIn('connect timeout')/] : 
+	* 					La valeur en millisecondes pour le timeout de connexion.
+	*/
+	public static void [apply_methodSet('connect timeout')/](final int [apply_parameterMethodClassicIn('connect timeout')/]){
+
+		[buildRSFrontConfigClassName()/].[apply_attributeStatic('connect timeout')/] = [apply_parameterMethodClassicIn('connect timeout')/];
+	}
+
+	/**
+	* Récupération du timeout en milliseconde pour la lecture des données pour le client.
+	*
+	* @return le timeout en millisecondes pour la lecture des données.
+	*/
+	public static int [apply_methodGet('read timeout')/]() {
+
+		if(0 == [apply_attributeStatic('read timeout')/]) {
+			return 2000; //TODO passer en constante.
+		}
+
+		return [apply_attributeStatic('read timeout')/];
+	}
+
+	/**
+	* Paramétrage du timeout en milliseconde pour la lecture des données pour le client.
+	*
+	* @param [apply_parameterMethodClassicIn('read timeout')/] : 
+	* 					La valeur en millisecondes pour le timeout de lecture des données.
+	*/
+	public static void [apply_methodSet('read timeout')/](final int [apply_parameterMethodClassicIn('read timeout')/]){
+
+		[buildRSFrontConfigClassName()/].[apply_attributeStatic('read timeout')/] = [apply_parameterMethodClassicIn('read timeout')/];
+	}
+
+	/**
+	* Récupération du nombre maximum de clients http dans le pool.
+	*
+	* @return le nombre maximum de clients http authorisés.
+	*/
+	public static int [apply_methodGet('max pool clients')/]() {
+
+		return [apply_attributeStatic('max pool clients')/];
+	}
+
+	/**
+	* Paramétrage du nombre maximum de clients http dans le pool.
+	*
+	* @param [apply_parameterMethodClassicIn('max pool clients')/] : 
+	* 					Le nombre maximum de clients http authorisés..
+	*/
+	public static void [apply_methodSet('max pool clients')/](final int [apply_parameterMethodClassicIn('max pool clients')/]){
+
+		[buildRSFrontConfigClassName()/].[apply_attributeStatic('max pool clients')/] = [apply_parameterMethodClassicIn('max pool clients')/];
+	}
+
+	/**
+	* Récupération de l'indicateur d'affichage Majuscule pourle debogage.
+	*
+	* @return true si le développeur demande l'affichage des attributs en majuscule.
+	*/
+	public static boolean [apply_methodDefault('is debug display attr upper')/]() {
+
+		return [apply_attributeStatic('debug display attr upper')/];
+	}
+
+	/**
+	* Paramétrage de  l'indicateur d'affichage Majuscule pourle debogage.
+	*
+	* @param [apply_parameterMethodClassicIn('debug display attr upper')/] : 
+	* 					true ou false selon affichage ou non des données en majuscule.
+	*/
+	public static void [apply_methodSet('debug display attr upper')/](final boolean [apply_parameterMethodClassicIn('debug display attr upper')/]){
+
+		[buildRSFrontConfigClassName()/].[apply_attributeStatic('debug display attr upper')/] = [apply_parameterMethodClassicIn('debug display attr upper')/];
+	}
+
+	/**
+	* Récupération de l'indicateur d'affichage des en-têtes pour le débogage.
+	*
+	* @return l'indicateur d'affichage des en-têtes pour le débogage.
+	*/
+	public static boolean [apply_methodDefault('is debug display headers')/]() {
+
+		return [apply_attributeStatic('debug display headers')/];
+	}
+
+	/**
+	* Paramétrage de l'indicateur d'affichage des en-têtes pour le débogage.
+	*
+	* @param [apply_parameterMethodClassicIn('debug display headers')/] : 
+	* 					true ou false selon affichage ou non des en-têtes.
+	*/
+	public static void [apply_methodSet('debug display headers')/](final boolean [apply_parameterMethodClassicIn('debug display headers')/]){
+
+		[buildRSFrontConfigClassName()/].[apply_attributeStatic('debug display headers')/] = [apply_parameterMethodClassicIn('debug display headers')/];
+	}
+
+	/**
+	* Indique si le mode opératoire est 'DEBUG'.
+	*
+	* @return TRUE si le mode opératoire est 'DEBUG'.
+	*/
+	public static boolean [apply_methodDefault('is debug mode')/](){
+
+		return [apply_attributeStatic('operating mode')/]  == [apply_classEnum('operating mode')/].[apply_attributeEnum('debug')/];
+	}
+
+	/**
+	* Indique si le mode opératoire est 'TEST'.
+	*
+	* @return TRUE si le mode opératoire est 'TEST'.
+	*/
+	public static boolean [apply_methodDefault('is test mode')/](){
+
+		return [apply_attributeStatic('operating mode')/]  == [apply_classEnum('operating mode')/].[apply_attributeEnum('test')/];
+	}
+
+	/**
+	* Indique si le mode opératoire est 'INTEG'.
+	*
+	* @return TRUE si le mode opératoire est 'INTEG'.
+	*/
+	public static boolean [apply_methodDefault('is integ mode')/](){
+
+		return [apply_attributeStatic('operating mode')/]  == [apply_classEnum('operating mode')/].[apply_attributeEnum('integ')/];
+	}
+
+	/**
+	* Indique si le mode opératoire est 'PROD'.
+	*
+	* @return TRUE si le mode opératoire est 'PROD'.
+	*/
+	public static boolean [apply_methodDefault('is prod mode')/](){
+
+		return [apply_attributeStatic('operating mode')/]  == [apply_classEnum('operating mode')/].[apply_attributeEnum('prod')/];
+	}
+
+  	/**
+   	* Chargement de la configuration pour l'application.
+   	*
+   	* @param [apply_parameterMethodClassicIn('properties file name')/] :
+   	* 				Le chemin complet du fichier de configuration.
+   	*/
+  	private static void [apply_methodDefault('load configuration')/](final String [apply_parameterMethodClassicIn('properties file name')/]) {
+
+		// Comme la classe est 'static', stoppe le chargement lors de multiples appels.
+    	if ([apply_attributeStatic('loaded')/]) {
+      		return;
+		}
+
+		// Affichage du chemin pour le fichier de configuration.
+		[apply_attributeFinalStatic('config log')/].info("Chargement de la configuration : " 
+				+ [apply_parameterMethodClassicIn('properties file name')/]);
+
+    	final Properties [apply_variableFinal('props')/] = new Properties();
+
+    	try (InputStream [apply_variableFinal('input stream')/] = new FileInputStream([apply_parameterMethodClassicIn('properties file name')/])){
+      		[apply_variableFinal('props')/].load([apply_variableFinal('input stream')/]);
+
+      		[apply_methodSet('pes application name')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _pes _header _app')/]));
+
+      		[apply_methodSet('pes header constraint')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _pes _header _constraint')/]));
+
+      		[apply_methodSet('pes header mention')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _pes _header _mention')/]));
+
+      		[apply_methodSet('pes header secu')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _pes _header _secu')/]));
+
+      		[apply_methodSet('pes header secu key')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('auth _header _pes _secu')/]));
+
+      		[apply_methodSet('pes header app key')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('auth _header _pes _app _name')/]));
+
+      		[apply_methodSet('pes header mention key')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('auth _header _pes _mention')/]));
+
+      		[apply_methodSet('pes header constraint key')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('auth _header _pes _constraint')/]));
+
+      		[apply_methodSet('pes header dlpp key')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('auth _header _pes _dlpp')/]));
+
+      		[apply_methodSet('pes header token key')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('auth _header _pes _token')/]));
+
+	  		[apply_methodSet('base url')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _base _url')/]));
+
+	  		[apply_methodSet('proxy url')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _proxy _url')/]));
+
+	  		[apply_methodSet('proxy user')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _proxy _user')/]));
+
+	  		[apply_methodSet('proxy passwd')/]([apply_variableFinal('props')/].getProperty(
+				[apply_attributeFinalStatic('conf _filter _proxy _passwd')/]));
+
+			[apply_methodSet('max pool clients')/](Integer.valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _client _pool _max')/])));
+
+			[apply_methodSet('connect timeout')/](Integer.valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _client _connect _timeout')/])));
+
+			[apply_methodSet('read timeout')/](Integer.valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _client _read _timeout')/])));
+			
+			[apply_methodSet('socket secured')/](Boolean.valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _filter _socket _secured')/])));
+
+			[apply_methodSet('debug display attr upper')/](Boolean.valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _debug _display _attr _upper')/])));
+
+			[apply_methodSet('debug display headers')/](Boolean.valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _debug _display _headers')/])));
+
+      		[apply_methodSet('operating mode')/]([apply_classEnum('operating mode')/].valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _filter _operating _mode')/])));
+
+      		[apply_methodSet('routing strategy')/]([apply_classEnum('routing strategy')/].valueOf(
+				[apply_variableFinal('props')/].getProperty([apply_attributeFinalStatic('conf _filter _routing _strategy')/])));
+
+			// Chargement de la configuration des jetons (si nécessaire).
+			[buildRSFrontTokensConfigClassName()/].[apply_methodDefault('load configuration')/]([apply_variableFinal('props')/]);
+
+      		[apply_attributeStatic('loaded')/] = Boolean.TRUE;
+
+    	} catch (final FileNotFoundException [apply_parameterMethodClassicIn('e')/]) {
+
+      		throw new [buildRSFrontExceptionClassName()/]( Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+          		"Impossible de trouver le fichier de configuration de l'application pour les services REST : "
+				+ [apply_parameterMethodClassicIn('properties file name')/]);
+
+    	} catch (final Exception [apply_parameterMethodClassicIn('e')/]) {
+
+      		throw new [buildRSFrontExceptionClassName()/]( Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+          		"Impossible de charger la configuration de l'application pour les services REST : " 
+				+ [apply_parameterMethodClassicIn('e')/].getMessage());
+    	}
+  	}
+
+  	/**
+   	* Enumération des différents modes de routage pour les clients (ressources).
+   	*
+   	* - PEM = Platforme d'Echange et de Médiation (API Management entre 2 applications sur Intradef).
+   	* - PAPI => PEM entre Intradef et Internet (2 PEM qui discutent entre elles).
+   	*
+   	* - API_GATEWAY : Le client est positionné derrière une passerelle (autre que PES).
+   	* - PEM_GATEWAY : Le client est positionné derrière la passerelle spécifique du PES.
+   	* - PAPI_GATEWAY : Le client est positionné derrière les passerelles spécifiques du PES.
+   	* - STANDALONE : Le client est en accès libre sur Internet.
+   	*/
+  	protected enum [apply_classEnum('routing strategy')/] {
+
+    	[apply_attributeEnum('api_gateway')/], [apply_attributeEnum('pem_gateway')/], [apply_attributeEnum('papi_gateway')/], [apply_attributeEnum('standalone')/]
+  	}
+
+  	/**
+   	* Enumération des différents modes de fonctionnement  pour les clients.
+   	*/
+  	protected enum [apply_classEnum('operating mode')/] {
+
+    	[apply_attributeEnum('debug')/], [apply_attributeEnum('test')/], [apply_attributeEnum('integ')/], [apply_attributeEnum('prod')/];
+  	}
+}
+[/template]
+
+
+[comment : **************************************************************/]
+[comment : Create the abstract main super-class for the front resources. /]
+[comment : **************************************************************/]
+[template public rsFrontResourceAbstract(any : OclAny)]
+[licence()/]
+package [buildPackageRsFront()/];
+// [protected ('for imports')]
+
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
+
+// [/protected]
+
+/**
+ * Classe abstraite d'assistance pour les ressources client.
+ *
+ * @author [getAuthorName()/].
+ */
+public abstract class [buildRSFrontResourcesAbstractClassName() /]
+{
+  /**
+   * Contient le fragment principal de l'URI (URL serveur + URI de ressource).
+   * On s'arrête donc au niveau de la méthode qui contient son annotation @PATH.
+   */
+  private final String [apply_attributeFinal('base uri')/];
+
+  /**
+   * Chargement de la configuration.
+   */
+  static {
+
+    //static configuration
+    //[protected (any.getUserCodeId('static configuration'))]
+
+    // Chargement de la configuration pour l'application.
+    [buildRSFrontConfigClassName()/].[apply_methodGet('configuration')/]("[getApplicationName().toUpper()/]");
+
+    // Paramétrage du mode opératoire (DEBUG / TEST /  etc...) pour l'application.
+    [buildRSFrontConfigClassName()/].[apply_methodSet('operating mode')/](
+			[buildRSFrontConfigClassName()/].[apply_classEnum('operating mode')/].[apply_attributeEnum('debug')/]);
+
+    //[/protected]
+  }
+
+  /**
+   * Constructeur.
+   *
+   * @param [apply_parameterMethodClassicIn('base uri')/] :
+   *				Le fragment de base pour permettre la construction de l'URI de la ressource.
+   */
+  protected [buildRSFrontResourcesAbstractClassName() /](final String [apply_parameterMethodClassicIn('base uri')/]) {
+
+    [getAffectationPrefix()/][apply_attributeFinal('base uri')/] = [apply_methodDefault('build target')/]([apply_parameterMethodClassicIn('base uri')/]);
+  }
+
+  /**
+   * Obtient le client REST et la "WebTarget" pour la ressource.
+   *
+   * @return La "WebTarget" de la ressource spécifique.
+   */
+  protected WebTarget [apply_methodDefault('target')/]() {
+
+    //for target
+    //[protected (any.getUserCodeId('for target'))]
+
+    return [buildRSClientFactoryClassName()/].[apply_methodGet('client')/]().target([apply_attributeFinal('base uri')/]);
+
+    //[/protected]
+  }
+
+  /**
+   * Ferme la réponse avant de lire les en-têtes.
+   * Cette méthode est spécifique pour les opérations de type "HEAD",
+   * elle permet de conserver le pattern "fluent" de l'API.
+   *
+   * @param [apply_parameterMethodClassicIn('response')/] :
+   * 					L'objet de réponse avec le code d'état.
+   * @return La réponse (fermée) mais toujours fonctionnelle pour lire les en-têtes.
+   */
+  protected Response [apply_methodDefault('close')/](final Response [apply_parameterMethodClassicIn('response')/]) {
+
+    [apply_parameterMethodClassicIn('response')/].close();
+    return [apply_parameterMethodClassicIn('response')/];
+  }
+
+  /**
+   * Création de l'URI de base pour la ressource.
+   * (Jusqu'à l'URI de la méthode : ex : https://www.server.com/ws/resource/..)
+   *
+   * @param [apply_parameterMethodClassicIn('target')/] :
+   * 				Un fragment d'URI pour la ressource spécifique.
+   * @return l'URI complete (base) pour la ressource.
+   */
+  private String [apply_methodDefault('build target')/](final String [apply_parameterMethodClassicIn('target')/]){
+
+    //for build target base uri
+    //[protected (any.getUserCodeId('for build target base uri'))]
+
+    StringBuffer [apply_variableDefault('sbuff base uri')/] = new StringBuffer();
+    [apply_variableDefault('sbuff base uri')/].append([buildRSFrontConfigClassName()/].[apply_methodGet('base url')/]());
+
+    if([apply_variableDefault('sbuff base uri')/].length() == 0) {
+      [apply_variableDefault('sbuff base uri')/].append("");
+    }
+
+    [apply_variableDefault('sbuff base uri')/].append([apply_parameterMethodClassicIn('target')/]);
+    String [apply_variableDefault('base uri')/] = [apply_variableDefault('sbuff base uri')/].toString();
+    return [apply_variableDefault('base uri')/].replaceAll("(?<!(http:|https:))//", "/");
+
+    //[/protected]
+  }
+}
+[/template]

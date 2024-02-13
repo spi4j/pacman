@@ -1,0 +1,69 @@
+package fr.appwhite1.client.ui.swing; // NOPMD
+
+// Start of user code for imports
+
+import java.lang.reflect.Constructor;
+
+import fr.appwhite1.client.ui.annuaire.DetailPersonnePresenter;
+import fr.appwhite1.client.ui.swing.annuaire.DetailPersonneViewSwing;
+import fr.appwhite1.client.ui.annuaire.ListePersonnesPresenter;
+import fr.appwhite1.client.ui.swing.annuaire.ListePersonnesViewSwing;
+import fr.appwhite1.client.ui.LoginPresenter;
+import fr.appwhite1.client.ui.swing.LoginViewSwing;
+import fr.appwhite1.client.ui.MainPresenter;
+import fr.appwhite1.client.ui.swing.MainViewSwing;
+
+import fr.spi4j.exception.Spi4jRuntimeException;
+import fr.spi4j.ui.mvp.Presenter_Abs;
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.mvp.rda.RichViewsAssociation;
+
+// End of user code
+
+/**
+ * Association des vues pour SWING.
+ * @author Pacman
+ */
+public class SwingViews extends RichViewsAssociation
+{
+   /**
+    * Constructeur.
+    */
+   // CHECKSTYLE:OFF
+   public SwingViews ()
+   {
+      // CHECKSTYLE:ON
+      super();
+      addAssociation(DetailPersonnePresenter.class, DetailPersonneViewSwing.class);
+      addAssociation(ListePersonnesPresenter.class, ListePersonnesViewSwing.class);
+      addAssociation(LoginPresenter.class, LoginViewSwing.class);
+      addAssociation(MainPresenter.class, MainViewSwing.class);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public <TypeView extends View_Itf> TypeView getViewForPresenter (
+      final Presenter_Abs<TypeView, ?> p_presenter)
+   {
+      final Class<? extends View_Itf> v_viewClass = getAssociation((Class<? extends Presenter_Abs<? extends View_Itf, ?>>) p_presenter
+         .getClass());
+
+      try
+      {
+         final Constructor<? extends View_Itf> v_viewConstructor = v_viewClass
+            .getConstructor(p_presenter.getClass());
+         return (TypeView) v_viewConstructor.newInstance(p_presenter);
+      }
+      catch (final Exception v_e)
+      {
+         throw new Spi4jRuntimeException(v_e, "La vue Swing "
+            + v_viewClass.getSimpleName()
+            + " devrait avoir un constructeur avec un paramètre : "
+            + p_presenter.getClass().getSimpleName(),
+            "Ajouter un constructeur avec un paramètre : "
+            + p_presenter.getClass().getSimpleName()
+            + " dans la vue Swing "
+            + v_viewClass.getSimpleName());
+      }
+   }
+}

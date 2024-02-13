@@ -1,0 +1,21 @@
+[comment encoding = UTF-8 /]
+[module genGwtModuleCommons('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                            'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::gwt::resources::gwtModuleCommons /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genGwtModuleCommons(n : Namespace)]
+[file (filename(getClientGwtResourcesDir(), getApplicationPackage(), filename()), false, 'UTF-8')]
+[gwtModuleCommons(n)/]
+[/file]
+[/template]
+
+[query private filename(any : OclAny) : String =
+getApplicationNameUpperFirst() + '_commons.gwt.xml'
+/]

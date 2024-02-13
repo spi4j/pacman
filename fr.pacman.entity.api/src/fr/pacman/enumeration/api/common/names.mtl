@@ -1,0 +1,6 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[template public nameSimpleEnum(e : Enumeration) post (trim())]
+[e.name.toUpperFirst()/]
+[/template]

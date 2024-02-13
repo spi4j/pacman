@@ -1,0 +1,107 @@
+[comment encoding = UTF-8 /]
+[module jsf-commons('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+
+
+[query public getRootBean(any : OclAny) : ViewContainer =
+    if (hasRootBean(any)) then
+        any.eContainer(CinematicRoot).eAllContents(ViewContainer)
+            ->select(view : ViewContainer | not view.widget.oclIsUndefined() and 'MainPanel'.equalsIgnoreCase(view.widget.name))->first()
+    else
+        null
+    endif
+/]
+
+[query public hasRootBean(any : OclAny) : Boolean =
+    not any.eContainer(CinematicRoot).eAllContents(ViewContainer)
+        ->select(view : ViewContainer | not view.widget.oclIsUndefined() and 'MainPanel'.equalsIgnoreCase(view.widget.name))->isEmpty()
+/]
+
+[query public flowHasMainPanel(flow : Flow) : Boolean =
+    flow.states->filter(ViewState)
+        ->exists(viewState : ViewState | viewState.viewContainers
+            ->exists(view : ViewContainer | not view.widget.oclIsUndefined() and 'MainPanel'.equalsIgnoreCase(view.widget.name)))
+/]
+
+[query public getViewEvents(event : Event) : Set(ViewEvent) =
+    if (event.oclIsTypeOf(ViewEvent)) then
+        Set{event}
+    else
+        if (event.oclIsTypeOf(FlowEvent)) then
+            event.oclAsType(FlowEvent).binds.getViewEvents()
+        else
+            Set{}
+        endif
+    endif
+/]
+
+[template public genFullQualifiedFileName(aFS : FlowState)]
+//TODO handle [aFS.eClass().name/]
+[/template]
+
+[**
+ * The documentation of the template genFullQualifiedFileName.
+ * @param aViewState
+ */]
+[template public genFullQualifiedFileName(aViewState : ViewState)]
+[getProperty('src.folder.pages')/]/[aViewState.eContainer(CinematicRoot).name/]/[aViewState.ancestors(Package)->reverse().name->sep('/')/][if (aViewState.ancestors(Package)->notEmpty())]/[/if][aViewState.eContainer(Flow).name/]/[aViewState.name/].html
+[/template]
+
+[**
+ * The documentation of the template genFullQualifiedFileName.
+ * @param aViewState
+ * @param aEvent
+ */]
+[template public genFullQualifiedFileName(aViewState : ViewState, aEvent : Event)]
+[getProperty('src.folder.pages')/]/[aViewState.eContainer(CinematicRoot).name/]/[aViewState.ancestors(Package)->reverse().name->sep('/')/][if (aViewState.ancestors(Package)->notEmpty())]/[/if][aViewState.eContainer(Flow).name/]/MultipleTransitions/[aViewState.name/][aEvent.name/].html
+[/template]
+
+[**
+ * The documentation of the template genFullQualifiedFileName.
+ * @param aViewState
+ */]
+[template public genFullQualifiedFileName(aActionState : ActionState)]
+[getProperty('src.folder.pages')/]/[aActionState.eContainer(CinematicRoot).name/]/[aActionState.ancestors(Package)->reverse().name->sep('/')/][if (aActionState.ancestors(Package)->notEmpty())]/[/if][aActionState.eContainer(Flow).name/]/ActionStates/[aActionState.name/].html
+[/template]
+
+[**
+ * The documentation of the template genRelativeName.
+ * @param aViewState
+ */]
+[template public getRootContainerPath(aFS : FlowState)]
+//TODO handle [aFS.eClass().name/]
+[/template]
+
+[template public getRootContainerPath(aViewState : ViewState)]
+['../../' + aViewState.genPackageRelativePath() + '../'/]
+[/template]
+
+[template public getRootContainerPath(aViewState : ViewState, aEvent : Event)]
+['../../' + aViewState.genPackageRelativePath() + '../../'/]
+[/template]
+
+[template public getRootContainerPath(aActionState : ActionState)]
+['../../' + aActionState.genPackageRelativePath() + '../../'/]
+[/template]
+
+[template public genPackageRelativePath(aNFS : NamedFlowState)]
+[for (it : Package | aNFS.ancestors(Package))]../[/for]
+[/template]
+
+[template public getLabel(anAVE : AbstractViewElement) post(trim())]
+[if (not(anAVE.label.oclIsUndefined()) and anAVE.label.size() > 0)][anAVE.label/][else][anAVE.name/][/if]
+[/template]
+
+[template public getName(aFS : FlowState) post(trim())]
+//TODO handle [aFS.eClass().name/]
+[/template]
+
+[template public getName(aViewState : ViewState) post(trim())]
+[aViewState.name/]
+[/template]
+
+[template public getName(aActionState : ActionState) post(trim())]
+[aActionState.name/]
+[/template]
+
+

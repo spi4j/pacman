@@ -1,0 +1,61 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/soa/4.0.0',
+			    'http://www.obeonetwork.org/dsl/entity/3.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::utils /]
+
+[comment : /]
+[query public buildPackageWsApiDto(d : DTO) : String =
+    buildPackageWs() + '.' + getPackageApi() + categoryHierarchy(d)
+/]
+
+[comment : /]
+[query public buildPackageWsApiEnum(e : Enumeration) : String =
+    buildPackageWs() + '.' + getPackageApi() + categoryHierarchy(e)
+/]
+
+[comment : /]
+[query public buildPackageBusinessApiDto(d : DTO) : String =
+    buildPackageBusinessApi(d) + categoryHierarchy(d)
+/]
+
+[comment : /]
+[query public getNamespaceXto(d : DTO) : String =
+    invoke(
+        'fr.pacman.commons.services.StringUtils',
+        'reverse(java.lang.String, java.lang.String, java.lang.String)',
+        Sequence{getApplicationPackage() + categoryHierarchy(d), '\\.', '.'})
+/]
+
+
+[comment :  Try to mutualize ? /]
+[query public categoryHierarchy(e : Entity) : String =
+    if (e.ancestors(Namespace)->size() < 1) then
+        ''
+    else        
+		'.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+
+/]
+
+[comment : Try to mutualize ? /]
+[query public categoryHierarchy(d : DTO) : String =
+    if (d.ancestors(Namespace)->size() < 1) then
+        ''
+    else        
+		'.' + d.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+
+/]
+
+[comment :  Try to mutualize ? /]
+[query public categoryHierarchy(e : Enumeration) : String =
+    if (e.ancestors(Namespace)->size() < 1) then
+        ''
+    else        
+		'.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+
+/]

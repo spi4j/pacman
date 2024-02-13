@@ -1,0 +1,200 @@
+[comment encoding = UTF-8 /]
+[module generateServerSoa('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                          'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::commons::soa::common::services /]
+[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::soa::files::genRSResources /]
+
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::files::genMatch/]
+[import fr::pacman::soa::files::genMatchItf/]
+[import fr::pacman::soa::files::genService/]
+[import fr::pacman::soa::files::genServiceRequirements/]
+[import fr::pacman::soa::files::genServiceTest/]
+[import fr::pacman::soa::files::genServiceCXF/]
+[import fr::pacman::soa::files::genServiceRS/]
+[import fr::pacman::soa::files::genUserMatching/]
+[import fr::pacman::soa::files::genAppliMatchAbs/]
+[import fr::pacman::soa::files::genMapperItf/]
+[import fr::pacman::soa::files::genMapper/]
+[import fr::pacman::soa::files::genUserMapper/]
+[import fr::pacman::soa::files::genLog4j/]
+[import fr::pacman::soa::files::genWebAppSecurity/]
+[import fr::pacman::soa::files::genWebappRemotingServlet/]
+[import fr::pacman::soa::files::genCXFServlet/]
+[import fr::pacman::soa::files::genRSResources/]
+
+
+[comment : ****************************************************************/]
+[comment : En OCL on a toujours pris une seule lettre pour les parametres. /]
+[comment : pour eviter de confondre avec les services, System = m.         /]
+[comment : ****************************************************************/]
+[comment : Generation complete a partir du systeme.                        /]
+[comment : ****************************************************************/]
+[template public GenerateServerSystem(m : System)]
+[comment @main /]
+
+	[comment : Generation du fichier log4j. /]
+    [m.genLog4j()/]
+	[comment : Generation des matchers. /]
+	[if usePersistence()][m.genUserMatching()/][/if]
+    [if hasAutomaticColumns()][m.genAppliMatchAbs()/][/if]
+	[comment : Generation des mappers. /]
+	[m.genMappers()/]
+    [comment : Generation des implementations de service. /]
+    [m.genServicesImpls()/]
+	[comment : Generation des services DTO (crud) si option crud active. /]
+	[m.genDtos()/]
+
+	[comment : Generation du configurateur pour les jetons (REST). /] 
+	[if m.useWS()]
+		[m.genRsTokensConfigurator()/]
+		[m.genRsTokensFileConfig()/]
+		[m.genRsTechnicalTokensResources()/]
+		[comment : m.genRsAuthResources()/]
+		[m.genRsOAuth2Resources()/]
+		[m.genRsWebXmlServletMappingFragment()/]
+	[/if]
+	[comment : Generation du servlet CXF. /]
+	[if m.useWS()][m.genCXFServlet()/][/if]
+	[comment : Creation des fabriques ou de l'injection pour les services REST. /]
+	[if isFacadeHk2Injection()][m.genRSApplicationConfig()/][/if]
+	[if isFacadeFactory()][m.genRSServicesFacadeFactory()/][/if]
+    [comment : Si client SWING, génération de WebappRemotingServlet /]
+    [if clientNeedRemotingServlet()][genWebappRemotingServlet()/][/if]
+	[comment : Generation de la couche de securité si appli web et schemas de securite detectes. /]
+	[if m.useWebAppSecuritySchemes()][m.genWebAppSecurityHelper()/][/if]
+	[comment : Generation des autres ressources. /]
+	[m.genAllOtherSelectedResources()/]
+
+[/template]
+
+[comment : Generation du fichier log4j dans les ressources. /]
+[comment : On remplace le  log4j existant (entity) par une version SOA. /]
+[template private genLog4j (m : System)]
+
+[if (useLog4J())][m.genLog4j('server')/][/if]
+
+[/template]
+
+
+[comment : Generation des mappers. /]
+[template private genMappers (m : System)]
+
+    [if clientNeedXto() or m.isWSCrudApplication()]
+        [genMappers(m.eAllContents(DTO)->asSet()->sortedBy(name), m)/]
+    [else]
+        [if useWS()][genMappers(xtoAGenerer(m), m)/][/if]
+    [/if]
+
+[/template]
+
+
+[comment : Generation des mappers. /]
+[template private genMappers(xtos : Set(DTO), n : Namespace)]
+
+[if not xtos->isEmpty()]
+    [genUserMapper(xtos, n)/]
+    [for (d : DTO | xtos)]
+		[if not d.isParent()][genMapperItf(d) /][genMapper(d) /][/if]
+    [/for]
+[/if]
+
+[/template]
+
+[comment : Generation des services crud pour l'ensemble des DTOs (si option active). /]
+[comment : Le nom de la methode n'est pas bon, mais il est conservé pour faire le pendant /]
+[comment : avec ce qui existe deja au niveau de la generation du projet 'common'. / ]
+[template private genDtos (m : System)]
+
+[if m.isWSCrudApplication() ]
+	[for (d : DTO | m.eAllContents(DTO))]
+		[if not d.isNotPersistent() and not d.isParent()]
+			[genServiceRS(null, d)/]
+			[genRSResource(null, d) /]
+		[/if]
+	[/for]
+[/if]
+
+[/template]
+
+
+[comment : Generation des implementations pour les services. /]
+[template private genServicesImpls (m : System)]
+
+[for (s : Service | m.eAllContents(Service))][s.genServiceImplementations()/][/for]
+
+[/template]
+
+
+[comment : Generation des implementations pour un seul service. /]
+[template private genServiceImplementations (s : Service)]
+
+[if s.serviceSeul()][s.genService()/][s.genServiceTest()/]
+[if useServiceRequirements()][s.genServiceRequirements()/][/if][/if]
+[if s.hasCXFOperations()][s.genServiceCXF()/][/if]
+[if s.hasRSOperations()][s.genServiceRS(null)/]
+[s.genRSResource(null)/][/if]
+
+[/template]
+
+
+[comment : Generation des autres ressources (matcher, requirement, etc... ). /]
+[template private genAllOtherSelectedResources (m : System)]
+	
+[for (d : DTO | m.listeDtos())][d.genAllOtherSelectedResources()/][/for]
+
+[/template]
+
+
+[comment : Generation des autres ressources pour un DTO (matcher, requirement, etc... ). /]
+[template private genAllOtherSelectedResources (d : DTO)]
+	
+[if not d.isNotPersistent() and not d.isParent()][d.genMatch()/][d.genMatchItf()/][/if]
+[if (not d.isNotPersistent() and not d.isParent()) or d.serviceFromDto() <> null]
+	[d.serviceFromDto().genService(d)/]
+	[if useServiceRequirements()][d.serviceFromDto().genServiceRequirements(d)/][/if]
+    [d.serviceFromDto().genServiceTest(d)/]
+[/if]
+
+[/template]
+
+
+[comment : ****************************/]
+[comment : Les generations partielles. /]
+[comment : ****************************/]
+
+[comment : Generation pour un service specifique. /]
+[template public GenerateServerService(s : Service)]
+[comment @main /]
+
+[s.genServiceImplementations()/]
+[if s.hasCXFOperations()][s.genCXFServlet()/][/if] 
+
+[/template]
+
+
+[comment :  Generation pour un composant. /]
+[template public GenerateServerComponent(c : Component)]
+[comment @main /]
+
+[for (s : Service | c.eAllContents(Service))][s.genServiceImplementations()/][/for]
+[if c.hasCXFOperations()][c.genCXFServlet()/][/if]
+
+[/template]
+
+[comment : Generation a partir d'un DTO. /]
+[template public GenerateServerDto(d: DTO)]
+[comment @main /]
+
+[d.genAllOtherSelectedResources()/]
+
+[/template]
+
+
+
+

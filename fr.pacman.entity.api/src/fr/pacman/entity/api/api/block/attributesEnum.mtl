@@ -1,0 +1,227 @@
+[comment encoding = UTF-8 /]
+[module attributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                       'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+
+[template public enumStruct (p : Property, e : Entity)]
+XXX attributesEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX
+[/template]
+
+[template public enumStruct (a : Attribute, e : Entity)]
+   /** [nameBaseAttribute(a)/]. */
+   [apply_attributeEnum(a.name.normalize())/]("[apply_attributeEnum(a.name.normalize())/]", "[a.description.escape()/]", [a.type.genTypeName()/].class, [mandatory(a)/], [if hasSize(a.metadatas)][size(a.metadatas)/][else]-1[/if])
+[/template]
+
+[template public enumStruct (r : Reference, e : Entity)]
+[if isReferenceNoStar(e, r)]
+    [if not isComputed(r)]
+   [r.enumStructId()/],
+	[/if]
+   [r.enumStructReference()/][elseif isReferenceStar(e, r)]
+   [r.enumStructTab()/][elseif isReferencingStar(e, r)]
+   [r.enumStructInverseId()/][/if]
+[/template]
+
+[template public enumStructId (r : Reference)]
+/** [nameBaseReference(r)/][namePK_ID()/]. */
+[nameBaseReference(r)/][namePK_ID()/]("[nameBaseReference(r)/][namePK_ID()/]", "[r.description.escape()/]", [genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
+[/template]
+
+[template public enumStructReference (r : Reference)]
+/** [nameBaseReference(r)/]. */
+[nameBaseReference(r)/]("[nameBaseReference(r)/]", "[r.description.escape()/]", [r.referencedType.oclAsType(Entity).buildEntityName()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
+[/template]
+
+[template public enumStructTab (r : Reference)]
+/** [nameBaseReferenceTab(r)/]. */
+[nameBaseReferenceTab(r)/]("[nameBaseReferenceTab(r)/]", "[r.description.escape()/]", List.class, false, [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
+[/template]
+
+[template public enumStructInverseId (r : Reference)]
+/** [nameBaseReferenceInverse(r)/][namePK_ID()/]. */
+[nameBaseReferenceInverse(r)/][namePK_ID()/]("[nameBaseReferenceInverse(r)/][namePK_ID()/]", "[r.description.escape()/]", [genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
+[/template]
+
+[template public attributesEnum(e : Entity)]
+[licence()/]
+package [buildPackageBusinessApiEntity(e)/];
+// [protected ('for imports')]
+[let attributs : OrderedSet(Attribute) =  e.attributesNoPk()/]
+
+[comment : Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+/**
+ * L'énumération définissant les informations de chaque attribut pour le type '[e.buildEntityName()/]'.
+ * @author [getAuthorName()/]
+ */
+public enum [e.buildAttributesEnumName()/] implements [getClassNameForAttributesNames_Itf()/]
+{
+
+   /** [nameENUM_PK_ID()/]. */
+[let eAttributes : OrderedSet(Property) = e.navigableProperties()]
+[if not eAttributes->isEmpty()]
+[/if]
+   [nameENUM_PK_ID()/]("[nameENUM_PK_ID()/]", "id", [genPkType()/].class, true, -1)[if not eAttributes->isEmpty()],
+[eAttributes.enumStruct(e)->sep(',\r\n')/][/if];
+[/let]
+
+   /** Le nom de l'attribut. */
+   private final String [apply_attributeFinal('name')/];
+
+   /** La description de l'attribut. */
+   private final String [apply_attributeFinal('description')/];
+
+   /** Le type associé à l'attribut. */
+   private final Class<?> [apply_attributeFinal('type')/];
+
+   /** Est-ce que la saisie de la valeur est obligatoire pour cet attribut ? */
+   private final boolean [apply_attributeFinal('mandatory')/];
+
+   /** La taille de l'attribut. */
+   private final int [apply_attributeFinal('size')/];
+
+   /** La méthode du getter. */
+   private transient Method [apply_attributeDefault('getter method')/];
+
+   /** La méthode du setter. */
+   private transient Method [apply_attributeDefault('setter method')/];
+
+   /**
+    * Constructeur.
+    * @param [apply_parameterMethodClassicIn('name')/]
+    *           (In)(*) Le nom de l'attribut.
+    * @param [apply_parameterMethodClassicIn('description')/]
+    *           (In)(*) La description de l'attribut.
+    * @param [apply_parameterMethodObjectIn('class type')/]
+    *           (In)(*) Le type de l'attribut.
+    * @param [apply_parameterMethodClassicIn('mandatory')/]
+    *           (In)(*) Est-ce que la saisie de la valeur est obligatoire pour cette colonne?
+    * @param [apply_parameterMethodClassicIn('size')/]
+    *           (In)(*) La taille de la colonne
+    */
+   private [e.buildAttributesEnumName()/] (final String [apply_parameterMethodClassicIn('name')/], final String [apply_parameterMethodClassicIn('description')/], final Class<?> [apply_parameterMethodObjectIn('class type')/], final boolean [apply_parameterMethodClassicIn('mandatory')/], final int [apply_parameterMethodClassicIn('size')/])
+   {
+      [getAffectationPrefix()/][apply_attributeFinal('name')/] = [apply_parameterMethodClassicIn('name')/];
+      [getAffectationPrefix()/][apply_attributeFinal('description')/] = [apply_parameterMethodClassicIn('description')/];
+      [getAffectationPrefix()/][apply_attributeFinal('type')/] = [apply_parameterMethodObjectIn('class type')/];
+      [getAffectationPrefix()/][apply_attributeFinal('mandatory')/] = [apply_parameterMethodClassicIn('mandatory')/];
+      [getAffectationPrefix()/][apply_attributeFinal('size')/] = [apply_parameterMethodClassicIn('size')/];
+   }
+
+   @Override
+   public String getName ()
+   {
+      return [apply_attributeFinal('name')/];
+   }
+
+   @Override
+   public String getDescription ()
+   {
+      return [apply_attributeFinal('description')/];
+   }
+
+   @Override
+   public Class<?> getType ()
+   {
+      return [apply_attributeFinal('type')/];
+   }
+
+   @Override
+   public boolean isMandatory ()
+   {
+      return [apply_attributeFinal('mandatory')/];
+   }
+
+   @Override
+   public int getSize ()
+   {
+      return [apply_attributeFinal('size')/];
+   }
+
+   @Override
+   public Method getGetterMethod ()
+   {
+      if ([apply_attributeDefault('getter method')/] == null)
+      {
+         [apply_attributeDefault('getter method')/] = EntityAttributeHelper.getInstance().getGetterMethodForAttribute([e.buildEntityName()/].class, getName());
+      }
+      return [apply_attributeDefault('getter method')/];
+   }
+
+   @Override
+   public Method getSetterMethod ()
+   {
+      if ([apply_attributeDefault('setter method')/] == null)
+      {
+         [apply_attributeDefault('setter method')/] = EntityAttributeHelper.getInstance().getSetterMethodForAttribute([e.buildEntityName()/].class, getName(), getType());
+      }
+      return [apply_attributeDefault('setter method')/];
+   }
+
+   @Override
+   public String toString ()
+   {
+      return [apply_attributeFinal('description')/];
+   }
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity) post(trim())]
+[e.initImports() /]
+[e.addImport('java.lang.reflect.Method')/]
+[e.addImport(buildPackagePersistenceImplementationJdbcEntity(e) + '.' + buildEntityImplClassName(e))/]
+[e.addImport(getImportForAttributesNames_Itf())/];
+[e.addImport('fr.spi4j.persistence.entity.EntityAttributeHelper')/];
+
+[comment : List references for relational enties. /]
+[for (r : Reference | e.referencesNoStar())]
+	 [e.addImport(buildPackagePersistenceImplementationJdbcEntity(r.containingType.oclAsType(Entity)) + '.' + buildEntityImplClassName(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List references for relational enties. /]
+[for (r : Reference | e.referencingStar())]
+	[e.addImport(buildPackagePersistenceImplementationJdbcEntity(r.containingType.oclAsType(Entity)) + '.' + buildEntityImplClassName(r.containingType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List enumerations. /]
+[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
+	[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+
+[e.flushImports()/]
+[/template]
+
+[comment] Détermine si un attribut ou une référence possède une méta-donnée Annotation de titre "COMPUTED". [/comment]
+[query public isComputed(p : Property) : Boolean =
+    not p.metadatas.oclIsUndefined()
+    and p.metadatas.metadatas->
+        exists(m : MetaData |
+            not m.oclIsUndefined()
+            and not m.oclAsType(Annotation).title.oclIsUndefined()
+            and m.oclAsType(Annotation).title.equalsIgnoreCase('COMPUTED'))
+/]

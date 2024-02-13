@@ -1,0 +1,17 @@
+[comment encoding = UTF-8 /]
+[module genParamPersistence('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::jdbc::implementation::paramPersistence /]
+[import fr::pacman::commons::common::classes /]
+
+[template public genParamPersistence(r : Root)]
+[file (filename(getServerSourceDir(), buildPackagePersistence(), buildParamPersistenceClassName() + '.java'), false, 'UTF-8')]
+[r.paramPersistence()/]
+[/file]
+
+[file (filename(getServerResourcesDir(),'' , 'context.xml'), false, 'UTF-8')]
+[r.contextDatasource()/]
+[/file]
+[/template]

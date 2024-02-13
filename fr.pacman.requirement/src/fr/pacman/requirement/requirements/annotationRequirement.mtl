@@ -1,0 +1,42 @@
+[comment encoding = UTF-8 /]
+[module annotationRequirement('http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[template public annotationRequirement(repo : Repository)]
+[annotationTemplateGenerique(repo, buildPackageRequirement(), 'Annotation des exigences.', apply_classAnnotation('requirement'), apply_classEnum('requirement'))/]
+[/template]
+
+[template public annotationRequirement(cat : Category)]
+[annotationTemplateGenerique(cat, buildPackageRequirementForCategory(cat), 'Annotation des exigences : ' + cat.name + '.', apply_classAnnotation('requirement ' + cat.id), apply_classEnum('requirement ' + cat.id))/]
+[/template]
+
+[template private annotationTemplateGenerique(void : OclAny, pkg : String, javadoc : String, nomAnnotation : String, nomEnumeration : String)]
+[licence()/]
+package [pkg/];
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * [javadoc/]
+ * @author [getAuthorName()/]
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface [nomAnnotation/]
+{
+   /**
+    * La liste des exigences.
+    */
+   [nomEnumeration/]['[]'/] [apply_methodDefault('value')/]();
+}
+[/template]

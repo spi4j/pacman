@@ -1,0 +1,490 @@
+[comment encoding = UTF-8 /]
+[module ClientJsp('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::configuration::common::webXml/]
+[import fr::pacman::configuration::common::pomXml/]
+[import fr::pacman::configuration::common::properties /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+[template public clientJspPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>[getApplicationPackage()/]</groupId>
+        <artifactId>[getApplicationName()/]</artifactId>
+        <version>[getVersion()/]</version>
+    </parent>
+    <artifactId>[getClientJspProjectName()/]</artifactId>
+    <packaging>war</packaging>
+    <name>[getApplicationName()/] - Client JSP</name>
+
+	<!--
+	// [protected ('for code')]
+	-->
+		
+	<!--
+	// [/protected]
+	-->
+
+    <dependencies>
+		<dependency>
+			<groupId>fr.spi4j</groupId>
+			<artifactId>spi4j-jsp</artifactId>
+			<version>${spi4j.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>[getApplicationPackage()/]</groupId>
+            <artifactId>[getServerProjectName()/]</artifactId>
+            <version>${project.version}</version>
+			[if useWS() and not hasHttpEmbeddedServer()]
+            <!-- Ce client leger n'a pas besoin des web services -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-transports-http</artifactId>
+                </exclusion>
+            </exclusions>
+			[/if]
+        </dependency>
+        <dependency>
+            <groupId>[getApplicationPackage()/]</groupId>
+            <artifactId>[getCommonProjectName()/]</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		[if hasAdditionnalLibraries()]
+		[for (prop : String | getAdditionnalLibraries())]
+		<!-- Librairie additionnelle utilisateur. -->
+		<dependency>
+			<groupId>[getLibraryPackage(prop)/]</groupId>
+			<artifactId>[getLibraryName(prop)/]-commons</artifactId>
+			<version>${user-library-[getLibraryName(prop)/].version}</version>
+		</dependency>
+		<dependency>
+			<groupId>[getLibraryPackage(prop)/]</groupId>
+			<artifactId>[getLibraryName(prop)/]-server</artifactId>
+			<version>${user-library-[getLibraryName(prop)/].version}</version>
+		</dependency>
+		[/for][/if]
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>${jakarta-servlet-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		[if not hasHttpEmbeddedServer()]
+		<dependency>
+        	<groupId>jakarta.servlet.jsp.jstl</groupId>
+        	<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        	<version>${jstl-api.version}</version>
+    	</dependency>
+		<dependency>
+    		<groupId>org.glassfish.web</groupId>
+    		<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+    		<version>${jstl.version}</version>
+		</dependency> 
+		[/if]
+		<dependency>
+			<groupId>jakarta.transaction</groupId>
+			<artifactId>jakarta.transaction-api</artifactId>
+			<version>${jakarta-transaction-api.version}</version>
+		</dependency>
+		[if useEjb()]
+        <dependency>
+            <groupId>javax.ejb</groupId>
+            <artifactId>ejb-api</artifactId>
+            <version>${ejb-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+		[/if]
+        <dependency>
+            <!-- activation du monitoring -->
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+            <version>${javamelody-core.version}</version>
+        </dependency>
+
+        <!-- Dependance iText pour exports PDF dans le monitoring -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>${itext.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcmail-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bcprov-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bctsp-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Utilisation d'une base h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+			[if not useH2EmbeddedDatabase()]
+            <scope>test</scope>
+			[/if]
+        </dependency>
+		[httpEmbeddedServerDependencies(false)/]
+		<!--
+		// [protected ('for dependencies')]
+		-->
+		
+		<!--
+		// [/protected]
+		-->
+    </dependencies>
+
+    <build>
+        <plugins>
+			[plugins(false)/]
+           	[httpEmbeddedServerPlugins(false)/]
+			<!--
+			// [protected ('for plugins')]
+			-->
+		
+			<!--
+			// [/protected]
+			-->
+        </plugins>
+    </build>
+</project>
+[/template] 
+
+[template public clientJspWebXml(any : OclAny) post (trim())]
+<?xml version="1.0" encoding="UTF-8" ?>
+<web-app 
+    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+	https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+    version="6.0">
+
+    <display-name>Webapp JSP [getApplicationName()/]</display-name>
+    <distributable />
+	[httpEmbeddedConfiguration()/]
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+	[melodyFilters()/]
+	[melodyConfiguration()/]	
+	[initializationListener()/]
+	[securityInitialization()/]
+	[configFilesInitialization()/]
+	[adminServlet()/]
+
+	<!-- Specifie un encodage UTF-8 pour les jsp. -->
+	<jsp-config>
+    	<jsp-property-group>
+        	<url-pattern>*.jsp</url-pattern>
+        	<page-encoding>UTF-8</page-encoding>
+    	</jsp-property-group>
+	</jsp-config>
+
+	<!-- Le dispatcher (liste des routes) pour l'ensemble de l'application. -->
+	<context-param>
+		<param-name>fr.spi4j.jsp.dispatcher</param-name>
+		<param-value>[getApplicationPackage()/].[buildJspDispatcherClassName()/]</param-value>
+	</context-param>
+
+	<!-- Cache navigateur 1h sur fichiers statiques -->
+	<filter>
+		<filter-name>client-1h-cache</filter-name>
+		<filter-class>fr.spi4j.filter.CacheControlFilter</filter-class>
+		<init-param>
+			<param-name>Cache-Control</param-name>
+			<param-value>max-age=3600, public</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>client-1h-cache</filter-name>
+		<url-pattern>/static/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Pas de cache navigateur sur pages dynamiques -->
+	<filter>
+		<filter-name>client-no-cache</filter-name>
+		<filter-class>fr.spi4j.filter.CacheControlFilter</filter-class>
+		<init-param>
+			<param-name>Cache-Control</param-name>
+			<param-value>no-cache</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Pragma</param-name>
+			<param-value>no-cache</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Expires</param-name>
+			<param-value>-1</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>client-no-cache</filter-name>
+		<url-pattern>[getJspCtrlUriFragment()/]/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Servlet principale qui appelle les contrôleurs et délègue 
+		 l'affichage aux différentes pages JSP -->
+	<servlet>
+		<servlet-name>[getApplicationName()/]Servlet</servlet-name>
+		<servlet-class>fr.spi4j.ui.jsp.JspControllerServlet</servlet-class>
+		<init-param>
+           <param-name>compilerSourceVM</param-name>
+        	<param-value>[getJavaStringVersion()/]</param-value>
+        </init-param>
+        <init-param>
+        	<param-name>compilerTargetVM</param-name>
+       		<param-value>[getJavaStringVersion()/]</param-value> 
+    	</init-param>
+		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+        	<max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>[getApplicationName()/]Servlet</servlet-name>
+		<url-pattern>[getJspCtrlUriFragment()/]/*</url-pattern>
+	</servlet-mapping>
+	[dummyRSServlet()/]
+
+    <session-config>
+        <!-- time out des sessions en minutes -->
+        <session-timeout>15</session-timeout>
+    </session-config>
+
+	[basicAuth()/]
+	[userCode()/]
+</web-app>
+[/template]
+
+[template public clientJspIndex (any : OclAny)]
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" autoFlush="true" %>
+
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<!DOCTYPE html>
+// Page initiale pour l'application.
+
+<h1>Page JSP d'index pour l'application.</h1>
+[/template]
+
+[template public clientJspDefaultDispatcher(any : OclAny)]
+[licence()/]
+package [getApplicationPackage()/];
+
+import fr.spi4j.ui.jsp.JspDispatcherEnum_Itf;
+
+/**
+ * Enumeration par défaut. 
+ * 
+ * Cette énumération est juste générée afin de pouvoir démarrer immédiatement un test de la page 
+ * d'index suite à la création d'un projet JSP. Dans tous les cas, elle sera écrasée par la 
+ * génération issue du diagramme de cinématique. NE RIEN ECRIRE DEDANS !!!
+ *
+ * @author [getAuthorName()/]
+ */
+public enum [buildJspDispatcherClassName()/] implements JspDispatcherEnum_Itf {
+
+	systemViewState_error("", true, false);
+	
+	[buildJspDispatcherClassName()/] (final String [apply_parameterMethodClassicIn('displatch')/], 
+			final boolean [apply_parameterMethodClassicIn('redirect')/],
+ 			final boolean [apply_parameterMethodClassicIn('menu')/]) {
+	}
+
+	@Override
+	public String dispatch() {
+		return null;
+	}
+
+	@Override
+	public boolean redirect() {
+		return false;
+	}
+
+	@Override
+	public boolean menu() {
+		return false;
+	}
+
+	// NE RIEN ECRIRE !!!
+}
+[/template]
+
+[template public clientJspCss (any : OclAny)]
+@CHARSET "ISO-8859-1";
+
+body {
+	font-family: Calibri, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+img {
+	border: 0px;
+}
+
+fieldset {
+	border-radius: 3px;
+	padding-top: 15px;
+	border : solid 1px #C0C0C0;
+	background: #F6F8FF;
+}
+
+fieldset.error {
+	background: #FFDDDD;
+}
+
+fieldset.warning {
+	background: #FFFFCC;
+}
+
+fieldset.info {
+	background: #DDFFFF;
+}
+
+fieldset.success {
+	background: #DDFFDD;
+}
+
+legend {
+	font-size: x-large;
+}
+
+input {
+	display: block;
+	height: 23px;
+	margin: 5px;
+	font-size: 14px;
+}
+
+select {
+	margin: 5px;
+	height: 30px;
+	display: block;
+}
+
+a {
+	text-decoration: none;
+	display: inline-block;
+	padding: 3px;
+}
+
+label {
+	display: inline-block;
+	margin-left : 5px;
+	width: 120px;
+}
+
+/*
+ * Mettre la bordure à 'none' une fois 
+ * que le positionnement des éléments 
+ * est effectué.
+ */
+div {
+	/* Pour debug. */	
+	border: solid;
+	border-width: 1px;
+}
+
+div.row {
+	display: table;
+	width: 100%;
+	/* Pour debug. */
+	border-color: #00FF00;
+}
+
+div.col {
+	float: left; /* fix for  buggy browsers */
+	display: table-column;
+	padding-right: 25px;
+	/* Pour debug. */
+	border-color: #FF0000;
+}
+
+input['['/]type=button[']'/], input['['/]type=submit[']'/], input['['/]type=reset[']'/] {
+	background-color: #008CBA;
+	box-shadow: 2px 2px #c0c0c0;
+	border: none;
+	cursor: pointer;
+	color: #FFFFFF;
+	width: 100px;
+	height:33px;
+	float: right;
+}
+
+input['['/]type=button[']'/]:hover, input['['/]type=submit[']'/]:hover, input['['/]type=reset[']'/]:hover {
+	background-color: #0075bb;
+}
+
+input['['/]type=button[']'/]:active, input['['/]type=submit[']'/]:active, input['['/]type=reset[']'/]:active {
+  box-shadow: 2px 2px #666;
+  transform: translateY(1px);
+}
+
+input['['/]type=text[']'/]:focus {
+
+}
+
+input['['/]type="checkbox"[']'/] {
+	width: 25px;
+	height: 25px;
+	margin-top: 5px;
+}
+
+table {
+	width: 100%;
+}
+
+th, td {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+td.nodata {
+	background-color: #FF5432;
+	color: #FFFFFF;
+}
+
+th {
+	background-color: #008CBA;
+	color: #FFFFFF;
+}
+
+td {
+	text-align: left;
+}
+[/template]
+

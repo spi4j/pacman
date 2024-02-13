@@ -1,0 +1,58 @@
+[comment encoding = UTF-8 /]
+[module generatePersistenceApi('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::files::genEntityColumnsEnum /]
+[import fr::pacman::entity::api::files::genEntityItf /]
+[import fr::pacman::entity::api::files::genDaoItf /]
+[import fr::pacman::entity::api::files::genDaoTest /]
+[import fr::pacman::entity::api::files::genUserPersistenceApp /]
+[import fr::pacman::entity::api::files::genH2DatabaseHelper /]
+[import fr::pacman::entity::api::files::genParamAppli /]
+[import fr::pacman::entity::api::files::genAppliColumnsEnum /]
+[import fr::pacman::entity::api::files::genAppliEntityItf /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::commons::common::properties /]
+
+[template public generatePersistenceApi(r : Root)]
+[comment @main /]
+
+[genParamAppli(r)/]
+[genUserPersistenceApp(r)/]
+[genH2DatabaseHelper(r)/]
+
+[if hasAutomaticColumns()]
+    [genAppliColumnsEnum(r)/]
+    [genAppliEntityItf()/]
+[/if]
+
+[comment : agglomération des mains /]
+
+[for (entity : Entity | r.eAllContents(Entity))]
+    [genEntityColumnsEnum(entity)/]
+    [genEntityItf(entity)/]
+    [genDaoItf(entity)/]
+    [genDaoTest(entity)/]
+[/for]
+
+[/template]
+
+[template public generatePersistenceApiBlock(n : Namespace)]
+[comment @main /]
+[for (entity : Entity | n.eAllContents(Entity))]
+    [genEntityColumnsEnum(entity)/]
+    [genEntityItf(entity)/]
+    [genDaoItf(entity)/]
+    [genDaoTest(entity)/]
+[/for]
+
+[/template]
+[template public generatePersistenceApiEntity(entity : Entity)]
+[comment @main /]
+
+    [genEntityColumnsEnum(entity)/]
+    [genEntityItf(entity)/]
+    [genDaoItf(entity)/]
+    [genDaoTest(entity)/]
+
+[/template]

@@ -1,0 +1,417 @@
+[comment encoding = UTF-8 /]
+[module paramPersistence('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::entity::jdbc::common::packages /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+[template public paramPersistence(r : Root)]
+[licence()/]
+package [buildPackagePersistence()/]; // NOPMD
+// [protected ('for imports')]
+
+import java.io.File;
+
+import javax.naming.NamingException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import fr.spi4j.Parameters;
+import fr.spi4j.exception.Spi4jRuntimeException;
+import fr.spi4j.persistence.ElemResourceManager;
+import fr.spi4j.persistence.ParamPersistence_Abs;
+import fr.spi4j.persistence.dao.jdbc.DefaultJdbcDao;
+import fr.spi4j.persistence.resource.DefaultResourcePhysical;
+import fr.spi4j.persistence.resource.ResourcePhysical_Abs;
+import fr.spi4j.persistence.resource.ResourceType_Enum;
+import fr.spi4j.persistence.resource.jdbc.NonXAJndiResourcePhysical;
+import [getApplicationPackage()/].[buildParamAppliClassName()/];
+
+// [/protected]
+
+[comClass('Implémentation permettant de centraliser le paramétrage de persistance de l\'application')/]
+public final class [buildParamPersistenceClassName()/] extends ParamPersistence_Abs implements [buildParamAppliClassName()/]
+{
+   private static final Logger [apply_attributeFinalStatic('log')/] = LogManager.getLogger([buildParamPersistenceClassName()/].class);
+
+   // Resources Physiques
+   // [protected (r.getUserCodeId('Resources Physiques'))]
+
+   /** Chemin de la base H2 (test ou base embarquee). */
+   private static final String [apply_attributeFinalStatic('chemin base h2')/] = "./h2/[getApplicationNameUpperFirst()/]";
+
+   // [/protected]
+
+   /** Propriété positionnée à "true" (par maven-surefire-plugin) lorsque l'application est lancée en mode h2. */
+   private boolean [apply_attributeDefault('h2 mode')/] = Boolean.FALSE;
+
+[if isLibrary()]
+   /**
+    * Le gestionnaire de connexions par défaut si renseigné.
+    */
+   private static ElemResourceManager [apply_attributeFinal('default ElemResourceManager')/];
+
+[/if]
+   /**
+    * Le gestionnaire de connexions comprenant des ResourcePhysique et renvoyant le ResourceManager correspondant au mode de fonctionnement de l'appli.
+    */
+   private final ElemResourceManager [apply_attributeFinal('ElemResourceManager')/];
+
+   /**
+    * Constructeur.
+    */
+   public [buildParamPersistenceClassName()/] ()
+   {
+      super([apply_attributeFinalStatic('id appli')/]);
+
+      // Constructeur
+      // [protected (r.getUserCodeId('Constructeur'))]
+
+	  // Positionne l'indicateur à "true" si l'application est lancée en mode h2.
+      [getAffectationPrefix()/][apply_attributeDefault('h2 mode')/] = [apply_methodDefault('check if h2 mode')/]();
+
+[if isLibrary()]
+      if ([apply_attributeFinal('default ElemResourceManager')/] == null)
+      {
+         // La ressource physique SGBD.
+         [getAffectationPrefix()/][apply_attributeFinal('ElemResourceManager')/] = new ElemResourceManager([apply_attributeFinalStatic('id appli')/], [apply_methodDefault('create resource physical')/]());
+      }
+      else
+      {
+         [getAffectationPrefix()/][apply_attributeFinal('ElemResourceManager')/] = [apply_attributeFinal('default ElemResourceManager')/];
+      }
+[else]
+      // La ressource physique SGBD.
+      [getAffectationPrefix()/][apply_attributeFinal('ElemResourceManager')/] = new ElemResourceManager([apply_attributeFinalStatic('id appli')/], [apply_methodDefault('create resource physical')/]());
+[/if]
+
+[if hasAdditionnalLibraries()]
+	[apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/]();
+[/if]
+
+      // [/protected]
+   }
+
+	/**
+	 * Initialise l'indicateur de mode de lancement pour l'application. Soit on part
+	 * sur une base H2 dans le cadre des tests unitaires ou d'une base embarquée,
+	 * soit on se connecte sur une base externe. Dans le cas d'une base embarquée, 
+	 * on force directement l'indicateur et on se contente de le retourner. 
+	 */
+   private boolean [apply_methodDefault('check if h2 mode')/]() {
+	
+	  [if useH2EmbeddedDatabase()]
+		// On vérouille sur la base embarquée de type H2.
+		return Boolean.TRUE;
+	  [else]
+      boolean [apply_variableDefault('h2 mode')/];
+      try {
+
+         final String [apply_variableDefault('with h2 bool')/] = Parameters.getParameter(Parameters.c_h2, Boolean.toString(Boolean.FALSE));
+         [apply_variableDefault('h2 mode')/] = [apply_variableDefault('with h2 bool')/].equalsIgnoreCase(Boolean.toString(Boolean.TRUE));
+
+	  } catch (final IllegalStateException v_e) {
+
+         [apply_variableDefault('h2 mode')/] = Boolean.FALSE;
+      }
+	  return [apply_variableDefault('h2 mode')/];
+	  [/if]
+   }
+
+   /**
+    * Initialiser les instances du paramétrage de la couche persistance.
+    */
+   private static synchronized void [apply_methodDefault('init instance')/] ()
+   {
+      [buildParamPersistenceClassName()/] [apply_variableObjectDefault('param persistence')/] = ([buildParamPersistenceClassName()/]) getParamPersistence([apply_attributeFinalStatic('id appli')/]);
+      // Si pas d'instance
+      if ([apply_variableObjectDefault('param persistence')/] == null)
+      {
+         // Instancier 'ParamPersistenceApp'
+         [apply_variableObjectDefault('param persistence')/] = new [buildParamPersistenceClassName()/]();
+         // Mémoriser l'instance 'ParamPersistence'
+         setParamPersistence([apply_attributeFinalStatic('id appli')/], [apply_variableObjectDefault('param persistence')/]);
+
+         // Instancier un '[buildUserPersistenceAppClassName()/]'
+         final [buildUserPersistenceAppClassName()/] [apply_variableObjectFinal('user persistence')/] = new [buildUserPersistenceAppClassName()/]([apply_variableObjectDefault('param persistence')/]);
+         // Mémoriser l'instance 'UserPersistence'
+         setUserPersistence([apply_attributeFinalStatic('id appli')/], [apply_variableObjectFinal('user persistence')/]);
+
+         // Initialiser les éléments du paramétrage
+         [apply_variableObjectDefault('param persistence')/].initElemParamPersistence();
+      }
+   }
+
+   /**
+    * Permet d'obtenir le 'UserPersistence' de l'application.
+    * @return Une instance de '[buildUserPersistenceAppClassName()/]'
+    */
+   public static [buildUserPersistenceAppClassName()/] [apply_methodDefault('get user persistence')/] ()
+   {
+      return [apply_classDefault('user persistence static holder')/].[apply_attributeFinalStatic('user persistence')/];
+   }
+
+   /**
+    * Design pattern "Static Holder": Classe pour initialiser au besoin (c'est-à-dire à la première demande)<br>
+    * le userPersistence de l'application sans nécessiter d'ajouter "synchronized" sur la méthode static getUserPersistence().<br>
+    * Ajouter "synchronized" pourrait devenir une contention car la méthode est static et est appelée très souvent dans l'application.<br>
+    * Le Static Holder permet d'initialiser l'attribut en étant automatiquement synchronisé par l'initialisation de la classe dans le ClassLoader.<br>
+    */
+   private static final class [apply_classDefault('user persistence static holder')/]
+   {
+      /** Le 'UserPersistence' de l'application. */
+      private static final [buildUserPersistenceAppClassName()/] [apply_attributeFinalStatic('user persistence')/];
+
+      static
+      {
+         // Initialiser la couche de persistance
+         [apply_methodDefault('init instance')/]();
+         // Obtenir le 'UserPersistence' de l'application
+         [apply_attributeFinalStatic('user persistence')/] = ([buildUserPersistenceAppClassName()/]) getUserPersistence([apply_attributeFinalStatic('id appli')/]);
+         // finalise l'initialisation du ParamPersistence
+         (([buildParamPersistenceClassName()/]) getParamPersistence([apply_attributeFinalStatic('id appli')/])).[apply_methodDefault('after init')/]();
+      }
+
+      /**
+       * Constructeur.
+       */
+      private [apply_classDefault('user persistence static holder')/] ()
+      {
+         super();
+      }
+   }
+
+   @Override
+   protected void [apply_methodDefault('after init')/] ()
+   {
+      // afterInit
+      // [protected (r.getUserCodeId('afterInit'))]
+
+	  // Uniquement si application en mode h2.
+	  if([getAffectationPrefix()/][apply_attributeDefault('h2 mode')/]) {
+
+      	// suppression de l'ancienne base si elle existe encore
+      	final File [apply_variableFinal('db file')/] = new File([apply_attributeFinalStatic('chemin base h2')/] + ".mv.db").getAbsoluteFile();
+      	if ([apply_variableFinal('db file')/].exists())
+      	{
+        	[apply_attributeFinalStatic('log')/].info("Suppression de la base existante : " + [apply_variableFinal('db file')/].getName());
+         	if (![apply_variableFinal('db file')/].delete())
+         	{
+            	[apply_attributeFinalStatic('log')/].warn("La base existante n'a pas pu être supprimée : " + [apply_variableFinal('db file')/].getName());
+         	}
+      	}
+      	try
+      	{
+			[apply_attributeFinalStatic('log')/].info("Création de la base (version usine) : " + [apply_variableFinal('db file')/].getName());
+         	[buildH2DatabaseHelperClassName()/].[apply_methodDefault('initialize database')/]();
+      	}
+      	catch (final Throwable [apply_variableFinal('t')/])
+      	{
+        	[apply_attributeFinalStatic('log')/].error("Impossible d'initialiser la base de données, "
+                  + "vérifier les scripts d'initialisation de la base de données", [apply_variableFinal('t')/]);
+      	}
+	  }
+      // [/protected]
+   }
+
+   /**
+    * Paramétrage de la persistance.
+    */
+   // CHECKSTYLE:OFF
+   @Override
+   // CHECKSTYLE:ON
+   protected void initElemParamPersistence () // NOPMD
+   {
+      // Ajout de différentes ressources au ElemResourceManager
+      // Ajout Resources
+      // [protected (r.getUserCodeId('Ajout Resources'))]
+      // [apply_attributeFinal('ElemResourceManager')/].addResourcePhysical([apply_attributeFinalStatic('Local resource physical')/], fr.spi4j.persistence.Mode_Enum.nomade);
+      // [/protected]
+
+      // Default Dao
+      // [protected (r.getUserCodeId('Default Dao'))]
+      // Ajouter le paramétrage pour le DAO par défaut
+      setDefaultDao(DefaultJdbcDao.class, [apply_attributeFinal('ElemResourceManager')/]);
+      // [/protected]
+
+[for (e : Entity | r.eAllContents(Entity))]
+[if not e.isNotPersistent() or useMatching()]
+      // [buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e)/]
+      // [protected (e.getUserCodeId(buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e)))]
+      // Ajouter le paramétrage pour l'entité "[buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/]"
+      addElemParamPersistence([buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/].class, new ElemParamPersistence(
+               [buildPackagePersistenceImplementationJdbcEntity(e)/].[buildEntityImplClassName(e)/].class,
+               [buildPackagePersistenceImplementationJdbcEntity(e)/].[buildDaoImplClassName(e)/].class, [apply_attributeFinal('ElemResourceManager')/]));
+      // [/protected]
+[/if]
+[/for]
+   }
+
+   /**
+    * Création de la ressource physique.
+    * @return ResourcePhysical_Abs
+    */
+   private ResourcePhysical_Abs [apply_methodDefault('create resource physical')/] ()
+   {
+
+	  // Creation resource physique
+	  // [protected (r.getUserCodeId('Creation resource physique'))]
+
+	  final ResourcePhysical_Abs [apply_variableDefault('resource physical')/];
+     
+      // On regarde si on démarre en mode base h2 embarque ou sur une base externe.
+	  if([apply_attributeDefault('h2 mode')/]){
+
+			// Chargement de la base H2.
+			[apply_attributeFinalStatic('log')/].info("Démarrage du serveur/application sur base H2.");
+			[apply_variableDefault('resource physical')/] = new DefaultResourcePhysical("jdbc:h2:" + [apply_attributeFinalStatic('chemin base h2')/], "sa", "",
+                  ResourceType_Enum.ressourceH2NonXA);
+	  } else {
+			[comment : Si application web alors configuration obligatoire par jndi. /]
+			[if isWebApplication()]
+			// Récupération du nom jndi pour la ressource.
+      		final String [apply_variableDefault('jndi name')/] = Parameters.getParameter("[getApplicationName().toLowerCase()/].datasource", 
+                  "java:comp/env/[getApplicationName().toLowerCase()/]/datasource");
+			try {
+
+       	 		// Chargement de la ressource via son nom jndi.
+         		[apply_attributeFinalStatic('log')/].info("Démarrage du serveur en utilisant la datasource : " + [apply_variableDefault('jndi name')/]);
+				[apply_variableDefault('resource physical')/] = new NonXAJndiResourcePhysical([apply_variableDefault('jndi name')/]);
+
+			} catch(NamingException [apply_variableDefault('e')/]) {
+        		
+				 throw new Spi4jRuntimeException([apply_variableDefault('e')/], "Nom JNDI inconnu : " +  [apply_variableDefault('jndi name')/],
+                  "Vérifier le nom JNDI de la DataSource");
+			}
+			[comment : Si application de type 'exe' alors configuration obligatoire directement au niveau du paramPersistence. /]
+			[else]
+
+			// Chargement de la ressource.
+			[apply_attributeFinalStatic('log')/].info("Démarrage de l'application avec la couche de persistence...");
+			[apply_variableDefault('resource physical')/] = new DefaultResourcePhysical("jdbc:", "", "", ResourceType_Enum.ressourceDbcpNonXA);
+			[/if]
+	  }
+      return [apply_variableFinal('resource physical')/];
+	  // [/protected]
+   }
+
+[if isLibrary()]
+   /**
+    * Setter pour que l'application puisse fournir sa propre gestion de ressources à la gestion de persistance de la librairie.
+    * @param [apply_parameterMethodObjectIn('elemResourceManager')/]
+    *           ElemResourceManager
+    */
+   public static void [apply_methodDefault('set ElemResourceManager')/] (final ElemResourceManager [apply_parameterMethodObjectIn('elemResourceManager')/])
+   {
+      [apply_attributeFinal('default ElemResourceManager')/] = [apply_parameterMethodObjectIn('elemResourceManager')/];
+   }
+
+[/if]
+[if hasAdditionnalLibraries()]
+   /**
+    * Injection du ElemResourceManager de [getApplicationName()/] dans le(s) librairie(s) pour utiliser la même connexion jdbc (plus économique en ressources bdd et ne nécessite pas XA)
+    */
+   private void [apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/] ()
+   {
+      // [apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/]
+      // [protected (r.getUserCodeId(apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')))]
+      // TODO renseigner le(s) initialisation(s) de paramPersistence des librairies avec celui de [getApplicationName()/]
+	
+	  [for (prop : String | getAdditionnalLibraries())]
+	  [if isLibraryDatabaseConnected(prop)]
+	  // [getLibraryPackage(prop)/].persistence.[apply_classDefault(getLibraryName(prop) + ' param persistence')/].[apply_methodDefault('set ElemResourceManager')/]([apply_attributeFinal('ElemResourceManager')/]);
+	  [/if]
+	  [/for]
+	
+      // [/protected]
+   }
+[/if]
+
+   // Methodes
+   // [protected (r.getUserCodeId('Methodes'))]
+
+   // [/protected]
+}
+[/template]
+
+[template public contextDatasource(r : Root)]
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+<!-- Modifier la datasource avec le nom de la machine hébergeant la base de données, 
+ 	le nom de la base, le nom et le mot de passe utilisateur puis, copier la datasource 
+    correspondante dans le fichier de paramétrage du serveur. -->
+
+[comment : Datasource pour une base MYSQL. /]
+[if isDbMySql()]
+<!-- Connexion à une base de données Mysql -->
+<Resource name="[getApplicationName().toLowerCase()/]/datasource" auth="Container" type="javax.sql.DataSource" 
+	driverClassName="org.mariadb.jdbc.Driver" factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    maxIdle="3" initialSize="2" maxTotal="4" maxWaitMillis="10000" username="['['/]identifiant[']'/]" 
+    password="['['/]mot de passe[']'/]" url="jdbc:mysql://localhost:3306/['['/]nom de la base[']'/]"/>
+
+[/if]
+
+[comment : Datasource pour une base MARIADB. /]
+[if isDbMariaDB()]
+<!-- Connexion à une base de données MariaDB -->
+<Resource name="[getApplicationName().toLowerCase()/]/datasource" auth="Container" type="javax.sql.DataSource" 
+	driverClassName="cdata.jdbc.mariadb.MariaDBDriver" factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    maxIdle="3" initialSize="2" maxTotal="4" maxWaitMillis="10000" username="['['/]identifiant[']'/]" 
+    password="['['/]mot de passe[']'/]" url="jdbc:mariadb://localhost:3306/['['/]nom de la base[']'/]"/>
+
+[/if]
+
+[comment : Datasource pour une base ORACLE. /]
+[if isDbOracle()]
+<!-- Connexion à une base de données Oracle -->
+<Resource name="[getApplicationName().toLowerCase()/]/datasource" auth="Container" type="javax.sql.DataSource" 
+    driverClassName="oracle.jdbc.OracleDriver" defaultAutoCommit="false" 
+    maxActive="100" maxIdle="3" maxWait="10000" username="['['/]identifiant[']'/]" 
+    password="['['/]mot de passe[']'/]" url="jdbc:oracle:thin://localhost:1521 /['['/]nom de la base[']'/]" 
+    connectionProperties="charSet=ISO8859_15"/>
+
+[/if]
+[comment : Datasource pour une base ORACLE en version 32bits. /]
+[if isDbOracle32()]
+[/if]
+[comment : Datasource pour une base POSTGRESQL. /]
+[if isDbPostgresql()]
+<!-- Connexion à une base de données Postgresql -->
+<Resource name="[getApplicationName().toLowerCase()/]/datasource" auth="Container" type="javax.sql.DataSource" 
+    driverClassName="org.postgresql.Driver" defaultAutoCommit="false" 
+    maxActive="100" maxIdle="3" maxWait="10000" username="['['/]identifiant[']'/]" 
+    password="['['/]mot de passe[']'/]" url="jdbc:postgresql://localhost:5432/['['/]nom de la base[']'/]" 
+    connectionProperties="charSet=ISO8859_15"/>
+
+[/if]
+[comment : Datasource pour une base SQL SERVER. /]
+[if isDbSqlServer()] 
+<!-- Connexion à une base de données Sql Server -->
+<Resource name="[getApplicationName().toLowerCase()/]/datasource" auth="Container" type="javax.sql.DataSource" 
+    driverClassName="net.sourceforge.jtds.jdbc.Driver" defaultAutoCommit="false" 
+    maxActive="100" maxIdle="3" maxWait="10000" username="['['/]identifiant[']'/]" 
+    password="['['/]mot de passe[']'/]" url="jdbc:jtds:sqlserver://localhost:1433/['['/]nom de la base[']'/]" 
+    connectionProperties="charSet=ISO8859_15"/>
+[/if]
+</Context>
+[/template]

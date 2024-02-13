@@ -1,0 +1,12 @@
+[comment encoding = UTF-8 /]
+[module enumerationRule('http://www.eclipse.org/ocl/1.1.0/Ecore')] 
+
+[comment : Override, specific for API. /]
+[template public apply_enum(value : String)]
+[value.replaceAll('-', '_').toUpperCase()/]
+[/template]
+
+[comment : Override, specific for API. / ]
+[template public apply_enumValue(value : String)]
+[value.toUpperCase()/]
+[/template]

@@ -1,0 +1,484 @@
+[comment encoding = UTF-8 /]
+[module xto('http://www.obeonetwork.org/dsl/soa/4.0.0',
+            'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+
+[import fr::pacman::commons::soa::common::packages /]
+[import fr::pacman::commons::soa::common::references /]
+[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::methods /]
+[import fr::pacman::commons::soa::common::attributes /]
+[import fr::pacman::commons::soa::common::comments /]
+
+[import fr::pacman::commons::services::SecurityUtils /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[comment : Generation de la classe commune (application) pour les champs additionnels. /]
+[template public xtoAppliAbs(s : System)]
+[licence()/]
+package [s.buildPackageBusiness()/];
+// [protected ('for imports')]
+
+[s.writeImports()/]
+
+// [/protected]
+
+/**
+ * Classe abstraite contenant les attributs additionnels qui sont communs à tous les xtos.
+ *
+ * @author [getAuthorName()/]
+ */
+public abstract class [s.buildAppliXtoAbstractClassName()/] {
+
+	// CONSTANTES
+
+	// Constantes
+	// [protected (s.getUserCodeId('Constantes'))]
+
+	// [/protected]
+
+	// ATTRIBUTS
+	[for (columnProp : String | get_automaticColumnsProperties())]
+	[if (columnProp.hasToWriteColumn())]
+   	/** [columnProp.getNameColumn().toUpperFirst()/] */
+   	@XmlElement(namespace = "", name = "[columnProp.getNameColumn().sanitize().toLowerFirst()/]")
+   	[if useWS()]@JsonProperty("[columnProp.getNameColumn().sanitize().toLowerFirst()/]")[/if]
+   	private [columnProp.getTypeColumn()/] [apply_attributeDefault(columnProp.getNameColumn())/];[lineSeparator()/]
+	[/if][/for]
+
+	// Commons Attributs 
+	// [protected (s.getUserCodeId('Commons Attributs'))]
+
+	// [/protected]
+
+ 	// METHODES
+
+	[for (columnProp : String | get_automaticColumnsProperties())]
+	[columnProp.getAutomaticGetter() /]
+
+	[columnProp.getAutomaticSetter() /]
+
+	[/for]
+}
+[/template]
+
+[comment : Generation des getter pour les champs additionnels. /]
+[template private getAutomaticGetter(columnProp : String)]
+[if (columnProp.hasToWriteColumn())]
+public [columnProp.getTypeColumn()/] [apply_methodGet(columnProp.getNameColumn())/] ()
+{
+	return [apply_attributeDefault(columnProp.getNameColumn())/];
+}[/if]
+[/template]
+
+[comment : Generation des setter pour les champs additionnels. /]
+[template private getAutomaticSetter(columnProp : String)]
+[if (columnProp.hasToWriteColumn())]
+public void [apply_methodSet(columnProp.getNameColumn())/] (final [columnProp.getTypeColumn()/] [apply_parameterMethodClassicIn(columnProp.getNameColumn())/])
+{
+	[getAffectationPrefix()/][apply_attributeDefault(columnProp.getNameColumn())/] = [apply_parameterMethodClassicIn(columnProp.getNameColumn())/];
+}[/if]
+[/template]
+
+[template private getImplementation (d : DTO) post(trim())]
+[if hasAutomaticColumns() and not d.hasParent()]extends [d.buildAppliXtoAbstractClassName()/][/if] [d.getImplementationForNoAutomaticColumns()/]
+[/template]
+
+[template private getImplementationForNoAutomaticColumns (d : DTO) post(trim())]
+[if d.hasParent()][if not hasAutomaticColumns()]extends[else], [/if][d.supertype.oclAsType(DTO).buildXtoClassNameFromDto()/][/if] [d.getImplementationForSimpleXto()/]
+[/template]
+
+[comment : For REST services, the Xto implements the RsXto_Itf which is just a markup interface. /]
+[template private getImplementationForSimpleXto (d : DTO) post(trim())]
+implements [if not isLibraryRS()][if d.hasParent()][if (useSpi4jSecurity() and dtoIsUser(d))]User_Itf[/if][else][getClassNameForXto_Itf()/]<[genPkType()/]>, RsXto_Itf[if (useSpi4jSecurity() and dtoIsUser(d))], User_Itf[/if][/if][else]Serializable[/if]
+[/template]
+
+[comment : No need of persistence for REST services but do not rely on the metadata 'NOT_PERSISTENT'./]
+[template public xto(d : DTO)]
+[licence()/]
+package [buildPackageWsApiDto(d)/];
+// [protected ('for imports')]
+
+[comment : write all the required imports. /]
+[d.writeImports()/]
+
+// [/protected]
+
+/**
+[if d.isParent()]
+ * XTO abstrait pour le type '[d.nameClassDto()/]'.
+[else]
+ * Implémentation XTO pour le type '[d.nameClassDto()/]'.
+[/if]
+ * @author [getAuthorName()/]
+ */
+@XmlRootElement(name = "[d.buildXtoClassNameFromDto()/]", namespace = "http://[getNamespaceXto(d)/]/xto")
+@XmlAccessorType(XmlAccessType.FIELD)
+public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.getImplementation()/]
+{
+
+   private static final long serialVersionUID = 1L;
+
+   // ATTRIBUTS
+
+   [comment : for REST services, we dont need a technical ID. (no persistence)/]
+   [comment : for the moment, leave the code but block ./]
+   [if not d.hasParent() and not isLibraryRS()]
+   /** L'identifiant. */
+   // for annotation_[nameENUM_PK_ID()/]
+   // [protected (d.getUserCodeId('for annotation_' + nameENUM_PK_ID()))]
+   @XmlElement(namespace = "", name = "[nameENUM_PK_ID()/]")
+   [if useWS()]@JsonProperty("[nameENUM_PK_ID()/]")[/if]
+   private [genPkType()/] [namePK_ID()/];
+   // [/protected]
+
+   [/if]
+[comment] On ne génére que les attributs qui ne possèdent pas de méta-donnée Annotation de titre "COMPUTED" [/comment]
+[for (a : Attribute | d.attributesNotComputed())]
+[if not isPropertyFromParent(a, d)]
+   /** [a.description/]. */
+   // for annotation_[nameBaseAttribute(a)/]
+   // [protected (d.getUserCodeId('for annotation_' + nameBaseAttribute(a)))]
+   @XmlElement(namespace = "", name = "[nameBaseAttribute(a)/]")
+   [if useWS()]@JsonProperty("[nameBaseAttribute(a)/]")[/if]
+   // [/protected]
+   [a.getProperty()/];
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesNoStar())]
+[if not isPropertyFromParent(r, d)]
+[if not r.referencedType.oclAsType(DTO).isNotPersistent() and not isLibraryRS()]
+   [comment : for REST services, we dont need a FK reference. (no persistence)/]
+   /** La FK sur le Type '[r.nameClassXto()/]'. */
+   // for annotation_1_[nameBaseReference(r) + namePK_ID()/]
+   // [protected (r.getUserCodeId('for annotation_1_' + nameBaseReference(r) + namePK_ID()))]
+   @XmlElement(namespace = "", name = "[nameBaseReference(r)/][namePK_ID()/]")
+   [if useWS()]@JsonProperty("[nameBaseReference(r)/][namePK_ID()/]")[/if]
+   // [/protected]
+   [r.getXtoReferenceId()/]
+[/if]
+
+   /** L'instance de '[r.referencedType.oclAsType(DTO).genTypeName()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
+   // for annotation_[nameBaseReference(r)/]
+   // [protected (r.getUserCodeId('for annotation_' + nameBaseReference(r)))]
+   @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
+   [if useWS()]@JsonProperty("[nameBaseReference(r)/]")[/if]
+   // [/protected]
+   [r.getXtoReference()/]
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesStarStar())]
+[if not isPropertyFromParent(r, d)]
+   /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
+   // for annotation_1_[apply_attributeMultiple(r.name.toLowerFirst())/]
+   // [protected (r.getUserCodeId('for annotation_1_' + apply_attributeMultiple(r.name.toLowerFirst())))]
+   @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
+   [if useWS()]@JsonProperty("[nameBaseReference(r)/]")[/if]
+   // [/protected]
+   [r.getRefListeXto()/]
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesStarNoStar())]
+[if not isPropertyFromParent(r, d)]
+   /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
+   // for annotation_[apply_attributeMultiple(r.name.toLowerFirst())/]
+   // [protected (r.getUserCodeId('for annotation_' + apply_attributeMultiple(r.name.toLowerFirst())))]
+   @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
+   [if useWS()]@JsonProperty("[nameBaseReference(r)/]")[/if]
+   // [/protected]
+   [r.getRefListeXto()/]
+
+[/if]
+[/for]
+[for (r : Reference | d.referencingStar())]
+[if not isPropertyFromParent(r, d) and not isLibraryRS()]
+   /** La FK sur le type '[r.containingType.oclAsType(DTO).nameBaseXtoUP()/]'. */
+   // for annotation_[nameBaseReference(r) + namePK_ID()/]
+   // [protected (r.getUserCodeId('for annotation_' + nameBaseReference(r) + namePK_ID()))]
+   @XmlElement(namespace = "", name = "[nameBaseReferenceInverse(r)/][namePK_ID()/]")
+   [if useWS()]@JsonProperty("[nameBaseReferenceInverse(r)/][namePK_ID()/]")[/if]
+   // [/protected]
+   [r.getXtoReferenceInverseId()/]
+
+[/if]
+[/for]
+[comment on rajoute la version dans le XTO pour utilisation par GWT /]
+[if not d.isNotPersistent() and d.hasEntityWithVersion()]
+   /** La valeur de la version. */
+   @SuppressWarnings("all")
+   @XmlTransient
+   private Serializable _versionValue;
+
+[/if]
+   // METHODES
+
+[comment : for REST services, we dont need a technical ID. (no persistence)/]
+[if not d.hasParent() and not isLibraryRS()]
+   @Override
+   public [genPkType()/] getId ()
+   {
+      return [namePK_ID()/];
+   }
+
+   @Override
+   public void setId (final [genPkType()/] [apply_parameterMethodClassicIn(nameENUM_PK_ID())/])
+   {
+      [getAffectationPrefix()/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameENUM_PK_ID())/];
+   }
+
+[/if]
+[comment pas de génération de méthode pour les attributs calculés dans le cas des XTO /]
+[for (a : Attribute | d.attributesNotComputed())]
+[if not isPropertyFromParent(a, d)]
+   /**
+[comPrefix(a, 'Obtenir')/]
+[comReturn(a)/]
+    */
+[if (useSpi4jSecurity() and dtoIsUser(d) and a.name = 'identifiant')]
+   @Override
+   public String getIdentifiant ()
+[else]
+   [a.getGetter()/]
+[/if]
+   {
+      return [apply_attributeDefault(a.name.normalize())/];
+   }
+
+   /**
+[comPrefix(a, 'Affecter')/]
+[a.getComParamIn()/]
+    */
+[comment]Cas particulier pour l'attribut identifiant qui ne suit pas la convention de nommage.[/comment]
+[if (useSpi4jSecurity() and dtoIsUser(d) and a.name = 'identifiant')]
+   public void setIdentifiant (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(a.name.normalize())/])
+[else]
+   [a.getSetter()/]
+[/if]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(a.name.normalize())/] = [apply_parameterMethodClassicIn(a.name.normalize())/];
+   }
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesNoStar())]
+[if not isPropertyFromParent(r, d)]
+[comment : for REST services, we dont need assessors for FK. (no persistence)/]
+[if not r.referencedType.oclAsType(DTO).isNotPersistent() and not isLibraryRS()]
+   /**
+[comPrefix(r, 'Obtenir')/]
+[comReturn(r)/]
+    */
+   [r.getGetterIdDto()/]
+   {
+      if ([apply_attributeDefault(r.name.toLowerFirst())/] != null)
+      {
+         [apply_attributeDefault(r.name.toLowerFirst())/][namePK_ID()/] = [apply_attributeDefault(r.name.toLowerFirst())/].getId();
+      }
+      return [apply_attributeDefault(r.name.toLowerFirst())/][namePK_ID()/];
+   }
+
+   /**
+[comPrefix(r, 'Affecter')/]
+[r.getComParamIdIn()/]
+    */
+   [r.getSetterIdDto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.toLowerFirst())/][namePK_ID()/] = [apply_parameterMethodClassicIn(r.name.toLowerFirst())/][namePK_ID()/];
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.toLowerFirst())/] = null;
+   }
+
+[/if]
+   /**
+    * Obtenir l'instance de '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante.
+    * @return L'instance desiree.
+    */
+   [r.getGetterXto()/]
+   {
+      return [apply_attributeDefault(r.name.toLowerFirst())/];
+   }
+
+   /**
+    * Affecter [r.nameBaseReference()/] de [d.nameBaseXto()/].
+[r.getComParamIn()/]
+    */
+   [r.getSetterXtoReference()/]
+   {
+[comment : for REST services, we dont need to affect a technical ID. (no persistence)/]
+[if not r.referencedType.oclAsType(DTO).isNotPersistent() and not isLibraryRS()]
+      if ([apply_parameterMethodClassicIn(r.name.toLowerFirst())/] == null)
+      {
+         [apply_methodSet(r.name.toLowerFirst())/][namePK_ID()/](null);
+      }
+      else
+      {
+         [apply_methodSet(r.name.toLowerFirst())/][namePK_ID()/]([apply_parameterMethodClassicIn(r.name.toLowerFirst())/].getId());
+      }
+[/if]
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.toLowerFirst())/] = [apply_parameterMethodClassicIn(r.name.toLowerFirst())/];
+   }
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesStarStar())]
+[if not isPropertyFromParent(r, d)]
+   /**
+    * Obtenir la liste de type '[r.nameClassXto()/]' associee à  l'instance de '[d.nameClassXto()/]' courante.
+    * @return La liste desiree.
+    */
+   [r.getGetterListXto()/]
+   {
+      return [apply_attributeMultiple(r.name.toLowerFirst())/];
+   }
+
+   /**
+    * Affecter les [r.nameClassXto()/] de [d.nameBaseXto()/].
+[r.getComParamTabIn()/]
+    */
+   [r.getSetterListXto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.toLowerFirst())/] = [apply_parameterMethodMultiple(r.referencedType.name.normalize())/];
+   }
+
+[/if]
+[/for]
+[for (r : Reference | d.referencesStarNoStar())]
+[if not isPropertyFromParent(r, d)]
+   /**
+    * Obtenir la liste de type '[r.nameClassXto()/]' associee à  l'instance de '[d.nameClassXto()/]' courante.
+    * @return La liste desiree.
+    */
+   [r.getGetterListXto()/]
+   {
+      return [apply_attributeMultiple(r.name.toLowerFirst())/];
+   }
+
+   /**
+    * Affecter les [r.nameClassXto()/] de [d.nameBaseXto()/].
+[r.getComParamTabIn()/]
+    */
+   [r.getSetterListXto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.toLowerFirst())/] = [apply_parameterMethodMultiple(r.referencedType.name.normalize())/];
+   }
+
+[/if]
+[/for]
+[for (r : Reference | d.referencingStar())]
+[if not isPropertyFromParent(r, d) and not isLibraryRS()]
+   /**
+    * Obtenir [r.nameBaseReferenceInverse()/] de [d.nameBaseXto()/].
+[r.comReturnInverse()/]
+    */
+   [r.getGetterInverseIdDto()/]
+   {
+      return [apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/];
+   }
+
+   /**
+    * Affecter [r.nameBaseReferenceInverse()/] de [d.nameBaseXto()/].
+[r.getComParamInverseIdIn()/]
+    */
+   [r.getSetterInverseIdDto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/] = [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/];
+   }
+
+[/if]
+[/for]
+[if not d.isParent()]
+   @Override
+   public String toString ()
+   {
+      // toString
+      // [protected (d.getUserCodeId('toString'))]
+
+      return [d.toString()/]
+
+      // [/protected]
+   }
+[/if]
+}
+[/template]
+
+[comment : Add required imports for app auto fields /]
+[template private writeImports (s : System) post(trim())]
+[s.initImports()/]
+[s.addImport('java.util.List')/]
+[s.addImport('java.util.Date')/]
+[s.addImport('fr.spi4j.type.XtopSup')/]
+[s.addImport(getApplicationPackage() + '.Binary')/]
+[s.addImport('jakarta.xml.bind.annotation.XmlAccessType')/]
+[s.addImport('jakarta.xml.bind.annotation.XmlAccessorType')/]
+[s.addImport('jakarta.xml.bind.annotation.XmlRootElement')/]
+[s.addImport('jakarta.xml.bind.annotation.XmlElement')/]
+[comment : s.addImport('java.io.Serializable')/]
+[comment : s.addImport(getImportForXto_Itf(), not isLibraryRS())/]
+[comment : s.addImport(getImportForRsXto_Itf(), not isLibraryRS())/]
+[s.flushImports()/]
+[/template]
+
+[comment : Write all the required imports. /]
+[template private writeImports (d : DTO) post(trim())]
+[d.initImports()/]
+[d.addImport('java.util.List')/]
+[d.addImport('java.util.Date')/]
+[d.addImport('java.io.Serializable')/]
+[comment : used for rest library. will be deleted by CTRL+SHIFT+O if necessary. / ]
+[d.addImport(getApplicationPackage() + '.Binary')/]
+[d.addImport('jakarta.xml.bind.annotation.XmlAccessType')/]
+[d.addImport('jakarta.xml.bind.annotation.XmlAccessorType')/]
+[d.addImport('jakarta.xml.bind.annotation.XmlRootElement')/]
+[d.addImport('jakarta.xml.bind.annotation.XmlElement', d.hasAttributes())/]
+[d.addImport('com.fasterxml.jackson.annotation.JsonProperty', d.hasAttributes() and useWS())/]
+[d.addImport('fr.spi4j.lib.security.User_Itf', useSpi4jSecurity() and d.dtoIsUser())/]
+[d.addImport('jakarta.xml.bind.annotation.XmlTransient', d.hasEntityWithVersion())/]
+[d.addImport(getImportForXto_Itf(), not isLibraryRS())/]
+[d.addImport(getImportForRsXto_Itf(), not isLibraryRS())/]
+
+[comment : List all references of the DTO to find potentials other DTO. /]
+[for (r : Reference | d.referencesNoStar())]
+[d.addImport(buildPackageWsApiDto(r.referencedType.oclAsType(DTO)) 
+	+ '.' + r.referencedType.oclAsType(DTO).buildXtoClassNameFromDto(), not isPropertyFromParent(r, d))/]
+[/for]
+
+[comment : List all references of the DTO to find potentials other DTO. /]
+[for (r : Reference | d.referencesStarStar())]
+[d.addImport(buildPackageWsApiDto(r.referencedType.oclAsType(DTO)) 
+	+ '.' + r.referencedType.oclAsType(DTO).buildXtoClassNameFromDto(), not isPropertyFromParent(r, d))/]
+[/for]
+
+[comment : List all references of the DTO to find potentials other DTO. /]
+[for (r : Reference | d.referencesStarNoStar())]
+[d.addImport(buildPackageWsApiDto(r.referencedType.oclAsType(DTO)) 
+	+ '.' + r.referencedType.oclAsType(DTO).buildXtoClassNameFromDto(), not isPropertyFromParent(r, d))/]
+[/for]
+[d.flushImports()/]
+[/template]
+
+[comment : First part for the ToString() method, for simplication in REST services, we dont have getId ad SetId so send a "NO-ID". / ]
+[template private toString(d : DTO)]
+getClass().getName() + '['['/]' [if isLibraryRS()]+ "NO-ID" [d.endToString()/] [else] + getId () [d.endToString()/] [/if]+ '[']'/]';
+[/template]
+
+[comment : Second part of the "toString()" method. /]
+[template private endToString(d : DTO)]
+[for (a : Attribute | d.attributesNotComputed())] + ", " + [if (useSpi4jSecurity() and dtoIsUser(d) and a.name = 'identifiant')] getIdentifiant () [else][apply_methodGet(a.name.normalize())/]()[/if]  [/for][for (r : Reference | d.referencesNoStar())][if not r.referencedType.oclAsType(DTO).isNotPersistent() and not isLibraryRS()] + ", " + [apply_methodGet(r.name.toLowerFirst())/][namePK_ID()/] ()[/if][/for]
+[/template]

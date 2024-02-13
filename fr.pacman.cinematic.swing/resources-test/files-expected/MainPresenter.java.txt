@@ -1,0 +1,109 @@
+package fr.appwhite1.client.ui;
+
+// Start of user code for imports
+
+import fr.spi4j.ui.graal.UserAction;
+import fr.spi4j.ui.mvp.Presenter_Abs;
+import fr.spi4j.ui.mvp.View_Itf;
+
+import fr.appwhite1.client.ui.LoginPresenter;
+
+// End of user code
+
+/**
+ * Presenter.
+ * @author Pacman
+ */
+// Start of user code Class definition
+public class MainPresenter extends Presenter_Abs<MainView_Itf, Object>
+// End of user code
+{
+
+   // Start of user code Constructeur(s)
+   /**
+    * Constructeur.
+    */
+   public MainPresenter ()
+   {
+      super(null);
+   }
+
+   /**
+    * Constructeur avec présenteur parent.
+    * @param p_parent
+    *           le présenteur parent
+    */
+   public MainPresenter (final Presenter_Abs<? extends View_Itf, ?> p_parent)
+   {
+      super(p_parent);
+   }
+
+   // End of user code
+
+   @Override
+   public void initView ()
+   {
+      // Start of user code Initialisation de la vue
+
+      // End of user code
+   }
+
+   @Override
+   protected String doGenerateTitle ()
+   {
+      // Start of user code Titre de l'écran
+      return "Main";
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément connexion.
+    */
+   @UserAction(UserAction.c_BOUTON + "connexion")
+   public void connexion ()
+   {
+      // Start of user code Pre connexion
+      // End of user code
+
+      // Start of user code connexion : Affichage de Login
+      LoginPresenter v_loginPresenter = getViewManager().getPresenter(LoginPresenter.class);
+      if (v_loginPresenter == null)
+      {
+         v_loginPresenter = new LoginPresenter(this);
+         getView().addView(v_loginPresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_loginPresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post connexion
+
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément déconnexion.
+    */
+   @UserAction(UserAction.c_BOUTON + "déconnexion")
+   public void deconnexion ()
+   {
+      // Start of user code Pre déconnexion
+      // End of user code
+
+      // Start of user code déconnexion : Affichage de Home
+
+      // End of user code
+
+      // Start of user code Post déconnexion
+
+      // End of user code
+   }
+
+   // Start of user code MainPresenter
+
+   // End of user code
+
+}

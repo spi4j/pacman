@@ -1,0 +1,12 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[template public nameSimpleEnum(e : Enumeration) post (trim())]
+[e.name.toUpperFirst()/]
+[/template]
+
+[query public buildEnumName(e : Enumeration) : String =
+apply_classEnum(e.name)
+ /]

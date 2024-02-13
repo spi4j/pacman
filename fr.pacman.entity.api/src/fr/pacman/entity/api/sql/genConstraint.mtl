@@ -1,0 +1,105 @@
+[comment encoding = UTF-8 /]
+[module genConstraint('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::sql::genTable /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::common::properties /]
+
+[template public genConstraint(r : Root)]
+/****************************************************************/
+[genSlashedLine('Constraints', sizeHeader())/]
+/****************************************************************/
+[for (n : environment::Namespace | r.ownedNamespaces)]
+[genConstraint(n)/][/for]
+[/template]
+
+[template public genConstraintWithoutHeader(r : Root)]
+[for (b :  environment::Namespace | r.ownedNamespaces)]
+[genConstraint(b)/]
+[/for]
+[/template]
+
+[template private genConstraint(n :  environment::Namespace)]
+[for (sn :  environment::Namespace | n.ownedNamespaces)]
+[genConstraint(sn)/]
+[/for]
+[for (e : Entity | n.types->select(el |el.oclIsKindOf(entity::Entity)))]
+[if not e.isNotPersistent() or useMatching()][genConstraint(e)/][/if][/for]
+[/template]
+
+[template private genConstraint(e : Entity)]
+[for (a : Attribute | e.attributes())]
+[if hasCheckConstraint(a)]
+[genCK(e, a, e.get_counterCK())/]
+[/if]
+[if ((a.type.oclIsKindOf(Enumeration)) and (not a.type.oclAsType(Enumeration)->isEmpty()))]
+[genCKEnum(e, a, e.get_counterCK())/]
+[/if]
+[/for]
+[for (ent : Entity | entitiesReferencedOrReferencing())]
+[genFK(e, ent, e.get_counterFK(referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()))/][/for]
+[for (r : Reference | e.referencesStarStarOwned())]
+alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJointure1(r)/] foreign key ([namePK(r.containingType.oclAsType(entity::Entity))/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
+alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJointure2(r)/] foreign key ([namePK(r.referencedType.oclAsType(entity::Entity))/]) references [referencedNameTableWithSchema(r)/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
+[/for]
+[/template]
+
+[comment : construction du nom la table en fonction de l'entite externe (librairie) ou interne pour les relations bi-directionnelles. /]
+[template private referencedNameTableWithSchema(r : Reference)]
+[let  e : Entity = r.referencedType.oclAsType(entity::Entity)][if e.isLibraryEntity(getApplicationName())]
+[e.nameLibraryTableWithSchema()/][else][e.nameTableWithSchema()/][/if][/let]
+[/template]
+
+[comment : le nouveau template permet simplement de passer le compteur (problématique OCL)./]
+[template private genFK(e : Entity, ent : Entity, compteur : Integer)]
+[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
+[if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1]
+[if r.containingType.oclAsType(entity::Entity) = e][genFKMultiple(e, r, compteur + (i-1), i)/]
+[elseif r.oppositeOf.oclIsUndefined()]
+[genFKMultipleInverse(e, r, compteur + (i-1), i)/]
+[/if][else][if r.containingType.oclAsType(entity::Entity) = e]
+[genFK(e, r, compteur)/]
+[elseif r.oppositeOf.oclIsUndefined()]
+[genFKInverse(e, r, compteur)/]
+[/if][/if][/for]
+[/template]
+
+[comment]references[/comment]
+[template private genFKMultiple(e : Entity, r : Reference, compteur : Integer, i : Integer)]
+alter table [nameTableWithSchema(e)/] add constraint [nameConstraint(e, r, compteur)/] foreign key ([nameColumnId(r,i)/]) references [nameTableWithSchema(r.referencedType.oclAsType(entity::Entity))/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
+[/template]
+
+[comment]referencing[/comment]
+[template private genFKMultipleInverse(e : Entity, r : Reference, compteur : Integer, i : Integer)]
+alter table [nameTableWithSchema(e)/] add constraint [nameConstraintInverse(e, r, compteur)/] foreign key ([nameColumnReferencingId(r,i)/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
+[/template]
+
+[comment]references[/comment]
+[template private genFK(e : Entity, r : Reference, compteur : Integer)]
+alter table [nameTableWithSchema(e)/] add constraint [nameConstraint(e, r, compteur)/] foreign key ([nameColumnId(r)/]) references [nameTableWithSchema(r.referencedType.oclAsType(entity::Entity))/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
+[/template]
+
+[comment]referencing[/comment]
+[template private genFKInverse(e : Entity, r : Reference, compteur : Integer)]
+alter table [nameTableWithSchema(e)/] add constraint [nameConstraintInverse(e, r, compteur)/] foreign key ([nameColumnReferencingId(r)/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
+[/template]
+
+[template private genCK(e : Entity, a : Attribute , compteur : Integer)]
+alter table [nameTableWithSchema(e)/] add constraint [nameConstraintCK(e, compteur)/] CHECK ([nameColumn(a)/] [checkConstraint(a)/]);
+[/template]
+
+[template private genCKEnum(e : Entity, a : Attribute , compteur : Integer)]
+alter table [nameTableWithSchema(e)/] add constraint [nameConstraintCK(e, compteur)/] CHECK ([nameColumn(a)/] IN ([a.type.oclAsType(Enumeration).literals.enumStruct(a.type.oclAsType(Enumeration))->sep(',')/]));
+[/template]
+
+[template public enumStruct (l : Literal, e : Enumeration)]
+'[l.name/]'
+[/template]

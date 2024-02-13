@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genAppliEventTypeEnum('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::client::ui::appliEventTypeEnum /]
+
+[template public genAppliEventTypeEnum(e : OclAny, clientPropertiesPrefix : String)]
+[file (filename(getConfigValue(clientPropertiesPrefix.toLower() + '.source.dir'), namePackageClient(), buildAppliEventTypeEnum() + '.java'), false, 'UTF-8')]
+[appliEventTypeEnum()/]
+[/file]
+[/template]

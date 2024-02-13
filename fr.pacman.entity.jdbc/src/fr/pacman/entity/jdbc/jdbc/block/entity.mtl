@@ -1,0 +1,306 @@
+[comment encoding = UTF-8 /]
+[module entity('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::requests::counterQueries /]
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::classesEntity /]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[comment sur la base de PersonneEntity en r97 /]
+[template public entityJdbc(e : Entity)]
+[licence()/]
+package [buildPackagePersistenceImplementationJdbcEntity(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+[comClass(roleEntity())/]
+public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [buildAppliEntityAbstractClassName()/]<[genPkType()/]> [/if]implements [buildEntityInterfaceName(e)/][if hasVersion()], JdbcOptimistLocked_Itf[/if]
+{
+   // CONSTANTES
+
+   /**
+    * SerialUid.
+    */
+   private static final long serialVersionUID = -1;
+
+   // Constantes [buildEntityImplClassName(e)/]
+   // [protected (e.getUserCodeId('Constantes ' + buildEntityImplClassName(e)))]
+
+   // [/protected]
+
+   // ATTRIBUTS
+
+   /** Id. */
+   private [genPkType()/] [apply_attributeDefault(nameSimplePropertyID(e))/];
+
+[for (a : Attribute | e.attributesNoPk())]
+   /** [description(a, false)/] */
+[if a.isVersion()]
+   @JdbcVersion
+[/if]
+   [getProperty(a)/];
+
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+   /** [description(a, false)/] */
+[if a.isVersion()]
+   @JdbcVersion
+[/if]
+   [getProperty(a)/];
+
+[/for]
+
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+   /** [description(r, true)/] */
+   [getProperty(r)/];
+
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+   /** [descriptionInverse(r, true)/] */
+   [getPropertyInverse(r)/];
+
+[/if]
+[/for]
+   // Attributs [buildEntityImplClassName(e)/]
+   // [protected (e.getUserCodeId('Attributs ' + buildEntityImplClassName(e)))]
+
+   // [/protected]
+
+   // METHODES
+
+   /**
+    * Constructeur sans paramètre de l'entité '[nameSimpleEntity(e)/]'. <br>
+    * Attention à ne pas appeler ce constructeur directement, mais à bien passer par UserPersistence.
+    */
+   public [buildEntityImplClassName(e)/] ()
+   {
+      super ();
+   }
+
+   @Override
+   public [genPkType()/] getId ()
+   {
+      return [apply_attributeDefault(nameSimplePropertyID(e))/];
+   }
+
+   @Override
+   public void setId (final [genPkType()/] [apply_parameterMethodClassicIn('id')/])
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimplePropertyID(e))/] = [apply_parameterMethodClassicIn('id')/];
+   }
+
+[for (a : Attribute | e.attributesNoPk())]
+   @Override
+   [gen_getter(a)/]
+   {
+      return [apply_attributeDefault(nameSimpleProperty(a))/];
+   }
+
+   @Override
+   [gen_setter(a)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(a))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(a))/];
+   }
+
+[/for]
+
+[for (a : Attribute | e.getInheritDtoAttributes())]
+    @Override
+   [gen_getter(a)/]
+   {
+      return [apply_attributeDefault(nameSimpleProperty(a))/];
+   }
+
+   @Override
+   [gen_setter(a)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(a))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(a))/];
+   }
+
+[/for]
+
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+   @Override
+   [gen_getter(r)/]
+   {
+      return [apply_attributeDefault(nameSimpleProperty(r))/];
+   }
+
+   @Override
+   [gen_setter(r)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleProperty(r))/] = [apply_parameterMethodClassicIn(nameSimpleProperty(r))/];
+   }
+
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+   @Override
+   [gen_getterInverse(r)/]
+   {
+      return [apply_attributeDefault(r.nameSimplePropertyInverse())/][namePK_ID()/];
+   }
+
+   @Override
+   [gen_setterInverse(r)/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.nameSimplePropertyInverse())/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameSimplePropertyInverse(r))/][namePK_ID()/];
+   }
+
+[/if]
+[/for]
+   @Override
+   public String toString ()
+   {
+      return super.toString () + " : " + [apply_attributeDefault(nameSimplePropertyID(e))/][for (a : Attribute | e.attributesNoPk())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (a : Attribute | e.getInheritDtoAttributes())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (r : Reference | e.referencesNoStar())] + ", " + [apply_attributeDefault(nameSimpleProperty(r))/][/for][for (r : Reference | e.referencingStar())] + ", " + [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/][/for];
+   }
+
+[if hasAutomaticColumns()]
+   @Override
+   public void validate () throws Spi4jValidationException
+   {
+      [if not e.hasMandatoryFields()]final [/if]List<String> [apply_variableDefault('champs invalides')/] = [apply_methodDefault('prepare validate')/] ();
+[if e.hasMandatoryFields()][initCounter('validate '.concat(e.name))/]
+[for (a : Attribute | e.attributesNoPkNoVersion())]
+[validPropertyWhenHasAutomaticColumns(e, a)/][/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+[validPropertyWhenHasAutomaticColumns(e, a)/][/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+[validPropertyWhenHasAutomaticColumns(e, r)/][/if][/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+[validInversePropertyWhenHasAutomaticColumns(e, r)/][/if][/for]
+[/if]
+      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      if ([apply_variableDefault('champs invalides')/] != null)
+      {
+         throw new Spi4jValidationException (this, [apply_variableDefault('champs invalides')/].toArray (new String['[' + apply_variableDefault('champs invalides') + '.size()]'/]));
+      }
+   }
+[else]
+   @Override
+   public void validate () throws Spi4jValidationException
+   {
+[if e.hasMandatoryFields() or e.hasStringFieldWithSize()]
+      List<String> [apply_variableDefault('champs invalides')/] = null;[initCounter('validate '.concat(e.name))/]
+[for (a : Attribute | e.attributesNoPkNoVersion())]
+[validProperty(e, a)/][/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+[validProperty(e, a)/][/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.containingType.oclAsType(entity::Entity) = e]
+[validProperty(e, r)/][/if][/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+[validInverseProperty(e, r)/][/if][/for]
+      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      if ([apply_variableDefault('champs invalides')/] != null)
+      {
+         throw new Spi4jValidationException (this, [apply_variableDefault('champs invalides')/].toArray (new String['[' + apply_variableDefault('champs invalides') + '.size()]'/]));
+      }
+[else]
+      // aucun champ obligatoire
+[/if]
+   }
+[/if]
+
+   // Methodes [buildEntityImplClassName(e)/]
+   // [protected (e.getUserCodeId('Methodes ' + buildEntityImplClassName(e)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[template private validProperty(e : Entity, p : Property)]
+[if isMandatory(p)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField ("[nameSimpleProperty(p)/]", [apply_attributeDefault(nameSimpleProperty(p))/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[if p.oclIsTypeOf(Attribute)]
+[validateSize(e, p.oclAsType(Attribute))/][/if]
+[/template]
+
+[template private validInverseProperty(e : Entity, r : Reference)]
+[if isMandatory(r)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField ("[nameSimplePropertyInverse(r)/]", [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[template private validPropertyWhenHasAutomaticColumns(e : Entity, p : Property)]
+[if isMandatory(p)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField ("[nameSimpleProperty(p)/]", [apply_attributeDefault(nameSimpleProperty(p))/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[if p.oclIsTypeOf(Attribute)]
+[validateSize(e, p.oclAsType(Attribute))/][/if]
+[/template]
+
+[template private validInversePropertyWhenHasAutomaticColumns(e : Entity, r : Reference)]
+[if isMandatory(r)]
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField ("[nameSimplePropertyInverse(r)/]", [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[query public roleEntity(e : Entity) : String = 'Entité du type ' + nameSimpleEntity(e) /]
+
+[template private validateSize(e : Entity, a : Attribute)]
+[if hasSize(a.metadatas) and a.type.name = 'String']
+      [apply_variableDefault('champs invalides')/] = EntityUtil.checkFieldSize ("[nameSimpleProperty(a)/]", [apply_attributeDefault(nameSimpleProperty(a))/], [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize(), [apply_variableDefault('champs invalides')/]);
+[/if]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity) post(trim())]
+[e.initImports()/]
+[e.addImport('java.util.List')/]
+[e.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+[e.addImport('fr.spi4j.persistence.entity.EntityUtil')/]
+[e.addImport('fr.spi4j.persistence.dao.jdbc.JdbcOptimistLocked_Itf', e.hasVersion())/]
+[e.addImport('fr.spi4j.persistence.dao.jdbc.JdbcVersion', e.hasVersion())/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + e.buildEntityInterfaceName())/]
+[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + e.buildEntityColumnEnumName(), e.hasEnumImport())/]
+[e.addImport(buildPackagePersistenceImplJdbc() + '.' + buildAppliEntityAbstractClassName(), e.hasAutomaticColumns())/]
+
+[comment : List all enumerations. /]
+[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
+	[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+
+[e.flushImports()/]
+[/template]
+
+
+
+

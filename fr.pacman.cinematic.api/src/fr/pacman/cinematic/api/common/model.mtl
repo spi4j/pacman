@@ -1,0 +1,204 @@
+[comment encoding = UTF-8 /]
+[module model('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+			  'http://www.obeonetwork.org/dsl/entity/3.0.0',
+			  'http://www.obeonetwork.org/dsl/soa/4.0.0',
+              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::cinematic::api::common::name /]
+
+[**
+ * Retourne l'initial d'un flow
+ * @param flow
+ */]
+[query public getInitialState(flow : Flow) : InitialState =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'getInitialState(org.obeonetwork.dsl.cinematic.flow.Flow)', Sequence{flow})
+/]
+
+
+[**
+ * Retourne les ViewStates débutant un Flow, sans passer par une transition avec garde ou liée à un événement
+ * @param flow
+ */]
+[query public getFirstViewStates(flow : Flow) : Sequence(ViewState) =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'getFirstViewStates(org.obeonetwork.dsl.cinematic.flow.Flow)', Sequence{flow})
+/]
+
+[**
+ * Cherche les états suivants un état source RECURSIVEMENT, en suivant des transitions sans garde et sans événement spécifié
+ * @param state l'état source des états recherchés
+ */]
+[query public getAllFollowingStatesWithoutGardOrEvent(state : FlowState, followSubFlows : Boolean) : Sequence(FlowState) =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'getAllFollowingStatesWithoutGardOrEvent(org.obeonetwork.dsl.cinematic.flow.FlowState, boolean)', Sequence{state, followSubFlows})
+/]
+
+[**
+ * Cherche les transitions à partir d'un état source. Si l'état source est un SubflowState, on peut chercher à partir de l'état initial du Flow pointé si followSubFlows est positionné à true
+ * On considère qu'il n'y a pas de transitions après un SubFlowState. A tort ? Cas d'exemple ?
+ * @param state l'état source des transitions
+ */]
+[query public getTransitionsFromState(state : FlowState, followSubFlows : Boolean) : Set(Transition) =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'getTransitionsFromState(org.obeonetwork.dsl.cinematic.flow.FlowState, boolean)', Sequence{state, followSubFlows})
+/]
+
+[**
+ * Cherche les ViewStates qui référencent un ViewContainer
+ * @param viewContainer le ViewContainer recherché
+ */]
+[query public getViewStatesForViewContainer(viewContainer : ViewContainer) : Set(ViewState) =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'getViewStatesForViewContainer(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{viewContainer})
+/]
+
+[**
+ * Cherche les FlowEvents lancés par un ViewEvent
+ * @param viewEvent le ViewEvent traité
+ */]
+[query public getFlowEventsForViewEvent(viewEvent : ViewEvent) : Set(FlowEvent) =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'getFlowEventsForViewEvent(org.obeonetwork.dsl.cinematic.view.ViewEvent)', Sequence{viewEvent})
+/]
+
+[**
+ * Cherche le viewState eventuellement retourne a partir d'un evenement.
+ * @param viewEvent le ViewEvent traité
+ */]
+[query public getNextViewStateFromEvent(viewState : ViewState, viewEvent : ViewEvent) : ViewState = 
+	invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 
+    'getNextViewStateFromEvent(org.obeonetwork.dsl.cinematic.flow.ViewState ,org.obeonetwork.dsl.cinematic.view.ViewEvent)', 
+    Sequence{viewState, viewEvent})
+/]
+
+[**
+ * Cherche tous les evenements attaches a un viewcontainer (or les evenements 'onLoad')
+ * (on ne prend pas les conteneurs mais uniquement les elements a l'interieur des conteneurs).
+ */]
+[query public getEventsForViewContainer(viewContainer : ViewContainer) : Sequence(ViewEvent) = 
+	invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 
+    'getEventsForViewContainer(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{viewContainer})
+/]
+
+[**
+ * Cherche tous les elements (widgets) attaches a un viewcontainer.
+ */]
+[query public getViewElementsForViewContainer(viewContainer : ViewContainer) : Sequence(AbstractViewElement) = 
+	invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 
+    'getViewElementsForViewContainer(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{viewContainer})
+/]
+
+[**
+ * Recuperation de toutes les operations pour un actionState
+ */]
+[query public getOperationsForActionState(actionState : ActionState) : Sequence(Operation) = 
+	invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 
+    'getOperationsForActionState(org.obeonetwork.dsl.cinematic.flow.ActionState)', Sequence{actionState})
+/]
+
+[**
+ * Cherche les états suivants un état source
+ * @param state l'état source des états recherchés
+ */]
+[comment][query public getNextStates(state : FlowState, followSubFlows : Boolean) : Sequence(FlowState) =
+    state.getTransitionsFromState(followSubFlows).to->asSequence()
+/][/comment]
+
+[**
+ * Cherche les états suivants un état source, en suivant des transitions sans garde et sans événement spécifié, en remplacant les subflowstates par l'état initial du flow sur lequel ils pointent
+ * @param state l'état source des états recherchés
+ */]
+[comment][query public getNextStatesWithoutGardOrEvent(state : FlowState, followSubFlows : Boolean) : Sequence(FlowState) =
+    state.getTransitionsFromStateWithoutGardOrEvent(followSubFlows)->select(transition : Transition | transition.to <> null)->collect(transition : Transition | transition.to)->asSequence()
+/][/comment]
+
+[**
+ * Cherche les états suivants un état source RECURSIVEMENT, de type ViewState, en suivant des transitions sans garde et sans événement spécifié
+ * @param state l'état source des états recherchés
+ */]
+[comment][query public getAllFollowingViewStatesWithoutGardOrEvent(state : FlowState, followSubFlows : Boolean) : Sequence(FlowState) =
+    state.getNextStatesWithoutGardOrEvent(followSubFlows)->union(state.getNextStatesWithoutGardOrEvent(followSubFlows)->select(nextState : FlowState | not nextState.oclIsKindOf(ViewState))->collect(nextState : FlowState | nextState.getAllFollowingViewStatesWithoutGardOrEvent(followSubFlows)))
+/][/comment]
+
+[**
+ * Cherche les transitions à partir d'un état source, sans garde et sans événement spécifié
+ * @param state l'état source des transitions
+ */]
+[comment][query public getTransitionsFromStateWithoutGardOrEvent(state : FlowState, followSubFlows : Boolean) : Set(Transition) =
+    state.getTransitionsFromState(followSubFlows)->select(transition : Transition |
+        (transition.guard.oclIsUndefined() or transition.guard.trim().size() = 0) and (transition.on.oclIsUndefined() or transition.on->isEmpty()))
+/][/comment]
+
+[**
+ * Cherche les transitions à partir d'un état cible
+ * @param state l'état cible des transitions
+ */]
+[comment][query public getTransitionsToState(state : FlowState) : Set(Transition) =
+    state.eContainer(Flow).transitions->select(transition : Transition | transition.to = state)
+        ->asSet()->sortedBy(name)
+/][/comment]
+
+[**
+ * Cherche le binding d'un élément
+ * @param object l'élément source
+ */]
+[query public searchBindingFor(object : ViewContainer) : BoundableElement =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'searchBindingFor(org.obeonetwork.dsl.environment.BoundableElement)', Sequence{object})
+/]
+
+[query public searchBindingFor(object : ViewElement) : BoundableElement =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'searchBindingFor(org.obeonetwork.dsl.environment.BoundableElement)', Sequence{object})
+/]
+
+
+[query public getTypeBeanEntity(viewContainer : ViewContainer) : String =
+    if (searchBindingForEntity(viewContainer) = null) then
+        'Undefined'
+    else  
+        buildEntityClassName(searchBindingForEntity(viewContainer))        	
+	endif
+ /]
+
+[query public getTypeBeanEntity(viewElement : ViewElement) : String =    
+    if (viewElement.type.oclIsKindOf(Entity)) then
+        buildEntityClassName(viewElement.type.oclAsType(Entity))
+	else null         	
+	endif
+ /]
+
+
+[query public getElementTypeEntity(object : ViewElement) : String =
+	if (searchBindingForElement(object) = null) then
+        object.type.name
+    else
+	    buildXtoClassNameFromEntity(searchBindingForElement(object))
+	endif
+ /]
+
+[**
+ * Retourne la classe d'un XTO selon le Entity lié. Appelé à la fois par SOA et Cinematic.
+*/]
+[query public buildXtoClassNameForEntity(object : ViewContainer) : String =
+ 	buildXtoClassNameFromEntity(searchBindingForEntity(object))
+ /]
+
+[**
+ * Cherche le binding d'un élément
+ * @param object l'élément source
+ */]
+[query public searchBindingForEntity(object : ViewContainer) : Entity =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'searchBindingForEntity(org.obeonetwork.dsl.environment.BoundableElement)', Sequence{object})
+/]
+
+[query public searchBindingForEntity(object : ViewElement) : Entity =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'searchBindingForEntity(org.obeonetwork.dsl.environment.BoundableElement)', Sequence{object})
+/]
+
+[**
+ * Cherche le binding d'un élément
+ * @param object l'élément source
+ */]
+[query public searchBindingForElement(object : ViewElement) : Entity =
+    invoke('fr.pacman.cinematic.api.services.CinematicModelServices', 'searchBindingForEntity(org.obeonetwork.dsl.environment.BoundableElement)', Sequence{object})
+/]
+
+[comment : Retourne la racine pour les pages jsp. /]
+[query public getJspPageUriFragment(any : OclAny) : String = 
+	'/WEB-INF/jsp'
+/]

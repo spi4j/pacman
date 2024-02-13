@@ -1,0 +1,266 @@
+[comment encoding = UTF-8 /]
+[module Servlets('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::configuration::common::names /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+
+[template public buildInfoServlet(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+
+import fr.spi4j.admin.BuildInfoServlet;
+import fr.spi4j.admin.BuildInfo_Abs;
+
+
+/**
+ * La servlet utilisee pour retourner les informations sur la version deployee de
+ * l'application.
+ */
+
+public class [buildInfoServletClassName()/] extends BuildInfoServlet
+{
+
+   private static final long serialVersionUID = 1L;
+
+   @Override
+   protected BuildInfo_Abs getBuildInfo ()
+   {
+      return [buildInfoClassName()/].[apply_methodGet('instance')/] ();
+   }
+
+   @Override
+   protected String getContent ()
+   {
+      final StringBuilder [apply_variableFinal(' string content')/] = new StringBuilder (super.getContent());
+      [apply_variableFinal(' string content')/].append ("Identifiant unique : <b>").append ((([buildInfoClassName()/])getBuildInfo ()).getUniqueId ())
+               .append("</b>").append("<br>");
+      // build.id pour la date et l'heure du build
+      [apply_variableFinal(' string content')/].append ("Build id : <b>").append ((([buildInfoClassName()/]) getBuildInfo ()).getBuildId())
+               .append("</b>").append ("<br>");
+      [apply_variableFinal(' string content')/].append("Version Java : <b>").append (System.getProperty ("java.version")).append ("</b>")
+               .append ("<br>");
+      return [apply_variableFinal(' string content')/].toString ();
+   }
+}
+[/template]
+
+[template public administrationServiceEnum(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+
+import fr.spi4j.admin.AdministrationService_Itf;
+
+/**
+ * Services disponibles pour le servlet d'administration.
+ */
+enum [buildAdministrationServiceEnumName()/] implements AdministrationService_Itf {
+
+	INDEX("/", "index.html"),
+
+	CLEAR_CACHES("/clearCaches", "clearCaches.html");
+
+	private final String [apply_attributeFinal('path')/];
+
+	private final String [apply_attributeFinal('servletContent')/];
+
+	/**
+	 * Constructeur
+	 * 
+	 * @param [apply_parameterMethodClassicIn('path')/]
+	 *            l'url de ce service
+	 * @param [apply_parameterMethodClassicIn('servlet content')/]
+	 *            le chemin de la jsp a afficher a l'utilisateur (les jsp doivent se
+	 *            trouver dans src/main/resources/fr/spi4j/admin/)
+	 */
+	private [buildAdministrationServiceEnumName()/](final String [apply_parameterMethodClassicIn('path')/], final String [apply_parameterMethodClassicIn('servlet content')/]) {
+		[getAffectationPrefix()/][apply_attributeFinal('path')/] = [apply_parameterMethodClassicIn('path')/];
+		[getAffectationPrefix()/][apply_attributeFinal('servlet content')/] = [apply_parameterMethodClassicIn('servlet content')/];
+	}
+
+	@Override
+	public String getServletContentPath() {
+		return [apply_attributeFinal(' servlet content')/];
+	}
+
+	/**
+	 * Retrouve un service a partir de son url
+	 * 
+	 * @param [apply_parameterMethodClassicIn('path')/]
+	 *            l'url cherchee
+	 * @return le service trouvee ou null si aucun service n'est defini a cette url
+	 */
+	public static [buildAdministrationServiceEnumName()/] [apply_methodGet('service from path')/] (final String [apply_parameterMethodClassicIn('path')/]) {
+		for (final [buildAdministrationServiceEnumName()/] [apply_variableDefault('service')/] : values()) {
+			if ([apply_variableDefault('service')/].[apply_attributeFinal('path')/].equalsIgnoreCase([apply_parameterMethodClassicIn('path')/])) {
+				return [apply_variableDefault('service')/];
+			}
+		}
+		return null;
+	}
+}
+
+[/template]
+
+[template public administrationServlet(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import fr.spi4j.admin.AdministrationService_Itf;
+import fr.spi4j.admin.AdministrationServlet;
+import fr.spi4j.persistence.UserPersistence_Abs;
+
+/**
+ * Servlet d'administration.
+ */
+public class [buildAdministrationServletClassName()/] extends AdministrationServlet
+{
+   private static final long serialVersionUID = 1L;
+
+   @Override
+   protected AdministrationService_Itf findService (final String [apply_parameterMethodClassicIn('path')/])
+   {
+      final AdministrationService_Itf [apply_variableFinal('service')/] = [buildAdministrationServiceEnumName()/].[apply_methodGet('service from path')/] ([apply_parameterMethodClassicIn('path')/]);
+      if ([apply_variableFinal('service')/] != null)
+      {
+         return [apply_variableFinal('service')/];
+      }
+      return super.findService([apply_parameterMethodClassicIn('path')/]);
+   }
+
+   @Override
+   @SuppressWarnings("rawtypes")
+   public void executeService (final AdministrationService_Itf [apply_parameterMethodClassicIn('service')/], final Map [apply_parameterMethodClassicIn('parameters')/])
+   {
+      final Logger [apply_variableFinal('logger')/] = LogManager.getLogger([buildAdministrationServletClassName()/].class);
+      if ([apply_parameterMethodClassicIn('service')/] == [buildAdministrationServiceEnumName()/].CLEAR_CACHES)
+      {
+         [apply_variableFinal('logger')/].info("Demande de purge et rechargement du cache");
+         [buildCacheManagerClassName()/].clearCaches();
+      }
+      else
+      {
+         super.executeService([apply_parameterMethodClassicIn('service')/], [apply_parameterMethodClassicIn('parameters')/]);
+      }
+   }
+
+   @Override
+   protected List<UserPersistence_Abs> getUserPersistences ()
+   {
+      return Arrays.asList(null);
+   }
+}
+
+[/template]
+
+[template public cacheManager(any : OclAny) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import fr.spi4j.SpiJob_Abs;
+import fr.spi4j.business.ServiceCacheProxy;
+import fr.spi4j.persistence.UserPersistence_Abs;
+
+/**
+ * Classe permettant de demarrer le job de purge des caches lors de l'initialisation de la webapp.
+ * @author [getAuthorName()/]
+ */
+public class [buildCacheManagerClassName()/] implements ServletContextListener
+{
+
+   private static final Logger [apply_attributeFinalStatic('log')/] = LogManager.getLogger([buildCacheManagerClassName()/].class);
+
+   /**
+    * Heure de la purge quotidienne des caches.
+    */
+   private static final int [apply_attributeFinalStatic('clear caches hour')/] = 0;
+
+   /**
+    * Le job pour la purge des caches.
+    */
+   private transient SpiJob_Abs [apply_attributeFinal('job purge cache')/];
+
+   @Override
+   public void contextInitialized (final ServletContextEvent [apply_parameterMethodClassicIn('sce')/])
+   {
+      [apply_attributeFinal('job purge cache')/] = new SpiJob_Abs("Purge des caches")
+      {
+         @Override
+         protected void run () throws Throwable
+         {
+            clearCaches();
+         }
+
+         @Override
+         protected boolean hasTransaction ()
+         {
+            return false;
+         }
+
+         @Override
+         protected void doOnException (final Throwable [apply_parameterMethodClassicIn('ex')/])
+         {
+            [apply_attributeFinalStatic('log')/].warn([apply_parameterMethodClassicIn('ex')/].toString(), [apply_parameterMethodClassicIn('ex')/]);
+         }
+
+         @Override
+         protected UserPersistence_Abs getUserPersistence ()
+         {
+            return null;
+         }
+      };
+      // on purge les caches de service tous les jours a l'heure souhaitee
+      [apply_attributeFinal('job purge cache')/].scheduleDaily([apply_attributeFinalStatic('clear caches hour')/]);
+
+   }
+
+   @Override
+   public void contextDestroyed (final ServletContextEvent [apply_parameterMethodClassicIn('sce')/])
+   {
+      if ([apply_attributeFinal('job purge cache')/] != null)
+      {
+         // Eviter les fuites memoires.
+         [apply_attributeFinal('job purge cache')/].cancel();
+      }
+      ServiceCacheProxy.shutdown();
+   }
+
+   public static void clearCaches ()
+   {
+
+      ServiceCacheProxy.clearCaches();
+      [apply_attributeFinalStatic('log')/].info("Caches purges");
+
+	  // for reloading caches
+	  // [protected (any.getUserCodeId('for reloading caches'))]
+
+      // [/protected]
+
+      [apply_attributeFinalStatic('log')/].info("Caches recharges");
+   }
+}
+[/template]

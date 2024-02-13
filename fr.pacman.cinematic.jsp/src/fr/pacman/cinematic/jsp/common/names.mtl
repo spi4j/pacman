@@ -1,0 +1,19 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+			'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::convention::rule::pageRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[query public nameViewImplementation(viewContainer : ViewContainer) : String =
+	  apply_pageDefault(viewContainer.name)
+/]
+
+[query public nameViewStateImplementation(viewState : ViewState) : String =
+	  apply_methodDefault(viewState.name)
+/]
+
+[query public nameBeanImplementation (t : StructuredType) : String = 
+	t.name + 'Bean'
+/]
+

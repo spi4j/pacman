@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genGwtUserBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0',
+							'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::gwt::client::business::gwtUserBusiness /]
+[import fr::pacman::soalight::common::classes /]
+
+[template public genGwtUserBusiness(n : Namespace)]
+[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtClient(), buildGwtUserBusinessClassName() + '.java'), false, 'UTF-8')]
+[gwtUserBusiness()/]
+[/file]
+[/template]

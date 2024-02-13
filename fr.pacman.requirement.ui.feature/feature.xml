@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.pacman.requirement.ui.feature"
+      label="PacMan - Requirement"
+      version="4.4.0.qualifier"
+      provider-name="Safr@n"
+      plugin="fr.pacman.branding">
+
+   <includes
+         id="fr.pacman.commons.feature"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.obeonetwork.dsl.requirement"/>
+   </requires>
+
+   <plugin
+         id="fr.pacman.requirement"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fr.pacman.requirement.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

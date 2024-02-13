@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: fr.pacman.cinematic.gwt
+Bundle-ManifestVersion: 2
+Bundle-Name: PacMan - Cinematic GWT
+Bundle-SymbolicName: fr.pacman.cinematic.gwt
+Bundle-Version: 4.4.0.qualifier
+Bundle-Activator: fr.pacman.cinematic.gwt.Activator
+Bundle-Vendor: Safr@n
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.ocl,
+ org.eclipse.ocl.ecore,
+ org.eclipse.acceleo.model,
+ org.eclipse.acceleo.engine,
+ org.obeonetwork.dsl.cinematic,
+ org.obeonetwork.dsl.entity,
+ org.obeonetwork.dsl.overview,
+ fr.pacman.commons,
+ fr.pacman.cinematic.api,
+ fr.pacman.test;resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Eclipse-LazyStart: true
+Export-Package: fr.pacman.cinematic.gwt,
+ fr.pacman.cinematic.gwt.services

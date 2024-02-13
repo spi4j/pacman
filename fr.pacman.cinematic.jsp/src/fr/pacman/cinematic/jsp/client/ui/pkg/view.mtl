@@ -1,0 +1,713 @@
+[comment encoding = UTF-8 /]
+[module view('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+			 'http://www.obeonetwork.org/dsl/environment/3.0.0',
+			 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::cinematic::jsp::common::packages /]
+[import fr::pacman::cinematic::jsp::common::names /]
+[import fr::pacman::cinematic::jsp::common::services /]
+
+[import fr::pacman::cinematic::api::common::model /]
+
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+[comment : 
+	Ici on traite qu'avec des DTO meme si le binding effectue avec l'outil de modelisation/
+	En effet, pour l'instant si le DTO est issu d'un Entity, l'outil de meodelisation n'est 
+    pas capable de recuperer les attributs de l'Entity. Il n'est donc pas possible de lier 
+	un element de la page sur un attribut de DTO. Il faut donc le faire directement sur 
+  	l'entity au niveau de la modelisation. Par contre, l'objet DTO existe bien et a exactement 
+	les memes attributs que l'Entity. Au niveau de la generation on ne traite donc qu'avec des
+	DTO.
+/]
+
+[comment : **************************************************************************************************** /]
+[comment : Ecriture de la page d'erreur par defaut si aucune page d'erreur n'a ete modelisee par le developeur. /]
+[comment : Pour l'instant on fait au plus simple, a voir par la suite.                                          /]
+[comment : **************************************************************************************************** /]
+[template public viewDefaultError(root : CinematicRoot)]
+[root.writeViewTechnicalHeader(true)/]
+[/template]
+
+[comment : ********************************************************************************************** /]
+[comment : ********************************************************************************************** /]
+[comment :  Ecriture de la page jsp (methode principale).                                                 /]
+[comment :  Si la page d'erreur est modelisee alors elle est cree par le biais de ce template.            /]
+[comment : ********************************************************************************************** /]
+[comment : ********************************************************************************************** /]
+[template public view(viewContainer : ViewContainer, viewState : ViewState)]
+[viewContainer.writeViewTechnicalHeader(false)/]
+[comment : Si la page est un en-tete... /]
+[if viewState.isHeaderController()]
+<!-- En-tête pour l'application. -->
+[viewContainer.writeSpecificPageStyle()/]
+[viewContainer.writeViewBody(viewState, 'header')/]
+[comment : Si la page est un pied-de-page ... /]
+[elseif viewState.isFooterController()]
+<!-- Pied-de-page pour l'application. -->
+[viewContainer.writeViewBody(viewState, 'footer')/]
+[comment : Si la page concerne le referentiel. /]
+[elseif viewState.isReferentialController()]
+<!-- Référentiel pour l'application. -->
+[viewState.writeJspUseBeans('application')/]
+[else]
+<!-- Page standard pour l'application. -->
+[comment : Pour tous les autres types de page.../ ]
+[comment : Ecriture pour la recuperation des beans. / ]
+<!-- Référencement des beans utilisés pour la page. -->
+[viewState.writeJspUseBeans('request')/]
+[if viewContainer.hasToWriteReferential()][viewContainer.writeReferentialLink()/][/if]
+<html>
+	<head>
+		[viewContainer.writeCssLink()/]
+		[viewContainer.writeSpecificPageStyle()/]
+		[viewContainer.writeSpecificPageScript()/]
+	</head>
+	[comment : Affichage du corps de la page. /]
+	<body>		
+		<div id="div_[getApplicationName().toLower()/]_main">
+		[comment : Affichage de l'en-tete si l'en-tete existe. /]
+		[comment : Pour l'instant tout le css de l'en-tete est sous <body> ce qui n'est pas bon !!!/]
+		[if viewContainer.hasToWriteHeaderView()][viewContainer.writeHeaderLink()/][/if]
+		[viewContainer.writeViewMessengerLink()/]
+		[viewContainer.writeViewBody(viewState, 'body')/]
+		[comment : Affichage du pied-de-page si le pied-de-page existe. /]
+		[if viewContainer.hasToWriteFooterView()][viewContainer.writeFooterLink()/][/if]
+		</div>
+	</body>
+</html>
+[/if]
+[/template]
+
+[comment : ********************************************************************************************** /]
+[comment : Ecriture des differents liens d'inclusion pour la page (si besoin).                            /]
+[comment : ********************************************************************************************** /]
+
+[comment : Ecriture de la zone commune pour les messages. /]
+[template public viewMessenger(root : CinematicRoot)]
+[comment : On prend n'importe lequel des viewContainers... juste pour accrocher la methode. /]
+[root.getRootState().viewContainers->first().writeViewTechnicalHeader(true)/]
+<div id="[getApplicationName().toLower()/]_msg">
+	<% JspControllerMessenger [apply_variableDefault('messenger')/] = (JspControllerMessenger)request.getAttribute("fr.spi4j.jsp.messenger");  
+	if ([apply_variableDefault('messenger')/] != null) {%><fieldset class="<% out.print([apply_variableDefault('messenger')/].get_css()); %>"><legend>&nbsp;
+	<% out.print([apply_variableDefault('messenger')/].get_title()); %>&nbsp;</legend><% for(int i=0; i < [apply_variableDefault('messenger')/].get_messages().size(); i++)
+	{out.print([apply_variableDefault('messenger')/].get_messages().get(i) + "<br/>");}%></fieldset> <% } %> 
+</div>	
+[/template]
+
+[comment : Ecriture pour les surcharges de code javascript specifiques a la page. /]
+[template private writeSpecificPageScript(viewContainer : ViewContainer) post (trim())]
+<script>
+	// [viewContainer.name/] js
+	// [protected (viewContainer.getUserCodeId(viewContainer.name + ' js'))]
+	// Placer ici les portions de javascript personnalisées.
+
+	window.onload = function() {
+		if (typeof document.forms['['/]0[']'/] !== 'undefined' &&
+			typeof document.forms['['/]0[']'/].elements['['/]2[']'/] !== 'undefined') {
+				document.forms['['/]0[']'/].elements['['/]2[']'/].focus();
+		}
+    }
+	
+	// [/protected]		
+</script>
+[/template]
+
+[comment : Inclusion de la feuille de style (../ remplace ${pageContext.request.contextPath}). /]
+[template private writeCssLink(any : OclAny) post (trim())]
+<link rel="stylesheet" href="../css/style.css" media="all" type="text/css">
+[/template]
+
+[comment  : Inclusion pour la zone de message dans l'ensemble des pages. /]
+[template private writeViewMessengerLink(viewContainer : ViewContainer) post (trim())]
+<%@ include file="[ getJspPageUriFragment()/]/messenger.jsp" %>
+[/template]
+
+[comment : Inclusion de l'en-tete. /]
+[template private writeHeaderLink(viewContainer : ViewContainer) post (trim())]
+<%@ include file="[getHeaderView().namePackageViewContainer()/]/[getHeaderView().nameViewImplementation()/].jsp" %>
+[/template]
+
+[comment : Inclusion du pied-de-page. /]
+[template private writeFooterLink(viewContainer : ViewContainer) post (trim())]
+<div id="footer_[getApplicationName().toLower()/]">
+<%@ include file="[getFooterView().namePackageViewContainer()/]/[getFooterView().nameViewImplementation()/].jsp" %>
+</div>
+[/template]
+
+[comment : Inclusion du referentiel. /]
+[template private writeReferentialLink(viewContainer : ViewContainer) post (trim())]
+<%@ include file="[getReferentialView().namePackageViewContainer()/]/[getReferentialView().nameViewImplementation()/].jsp" %>
+[/template]
+
+[comment : Ecriture des surcharges de style specifiques a la page. /]
+[template private writeSpecificPageStyle(viewContainer : ViewContainer) post (trim())]
+<!-- Placer ici les styles spécifiques pour la page (si besoin) -->
+<style>
+	/* Le double slash n'a pas d'impact dans le style pour les navigateurs actuels...  */
+	/* [viewContainer.name/] css */
+	// [protected (viewContainer.getUserCodeId(viewContainer.name + ' css'))]
+
+	[viewContainer.layout.scanViewLayoutsStyle()/]
+
+	// [/protected]
+</style>
+[/template]
+
+[comment : Ecriture d'une zone protegee dans le corps de la page. /]
+[template private writeProtectedBodyZone (viewContainer : ViewContainer, viewState : ViewState, label : String) post (trim())]
+<!-- Positionner ici toute la partie de code personnalisé pour la portion de page (si nécessaire).
+// [viewContainer.name + label/]
+// [protected (viewContainer.getUserCodeId(viewContainer.name + label))]
+-->
+
+<!--
+// [/protected]
+-->
+[/template]
+
+[comment : Ecriture pour le referencement des beans (DTO) a utiliser pour la page. /]
+[template private writeJspUseBeans(viewState : ViewState, scope : String) post(trim())]
+[for (transition : Transition | viewState.getTransitionsFromState(false))][if not transition.to.oclIsUndefined() and transition.to.oclIsTypeOf(ActionState)]
+[for (op : Operation  | transition.to.oclAsType(ActionState).getOperationsForActionState())][for (param : Parameter | op.output)]
+[if param.type.oclIsTypeOf(DTO)][param.writeJspUseBean(param.type.oclAsType(DTO), transition)/][/if]
+[/for][/for][/if][/for]
+
+<!-- Placer ici les référencements de bean personnalisés. 
+     Attention : Si des champs en entrée sont mappés sur des DTO,
+	 placer ici manuellement les DTO en préfixant le nom du dto par 
+	 'input_'. Pour voir l'id exact du DTO aller dans la page et 
+	 récupérer l'identifiant du DTO qui a été automatiquement généré
+	 pour le champ. 
+// [viewState.name/] jsp use bean
+// [protected (viewState.getUserCodeId(viewState.name + ' jsp use bean'))]
+-->
+
+<!--
+// [/protected]
+-->
+[/template]
+
+[comment : Ecriture pour le referencement d'un bean (DTO) a utiliser pour la page. /]
+[template private writeJspUseBean (p : Parameter, d : DTO, t : Transition) post(trim())]
+<jsp:useBean id="[d.nameBeanImplementation()/]" scope="[t.writeScope()/]" type="[if p.isMultiple()]java.util.List<[/if][d.namePackageJspUseBeanType()/][if p.isMultiple()]>[/if]"/>
+[/template]
+
+[comment : Ecriture du scope pour le bean (en fonction de la metadonnee presente sur la transition). /]
+[template private writeScope(t : Transition) post(trim())]
+[if t.getScope().oclIsUndefined()]request[else][t.getScope()/][/if]
+[/template]
+
+[comment : ********************************************************************************************** /]
+[comment : ********************************************************************************************** /]
+[comment : Ecriture du corps de la page.                                                                  /]
+[comment : ********************************************************************************************** /]
+[comment : ********************************************************************************************** /]
+[template private writeViewBody (viewContainer : ViewContainer, viewState : ViewState, idFragment : String) post (trim())]
+<div id="div_[getApplicationName().toLower()/]_[idFragment/]" class="row">
+	[viewContainer.writeProtectedBodyZone(viewState,' body begin')/]
+	[viewContainer.layout.writeBeginContainer(viewState, false)/]
+	[viewContainer.layout.scanViewLayouts(viewContainer, viewState, viewContainer.layout)/]
+	[viewContainer.layout.writeEndContainer(false)/]
+	[viewContainer.writeProtectedBodyZone(viewState,' body end')/]
+</div>
+[/template]
+
+[comment : Scan de l'arbre des layouts mais uniquement pour les styles. /]
+[template private scanViewLayoutsStyle (layout : Layout) post (trim())]
+[comment : Securite.../]
+[if not layout.oclIsUndefined()]
+[for (subLayout : Layout | layout.ownedLayouts)]
+[if subLayout.isLayoutFormContainer()][subLayout.writeStyleElement()/][subLayout.scanViewLayoutsStyle()/]
+[elseif subLayout.isLayoutVirtual()][subLayout.scanViewLayoutsStyle()/]
+[else][subLayout.writeStyleElement()/][/if][/for][/if]
+[/template]
+
+[comment : Ecriture du style specifique pour le layout. /]
+[template private writeStyleElement(layout : Layout)]
+#[layout.getLayoutElement().getViewElementId()/] 
+{
+
+}
+[comment : si on rajoute un style supplementaire pour l'image... /]
+[if layout.getLayoutElement().isImageLink()]
+#img_[layout.getLayoutElement().getViewElementId()/] 
+{
+
+}
+[/if]
+[/template]
+
+[comment : ********************************************************************************************** /]
+[comment : ********************************************************************************************** /]
+[comment : Scan de l'arbre des layouts et écriture complete de la page. /]
+[comment : On travail avec le layout courant et le precedent layout (layout conteneur du layout courant). /]
+[comment : ********************************************************************************************** /]
+[comment : ********************************************************************************************** /]
+[template private scanViewLayouts(currentLayout : Layout, viewContainer : ViewContainer, 
+                                  viewState : ViewState, containerLayout : Layout) post (trim())]
+[comment : Securite.../]
+[if not currentLayout.oclIsUndefined()]
+[comment : On parcourt la liste des layouts. /]
+[for (subLayout : Layout | currentLayout.ownedLayouts)]
+[comment : Ecriture d'un conteneur de type formulaire. /]
+[if subLayout.isLayoutFormContainer()]
+[subLayout.writeBeginForm(viewState)/]
+[subLayout.storeCurrentFormLayout()/]
+[subLayout.writeBeginContainer(viewState, true)/]
+[subLayout.scanViewLayouts(viewContainer, viewState, subLayout)/]
+[subLayout.writeEndContainer(true)/]
+[subLayout.writeEndForm(viewState)/]
+[comment : Ecriture d'un conteneur autre que formulaire. /]
+[elseif subLayout.isLayoutVirtual()]
+[containerLayout.writeSeparatorContainer(viewState)/]
+[subLayout.writeBeginContainer(viewState, false)/]
+[subLayout.scanViewLayouts(viewContainer, viewState, subLayout)/]
+[subLayout.writeEndContainer(false)/]
+[comment : Ecriture d'un element final d'un conteneur. /]
+[else]
+[containerLayout.writeSeparatorContainer(viewState)/]
+[subLayout.writeElement(viewContainer, viewState)/]
+[/if]
+[/for]
+[/if]
+[/template]
+
+
+[comment : ********************************************************************************************** /]
+[comment : Ecritures des differents elements pour l'ensemble de la page.                                  /]
+[comment : ********************************************************************************************** /]
+
+[comment : Ecriture de l'element generique, point d'entree pour l'ecriture d'un element. /]
+[template private writeElement (layout : Layout, viewContainer : ViewContainer, viewState : ViewState)]
+<!-- [layout.getLayoutName()/] - [layout.getLayoutType()/] -->
+[layout.viewElement.writeWidget(viewContainer, viewState, layout.viewElement.getAttribut(), false )/] 
+[/template]
+
+[comment : Ecriture pour l'ouverture d'une zone de formulaire. /]
+[comment : Ici on parle de la partie technique (non graphique) pour le formulaire. /]
+[template private writeBeginForm (layout : Layout, viewState : ViewState)]
+<!-- Formulaire avec champ caché pour le routage -->
+<form action="./[viewState.nameViewStateImplementation() /]" [viewElement.writeCustomCode()/] 
+	method="post" id="[layout.viewElement.getViewElementId()/]" enctype="application/x-www-form-urlencoded">
+<input type="hidden" id="method" name="method">
+[/template]
+
+[comment : Ecriture pour la fermeture d'une zone de formulaire. /]
+[comment : Ici on parle de la partie technique (non graphique) pour le formulaire. /]
+[template private writeEndForm(layout : Layout, viewState : ViewState)]
+<!-- Positionner ici le code personnalisé pour le formulaire (si nécessaire). 
+// [layout.getLayoutId(viewState)/] zone formulaire
+// [protected (layout.getUserCodeId(layout.getLayoutId(viewState) + ' zone formulaire'))]
+-->
+
+<!--
+// [/protected]
+-->
+</form>
+
+[/template]
+
+[comment : Ecriture de l'id pour un conteneur de positionnement. /]
+[template private getLayoutId(layout : Layout, viewState : ViewState) post(trim())]
+div_[if not layout.viewElement.oclIsUndefined()][layout.viewElement.getViewElementId()/][else][layout.getDivId(viewState.name)/][/if]
+[/template]
+
+[comment : Ecriture pour l'ouverture d'un conteneur (qui peut aussi etre un formulaire). /]
+[comment : Ici on parle de la representation graphique dans le cas d'un formulaire. /]
+[template private writeBeginContainer (layout : Layout, viewState : ViewState, formContainer : Boolean )]
+[if formContainer]<fieldset><legend>&nbsp;[if not layout.getLayoutElement().oclIsUndefined() 
+and not layout.getLayoutElement().label.oclIsUndefined()][layout.getLayoutElement().label/][/if]&nbsp;</legend>[/if]
+<div id="div_[layout.getDivId(viewState.name)/]">
+[/template]
+
+[comment : Ecriture pour la fermeture d'un composant conteneur (qui peut aussi etre un formulaire). /]
+[comment : Ici on parle de la representation graphique dans le cas d'un formulaire. /]
+[template private writeEndContainer (layout : Layout, formContainer : Boolean )]
+</div>[if formContainer]</fieldset>[/if]
+[/template]
+
+[comment : Ecriture des conteneurs de positionnement pour les composants (a partir des layouts). /]
+[comment : La premiere et la derniere cellule sont toujours vides (permet de simplifier le code) ! /]
+[template private writeSeparatorContainer (layout : Layout, viewState : ViewState)]
+[if not layout.oclIsUndefined()][if layout.direction = LayoutDirection::HORIZONTAL]</div>
+<div class="col" id="[layout.getLayoutId(viewState)/]">[else]</div>
+<div class="row" id="[layout.getLayoutId(viewState)/]">[/if][/if]
+[/template]
+
+[comment : ********************************************************************************************** /]
+[comment : Ecriture d'un composant sur la page.                                                           /]
+[comment : On transfert de nombreux objets meme si ils ne sont pas utilises (a titre evolutif).           /]
+[comment : ********************************************************************************************** /]
+[template private writeWidget(viewElement : AbstractViewElement, viewContainer : ViewContainer, 
+  viewState : ViewState , attribute : Attribute, table : Boolean) post (trim())]
+[if viewElement.isPassword()][viewElement.writePassword()/]
+[elseif (viewElement.isPanel())][viewElement.writePanel(viewContainer)/]
+[elseif (viewElement.isButtonSimple())][viewElement.writeButtonSimple(viewContainer, viewState, attribute, table)/]
+[elseif (viewElement.isButtonSubmit())][viewElement.writeButtonSubmit(viewContainer, viewState)/]
+[elseif (viewElement.isRadio())][viewElement.writeRadio(viewContainer, viewState ,attribute)/]
+[elseif (viewElement.isCheckbox())][viewElement.writeCheckbox(viewContainer, viewState, attribute)/]
+[elseif (viewElement.isCombobox())][viewElement.writeCombobox(viewContainer, viewState, attribute)/]
+[elseif (viewElement.isTable())][viewElement.writeTable(viewContainer, viewState)/]
+[elseif (viewElement.isText())][viewElement.writeText(viewContainer, viewState, attribute)/]
+[elseif (viewElement.isLabel())][viewElement.writeLabel(attribute, false, table)/]
+[elseif (viewElement.isDate())][viewElement.writeDate(viewContainer, viewState, attribute)/]
+[elseif (viewElement.isImageLink())][viewElement.writeLink(viewContainer, viewState, attribute, true)/]
+[elseif (viewElement.isLink())][viewElement.writeLink(viewContainer, viewState, attribute, false)/]
+[elseif (viewElement.isImage())][viewElement.writeImage(viewContainer, viewState, attribute, false)/]
+[else] <!-- Composant inconnu pour le générateur ! -->
+[/if]
+[/template]
+
+[comment : ********************************************************************************************** /]
+[comment : Ecriture de l'identifiant pour l'element (interne page jsp). /]
+[comment : ********************************************************************************************** /]
+[template private getViewElementId (viewElement : AbstractViewElement) post (trim())]
+[if viewElement.isPassword()]pwd_[viewElement.name/]
+[elseif (viewElement.isPanel())]pnl_[viewElement.name/]
+[elseif (viewElement.isFormPanel())]frm_[viewElement.name/]
+[elseif (viewElement.isPage())]pge_[viewElement.name/]
+[elseif (viewElement.isButtonSimple())]spl_[viewElement.name/]
+[elseif (viewElement.isButtonSubmit())]cmd_[viewElement.name/]
+[elseif (viewElement.isRadio())]rdo_[viewElement.name/]
+[elseif (viewElement.isCheckbox())]cbx_[viewElement.name/]
+[elseif (viewElement.isCombobox())]cbo_[viewElement.name/]
+[elseif (viewElement.isTable())]tbl_[viewElement.name/]
+[elseif (viewElement.isText())]txt_[viewElement.name/]
+[elseif (viewElement.isLabel())]lbl_[viewElement.name/]
+[elseif (viewElement.isDate())]dat_[viewElement.name/]
+[elseif (viewElement.isLink())]lnk_[viewElement.name/]
+[elseif (viewElement.isImageLink())]ilnk_[viewElement.name/]
+[elseif (viewElement.isImage())]img_[viewElement.name/]
+[else] cmp_[viewElement.name/][/if]
+[/template]
+
+[comment : Ecriture d'une table. /]
+[template private writeTable(viewElement : AbstractViewElement, viewContainer: ViewContainer, viewState : ViewState) post (trim())]
+[if viewElement.oclIsTypeOf(ViewContainer)][comment : vraiment utile ?/]
+<table id="[viewElement.getViewElementId()/]" [viewElement.writeCustomCode()/]><tr>
+[for (column : AbstractViewElement | viewElement.oclAsType(ViewContainer).ownedElements)]
+<th id="th_[column.name/]">[column.label/]</th>
+[/for][let e : BoundableElement = viewElement.oclAsType(ViewContainer).searchBindingFor()]
+[if not e.oclIsUndefined() and e.oclIsKindOf(DTO)][viewElement.writeTableTDEmpty(e.oclAsType(DTO))/]
+<c:forEach items="${[e.oclAsType(DTO).nameBeanImplementation()/]}" var="item" varStatus="status"><tr>
+[for (column : AbstractViewElement | viewElement.oclAsType(ViewContainer).ownedElements)]
+<td id="td_[column.name/]">[column.writeTableTD(viewContainer, viewState)/]</td>
+[/for]</tr></c:forEach>[/if][/let]
+<tr></table>[/if]
+[/template]
+
+[comment : Ecriture de la zone libre pour message si aucune ligne dans la table. /]
+[comment : Le fait d'avoir une zone libre permet de modifier facilement le texte et l'aspect de la ligne. /]
+[template private writeTableTDEmpty(viewElement : AbstractViewElement, dto : DTO) post (trim())]
+<c:if test="${[dto.nameBeanImplementation()/].size() == 0}">
+	<!-- On profite du laxisme html avec un colspan fixe, possibilité de modifier 
+		 le colspan apres première génération.
+
+	// [viewElement.getViewElementId()/] zone tableau [dto.name/]
+	// [protected (viewElement.getUserCodeId(viewElement.getViewElementId() + ' zone tableau' + dto.name))]
+	-->
+	
+	<tr><td colspan="100" class="nodata"><span id="[viewElement.getViewElementId()/]_emptyData">Aucune donnée trouvé !</span></td></tr>
+	
+	<!--
+	// [/protected]
+	-->
+</c:if>
+[/template]
+
+[comment : Ecriture d'une ligne pour la table. Pour l'instant pret pour repartir dans le tronc commun. /]
+[template private writeTableTD(column : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState) post (trim())]
+[let e : BoundableElement = column.oclAsType(ViewElement).searchBindingFor()]
+[if e.oclIsKindOf(Attribute)][column.writeWidget(viewContainer, viewState, e.oclAsType(Attribute), true)/][/if][/let]
+[/template]
+
+[comment : /]
+[template private writeOutputValue(viewElement : AbstractViewElement, prefix : String) post(trim())]
+[let e : BoundableElement = viewElement.oclAsType(ViewElement).searchBindingFor()]
+[if not e.oclIsUndefined() and e.oclIsTypeOf(Attribute)][let d : DTO = e.oclAsType(Attribute).containingType.oclAsType(DTO)]
+<c:out value="${[prefix/][d.nameBeanImplementation()/].[apply_methodGet(e.oclAsType(Attribute).name)/]()}"/>[/let][/if][/let]
+[/template]
+
+[comment : Recuperation du nom pour le bean cible a attaquer pour le composant (passer en query ?). /]
+[template private getTargetBeanName(viewElement : AbstractViewElement) post(trim())]
+[let e : BoundableElement = viewElement.oclAsType(ViewElement).searchBindingFor()]
+[if not e.oclIsUndefined()][if e.oclIsTypeOf(DTO)][e.oclAsType(DTO).nameBeanImplementation()/]
+[elseif e.oclIsTypeOf(Attribute)][let d : DTO = e.oclAsType(Attribute).containingType.oclAsType(DTO)]
+[d.nameBeanImplementation()/][/let][/if][/if][/let]
+[/template]
+
+[comment : Ecriture pour l'initialisation de la donnee. /]
+[comment : Si le la zone est mappee sur un DTO, on route vers la methode 'writeOutputValue'. /]
+[template private writeInputValue (viewElement : AbstractViewElement) post(trim()) ]
+[if not viewElement.getDefaultValue().oclIsUndefined()][viewElement.getDefaultValue()/]
+[elseif not viewElement.oclAsType(ViewElement).searchBindingFor().oclIsUndefined()]
+[viewElement.writeOutputValue('input_')/][else]<c:out value="${param.[viewElement.name/]}"/>[/if]
+[/template]
+
+[comment : Recuperation de la valeur d'un label (sert aussi pour les libelles des champs). /]
+[template public getLabelValue(viewElement : AbstractViewElement) post(trim())]
+[if (not(viewElement.label.oclIsUndefined()) and viewElement.label.size() > 0)][viewElement.label/][else][viewElement.name/][/if]
+[/template]
+
+[comment : Simple alias pour centraliser la gestion de la nullite de l'attribut si on est pas dans une table./]
+[template private writeLabel(viewElement : AbstractViewElement, form : Boolean ) post (trim())]
+[viewElement.writeLabel(null, form, false)/]
+[/template]
+
+[comment : Pour l'instant, simple alias vers la methode d'ecriture du code personnalise. /]
+[template private writeCustomCode(viewElement : AbstractViewElement) post (trim())]
+[viewElement.writeCustomCode('')/]
+[/template]
+
+[comment : Ecriture de code personnalise pour positionner des parametres dans des urls. /]
+[comment : Pour l'instant, on se contente d'ecrire le code tel quel car il est impossible de l'inventer. /]
+[template private writeCustomUrlParams(viewElement : AbstractViewElement) post (trim())]
+[let customParams : String = viewElement.getUrlCustomParams()][if not customParams.oclIsUndefined()][customParams/][/if][/let]
+[/template]
+
+[comment : Ecriture de code utilisateur personnalise pour le widget. /]
+[comment : On prend chaque attribut separe par une virgule et on cree une zone 'user code'. /]
+[template private writeCustomCode(viewElement : AbstractViewElement, prefix : String) post (trim())]
+[let customCode : String = viewElement.getCustomCode()]
+[let attributs : Sequence(String) = customCode.tokenize(',')]
+[for (attribut : String | attributs)][attribut.trim()/]="
+[attribut.writeCommentBegin()/]
+// [prefix/][viewElement.getViewElementId()/]_[attribut.trim()/]
+// [protected (viewElement.getUserCodeId(prefix + viewElement.getViewElementId() + '_' + attribut.trim()))]
+[attribut.writeCommentEnd()/] 
+
+[attribut.writeCommentBegin()/]
+// [/protected]
+[attribut.writeCommentEnd()/]"
+[/for][/let][/let]
+[/template]
+
+[comment : Ecriture de la balise de commentaire en fonction de l'attribut. /]
+[template private writeCommentBegin(attribut : String) post (trim())]
+/*
+[/template]
+
+[comment : Ecriture de la balise de commentaire en fonction de l'attribut. /]
+[template private writeCommentEnd(attribut : String) post (trim())]
+*/
+[/template]
+
+[comment : Ecriture generique pour affichage d'une donnee sous forme de texte. /]
+[template private writeLabel(viewElement : AbstractViewElement, attribute : Attribute, form : Boolean, table : Boolean) post (trim())]
+[if attribute.oclIsUndefined()][viewElement.writeLbl(form)/][else][viewElement.writeSpn(attribute, table)/][/if]
+[/template]
+
+[comment : Ecriture d'un véritable label devant un champ quelconque (texte, textarea, combo, etc...). /]
+[template private writeLbl(viewElement : AbstractViewElement, form : Boolean) post(trim())]
+<label id="[if form]lbl_[/if][viewElement.getViewElementId()/]" [viewElement.writeCustomCode('lbl_')/]>[viewElement.getLabelValue()/] : </label>
+[/template]
+
+[comment : Ecriture d'un span avec la valeur de l'attribut, on se sert du span simplement pour pouvoir mettre un identifiant. /]
+[comment : Par contre, le span peut etre dans une table ou hors d'une table. /]
+[template private writeSpn(viewElement : AbstractViewElement, attribute : Attribute, table : Boolean) post(trim())]
+[if table][attribute.writeValueFromItem()/][else]<span id="spn_[viewElement.getViewElementId()/]">[attribute.writeValueFromBean()/]</span>[/if]
+[/template]
+
+[comment : Centralisation de la recuperation de la valeur d'un attribut dans une iteration de table. /]
+[comment : Ici le conteneur pour l'attribut est gere par la table, il est automatiquement appele 'item'. /]
+[template private writeValueFromItem(attribute : Attribute) post(trim())]
+<c:out value="${item.[apply_methodGet(attribute.name)/]()}"/>
+[/template]
+
+[comment : Centralisation de la recuperation de la valeur d'un attribut hors d'une table./]
+[comment : Ici il faut retrouver le nom du bean qui peut etre soit un dto soit une entite (au niveau modelisation / binding). /]
+[template private writeValueFromBean(attribute : Attribute) post(trim())]
+<c:out value="${[attribute.containingType.nameBeanImplementation()/].[apply_methodGet(attribute.name)/]()}"/>
+[/template]
+
+[comment : Ecriture d'un composant de type 'text'./]
+[template private writeText(viewElement : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState, attribute : Attribute) post (trim())]
+[viewElement.writeLabel(true)/]
+<input type="text" id="[viewElement.getViewElementId()/]" name="[viewElement.name/]" [viewElement.writeCustomCode()/] 
+ value="[viewElement.writeInputValue()/]" maxlength="[viewElement.getMaxlenght()/]">
+[/template]
+
+[comment : Ecriture d'un composant de type 'Textarea'./]
+[template public writeTextarea(viewElement : AbstractViewElement) post (trim())]
+[viewElement.writeLabel(true)/]
+<input type="textarea" id="[viewElement.getViewElementId()/]" rows="3" >[viewElement.writeInputValue()/]</textarea>
+[/template]
+
+[comment : Ecriture d'un composant de type 'Liste déroulante'. /]
+[template private writeCombobox(viewElement : AbstractViewElement , viewContainer : ViewContainer, viewState : ViewState, attribute : Attribute) post (trim())]
+[viewElement.writeLabel(true)/]
+<select id="[viewElement.getViewElementId()/]"  name="[viewElement.name/]" [viewElement.writeCustomCode()/] 
+[if not viewElement.events->isEmpty()][viewElement.writeJsRouting(viewContainer, viewState)/][else]>[/if]
+<c:forEach items="${[viewElement.getTargetBeanName()/]}" var="item" varStatus="status">
+<!-- 
+// [viewElement.getViewElementId()/]
+// [protected (viewElement.getUserCodeId(viewElement.getViewElementId()))]
+-->
+<option value="${item.get_value()}">${item.get_label()}</option>
+<!--
+// [/protected]
+-->
+</c:forEach>
+</select>		    
+[/template]
+
+[comment : Ecriture d'un composant de type 'Bouton radio'. /]
+[template private writeRadio(viewElement : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState,  attribute : Attribute) post (trim())]
+[if attribute.oclIsUndefined()][viewElement.writeLabel(true)/][/if]
+<input type="radio" id="[viewElement.getViewElementId()/]" name="[viewElement.name/]" [viewElement.writeCustomCode()/]
+ 	value="[if attribute.oclIsUndefined()][else][attribute.writeValueFromItem()/][/if]"/>
+[/template]
+
+[comment : Ecriture d'un composant de type 'Case a cocher'. /]
+[template private writeCheckbox(viewElement : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState, attribute : Attribute) post (trim())]
+[viewElement.writeLabel(true)/]
+<input type="checkbox" id="[viewElement.getViewElementId()/]" [viewElement.writeCustomCode()/]
+	value="[viewElement.writeInputValue()/]" name="[viewElement.name/]" 
+	[if not viewElement.events->isEmpty()][viewElement.writeJsRouting(viewContainer, viewState)/][else]/>[/if]
+[/template]
+
+[comment : Ecriture d'un composant de type 'Panel'. /]
+[template private writePanel(viewElement : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+<fieldset><legend>[viewElement.getLabelValue()/]</legend></fieldset>
+[/template]
+
+[comment : Ecriture d'un composant de type 'Image'. (../ remplace ${pageContext.request.contextPath})/]
+[template private writeImage(viewElement : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState, attribute : Attribute, fromOtherElement : Boolean) post (trim())]
+[if attribute.oclIsUndefined()]<img src="../img/[viewElement.getImageName().trim()/]"
+id="[if fromOtherElement]img_[/if][viewElement.getViewElementId()/]" title="[viewElement.getLabelValue()/]" [viewElement.writeCustomCode('img_')/]/>[else]
+<img src="../img/[attribute.writeValueFromItem().trim()/]" [viewElement.writeCustomCode()/]>[/if]
+[/template] 
+
+[comment : Ecriture d'un composant de type 'Lien' ou 'Image avec un lien'. /]
+[template private writeLink(viewElement : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState, attribute : Attribute, image : Boolean) post (trim())]
+<a href="[viewElement.writeUrl(viewState)/][viewElement.writeCustomUrlParams()/]" id="[viewElement.getViewElementId()/]" [viewElement.writeCustomCode()/]>
+[if image][viewElement.writeImage(viewContainer, viewState, attribute, true)/][else][if not attribute.oclIsUndefined()]
+[attribute.writeValueFromItem()/][else][viewElement.getLabelValue()/][/if][/if]</a>
+[/template]
+
+[comment : Ecriture du lien, si pas d'evenement on cherche un binding./]
+[template private writeUrl(viewElement : AbstractViewElement, viewState : ViewState) post (trim())]
+[if viewElement.events->isEmpty()][viewElement.writeBindingUrl(viewState)/][else]./[viewState.nameViewStateImplementation() /]?method=[viewElement.getMethodName()/][/if]	
+[/template]
+
+[template private writeBindingUrl(viewElement : AbstractViewElement, viewState : ViewState) post (trim())]
+[/template]
+
+[comment : Ecriture d'un composant de type 'Calendrier'. /]
+[comment : Pour l'instant on fait un simple champ text. /]
+[template private writeDate(viewElement : AbstractViewElement, viewContainer : ViewContainer, viewState : ViewState, attribute : Attribute) post (trim())]
+[viewElement.writeLabel(true)/]
+<input type="text" id="[viewElement.getViewElementId()/]" name="[viewElement.name/]" [viewElement.writeCustomCode()/] 
+ value="[viewElement.writeInputValue()/]" maxlength="10" size="15" placeHolder="../../...." pattern="['['/]0-9[']'/]{2}/['['/]0-9[']'/]{2}/['['/]0-9[']'/]{4}">
+[/template]
+
+[comment : Ecriture d'un composant de type 'Mot de passe'. /]
+[template private writePassword(viewElement : AbstractViewElement) post (trim())]
+[viewElement.writeLabel(true)/]
+<input type="password" id="[viewElement.getViewElementId()/]" name="[viewElement.name/]" 
+value="[viewElement.writeInputValue()/]" [viewElement.writeCustomCode()/]/>
+[/template]
+
+[comment : Ecriture d'un composant de type 'Bouton'. /]
+[template private writeButtonSimple(viewElement : AbstractViewElement, viewContainer : ViewContainer, 
+ viewState : ViewState, attribute : Attribute, table : Boolean) post (trim())]
+<!-- On renvoie toujours sur le contrôleur proprietaire du bouton. -->
+<input type="button" value="[viewElement.getLabelValue()/]" id="[viewElement.getViewElementId()/]" [viewElement.writeCustomCode()/] 
+ onclick="location.href='./[viewState.nameViewStateImplementation() /]?method=[viewElement.getMethodName()/][addAttributeToUrl(attribute, table)/]'"/>
+[/template] 
+
+[template private addAttributeToUrl(attribute : Attribute, table : Boolean)  post (trim())]
+[if not attribute.oclIsUndefined()]&[attribute.name/]=[if table][attribute.writeValueFromItem()/][else][attribute.writeValueFromBean()/][/if][/if]
+[/template]
+
+[comment : Ecriture d'un composant de type 'Bouton' (pour soumission formulaire). /]
+[template private writeButtonSubmit(viewElement : AbstractViewElement, viewContainer : ViewContainer, 
+ viewState : ViewState) post (trim())]
+<!-- On renvoie toujours sur le contrôleur proprietaire du bouton. -->
+<input type="submit" value="[viewElement.getLabelValue()/]" id="[viewElement.getViewElementId()/]" [viewElement.writeCustomCode()/]  
+	[viewElement.writeJsRouting(viewContainer, viewState)/] [comment : Ne pas fermer la balise a ce niveau !/]
+[/template] 
+
+[comment : Ecriture de la methode javascript de routage pour le composant. /]
+[comment : On rajoute un appel a une methode js pour que le developpeur puisse mettre du code personnel. /]
+[template private writeJsRouting (viewElement : AbstractViewElement, viewContainer : ViewContainer, 
+ viewState : ViewState) post (trim())]
+[for (event : ViewEvent| viewElement.events)]
+[event.type.name.toLower()/]="[viewElement.writeJsRoutingMethod(event)/]"[/for]/>
+<script>
+	function [viewElement.name/]CustomMethodJS(event) {
+		<!--
+		 // [viewElement.name/]CustomMethodJS
+		 // [protected (viewElement.getUserCodeId(viewElement.name + 'CustomMethodJS'))]
+		-->
+[if viewElement.isButtonSubmit()]
+		return true;
+[else]
+		document.forms['['/]'[viewElement.getCurrentFormLayout().viewElement.getViewElementId()/]'[']'/].submit();
+[/if]
+		<!--
+		// [/protected]
+		-->
+	}
+</script>                                             
+[/template]
+
+[comment : Ecriture de la portion de code pour attaquer le formulaire en javascript. /]
+[template private writeJsRoutingMethod(viewElement : AbstractViewElement, event : ViewEvent) post(trim())]
+[viewElement.writeJsRoutingForm()/].[viewElement.writeJsRoutingValue(event)/]; [if viewElement.isButtonSubmit()]return[/if] [viewElement.name/]CustomMethodJS('[event.type.name.toLower()/]');
+[/template]
+
+[comment : Ecriture de la portion de code pour attaquer le formulaire en javascript (suite). /]
+[template private writeJsRoutingForm(viewElement : AbstractViewElement) post(trim())]
+document.forms['['/]'[viewElement.getCurrentFormLayout().viewElement.getViewElementId()/]'[']'/]
+[/template]
+
+[comment : Ecriture de la portion de code pour attaquer le formulaire en javascript (suite). /]
+[template private writeJsRoutingValue(event : ViewEvent) post(trim())]
+elements['['/]'method'[']'/].setAttribute('value','[event.getEventName()/]')
+[/template]
+
+[comment : Ecriture du nom de la methode a attaquer dans le cadre de la gestion des evenements javascript. /]
+[template private getMethodName (viewElement : AbstractViewElement) post (trim())]
+[for (event : ViewEvent| viewElement.events)]
+[if not event.type.oclIsUndefined() and event.type.name.equalsIgnoreCase('onClick')]
+[event.getEventName()/][/if][/for]
+[/template]
+
+[comment : Ecriture de la page d'index pour l'application. /]
+[template public viewIndex(root : CinematicRoot)]
+[root.getRootState().viewContainers->first().writeViewTechnicalHeader(false)/]
+// Page initiale : on redirige vers la première page de l'application.
+<% response.sendRedirect(".[getJspCtrlUriFragment()/]/[root.getRootState().nameViewStateImplementation()/]"); %>
+[/template]
+
+[comment : Ecriture de l'en-tete technique pour une page jsp. /]
+[template private writeViewTechnicalHeader(any : OclAny, writeMessenger : Boolean) post (trim())]
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" autoFlush="true" %>
+[if writeMessenger]<%@ page import="fr.spi4j.ui.jsp.JspControllerMessenger" %>[/if]
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+
+<!DOCTYPE html>
+[/template]
+
+[comment : Recherche si l'element est lie a un attribut de DTO. /]
+[comment : securite supplementaire avec test 'ViewElement'. /]
+[query private getAttribut(e : AbstractViewElement ) : Attribute = 
+	if(e.oclIsKindOf(ViewElement) and (not e.oclAsType(ViewElement).searchBindingFor().oclIsUndefined() 
+    and e.oclAsType(ViewElement).searchBindingFor().oclIsKindOf(Attribute))) then 
+	e.oclAsType(ViewElement).searchBindingFor().oclAsType(Attribute) else null endif 
+/]
+
+[comment : Non utilisé pour l'instant. A voir. /] 
+[query private valid(o : ObeoDSMObject) : Boolean = 
+	not o.oclIsUndefined() and not o.oclIsInvalid()
+/]

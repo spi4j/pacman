@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.pacman.validation.ui.feature"
+      label="PacMan - Validation"
+      version="4.4.0.qualifier"
+      provider-name="Safr@n"
+      plugin="fr.pacman.branding">
+
+   <includes
+         id="fr.pacman.commons.feature"
+         version="0.0.0"/>
+
+   <requires>
+   	  <!-- Do we need Graal yet ? -->
+      <import plugin="com.google.guava"/>
+      <import plugin="org.obeonetwork.dsl.requirement"/>
+      <import plugin="org.obeonetwork.graal"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.sirius"/>
+      <import plugin="org.eclipse.sirius.diagram"/>
+      <import plugin="org.eclipse.sirius.common"/>
+      <import plugin="org.obeonetwork.graal.editor"/>
+      <import plugin="org.obeonetwork.dsl.entity.editor"/>
+      <import plugin="org.obeonetwork.dsl.requirement.editor"/>
+      <import plugin="org.obeonetwork.dsl.soa.editor"/>
+      <import plugin="org.obeonetwork.dsl.cinematic.editor"/>
+   </requires>
+
+   <plugin
+         id="fr.pacman.validation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fr.pacman.validation.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fr.pacman.validation.view"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

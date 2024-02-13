@@ -1,0 +1,58 @@
+[comment encoding = UTF-8 /]
+[module webappRemotingServlet('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                            'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::methodes /]
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+[template public webappRemotingServlet(any : OclAny)]
+[licence()/]
+package [getApplicationPackage()/];
+
+// [protected ('for imports')]
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+
+import [buildPackageBusiness() + '.' + buildAppliUserBusinessGenClassName()/];
+
+// [/protected]
+
+/**
+ * Servlet pour le remoting des services.
+ */
+public class WebappRemotingServlet extends fr.spi4j.remoting.RemotingServlet
+{
+   // WebappRemotingServlet
+   // [protected (any.getUserCodeId('WebappRemotingServlet'))]
+
+   private static final long serialVersionUID = 1L;
+
+   @Override
+   public void init (final ServletConfig [apply_parameterMethodClassicIn('config')/]) throws ServletException
+   {
+      super.init([apply_parameterMethodClassicIn('config')/]);
+
+      final [buildAppliUserBusinessGenClassName()/] [apply_variableFinal('userBusiness')/] = [buildAppliUserBusinessGenClassName()/].getSingleton();
+      setUserBusiness([apply_variableFinal('userBusiness')/]);
+   }
+
+   // [/protected]
+}
+[/template]

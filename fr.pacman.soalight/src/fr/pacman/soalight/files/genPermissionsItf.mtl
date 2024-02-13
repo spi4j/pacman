@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genPermissionsItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
+						'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::commons::permissionsItf /]
+[import fr::pacman::soalight::common::classes /]
+
+[template public genPermissionsItf(n : Namespace)]
+[file (filename(getCommonsSourceDir(), buildPackageBusiness(), buildAppliPermissionsInterfaceName() + '.java'), false, 'UTF-8')]
+[permissionsItf(n)/]
+[/file]
+[/template]

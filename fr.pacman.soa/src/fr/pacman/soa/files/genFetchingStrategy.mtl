@@ -1,0 +1,20 @@
+[comment encoding = UTF-8 /]
+[module genFetchingStrategy('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                            'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::commons::business::api::fetching::category::fetchingStrategy /]
+[import fr::pacman::soa::commons::business::api::fetching::category::fetchingStrategyTest /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genFetchingStrategy(d : DTO)]
+[comment AVOIR certains fichiers sont à générer dans le réferentiel /]
+[file (filename(getServerSourceDir(), buildPackageFetchingStrategyDto(d), buildFetchingStrategyClassName(d) + '.java'), false, 'UTF-8')]
+[fetchingStrategy(d)/]
+[/file]
+[file (filename(getServerTestDir(), buildPackageFetchingStrategyDto(d), buildFetchingStrategyTestClassName(d) + '.java'), false, 'UTF-8')]
+[fetchingStrategyTest(d)/]
+[/file]
+[/template]

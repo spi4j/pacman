@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module gwt-widgets('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[query public getImplementationClass(widget : Widget) : String =
+invoke('fr.pacman.cinematic.gwt.services.GwtWidgetUtils', 'getImplementationClass(org.obeonetwork.dsl.cinematic.toolkits.Widget)', Sequence{widget})
+/]
+
+[query public getImplementationPackage(widget : Widget) : String =
+invoke('fr.pacman.cinematic.gwt.services.GwtWidgetUtils', 'getImplementationPackage(org.obeonetwork.dsl.cinematic.toolkits.Widget)', Sequence{widget})
+/]
+
+[query public getImplementationClassNameForImport(widget : Widget) : String =
+invoke('fr.pacman.cinematic.gwt.services.GwtWidgetUtils', 'getImplementationClassNameForImport(org.obeonetwork.dsl.cinematic.toolkits.Widget)', Sequence{widget})
+/]

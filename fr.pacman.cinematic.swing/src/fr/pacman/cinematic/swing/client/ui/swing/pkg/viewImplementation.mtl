@@ -1,0 +1,314 @@
+[comment encoding = UTF-8 /]
+[module viewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+                           'http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::standard-widgets /]
+[import fr::pacman::cinematic::api::common::model /]
+
+[import fr::pacman::cinematic::swing::common::packages /]
+[import fr::pacman::cinematic::swing::common::name /]
+[import fr::pacman::cinematic::swing::common::swing-widgets /]
+[import fr::pacman::cinematic::swing::common::swing-commons /]
+
+[template public viewImplementation(viewContainer : ViewContainer)]
+package [namePackageViewContainerImplementation(viewContainer)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[viewContainer.writeImports()/]
+
+// [/protected]
+
+/**
+ * Screen [nameViewImplementation(viewContainer)/].
+ * @author [getAuthorName()/]
+ */
+public class [nameViewImplementation(viewContainer)/] extends SpiViewPanel<[namePresenter(viewContainer)/]> implements [nameViewInterface(viewContainer)/]
+{
+
+   private static final long serialVersionUID = 1L;
+
+[for (element : ViewElement | viewContainer.viewElements)]
+   // Declaration [element.name + '_' + genericType(element, getImplementationClass(element.widget), true)/]
+   // [protected (element.getUserCodeId('Declaration ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), true)))]
+	[if (useMatching())] 
+   private final [genericType(element, getImplementationClass(element.widget), true)/] [nameVariableElement(element)/];
+	[else] 
+	private final [genericTypeEntity(element, getImplementationClass(element.widget))/] [nameVariableElement(element)/];	
+	[/if]
+   // [/protected]
+
+[/for]
+
+   // initialisation des composants
+
+[for (element : ViewElement | viewContainer.viewElements)]
+[for (viewEvent : ViewEvent | element.events)]
+[if not viewEvent.type.oclIsUndefined() and ('onClick'.equalsIgnoreCase(viewEvent.type.name))]
+   // Parametrage [element.name + '_' + genericType(element, getImplementationClass(element.widget), true)/]
+   // [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), true)))]
+   private transient final ActionListener [nameVariableElement(element)/]Action = new ActionListener()
+   {
+      @Override
+      public void actionPerformed (final ActionEvent p_event)
+      {
+    [if viewContainer.getViewStatesForViewContainer()->exists(viewState : ViewState | viewState.getTransitionsFromState(true).on->includes(viewEvent))]
+         getPresenter().[viewEvent.nameActionPresenteur()/]();
+    [/if]
+    [for (flowEvent : FlowEvent | viewEvent.getFlowEventsForViewEvent())]
+       [if viewContainer.getViewStatesForViewContainer()->exists(viewState : ViewState | viewState.getTransitionsFromState(true).on->includes(flowEvent))]
+         getPresenter().[flowEvent.nameActionPresenteur()/]();
+       [/if]
+    [/for]
+    [if not viewContainer.widget.oclIsUndefined() and viewContainer.widget.name = 'Dialog']
+         // Cet écran est une fenêtre de dialogue, donc celle-ci est fermée par défaut dès qu'un événement intervient
+         getPresenter().close();
+    [/if]
+      }
+   };
+   // [/protected]
+[/if]
+[/for]
+[/for]
+
+   /**
+    * Constructeur.
+    * @param p_presenter
+    *           le présenteur
+    */
+   public [nameViewImplementation(viewContainer)/] (final [namePresenter(viewContainer)/] p_presenter)
+   {
+      super(p_presenter);
+      // initialize
+      // [protected (viewContainer.getUserCodeId('initialize'))]
+[if not ViewIsMainPanel(viewContainer)]
+      final SpiPanel v_buttonsPanel = new SpiPanel(new GridLayout([viewContainer.viewElements->size()/], 1));
+[/if]
+[for (element : ViewElement | viewContainer.viewElements)]
+    [if (getImplementationClass(element.widget) = 'SpiButton')]
+        [if (element.label.oclIsUndefined() or element.label.size() = 0)]
+      [nameVariableElement(element)/] = new [genericType(element, getImplementationClass(element.widget), true)/]("[element.name/]");
+        [else]
+      [nameVariableElement(element)/] = new [genericType(element, getImplementationClass(element.widget), true)/]("[element.label/]");
+        [/if]
+    [else]
+		[if (useMatching())] 
+      [nameVariableElement(element)/] = new [genericType(element, getImplementationClass(element.widget), true)/]();
+		[else]
+	  [nameVariableElement(element)/] = new [genericTypeEntity(element, getImplementationClass(element.widget))/]();
+	    [/if]
+    [/if]
+[for (viewEvent : ViewEvent | element.events)]
+    [if not viewEvent.type.oclIsUndefined() and 'onClick'.equalsIgnoreCase(viewEvent.type.name)]
+      [nameVariableElement(element)/].addActionListener([nameVariableElement(element)/]Action);
+    [/if]
+[/for]
+      [if ViewIsMainPanel(viewContainer)]
+      add([nameVariableElement(element)/]);
+    [else]
+      v_buttonsPanel.add([nameVariableElement(element)/]);
+    [/if]
+[/for]
+
+[if ViewIsMainPanel(viewContainer)]
+      final SpiFrame v_frame = new SpiFrame()
+      {
+         private static final long serialVersionUID = 1L;
+      };
+      v_frame.setContentPane(this);
+      v_frame.setTitle(this.getTitle());
+      v_frame.display();
+      v_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+[else]
+      setLayout(new BorderLayout());
+      setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         @Override
+         public void run ()
+         {
+            SpiSwingUtilities.getAncestorOfClass(JFrame.class, [nameViewImplementation(viewContainer)/].this).setDefaultCloseOperation(
+                     WindowConstants.DISPOSE_ON_CLOSE);
+         }
+      });
+[/if]
+[if not ViewIsMainPanel(viewContainer)]
+      add(v_buttonsPanel, BorderLayout.CENTER);
+[/if]
+      // [/protected]
+   }
+
+   @Override
+   public void addView (final View_Itf p_view)
+   {
+      // addView
+      // [protected (viewContainer.getUserCodeId('addView'))]
+      if (p_view instanceof SpiViewPanel)
+      {
+         SpiFrame.open((SpiViewPanel<?>) p_view);
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // [/protected]
+   }
+
+   @Override
+   public void restoreView (final View_Itf p_view)
+   {
+      // restoreView
+      // [protected (viewContainer.getUserCodeId('restoreView'))]
+      if (p_view instanceof SpiViewPanel)
+      {
+         final SpiFrame v_frame = SpiSwingUtilities.getAncestorOfClass(SpiFrame.class, (SpiViewPanel<?>) p_view);
+         v_frame.toFront();
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // [/protected]
+   }
+
+   @Override
+   public void removeView (final View_Itf p_view)
+   {
+      // removeView
+      // [protected (viewContainer.getUserCodeId('removeView'))]
+      if (p_view instanceof SpiViewPanel)
+      {
+         final SpiFrame v_frame = SpiSwingUtilities.getAncestorOfClass(SpiFrame.class, (SpiViewPanel<?>) p_view);
+         v_frame.dispose();
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // [/protected]
+   }
+
+[for (element : ViewElement | viewContainer.viewElements)]
+   [if not (element.widget.name = 'Button')]
+   // Getter [element.name + '_' + genericType(element, getImplementationClass(element.widget), true)/]
+   // [protected (element.getUserCodeId('Getter ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), true)))]
+
+   @Override
+   public [if (useMatching())] [genericType(element, getInterfaceName(element.widget), true)/] [else][genericTypeEntity(element, getImplementationClass(element.widget))/] [/if][nameGetterViewElement(element)/] ()
+   {
+      return [nameVariableElement(element)/];
+   }
+
+   // [/protected]
+
+   [/if]
+[/for]
+   @Override
+   public void beforeClose ()
+   {
+      disposeWindow();
+      super.beforeClose();
+   }
+
+   // [nameViewImplementation(viewContainer)/]
+   // [protected (viewContainer.getUserCodeId(nameViewImplementation(viewContainer)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(v : ViewContainer) post(trim())]
+[v.initImports()/]
+[v.addImport('java.awt.BorderLayout')/]
+[v.addImport('java.awt.FlowLayout')/]
+[v.addImport('java.awt.GridLayout')/]
+[v.addImport('java.awt.event.ActionEvent')/]
+[v.addImport('java.awt.event.ActionListener')/]
+[v.addImport('javax.swing.BorderFactory')/]
+[v.addImport('javax.swing.JFrame')/]
+[v.addImport('javax.swing.SwingUtilities')/]
+[v.addImport('javax.swing.WindowConstants')/]
+[v.addImport('fr.spi4j.ui.mvp.View_Itf')/]
+[v.addImport('fr.spi4j.ui.swing.SpiFrame')/]
+[v.addImport('fr.spi4j.ui.swing.SpiPanel')/]
+[v.addImport('fr.spi4j.ui.swing.SpiSwingUtilities')/]
+[v.addImport('fr.spi4j.ui.swing.SpiViewPanel')/]
+[v.addImport(v.namePackageViewContainerInterface() + '.' + v.nameViewInterface())/]
+[v.addImport(v.namePackageViewContainerPresenter() + '.' + v.namePresenter())/]
+
+[comment : List all widgets./]
+[if not v.widget.oclIsUndefined()]
+	[for (widget : Widget | Set{v.widget})]
+		[v.addImport(getImplementationPackage(widget) + '.' + getImplementationClassNameForImport(widget))/]
+		[v.addImport(getInterfacePackage(widget) + '.' + getInterfaceNameForImport(widget))/]
+	[/for]
+[/if]
+[v.flushImports()/]
+[/template]
+
+[query private nameVariableElement(element : ViewElement) : String =
+    '_' + element.name
+/]
+
+[query private paramViewElementInConstructor(element : ViewElement) : String =
+    if (not element.widget.oclIsUndefined() and element.widget.name = 'Table') then
+        '"' + element.name + '"'
+    else
+        ''
+    endif
+/]
+
+[query private getElementType (element : ViewElement) : String =
+    if (not element.oclIsUndefined() and not element.type.oclIsUndefined()) then
+        if (element.type.oclIsKindOf(DTO)) then
+            buildDtoClassName(element.type.oclAsType(DTO))
+        else
+            element.type.name
+        endif
+    else
+        '[ERREUR : Type inconnu pour ce widget]'
+    endif
+/]
+[query private orderTransitions(transitions : Set(Transition)) : OrderedSet(Transition) =
+transitions->sortedBy(t : Transition | transitionComparator(t))
+/]
+[query private transitionComparator(transition : Transition) : String =
+    if not transition.on->isEmpty() then
+        '' + transition.on.name
+    else
+        if transition.to.oclIsUndefined() then
+            ''
+        else
+            if transition.to.oclIsKindOf(NamedFlowState) then
+                transition.to.oclAsType(NamedFlowState).name
+            else
+                if transition.to.oclIsKindOf(SubflowState) then
+                    transition.to.oclAsType(SubflowState).name
+                else
+                    transition.to.toString()
+                endif
+            endif
+        endif
+    endif
+/]
+
+[query private buildEntityNameFromDto(viewContainer : ViewContainer) : String =
+    if (searchBindingFor(viewContainer).oclIsUndefined()) then
+        'Object'
+    else
+        if (searchBindingFor(viewContainer).oclIsKindOf(DTO)) then
+            buildEntityClassNameImplFromDto(searchBindingFor(viewContainer).oclAsType(DTO))
+        else 
+			'Object'
+        endif    	
+	endif
+ /]

@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genCommon('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::start::project::Common /]
+
+[template public genCommon(any : OclAny)]
+[comment : Creation du fichier de conf PMD_Spi4j.xml /]
+[file (filename(getCommonProjectName(), getCommonsConfDir(),'PMD_Spi4j.xml'), false, 'UTF-8')]
+[CommonPMD_Spi4j() /]
+[/file]
+[/template]
+

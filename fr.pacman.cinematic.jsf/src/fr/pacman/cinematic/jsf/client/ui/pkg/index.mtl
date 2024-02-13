@@ -1,0 +1,43 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module index.
+ */]
+[module index('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::cinematic::jsf::common::common /]
+[import fr::pacman::cinematic::jsf::common::packages /]
+
+[**
+ * The documentation of the template index.
+ * @param index
+ */]
+[template public index(aCinematicRoot : CinematicRoot)]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout.xhtml">	
+	<ui:define name="content">
+		<ui:define name="title">
+			[aCinematicRoot.name/]
+		</ui:define>
+		<h:form>
+			[for (aFlow : Flow | aCinematicRoot.eAllContents(Flow))]					  		      
+				        <ul>
+				          [for (aViewState : ViewState | aFlow.states->filter(ViewState))]
+							[for (viewContainer : ViewContainer | aViewState.viewContainers)]
+
+								[if viewContainer.ownedElements->size()>0]								
+							<li><p:link outcome="[viewContainer.genFullQualifiedFileNameWithoutDot()/]" value="[getLabel(viewContainer)/]"/></li>
+								[/if]
+							[/for]
+						  [/for]
+				        </ul>				      
+			[/for]		
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+[/template]

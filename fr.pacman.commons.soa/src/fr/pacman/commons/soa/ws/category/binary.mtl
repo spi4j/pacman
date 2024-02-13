@@ -1,0 +1,33 @@
+[comment encoding = UTF-8 /]
+[module binary('http://www.obeonetwork.org/dsl/soa/4.0.0',
+             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::licence /]
+
+[comment : **********************************************/]
+[comment : Create a specific binary type for rs library. /]
+[comment : **********************************************/]
+[template public binary (any : OclAny)]
+[licence()/]
+package [getApplicationPackage()/];
+// [protected ('for imports')]
+
+import java.io.IOException;
+import java.io.InputStream;
+
+// [/protected]
+
+// for library rs binary class
+// [protected (any.getUserCodeId('for library rs binary class'))]
+public class Binary extends InputStream {
+
+	@Override
+	public int read() throws IOException {
+		return 0;
+	}
+}
+// [/protected]
+
+[/template]

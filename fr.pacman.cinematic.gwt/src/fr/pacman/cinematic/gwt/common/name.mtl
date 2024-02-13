@@ -1,0 +1,28 @@
+[comment encoding = UTF-8 /]
+[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::gwt::common::gwt-commons /]
+
+[query public nameViewImplementation(viewContainer : ViewContainer) : String =
+    apply_classDefault(viewContainer.name + ' View Gwt')
+/]
+
+[query public nameAppliAsyncCallback(any : OclAny) : String =
+    apply_classDefault(getApplicationName() + ' Async Callback')
+/]
+
+[query public getRootPresenterName(any : OclAny) : String =
+    namePresenter(getRootPresenter(any))
+/]
+
+[query public nameGwtLanceur(any : OclAny) : String =
+    apply_classDefault('Gwt Lanceur')
+/]
+
+[query public nameGwtViews(any : OclAny) : String =
+    apply_classDefault('Gwt Views')
+/]

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.popupMenus">
+
+     <!-- Gestion File -->
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.*"
+            id="fr.pacman.soapifirst.ui.popup.contribution.IFile">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soapifirst.ui.popup.AcceleoGenerateSoaRsAction"
+               enablesFor="+"
+               id="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstAction"
+               icon="icons/safran.png"
+               label="Génération Import Swagger"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"/>
+      </objectContribution>
+
+      <!-- Gestion CDO -->
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.emf.cdo.eresource.CDOResource"
+            nameFilter="*"
+            id="fr.pacman.soapifirst.ui.popup.contribution.CDOResource">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soapifirst.ui.popup.AcceleoGenerateSoaRsActionCDOResource"
+               enablesFor="+"
+               id="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstActionCDOResource"
+               icon="icons/safran.png"
+               label="Génération Import Swagger"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"/>
+      </objectContribution>
+  
+      <!-- Gestion d'un package DTO (Category / Liste des Components) -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.environment.Namespace"
+            nameFilter="*"
+            id="fr.pacman.soapifirst.ui.popup.contribution.Namespace">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soapifirst.ui.popup.AcceleoGenerateSoaRsActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle Package DTO Import Swagger"
+               overrideActionId="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+          
+      <!-- Gestion d'un package services (Component / Liste des Services) -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.soa.Component"
+            nameFilter="*"
+            id="fr.pacman.soapifirst.ui.popup.contribution.Component">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soapifirst.ui.popup.AcceleoGenerateSoaRsActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle Package Services Import Swagger"
+               overrideActionId="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+      
+      <!-- Gestion partir d'un service -->
+      <!-- objectContribution
+            adaptable="true"
+            objectClass="org.obeonetwork.dsl.soa.Service"
+            nameFilter="*"
+            id="fr.pacman.soapifirst.ui.popup.contribution.Service">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.soapifirst.ui.popup.AcceleoGenerateSoaRsActionEObject"
+               enablesFor="+"
+               id="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstActionEObject"
+               icon="icons/safran.png"
+               label="Génération partielle Service Import Swagger"
+               overrideActionId="fr.pacman.soapifirst.ui.popup.acceleoGenerateSoapiFirstAction"
+               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
+      </objectContribution-->
+   </extension>
+</plugin>

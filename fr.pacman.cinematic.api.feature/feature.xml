@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.pacman.cinematic.api.feature"
+      label="PacMan - Cinematic API"
+      version="4.4.0.qualifier"
+      provider-name="Safr@n"
+      plugin="fr.pacman.branding">
+
+   <includes
+         id="fr.pacman.commons.feature"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.obeonetwork.dsl.cinematic"/>
+      <import plugin="org.obeonetwork.dsl.overview"/>
+   </requires>
+
+   <plugin
+         id="fr.pacman.cinematic.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

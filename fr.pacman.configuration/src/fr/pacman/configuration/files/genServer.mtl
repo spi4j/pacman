@@ -1,0 +1,180 @@
+[comment encoding = UTF-8 /]
+[module genServer('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::log4j /]
+
+[import fr::pacman::configuration::project::Server /]
+[import fr::pacman::configuration::project::CXFServlet /]
+[import fr::pacman::configuration::project::RSResources /]
+[import fr::pacman::configuration::project::RsFrontResources /]
+
+[import fr::pacman::configuration::common::names]
+[import fr::pacman::configuration::project::Servlets]
+
+
+[template public genServer(any : OclAny, fromStarter : Boolean)]
+
+[if fromStarter or any.hasToGenerateRootFiles()]
+[comment : Generate the pom for the project xxx-Server /]
+[file (getServerProjectName() + '/pom.xml', false, 'UTF-8')]
+[serverPom()/]
+[/file]
+[/if]
+
+[comment : Generate the log4j2.xml if needed. /]
+[comment : For RS library, force even if getUseLog4J() is false from starter. /]
+[if (isLibraryRS() or useLog4J()) and (fromStarter or any.hasToGenerateRootFiles())]
+[file (filename(getServerProjectName(), getServerResourcesDir(), '', 'log4j2.xml'), false, 'UTF-8')]
+[log4j('server')/]
+[/file]
+[/if]
+
+[comment : Generate the security manager for the project xxx-server /]
+[if useSpi4jSecurity()]
+
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildSecurityManagerClassName() + '.java'), false, 'UTF-8')]
+[securityManager()/]
+[/file]
+
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildSecurityInitializationClassName() + '.java'), false, 'UTF-8')]
+[initialization()/]
+[/file]
+
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildSecurityListenerClassName() + '.java'), false, 'UTF-8')]
+[securityListener()/]
+[/file]
+
+[/if]
+
+[comment : Only for standard projects. /]
+[if not isLibraryRS()]
+
+[comment : Generate build info servlet. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildInfoServletClassName() + '.java'), false, 'UTF-8')]
+[buildInfoServlet()/]
+[/file]
+
+[comment : Generate the cache manager for administration servlet. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildCacheManagerClassName() + '.java'), false, 'UTF-8')]
+[cacheManager()/]
+[/file]
+
+[comment : Generate enumeration for administration servlet. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildAdministrationServiceEnumName() + '.java'), false, 'UTF-8')]
+[administrationServiceEnum()/]
+[/file]
+
+[comment : Generate administration servlet. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildAdministrationServletClassName() + '.java'), false, 'UTF-8')]
+[administrationServlet()/]
+[/file]
+
+[/if]
+
+[comment : If export for web services, generate all generic expected classes./]
+[if useWS() ]
+
+[comment : Generate CXF servlet. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), buildPackageCXF(), buildCXFServletClassName() + '.java'), false, 'UTF-8')]
+[cxfServlet()/]
+[/file]
+
+[comment : Generate the abstract class for SOAP publication. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), buildPackageCXF(), buildCXFAbstractClassName() + '.java') , false, 'UTF-8')]
+[cxfServletAbs()/]
+[/file]
+
+[comment : Generate the TokensConfigurator for REST publication. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRS(), buildRSTokensConfiguratorClassName() + '.java'), false, 'UTF-8')]
+[rsTokensConfigurator()/]
+[/file]
+
+[comment : Generate the ContextResolver for REST publication. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRS(), buildRSContextResolverClassName() + '.java'), false, 'UTF-8')]
+[rsContextResolver()/]
+[/file]
+
+[comment : Generate the ExceptionHandler for REST publication. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRS(), buildRSExceptionHandlerClassName() + '.java'), false, 'UTF-8')]
+[rsExceptionHandler()/]
+[/file]
+
+[comment : Generate the GenericFilter (Secured and Unsecured) for REST publication. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRS(), buildRSGenericFilterClassName() + '.java'), false, 'UTF-8')]
+[rsGenericFilter()/]
+[/file]
+
+[comment : Generate the application CDI configuration  for REST publication. /]
+[if useWsServiceInjection()]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRS(), buildRSApplicationConfigClassName() + '.java'), false, 'UTF-8')]
+[rsApplicationConfig()/]
+[/file][/if]
+
+[comment : Generate a .properties file with the default configuration for the application. /]
+[file (filename(getServerProjectName(), getServerResourcesDir(), '', getApplicationName() + 'Application.properties'), false, 'UTF-8')]
+[rsConfigurationFile()/]
+[/file]
+
+[comment : Generate a fragment for the web.xml file, contains the base URI to map for the REST services. /]
+[file (filename(getServerProjectName(), getServerResourcesDir(), 'META-INF', 'web-fragment.xml'), false, 'UTF-8')]
+[rsWebFragment()/]
+[/file]
+
+[comment : Generate a "README.txt" file for the localisation of configuration file. /]
+[file (filename(getServerProjectName(), '',  '', 'README.txt'), false, 'UTF-8')]
+[rsReadMeFile()/]
+[/file]
+
+[/if]
+
+[comment : If import for web services, generate all generic expected classes. /]
+[if isLibraryRS()]
+
+[comment : Generate the jersey http client factory. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSClientFactoryClassName() + '.java'), false, 'UTF-8')]
+[rsDefaultClientFactory()/]
+[/file]
+
+[comment : Generation for a standard exception if response status not 200 / OK. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFrontExceptions(), buildRSFrontExceptionClassName() + '.java'), false, 'UTF-8')]
+[rsFrontStandardException()/]
+[/file]
+
+[comment : Generation of a default empty interceptor for the front resources. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontResourcesDefaultInterceptor() + '.java'), false, 'UTF-8')]
+[rsFrontResourceDefaultInterceptor()/]
+[/file]
+
+[comment : Generation of a default generic filter for the front resources. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontResourcesDefaultFilter() + '.java'), false, 'UTF-8')]
+[rsFrontResourceDefaultFilter()/]
+[/file]
+
+[comment : Generation of a context holder (for temporary headers storage). /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontResourcesContextHolder() + '.java'), false, 'UTF-8')]
+[rsFrontResourceContextHolder()/]
+[/file]
+
+[comment : Generation for the configuration class of all the front resources. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontTokensConfigClassName() + '.java'), false, 'UTF-8')]
+[rsFrontTokensConfiguration()/]
+[/file]
+
+[comment : Generation for the default token(s) configuration class. /]
+[comment : Generation for the configuration class of all the front resources. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontConfigClassName() + '.java'), false, 'UTF-8')]
+[rsFrontConfiguration()/]
+[/file]
+
+[comment : Generation for abstract super-class for all the front resources. /]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontResourcesAbstractClassName() + '.java'), false, 'UTF-8')]
+[rsFrontResourceAbstract()/]
+[/file]
+
+[/if]
+
+[/template]

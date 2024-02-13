@@ -1,0 +1,387 @@
+[comment encoding = UTF-8 /]
+[module viewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+                           'http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::model /]
+[import fr::pacman::cinematic::api::common::standard-widgets /]
+[import fr::pacman::cinematic::jsf::common::packages /]
+[import fr::pacman::cinematic::jsf::common::name /]
+[import fr::pacman::cinematic::jsf::common::common /]
+[import fr::pacman::cinematic::jsf::requests::requests/]
+[import fr::pacman::cinematic::jsf::services::cinematicServices /]
+
+
+[template public viewImplementation(viewContainer : ViewContainer, aViewState : ViewState )]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<!-- 
+[protected ('Xhtml use code')]
+ -->
+<h:body>	
+<ui:composition template="/WEB-INF/templates/layout.xhtml">
+	<ui:define name="title">				
+			[getLabel(viewContainer)/]				
+	</ui:define>
+	<ui:define name="welcome">
+	    <p:link value="Accueil" outcome="/pages/index"/>
+	</ui:define>
+	<ui:define name="content">	
+		<h:form id="[genNameWebForm(viewContainer)/]">
+[if (not aViewState.viewContainers->isEmpty())]
+			<h:panelGrid columns="2">
+[for (aVC : ViewContainer | aViewState.viewContainers)]
+	[for (anAVE : AbstractViewElement | aVC.ownedElements)]
+		[if (not isButton(anAVE))]							
+					[anAVE.genJsfWidget(aViewState,viewContainer)/]																		
+		[/if]
+	[/for]
+[/for]
+			</h:panelGrid>
+[/if]
+			<br>
+[if viewContainer.getNbButtons() > 0]
+			<h:panelGrid columns="[viewContainer.getNbButtons()/]">
+			<div>	
+[for (aVC : ViewContainer | aViewState.viewContainers)]
+	[for (anAVE : AbstractViewElement | aVC.ownedElements)]
+		[if (isButton(anAVE))]
+			[for (transition : Transition | aViewState.getTransitionsFromState(true)->orderTransitions())]
+				[if (not (transition.on->isEmpty()))]	
+					[for (flowEvent : FlowEvent | transition.on->selectByType(FlowEvent))]
+					[if (not (flowEvent.binds->isEmpty()))]
+	  					[for (eventElement : ViewEvent | anAVE.events)]
+						 	[for (viewEvent : ViewEvent | flowEvent.binds)]			
+    							[if (eventElement.name  = viewEvent.name)]
+					[anAVE.genJsfButtonEvent(viewContainer)/]		
+								[/if]			
+							[/for]				
+						[/for]
+					[/if]
+					[/for]
+					[for (ev : Event | transition.on->selectByType(ViewEvent))]					
+	  					[for (eventElement : ViewEvent | anAVE.events)]						 	
+    							[if (eventElement.name  = ev.name)]
+					[anAVE.genJsfButtonEvent(viewContainer)/]		
+								[/if]														
+						[/for]					
+					[/for]																										
+				[/if]
+	 		[/for]
+		[/if]
+	[/for]
+[/for]
+			</div>
+			</h:panelGrid>
+[/if]
+		</h:form>
+	</ui:define>
+</ui:composition>
+</h:body>
+<!-- 
+[/protected] 
+-->
+</html>
+
+[/template]
+
+[query private nameVariableElement(element : ViewElement) : String =
+    element.name
+/]
+[template private genJsfWidget(anAVE : AbstractViewElement, aViewState : ViewState, viewContainer : ViewContainer) post (trim())]
+	[if (isPage(anAVE))]
+[anAVE.genJsfPanel(aViewState, viewContainer)/]
+	[elseif (isPanel(anAVE))]
+[anAVE.genJsfPanel(aViewState,viewContainer)/]
+	[elseif (isTable(anAVE))]
+[anAVE.genJsfTable(aViewState,viewContainer)/]
+	[elseif (isText(anAVE))]
+[anAVE.genJsfText(viewContainer)/]
+	[elseif (isTextarea(anAVE))]
+[anAVE.genJsfTextarea()/]
+	[elseif (isCombo(anAVE))]
+[anAVE.genJsfCombo(viewContainer)/]
+	[elseif (isLabel(anAVE))]
+[anAVE.genJsfLabel()/]
+	[elseif (isImage(anAVE))]
+[anAVE.genJsfImage()/]
+	[elseif (isLink(anAVE))]
+[anAVE.genJsfLink(aViewState)/]
+	[elseif (isPassword(anAVE))]
+[anAVE.genJsfPassword(viewContainer)/]
+	[elseif (isRadio(anAVE))]
+[anAVE.genJsfRadio(viewContainer)/]
+	[elseif (isCheckbox(anAVE))]
+[anAVE.genJsfCheckbox(viewContainer)/]
+	[elseif (isDateField(anAVE))]
+[anAVE.genJsfCalendar(viewContainer)/]
+	[elseif  (not (isButton(anAVE)))]
+<!-- TODO widget [anAVE.widget.qualifiedName()/] non gere -->
+	[/if]
+[comment anAVE.genEventsDropdown(aViewState)/]
+	[if (isTopLevelViewContainer(anAVE.eContainer(ViewContainer)) and not(isPanel(anAVE)))]
+	[/if]	
+[/template]
+
+[template private genEventsDropdown(anAVE : AbstractViewElement, aViewState : ViewState)]
+[if (not anAVE.events->isEmpty())]
+<span>
+  <p:link outcome="#menu[anAVE.getID()/]" />
+  <ul>    
+   <p:link outcome="#" value="Click to simulate an event"/>    
+[for (event : ViewEvent | anAVE.events)]
+    <li><p:link outcome="[event.genLink(aViewState)/]" value="[event.name/]" /></li>
+[/for]
+  </ul>
+</span>
+[/if]
+[/template]
+
+[template private genJsfPanel(anAVE : AbstractViewElement, aViewState : ViewState,viewContainer : ViewContainer) post (trim())]
+<h:panelGrid>
+[for (anAVE : AbstractViewElement | anAVE.oclAsType(ViewContainer).ownedElements)]		  	
+		[anAVE.genJsfWidget(aViewState,viewContainer)/]		
+[/for]
+</h:panelGrid>
+[/template]
+
+[template private genJsfTable(anAVE : AbstractViewElement, aViewState : ViewState,viewContainer : ViewContainer) post (trim())]
+</h:panelGrid>
+<br>
+[if (anAVE.oclIsTypeOf(ViewContainer))]
+<p:dataTable border="1" id="table[anAVE.name.toUpperFirst()/]" paginator="true" sortMode="multiple" selectionMode="single" lazy="true">
+	[for (anAVE : AbstractViewElement | anAVE.oclAsType(ViewContainer).ownedElements)]		
+		<p:column headerText="[aViewState.name/]">
+			<h:outputText value="[anAVE.genJsfWidget(aViewState,viewContainer)/]" />			
+		</p:column>		
+	[/for]
+</p:dataTable>	
+<h:panelGrid columns="3">
+[else]
+<p:dataTable border="1" id="table[anAVE.name.toUpperFirst()/]" paginator="true" sortMode="multiple" selectionMode="single" title="[getLabel(anAVE)/]" lazy="true">
+	<p:column>
+		<f:facet name="header">
+			<h:outputText value="Column 1" />
+		</f:facet>
+		<h:outputText value="Lorem ipsum" />
+	</p:column>
+	<p:column>
+		<f:facet name="header">
+			<h:outputText value="Column 2" />
+		</f:facet>
+		<h:outputText value="Lorem ipsum" />
+	</p:column>
+	<p:column>
+		<f:facet name="header">
+			<h:outputText value="Column 3" />
+		</f:facet>
+		<h:outputText value="Lorem ipsum" />
+	</p:column>
+	<p:column>
+		<f:facet name="header">
+			<h:outputText value="Column 4" />
+		</f:facet>
+		<h:outputText value="Lorem ipsum" />
+	</p:column>	
+</p:dataTable>
+<h:panelGrid>
+[/if]
+[/template]
+
+[template private genJsfText(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:inputText id="txt[anAVE.name.toUpperFirst()/]"  value="#{[nameBeanFirstLower(viewContainer)/].[anAVE.name.toLowerFirst()/]}"/>
+[/template]
+
+[template public genJsfTextarea(anAVE : AbstractViewElement) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:inputTextArea  value="[anAVE.name/]" rows="3"></textarea>
+[/template]
+
+[template private genJsfCombo(anAVE : AbstractViewElement , viewContainer : ViewContainer) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:selectOneMenu id="selectMenu[anAVE.name.toUpperFirst()/]" name="[anAVE.name/]" [if not (anAVE.events->isEmpty())] valueChangeListener="[genElementEvent(anAVE, viewContainer)/]" [/if]>
+</p:selectOneMenu> 			    
+[/template]
+
+[template private genJsfLabel(anAVE : AbstractViewElement) post (trim())]
+<p:outputLabel  id="label[anAVE.name.toUpperFirst()/]"  value="[getLabel(anAVE)/]" />
+[/template]
+
+[template private genJsfRadio(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:selectOneRadio id="radio[anAVE.name.toUpperFirst()/]" value="#{[nameBeanFirstLower(viewContainer)/].[anAVE.name.toLowerFirst()/]}">
+</p:selectOneRadio>
+[/template]
+
+[template private genJsfCheckbox(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:selectBooleanCheckbox id="chBox[anAVE.name.toUpperFirst()/]" value="#{[nameBeanFirstLower(viewContainer)/].[anAVE.name.toLowerFirst()/]}" valueChangeListener="[nameBeanFirstLower(viewContainer)/].valueChangeChBox[anAVE.name.toUpperFirst()/]">
+</p:selectBooleanCheckbox>
+[/template]
+
+[template private genJsfImage(anAVE : AbstractViewElement) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:graphicImage library="/resources/img/" name="[anAVE.name/]"/>
+[/template]
+
+[template private genJsfLink(anAVE : AbstractViewElement, aViewState : ViewState) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:link outcome="[anAVE.genLink(aViewState)/]" value="[getLabel(anAVE)/]"/>
+[/template]
+
+[template private genJsfPassword(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:password id="pwd[anAVE.name.toUpperFirst()/]" value="#{[nameBeanFirstLower(viewContainer)/].[anAVE.name.toLowerFirst()/]}"/>
+[/template]
+
+[template private genJsfButtonFlowEvent(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+<p:commandButton value="[getLabel(anAVE)/]" id="cmdBt[anAVE.name/]" actionListener="[genElementEvent(anAVE, viewContainer)/]"/>&nbsp;
+[/template]
+
+[template private genJsfButtonEvent(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+<p:commandButton value="[getLabel(anAVE)/]" id="cmdBt[anAVE.name/]" actionListener="[genElementEvent(anAVE, viewContainer)/]"/>&nbsp;
+[/template]
+
+[template private genJsfCalendar(anAVE : AbstractViewElement,viewContainer : ViewContainer) post (trim())]
+[anAVE.genJsfLabel()/]
+<p:calendar id="date[anAVE.name.toUpperFirst()/]" value="#{[nameBeanFirstLower(viewContainer)/].[anAVE.name.toLowerFirst()/]}" locale="fr" />
+[/template]
+
+[template private genEventOnClick(aViewEvent : ViewEvent, aViewState : ViewState) post (trim())]
+onclick="self.location.href='[aViewEvent.genLink(aViewState)/]'"
+[/template]
+
+[template private genLink(anAVE : AbstractViewElement, aViewState : ViewState) post (trim())]
+[anAVE.events->select(not(oclIsUndefined()))->first().genLink(aViewState)/]
+[/template]
+
+[template private genLink(aViewEvent : ViewEvent, aViewState : ViewState) post (trim())]
+[if (aViewEvent.getFlowEvent().oclIsUndefined() or aViewEvent.getFlowEvent().oclIsInvalid())]
+	[let nexts : Set(FlowState) = aViewState.getNextStates(aViewEvent)]
+		[if (nexts->isEmpty())]
+javascript:alert('No transition found on this event.\nPlease check your model.');
+		[elseif (nexts->size() = 1)]
+[aViewState.getRootContainerPath()/][nexts->asOrderedSet()->first().genFullQualifiedFileName()/]
+		[else]
+[aViewState.getRootContainerPath()/][aViewState.genFullQualifiedFileName(aViewEvent)/]
+		[/if]
+	[/let]
+[else]
+[let f : FlowEvent = aViewEvent.getFlowEvent()]
+	[let nexts : Set(FlowState) = aViewState.getNextStates(f)]
+		[if (nexts->isEmpty())]
+javascript:alert('No transition found on this event.\nPlease check your model.');
+		[elseif (nexts->size() = 1)]
+[aViewState.getRootContainerPath()/][nexts->asOrderedSet()->first().genFullQualifiedFileName()/]
+		[else]
+[aViewState.getRootContainerPath()/][aViewState.genFullQualifiedFileName(f)/]
+		[/if]
+	[/let]
+[/let]
+[/if]
+[/template]
+
+[template private genEvents(anAVE : AbstractViewElement, aViewState : ViewState) post (trim())]
+[anAVE.events->select(not(oclIsUndefined())).genEvent(aViewState)->sep(' ')/]
+[/template]
+
+[template private genEvent(aViewEvent : ViewEvent, aViewState : ViewState) post (trim())]
+[aViewEvent.genEventOnClick(aViewState)/]
+[/template]
+
+[template private genEventOld(aViewEvent : ViewEvent, aViewState : ViewState) post (trim())]
+[if (not(aViewEvent.type.oclIsUndefined()))]
+	[if (getProperty(aViewEvent.type.qualifiedName()) = 'jsf.event.onClick')]
+[aViewEvent.genEventOnClick(aViewState)/]
+	[/if]
+[/if]
+[/template]
+
+[template private genNameWebForm(viewContainer : ViewContainer) post (trim())]
+		form[nameViewImplementation(viewContainer).sanitize()/]
+[/template]
+
+[template private genElementEvent(anAVE : AbstractViewElement, viewContainer : ViewContainer) post (trim())]
+[for (eventElement : ViewEvent | anAVE.events)]
+	[if not (eventElement.getFlowEventsForViewEvent()->isEmpty())]
+		[for (flowEvent : FlowEvent | eventElement.getFlowEventsForViewEvent())]
+			#{[nameBeanFirstLower(viewContainer)/].[flowEvent.nameActionBean()/]}
+		[/for]
+	[else]
+			#{[nameBeanFirstLower(viewContainer)/].[eventElement.nameActionBean()/]}
+	[/if]
+[/for]
+[/template]
+
+[query private paramViewElementInConstructor(element : ViewElement) : String =
+    if (not element.widget.oclIsUndefined() and element.widget.name = 'Table') then
+        '"' + element.name + '"'
+    else
+        ''
+    endif
+/]
+
+[query private getElementType (element : ViewElement) : String =
+    if (not element.oclIsUndefined() and not element.type.oclIsUndefined()) then
+        if (element.type.oclIsKindOf(DTO)) then
+            buildXtoClassNameFromDto(element.type.oclAsType(DTO))
+        else
+            element.type.name
+        endif
+    else
+        '[ERREUR : Type inconnu pour ce widget]'
+    endif
+/]
+
+[query private genJsfButton(anAVE : AbstractViewElement, flowEvent : FlowEvent , viewContainer : ViewContainer) : String =
+'<p:commandButton value="'+ getLabel(anAVE) +'" id="cmdBt'+ anAVE.name +'" actionListener="#{'+ nameBeanFirstLower(viewContainer) + '.' + flowEvent.name.sanitize().toLowerFirst() +'}"/>'	  
+/]
+
+[query private getFlowEvent(aViewEvent : ViewEvent) : FlowEvent = 
+let s : Sequence(FlowEvent) = aViewEvent.ancestors(CinematicRoot)->first().eAllContents(FlowEvent)->select(binds->select(v : ViewEvent | v = aViewEvent)->notEmpty())
+in 
+if s->notEmpty()
+then
+	s->first()
+else
+	null
+endif
+ /]
+
+[query private getTransition(aViewEvent : ViewEvent, aEvent : Event, aViewState : ViewState) : Transition = 
+aViewEvent.ancestors(CinematicRoot)->first().eAllContents(Transition)->select(on->select(e : Event | e = aEvent)->notEmpty() and from = aViewState)->first()
+/]
+
+[query private orderTransitions(transitions : Set(Transition)) : OrderedSet(Transition) =
+transitions->sortedBy(t : Transition | transitionComparator(t))
+/]
+
+[query private transitionComparator(transition : Transition) : String =
+    if not transition.on->isEmpty() then
+        '' + transition.on.name
+    else
+        if transition.to.oclIsUndefined() then
+            ''
+        else
+            if transition.to.oclIsKindOf(NamedFlowState) then
+                transition.to.oclAsType(NamedFlowState).name
+            else
+                if transition.to.oclIsKindOf(SubflowState) then
+                    transition.to.oclAsType(SubflowState).name
+                else
+                    transition.to.toString()
+                endif
+            endif
+        endif
+    endif
+/]

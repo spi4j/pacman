@@ -1,0 +1,255 @@
+[comment encoding = UTF-8 /]
+[module service('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::sql::common /]
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
+
+[comment] le Service existe sans Entity [/comment]
+[comment] le Service et le Entity existent [/comment]
+[template public service(e : Entity)]
+[licence()/]
+[let self : OclAny = if not e.oclIsUndefined() then e else if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR SERVICE AND Entity NULL' endif endif]
+package [buildPackageBusinessImplementationServiceEntity(e)/];
+
+// [protected ('for imports')]
+
+[if not e.referencesStarStar()->isEmpty()]
+import java.util.HashMap;
+import java.util.Map;
+[/if]
+import java.util.Date;
+
+import [buildPackageServiceApiEntity(e)/].[buildServiceInterfaceName(e)/];
+import [buildPackagePersistence()/].[buildParamPersistenceClassName()/];
+import [buildPackagePersistence()/].[buildUserPersistenceAppClassName()/];
+import java.util.List;
+[if not e.isNotPersistent()]
+import [buildPackagePersistenceApiEntity(e)/].[buildDaoInterfaceName(e)/];
+[getImportEnum(e)/]
+[/if]
+import [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/];
+[for (r : Reference | e.referencingStar())]
+[if not (buildEntityImplClassName(e).equalsIgnoreCase(buildEntityImplClassName(r.referencedType.oclAsType(Entity))))]
+import [buildPackagePersistenceImplementationJdbcEntity(r.referencedType.oclAsType(Entity))/].[buildEntityImplClassName(r.referencedType.oclAsType(Entity))/];
+[/if]
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+[if not (buildEntityColumnEnumName(e).equalsIgnoreCase(buildEntityColumnEnumName(r.referencedType.oclAsType(Entity))))]
+import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity))/].[buildEntityColumnEnumName(r.referencedType.oclAsType(Entity))/];
+[/if]
+import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity))/].[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/];
+[/for]
+[if useServiceRequirements()]
+[getImportServiceRequirements(e)/]
+[/if]
+[if not e.isNotPersistent()]
+import [getImportForEntityService_Abs()/];
+[/if]
+import fr.spi4j.exception.Spi4jValidationException;
+[if useEjb()]
+import jakarta.ejb.Stateless;
+[/if]
+
+// [/protected]
+
+/**
+ * Implémentation du contrat de services spécifiques pour un type '[buildEntityInterfaceName(e)/]'. <br>
+ * Pour rappel, les services sont sans état.
+ * @author [getAuthorName()/]
+ */
+// Annotations Service
+// [protected (e.getUserCodeId('Annotations Service'))]
+[if useEjb()]
+@Stateless
+[/if]
+// [/protected]
+public class [buildServiceImplClassName(e)/] [if not e.isNotPersistent()]extends [getClassNameForEntityService_Abs()/]<[genPkType()/], [buildEntityInterfaceName(e)/], [buildEntityColumnEnumName(e)/]>[/if] implements [buildServiceInterfaceName(e)/]
+{
+
+   // Rappel : les services sont sans état.
+   // attributs
+   // [protected (e.getUserCodeId('attributs'))]
+
+   // [/protected]
+ 
+[if useServiceRequirements()]
+   @SuppressWarnings("all")
+   private final [buildServiceRequirementsClassName(e)/] [apply_attributeFinal('requirements')/] = new [buildServiceRequirementsClassName(e)/](); // NOPMD
+[/if]
+
+
+    // Methodes [buildServiceClassName(e)/]
+    // [protected (e.getUserCodeId('Methodes ' + buildServiceClassName(e)))]
+
+[if not e.isNotPersistent()]
+    /**
+    * Obtenir l'instance de dao sur le type '[nameSimpleEntity(e)/]Dao'.
+    * @return L'instance désirée.
+    */
+    @Override
+    protected [buildDaoInterfaceName(e)/] getDao ()
+   {
+      final [buildUserPersistenceAppClassName()/] [apply_variableFinal('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
+      return [apply_variableFinal('user persistence')/].[apply_methodDefault('get '+ nameSimpleEntity(e)+'Dao')/]();
+   }
+
+    /**
+    * Sauvegarde l'entité de type '[buildEntityInterfaceName(e)/]'  ainsi que ses relations de type * *
+    * @return L'entite  sauvegardée.
+    */
+    @Override
+    public [buildEntityInterfaceName(e)/] save (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/] ) throws Spi4jValidationException
+    {
+  [if e.hasReferencesStarStar()]
+        if ([apply_parameterMethodClassicIn('entity')/].getId() != null)
+        {
+[for (r : Reference | e.referencesStarStar())]
+           [apply_methodDefault('delete ' + r.name.normalize())/] ( [apply_parameterMethodClassicIn('entity')/] );
+[/for]
+        }
+
+  [/if]
+  [if hasAutomaticColumns()]
+        //TODO Renseigner avec la bonne valeur de champs automatiques
+  [for (columnProp : String | get_automaticColumnsProperties())]
+        if ([e.apply_parameterMethodClassicIn('entity')/].[e.apply_methodGet(e.get_nameColumn(columnProp).toLower())/]() == null)
+        {
+           [e.apply_parameterMethodClassicIn('entity')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]([defaultValueForColumnType(e.get_typeColumn(columnProp))/]);
+        }
+  [/for]
+
+  [/if]
+        final [buildEntityInterfaceName(e)/] [apply_variableFinal('created entity')/] = super.save([apply_parameterMethodClassicIn('entity')/]);
+
+[for (r : Reference | e.referencesStarStar())]
+        [apply_variableFinal('created entity')/].[getNameSetterListEntity(r)/] ( [apply_parameterMethodClassicIn('entity')/].[getNameGetterListEntity(r)/]() );
+        [apply_methodDefault('save ' + r.name.normalize())/] ([apply_variableFinal('created entity')/], [apply_variableFinal('created entity')/].[getNameGetterListEntity(r)/]() );
+
+[/for]
+
+        return [apply_variableFinal('created entity')/];
+    }
+
+    /**
+    * Delete l'entité de type '[buildEntityInterfaceName(e)/]'  ainsi que ses relations de type * *
+    * @return
+    */
+    @Override
+    public void delete (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/] ) throws Spi4jValidationException
+    {
+[for (r : Reference | e.referencesStarStar())]
+        [apply_methodDefault('delete ' + r.name.normalize())/] ([apply_parameterMethodClassicIn('entity')/]);
+[/for]
+        super.delete([apply_parameterMethodClassicIn('entity')/]);
+    }
+
+[for (r : Reference | e.referencingStar())]
+   @Override
+   public List<[buildEntityInterfaceName(e)/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamInverseId(r))/])
+   {
+      return findByColumn([e.buildEntityColumnEnumName()/].[apply_attributeEnum(r.nameSimpleProperty())/], [apply_parameterMethodClassicIn(nameParamInverseId(r))/]);
+   }
+
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+    /**
+    * Sauvegarde les elements de la relation '[apply_parameterMethodMultiple(r.name.normalize())/]'  pour l'entity [buildEntityInterfaceName(e)/]
+    * @param [apply_parameterMethodClassicIn('entity')/]
+    *           le entity
+    * @param [apply_parameterMethodMultiple(r.name.normalize())/]
+    *           les relations à ajouter
+    */
+    public void [apply_methodDefault('save ' + r.name.normalize())/] (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/], final List<[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> [apply_parameterMethodMultiple(r.name.normalize())/])
+     {
+       if ([apply_parameterMethodMultiple(r.name.normalize())/] != null)
+       {
+         // construction de la requête
+         final String [apply_variableFinal('query ' + r.name.normalize() + ' insert')/] = "insert into " + [buildEntityColumnEnumName(e)/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(e) +  r.name.sanitize())/] + "(" + [buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/] + ", " + [buildEntityColumnEnumName(r.referencedType.oclAsType(Entity))/].[nameSimplePropertyID(r.referencedType.oclAsType(Entity))/] + ") values (:[nameSimplePropertyID(e)/], :[nameSimplePropertyID(r.referencedType.oclAsType(Entity))/])";
+         // initialisation des paramètres de la requête
+         final Map<String, Long> [apply_variableFinal('params')/] = new HashMap<>(2);
+         [apply_variableFinal('params')/].put("[nameSimplePropertyID(e)/]", [apply_parameterMethodClassicIn('entity')/].getId());
+         for (final [buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/] [apply_variableFinal('entity fk')/] : [apply_parameterMethodMultiple(r.name.normalize())/])
+         {
+            [apply_variableFinal('params')/].put("[nameSimplePropertyID(r.referencedType.oclAsType(Entity))/]", [apply_variableFinal('entity fk')/].getId());
+            // insertion en base
+            getDao().executeUpdate([apply_variableFinal('query ' + r.name.normalize() + ' insert')/], [apply_variableFinal('params')/]);
+         }
+       }
+    }
+
+    /**
+    * Obtenir la liste d'entité de type '[buildEntityInterfaceName(r.referencedType.oclAsType(Entity)).toUpperFirst()/]' pour la relation [r.name.sanitize()/] avec pour identifiant [apply_parameterMethodClassicIn(e.nameSimpleEntity())/][namePK_ID()/]
+    * @param [apply_parameterMethodClassicIn(apply_parameterMethodClassicIn(e.nameSimpleEntity()))/][namePK_ID()/]/]
+    *           (In)(*) [buildEntityImplClassName(r.referencedType.oclAsType(Entity))/]
+    * @return une liste de [buildEntityImplClassName(r.referencedType.oclAsType(Entity))/]
+    */
+    @Override
+    public List<[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/] (final [genPkType()/] [apply_parameterMethodClassicIn(e.nameSimpleEntity())/][namePK_ID()/]){
+      return getDao().[apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/]([apply_parameterMethodClassicIn(e.nameSimpleEntity() + namePK_ID())/]);
+    }
+
+    /**
+    * Supprime les relations [r.name/] pour une entity [buildEntityInterfaceName(e)/]
+    * @param [apply_parameterMethodClassicIn('entity')/]
+    *           le Entity
+    */
+    public void [apply_methodDefault('delete ' + r.name.normalize())/] (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/])
+    {
+      if ([apply_parameterMethodClassicIn('entity')/] != null)
+      {
+         final long [apply_variableFinal('entity id')/] = [apply_parameterMethodClassicIn('entity')/].getId();
+         final String [apply_variableFinal('query ' + r.name.normalize() + ' delete')/] = "delete from " + [buildEntityColumnEnumName(e)/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(e) +  r.name.sanitize())/] + " where " + [buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/] + "=:[nameSimplePropertyID(e)/]";
+
+         final Map<String, Long> [apply_variableFinal('params')/] = new HashMap<>(1);
+         [apply_variableFinal('params')/].put("[nameSimplePropertyID(e)/]", [apply_variableFinal('entity id')/]);
+
+         // suppression en base
+         getDao().executeUpdate([apply_variableFinal('query ' + r.name.normalize() + ' delete')/], [apply_variableFinal('params')/]);
+      }
+    }
+
+[/for]
+[/if]
+
+    // [/protected]
+
+}[/let]
+[/template]
+
+[template private defaultValueForColumnType(type : String)]
+[if type.equalsIgnoreCase('String')]
+"Str"[elseif type.equalsIgnoreCase('Boolean')]
+false[elseif type.equalsIgnoreCase('Integer')]
+2[elseif type.equalsIgnoreCase('Long')]
+2L[elseif type.equalsIgnoreCase('Float')]
+2F[elseif type.equalsIgnoreCase('Double')]
+2D[elseif type.equalsIgnoreCase('Date')]
+new Date()[elseif type.equalsIgnoreCase('Timestamp')]
+new Timestamp(new Date().getTime())[elseif type.equalsIgnoreCase('Time')]
+new Time(new Date().getTime())[elseif type.equalsIgnoreCase('Binary')]
+getRandomBinary()[elseif type.equalsIgnoreCase('Char')]
+'X'[else]null[/if]
+[/template]

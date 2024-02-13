@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<!-- 
+Start of user code Xhtml use code
+ -->
+<h:body>	
+<ui:composition template="/pages/common/layout.xhtml">
+	<ui:define name="title">				
+			Detail Personne				
+	</ui:define>
+	<ui:define name="welcome">
+	    <p:link value="Accueil" outcome="/pages/index"/>
+	</ui:define>
+	<ui:define name="content">	
+		<h:form id="formDetailPersonne">
+			<h:panelGrid columns="2">
+					<h:outputLabel  id="labelTxtNom"  value="Nom" />
+					<h:outputText id="txtTxtNom"  value="#{detailPersonneBean.txtNom}"/>																		
+					<h:outputLabel  id="labelTxtPrenom"  value="Prénom" />
+					<h:outputText id="txtTxtPrenom"  value="#{detailPersonneBean.txtPrenom}"/>																		
+					<h:outputLabel  id="labelCbGrade"  value="Grade" />
+					<h:selectOneMenu id="selectMenuCbGrade" name="cbGrade" 	onChange="#{detailPersonneBean.onSelectGrade;}">
+					</h:selectOneMenu>																		
+					<h:outputLabel  id="labelDateNaissance"  value="Date de naissance" />
+					<p:calendar id="dateDateNaissance" value="#{detailPersonneBean.dateNaissance}" locale="fr" />																		
+					<h:outputLabel  id="labelChkCivil"  value="Civil" />
+					<p:selectBooleanCheckbox id="chckBoxChkCivil" value="#{detailPersonneBean.chkCivil}" layout="custom">
+					</p:selectBooleanCheckbox>																		
+					<h:outputLabel  id="labelTxtSalaire"  value="Salaire" />
+					<h:outputText id="txtTxtSalaire"  value="#{detailPersonneBean.txtSalaire}"/>																		
+</h:panelGrid>
+<br/>
+<h:panelGrid columns="4">
+			<div style="text-align: center;">	
+					<p:commandButton value="Annuler" id="cmdBtbtAnnuler" action="#{detailPersonneBean.annuler}"/>&nbsp;		
+					<p:commandButton value="Enregistrer" id="cmdBtbtEnregistrer" action="#{detailPersonneBean.enregistrer}"/>&nbsp;		
+			</div>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</h:body>
+<!-- 
+End of user code 
+-->
+</html>
+

@@ -1,0 +1,41 @@
+[comment encoding = UTF-8 /]
+[module typePrimitif('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[template public typePrimitif(t : PrimitiveType)]
+package [buildPackageTypePrimitif(t)/];
+
+// [protected ('for imports')]
+
+// [/protected]
+
+/**
+ * Type personnalisé '[t.name.toUpperFirst()/]'.
+ * @author [getAuthorName()/]
+ */
+public class [t.name.toUpperFirst()/]
+{
+   /**
+    * SerialUid.
+    */
+   @SuppressWarnings("unused")
+   private static final long serialVersionUID = -1;
+
+   // ATTRIBUTS
+
+   // Attributs
+   // [protected (t.getUserCodeId('Attributs'))]
+
+   // [/protected]
+
+
+   // Méthodes
+   // [protected (t.getUserCodeId('Méthodes'))]
+
+   // [/protected]
+
+}
+[/template]

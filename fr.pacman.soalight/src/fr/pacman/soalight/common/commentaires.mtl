@@ -1,0 +1,97 @@
+[comment encoding = UTF-8 /]
+[module commentaires('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                     'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::classes /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::common::names /]
+
+[**
+ * Paramétrage PacMan
+*/]
+
+[template public getComParamIn(p : Property)]
+    * @param [apply_parameterMethodClassicIn(p.name.normalize())/]
+    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
+[/template]
+
+
+[template public getComParamsIn(o : Operation)]
+[for (p : Parameter | o.input)]
+    * @param [apply_parameterMethodClassicIn(p.name.normalize())/]
+    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
+[/for]
+[/template]
+
+[**
+ * Fin Paramétrage
+*/]
+
+[comment] r : Rôle succinct (sur une ligne) [/comment]
+[template public comClass(r : String, d : DTO)]
+/**
+ * [r/].
+ * @author [getAuthorName()/]
+ */
+[/template]
+
+[template public comClass(r : String)]
+/**
+ * [r/].
+ * @author [getAuthorName()/]
+ */
+[/template]
+
+[template public comParamIn(p : Property)]
+    * @param [apply_parameterMethodClassicIn(nameParam(p))/]
+    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
+[/template]
+
+[template public comParamOut(p : Property)]
+    * @param [apply_parameterMethodClassicIn(nameParam(p))/]
+    *           (Out)[if (isMandatory(p))](*)[/if] [description(p, false)/]
+[/template]
+
+[template public comReturn(p : Property)]
+    * @return [description(p, false)/]
+[/template]
+
+
+[template public comPrefix(p : Property, s : String)]
+    * [s/] [description(p, true)/]
+[/template]
+
+[template private description(p : Property, lowerFirst : Boolean)]
+[if (p.description.oclIsUndefined())][p.name/].[else][if lowerFirst][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
+[/template]
+
+[template private description(p : Parameter, lowerFirst : Boolean)]
+[if (p.description.oclIsUndefined())][p.name/].[else][if lowerFirst][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
+[/template]
+
+[template public comParamsIn(o : Operation)]
+[for (p : Parameter | o.input)]
+    * @param [apply_parameterMethodClassicIn(nameParam(p))/]
+    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
+[/for]
+[/template]
+
+[template public comParamOut(o : Operation)]
+[for (p : Parameter | o.output)]
+    * @return [description(p, false)/]
+[/for]
+[/template]
+
+[template public comParamOutCallback(o : Operation)]
+[if o.output->isEmpty()]
+    * @param callback
+    *           (Out) le callback
+[else]
+[for (p : Parameter | o.output)]
+    * @param callback
+    *           (Out) le callback pour retourner [description(p, false)/]
+[/for]
+[/if]
+[/template]

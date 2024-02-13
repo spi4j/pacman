@@ -1,0 +1,284 @@
+[comment encoding = UTF-8 /]
+[module LivraisonHebergement('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::configuration::common::properties / ]
+
+[template public livraisonHebergementPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>[getApplicationPackage()/]</groupId>
+        <artifactId>[getApplicationName()/]</artifactId>
+        <version>[getVersion() /]</version>
+    </parent>
+    <artifactId>[getDeliveryProjectName()/]</artifactId>
+    <packaging>pom</packaging>
+    <name>[getApplicationName()/] - Packaging de la livraison pour l'hebergement</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+		[if 'swing'.equalsIgnoreCase(getClient()) or useWS()]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getWebappProjectName()/]</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		[/if]
+		[if 'swing'.equalsIgnoreCase(getClient())]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getClientJavaWebStartProjectName()/]</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		[elseif 'gwt'.equalsIgnoreCase(getClient())]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getClientGwtProjectName()/] </artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+		[elseif 'jsf'.equalsIgnoreCase(getClient())]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getClientJsfProjectName()/]</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		[elseif 'jsp'.equalsIgnoreCase(getClient())]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getClientJspProjectName()/]</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		[elseif isLibraryRS()]
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getServerProjectName()/]</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+		[/if]
+    </dependencies>
+</project>
+[/template]
+
+[template public livraisonHebergementAssembly(any : OclAny) post (trim())]
+<?xml version='1.0' encoding='UTF-8'?>
+<assembly>
+    <id>zipFile</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+	[if isLibraryRS()]
+	<!-- Génération des deux jars de la librairie contenant : 
+		- Les fichiers du commons (ensemble des entités au format Xto)
+		- Les clients de la partie server pour les appels des différentes ressources.  
+	-->
+	[else]
+    <!-- On construit un zip pour livraison au centre d'hebergement et contenant :
+        - les fichiers war des webapps a deployer en hebergement
+        - le doc de la procedure d'installation en hebergement
+        (il faut bien sûr que tous ces fichiers existent avec les noms utilises ci-dessous, 
+		ce qui depend largement des differents pom.xml)
+     -->
+	[/if]
+      <dependencySets>
+		[if 'swing'.equalsIgnoreCase(getClient())]
+  		<dependencySet>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping>[getServerProjectName()/].war</outputFileNameMapping>
+            <includes>
+                <!-- Binaire pour deploiement webapp serveur -->
+                <include>[getApplicationPackage()/]:[getWebappProjectName()/]:war</include>
+            </includes>
+         </dependencySet> 
+		[/if]
+		[comment : Specifique webapp, plus propre, evite d'avoir -server. /]
+		[if not hasClient() and useWS()]
+  		<dependencySet>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping>[getWebappProjectName()/].war</outputFileNameMapping>
+            <includes>
+                <!-- Binaire pour deploiement webapp serveur -->
+                <include>[getApplicationPackage()/]:[getWebappProjectName()/]:war</include>
+            </includes>
+         </dependencySet> 
+		[/if]
+		[if 'swing'.equalsIgnoreCase(getClient())]
+         <dependencySet>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping>[getClientSwingProjectName()/].war</outputFileNameMapping>
+            <includes>
+                <!-- Binaire pour deploiement webapp client RDA -->
+                <include>[getApplicationPackage()/]:[getClientJavaWebStartProjectName()/]:war</include>
+            </includes>
+         </dependencySet>
+		[elseif 'gwt'.equalsIgnoreCase(getClient())]
+         <dependencySet>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping>[getClientGwtProjectName()/].war</outputFileNameMapping>
+            <includes>
+                <!-- Binaire pour deploiement webapp client GWT -->
+                <include>[getApplicationPackage()/]:[getApplicationName()/]-client-[getClient()/]:war</include>
+            </includes>
+         </dependencySet>
+		[elseif 'jsf'.equalsIgnoreCase(getClient())]
+         <dependencySet>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping>[getClientJsfProjectName()/].war</outputFileNameMapping>
+            <includes>
+                <!-- Binaire pour deploiement webapp client JSF -->
+                <include>[getApplicationPackage()/]:[getApplicationName()/]-client-[getClient()/]:war</include>
+            </includes>
+         </dependencySet>
+		[elseif 'jsp'.equalsIgnoreCase(getClient())]
+         <dependencySet>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping>[getClientJspProjectName()/].war</outputFileNameMapping>
+            <includes>
+                <!-- Binaire pour deploiement webapp client JSP -->
+                <include>[getApplicationPackage()/]:[getApplicationName()/]-client-[getClient()/]:war</include>
+            </includes>
+         </dependencySet>
+		[/if]
+		[if isLibraryRS()]
+		<!-- Génération des deux jars de la librairie. -->
+		 <dependencySet>
+			<outputDirectory>/</outputDirectory>
+			<useProjectArtifact>false</useProjectArtifact>
+			<includes>
+				<include>[getApplicationPackage()/]:[getServerProjectName()/]:jar</include>
+				<include>[getApplicationPackage()/]:[getCommonProjectName()/]:jar</include>
+			</includes>
+		 </dependencySet>
+		 <!-- Génération des jars pour les dépendances (projets non Maven). -->
+		 <dependencySet>
+			<outputDirectory>/dependencies</outputDirectory>
+			<useProjectArtifact>false</useProjectArtifact>
+			<excludes>
+				<exclude>[getApplicationPackage()/]:[getServerProjectName()/]:jar</exclude>
+				<exclude>[getApplicationPackage()/]:[getCommonProjectName()/]:jar</exclude>
+			</excludes>
+		 </dependencySet>
+		[/if]
+     </dependencySets>
+
+    <fileSets>
+		[if isLibraryRS()]
+		<fileSet>
+			<directory>../[getServerProjectName()/]/</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>README.txt</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../[getServerProjectName()/]/</directory>
+			<outputDirectory>poms/server</outputDirectory>
+			<includes>
+				<include>pom.xml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../[getCommonProjectName()/]/</directory>
+			<outputDirectory>poms/commons</outputDirectory>
+			<includes>
+				<include>pom.xml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../</directory>
+			<outputDirectory>poms</outputDirectory>
+			<includes>
+				<include>pom.xml</include>
+			</includes>
+		</fileSet>		
+		[/if]
+		[if hasHttpEmbeddedServer()]
+		<fileSet>
+			<directory>../[getApplicationName()/]-[if hasClientWeb()]client-[getClient()/][else]webapp[/if]/src/main/resources</directory>
+			<outputDirectory>bin</outputDirectory>
+			<includes>
+				<include>EmbeddedTomcat.bat</include>
+				<include>[getApplicationNameUpperFirst()/]Startup.bat</include>
+			</includes>
+		</fileSet>
+		[/if]
+		[if hasHttpEmbeddedServer() and not useH2EmbeddedDatabase()]
+		<fileSet>
+			<directory>../[getServerProjectName()/]/[getServerResourcesDir()/]</directory>
+			<outputDirectory>conf</outputDirectory>
+			<includes>
+				<include>context.xml</include>
+			</includes>
+		</fileSet>
+		[/if]
+		[if useH2EmbeddedDatabase()]
+       	<fileSet>
+        	<directory>../[getServerProjectName()/]/[getServerSQLDir()/]</directory>
+        	<outputDirectory>conf</outputDirectory>
+        	<includes>
+        		<include>init_data_[getApplicationName()/].sql</include>
+        		<include>create_tables_[getApplicationName()/]_H2.sql</include>
+        	</includes>
+        </fileSet>
+		[/if]
+        <fileSet>
+			<directory>../[getApplicationName()/]-[if hasClientWeb()]client-[getClient()/][else]server[/if]/src/main/resources</directory>
+            <outputDirectory>[if isLibraryRS()]properties[else]conf[/if]</outputDirectory>
+            <includes>
+                <!-- Exemple de configuration log4j -->
+                <include>log4j2.xml</include>
+				[if isLibraryRS()]<include>[getApplicationName()/]Application.properties</include>[/if]
+				[if isLibraryRS()]<include>[getApplicationName()/]Tokens.properties</include>[/if]
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>..</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <!-- Procedure d'installation -->
+                <include>*.doc</include>
+            </includes>
+        </fileSet>
+
+		<!--
+		// [protected ('filesets')]
+		-->
+
+		<!--
+		// [/protected]
+		-->
+    </fileSets>
+</assembly>
+[/template]

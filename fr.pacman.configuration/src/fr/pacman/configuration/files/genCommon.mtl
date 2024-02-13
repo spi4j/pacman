@@ -1,0 +1,56 @@
+[comment encoding = UTF-8 /]
+[module genCommon('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::log4j /]
+
+
+[import  fr::pacman::configuration::project::Common /]
+[import  fr::pacman::configuration::common::names /]
+
+[template public genCommon(any : OclAny, fromStarter : Boolean)]
+
+[if fromStarter or any.hasToGenerateRootFiles()]
+[comment : Creation du pom de xxx-Commons /]
+[file (filename(getCommonProjectName(), '', 'pom.xml'), false, 'UTF-8')]
+[commonPom() /]
+[/file]
+[/if]
+
+[comment : Creation du fichier de conf Spi4j Checks_Spi4j.xml /]
+[file (filename(getCommonProjectName(), getCommonsConfDir(), 'Checks_Spi4j.xml'), false, 'UTF-8')]
+[commonCheck_Spi4j() /]
+[/file]
+
+[comment : Creation du bean pour la recuperation des versions utilisees par le build /]
+[if not isLibraryRS()]
+[file (filename(getCommonProjectName(), getCommonsSourceDir(), getApplicationPackage(), buildInfoClassName()  + '.java') , false, 'UTF-8')]
+[buildInfos()/]
+[/file]
+[/if]
+
+[comment : Creation du fichier conf/xxx-jsf.xml /]
+[if 'jsf'.equalsIgnoreCase(getClient())]
+[file (filename(getCommonProjectName(), getCommonsConfDir(), buildJSFContextXmlName() + '.xml'), false, 'UTF-8')]
+[commonJsfContext() /]
+[/file]
+[/if]
+
+[comment : Creation du fichier log4j2.xml si besoin. /]
+[if useLog4J()]
+[file (filename(getCommonProjectName(), getCommonsTestResourceDir(), '', 'log4j2.xml'), false, 'UTF-8')]
+[log4j('common')/]
+[/file]
+[/if]
+
+[comment : Creation du provider pour la lecture des fichiers de configuration si besoin. /]
+[if useConfigFileSpi4jFrwk()]
+[file (filename(getCommonProjectName(), getCommonsSourceDir(), getApplicationPackage(), buildConfigProviderClassName() + '.java'), false, 'UTF-8')]
+[configProvider()/]
+[/file]
+[/if]
+
+[/template]
+

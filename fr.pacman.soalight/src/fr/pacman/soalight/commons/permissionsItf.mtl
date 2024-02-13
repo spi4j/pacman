@@ -1,0 +1,51 @@
+[comment encoding = UTF-8 /]
+[module permissionsItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                       'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::attributes /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[template public permissionsItf(n : Namespace)]
+[licence()/]
+package [buildPackageBusiness()/]; // NOPMD
+
+// [protected ('for imports')]
+
+// [/protected]
+
+/**
+ * Listing des permissions.
+ * @author [getAuthorName()/]
+ */
+public interface [buildAppliPermissionsInterfaceName()/]
+{
+
+[for (permission : String | getSetOfPermissions(n))]
+   /** Permission [permission /]. */
+   String [n.apply_attributeFinalStatic(permission)/] = "[permission /]";
+
+[/for]
+   // [buildAppliPermissionsInterfaceName()/]
+   // [protected (n.getUserCodeId(buildAppliPermissionsInterfaceName()))]
+
+   // [/protected]
+
+}
+[/template]
+
+[query private getSetOfPermissions(n : Namespace) : Set(String) =
+   invoke('fr.pacman.commons.services.SecurityUtils', 'getSetOfAllKnownPermissions(java.util.List)', Sequence{n.systemeRacine().eAllContents(Operation)})
+ /]

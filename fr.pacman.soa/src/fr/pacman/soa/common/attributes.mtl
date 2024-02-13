@@ -1,0 +1,212 @@
+[comment encoding = UTF-8 /]
+[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::attributes /]
+
+[import fr::pacman::commons::soa::common::references /]
+[import fr::pacman::commons::soa::common::attributes /]
+[import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::utils /]
+
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+
+[*******************
+ * Paramétrage début
+*/]
+
+[template public getTypeAndNameParam(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.apply_parameterMethodClassicIn(a.name.normalize())/]
+[/template]
+
+[template public getDtoReferenceId(r : Reference)]
+private [genPkType()/] [apply_attributeDefault(r.name.normalize().toLowerFirst())/][namePK_ID()/];
+[/template]
+
+[template public getDtoReference(r : Reference)]
+private [r.referencedType.oclAsType(DTO).buildDtoClassName()/] [apply_attributeDefault(r.name.toLowerFirst())/];
+[/template]
+
+[template public getRefListe(r : Reference)]
+private List<[r.referencedType.oclAsType(DTO).buildDtoClassName()/]> [apply_attributeMultiple(r.name.toLowerFirst())/];
+[/template]
+
+[template public getDtoReferenceInverseId(r : Reference)]
+private [genPkType()/] [apply_attributeDefault(nameBaseReferenceInverse(r))/][namePK_ID()/];
+[/template]
+
+
+[*******************
+ * Paramétrage fin
+*/]
+
+[template public genClassTypeName(a : Attribute)]
+[if ((a.type.name <> null) and (a.type.name.contains('<')))][a.type.name.substring(1, a.type.name.index('<')-1)/][else][a.type.genTypeName()/][/if].class
+[/template]
+
+[template public genTypeAndName(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.nameProperty()/]
+[/template]
+
+[template public gentTypeAndNameParam(a : Attribute) post (trim())]
+[a.genPropertyType()/] [a.nameParam()/]
+[/template]
+
+[template public genProperty(a : Attribute) post (trim())]
+private [a.genTypeAndName()/]
+[/template]
+
+[template public genPropertyClassNoGenerics(a : Attribute) post (trim())]
+[if (isMultiple(a))]
+List
+[else][genPropertyTypeValid(a)/]
+[/if]
+[/template]
+
+[comment] Genere l'id d'une reference No star d'un Dto [/comment]
+[template public generateDtoReferenceId(r : Reference)]
+private [genPkType()/] [namePropertyId(r)/];
+[/template]
+
+[template public generateDtoReferenceInverseId(r : Reference)]
+private [genPkType()/] [namePropertyInverseId(r)/];
+[/template]
+
+[comment] Genere la reference a un dto [/comment]
+[template public genDtoReference(r : Reference)]
+private [r.nameDto()/] [r.nameProperty()/];
+[/template]
+
+[comment] Genere une liste de reference pour un DTO [/comment]
+[template public genRefListe(r : Reference)]
+private List<[r.nameDto()/]> [r.namePropertyTab()/];
+[/template]
+
+[comment] Genere l'id d'une reference No star d'un Xto [/comment]
+[template public generateXtoReferenceId(r : Reference)]
+private [genPkType()/] [namePropertyId(r)/];
+[/template]
+
+[comment] Genere l'id d'une reference No star d'un Xto [/comment]
+[template public generateXtoReferenceInverseId(r : Reference)]
+private [genPkType()/] [namePropertyInverseId(r)/];
+[/template]
+
+[comment] Genere la reference a un xto [/comment]
+[template public genXtoReference(r : Reference)]
+private [r.nameXto()/] [r.nameProperty()/];
+[/template]
+
+[comment] Genere une liste de reference pour un XTO [/comment]
+[template public genRefListeXto(r : Reference)]
+private List<[r.nameXto()/]> [r.namePropertyTab()/];
+[/template]
+
+[comment constructon générique avec des noms de propriétés /]
+[template public genProperty(l : Sequence(Property), prefix : String, suffix : String, se : String)]
+[l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)/]
+[/template]
+
+[template public genAttribute(l : OrderedSet(Attribute), prefix : String, suffix : String, se : String)]
+[l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)/]
+[/template]
+
+[comment][query public genAttribute(l : OrderedSet(Attribute), prefix : String, suffix : String, se : String) : String =
+l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)
+ /][/comment]
+
+
+[template public genReference(l : OrderedSet(Reference), prefix : String, suffix : String, se : String)]
+[l.namePropertyId()->collect(s : String | prefix+s+suffix)->sep(se)/]
+[/template]
+
+[comment] les références d'un Dto sans multiplicité et les références multiple vers ce Dto [/comment]
+[query public referencesNoStarAndReferencingStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | not isMultiple(r) and r.navigable)
+    ->union((biggestParentUntilDtoRegistry(s).eAllContents(Reference)
+            ->select(r : Reference | isMultiple(r) and (r.referencedType = s) and r.navigable and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple())))
+    ->asOrderedSet())->sortedBy(name.toLower())
+/]
+
+[query private biggestParentUntilDtoRegistry(o : ObeoDSMObject) : ObeoDSMObject =
+        if (o.eContainer().oclIsUndefined()) then
+            o
+        else
+            biggestParentUntilDtoRegistry(o.eContainer().oclAsType(ObeoDSMObject))
+        endif
+/]
+
+[comment] les références calculées d'un Dto sans multiplicité [/comment]
+[query public referencesComputedNoStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | not isMultiple(r) and r.navigable and isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références calculées multiples [/comment]
+[query public referencesComputedStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | isMultiple(r) and r.navigable and isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query public referencingStarStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | isMultiple(r) and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple() and r.oppositeOf.navigable and not isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query public navigableProperties(s : DTO) : OrderedSet(Property) =
+    s.getAttributes()->union(
+        s.references->select(r : Reference | r.navigable)->union(s.referencingStar())->asOrderedSet()->sortedBy(name.toLower())
+    )->asOrderedSet()
+/]
+
+[query public isReferenceNoStar(s : DTO, r : Reference) : Boolean =
+    s.references->includes(r) and not r.isMultiple() and r.navigable
+/]
+
+[query public isReferenceStar(s : DTO, r : Reference) : Boolean =
+    s.references->includes(r) and r.isMultiple() and r.navigable
+/]
+
+[query public isReferencingStar(s : DTO, r : Reference) : Boolean =
+    r.isMultiple() and r.referencedType = s and r.navigable
+/]
+
+[query public hasMandatoryFields(d : DTO) : Boolean =
+    d.getAttributes()->exists(a : Attribute | isMandatory(a)) or d.referencesNoStar()->select(r : Reference | isMandatory(r) and not r.referencedType.oclAsType(DTO).isNotPersistent())->size() > 0 or d.referencingStar()->select(r : Reference | isMandatory(r))->size() > 0
+/]
+
+[query public hasStringFieldWithSize(d : DTO) : Boolean =
+    d.getAttributes()->exists(a : Attribute | hasSize(a))
+/]
+
+[comment] est ce que le dto a des références avec multiplicité le referencant [/comment]
+[query public hasReferencingStar(d : DTO) : Boolean =
+if ( d.referencingStar()->size() > 0) then
+    true
+else
+    false
+endif
+/]
+
+[comment] est ce que le dto a des références de cardinalite 1 * le referencant [/comment]
+[query public hasReferencingOneStar(d : DTO) : Boolean =
+if ( d.referencingStar()->select(r : Reference | r.multiplicity = environment::MultiplicityKind::ONE_STAR)->size() > 0 ) then
+    true
+else
+    false
+endif
+/]
+
+[query public attributesComputed(s : DTO) : OrderedSet(Attribute) =
+    (s.getAttributes()->select(a : Attribute | a.isComputed())->asOrderedSet())
+/]

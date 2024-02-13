@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genRoot('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::configuration::project::Root /]
+
+[template public genRoot(any : OclAny, fromStarter : Boolean)]
+[if fromStarter or any.hasToGenerateRootFiles()]
+[comment : Creation du pom de la racine xxx /]
+[file ('pom.xml', false, 'UTF-8')]
+[rootPom()/]
+[/file]
+[/if]
+[/template]

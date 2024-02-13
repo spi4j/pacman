@@ -1,0 +1,4 @@
+[comment encoding = UTF-8 /]
+[module empty('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[comment Ce module vide est utilisé par le lanceur, mais en fait c'est bien un générateur Java qui sera appelé /]

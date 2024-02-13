@@ -1,0 +1,544 @@
+[comment encoding = UTF-8 /]
+[module Root('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
+
+[import fr::pacman::configuration::common::properties /]
+
+[template public rootPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>[getApplicationPackage()/]</groupId>
+    <artifactId>[getApplicationName()/]</artifactId>
+    <packaging>pom</packaging>
+    <version>[getVersion()/]</version>
+    <name>[getApplicationName()/]</name>
+    <description></description>
+    <issueManagement>
+    </issueManagement>
+    <ciManagement>
+    </ciManagement>
+    <organization>
+    </organization>
+    <scm>
+    </scm>
+
+	[comment : no depency to SPI4J if the project is from a swagger import./]
+	[if not isLibraryRS()]
+    <dependencies>
+        <dependency>
+			<groupId>fr.spi4j</groupId>
+			<artifactId>spi4j</artifactId>
+            <version>${spi4j.version}</version>
+        </dependency>
+    </dependencies>
+	[/if]
+
+	[comment : Specific for getting Oracle driver > 12.1. /]
+	[if isDbOracle()]
+	<!-- Specific repository for Oracle drivers. -->
+	<repositories>
+		<repository>
+    		<id>maven.oracle.com</id>
+    		<releases>
+      			<enabled>true</enabled>
+    		</releases>
+    		<snapshots>
+      			<enabled>false</enabled>
+    		</snapshots>
+    		<url>https://maven.oracle.com</url>
+    		<layout>default</layout>
+  		</repository>
+	</repositories>
+	<pluginRepositories>
+	  	<pluginRepository>
+    		<id>maven.oracle.com</id>
+    		<url>https://maven.oracle.com</url>
+  		</pluginRepository>
+	</pluginRepositories>
+	[/if]
+	[comment : Specific for getting Oracle driver < 12.2 /]
+	[if isDbOracle32()]
+	<!-- Specific repository for Oracle drivers. -->
+	<repositories>
+    	<repository>
+        	<id>hand-china-repo</id>
+        	<name>HandChinaRepo</name>
+        	<url>http://nexus.saas.hand-china.com/content/repositories/rdc/</url>
+    	</repository>
+	</repositories>
+	[/if]
+	
+	<!-- 
+	// [protected ('for custom code')]
+	-->
+
+	[if isLibraryRS()]
+	<!-- A décommenter si la librairie est utilisée avec un frontal jsp. -->
+	<!--
+    <dependencies>
+        <dependency>
+			<groupId>fr.spi4j</groupId>
+			<artifactId>spi4j</artifactId>
+            <version>${spi4j.version}</version>
+        </dependency>
+    </dependencies>
+	-->
+	[/if]
+		
+	<!--
+	// [/protected]
+	-->
+
+    <modules>
+        <module>[getCommonProjectName()/]</module>
+        <module>[getServerProjectName()/]</module>
+		[if getClient().size() <> 0]
+        <module>[getApplicationName()/]-client-[getClient()/]</module>
+		[/if]
+		[if 'swing'.equalsIgnoreCase(getClient())]
+        <module>[getClientIntegrationProjectName()/]</module>
+        <module>[getClientJavaWebStartProjectName()/]</module>
+		[/if]
+		[if 'swing'.equalsIgnoreCase(getClient()) or useWS()]
+        <module>[getWebappProjectName()/]</module>
+		[/if]
+        <module>[getDeliveryProjectName()/]</module>
+        <module>[getModelProjectName()/]</module>
+    </modules>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+					<release>${java.version}</release>
+                    <compilerArgument>-Xlint</compilerArgument>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <!-- On attache les sources lors du packaging des sous-modules,
+                        pour que les sources de [getCommonProjectName()/], [getApplicationName()/]-client et [getServerProjectName()/]
+						soient disponibles dans le repo local pour que l'instrumentation globale des classes de ces sous-modules
+						fonctionnent dans le client d'integration. -->
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Execution des tests unitaires -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <!-- on redirige les logs des tests vers des fichiers pour que les logs des builds archives dans l'integration continue
+                    ne soient pas trop gros et ne consomment pas trop d'espace disque -->
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <argLine>-Xmx128m --illegal-access=permit</argLine>
+                </configuration>
+            </plugin>
+            
+			<!-- Verification des prerequis -->
+			<plugin>
+    			<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-enforcer-plugin</artifactId>
+    			<version>${maven-enforcer-plugin.version}</version>
+    			<executions>
+    				<execution>
+  						<id>enforce</id>
+        				<goals>
+            				<goal>enforce</goal>
+        				</goals>
+        				<configuration>
+            				<rules>
+                				<banDuplicatePomDependencyVersions/>
+                				<requireMavenVersion>
+    								<version>3.6.3</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+    								<version>${java.version}</version>
+								</requireJavaVersion>
+            				</rules>
+        				</configuration>   		
+        			</execution>		
+    			</executions>
+			</plugin>            
+
+			<!-- Couverture de code des tests unitaires -->
+			<!-- JaCoco remplace cobertura-maven-plugin pour la version 11 de Java -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+            <!-- Rapport checkstyle -->
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <configuration>
+                    <enableRSS>false</enableRSS>
+                    <linkXRef>false</linkXRef>
+                    <configLocation>[getCommonProjectName()/]/[getCommonsConfDir().ensureTrailingSlash()/]Checks_Spi4j.xml</configLocation>
+                </configuration>
+            </plugin>
+
+            <!-- Rapport findbugs -->
+            <!-- (Pour utiliser cette version 3 de findbugs, il faut lancer Maven avec un JDK 1.7) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs-maven-plugin.version}</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <omitVisitors>FindReturnRef,FindNullDeref,FindBadCast2,SerializableIdiom</omitVisitors>
+                </configuration>
+            </plugin>
+
+            <!-- Rapport pmd -->
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <configuration>
+                    <enableRulesSummary>false</enableRulesSummary>
+                    <source>${java.version}</source>
+                    <targetJdk>${java.version}</targetJdk>
+                    <linkXRef>false</linkXRef>
+                    <minimumPriority>4</minimumPriority>
+                    <minimumTokens>100</minimumTokens>
+                    <rulesets>
+                        <ruleset>../[getCommonProjectName()/]/[getCommonsConfDir().ensureTrailingSlash()/]PMD_Spi4j.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+
+            <!-- Javadoc -->
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Zip du projet avec les sources pour livraison -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <!-- Assembly seulement pour le module parent -->
+                <inherited>false</inherited>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+			<!-- verifie si tous les les plugins maven sont à jour. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${maven-versions-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+	
+			<!--
+			// [protected ('for plugins')]
+			-->
+		
+			<!--
+			// [/protected]
+			-->
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <tags>
+                    </tags>
+                </configuration>
+            </plugin>
+
+            <!-- Rapport des tests unitaires -->
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven-surefire-report-plugin.version}</version>
+                <configuration>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <!-- http://jira.codehaus.org/browse/SUREFIRE-257 -->
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report-only</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+			<!-- verifie si tous les les plugins maven sont à jour. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${maven-versions-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+
+            <!-- Information sur le projet -->
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>summary</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>issue-tracking</report>
+                            <report>scm</report>
+                            <report>cim</report>
+                            <report>plugin-management</report>
+                            <report>plugins</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <!-- Site -->
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven-site-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <properties>
+		<!-- Version Java. -->
+		<java.version>[getJavaStringVersion()/]</java.version>
+
+		[if not isLibraryRS()]
+		<!-- Version de la librairie : Simple Programming Interface For Java. -->
+		<spi4j.version>[getSpi4JVersion()/]</spi4j.version>
+		[/if]
+		
+		[if hasHttpEmbeddedServer()]
+		<!-- Version pour le serveur http embarque. -->
+		<[getHttpEmbeddedServer()/].version>[getHttpEmbeddedVersion()/]</[getHttpEmbeddedServer()/].version>
+		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		<log4j-slf4j.version>2.19.0</log4j-slf4j.version>
+		[/if]                                                     
+		<ecj.version>4.6.1</ecj.version>
+		[/if]
+
+		<!-- Specification de l'encodage des caracteres pour l'application. -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		[if not isLibraryRS()]
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		[/if]
+
+		<!-- Versions pour les plugins specifiques Maven. -->
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>2.4</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M6</maven-surefire-plugin.version>
+ 		<maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
+        <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
+        <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
+        <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
+        <maven-surefire-report-plugin.version>2.22.1</maven-surefire-report-plugin.version>
+        <maven-project-info-reports-plugin.version>3.0</maven-project-info-reports-plugin.version>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+		<maven-versions-plugin.version>2.8.1</maven-versions-plugin.version>
+		<maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+		[if not isLibraryRS()]
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+		<maven-war-plugin.version>3.2.2</maven-war-plugin.version>
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+ 		<maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
+        <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		[/if]
+
+		[if not isLibraryRS()]
+		<!-- Version(s) pour la/les base(s) de donnee(s). -->
+        <h2.version>1.4.196</h2.version>
+		[/if]
+		[comment : compatible with JDK8, JDK11, JDK12, JDK13, JDK14 and JDK15. /]
+		[if isDbOracle()] 
+        <oracle.version>12.2.0.1</oracle.version>
+		<oracle-group-id>com.oracle.database.jdbc</oracle-group-id>
+		<oracle-artifact-id>ojdbc8</oracle-artifact-id>
+		[/if]
+		[comment : compatible with .../]
+		[if isDbOracle32()]
+ 		<oracle.version>12.1.0.2</oracle.version>
+		<oracle-group-id>com.oracle</oracle-group-id>
+		<oracle-artifact-id>ojdbc7</oracle-artifact-id>
+		[/if]
+		[if isDbMySql()]
+        <mysql.version>5.1.41</mysql.version>
+		[/if]
+		[if isDbMariaDB()]
+        <mariadb.version>3.0.6</mariadb.version>
+		[/if]
+		[if isDbPostgresql()]
+        <postgresql.version>42.2.5</postgresql.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
+		[/if]
+		[if isDbSqlServer()]
+        <sqljdbc4.version>4.0</sqljdbc4.version>
+		[/if]
+
+		<!-- Autres versions. -->
+		[if not isLibraryRS()]
+        <tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
+        <itext.version>2.1.7</itext.version>
+        <itext-rtf.version>2.1.7</itext-rtf.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+		<jakarta-transaction-api.version>2.0.1</jakarta-transaction-api.version>
+        <opencsv.version>5.7.1</opencsv.version>
+        <mail.version>1.6.2</mail.version>
+		<xstream.version>1.4.20</xstream.version>
+        <mockito-core.version>5.3.1</mockito-core.version>
+        <ehcache-core.version>2.6.11</ehcache-core.version>
+		[if useEjb()]
+        <ejb-api.version>3.0-alpha-1</ejb-api.version>[/if]
+        <javamelody-core.version>2.0.0</javamelody-core.version>
+		<jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
+		[if useWS() ]
+		<jakarta-ws-rs-api.version>3.1.0</jakarta-ws-rs-api.version>[/if]
+		[/if]
+        <findbugs-maven-plugin.version>3.0.0</findbugs-maven-plugin.version>
+        <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+		<log4j-disruptor.version>3.4.4</log4j-disruptor.version>
+		<commons-io.version>2.12.0</commons-io.version>
+        <junit.version>5.9.3</junit.version>
+        <log4j.version>2.20.0</log4j.version>
+		<slf4j.version>2.0.5</slf4j.version>
+		[if hasHttpEmbeddedServer()]
+		<commons-cli.version>1.5.0</commons-cli.version>
+		[/if]
+		[if hasAdditionnalLibraries()]
+		[for (prop : String | getAdditionnalLibraries())]
+		<!-- Librairie additionnelle utilisateur. -->
+		<user-library-[getLibraryName(prop)/].version>[getLibraryVersion(prop)/]</user-library-[getLibraryName(prop)/].version>
+		[/for][/if]
+
+		[if useTestBDD()]
+        <jbehave-site-resources.version>3.5</jbehave-site-resources.version>
+        <jbehave-core.version>5.1</jbehave-core.version>
+		[/if]
+		[if useWS()]
+        <cxf.version>4.0.1</cxf.version>
+		[/if]
+		[if isLibraryRS()]
+		<jersey-apache-connector.version>3.1.2</jersey-apache-connector.version>
+		[/if]
+		[if useWS() or isLibraryRS()]
+   		<jackson.annotation.version>2.15.2</jackson.annotation.version>
+		<jersey.version>3.1.2</jersey.version>
+		<jwt.version>0.11.5</jwt.version>
+		<gson.version>2.8.6</gson.version>
+		<json.version>20230227</json.version>
+		<jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
+		[/if]
+		[if  'gwt'.equalsIgnoreCase(getClient())]
+        <gwt-user.version>2.7.0</gwt-user.version>
+        <gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>
+		[elseif 'jsp'.equalsIgnoreCase(getClient())]
+		<jstl-api.version>3.0.0</jstl-api.version>
+		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		<jstl.version>11.0.0</jstl.version>[else]<jstl.version>3.0.1</jstl.version>[/if]
+		[elseif 'jsf'.equalsIgnoreCase(getClient())]
+		<jakarta-faces.version>3.0.0</jakarta-faces.version>
+        <primefaces.version>6.2</primefaces.version>
+		[/if]
+		[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		<tomcat-dbcp.version>8.5.4</tomcat-dbcp.version>
+		[/if]
+
+		<!--
+		// [protected ('for properties')]
+		-->
+
+		[if isLibraryRS()]
+		<!-- Version de la librairie : Simple Programming Interface For Java. -->
+		<!-- A décommenter si la librairie est utilisée avec un frontal jsp. -->
+		<!-- <spi4j.version>[getSpi4JVersion()/]</spi4j.version> -->
+		[/if]		
+		
+		[if useConfigFileSpi4jFrwk()]
+		<!-- A décommenter en fonction de l'utilisation des diverses options
+		pour l'utilisation du framework spi4j dans le cas de la gestion des
+		fichiers de configuration pour l'application cible.	-->
+
+		<!-- <quartz.version>2.3.2</quartz.version> -->
+		<!-- <snakeyaml.version>2.1</snakeyaml.version>-->
+		[/if]
+
+		<!--
+		// [/protected]
+		-->
+    </properties>
+</project>
+[/template]
+
+[comment : Get specific version for embedded server (for now always for java 11+)/]
+[template private getHttpEmbeddedVersion(any : OclAny) post (trim())]
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]11.0.5[/if]
+[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]11.0.0-M1[/if]
+[if 'tomee'.equalsIgnoreCase(getHttpEmbeddedServer())]9.1.0[/if]	
+[/template]

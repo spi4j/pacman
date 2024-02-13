@@ -1,0 +1,55 @@
+[comment encoding = UTF-8 /]
+[module generateCommonSoaRs('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                           'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::commons::soa::common::services /]
+[import fr::pacman::commons::soa::files::genXto /]
+[import fr::pacman::commons::soa::files::genBinaryType /]
+
+[import fr::pacman::soapifirst::files::genRSFrontCommon /]
+[import fr::pacman::soapifirst::common::services /]
+
+[comment : ****************************************************************************/]
+[comment : Generation of all Xto founded in the Swagger file in (Application)-commons. /]
+[comment : ****************************************************************************/]
+[template public GenerateCommonSystem(m : System)]
+[comment @main /]
+
+[comment : Create a Binary type apart from spi4j. /]
+[if m.hasBinaryTypeForRsLibrary()][m.genBinaryType()/][/if]
+
+[comment : Create all Xto from DTOs found in the DTO hierarchy diagram. /]
+[for (d : DTO | m.eAllContents(DTO)->asSet())]
+    [d.genXto()/]
+[/for]
+
+[comment : Create all Enumerations found in the DTO hierarchy diagram. /]
+[for ( e : Enumeration | m.eAllContents( Enumeration  )->asSet())]
+	[e.genXtEnums() /]
+[/for]
+
+[/template]
+
+
+[comment : ********************************************************/]
+[comment : On now, nothing to do for component partial generation. /]
+[comment : ********************************************************/]
+[template public GenerateCommonComponent(c : Component)]
+[comment @main /]
+
+[comment : prepare if needed. /]
+
+[/template]
+
+
+[comment : ******************************************************/]
+[comment : On now, nothing to do for service partial generation ./]
+[comment : ******************************************************/]
+[template public GenerateCommonService(s : Service)]
+[comment @main /]
+
+[comment : prepare if needed. /]
+
+[/template]

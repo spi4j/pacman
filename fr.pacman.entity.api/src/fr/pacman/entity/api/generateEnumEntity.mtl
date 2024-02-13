@@ -1,0 +1,18 @@
+[comment encoding = UTF-8 /]
+[module generateEnumEntity('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::types::genEnum /]
+
+
+[template public generateEnumEntity(r : Root)]
+[comment @main /]
+
+[comment : agglomération des mains /]
+
+[for (enum: Enumeration | r.eAllContents(Enumeration))]
+[genEnum(enum)/]
+[/for]
+
+[/template]
+
+

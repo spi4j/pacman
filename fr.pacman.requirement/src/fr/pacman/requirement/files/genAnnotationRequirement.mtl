@@ -1,0 +1,18 @@
+[comment encoding = UTF-8 /]
+[module genAnnotationRequirement('http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::requirement::requirements::annotationRequirement /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[template public genAnnotationRequirement(repo : Repository)]
+[file (filename(getCommonsSourceDir(), buildPackageRequirement(), apply_classAnnotation('requirement') + '.java'), false, 'UTF-8')]
+[annotationRequirement(repo) /]
+[/file]
+[/template]
+
+[template public genAnnotationRequirement(cat : Category)]
+[file (filename(getCommonsSourceDir(), buildPackageRequirementForCategory(cat), apply_classAnnotation('requirement ' + cat.id) + '.java'), false, 'UTF-8')]
+[annotationRequirement(cat) /]
+[/file]
+[/template]

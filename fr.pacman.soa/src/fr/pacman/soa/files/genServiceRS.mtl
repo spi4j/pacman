@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genServiceRS('http://www.obeonetwork.org/dsl/soa/4.0.0', 
+					 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::soa::common::classes /]
+[import fr::pacman::soa::server::ws::rs::impl::category::serviceFacade /]
+
+[comment : ************************************************************/]
+[comment : Generation of the facade implementation for a REST service. /]
+[comment : ************************************************************/]
+[template public genServiceRS(s : Service, d : DTO)]
+[file (filename(getServerSourceDir(), buildPackageImplWs(s), s.buildServiceFacadeRSClassName(d) + '.java'), false, 'UTF-8')]
+[s.serviceFacade(d)/]
+[/file]
+[/template]

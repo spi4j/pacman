@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rules>
+  <rule id="DslEntity_Check013">
+    <text>Un bloc doit avoir un nom</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="unknownRule">
+    <text>%1$s</text>
+    <level>Information</level>
+    <active>false</active>
+    <params/>
+  </rule>
+  <rule id="WrongParameters">
+    <text>Erreur dans les paramètres d'entrée de la règle de validation %1$s : %2$s</text>
+    <level>Erreur</level>
+    <active>false</active>
+    <params/>
+  </rule>
+  <rule id="Metadata_Check001">
+    <text>Problème avec la métadonnée %1$s : %2$s</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslRequirement_Check001">
+    <text>L'identifiant de l'exigence doit etre unique : %1$s</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslRequirement_Check002">
+    <text>L'identifiant de l'exigence est obligatoire</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslRequirement_Check003">
+    <text>La description de l'exigence est obligatoire</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslRequirement_Check004">
+    <text>L'exigence d'id %1$s a un nom trop long (%2$s &gt; %3$s)</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params>
+      <param>100</param>
+    </params>
+  </rule>
+  <rule id="DslEntity_Check001">
+    <text>Une seule relation navigable dans la definition de 2 relations opposees</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check002">
+    <text>Plusieurs entités dans le même package ne doivent pas avoir le même nom</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check003">
+    <text>Plusieurs attributs ou propriétés dans la même entity ne doivent pas avoir le même nom</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check004">
+    <text>Les attributs doivent avoir une multiplicité 0..1 ou 1 (pas de liste)</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check005">
+    <text>Pas de caractères spéciaux dans les noms</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check006">
+    <text>Eviter les accents et les espaces dans les noms</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check007">
+    <text>Eviter les relations 1..*</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check008">
+    <text>Eviter les relations isComposite</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check009">
+    <text>Description fortement conseillée</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check010">
+    <text>Eviter d'imbriquer les blocs</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check011">
+    <text>Une entité ne devrait pas avoir d'attribut 'Primary Key'</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslEntity_Check012">
+    <text>Un attribut doit être de type primitif (sauf Email)</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check001">
+    <text>Un nom de tache doit être unique dans un use case</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check002">
+    <text>Chaque plan d'action doit avoir un etat initial</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check003">
+    <text>Une loop doit avoir un etat initial</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check004">
+    <text>Une loop doit avoir un etat final</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check005">
+    <text>Il faut un UserAction, par exemple si uniquement AppliAction, le plan d'action est inadapte</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check006">
+    <text>Chaque plan d'action doit avoir un etat final</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslGraal_Check007">
+    <text>Il est recommande de ne pas depasser %1$d niveaux dans une boucle</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params>
+      <param>2</param>
+    </params>
+  </rule>
+  <rule id="DslSoaDto_Check001">
+    <text>Une seule relation navigable dans la definition de 2 relations opposees</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslSoaDto_Check002">
+    <text>Description fortement conseillée</text>
+    <level>Avertissement</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslSoaDto_Check003">
+    <text>Le parametre doit etre de type primitif ou DTO</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslSoaDto_Check004">
+    <text>L'operation doit avoir 0 ou 1 parametre de retour</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslSoaDto_Check005">
+    <text>Le parametre d'une operation doit avoir Upper = 1 ou -1 (=*)</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslSoaDto_Check006">
+    <text>Le Service doit avoir une interface</text>
+    <level>Erreur</level>
+    <active>true</active>
+    <params/>
+  </rule>
+  <rule id="DslSoaDto_Check100">
+    <text>Pas de caracteres speciaux dans les noms</text>
+    <level>Information</level>
+    <active>false</active>
+    <params/>
+  </rule>
+</rules>

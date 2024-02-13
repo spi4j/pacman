@@ -1,0 +1,64 @@
+[comment encoding = UTF-8 /]
+[module serviceFacadeItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                         'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::soa::common::classes /]
+
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::commentaires /]
+[import fr::pacman::soalight::common::attributes /]
+[import fr::pacman::soalight::common::methodes /]
+[import fr::pacman::soalight::common::classes /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+
+
+[comment] le Service existe sans DTO [/comment]
+[template public serviceFacadeItf(s : Service)]
+[licence()/]
+package [buildPackageWsApi(s)/];
+
+// [protected ('for imports')]
+
+import java.util.List;
+
+// [/protected]
+
+/**
+ * Définit le contrat de services spécifiques.
+ * @author [getAuthorName()/]
+ */ 
+public interface [s.buildServiceFacadeRSInterfaceName(null)/]
+{
+
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+[if o.public]
+    /**
+    * [o.description/].
+[getComParamsIn(o)/][comParamOut(o)/]    */
+   // Annotations Méthode
+   // [protected (s.getUserCodeId('Annotations Méthode'))]
+
+   // [/protected]
+   [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/]);
+  
+[/if]
+[/for]
+[/if]
+   // [buildServiceFacadeInterfaceName(s)/]
+   // [protected (s.getUserCodeId(buildServiceFacadeInterfaceName(s)))]
+
+   // [/protected]
+}
+[/template]

@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genAppliAsyncCallback('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::cinematic::gwt::common::packages /]
+[import fr::pacman::cinematic::gwt::common::name /]
+[import fr::pacman::cinematic::gwt::client::ui::gwt::appliAsyncCallback /]
+
+[template public genAppliAsyncCallback(any : OclAny)]
+[file (filename(getClientGwtSourceDir(), namePackageGwt(), nameAppliAsyncCallback() + '.java'), false, 'UTF-8')]
+[appliAsyncCallback()/]
+[/file]
+[/template]
+

@@ -1,0 +1,246 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+
+[comment les conventions de nommage /]
+[*********************
+ * Paramétrage Début
+*/]
+
+[query public buildDaoImplClassName(e : Entity) : String =
+apply_classImplem(nameSimpleEntity(e) + ' dao')
+ /]
+
+[query public buildReferenceDaoImplClassName(r : Reference) : String =
+apply_classImplem(nameSimpleReference(r) + ' dao')
+ /]
+
+[query public buildDaoJdbcTestClassName(e : Entity) : String =
+apply_classTest(nameSimpleEntity(e) + ' dao jdbc')
+ /]
+
+[query public buildEntityImplClassName(e : Entity) : String =
+apply_classImplem(nameSimpleEntity(e) + ' entity')
+ /]
+
+[query public buildReferenceImplClassName(r : Reference) : String =
+apply_classImplem(nameSimpleReference(r) + ' entity')
+ /]
+
+[query public buildEntityMapperInterfaceName(e : Entity) : String =
+apply_classInterface(nameSimpleEntity(e) + ' mapper')
+ /]
+
+[query public buildEntityMapperImplClassName(e : Entity) : String =
+apply_classImplem(nameSimpleEntity(e) + ' mapper')
+ /]
+
+[query public buildAppliUserMapperGenClassName(any : OclAny) : String =
+apply_classDefault(getApplicationName() + ' user mapper')
+ /]
+
+
+[*********************
+ * Paramétrage fin
+*/]
+
+[template public nameMapper(e : Entity)]
+[nameSimpleEntity(e)/]Mapper
+[/template]
+
+[template public nameMapperInterface(e : Entity)]
+[nameMapper(e)/]_Itf
+[/template]
+
+[template public nameSimpleEntity(e : Entity) post (trim())]
+[e.name.sanitize().toUpperFirst()/]
+[/template]
+
+[template public nameSimpleReference(r : Reference) post (trim())]
+[nameSimpleEntity(r.containingType.oclAsType(entity::Entity))+r.name.sanitize().toUpperFirst()/]
+[/template]
+
+[template public nameEntityDelegate(e : Entity)]
+delegate
+[/template]
+
+[template public nameColumnProperty(p : Property)]
+[nameSimpleProperty(p)/]
+[/template]
+
+[template public getNameSetter(p : Property)]
+[apply_methodSet(p.name.normalize())/]
+[/template]
+
+[template public getNameSetterEntityId(r : Reference)]
+[apply_methodSet(r.name.normalize().toLowerFirst())/][namePK_ID()/]
+[/template]
+
+[template public getNameGetterEntityId(r : Reference)]
+[apply_methodGet(r.referencedType.oclAsType(Entity).name.normalize())/][namePK_ID()/]
+[/template]
+
+[template public getNameSetterInverseEntityId(r : Reference)]
+[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/]
+[/template]
+
+[comment parametrage /]
+[query public nameSimpleProperty(p : Property) : String =
+    if (p.oclIsKindOf(environment::Reference)) then
+        if (p.name.oclIsUndefined() or p.name.size() = 0) then
+            if (p.oclAsType(environment::Reference).referencedType.oclIsUndefined()) then
+                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
+            else
+                'ref' + p.oclAsType(environment::Reference).referencedType.oclAsType(entity::Entity).nameSimpleEntity().toUpperFirst() + namePK_ID()
+            endif
+        else
+            p.name + namePK_ID()
+        endif
+    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
+        'XXXattribut sans nomXXX'
+    else
+        p.name
+    endif endif
+/]
+
+[query public nameSimpleProperty_(p : Property) : String =
+    if (p.oclIsKindOf(environment::Reference)) then
+        if (p.name.oclIsUndefined() or p.name.size() = 0) then
+            if (p.oclAsType(environment::Reference).referencedType.oclIsUndefined()) then
+                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
+            else
+                'ref' + p.oclAsType(environment::Reference).referencedType.oclAsType(entity::Entity).nameSimpleEntity().toUpperFirst() + namePK_ID()
+            endif
+        else
+            p.name.sanitize().toLowerFirst() + namePK_ID()
+        endif
+    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
+        'XXXattribut sans nomXXX'
+    else
+        p.name.sanitize().toLowerFirst()
+    endif endif
+/]
+
+[template public nameSimplePropertyInverse(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else]
+[r.oppositeOf.name.sanitize().toLowerFirst()/][/if]
+[/template]
+
+[template public nameSimplePropertyInverse(r : Reference, compteur : Integer )]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else]
+[r.oppositeOf.name.sanitize().toLowerFirst()/][/if]
+[/template]
+
+[comment] le nom de la clé primaire d'une entitée dans les énumérations[/comment]
+[template public nameSimplePropertyID(e : Entity)]
+[comment nameSimpleEntity(e)/]
+[e.name.sanitize().toLower()/][namePK_ID()/]
+[/template]
+
+[comment] le nom de la clé primaire d'une entitée dans les énumérations[/comment]
+[template public nameSimpleReferencePropertyID(r : Reference)]
+[nameSimpleReference(r)/][namePK_ID()/]
+[/template]
+
+[comment] le nom de la clé primaire d'une entitée [/comment]
+[template public namePropertyID(e : Entity)]
+_[nameSimplePropertyID(e)/]
+[/template]
+
+[query public buildPackageFetchingStrategyEntity(e : Entity) : String =
+    buildPackageBusinessApi(e) + categoryHierarchy(e) + '.fetching'
+/]
+
+[query public buildPackageFetchingStrategyEntity(r : Reference) : String =
+    buildPackageBusinessApi(r) + categoryHierarchy(r) + '.fetching'
+/]
+
+[query public buildPackageBusinessApi(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageBusiness() + '.' + getPackageApi()
+/]
+
+[query public categoryHierarchy(e : Entity) : String =
+    if (e.ancestors(Namespace)->size() < 1) then
+        ''
+    else        
+		'.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+/]
+
+[query public categoryHierarchy(r : Reference) : String =
+    if (r.ancestors(Namespace)->size() < 1) then
+        ''
+    else        
+		'.' + r.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+/]
+
+[query public buildAttributesEnumName(e : Entity) : String =
+apply_classEnum(buildSimpleEntityName(e) + ' attributes')
+ /]
+
+[query public buildPackageBusinessApiEntity(e : Entity) : String =
+    buildPackageBusinessApi(e) + categoryHierarchy(e)
+/]
+
+[query public buildFetchingStrategyTestClassName(e : Entity) : String =
+apply_classTest(buildSimpleEntityName(e) + ' fetching strategy')
+ /]
+
+[query public buildFetchingStrategyClassName(e : Entity) : String =
+apply_classDefault(nameSimpleEntity(e) + ' fetching strategy')
+ /]
+
+[query public buildFetchingStrategyClassName(r : Reference) : String =
+apply_classDefault(nameSimpleEntity(r.referencedType.oclAsType(entity::Entity)) + ' fetching strategy')
+ /]
+
+[template public nameClassFetchingStrategy(e : Entity)]
+[e.nameSimpleEntity()/]FetchingStrategy
+[/template]
+
+[template public nameClassFetchingStrategyTest(e : Entity)]
+[e.nameClassFetchingStrategy()/]_Test
+[/template]
+
+[template public nameBaseAttribute(a : Attribute)]
+[a.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template public nameBaseReference(r : Reference)]
+[r.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template public nameBaseReferenceTab(r : Reference)]
+[if ((getListPrefix()).size() = 0)][r.nameBaseReference()/][else]
+[getListPrefix()/]_[r.nameBaseReference()/][/if]
+[/template]
+
+[template public nameBaseReferenceUpperFirst(r : Reference)]
+[r.name.sanitize().toUpperFirst()/]
+[/template]
+
+[template public nameBaseReferenceInverse(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(Entity).nameSimpleEntity() + r.name.toUpperFirst()/][else]
+[nameBaseReference(r.oppositeOf)/][/if]
+[/template]
+
+[template public getNameGetterListEntity(r : Reference)]
+[apply_methodDefault('get '+ apply_attributeMultiple(r.name.normalize()) )/]
+[/template]
+
+[template public getNameSetterListEntity(r : Reference)]
+[apply_methodDefault('set '+ apply_attributeMultiple(r.name.normalize()) )/]
+[/template]
+
+[template public enumValue(e : Enumeration)]
+[if ((e.literals->first().name <> null) and (e.literals->first().name.contains('(')))][e.literals->first().name.substring(1,e.literals->first().name.index('(')-1).toUpperFirst()/][else][e.literals->first().name.toUpperFirst()/][/if]
+[/template]

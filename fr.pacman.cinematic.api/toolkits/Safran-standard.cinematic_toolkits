@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cinematic-toolkits:Toolkit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cinematic-toolkits="http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0" xmi:id="_jIrpcK8aEeGs4sAdxwacjg" name="Safran-standard">
+  <widgets xmi:id="_SZ1REK8bEeGs4sAdxwacjg" name="CheckBox" icon="/fr.pacman.cinematic.api/icons/Checkbox.gif">
+    <possibleEvents xmi:id="_6AJ7AK8bEeGs4sAdxwacjg" name="onClick"/>
+  </widgets>
+  <widgets xmi:id="_UXTDUK8bEeGs4sAdxwacjg" name="ComboBox" icon="/fr.pacman.cinematic.api/icons/Combo.gif">
+    <possibleEvents xmi:id="_5VGL0K8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_WUw1kK8bEeGs4sAdxwacjg" name="DateField" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_5OiQ0K8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_YTa6oK8bEeGs4sAdxwacjg" name="DoubleField" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_5Ibo0K8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_aMackK8bEeGs4sAdxwacjg" name="IntegerField" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_5DNxoK8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_bn6KMK8bEeGs4sAdxwacjg" name="PasswordField" icon="/fr.pacman.cinematic.api/icons/Password.gif">
+    <possibleEvents xmi:id="_49s_gK8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_dMCPYK8bEeGs4sAdxwacjg" name="StringField" icon="/fr.pacman.cinematic.api/icons/Textarea.gif">
+    <possibleEvents xmi:id="_41gFwK8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_e3BxkK8bEeGs4sAdxwacjg" name="Table" icon="/fr.pacman.cinematic.api/icons/Table.gif">
+    <possibleEvents xmi:id="_4JGSwK8bEeGs4sAdxwacjg" name="onChange"/>
+  </widgets>
+  <widgets xmi:id="_gcf6kK8bEeGs4sAdxwacjg" name="ViewDialog" icon="/fr.pacman.cinematic.api/icons/Panel.gif" isContainer="true">
+    <possibleEvents xmi:id="_0-5noK8bEeGs4sAdxwacjg" name="onClose"/>
+  </widgets>
+  <widgets xmi:id="_nAGxgK8bEeGs4sAdxwacjg" name="ViewPanel" icon="/fr.pacman.cinematic.api/icons/Panel.gif" isContainer="true">
+    <possibleEvents xmi:id="_y-cy0K8bEeGs4sAdxwacjg" name="onClose"/>
+  </widgets>
+  <widgets xmi:id="_qOeyAK8bEeGs4sAdxwacjg" name="MainPanel" icon="/fr.pacman.cinematic.api/icons/Window.gif" implementation="" isContainer="true">
+    <possibleEvents xmi:id="_xQomIK8bEeGs4sAdxwacjg" name="onClose"/>
+  </widgets>
+  <widgets xmi:id="_sdOhgK8bEeGs4sAdxwacjg" name="Button" icon="/fr.pacman.cinematic.api/icons/Button.gif">
+    <possibleEvents xmi:id="_vf1W4K8bEeGs4sAdxwacjg" name="onClick"/>
+  </widgets>
+</cinematic-toolkits:Toolkit>

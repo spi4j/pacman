@@ -1,0 +1,92 @@
+[comment encoding = UTF-8 /]
+[module outils('http://www.obeonetwork.org/dsl/soa/4.0.0',
+              'http://www.obeonetwork.org/dsl/entity/3.0.0',
+              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::commons::soa::common::utils /]
+
+
+[query public dtoFromService(s : Service) : DTO =
+if not systemeRacine(s).oclIsUndefined() and systemeRacine(s).eAllContents(DTO)->exists(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName()) then
+    systemeRacine(s).eAllContents(DTO)->select(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first()
+else
+    null
+endif
+/]
+
+[query public serviceFromDto(d : DTO) : Service =
+if (not systemeRacine(d).oclIsUndefined() and systemeRacine(d).eAllContents(Service)->exists(s : Service | d.buildSimpleDtoName() = s.buildSimpleServiceName())) then
+    systemeRacine(d).eAllContents(Service)->select(s : Service | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first()
+else
+    null
+endif
+/]
+
+[comment : Verifie si le nom du service = le nom d'un DTO present dans la liste des DTO qui existent. /]
+[query public serviceSeul(s : Service) : Boolean =
+    not systemeRacine(s).oclIsUndefined() and not systemeRacine(s).eAllContents(DTO)->exists(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName())
+/]
+
+[query public serviceSeulFromSystem(s : Service, m  : System) : Boolean =
+    not m.listeDtosFromSystem()->exists(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName())
+/]
+
+[query public xtoAGenerer(o : ObeoDSMObject) : Set(DTO) =
+    invoke('fr.pacman.soa.services.WSUtils', 'xtoAGenerer(java.util.List)', Sequence{o.eAllContents(Operation)})
+/]
+
+[query public listeDtos(n : Namespace) : Set(DTO) =
+    invoke('fr.pacman.soa.services.WSUtils', 'listeDtos(java.util.List)', Sequence{n.eAllContents(DTO)})
+/]
+
+[query public listeDtosFromSystem(m : System) : Set(DTO) =
+	invoke('fr.pacman.soa.services.WSUtils', 'listeDtos(java.util.List)', Sequence{m.eAllContents(DTO)})
+/]
+
+[query public listeServicesFromSystem(m : System) : Set(Service) =
+	invoke('fr.pacman.soa.services.WSUtils', 'listeServices(java.util.List)', Sequence{m.eAllContents(Service)})
+/]
+
+[query public clientNeedXto(any : OclAny) : Boolean =
+    getClientTypes()->exists(client : String | client.equalsIgnoreCase('GWT'))
+/]
+
+[query public clientNeedRemotingServlet(any : OclAny) : Boolean =
+    getClientTypes()->exists(client : String | client.equalsIgnoreCase('SWING'))
+/]
+
+[query public isAuthCode(f : Flow) : Boolean = 
+ 	f.flowType = soa::FlowType::AUTHORIZATIONCODE
+/]
+
+[query public isAuthCredential(f : Flow) : Boolean = 
+ 	f.flowType = soa::FlowType::CREDENTIALS
+/]
+
+[query public isAuthImplicit(f : Flow) : Boolean = 
+ 	f.flowType = soa::FlowType::IMPLICIT
+/]
+
+[query public isAuthPassord(f : Flow) : Boolean = 
+ 	f.flowType = soa::FlowType::PASSWORD
+/]
+
+[query public isAuthOidc(s : SecurityScheme) : Boolean = 
+ 	s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT
+/]
+
+[query public isAuthOauth2(s : SecurityScheme) : Boolean = 
+ 	s.type = soa::SecuritySchemeType::OAUTH2
+/]
+
+[query public isAuthApiKey(s : SecurityScheme) : Boolean = 
+ 	s.type = soa::SecuritySchemeType::API_KEY
+/]
+
+[query public isWSCrudApplication(any : OclAny) : Boolean = 
+	any.useWS() and any.isCrudApplication()
+/]

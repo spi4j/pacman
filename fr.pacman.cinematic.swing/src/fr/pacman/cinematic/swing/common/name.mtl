@@ -1,0 +1,31 @@
+[comment encoding = UTF-8 /]
+[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::swing::common::swing-commons /]
+
+[query public nameViewImplementation(viewContainer : ViewContainer) : String =
+    apply_classDefault(viewContainer.name + ' View Swing')
+/]
+
+[query public getRootPresenterName(any : OclAny) : String =
+    namePresenter(getRootPresenter(any))
+/]
+
+[query public nameSwingLanceur(any : OclAny) : String =
+    apply_classDefault('Swing Lanceur')
+/]
+
+[query public nameSwingViews(any : OclAny) : String =
+    apply_classDefault('Swing Views')
+/]
+
+[query public nameSwingSecurity(any : OclAny) : String =
+    apply_classDefault('Client Security Manager')
+/]
+
+[query public nameSwingInitialization(any : OclAny) : String =
+    apply_classDefault('Initialization')
+/]

@@ -1,0 +1,23 @@
+[comment encoding = UTF-8 /]
+[module genModel('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::configuration::project::Properties /]
+[import fr::pacman::configuration::project::RSResources /]
+[import fr::pacman::commons::common::properties / ] 
+
+[template public genModel (any : OclAny)]
+
+[file (filename(getModelProjectName(), getModelPropertiesDir(), 'README.txt'), false, 'UTF-8')]
+[readMeProperties() /]
+[/file]
+
+[comment : Si WS alors dans le cas des services Rest, on ajoute un environnement pour les MAP. /]
+[if useWS()]
+[file (filename(getModelProjectName(), '', getApplicationName() + '.environment'), false, 'UTF-8')]
+[specificRsEnvironment() /]
+[/file]
+[/if]
+
+[/template]

@@ -1,0 +1,74 @@
+[comment encoding = UTF-8 /]
+[module references( 'http://www.obeonetwork.org/dsl/environment/3.0.0',
+                    'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::attributes /]
+
+[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::soa::common::names /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+
+[comment : les references multiples. /]
+[query public referencesStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | isMultiple(r) and r.navigable and not isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment :les references d'un Dto sans multiplicite ./]
+[query public referencesNoStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | not isMultiple(r) and r.navigable and not isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment : les references multiples ayant une reference opposee elle aussi multiple. /]
+[query public referencesStarStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple() and not isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment : les references multiples n'ayant pas de reference opposee multiple. /]
+[comment : autrement dit les references multiples ayant une reference opposee simple ou pas de reference opposee. /]
+[query public referencesStarNoStar(s : DTO) : OrderedSet(Reference) =
+    s.references->select(r : Reference | isMultiple(r) and r.navigable and not (not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple()) and not isComputed(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment : les references avec multiplicite vers un Dto. /]
+[query public referencingStar(s : DTO) : OrderedSet(Reference) =
+    (biggestParentUntilDtoRegistry(s).eAllContents(Reference)
+            ->select(r : Reference | isMultiple(r) and (r.referencedType = s) and r.navigable and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()) and not r.containingType.oclAsType(DTO).isNotPersistent() and not isComputed(r))
+    ->asOrderedSet())->sortedBy(name.toLower())
+/]
+
+[comment : /]
+[query public biggestParentUntilDtoRegistry(o : ObeoDSMObject) : ObeoDSMObject =
+        if (o.eContainer().oclIsUndefined()) then
+            o
+        else
+            biggestParentUntilDtoRegistry(o.eContainer().oclAsType(ObeoDSMObject))
+        endif
+/]
+
+[comment : /]
+[template public getXtoReferenceId(r : Reference)]
+private [genPkType()/] [apply_attributeDefault(r.name.toLowerFirst())/][namePK_ID()/];
+[/template]
+
+[comment : /]
+[template public getXtoReference(r : Reference)]
+private [r.referencedType.oclAsType(DTO).buildXtoClassNameFromDto()/] [apply_attributeDefault(r.name.toLowerFirst())/];
+[/template]
+
+[template public getXtoReferenceInverseId(r : Reference)]
+private [genPkType()/] [apply_attributeDefault(nameBaseReferenceInverse(r))/][namePK_ID()/];
+[/template]
+
+[template public getRefListeXto(r : Reference)]
+private List<[r.referencedType.oclAsType(DTO).buildXtoClassNameFromDto()/]> [apply_attributeMultiple(r.name.toLowerFirst())/];
+[/template]

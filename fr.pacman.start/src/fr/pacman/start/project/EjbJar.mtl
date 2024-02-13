@@ -1,0 +1,40 @@
+[comment encoding = UTF-8 /]
+[module EjbJar('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[template public EjbJar(any : OclAny) post (trim())]
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+	version="3.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"> 
+    <interceptors>
+        <interceptor>
+            <interceptor-class>fr.spi4j.lib.security.SecurityInterceptor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>fr.spi4j.persistence.TransactionInterceptor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>fr.spi4j.business.ServiceLogInterceptor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>fr.spi4j.business.MonitoringEjbInterceptor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>fr.spi4j.business.ServiceCacheInterceptor</interceptor-class>
+        </interceptor>
+    </interceptors>
+    <assembly-descriptor>
+        <interceptor-binding>
+            <ejb-name>*</ejb-name>
+            <interceptor-class>fr.spi4j.lib.security.SecurityInterceptor</interceptor-class>
+            <interceptor-class>fr.spi4j.persistence.TransactionInterceptor</interceptor-class>
+            <interceptor-class>fr.spi4j.business.ServiceLogInterceptor</interceptor-class>
+            <interceptor-class>fr.spi4j.business.MonitoringEjbInterceptor</interceptor-class>
+            <!-- Note : le ServiceCacheInterceptor ne fera rien si le service n'implémente
+                pas ServiceReferentiel_Itf -->
+            <interceptor-class>fr.spi4j.business.ServiceCacheInterceptor</interceptor-class>
+        </interceptor-binding>
+    </assembly-descriptor>
+</ejb-jar>
+[/template]

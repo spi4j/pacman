@@ -1,0 +1,20 @@
+[comment encoding = UTF-8 /]
+[module genFileFacade('http://www.obeonetwork.org/dsl/requirement/1.0')]
+[import fr::pacman::requirement::files::genAnnotationRequirement /]
+[import fr::pacman::requirement::files::genRequirementEnum /]
+[import fr::pacman::requirement::files::genRequirementVersionTest/]
+
+[template public genAnnotationRequirement_facade(r : Repository)]
+[comment @main/]
+[genAnnotationRequirement(r)/]
+[/template]
+
+[template public genRequirementEnum_facade(r : Repository)]
+[comment @main/]
+[genRequirementEnum(r)/]
+[/template]
+
+[template public genRequirementVersionTest_facade(r : Repository)]
+[comment @main/]
+[genRequirementVersionTest(r)/]
+[/template]

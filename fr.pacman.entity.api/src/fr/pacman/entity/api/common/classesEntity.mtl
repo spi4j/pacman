@@ -1,0 +1,187 @@
+[comment encoding = UTF-8 /]
+[module classesEntity('http://www.obeonetwork.org/dsl/entity/3.0.0',
+                      'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+
+[query private hasPhysicalName(p : Property) : Boolean =
+invoke('fr.pacman.commons.services.AnnotationUtils',
+    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{p, 'PHYSICAL_NAME', false}) <> null
+/]
+
+[query private hasPhysicalName(e : Entity) : Boolean =
+invoke('fr.pacman.commons.services.AnnotationUtils',
+    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{e, 'PHYSICAL_NAME', false}) <> null
+/]
+
+[template public physicalName(e : Entity)]
+[if hasPhysicalName(e)]
+[invoke('fr.pacman.commons.services.AnnotationUtils',
+    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{e, 'PHYSICAL_NAME', false})/][else]
+[e.name.sanitize().toUpper()/][/if]
+[/template]
+
+[template public physicalName(p : Property)]
+[if hasPhysicalName(p)]
+[invoke('fr.pacman.commons.services.AnnotationUtils',
+    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{p, 'PHYSICAL_NAME', false})/][else]
+[p.name.sanitize().toUpper()/][/if]
+[/template]
+
+[template public physicalNameJointure(r : Reference)]
+[if hasPhysicalName(r)]
+[invoke('fr.pacman.commons.services.AnnotationUtils',
+    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{r, 'PHYSICAL_NAME', false})/][else]
+[r.containingType.oclAsType(entity::Entity).name.sanitize().toUpper()/][r.referencedType.oclAsType(entity::Entity).name.sanitize().toUpper()/][/if]
+[/template]
+
+[comment]ENTITY : Teste si une propriété (attribut ou référence) est obligatoire[/comment]
+[query public isMandatory(p : Property) : Boolean =
+invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatoryEntity(org.obeonetwork.dsl.environment.Property)', Sequence{p})
+/]
+
+[comment]Retourne true si les métadonnées contiennent l'annotation FIC_CSV[/comment]
+[query public hasFicCsv(e : Entity) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'FIC_CSV'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation FIC_CSV dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public ficCsv(e : Entity) : String =
+    if hasFicCsv() then
+        invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'FIC_CSV'})
+    else
+        ''
+    endif
+/]
+
+[comment]Retourne true si les métadonnées contiennent l'annotation EXCLUDE_CRITERIA[/comment]
+[query public hasExcludeCriteria(e : Entity) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'EXCLUDE_CRITERIA'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation EXCLUDE_CRITERIA dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public excludeCriteria(e : Entity) : String =
+    if hasExcludeCriteria() then
+        invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'EXCLUDE_CRITERIA'})
+    else
+        ''
+    endif
+/]
+
+[comment]Retourne true si les métadonnées contiennent l'annotation INCLUDE_CRITERIA[/comment]
+[query public hasIncludeCriteria(e : Entity) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'INCLUDE_CRITERIA'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation INCLUDE_CRITERIA dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public includeCriteria(e : Entity) : String =
+    if hasIncludeCriteria() then
+        invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'INCLUDE_CRITERIA'})
+    else
+        ''
+    endif
+/]
+
+[comment]Retourne true si les métadonnées contiennent l'annotation EXCLUDE_CRITERIA[/comment]
+[query public hasExcludeCriteria(r : Reference) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'EXCLUDE_CRITERIA'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation EXCLUDE_CRITERIA dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public excludeCriteria(r : Reference) : String =
+    if hasExcludeCriteria() then
+        invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'EXCLUDE_CRITERIA'})
+    else
+        ''
+    endif
+/]
+
+[comment]Retourne true si les métadonnées contiennent l'annotation INCLUDE_CRITERIA[/comment]
+[query public hasIncludeCriteria(r : Reference) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'INCLUDE_CRITERIA'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation INCLUDE_CRITERIA dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public includeCriteria(r : Reference) : String =
+    if hasIncludeCriteria() then
+        invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'INCLUDE_CRITERIA'})
+    else
+        ''
+    endif
+/]
+
+
+[comment]Retourne true si les métadonnées contiennent l'annotation FK_CRITERE[/comment]
+[query public hasFkCritere(r : Reference) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'FK_CRITERE'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation FK_CRITERE dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public fkCritere(r : Reference) : String =
+    if hasFkCritere() then 
+	    invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'FK_CRITERE'})
+    else
+        ''
+    endif
+/]
+
+[comment]Retourne true si les métadonnées contiennent l'annotation PHYSICAL_UNIQUE[/comment]
+[query public hasPhysicalUnique(e : Entity) : Boolean =
+    invoke(
+        'fr.pacman.commons.services.AnnotationUtils',
+        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+        Sequence{metadatas, 'PHYSICAL_UNIQUE'}) <> null
+/]
+
+[comment]Retourne le contenu de l'annotation PHYSICAL_UNIQUE dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
+[query public physicalUnique(e : Entity) : String =
+    if hasPhysicalUnique() then
+        invoke(
+            'fr.pacman.commons.services.AnnotationUtils',
+            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+            Sequence{metadatas, 'PHYSICAL_UNIQUE'})
+    else
+        ''
+    endif
+/]

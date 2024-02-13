@@ -1,0 +1,257 @@
+package fr.appwhite1.client.ui.annuaire;
+
+// Start of user code for imports
+
+import fr.spi4j.ui.graal.UserAction;
+import fr.spi4j.ui.mvp.Presenter_Abs;
+import fr.spi4j.ui.mvp.View_Itf;
+
+import fr.appwhite1.client.ui.annuaire.ListePersonnesPresenter;
+import fr.appwhite1.client.ui.annuaire.ListePersonnesPresenter;
+import fr.appwhite1.client.ui.annuaire.DetailPersonnePresenter;
+import fr.appwhite1.client.ui.annuaire.DetailPersonnePresenter;
+import fr.appwhite1.client.ui.annuaire.ListePersonnesPresenter;
+import fr.appwhite1.client.ui.annuaire.DetailPersonnePresenter;
+
+// End of user code
+
+/**
+ * Presenter.
+ * @author Pacman
+ */
+// Start of user code Class definition
+public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_Itf, Object>
+// End of user code
+{
+
+   // Start of user code Constructeur(s)
+   /**
+    * Constructeur.
+    */
+   public ListePersonnesPresenter ()
+   {
+      super(null);
+   }
+
+   /**
+    * Constructeur avec présenteur parent.
+    * @param p_parent
+    *           le présenteur parent
+    */
+   public ListePersonnesPresenter (final Presenter_Abs<? extends View_Itf, ?> p_parent)
+   {
+      super(p_parent);
+   }
+
+   // End of user code
+
+   @Override
+   public void initView ()
+   {
+      // Start of user code Initialisation de la vue
+
+      // End of user code
+   }
+
+   @Override
+   protected String doGenerateTitle ()
+   {
+      // Start of user code Titre de l'écran
+      return "ListePersonnes";
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément actualiser.
+    */
+   @UserAction(UserAction.c_BOUTON + "actualiser")
+   public void actualiser ()
+   {
+      // Start of user code Pre actualiser
+      // End of user code
+
+      // Start of user code actualiser : Action ListerPersonnes
+      // TODO ListerPersonnes
+      // End of user code
+
+      // Start of user code actualiser : Affichage de ListePersonnes
+      ListePersonnesPresenter v_listePersonnesPresenter = getViewManager().getPresenter(ListePersonnesPresenter.class);
+      if (v_listePersonnesPresenter == null)
+      {
+         v_listePersonnesPresenter = new ListePersonnesPresenter(this);
+         getView().addView(v_listePersonnesPresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_listePersonnesPresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post actualiser
+
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément selectGrade.
+    */
+   // Start of user code Annotation selectGrade
+   // End of user code
+   public void selectGrade ()
+   {
+      // Start of user code Pre selectGrade
+      // End of user code
+
+      // Start of user code selectGrade : Action ListerPersonnes
+      // TODO ListerPersonnes
+      // End of user code
+
+      // Start of user code selectGrade : Affichage de ListePersonnes
+      ListePersonnesPresenter v_listePersonnesPresenter = getViewManager().getPresenter(ListePersonnesPresenter.class);
+      if (v_listePersonnesPresenter == null)
+      {
+         v_listePersonnesPresenter = new ListePersonnesPresenter(this);
+         getView().addView(v_listePersonnesPresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_listePersonnesPresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post selectGrade
+
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément créer.
+    */
+   @UserAction(UserAction.c_BOUTON + "créer")
+   public void creer ()
+   {
+      // Start of user code Pre créer
+      // End of user code
+
+      // Start of user code créer : Affichage de DetailPersonne
+      DetailPersonnePresenter v_detailPersonnePresenter = getViewManager().getPresenter(DetailPersonnePresenter.class);
+      if (v_detailPersonnePresenter == null)
+      {
+         v_detailPersonnePresenter = new DetailPersonnePresenter(this);
+         getView().addView(v_detailPersonnePresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_detailPersonnePresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post créer
+
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément modifier.
+    */
+   @UserAction(UserAction.c_BOUTON + "modifier")
+   public void modifier ()
+   {
+      // Start of user code Pre modifier
+      // End of user code
+
+      // Start of user code modifier : Action RecupererPersonne
+      // TODO RecupererPersonne
+      // End of user code
+
+      // Start of user code modifier : Affichage de DetailPersonne
+      DetailPersonnePresenter v_detailPersonnePresenter = getViewManager().getPresenter(DetailPersonnePresenter.class);
+      if (v_detailPersonnePresenter == null)
+      {
+         v_detailPersonnePresenter = new DetailPersonnePresenter(this);
+         getView().addView(v_detailPersonnePresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_detailPersonnePresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post modifier
+
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément supprimer.
+    */
+   @UserAction(UserAction.c_BOUTON + "supprimer")
+   public void supprimer ()
+   {
+      // Start of user code Pre supprimer
+      // End of user code
+
+      // Start of user code supprimer : Action SupprimerPersonne
+      // TODO SupprimerPersonne
+      // End of user code
+
+      // Start of user code supprimer : Affichage de ListePersonnes
+      ListePersonnesPresenter v_listePersonnesPresenter = getViewManager().getPresenter(ListePersonnesPresenter.class);
+      if (v_listePersonnesPresenter == null)
+      {
+         v_listePersonnesPresenter = new ListePersonnesPresenter(this);
+         getView().addView(v_listePersonnesPresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_listePersonnesPresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post supprimer
+
+      // End of user code
+   }
+
+   /**
+    * Gestion de l'événément visualiser.
+    */
+   @UserAction(UserAction.c_BOUTON + "visualiser")
+   public void visualiser ()
+   {
+      // Start of user code Pre visualiser
+      // End of user code
+
+      // Start of user code visualiser : Action RecupererPersonne
+      // TODO RecupererPersonne
+      // End of user code
+
+      // Start of user code visualiser : Affichage de DetailPersonne
+      DetailPersonnePresenter v_detailPersonnePresenter = getViewManager().getPresenter(DetailPersonnePresenter.class);
+      if (v_detailPersonnePresenter == null)
+      {
+         v_detailPersonnePresenter = new DetailPersonnePresenter(this);
+         getView().addView(v_detailPersonnePresenter.getView());
+      }
+      else
+      {
+         getView().restoreView(v_detailPersonnePresenter.getView());
+      }
+
+      // End of user code
+
+      // Start of user code Post visualiser
+
+      // End of user code
+   }
+
+   // Start of user code ListePersonnesPresenter
+
+   // End of user code
+
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.pacman.commons.feature"
+      label="PacMan - Commons"
+      version="4.4.0.qualifier"
+      provider-name="Safr@n"
+      plugin="fr.pacman.branding">
+
+   <!-- The key difference is that included features will be packaged with your feature 
+   when it is built. Required features are not packaged with the feature, but are 
+   expected to be present when you install the feature. -->
+   
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.ocl"/>
+      <import plugin="org.eclipse.ocl.ecore"/>
+      <import plugin="org.eclipse.acceleo.model"/>
+      <import plugin="org.eclipse.acceleo.engine"/>
+      <import plugin="org.eclipse.ui"/>
+      <!-- Needed at the top level do not go down -->
+      <import plugin="org.obeonetwork.dsl.overview"/>
+      <import plugin="org.obeonetwork.dsl.entity"/>
+      <import plugin="org.obeonetwork.dsl.soa"/>
+   </requires>
+
+   <plugin
+         id="fr.pacman.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fr.pacman.branding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

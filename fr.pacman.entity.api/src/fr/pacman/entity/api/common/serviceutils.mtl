@@ -1,0 +1,153 @@
+[comment encoding = UTF-8 /]
+[module serviceutils('http://www.obeonetwork.org/dsl/environment/3.0.0',
+			 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::entity::api::common::packages /]
+
+
+[template public comParamInverseIdIn(r : Reference)]
+    * @param [apply_parameterMethodClassicIn(nameParamInverseId(r))/]
+    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
+[/template]
+
+[comment]SOA : Teste si une propriété (attribut ou référence) est obligatoire[/comment]
+[query public isMandatory(p : environment::Property) : Boolean =
+invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatorySoa(org.obeonetwork.dsl.environment.Property)', Sequence{p})
+/]
+
+[template public getImportEntity(e : Entity)]
+import [buildPackageBusinessApiEntity(e)/].[e.buildEntityImplClassName()/];
+[/template]
+
+[template public getImportServiceRequirements(e : Entity)]
+import [buildPackageBusinessImplementationServiceEntity(e)/].[buildServiceRequirementsClassName(e)/];
+[/template]
+
+[template public nameBaseReference(r : Reference)]
+[r.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template public nameParamInverseId(r : Reference)]
+[nameBaseReferenceInverse(r)/] id
+[/template]
+
+[template public nameBaseReferenceInverse(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(Entity).buildSimpleEntityName().toLowerFirst()/][else]
+[nameBaseReference(r.oppositeOf)/][/if]
+[/template]
+
+[template public getImportEnum(e : Entity)]
+import [buildPackagePersistenceApiEntity(e)/].[e.buildEntityColumnEnumName()/];
+[/template]
+
+[query public buildServiceClassImplName(e : Entity) : String =
+	apply_classImplem(buildSimpleEntityName(e) + ' service')
+ /]
+
+[template public getImportServiceInterface(e : Entity)]
+import [buildPackageBusinessApiServiceEntity(e)/].[buildServiceInterfaceName(e)/];
+[/template]
+
+[query public buildServiceTestClassName(e : Entity) : String =
+    apply_classTest(nameSimpleEntity(e) + ' service')
+ /]
+
+[query public buildPackageBusinessImplementation(any : OclAny) : String =
+    getApplicationPackage() + '.' + getPackageBusiness() + '.' + getPackageImplServer()
+/]
+
+[query public buildPackageBusinessApiEntity(e : Entity) : String =
+    buildPackageBusinessApi(e) + categoryHierarchy(e)
+/]
+
+[query public buildPackageBusinessApiServiceEntity(e : Entity) : String =
+    if not e.oclIsUndefined() then
+        buildPackageBusinessApiEntity(e)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL'
+    endif
+/]
+
+[query public buildPackageBusinessGwtClientService(e : Entity) : String =
+    if not e.oclIsUndefined() then        
+  		buildPackageBusinessGwtClient(e) + categoryHierarchy(e)
+    else
+        'PACKAGE NOT FOUND FOR Service Entity'
+    endif
+/]
+
+[query public buildServiceGwtInterfaceName(e : Entity) : String =
+ e.apply_classDefault(buildSimpleEntityName(e) + ' gwt service')
+ /]
+
+[query public buildPackageBusinessGwtClient(any : OclAny) : String =
+    buildPackageGwtClient() + '.' + getPackageBusiness()
+/]
+
+[query private buildPackageGwtClient(any : OclAny) : String =
+    getApplicationPackage() + '.client'
+/]
+
+[query public buildServiceGwtAsyncClassName(e : Entity) : String =
+ e.apply_classDefault(buildSimpleEntityName(e) + ' gwt service async')
+ /]
+
+[query public buildPackageBusinessGwtServerService(e : Entity) : String =
+    if not e.oclIsUndefined() then
+        buildPackageBusinessGwtServer(e) + categoryHierarchy(e)    
+    else
+        'PACKAGE NOT FOUND FOR SERVICE'
+    endif 
+/]
+
+[query private buildPackageBusinessGwtServer(any : OclAny) : String =
+    buildPackageGwtServer() + '.' + getPackageBusiness()
+/]
+
+[query private buildPackageGwtServer(any : OclAny) : String =
+    getApplicationPackage() + '.server'
+/]
+
+[query public buildServiceGwtImplementationName(e : Entity) : String =
+ e.apply_classDefault(buildSimpleEntityName(e) + ' gwt service impl')
+ /]
+
+[template public getImportXtoGwt(e : Entity)]
+import [buildPackageWsApiEntity(e)/].[e.buildXtoClassNameFromEntity()/];
+[/template]
+
+[comment : interface -> impl  ????????!!!!! /]
+[template public nameServiceInterfaceGwt(e : Entity)]
+[buildServiceImplClassName(e)/]
+[/template]
+
+[query public buildMapperClassName(e : Entity) : String =
+apply_classImplem(buildSimpleEntityName(e) + ' mapper')
+ /]
+
+[query public buildMapperInterfaceName(e : Entity) : String =
+apply_classInterface(buildSimpleEntityName(e) + ' mapper')
+ /]
+
+[template public nameParamId(e : Entity)]
+[nameBaseEntity(e)/] id
+[/template]
+
+[template public nameBaseEntity(e : Entity)]
+[e.buildSimpleEntityName().toLowerFirst()/]
+[/template]
+
+[template public nameParamInverse(r : Reference)]
+[nameBaseReferenceInverse(r)/]
+[/template]
+

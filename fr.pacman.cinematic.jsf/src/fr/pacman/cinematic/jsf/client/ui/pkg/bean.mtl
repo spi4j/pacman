@@ -1,0 +1,433 @@
+[comment encoding = UTF-8 /]
+[module bean('http://www.obeonetwork.org/dsl/cinematic/3.0.0',			
+             'http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::standard-widgets /]
+[import fr::pacman::cinematic::api::common::model /]
+[import fr::pacman::cinematic::jsf::common::name /]
+[import fr::pacman::cinematic::jsf::common::packages /]
+[import fr::pacman::cinematic::jsf::common::jsf-commons /]
+
+
+
+[template public bean(viewContainer : ViewContainer, aViewState : ViewState)]
+[licence()/]
+package [namePackageContainerBean(viewContainer)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[viewContainer.writeImports()/]
+
+// [/protected]
+
+/**
+ * Bean [nameBeanFirstLower(viewContainer)/]
+ * @author [getAuthorName()/]
+ */
+// Annotation
+// [protected (viewContainer.getUserCodeId('Annotation'))]
+@SuppressWarnings("serial")
+@ManagedBean(name="[nameBeanFirstLower(viewContainer)/]")
+@ViewScoped
+// [/protected]
+public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] implements Serializable
+{
+
+    /** Log applicatifs */
+    private static final Logger LOG = LoggerManager.getLogger([nameBean(viewContainer)/].class);
+
+	[if (useMatching())]
+		[if (searchBindingFor(viewContainer).oclIsKindOf(DTO))]
+    /**    [getTypeBean(viewContainer)/]    */
+    private [getTypeBean(viewContainer)/] [nameFieldFirstLower(viewContainer)/];	
+		[/if]
+	[else]	
+		[if (searchBindingFor(viewContainer).oclIsKindOf(DTO))]
+    /**    [buildEntityNameFromDto(viewContainer)/]    */
+    private [buildEntityNameFromDto(viewContainer)/] [nameFieldFirstLower(viewContainer)/];	
+		[else]
+			[if (not (getTypeBeanEntity(viewContainer) = 'Undefined'))]
+	private [getTypeBeanEntity(viewContainer)/] [nameFieldFirstLower(viewContainer)/];
+			[/if]
+		[/if]	
+	[/if]
+	[for (element : ViewElement | viewContainer.viewElements)]
+		[if (element.widget.name = 'Table') or (element.widget.name = 'ComboBox') ]			
+			[if element.type.oclIsKindOf(DTO) or (element.type.name <> null) or (searchBindingFor(element).oclIsKindOf(DTO))]
+
+    /** [nameFieldFirstLower(element)/]   */
+	[genericTypeListJsf(element)/]
+			[/if]
+		[elseif not (element.widget.name = 'Button')]			
+			
+	/**	Attribut [element.name/] */
+	private [genericTypeJsf(element, transformList(getInterfaceName(element.widget)), true)/] [nameVariableElement(element)/];
+		[/if]			
+	[/for]
+	
+   // Attributs
+   // [protected (viewContainer.getUserCodeId('Attributs'))]   
+    
+   // [/protected]
+
+	/**
+	 * Méthode d'initialisation du Managed Bean JSF.
+	 * 	 
+	 */
+	@PostConstruct
+	public void init() {
+		// init
+		// [protected (viewContainer.getUserCodeId('init'))]       
+   		// [/protected]
+	}
+[for (element : ViewElement | viewContainer.viewElements)]
+	[if (element.widget.name = 'Table') or (element.widget.name = 'ComboBox') ]				
+		[if element.type.oclIsKindOf(DTO) or (element.type.name <> null) or (searchBindingFor(element).oclIsKindOf(DTO))]
+	/**
+    * return [nameVariableElement(element)/].
+    */
+   public ArrayList<[getTypeListJsf(element)/]> [nameGetterBeanElement(element)/] ()
+   {
+      return [nameVariableElement(element)/];
+   }
+	
+	/**
+    * set this.[nameVariableElement(element)/].
+    */
+	public void [nameSetterBeanElement(element)/] (final ArrayList<[getTypeListJsf(element)/]> [nameVariableElement(element).toLower()/])
+   {
+      this.[nameVariableElement(element)/] = [nameVariableElement(element).toLower()/] ;
+   }	
+		[/if]
+	[elseif not (element.widget.name = 'Button') ]  
+   
+	/**
+    * return [nameVariableElement(element)/].
+    */
+   public [genericTypeJsf(element, transformList(getInterfaceName(element.widget)), true)/] [nameGetterBeanElement(element)/] ()
+   {
+      return [nameVariableElement(element)/];
+   }
+	
+	/**
+    * set this.[nameVariableElement(element)/].
+    */
+	public void [nameSetterBeanElement(element)/] (final [genericTypeJsf(element, transformList(getInterfaceName(element.widget)), true)/] [nameVariableElement(element).toLower()/])
+   {
+      this.[nameVariableElement(element)/] = [nameVariableElement(element).toLower()/] ;
+   }	 
+   [/if]
+[/for]
+
+[for (element : ViewElement | viewContainer.viewElements)]
+ [if (element.widget.name = 'CheckBox')]
+ /**
+    * Gestion de l'événement Listener [element.name/].
+	*	
+    */      
+						
+    public void valueChangeChBox[element.name.toUpperFirst()/](ValueChangeEvent e){
+		// Value Change Event'+'[element.name/]
+		// [protected (element.getUserCodeId('Value Change Event'+'[element.name/]'))]
+		
+      	// [/protected]
+	} 	
+[/if]
+[/for]
+[for (aVC : ViewContainer | aViewState.viewContainers)]
+	[for (anAVE : AbstractViewElement | aVC.ownedElements)]
+		[for (eventElement : ViewEvent | anAVE.events)]
+			[if not (eventElement.getFlowEventsForViewEvent()->isEmpty())]
+				[for (flowEvent : FlowEvent | eventElement.getFlowEventsForViewEvent())]					
+						[if eventElement.name.oclIsUndefined()]
+   	// FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements des transitions issues de l'état [aViewState.name/]
+    					[else]
+   /**
+    * Gestion de l'événement [flowEvent.name/].
+	*	
+    */      
+							[if ('onChange'.equalsIgnoreCase(eventElement.type.name))] 
+    public void [flowEvent.nameActionBean()/](ValueChangeEvent e){
+		// Value Change Event
+		// [protected (viewContainer.getUserCodeId('Value Change Event With Param'))]
+		
+      	// [/protected]
+	} 	
+							[else]
+    public String [flowEvent.nameActionBean()/]()
+    {		
+		 // URL de redirection;		
+		String urlRedirect = "";
+      // [eventElement.nameActionBean()/]
+      // [protected (eventElement.getUserCodeId(eventElement.nameActionBean() + 'flow'))]
+		
+      // [/protected]	   
+	 	return urlRedirect;		
+    }	
+							[/if]	
+						[/if]				
+				[/for]
+			[else]
+				[if ('onChange'.equalsIgnoreCase(eventElement.type.name))] 
+    public void [eventElement.nameActionBean()/](ValueChangeEvent e){
+		// Value Change Event
+		// [protected (viewContainer.getUserCodeId('Value Change Event'))]
+		
+      	// [/protected]
+	} 	
+				[else]
+    public String [eventElement.nameActionBean()/]()
+    {
+	    // URL de redirection;		
+		String urlRedirect = "";
+      // [eventElement.nameActionBean()/]
+      // [protected (eventElement.getUserCodeId(eventElement.nameActionBean()))]
+		
+      // [/protected]	   
+	 	return urlRedirect;			
+    }	
+				[/if]
+			[/if]			
+		[/for]
+	[/for]
+[/for]
+
+[if (useMatching())]
+	[if (searchBindingFor(viewContainer).oclIsKindOf(DTO))]
+	/**    
+	* return [getTypeBean(viewContainer)/]    
+	*/
+	public [getTypeBean(viewContainer)/] get[nameFieldFirstLower(viewContainer).toUpperFirst()/]()
+	{
+		return [nameFieldFirstLower(viewContainer)/];
+	}
+
+	/**    
+	* Set [getTypeBean(viewContainer)/]    
+	*/
+	public void set[nameFieldFirstLower(viewContainer).toUpperFirst()/](final  [getTypeBean(viewContainer)/]  [getTypeBean(viewContainer).toLowerFirst()/])
+	{
+		[nameFieldFirstLower(viewContainer)/] = [getTypeBean(viewContainer).toLowerFirst()/];
+	}
+	[/if]
+[else] 
+	[if (searchBindingFor(viewContainer).oclIsKindOf(DTO))]
+	/**    
+	* return [buildEntityNameFromDto(viewContainer)/]    
+	*/
+	public [buildEntityNameFromDto(viewContainer)/] get[nameFieldFirstLower(viewContainer).toUpperFirst()/]()
+	{
+		return [nameFieldFirstLower(viewContainer)/];
+	}
+
+	/**    
+	* Set [buildEntityNameFromDto(viewContainer)/]    
+	*/
+	public void set[nameFieldFirstLower(viewContainer).toUpperFirst()/](final  [buildEntityNameFromDto(viewContainer)/]  [buildEntityNameFromDto(viewContainer).toLowerFirst()/])
+	{
+		[nameFieldFirstLower(viewContainer)/] = [buildEntityNameFromDto(viewContainer).toLowerFirst()/];
+	}	
+	[else]
+	[if (not (getTypeBeanEntity(viewContainer) = 'Undefined'))]
+		[let typeBeanEntity : String = getTypeBeanEntity(viewContainer)]
+	/**    
+	* return [typeBeanEntity/]    
+	*/
+	public [typeBeanEntity/] get[nameFieldFirstLower(viewContainer).toUpperFirst()/]()
+	{
+		return [nameFieldFirstLower(viewContainer)/];
+	}
+
+	/**    
+	* Set [typeBeanEntity/]    
+	*/
+	public void set[nameFieldFirstLower(viewContainer).toUpperFirst()/](final  [typeBeanEntity/]  [typeBeanEntity.toLowerFirst()/])
+	{
+		[nameFieldFirstLower(viewContainer)/] = [typeBeanEntity.toLowerFirst()/];
+	}
+		[/let]
+	[/if]
+[/if]
+[/if]
+	
+	/**
+    * Méthodes utilisateurs
+	*	
+    */ 
+   // Méthode
+   // [protected (viewContainer.getUserCodeId('Méthode'))]   
+    
+   // [/protected]
+}	
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(v : ViewContainer) post(trim())]
+[v.initImports()/]
+[v.addImport('java.io.Serializable')/]
+[v.addImport('java.util.List')/]
+[v.addImport('java.util.ArrayList')/]
+[v.addImport('java.util.Date')/]
+[v.addImport('jakarta.annotation.PostConstruct')/]
+[v.addImport('jakarta.faces.bean.ManagedBean')/]
+[v.addImport('jakarta.faces.bean.ViewScoped')/]
+[v.addImport('jakarta.faces.event.ActionEvent')/]
+[v.addImport('jakarta.faces.event.ValueChangeEvent')/]
+[v.addImport('org.apache.logging.log4j.Logger')/]
+[v.addImport('org.apache.logging.log4j.LogManager')/]
+[v.addImport(importAbstractBean())/]
+
+[if (useMatching())]
+[if v.getTypeBean() <> 'Object']
+	[v.addImport(namePackageDtoJsf(v.searchBindingFor().oclAsType(DTO)) + '.' + v.getTypeBean())/]
+[/if]
+[else]
+[if (not (v.getTypeBeanEntity() = 'Undefined'))]
+	[v.addImport(namePackageEntityJsf(v.searchBindingForEntity()) + '.' + v.getTypeBeanEntity())/]
+[/if]
+[/if]
+
+[v.flushImports()/]
+[/template]
+
+[query private orderTransitions(transitions : Set(Transition)) : OrderedSet(Transition) =
+transitions->sortedBy(t : Transition | transitionComparator(t))
+/]
+
+[query private transitionComparator(transition : Transition) : String =
+    if not transition.on->isEmpty() then
+        '' + transition.on.name
+    else
+        if transition.to.oclIsUndefined() then
+            ''
+        else
+            if transition.to.oclIsKindOf(NamedFlowState) then
+                transition.to.oclAsType(NamedFlowState).name
+            else
+                if transition.to.oclIsKindOf(SubflowState) then
+                    transition.to.oclAsType(SubflowState).name
+                else
+                    transition.to.toString()
+                endif
+            endif
+        endif
+    endif
+/]
+
+[query private getTypeBean(viewContainer : ViewContainer) : String =
+    if (searchBindingFor(viewContainer).oclIsUndefined()) then
+        'Object'
+    else
+        if (searchBindingFor(viewContainer).oclIsKindOf(DTO)) then
+            buildDtoClassName(searchBindingFor(viewContainer).oclAsType(DTO))
+        else 
+			'Object'
+        endif    	
+	endif
+ /]
+
+[query private buildEntityNameFromDto(viewContainer : ViewContainer) : String =
+    if (searchBindingFor(viewContainer).oclIsUndefined()) then
+        'Object'
+    else
+        if (searchBindingFor(viewContainer).oclIsKindOf(DTO)) then
+            buildDtoClassName(searchBindingFor(viewContainer).oclAsType(DTO))
+        else 
+			'Object'
+        endif    	
+	endif
+ /]
+
+[query private nameVariableElement(element : ViewElement) : String =
+    element.name.toLowerFirst()
+/]
+
+[query public genericTypeJsf(viewElement : ViewElement, implementation : String, IsDto : Boolean) : String =	
+    if (implementation.endsWith('<T>')) then
+        if (viewElement.type.oclIsUndefined()) then
+            'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]'
+        else  
+            if viewElement.type.oclIsKindOf(DTO) then
+                if (IsDto) then
+                    implementation.replace('<T>', '<' + buildDtoClassName(viewElement.type.oclAsType(DTO)) + '>')
+                else
+                    implementation.replace('<T>', '<' + buildXtoClassNameFromDto(viewElement.type.oclAsType(DTO)) + '>')
+                endif
+     		else
+                if viewElement.type.oclIsKindOf(PrimitiveType) then
+                    implementation.replace('<T>', '<' + viewElement.type.oclAsType(PrimitiveType).name + '>')
+                else
+                    implementation.replace('<T>', '<TODO>')
+                endif 
+            endif
+        endif
+    else
+        typeJava(implementation)
+    endif		
+/]
+
+[query private typeJava(s : String) : String =
+if (s.equalsIgnoreCase('HasBoolean_Itf')) then
+    'Boolean'
+else if (s.equalsIgnoreCase('HasDate_Itf')) then
+    'Date'
+else if (s.equalsIgnoreCase('HasDouble_Itf')) then
+    'Double'
+else if (s.equalsIgnoreCase('HasInteger_Itf')) then
+    'Integer'
+else if (s.equalsIgnoreCase('HasList_Itf<T>')) then
+    'List'
+else if (s.equalsIgnoreCase('HasLong_Itf')) then
+    'Long'
+else if (s.equalsIgnoreCase('HasSelection_Itf<T>')) then
+    'List<T>'
+else if (s.equalsIgnoreCase('HasString_Itf')) then
+    'String'
+else
+    'String'
+endif endif endif endif endif endif endif endif
+/]
+
+
+[query public genericTypeListJsf(viewElement : ViewElement) : String =	
+   if (not (getTypeBeanEntity(viewElement) = null) ) then
+	'private ArrayList<'+  getTypeBeanEntity(viewElement)  +'> '+nameFieldFirstLower(viewElement)+';'
+	else 
+		if (viewElement.type.oclIsKindOf(DTO)) then
+			if (useMatching()) then
+				'private ArrayList<'+ buildDtoClassName(viewElement.type.oclAsType(DTO))+'> '+nameFieldFirstLower(viewElement)+';'
+			else
+	 			'private ArrayList<'+ buildDtoClassName(viewElement.type.oclAsType(DTO))+'>  '+nameFieldFirstLower(viewElement)+';'
+			endif
+		else
+			'private ArrayList<'+viewElement.type.name+'>  '+nameFieldFirstLower(viewElement)+';'
+		endif
+	endif	
+/]
+
+[query public getTypeListJsf(viewElement : ViewElement) : String =	
+   if (not (getTypeBeanEntity(viewElement) = null) ) then
+		 getTypeBeanEntity(viewElement)  
+	else 
+		if (viewElement.type.oclIsKindOf(DTO)) then
+			if (useMatching()) then
+				buildDtoClassName(viewElement.type.oclAsType(DTO))
+			else
+	 			buildDtoClassName(viewElement.type.oclAsType(DTO))
+			endif
+		else
+			viewElement.type.name
+		endif
+	endif	
+/]

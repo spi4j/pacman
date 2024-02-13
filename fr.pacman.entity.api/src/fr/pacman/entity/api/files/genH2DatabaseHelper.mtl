@@ -1,0 +1,13 @@
+[comment encoding = UTF-8 /]
+[module genH2DatabaseHelper('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::implementation::h2DatabaseHelper /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[template public genH2DatabaseHelper(r : Root)]
+[file (filename(getServerSourceDir(), buildPackagePersistence(), buildH2DatabaseHelperClassName()+'.java'), false, 'UTF-8')]
+[h2DatabaseHelper(r)/]
+[/file]
+[/template]

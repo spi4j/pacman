@@ -1,0 +1,48 @@
+[comment encoding = UTF-8 /]
+[module moduleGwtXml('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::gwt::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::gwt::common::name /]
+
+[template public moduleGwtXml(any : OclAny)]
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+[protected ('Module')]
+-->
+<module rename-to='[getApplicationName()/]'>
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name='com.google.gwt.user.User'/>
+
+  <!-- Inherit the default GWT style sheet.  You can change       -->
+  <!-- the theme of your GWT application by uncommenting          -->
+  <!-- any one of the following lines.                            -->
+  <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+  <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
+  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+
+  <!-- Other module inherits                                      -->
+  <inherits name='com.google.gwt.i18n.I18N' />
+  <extend-property name="locale" values="fr" />
+  <set-property name="locale" value="fr" />
+
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class='[namePackageGwt()/].[nameGwtLanceur()/]'/>
+
+  <inherits name='[getApplicationPackage()/].[getApplicationNameUpperFirst()/]_commons'/>
+  <inherits name='[getApplicationPackage()/].[getApplicationNameUpperFirst()/]_business'/>
+
+  <!-- Specify the paths for translatable code                    -->
+  <source path='client'/>
+
+</module>
+<!--
+[/protected]
+-->
+
+[/template]

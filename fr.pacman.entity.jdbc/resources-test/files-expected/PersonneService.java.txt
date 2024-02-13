@@ -1,0 +1,102 @@
+/**
+ * (C) Copyright Ministere des Armees (France)
+ *
+ * Apache License 2.0
+ */
+package fr.application.business.impl_server.annuaire;
+
+// Start of user code for imports
+
+import java.util.Date;
+
+import fr.application.business.api.annuaire.PersonneService_Itf;
+import fr.application.persistence.ApplicationParamPersistence;
+import fr.application.persistence.ApplicationUserPersistence;
+import java.util.List;
+import fr.application.persistence.api.annuaire.PersonneDao_Itf;
+import fr.application.persistence.api.annuaire.PersonneColumns_Enum;
+import fr.application.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.application.business.impl_server.annuaire.PersonneServiceRequirements;
+import fr.spi4j.entity.Service_Abs;
+import fr.spi4j.exception.Spi4jValidationException;
+
+// End of user code
+
+/**
+ * Implémentation du contrat de services spécifiques pour un type 'PersonneEntity_Itf'. <br>
+ * Pour rappel, les services sont sans état.
+ * @author safr@n
+ */
+// Annotations Service
+// Start of user code Annotations Service
+// End of user code
+public class PersonneService extends Service_Abs<Long, PersonneEntity_Itf, PersonneColumns_Enum> implements PersonneService_Itf
+{
+
+   // Rappel : les services sont sans état.
+   // attributs
+   // Start of user code attributs
+
+   // End of user code
+ 
+   @SuppressWarnings("all")
+   private final PersonneServiceRequirements _requirements = new PersonneServiceRequirements(); // NOPMD
+
+
+    // Methodes PersonneService
+    // Start of user code Methodes PersonneService
+
+    /**
+    * Obtenir l'instance de dao sur le type 'PersonneDao'.
+    * @return L'instance désirée.
+    */
+    @Override
+    protected PersonneDao_Itf getDao ()
+   {
+      final ApplicationUserPersistence v_userPersistence = ApplicationParamPersistence.getUserPersistence();
+      return v_userPersistence.getPersonneDao();
+   }
+
+    /**
+    * Sauvegarde l'entité de type 'PersonneEntity_Itf'  ainsi que ses relations de type * *
+    * @return L'entite  sauvegardée.
+    */
+    @Override
+    public PersonneEntity_Itf save (final PersonneEntity_Itf p_entity ) throws Spi4jValidationException
+    {
+        //TODO Renseigner avec la bonne valeur de champs automatiques
+        if (p_entity.get_xdmaj() == null)
+        {
+           p_entity.set_xdmaj(new Date());
+        }
+        if (p_entity.get_xtopsup() == null)
+        {
+           p_entity.set_xtopsup(null);
+        }
+
+        final PersonneEntity_Itf v_createdEntity = super.save(p_entity);
+
+
+        return v_createdEntity;
+    }
+
+    /**
+    * Delete l'entité de type 'PersonneEntity_Itf'  ainsi que ses relations de type * *
+    * @return
+    */
+    @Override
+    public void delete (final PersonneEntity_Itf p_entity ) throws Spi4jValidationException
+    {
+        super.delete(p_entity);
+    }
+
+   @Override
+   public List<PersonneEntity_Itf> findListParentDeByPersonne (final Long p_personneId)
+   {
+      return findByColumn(PersonneColumns_Enum.parentDe_id, p_personneId);
+   }
+
+
+    // End of user code
+
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name='fr.spi4j.spi4j'/>
+
+  <source path="ws/api" />
+
+  <!--
+Start of user code Module Commons
+  -->
+
+  <!-- End of user code -->
+
+</module>

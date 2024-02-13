@@ -1,0 +1,216 @@
+[comment encoding = UTF-8 /]
+[module name('http://www.obeonetwork.org/dsl/soa/4.0.0',
+			 'http://www.obeonetwork.org/dsl/entity/3.0.0',
+             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::soalight::common::classes /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[*******************
+ * Paramétrage début
+*/]
+
+
+[template public getNameSetter(p : Property)]
+[apply_methodSet(p.name.normalize())/]
+[/template]
+
+[template public getNameGetter(p : Property)]
+[apply_methodGet(p.name.normalize())/]
+[/template]
+
+[*******************
+ * Paramétrage fin
+*/]
+
+[template private nameBaseProperty(p : Property)]
+[p.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template private nameBaseParameter(p : Parameter)]
+[p.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template public nameBaseAttribute(a : Attribute)]
+[a.name.sanitize().toLowerFirst()/]
+[/template]
+
+[comment] Les Classes [/comment]
+[comment]-------------[/comment]
+
+[template public nameService(s : Service)]
+[s.nameClassService()/]Service
+[/template]
+
+[template public nameServiceRequirements(s : Service)]
+[nameService(s) /]Requirements
+[/template]
+
+[template public nameServiceTest(s : Service)]
+[nameService(s) /]_Test
+[/template]
+
+[template public nameServiceInterface(s : Service)]
+[nameService(s)/]_Itf
+[/template]
+
+[template public nameServiceInterfaceGwt(s : Service)]
+[nameService(s)/]
+[/template]
+
+[template public nameServiceInterfaceGwtAsync(s : Service)]
+[nameService(s)/]Async
+[/template]
+
+[template public nameServiceImplementationGwt(s : Service)]
+[nameService(s)/]Impl
+[/template]
+
+[template public nameServiceFacade(s : Service)]
+[s.nameClassService()/]ServiceFacade
+[/template]
+
+[template public nameServiceFacadeInterface(s : Service)]
+[nameServiceFacade(s)/]_Itf
+[/template]
+
+[template private nameClassService(s : Service)]
+[s.buildSimpleServiceName().toUpperFirst()/]
+[/template]
+
+[template public buildEntityInterfaceNameFromService(s : Service)]
+[apply_classInterface(nameClassService(s) + ' entity')/]
+[/template]
+
+[template public buildEntityColumnEnumNamefromService(s : Service)]
+[apply_classEnum(nameClassService(s) + ' columns')/]
+[/template]
+
+[comment] Les Paramètres [/comment]
+[comment]----------------[/comment]
+
+[template public nameParam(s : String)]
+[s/]
+[/template]
+
+[template public nameParam(p : Property)]
+[nameBaseProperty(p)/]
+[/template]
+
+[template public nameParam(p : Parameter)]
+[nameBaseParameter(p)/]
+[/template]
+
+[template public nameParam(a : Attribute)]
+[nameBaseAttribute(a)/]
+[/template]
+
+[template public nameXtoParam(a : Attribute)]
+[nameBaseAttribute(a)/]
+[/template]
+[comment] Les Attributs  [/comment]
+[comment]----------------[/comment]
+
+[template public nameProperty(a : Attribute)]
+_[nameBaseAttribute(a)/]
+[/template]
+
+[template public getpkAttributeId(any : OclAny)]
+getId ()
+[/template]
+
+[template public nameTUFAttribute(a : Attribute)]
+[a.nameBaseAttribute().toUpperFirst()/]
+[/template]
+
+[query public nameSimpleProperty_(p : Property) : String =
+    if (p.oclIsKindOf(Reference)) then
+        if (p.name.oclIsUndefined() or p.name.size() = 0) then
+            if (p.oclAsType(Reference).containingType.oclIsUndefined()) then
+                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
+            else
+                'ref' + p.oclAsType(Reference).containingType.name.sanitize().toUpperFirst() + namePK_ID()
+            endif
+        else
+            p.name.sanitize() + namePK_ID()
+        endif
+    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
+        'XXXattribut sans nomXXX'
+    else
+        p.oclAsType(Reference).nameBaseReference()
+    endif endif
+/]
+
+[query public nameSimpleProperty(p : Property) : String =
+    if (p.oclIsKindOf(Reference)) then
+        if (p.name.oclIsUndefined() or p.name.size() = 0) then
+            if (p.oclAsType(Reference).containingType.oclIsUndefined()) then
+                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
+            else
+                'ref' + p.oclAsType(Reference).containingType.name.sanitize().toUpperFirst() + namePK_ID()
+            endif
+        else
+            p.name.sanitize().toLowerFirst() + namePK_ID()
+        endif
+    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
+        'XXXattribut sans nomXXX'
+    else
+        p.oclAsType(Reference).nameBaseReference()
+    endif endif
+/]
+
+[template public nameProperty(p : Property)]
+_[nameSimpleProperty(p)/]
+[/template]
+
+
+[template public mandatory(p : Property)]
+[if isMandatory(p)]true[else]false[/if]
+[/template]
+
+[query public isMandatory(p : Parameter) : Boolean =
+p.multiplicity=MultiplicityKind::ONE or p.multiplicity=MultiplicityKind::ONE_STAR     
+/]
+
+[template public nameComponent(s : Service)]
+[s.eContainer(Component).name.sanitize().toLower()/]
+[/template]
+
+[comment] Les Setters [/comment]
+[comment]-------------[/comment]
+
+[template public nameSetter(p : Property)]
+set[nameProperty(p)/]
+[/template]
+
+[comment] Les Getters [/comment]
+
+[template public nameGetter(p : Property)]
+get[nameProperty(p)/]
+[/template]
+
+[comment] Les Operations [/comment]
+[comment]----------------[/comment]
+
+[template public nameOperation(o : Operation)]
+[o.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template public nameOperationResponse(o : Operation)]
+[o.name.sanitize().toLowerFirst()/]Response
+[/template]
+
+[template public nameBaseReference(r : Reference)]
+[r.name.sanitize().toLowerFirst()/]
+[/template]
+
+[template public nameBaseReferenceInverse(r : Reference)]
+[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(Entity).name.sanitize().toUpperFirst()/][else]
+[nameBaseReference(r.oppositeOf)/][/if]
+[/template]
+

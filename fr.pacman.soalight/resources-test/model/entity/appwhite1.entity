@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oent:Root xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oent="http://www.obeonetwork.org/dsl/entity/2.0.0" xmlns:oenv="http://www.obeonetwork.org/dsl/environment/2.0.0" xmi:id="_z6QBIGG9EeCHXp28f7kSY0">
+  <blocks xmi:id="_4Ix3EGG9EeCHXp28f7kSYg" name="annuaire">
+    <entities xmi:id="_4Ix3EWG9EeCHXp28f7kSYg" description="Une personne" name="Personne">
+      <metadatas xmi:id="_hVwbAGXKEeCYicN6ASvBGg">
+        <metadatas xsi:type="oenv:Annotation" xmi:id="_hVwbAWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="PERSONNE"/>
+      </metadatas>
+      <ownedAttributes xmi:id="_4Ix3E2G9EeCHXp28f7kSYg" description="le nom de la personne" name="nom" multiplicity="1">
+        <metadatas xmi:id="_igjaMGXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_igjaMWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="NOM"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_4Ix3FGG9EeCHXp28f7kSYg" description="le prénom de la personne" name="prenom">
+        <metadatas xmi:id="_jH5HAGXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_jH5HAWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="PRENOM"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_1NVFUGtPEeCCpIdIoHC__A" description="indicateur si la personne est civile ou non" name="civil" multiplicity="1">
+        <metadatas xmi:id="_By768GtQEeCCpIdIoHC__A">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_By768WtQEeCCpIdIoHC__A" title="PHYSICAL_NAME" body="CIVIL"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5FXAqwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_8KXv8GtPEeCCpIdIoHC__A" description="la date de naissance de la personne" name="dateNaissance">
+        <metadatas xmi:id="_CdsIIGtQEeCCpIdIoHC__A">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_CdsIIWtQEeCCpIdIoHC__A" title="PHYSICAL_NAME" body="DATE_NAISSANCE"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-E6wKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_KKdd0ZvoEeCqbrxl15owLw" name="salaire">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EawKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_saiDcRRHEeGmQqeEOFervA" description="" name="version" multiplicity="1">
+        <metadatas xmi:id="_saiDchRHEeGmQqeEOFervA">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_saiDcxRHEeGmQqeEOFervA" title="PHYSICAL_NAME" body="VERSION"/>
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_E4GlkBRIEeGmQqeEOFervA" title="Version" body=""/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-E6wKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedReferences xmi:id="_4Ix3FWG9EeCHXp28f7kSYg" description="le grade d'une personne (facultatif)" name="grade">
+        <metadatas xmi:id="_kQwzkGXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_kQwzkWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="GRADE_ID"/>
+        </metadatas>
+        <type href="../referentiel/referentiel.entity#_Y-zlsGzyEeCG2-tAxDtkMQ"/>
+      </ownedReferences>
+      <ownedReferences xmi:id="_CY1C4GzoEeCyC7gFW9peZw" name="adresses" multiplicity="0..*" oppositeOf="_I9NkIACcEeGALu6lY-ekNg" type="_4Ix3F2G9EeCHXp28f7kSYg">
+        <metadatas xmi:id="_GBaTIGzoEeCyC7gFW9peZw">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_GBaTIWzoEeCyC7gFW9peZw" title="PHYSICAL_NAME" body="PERSONNE_ID"/>
+        </metadatas>
+      </ownedReferences>
+      <ownedReferences xmi:id="_DnqDMZDnEeCBOKVLXszqAQ" name="competences" multiplicity="0..*" oppositeOf="_H_bUsJDnEeCBOKVLXszqAQ" type="_4Ix3HGG9EeCHXp28f7kSYg"/>
+    </entities>
+    <entities xmi:id="_4Ix3F2G9EeCHXp28f7kSYg" description="une adresse de personne" name="Adresse">
+      <metadatas xmi:id="_jufM8GXKEeCYicN6ASvBGg">
+        <metadatas xsi:type="oenv:Annotation" xmi:id="_jufM8WXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="ADRESSE"/>
+      </metadatas>
+      <ownedAttributes xmi:id="_4Ix3GGG9EeCHXp28f7kSYg" description="la rue de l'adresse" name="rue" multiplicity="1">
+        <metadatas xmi:id="_nC0rgGXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_nC0rgWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="RUE"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_4Ix3GWG9EeCHXp28f7kSYg" description="" name="code postal" multiplicity="1">
+        <metadatas xmi:id="_nzQC4GXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_nzQC4WXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="CODEPOSTAL"/>
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_KUGqoGzYEeCyC7gFW9peZw" title="PHYSICAL_SIZE" body="5"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5FXAawKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_4Ix3GmG9EeCHXp28f7kSYg" description="la ville de l'adresse" name="ville" multiplicity="1">
+        <metadatas xmi:id="_oU7MkGXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_oU7MkWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="VILLE"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedReferences xmi:id="_I9NkIACcEeGALu6lY-ekNg" name="proprietaire" multiplicity="1" oppositeOf="_CY1C4GzoEeCyC7gFW9peZw" type="_4Ix3EWG9EeCHXp28f7kSYg" navigable="false"/>
+    </entities>
+    <entities xmi:id="_4Ix3HGG9EeCHXp28f7kSYg" description="une compétence" name="Competence">
+      <metadatas xmi:id="_o41x8GXKEeCYicN6ASvBGg">
+        <metadatas xsi:type="oenv:Annotation" xmi:id="_o41x8WXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="COMPETENCE"/>
+      </metadatas>
+      <ownedAttributes xmi:id="_4Ix3HWG9EeCHXp28f7kSYg" description="le libellé de la compétence" name="libelle" multiplicity="1">
+        <metadatas xmi:id="_pZdywGXKEeCYicN6ASvBGg">
+          <metadatas xsi:type="oenv:Annotation" xmi:id="_pZdywWXKEeCYicN6ASvBGg" title="PHYSICAL_NAME" body="LIBELLE"/>
+        </metadatas>
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedReferences xmi:id="_H_bUsJDnEeCBOKVLXszqAQ" name="personnes" multiplicity="0..*" oppositeOf="_DnqDMZDnEeCBOKVLXszqAQ" type="_4Ix3EWG9EeCHXp28f7kSYg" navigable="false"/>
+    </entities>
+  </blocks>
+  <blocks xmi:id="_FaLooM1fEeCtya0SPOK0rg" name="secu">
+    <entities xmi:id="_RhxskM1fEeCtya0SPOK0rg" name="Utilisateur">
+      <ownedAttributes xmi:id="_Rhxskc1fEeCtya0SPOK0rg" description="l'identifiant de connexion de l'utilisateur" name="identifiant" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_Rhxsks1fEeCtya0SPOK0rg" description="le mot de passe de connexion de l'utilisateur" name="motDePasse" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_Rhxsk81fEeCtya0SPOK0rg" description="le nom de l'utilisateur" name="nom" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_RhxslM1fEeCtya0SPOK0rg" description="le prénom de l'utilisateur" name="prenom" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_Rhxslc1fEeCtya0SPOK0rg" description="l'adresse email de l'utilisateur" name="email" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedAttributes xmi:id="_iPf7ANSaEeCFd693SdxKkQ" name="motDePasseHashe" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedReferences xmi:id="_Rhxsls1fEeCtya0SPOK0rg" name="rolesUtilisateur" multiplicity="0..*" oppositeOf="_Rhxsmc1fEeCtya0SPOK0rg" type="_Rhxsl81fEeCtya0SPOK0rg"/>
+    </entities>
+    <entities xmi:id="_Rhxsl81fEeCtya0SPOK0rg" name="Role">
+      <ownedAttributes xmi:id="_RhxsmM1fEeCtya0SPOK0rg" description="le nom du rôle" name="nomRole" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedReferences xmi:id="_Rhxsmc1fEeCtya0SPOK0rg" name="utilisateur" multiplicity="0..*" oppositeOf="_Rhxsls1fEeCtya0SPOK0rg" type="_RhxskM1fEeCtya0SPOK0rg" navigable="false"/>
+      <ownedReferences xmi:id="_Rhxsms1fEeCtya0SPOK0rg" name="permission" multiplicity="0..*" oppositeOf="_Rhxsnc1fEeCtya0SPOK0rg" type="_Rhxsm81fEeCtya0SPOK0rg"/>
+    </entities>
+    <entities xmi:id="_Rhxsm81fEeCtya0SPOK0rg" name="Permission">
+      <ownedAttributes xmi:id="_RhxsnM1fEeCtya0SPOK0rg" description="le nom de la permission" name="nomPermission" multiplicity="1">
+        <type href="platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment#_s5F-EKwKEd2XLNOhkJIazw"/>
+      </ownedAttributes>
+      <ownedReferences xmi:id="_Rhxsnc1fEeCtya0SPOK0rg" name="role" multiplicity="0..*" oppositeOf="_Rhxsms1fEeCtya0SPOK0rg" type="_Rhxsl81fEeCtya0SPOK0rg" navigable="false"/>
+    </entities>
+  </blocks>
+</oent:Root>

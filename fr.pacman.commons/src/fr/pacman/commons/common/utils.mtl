@@ -1,0 +1,118 @@
+[comment encoding = UTF-8 /]
+[module utils('http://www.obeonetwork.org/dsl/environment/3.0.0',
+			  'http://www.obeonetwork.org/dsl/soa/4.0.0',
+			  'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::properties /]
+
+
+[query public sanitize(msg : String) : String =
+    invoke('fr.pacman.commons.services.StringUtils', 'sanitize(java.lang.String)', Sequence{msg.normalize()})
+/]
+
+[query public normalize(msg : String) : String =
+    invoke('fr.pacman.commons.services.StringUtils', 'normalize(java.lang.String)', Sequence{msg})
+/]
+
+[query public genSlashedLine(str : String, size : Integer) : String =
+	invoke('fr.pacman.commons.services.StringUtils', 'genSlashedLine(java.lang.String, java.lang.Integer)', Sequence{str, size})
+/]
+
+[query public date(format : String) : String =
+	invoke('fr.pacman.commons.services.StringUtils', 'date(java.lang.String)', Sequence{format})
+/]
+
+[query public escape(str : String) : String =
+	invoke('fr.pacman.commons.services.StringUtils', 'escape(java.lang.String)', Sequence{str}) 
+/]
+
+[query public isLibraryEntity (e : Entity, s : String) : Boolean =
+   if(not hasAdditionnalLibraries()) then false else e.isLibraryEntity_invoke(s) endif 
+/]
+
+[query public isLibraryEntity_invoke (e : Entity, s : String) : Boolean =
+	invoke('fr.pacman.commons.services.ResourceUtils', 'isLibraryEntity(org.obeonetwork.dsl.entity.Entity, java.lang.String)', Sequence{e, s}) 
+/]
+
+[query public getLibraryNameForEntity (e : Entity, s : String ) : String =
+	invoke('fr.pacman.commons.services.ResourceUtils', 'getLibraryName(org.obeonetwork.dsl.entity.Entity, java.lang.String)', Sequence{e, s}) 
+/]
+
+[query public toPath(pkg : String) : String  = 
+    pkg.replaceAll('\\.', '/')
+/]
+
+[query public normalizePath(path : String) : String =
+    path.replaceAll('/+', '/').trim()
+/]
+
+[query public ensureTrailingSlash(path : String) : String =
+if (path = null) then
+    '/'
+else
+    if (path.endsWith('/')) then
+        path
+    else
+        path + '/'
+    endif
+endif
+/]
+
+[comment : Vérifie si un DTO/ENTITY?/Attribut ne doit pas etre persistant. /]
+[comment : Cette methode est tres importante elle est remontee au plus haut pour l'instant (peut-etre a tord)/]
+[comment : Les objets ne sont pas persistants dans les cas suivants : 
+	- Le projet n'est pas un projet lie a la persistance (starter).
+	- Une annotation NOT_PERSISTENT est presente au niveau du systeme (au plus haut niveau).
+	- Une annotation NOT_PERSISTENT est presente au niveau de l'objet.
+/]
+[query public isNotPersistent(e : ObeoDSMObject) : Boolean =
+	not e.usePersistence() or e.isNotPersistentObject()
+/]
+
+[query private isNotPersistentObject(e : ObeoDSMObject) : Boolean =
+	invoke('fr.pacman.commons.services.AnnotationUtils', 
+    'annotationExistsRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', 
+    Sequence{e, 'NOT_PERSISTENT'})
+/]
+
+[**
+ * Retrouve le package parent d'un objet,
+ * on prend la ressource physique de l'objet,
+ * on extrait la partie de l'uri qui correspond au folder.
+*/]
+[query public getModuleFolderFromUri(any : OclAny) : String =
+	invoke('fr.pacman.commons.services.StringUtils',
+	'getModuleFolderFromEObject(org.eclipse.emf.ecore.EObject)', Sequence{any})
+/]
+
+[comment : Check if the property is a list. /]
+[query public isMultiple(p : Property) : Boolean = 
+    p.multiplicity = environment::MultiplicityKind::ONE_STAR
+    or p.multiplicity = environment::MultiplicityKind::ZERO_STAR
+/]
+
+[comment : Check if the parameter is a list. /]
+[query public isMultiple(p : Parameter) : Boolean = 
+	p.multiplicity = environment::MultiplicityKind::ONE_STAR
+    or p.multiplicity = environment::MultiplicityKind::ZERO_STAR
+/]
+
+[comment : Check if the object exists and is valid. /]
+[query public isValidObject(e : ObeoDSMObject) : Boolean = 
+	not e.oclIsUndefined() and not e.oclIsInvalid()
+/]
+
+[comment : Search for xtsopsup existence. /]
+[query public hasXtopSup(any : OclAny) : Boolean = 
+	get_automaticColumnsProperties().contains('xtopsup') <> false
+/]
+
+[comment : Search for xdmaj existence. /]
+[query public hasXdMaj(any : OclAny) : Boolean = 
+	get_automaticColumnsProperties().contains('xdmaj') <> false
+/]
+
+[comment : Search for xdmaj or xtopsup existence. Must be optimised. /]
+[query public hasXtoSup_XdMaj(any : OclAny) : Boolean = 
+	hasXtopSup() or hasXdMaj()
+/]

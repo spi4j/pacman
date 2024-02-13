@@ -1,0 +1,339 @@
+[comment encoding = UTF-8 /]
+[module xto('http://www.obeonetwork.org/dsl/environment/3.0.0',
+			'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::services::SecurityUtils /]
+
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::xtoutils /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::methodes /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+[template public xto(e : Entity)]
+[licence()/]
+package [buildPackageWsApiEntity(e)/];
+// [protected ('for imports')]
+
+[comment :Write all required imports. /]
+[e.writeImports()/]
+
+// [/protected]
+
+/**
+ * Implémentation XTO pour le type '[buildEntityImplClassName(e)/]'.
+ * @author [getAuthorName()/]
+ */
+@XmlRootElement(name = "[e.buildXtoClassNameFromEntity()/]", namespace = "http://[getNamespaceXto(e)/]/xto")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class [e.buildXtoClassNameFromEntity()/] implements Serializable, [getClassNameForXto_Itf()/]<[genPkType()/]>, RsXto_Itf[if (entityIsUser(e))], User_Itf[/if]
+{
+
+   private static final long serialVersionUID = 1L;
+
+   // ATTRIBUTS
+
+ /** L'identifiant. */
+   @XmlElement(namespace = "", name = "[nameENUM_PK_ID()/]")
+   @JsonProperty("[nameENUM_PK_ID()/]")
+   private [genPkType()/] [apply_attributeDefault(nameENUM_PK_ID())/];
+
+
+[comment] On ne génére que les attributs qui ne possèdent pas de méta-donnée Annotation de titre "COMPUTED" [/comment]
+[for (a : Attribute | e.attributes())]
+   /** [a.description/]. */
+   @XmlElement(namespace = "", name = "[nameBaseAttribute(a)/]")
+   @JsonProperty("[nameBaseAttribute(a)/]")
+   [if a.type.oclIsTypeOf(Enumeration)]
+   private String  [apply_attributeDefault(a.nameSimpleProperty())/]; 
+   [else]
+   [a.getProperty()/];
+   [/if]
+
+[/for]
+[for (r : Reference | e.referencesNoStar())]
+
+   /** La FK sur le Type '[r.nameClassXto()/]'. */
+   @XmlElement(namespace = "", name = "[nameBaseReference(r)/][namePK_ID()/]")
+   @JsonProperty("[nameBaseReference(r)/][namePK_ID()/]")
+   [r.getXtoReferenceId()/]
+[if not (r.referencedType.oclIsUndefined())]
+
+   /** L'instance de '[r.referencedType.oclAsType(Entity).genTypeName()/]' associee a  l'instance de '[e.nameClassXto()/]' courante. */
+   @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
+   @JsonProperty("[nameBaseReference(r)/]")
+   [r.getXtoReference()/]
+[/if]
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+[if not (r.referencedType.oclIsUndefined())]
+   /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[e.nameClassXto()/]' courante. */
+   @XmlElement(namespace = "", name = "[apply_attributeMultiple(r.name.normalize())/]")
+   @JsonProperty("[apply_attributeMultiple(r.name.normalize())/]")
+   [r.getRefListeXto()/]
+[/if]
+[/for]
+[for (r : Reference | e.referencesStarNoStar())]
+[if not (r.referencedType.oclIsUndefined())]
+   /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[e.nameClassXto()/]' courante. */
+   @XmlElement(namespace = "", name = "[apply_attributeMultiple(r.name.normalize())/]")
+   @JsonProperty("[apply_attributeMultiple(r.name.normalize())/]")
+   [r.getRefListeXto()/]
+[/if]
+[/for]
+[for (r : Reference | e.referencingStar())]
+   /** La FK sur le type '[r.containingType.oclAsType(Entity).nameBaseXtoUP()/]'. */
+   @XmlElement(namespace = "", name = "[nameBaseReferenceInverse(r)/][namePK_ID()/]")
+   @JsonProperty("[nameBaseReferenceInverse(r)/][namePK_ID()/]")
+   [r.getXtoReferenceInverseId()/]
+
+[/for]
+[comment on rajoute la version dans le XTO pour utilisation par GWT /]
+[if e.hasVersion()]
+   /** La valeur de la version. */
+   @SuppressWarnings("all")
+   @XmlTransient
+   private Serializable _versionValue;
+[/if]
+   // METHODES
+
+   @Override
+   public [genPkType()/] getId ()
+   {
+      return [apply_attributeDefault(nameENUM_PK_ID())/];
+   }
+
+   @Override
+   public void setId (final [genPkType()/] [apply_parameterMethodClassicIn(nameENUM_PK_ID())/])
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(nameENUM_PK_ID())/] = [apply_parameterMethodClassicIn(nameENUM_PK_ID())/];
+   }
+
+[comment pas de génération de méthode pour les attributs calculés dans le cas des XTO /]
+[for (a : Attribute | e.attributes())]
+   /**
+[comPrefix(a, 'Obtenir')/]
+[comReturn(a)/]
+    */
+[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
+   @Override
+   public String getIdentifiant ()
+[else]
+[if a.type.oclIsTypeOf(Enumeration)]  
+   [a.gen_getterEnum()/]
+[else]
+   [a.gen_getter()/]
+[/if]
+[/if]
+   {
+      return [apply_attributeDefault(a.name.normalize())/];
+   }
+
+    /**
+[comPrefix(a, 'Affecter')/]
+[a.getComParamIn()/]
+    */    
+[comment]Cas particulier pour l'attribut identifiant qui ne suit pas la convention de nommage.[/comment]
+[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
+   public void setIdentifiant (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(a.name.normalize())/])
+[else]
+[if a.type.oclIsTypeOf(Enumeration)]
+[gen_setterEnum(a)/]
+[else]  
+   [a.gen_setter()/]
+[/if]
+[/if]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(a.name.normalize())/] = [apply_parameterMethodClassicIn(a.name.normalize())/];
+   }
+
+[/for]
+[for (r : Reference | e.referencesNoStar())]
+[if not (r.referencedType.oclIsUndefined())]
+
+   /**
+[comPrefix(r, 'Obtenir')/]
+[comReturn(r)/]
+    */
+
+   [r.getGetterIdEntity()/]
+   {
+      if ([apply_attributeDefault(r.name.normalize())/] != null)
+      {
+         [apply_attributeDefault(r.name.normalize())/][namePK_ID()/] = [apply_attributeDefault(r.name.normalize())/].getId();
+      }
+      return [apply_attributeDefault(r.name.normalize())/][namePK_ID()/];		
+   }
+
+   /**
+[comPrefix(r, 'Affecter')/]
+[r.getComParamIdIn()/]
+    */
+   [r.getSetterIdEntity()/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.normalize())/][namePK_ID()/] = [apply_parameterMethodClassicIn(r.name.normalize())/][namePK_ID()/];
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.normalize())/] = null;
+   }
+
+   /**
+    * Obtenir l'instance de '[r.nameClassXto()/]' associee a  l'instance de '[e.nameClassXto()/]' courante.
+    * @return L'instance desiree.
+    */
+   [r.getGetterXto()/]
+   {
+      return [apply_attributeDefault(r.name.normalize())/];
+   }
+
+   /**
+    * Affecter [r.nameBaseReference()/] de [e.nameBaseXto()/].
+[r.getComParamIn()/]
+    */
+   [r.getSetterXtoReference()/]
+   {
+
+      if ([apply_parameterMethodClassicIn(r.referencedType.name.normalize())/] == null)
+      {
+         [apply_methodSet(r.name.normalize())/][namePK_ID()/](null);
+      }
+      else
+      {
+         [apply_methodSet(r.name.normalize())/][namePK_ID()/]([apply_parameterMethodClassicIn(r.referencedType.name.normalize())/].getId());
+      }
+
+      [getAffectationPrefix()/][apply_attributeDefault(r.name.normalize())/] = [apply_parameterMethodClassicIn(r.referencedType.name.normalize())/];
+   }
+[/if]
+[/for]
+[for (r : Reference | e.referencesStarStar())]
+[if not (r.referencedType.oclIsUndefined())]
+   /**
+    * Obtenir la liste de type '[r.nameClassXto()/]' associee à  l'instance de '[e.nameClassXto()/]' courante.
+    * @return La liste desiree.
+    */
+   [r.getGetterListXto()/]
+   {
+      return [apply_attributeMultiple(r.name.normalize())/];
+   }
+
+   /**
+    * Affecter les [r.nameClassXto()/] de [e.nameBaseXto()/].
+[r.getComParamTabIn()/]
+    */
+   [r.getSetterListXto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.normalize())/] = [apply_parameterMethodMultiple(r.referencedType.name.normalize())/];
+   }
+[/if]
+[/for]
+[for (r : Reference | e.referencesStarNoStar())]
+[if not (r.referencedType.oclIsUndefined())]
+   /**
+    * Obtenir la liste de type '[r.nameClassXto()/]' associee à  l'instance de '[e.nameClassXto()/]' courante.
+    * @return La liste desiree.
+    */
+   [r.getGetterListXto()/]
+   {
+      return [apply_attributeMultiple(r.name.normalize())/];
+   }
+
+   /**
+    * Affecter les [r.nameClassXto()/] de [e.nameBaseXto()/].
+[r.getComParamTabIn()/]
+    */
+   [r.getSetterListXto()/]
+   {
+      [getAffectationPrefix()/][apply_attributeMultiple(r.name.normalize())/] = [apply_parameterMethodMultiple(r.referencedType.name.normalize())/];
+   }
+[/if]
+[/for]
+[for (r : Reference | e.referencingStar())]
+[if not (r.referencedType.oclIsUndefined())]
+
+   /**
+    * Obtenir [r.nameBaseReferenceInverse()/] de [e.nameBaseXto()/].
+[r.comReturnInverse()/]
+    */
+   [r.getGetterInverseIdEntity()/]
+   {
+      return [apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/];
+   }
+
+   /**
+    * Affecter [r.nameBaseReferenceInverse()/] de [e.nameBaseXto()/].
+		[r.getComParamInverseIdIn()/]
+    */
+   [r.getSetterInverseIdEntity()/]
+   {
+      [getAffectationPrefix()/][apply_attributeDefault(r.nameBaseReferenceInverse())/][namePK_ID()/] = [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/];
+   }
+[/if]
+[/for]
+
+   @Override
+   public String toString ()
+   {
+      // toString
+      // [protected (e.getUserCodeId('toString'))]
+
+      return [e.toString()/]
+
+      // [/protected]
+   }
+}
+[/template]
+
+[template public toString(e : Entity)]
+getClass().getName() + '['['/]' + getId ()  [e.endToString()/]+ '[']'/]';
+[/template]
+
+[template public endToString(e : Entity)]
+[for (a : Attribute | e.attributes())]+ ", " + [if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')] getIdentifiant() [else][apply_methodGet(a.name.normalize())/]()[/if]  [/for][for (r : Reference | e.referencesNoStar())]+ ", " + [apply_attributeDefault(r.name.normalize())/][namePK_ID()/] [/for]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity) post(trim())]
+[e.initImports()/]
+[e.addImport('java.io.Serializable')/]
+[e.addImport('jakarta.xml.bind.annotation.XmlAccessType')/]
+[e.addImport('jakarta.xml.bind.annotation.XmlAccessorType')/]
+[e.addImport('jakarta.xml.bind.annotation.XmlElement')/]
+[e.addImport('jakarta.xml.bind.annotation.XmlRootElement')/]
+[e.addImport('com.fasterxml.jackson.annotation.JsonProperty')/]
+[e.addImport('jakarta.xml.bind.annotation.XmlTransient', e.hasVersion())/]
+[e.addImport('fr.spi4j.lib.security.User_Itf', useSpi4jSecurity() and not useMatching() and entityIsUser(e))/]
+[e.addImport(getImportForXto_Itf())/]
+[e.addImport(getImportForRsXto_Itf())/]
+
+[comment : List references. /]
+[for (r : Reference | e.referencesNoStar())]
+[e.addImport(buildPackageWsApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List references. /]
+[for (r : Reference | e.referencesStarStar())]
+[e.addImport(buildPackageWsApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[comment : List references. /]
+[for (r : Reference | e.referencingStar())]
+[e.addImport(buildPackageWsApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity)))/]
+[/for]
+
+[e.flushImports()/]
+[/template]
+

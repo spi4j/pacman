@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genInitializeListener('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::cinematic::jsf::common::packages /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::cinematic::jsf::common::name /]
+[import fr::pacman::cinematic::jsf::client::ui::pkg::initializelistener /]
+
+[template public genInitializeListener(root : CinematicRoot)]
+[file (filename(getClientJsfSourceDir(),  getApplicationPackage() ,  'InitializationListener.java'), false, 'UTF-8')]
+[initializelistener(root)/]
+[/file]
+[/template]
+

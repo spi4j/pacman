@@ -1,0 +1,370 @@
+[comment encoding = UTF-8 /]
+[module Bootstrap('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::configuration::common::properties /]
+
+[import fr::pacman::commons::convention::rule::commonRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+[template public httpServerBootstrap (any : OclAny, webapp : Boolean) post (trim())]
+[licence()/]
+package [getApplicationPackage()/];
+// [protected ('for imports')]
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+import java.net.URL;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.UserStore;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.util.security.Credential;
+import org.eclipse.jetty.webapp.WebAppContext;
+[/if]
+[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.apache.catalina.Context;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.startup.VersionLoggerListener;
+import org.apache.tomcat.util.scan.StandardJarScanner;
+import fr.spi4j.exception.Spi4jRuntimeException;
+import java.net.MalformedURLException;
+[/if]
+[if 'tomee'.equalsIgnoreCase(getHttpEmbeddedServer())]
+[/if]
+
+// [/protected]
+
+public class [buildBoostrapClassName()/] {
+
+	private final static Logger [apply_attributeStatic('log')/] = LogManager.getLogger([buildBoostrapClassName()/].class);
+	private final static int [apply_attributeFinalStatic('default http port')/] = 80;
+	private final static String [apply_attributeFinalStatic('err parse msg')/] = "Usage : java -jar [getServerProjectName()/].war -p <port_Http>";
+	[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+	private final static String [apply_attributeFinalStatic('jetty include jar pattern')/] = "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern";
+	[/if]
+	private [buildServerType()/] [buildServerName()/];
+
+	/**
+	 * Lanceur pour le serveur embarqué [getHttpEmbeddedServer().toUpperFirst()/].
+	 * @param args : Liste des paramètres en provenance de la ligne de commande.
+	 */
+	public static void main(String['[]'/] [apply_parameterMethodClassicIn('args')/]) {
+
+		try {	
+			[apply_attributeStatic('log')/].info("Initialisation du serveur HTTP pour l'application : [getApplicationName()/]");
+
+			[buildBoostrapClassName()/] [apply_variableDefault('bootstrap')/] = new [buildBoostrapClassName()/]();
+			[apply_variableDefault('bootstrap')/].start([apply_parameterMethodClassicIn('args')/]);
+
+			[apply_attributeStatic('log')/].info("Lancement du serveur [getApplicationName()/] : OK.");
+			[apply_attributeStatic('log')/].info("Appuyez sur n'importe quelle touche pour stopper le serveur...");
+
+			[apply_variableDefault('bootstrap')/].waitForInterrupt();
+
+		} catch (ParseException p_e) {
+			
+			[apply_attributeStatic('log')/].warn([apply_attributeFinalStatic('err parse msg')/]);
+
+		} catch (Exception [apply_parameterMethodClassicIn('e')/]) {
+
+			[apply_attributeStatic('log')/].fatal("Lancement du serveur [getApplicationName()/] : KO : " + [apply_parameterMethodClassicIn('e')/].getMessage());
+			
+			Runtime.getRuntime().halt(1);
+			// System.exit(1);
+		}
+	}
+
+	/**
+	 * Contrôle et récupération des paramètres en provenance de la ligne de commande.
+	 * @param args : Liste des paramètres en provenance de la ligne de commande.
+	 */
+	private int getDefaultHttpPort(final String['[]'/] [apply_parameterMethodClassicIn('args')/]) throws ParseException  {
+	
+		// getDefaultHttpPort
+		// [protected (any.getUserCodeId('getDefaultHttpPort'))]
+
+		Options [apply_variableDefault('option')/] = new Options();
+		[apply_variableDefault('option')/].addOption("p", true, "Port HTTP du serveur");
+
+		CommandLineParser [apply_variableDefault('parser')/]  = new DefaultParser();
+		CommandLine [apply_variableDefault('line')/] = [apply_variableDefault('parser')/].parse([apply_variableDefault('option')/], [apply_parameterMethodClassicIn('args')/]);
+
+		if ([apply_variableDefault('line')/].hasOption("p") && null != [apply_variableDefault('line')/].getOptionValue("p")) {
+			return Integer.valueOf([apply_variableDefault('line')/].getOptionValue("p").trim());
+		}
+
+		return [apply_attributeFinalStatic('default http port')/];
+
+ 		// [/protected]
+	} 
+
+	/**
+	 * Paramétrage et démarrage du serveur.
+	 * @param [apply_parameterMethodClassicIn('args')/] : Liste des paramètres en provenance de la ligne de commande.
+	 * @throws Exception N'importe quelle exception suite à un problème de démarrage du serveur embarqué.
+	 */
+	private void start (final String['[]'/] [apply_parameterMethodClassicIn('args')/]) throws Exception {
+
+		// start
+		// [protected (any.getUserCodeId('start'))]
+
+		[if 'tomee'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		[/if]
+
+		[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		// Modifier les paramètres en fonction du besoin.
+		StandardJarScanner [apply_variableDefault('jar scanner')/] = new StandardJarScanner();
+		[apply_variableDefault('jar scanner')/].setScanAllDirectories(Boolean.TRUE);
+		[apply_variableDefault('jar scanner')/].setScanAllFiles(Boolean.TRUE);
+		[apply_variableDefault('jar scanner')/].setScanClassPath(Boolean.TRUE);
+		[apply_variableDefault('jar scanner')/].setScanManifest(Boolean.TRUE);
+		[apply_variableDefault('jar scanner')/].setScanBootstrapClassPath(Boolean.TRUE);
+		[/if]
+
+		[buildServerNameWithPrefix()/] = new [buildServerType()/]();
+		[comment : code for jetty server. /]
+		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		ServerConnector [apply_variableDefault('connector')/] = new ServerConnector([buildServerNameWithPrefix()/]);
+		[apply_variableDefault('connector')/].setPort(getDefaultHttpPort( [apply_parameterMethodClassicIn('args')/]));
+		[buildServerNameWithPrefix()/].addConnector([apply_variableDefault('connector')/]);
+		URL [apply_variableDefault('location')/] = [buildBoostrapClassName()/].class.getProtectionDomain().getCodeSource().getLocation();
+		URL [apply_variableDefault('location api')/] = new URL("file://" + [apply_variableDefault('location')/]
+			.getPath().substring(0, [apply_variableDefault('location')/].getPath().lastIndexOf("/") +1 ) + "[getServerProjectName()/].war"); 
+
+		HandlerCollection [apply_variableDefault('handlers')/] = new HandlerCollection(true);
+		WebAppContext [apply_variableDefault('webapp')/] = new WebAppContext();
+		[apply_variableDefault('webapp')/].setContextPath("");
+		// Recherche des annotations dans les sources ou dans le war deployé. 
+		[apply_variableDefault('webapp')/].setAttribute([apply_attributeFinalStatic('jetty include jar pattern')/], ".*/target/classes/|.*\\.war");
+		// Prise en compte Jstl pour les Jsp.
+		[apply_variableDefault('webapp')/].setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+				".*/['[^/]'/]*servlet-api-['[^/]'/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/['[^/]'/]*taglibs.*\\.jar$");
+		[apply_variableDefault('webapp')/].setResourceBase("[webapp.getDevWebAppContext()/]");
+		[if hasToWriteOtherWebappForApi()]
+		WebAppContext [apply_variableDefault('webapp api')/] = new WebAppContext();
+		[apply_variableDefault('webapp api')/].setContextPath("/api");
+		// Recherche des annotations dans les sources ou dans le war deployé. 
+		[apply_variableDefault('webapp api')/].setAttribute([apply_attributeFinalStatic('jetty include jar pattern')/], ".*/target/classes/|.*\\.war");
+		[apply_variableDefault('webapp api')/].setResourceBase("../[getWebappProjectName()/]/[getWebappDir()/]");
+		[/if]
+		
+		[writeComment()/]
+		//[apply_variableDefault('webapp')/].setWar([apply_variableDefault('location')/].toExternalForm());
+		[if hasToWriteOtherWebappForApi()]
+		//[apply_variableDefault('webapp api')/].setWar([apply_variableDefault('location api')/].toExternalForm());
+		[/if]
+		
+		[if hasToWriteOtherWebappForApi()][apply_variableDefault('handlers')/].addHandler([apply_variableDefault('webapp api')/]);[/if]
+		[apply_variableDefault('handlers')/].addHandler([apply_variableDefault('webapp')/]);
+		[buildServerNameWithPrefix()/].setHandler([apply_variableDefault('handlers')/]);
+		[/if]
+		[comment : code for tomcat server./]
+		[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		[buildServerNameWithPrefix()/].setSilent(true);
+		[buildServerNameWithPrefix()/].setPort(getDefaultHttpPort([apply_parameterMethodClassicIn('args')/]));
+		[buildServerNameWithPrefix()/].getServer().addLifecycleListener(new VersionLoggerListener()); 
+		Path [apply_variableDefault('path')/] = Paths.get(new File("").getAbsolutePath() + "/tomcat." 
+			+ getDefaultHttpPort([apply_parameterMethodClassicIn('args')/]) + "/webapps");
+		Files.createDirectories([apply_variableDefault('path')/]);
+
+		[writeComment()/]
+		// String [apply_variableDefault('doc base')/] = new File("").getAbsolutePath() + "/[webapp.getFinalWarName()/].war";
+		[if hasToWriteOtherWebappForApi()]
+		// String [apply_variableDefault('doc base api')/] = new File("").getAbsolutePath() + "/[true.getFinalWarName()/].war";
+		[/if]
+
+		String [apply_variableDefault('doc base')/] =  new File("[webapp.getDevWebAppContext()/]").getAbsolutePath();
+		Context [apply_variableDefault('context')/] = [buildServerNameWithPrefix()/].addWebapp("[true.getContext()/]", [apply_variableDefault('doc base')/]);
+		[if hasToWriteOtherWebappForApi()]
+		String [apply_variableDefault('doc base api')/] = new File("../[getWebappProjectName()/]/[getWebappDir()/]").getAbsolutePath();
+		Context [apply_variableDefault('context api')/] = [buildServerNameWithPrefix()/].addWebapp("[false.getContext()/]", [apply_variableDefault('doc base api')/]);
+		[buildServerNameWithPrefix()/].getHost().addChild([apply_variableDefault('context api')/]);
+		[/if]
+		[apply_variableDefault('context')/].setJarScanner([apply_variableDefault('jar scanner')/]);
+		[buildServerNameWithPrefix()/].getConnector();
+		[/if]
+		addBasicAuthUsers();
+		addSpecificXmlContext([apply_variableDefault('context')/]);
+		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		[buildServerNameWithPrefix()/].setStopTimeout(0x2710L);
+		[buildServerNameWithPrefix()/].setStopAtShutdown(true);
+		[/if]
+		[buildServerNameWithPrefix()/].start();
+		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+		[buildServerNameWithPrefix()/].dumpStdErr();
+		[/if]
+
+ 		// [/protected]
+	}
+
+	/**
+	 * Récupération (si besoin) et lecture du fichier de configuration externe
+	 * "context.xml". Si la base de données n'est pas une base embarquée de type H2,
+	 * il est alors nécessaire de définir une ressource de type jndi dans ce fichier
+	 * afin de pouvoir se connecter à la base de données.
+	 *
+	 * @param [apply_parameterMethodClassicIn('context')/] : Le contexte de l'application.
+	 * @throws MalformedURLException Une erreur de définition pour l'URL du fichier 'context.xml'.
+	 */
+	private void addSpecificXmlContext(final Context [apply_parameterMethodClassicIn('context')/]) throws MalformedURLException {
+
+		[if not useH2EmbeddedDatabase()]
+		File [apply_variableDefault('ctx')/] = new File(new File(getClass().getProtectionDomain()
+			.getCodeSource().getLocation().getFile()).getParentFile()
+			.getParentFile().getParentFile().getAbsolutePath() 
+			+ "/[getServerProjectName()/]/[getServerResourcesDir()/]context.xml");
+		
+		// Permet de retrouver la racine du répertoire 
+		// une fois l'application déployée.
+		if ([apply_variableDefault('ctx')/].getAbsolutePath().indexOf("tomcat.") > 0) {
+			 String [apply_variableDefault('deployed context path')/] = [apply_variableDefault('ctx')/].getAbsolutePath()
+				 .substring(0, [apply_variableDefault('ctx')/].getAbsolutePath().indexOf("tomcat.")) 
+				 + "conf/context.xml";
+			 [apply_variableDefault('ctx')/] = new File([apply_variableDefault('deployed context path')/]);
+		}
+
+		if (![apply_variableDefault('ctx')/].exists() || ![apply_variableDefault('ctx')/].canRead()) {
+			throw new Spi4jRuntimeException("Impossible de lire le fichier context.xml", 
+					"Vérifier le positionnement du fichier, le fichier est recherché à "
+					+ "l'emplacement suivant : " + [apply_variableDefault('ctx')/].getAbsolutePath());
+		}
+		[apply_parameterMethodClassicIn('context')/].setConfigFile([apply_variableDefault('ctx')/].toURI().toURL());
+		[buildServerNameWithPrefix()/].enableNaming();
+		[else]
+		// RAS : Il s'agit d'une base H2 embarquée.
+		[/if]
+	} 
+
+	/**
+	 * Paramétrage de la liste des utilisateurs dans le serveur embarqué.
+	 */
+	private void addBasicAuthUsers() {
+
+		// addBasicAuthUsers
+   		// [protected (any.getUserCodeId('addBasicAuthUsers'))]
+
+		if(null != [buildServerNameWithPrefix()/]) {
+			[comment : specific code for jetty server. /]
+			[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+			HashLoginService [apply_variableDefault('login service')/] = new HashLoginService("[getDefaultRealmParameter()/]");
+			UserStore [apply_variableDefault('user store')/] = new UserStore();
+			[apply_variableDefault('user store')/].addUser("[getDefaultAdminParameter()/]", 
+			Credential.getCredential("[getDefaultAdminParameter()/]"), new String['[]'/] { "[getDefaultAdminParameter()/]" });
+			[apply_variableDefault('login service')/].setUserStore([apply_variableDefault('user store')/]);
+			[buildServerNameWithPrefix()/].addBean([apply_variableDefault('login service')/]);
+			[/if]
+			[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+			[buildServerNameWithPrefix()/].addRole("[getDefaultAdminParameter()/]", "[getDefaultAdminParameter()/]");
+			[buildServerNameWithPrefix()/].addRole("[getDefaultAdminParameter()/]", "[getDefaultMonitoringParameter()/]");
+			[buildServerNameWithPrefix()/].addUser("[getDefaultAdminParameter()/]", "[getDefaultAdminParameter()/]");
+			[/if]
+		}
+
+ 		// [/protected]
+	}
+
+	/**
+	 * Mise en écoute du serveur et tentative d'arrêt 
+	 * en cas de détection d'un crash de la JVM.
+	 * @throws InterruptedException 
+	 */
+	public void waitForInterrupt() throws Exception {
+
+		// waitForInterrupt
+   		// [protected (any.getUserCodeId('waitForInterrupt'))]
+		
+		if(System.in.read()!=-1) {
+			stop();
+		}
+		// [buildServerNameWithPrefix()/].[buildWaitForInterrupt()/];
+
+		// [/protected]
+	}
+
+	/**
+	 * Mise en arrêt du serveur embarqué.
+	 * @throws Exception
+	 */
+	public void stop() throws Exception {
+
+		// stop
+   		// [protected (any.getUserCodeId('stop'))]
+
+		[apply_attributeStatic('log')/].info("Demande de fermeture pour le serveur [getApplicationName()/]...");
+		if(null != [buildServerNameWithPrefix()/]) {
+			try {
+				[buildServerNameWithPrefix()/].stop();
+				[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+				[buildServerNameWithPrefix()/].destroy();
+				[/if]
+				[buildServerNameWithPrefix()/] = null;
+				Runtime.getRuntime().halt(0);
+				// System.exit(0);
+			} catch (Exception  [apply_variableDefault('e')/]) {
+				[apply_attributeStatic('log')/].info("Fermeture du serveur OK mais avec un avertissement : " +  [apply_variableDefault('e')/]);
+			}
+		}
+		[apply_attributeStatic('log')/].info("Fermeture du serveur [getApplicationName()/] : OK.");
+		
+		// [/protected]
+	}
+}
+
+[/template]
+
+[comment : /]
+[template private writeComment(any : OclAny) post (trim())]
+// Décommenter la/les ligne(s) si dessous et commenter la/les ligne(s)
+// actuelle(s) de recuperation et de l'enregistrement de la webapp dans le
+// serveur avant d'effectuer le packaging avec maven pour la mise en production
+// de l'application.
+[/template]
+
+[comment : Construction nom complet (avec l'eventuel prefix) de la variable pour le serveur./]
+[template private buildServerNameWithPrefix(any : OclAny) post (trim())]
+[getAffectationPrefix()/][buildServerName()/] 
+[/template]
+
+[comment : Construction nom de la variable pour le serveur./]
+[template private buildServerName(any : OclAny) post (trim())]
+[apply_attributeDefault(getHttpEmbeddedServer() + ' server')/] 
+[/template]
+
+[comment : Construction du type pour le serveur./]
+[template private buildServerType(any : OclAny) post (trim())]
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]Server[/if]
+[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]Tomcat[/if]
+[/template]
+
+[comment : Construction de la methode d'attente de mise en arret pour le serveur./]
+[template private buildWaitForInterrupt(any : OclAny) post (trim())]
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]join()[/if]
+[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]getServer().await()[/if]
+[/template]
+
+[comment : Recuperation du contexte pour l'application. /]
+[query private getContext(mainWebapp : Boolean) : String = 
+if  (mainWebapp and hasToWriteOnlyWebappForApi()) or (not mainWebapp) then '/api' else '' endif 
+/]

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.*"
+            id="fr.pacman.entity.sql.ui.popup.contribution.IFile">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.entity.dbpopulate.ui.popup.AcceleoGenerateDbPopulateAction"
+               enablesFor="+"
+               id="fr.pacman.entity.sql.ui.popup.AcceleoGenerateDbPopulatelAction"
+               icon="icons/safran.png"
+               label="Génération Peuplement Base de Données"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"
+               tooltip="Génère les classes Java de peuplement de la base de données"/>
+      </objectContribution>
+   </extension>
+</plugin>

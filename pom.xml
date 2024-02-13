@@ -1,0 +1,554 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fr.pacman</groupId>
+	<artifactId>pacman-parent</artifactId>
+	<version>4.4.0</version>
+	<packaging>pom</packaging>
+	<name>pacman-parent</name>
+	<description>Projet parent aux generateurs Pacman pour Safr@n.</description>
+
+	<scm>
+		<connection>scm:svn:https://safran-forge-casid.intradef.gouv.fr/svn-default/svn/pacman_svn2/trunk/SCRIPTS</connection>
+		<url>https://safran-forge-casid.intradef.gouv.fr/svn-default/svn/pacman_svn2/trunk/SCRIPTS</url>
+	</scm>
+
+	<repositories>
+		<repository>
+			<id>odc-updatesite</id>
+			<layout>p2</layout>
+			<url>${odc-updatesite-url}</url>
+		</repository>
+		<repository>
+			<id>is-updatesite</id>
+			<layout>p2</layout>
+			<url>${is-updatesite-url}</url>
+		</repository>
+		<repository>
+			<id>eclipse-updatesite</id>
+			<layout>p2</layout>
+			<url>${eclipse-updatesite-url}</url>
+		</repository>
+	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>${central-repository-url}</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>Eclipse - Acceleo Releases</id>
+			<url>${acceleo-releases_url}</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<strictVersions>false</strictVersions>
+				</configuration>
+			</plugin>
+			<!-- Tycho does not know how to generate in several files, so all .class will be in target / classes -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<!-- No use of tests for production, so exclude them. -->
+					<extraClasspathElements>
+						<extraClasspathElement>
+							<groupId>org.junit.jupiter</groupId>
+							<artifactId>junit-jupiter</artifactId>
+							<version>5.9.3</version>
+						</extraClasspathElement>
+						<extraClasspathElement>
+							<groupId>fr.pacman</groupId>
+							<artifactId>fr.pacman.test</artifactId>
+							<version>${project.version}</version>
+						</extraClasspathElement>
+					</extraClasspathElements>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<!-- <target> <artifact> <groupId>fr.pacman</groupId> <artifactId>fr.pacman.target-definition</artifactId> 
+						<version>${project.parent.version}</version> </artifact> </target> -->
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<release>${java.version}</release>
+					<encoding>UTF-8</encoding>
+					<compilerArgument>-Xlint</compilerArgument>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<!-- 
+				<version>2.3.2</version>
+				 -->
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<releaseProfiles>release,integration</releaseProfiles>
+					<arguments>-Prelease,integration</arguments>
+					<mavenExecutorId>forked-path</mavenExecutorId>
+					<!-- on ne fait pas le goal clean car il est lance juste avant et il 
+						ne faut pas faire de nouveau un tycho:set-version -->
+					<preparationGoals>verify</preparationGoals>
+					<checkModificationExcludes>
+						<checkModificationExclude>**/MANIFEST.MF</checkModificationExclude>
+						<checkModificationExclude>**/plugin.xml</checkModificationExclude>
+						<checkModificationExclude>**/feature.xml</checkModificationExclude>
+						<checkModificationExclude>**/site.xml</checkModificationExclude>
+						<!-- les poms sont mis a jour par le plugin set-version de tycho avant 
+							la release (en phase clean) -->
+						<checkModificationExclude>**/pom.xml</checkModificationExclude>
+					</checkModificationExcludes>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.acceleo</groupId>
+					<artifactId>org.eclipse.acceleo.maven</artifactId>
+					<version>${acceleo-version}</version>
+					<executions>
+						<execution>
+							<id>acceleo-compile</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>acceleo-compile</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-packaging-plugin
+										</artifactId>
+										<versionRange>
+											[${tycho-version},)
+										</versionRange>
+										<goals>
+											<goal>build-qualifier</goal>
+											<goal>validate-id</goal>
+											<goal>
+												validate-version
+											</goal>
+											<goal>
+												build-qualifier-aggregator
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-compiler-plugin
+										</artifactId>
+										<versionRange>
+											[${tycho-version},)
+										</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<profiles>
+		<!-- Default profile (used for manual or Jenkins delivery). -->
+		<!-- For release delivery, launch successively : 
+		 - mvn clean install -P integration -Dosgi.os=win32 -Dosgi.ws=win32 -Dosgi.arch=x86
+		 - mvn clean -P integration,post-release1 
+		 - mvn clean -P integration,post-release2, etc..   -->
+		<profile>
+			<id>integration</id>
+			<activation>
+				<activeByDefault />
+			</activation>
+			<modules>
+				<!-- Business modules. -->
+				<module>fr.pacman.branding</module>
+				<module>fr.pacman.commons</module>
+				<module>fr.pacman.start</module>
+				<module>fr.pacman.configuration</module>
+				<module>fr.pacman.environment</module>
+				<module>fr.pacman.entity.api</module>
+				<module>fr.pacman.entity.jdbc</module>
+				<module>fr.pacman.requirement</module>
+				<module>fr.pacman.soa</module>
+				<module>fr.pacman.soapifirst</module>
+				<module>fr.pacman.soalight</module>
+				<module>fr.pacman.commons.soa</module>
+				<module>fr.pacman.cinematic.api</module>
+				<module>fr.pacman.cinematic.gwt</module>
+				<module>fr.pacman.cinematic.jsf</module>
+				<module>fr.pacman.cinematic.jsp</module>
+				<module>fr.pacman.cinematic.swing</module>
+				<module>fr.pacman.validation</module>
+				<module>fr.pacman.validation.view</module>
+				<module>fr.pacman.estimation</module>
+				<module>fr.pacman.test</module>
+				<!-- UI modules. -->
+				<module>fr.pacman.configuration.ui</module>
+				<module>fr.pacman.start.ui</module>
+				<module>fr.pacman.environment.ui</module>
+				<module>fr.pacman.entity.jdbc.ui</module>
+				<module>fr.pacman.entity.dbpopulate.ui</module>
+				<module>fr.pacman.entity.dbreferentiel.ui</module>
+				<module>fr.pacman.entity.sql.ui</module>
+				<module>fr.pacman.entity.xmi.ui</module>
+				<module>fr.pacman.requirement.ui</module>
+				<module>fr.pacman.requirementsgrouper.ui</module>
+				<module>fr.pacman.soa.ui</module>
+				<module>fr.pacman.soapifirst.ui</module>
+				<module>fr.pacman.cinematic.gwt.ui</module>
+				<module>fr.pacman.cinematic.jsf.ui</module>
+				<module>fr.pacman.cinematic.jsp.ui</module>
+				<module>fr.pacman.cinematic.swing.ui</module>
+				<module>fr.pacman.validation.ui</module>
+				<module>fr.pacman.estimation.ui</module>
+				<!-- Feature modules. -->
+				<module>fr.pacman.commons.feature</module>
+				<module>fr.pacman.commons.soa.feature</module>
+				<module>fr.pacman.configuration.ui.feature</module>
+				<module>fr.pacman.start.ui.feature</module>
+				<module>fr.pacman.environment.ui.feature</module>
+				<module>fr.pacman.entity.api.feature</module>
+				<module>fr.pacman.entity.jdbc.ui.feature</module>
+				<module>fr.pacman.entity.dbpopulate.ui.feature</module>
+				<module>fr.pacman.entity.dbreferentiel.ui.feature</module>
+				<module>fr.pacman.entity.sql.ui.feature</module>
+				<module>fr.pacman.entity.xmi.ui.feature</module>
+				<module>fr.pacman.soa.ui.feature</module>
+				<module>fr.pacman.soapifirst.ui.feature</module>
+				<module>fr.pacman.soalight.feature</module>
+				<module>fr.pacman.requirement.ui.feature</module>
+				<module>fr.pacman.requirementsgrouper.ui.feature</module>
+				<module>fr.pacman.cinematic.api.feature</module>
+				<module>fr.pacman.cinematic.gwt.ui.feature</module>
+				<module>fr.pacman.cinematic.jsf.ui.feature</module>
+				<module>fr.pacman.cinematic.jsp.ui.feature</module>
+				<module>fr.pacman.cinematic.swing.ui.feature</module>
+				<module>fr.pacman.validation.ui.feature</module>
+				<module>fr.pacman.estimation.ui.feature</module>
+				<!-- Update site module. -->
+				<module>fr.pacman.update</module>
+			</modules>
+		</profile>
+
+		<!-- Test profile. -->
+		<profile>
+			<id>test</id>
+			<activation>
+				<property>
+					<name>pacman.test</name>
+				</property>
+			</activation>
+
+			<modules>
+				<module>fr.pacman.commons</module>
+				<module>fr.pacman.test</module>
+				<module>fr.pacman.start</module>
+				<module>fr.pacman.configuration</module>
+				<!-- module>fr.pacman.environment</module -->
+				<module>fr.pacman.entity.api</module>
+				<!-- module>fr.pacman.entity.jdbc</module> <module>fr.pacman.requirement</module -->
+				<!-- module>fr.pacman.soa</module -->
+				<!-- module>fr.pacman.soalight</module -->
+				<!-- module>fr.pacman.cinematic.api</module> <module>fr.pacman.cinematic.gwt</module> 
+					<module>fr.pacman.cinematic.jsf</module> <module>fr.pacman.cinematic.swing</module> 
+					<module>fr.pacman.validation</module> <module>fr.pacman.estimation</module -->
+			</modules>
+
+			<dependencies>
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<version>4.10</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<!-- We copy the .class from target / classes to target / test-classes 
+						to be executed as unit tests -->
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-test-classes</id>
+								<phase>test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<copy todir="target/test-classes" failonerror="false">
+											<fileset dir="target/classes" includes="**/*.class" />
+										</copy>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Execution of unit tests. -->
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.12.4</version>
+						<executions>
+							<execution>
+								<id>pacmanTest</id>
+								<phase>package</phase>
+								<goals>
+									<goal>test</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<testFailureIgnore>true</testFailureIgnore>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Profile to deliver a new version of generators. -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-versions-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>update-poms-and-manifests</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>set-version</goal>
+								</goals>
+								<configuration>
+									<newVersion>${releaseVersion}</newVersion>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>commit-manifests</id>
+								<inherited>false</inherited>
+								<phase>clean</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<ant antfile="build-release.xml" target="release" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+
+		<!-- Profile to prepare the next version of generators after release. -->
+		<profile>
+			<id>post-release1</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<version>1.0-alpha-2</version>
+						<executions>
+							<execution>
+								<id>read-properties1</id>
+								<goals>
+									<goal>read-project-properties</goal>
+								</goals>
+								<phase>clean</phase>
+								<inherited>false</inherited>
+								<configuration>
+									<files>
+										<file>${basedir}/release.properties</file>
+									</files>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-versions-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>update-version1</id>
+								<goals>
+									<goal>set-version</goal>
+								</goals>
+								<phase>clean</phase>
+								<inherited>false</inherited>
+								<configuration>
+									<newVersion>${project.rel.fr.pacman:pacman-parent}</newVersion>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+
+		<!-- Profile to prepare the next version of generators after release. -->
+		<profile>
+			<id>post-release2</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<version>1.0-alpha-2</version>
+						<executions>
+							<execution>
+								<id>read-properties2</id>
+								<goals>
+									<goal>read-project-properties</goal>
+								</goals>
+								<phase>clean</phase>
+								<inherited>false</inherited>
+								<configuration>
+									<files>
+										<file>${basedir}/release.properties</file>
+									</files>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-versions-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>update-version2</id>
+								<goals>
+									<goal>set-version</goal>
+								</goals>
+								<phase>clean</phase>
+								<inherited>false</inherited>
+								<configuration>
+									<newVersion>${project.dev.fr.pacman:pacman-parent}</newVersion>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<properties>
+		<java.version>11</java.version>
+		<tycho-version>1.7.0</tycho-version>
+		<acceleo-version>3.6.4</acceleo-version>
+		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+		<central-repository-url>https://repo.maven.apache.org/maven2</central-repository-url>
+		<acceleo-releases_url>https://repo.eclipse.org/content/repositories/acceleo-releases</acceleo-releases_url>
+		<odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.3/community/11.3.2/repository/</odc-updatesite-url>
+		<!-- <odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.6/community/11.6.0/repository/</odc-updatesite-url>  -->
+		<is-updatesite-url>file:///C:/Travail/updateSiteDeltaPack-4.1.0</is-updatesite-url>
+		<eclipse-updatesite-url>http://download.eclipse.org/releases/2019-06/</eclipse-updatesite-url> 
+		<!-- <eclipse-updatesite-url>http://download.eclipse.org/releases/2020-06/</eclipse-updatesite-url>  -->
+	</properties>
+</project>

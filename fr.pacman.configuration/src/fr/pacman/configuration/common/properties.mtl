@@ -1,0 +1,43 @@
+[comment encoding = UTF-8 /]
+[module properties('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+
+[query public hasHttpEmbeddedServer(any : OclAny) : Boolean = 
+	not getHttpEmbeddedServer().oclIsUndefined() and not getHttpEmbeddedServer().oclIsInvalid()	
+	and ('jetty'.equalsIgnoreCase(getHttpEmbeddedServer()) or 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())) 
+/]
+
+[comment : Verifie si le projet doit generer un client qui necessite une webapp. /]
+[query public hasClientWeb(any : OclAny) : Boolean = 
+	hasClient() and	('jsp'.equalsIgnoreCase(getClient()) or 'jsf'.equalsIgnoreCase(getClient()) 
+	or 'gwt'.equalsIgnoreCase(getClient())) 
+/]
+
+[comment : Verifie si le projet a un client (quel que soit le type du client). /]
+[query public hasClient(any : OclAny) : Boolean = 
+	not getClient().oclIsUndefined() and getClient().trim().size() > 0
+/]
+
+[comment : Verifie si on doit ecrire une autre webapp dediee api dans le bootstrap du serveur embarque. /]
+[query public hasToWriteOtherWebappForApi(any : OclAny) : Boolean = 
+	useWS() and hasClientWeb()
+/]
+
+[query public hasToWriteOnlyWebappForApi(any : OclAny) : Boolean =
+	useWS() and not hasClientWeb()
+/]
+
+[comment : Recuperation du nom final pour le war avant assemblage dans le zip de livraison. /]
+[template public getFinalWarName (webapp : Boolean) post (trim())]
+[if (not webapp)][if 'jsf'.equalsIgnoreCase(getClient())][getClientJsfProjectName()/][/if]
+[if 'jsp'.equalsIgnoreCase(getClient())][getClientJspProjectName()/][/if][else][getServerProjectName()/][/if]
+[/template]
+
+[comment : Obtention de la chaine pour le contexte de l'application./]
+[template public getDevWebAppContext (webapp : Boolean) post (trim())]
+[if (not webapp)][if 'jsf'.equalsIgnoreCase(getClient())][getClientJsfWebappDir()/][/if]
+[if 'jsp'.equalsIgnoreCase(getClient())][getClientJspWebappDir()/][/if][else][getWebappDir()/][/if]
+[/template]

@@ -1,0 +1,406 @@
+[comment encoding = UTF-8 /]
+[module pomXml('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::configuration::common::properties /]
+
+[template public jBehavePluginManagement(any : OclAny)]
+<pluginManagement>
+	<plugins>
+		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+		<plugin>
+			<groupId>org.eclipse.m2e</groupId>
+			<artifactId>lifecycle-mapping</artifactId>
+			<version>${lifecycle-mapping.version}</version>
+			<configuration>
+				<lifecycleMappingMetadata>
+					<pluginExecutions>
+						<pluginExecution>
+							<pluginExecutionFilter>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-dependency-plugin</artifactId>
+								<versionRange>['['/]${maven-dependency-plugin.version},)</versionRange>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+							</pluginExecutionFilter>
+							<action>
+								<ignore></ignore>
+							</action>
+						</pluginExecution>
+					</pluginExecutions>
+				</lifecycleMappingMetadata>
+			</configuration>
+		</plugin>
+	</plugins>
+</pluginManagement>
+[/template]
+
+[template public jBehaveDependencyPlugin(any : OclAny)]
+<plugin>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>${maven-dependency-plugin.version}</version>
+	<executions>
+		<!-- Mise en place des fichiers pour le site JBehave -->
+		<execution>
+			<id>unpack-jbehave-site-resources</id>
+			<phase>generate-resources</phase>
+				<goals>
+					<goal>unpack</goal>
+				</goals>
+				<configuration>
+					<overwriteReleases>false</overwriteReleases>
+					<overwriteSnapshots>true</overwriteSnapshots>
+					<artifactItems>
+						<artifactItem>
+							<groupId>org.jbehave.site</groupId>
+							<artifactId>jbehave-site-resources</artifactId>
+							<version>${jbehave-site-resources.version}</version>
+							<type>zip</type>
+							<outputDirectory>${project.build.directory}/jbehave/view</outputDirectory>
+						</artifactItem>
+					</artifactItems>
+				</configuration>
+		</execution>
+		<execution>
+			<id>unpack-jbehave-reports-resources</id>
+			<phase>generate-resources</phase>
+			<goals>
+				<goal>unpack</goal>
+			</goals>
+			<configuration>
+				<overwriteReleases>false</overwriteReleases>
+				<overwriteSnapshots>true</overwriteSnapshots>
+				<artifactItems>
+					<artifactItem>
+						<groupId>org.jbehave</groupId>
+						<artifactId>jbehave-core</artifactId>
+						<version>${jbehave-core.version}</version>
+						<outputDirectory>${project.build.directory}/jbehave/view</outputDirectory>
+						<includes>**\/*.css,**\/*.ftl,**\/*.js</includes>
+					</artifactItem>
+				</artifactItems>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>
+<!-- pour exporter les .story dans le jar -->
+<plugin>
+	<artifactId>maven-jar-plugin</artifactId>
+	<version>${maven-jar-plugin.version}</version>
+	<executions>
+		<execution>
+			<goals>
+				<goal>test-jar</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>     
+[/template]
+
+[template public jBehaveTestResources(any : OclAny)]
+<testResources>
+	<testResource>
+		<directory>${project.basedir}/src/test/java</directory>
+			<includes>
+				<include>**/*.story</include>
+			</includes>
+	</testResource>
+</testResources>
+[/template]
+
+
+[template public plugins(any : OclAny, webapp : Boolean)]
+<!-- le driver H2 est une dependance Maven de ce module (via le module
+	[getServerProjectName()/]) pour que l'on puisse facilement lancer la webapp dans Tomcat
+	depuis Eclipse sans configurer de datasource, mais le jar du driver jdbc
+	n'est pas inclus dans le fichier war de cette webapp et c'est le serveur
+	d'application (Tomcat ou GlassFish) qui doit fournir la datasource jdbc a
+	partir du driver jdbc inlus dans le serveur (%TOMCAT_HOME%/lib/h2.jar
+	par exemple) -->
+<plugin>
+	<artifactId>maven-war-plugin</artifactId>
+	<version>${maven-war-plugin.version}</version>
+	<configuration>
+		[if not useH2EmbeddedDatabase()]
+		<packagingExcludes>WEB-INF/lib/h2*.jar</packagingExcludes>
+		[/if]
+		[if hasHttpEmbeddedServer() and not (webapp and hasClientWeb())]
+		<archive>
+			<manifest>
+				<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+				<mainClass>[getApplicationPackage()/].[buildBoostrapClassName()/]</mainClass>
+			</manifest>
+		</archive>
+		[/if]
+	</configuration>
+	[if 'jsf'.equalsIgnoreCase(getClient())]
+	<executions>
+		<!-- On ne veut pas mettre le packaging war sur ce pom pour ne pas perturber
+			les configurations eclipse des autres projets, mais par contre on veut fabriquer
+			un war qui contiendra l'application -->
+		<execution>
+			<id>War</id>
+			<phase>package</phase>
+			<goals>
+				<goal>war</goal>
+			</goals>
+		</execution>
+	</executions>
+	[/if]
+</plugin>
+<plugin>
+	<artifactId>maven-antrun-plugin</artifactId>
+	<version>${maven-antrun-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+	<executions>
+		<execution>
+			<id>WarBuild</id>
+			<phase>package</phase>
+			<goals>
+				<goal>run</goal>
+			</goals>
+			<configuration>
+				<target>
+					<!-- Pour avoir en plus un nom de fichier war independant de la version Maven 
+                         et qui servira comme nom de webapp dans Tomcat via la configuration de 
+                         deploiement automatique dans Jenkins -->
+                         <copy file="target/${project.artifactId}-${project.version}.war" 
+                                     tofile="target/[webapp.getFinalWarName()/].war"/>
+				</target>
+			</configuration>
+		</execution>
+		[if hasHttpEmbeddedServer() and not (webapp and hasClientWeb())]
+		<!-- Copie du bootsrap pour le serveur [getHttpEmbeddedServer().toUpperFirst()/] embarque au niveau de la racine. -->
+		<execution>
+			<id>[buildBoostrapClassName()/]Copy</id>
+			<phase>prepare-package</phase>
+			<goals>
+				<goal>run</goal>
+			</goals>
+			<configuration>
+				<target>
+					<move todir="${project.build.directory}/${project.artifactId}-${project.version}/">
+					<fileset dir="${project.build.directory}/classes/">
+						<include name="[getApplicationPackage().replaceAll('\\.', '/')/]/[buildBoostrapClassName()/].class" />
+					</fileset>
+					</move>
+				</target>
+			</configuration>
+		</execution>
+		[/if]			
+	</executions>
+</plugin>
+<!-- plugin pour lancer un serveur http jetty, via le goal "jetty:run-exploded"
+(pas "jetty:run" sinon les classes ne sont pas dans WEB-INF/classes et donc JSF ne lit pas les annotations) -->
+<plugin>
+	<groupId>org.mortbay.jetty</groupId>
+ 	<artifactId>maven-jetty-plugin</artifactId>
+	<version>${maven-jetty-plugin.version}</version>
+	<configuration>
+		<scanIntervalSeconds>10</scanIntervalSeconds>
+		<connectors>
+			<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+				<port>8080</port>
+				<maxIdleTime>60000</maxIdleTime>
+			</connector>
+		</connectors>
+	</configuration>
+</plugin>
+<!-- plugin pour lancer un serveur http tomcat, via le goal "tomcat7:run-war"
+(pas "tomcat7:run" sinon les classes ne sont pas dans WEB-INF/classes et donc JSF ne lit pas les annotations) -->
+<plugin>
+	<groupId>org.apache.tomcat.maven</groupId>
+	<artifactId>tomcat7-maven-plugin</artifactId>
+	<version>${tomcat7-maven-plugin.version}</version>
+	<configuration>
+		<port>8080</port>
+		<path>/</path>
+	</configuration>
+</plugin>
+[/template]
+
+[template public httpEmbeddedServerPlugins(webapp : Boolean)]
+[if hasHttpEmbeddedServer() and not (webapp and hasClientWeb())]
+<!-- Positionne l'ensemble des classes du serveur [getHttpEmbeddedServer().toUpperFirst()/] 
+     et toutes les classes du package "org.apache.commons.cli" au niveau de 
+     la racine afin de pouvoir faire un war executable. -->
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>${maven-dependency-plugin.version}</version>
+	<executions>
+		<execution>
+			<id>[getHttpEmbeddedServer().toUpperFirst()/]Classpath</id>
+			<phase>prepare-package</phase>
+			<goals>
+				<goal>unpack-dependencies</goal>
+			</goals>
+			<configuration>
+				<includeGroupIds>
+						commons-cli,javax.servlet,
+						org.eclipse.jdt.core.compiler,
+						org.eclipse.jdt,
+						org.apache.logging,
+						[getIncludeGroupsId()/]
+				</includeGroupIds>
+				<excludeArtifactIds>jsp-api,jstl</excludeArtifactIds>
+				<excludes>META-INF/ECLIPSEF.*,META-INF/*.SF,META-INF/*.DSA,META-INF/*.RSA</excludes>
+				<outputDirectory>
+					${project.build.directory}/${project.artifactId}-${project.version}
+				</outputDirectory>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>[/if]
+[/template]
+
+[template public httpEmbeddedConfiguration(any : OclAny)]
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+<!-- Ajout de la suppression du parcours des repertoires 
+     dans le cadre d'un serveur embarque de type jetty. -->
+<context-param>
+	<param-name>org.eclipse.jetty.servlet.Default.dirAllowed</param-name>
+	<param-value>false</param-value>
+</context-param>	
+[/if]
+[/template]
+
+[template public httpEmbeddedServerDependencies(webapp : Boolean)]
+[if hasHttpEmbeddedServer() and not (webapp and hasClientWeb())]
+<!-- Dependances pour le serveur embarque [getHttpEmbeddedServer().toUpperFirst()/] -->
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+<dependency>
+	<groupId>org.eclipse.jetty</groupId>
+	<artifactId>jetty-webapp</artifactId>
+	<version>${[getHttpEmbeddedServer()/].version}</version>
+	<exclusions>
+		<exclusion>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+<dependency>
+	<groupId>org.eclipse.jetty</groupId>
+	<artifactId>jetty-annotations</artifactId>
+	<version>${jetty.version}</version>
+	<exclusions>
+		<exclusion>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+<dependency>
+	<groupId>org.eclipse.jetty</groupId>
+	<artifactId>jetty-server</artifactId>
+	<version>${jetty.version}</version>
+	<exclusions>
+		<exclusion>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-slf4j2-impl</artifactId>
+	<version>${log4j-slf4j.version}</version>
+</dependency>
+[if 'jsp'.equalsIgnoreCase(getClient())]
+<!-- Dependances pour la compilation des Jsp. -->
+<dependency>
+	<groupId>org.eclipse.jetty</groupId>
+	<artifactId>apache-jsp</artifactId>
+	<version>${jetty.version}</version>
+	<classifier>nolog</classifier>
+	<scope>provided</scope>
+</dependency> 		
+<!-- Utilisation potentielle du jstl dans les pages jsp. -->
+<dependency>
+	<groupId>org.eclipse.jetty</groupId>
+	<artifactId>apache-jstl</artifactId>
+	<version>${jstl.version}</version>
+	<scope>provided</scope>
+</dependency>
+[/if]
+[/if]
+[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
+<dependency>
+    <groupId>org.apache.tomcat.embed</groupId>
+    <artifactId>tomcat-embed-core</artifactId>
+    <version>${[getHttpEmbeddedServer()/].version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.tomcat.embed</groupId>
+    <artifactId>tomcat-embed-jasper</artifactId>
+    <version>${[getHttpEmbeddedServer()/].version}</version>
+	<!-- 
+	<exclusions>
+		<exclusion>
+			<groupId>org.eclipse.jdt</groupId>
+			<artifactId>ecj</artifactId>
+		</exclusion>
+	</exclusions>
+	-->
+</dependency>
+[if not useH2EmbeddedDatabase()]
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat-dbcp</artifactId>
+    <version>${tomcat-dbcp.version}</version>
+</dependency>
+[/if]
+[if 'jsp'.equalsIgnoreCase(getClient())]
+<dependency>
+    <groupId>org.glassfish.web</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+    <version>${jstl.version}</version>
+</dependency>
+<dependency>
+	<groupId>jakarta.servlet.jsp.jstl</groupId>
+	<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+	<version>${jstl-api.version}</version>
+</dependency>
+<!-- 	 
+<dependency>
+    <groupId>org.eclipse.jdt</groupId>
+    <artifactId>ecj</artifactId>
+    <version>3.34.0</version>
+</dependency>
+--> 
+[/if]
+[/if]
+[if 'tomee'.equalsIgnoreCase(getHttpEmbeddedServer())]
+<dependency>
+    <groupId>org.apache.tomee</groupId>
+    <artifactId>tomee-embedded</artifactId>
+    <version>${tomee.version}</version>
+</dependency>
+
+[/if]
+<dependency>
+    <groupId>commons-cli</groupId>
+    <artifactId>commons-cli</artifactId>
+    <version>${commons-cli.version}</version>
+</dependency>
+[/if]
+[/template]
+
+[template private getIncludeGroupsId(any : OclAny) post (trim())]
+[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
+org.eclipse.jetty,jstl,
+org.mortbay.jasper,
+org.eclipse.jetty.toolchain,
+org.ow2.asm,
+org.slf4j,
+com.sun.el,
+javax.annotation
+[else]
+org.apache.tomcat.embed,
+org.apache.tomcat[/if]
+[/template]

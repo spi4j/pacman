@@ -1,0 +1,769 @@
+[comment encoding = UTF-8 /]
+[module daoTest('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::commons::types::packages /]
+[import fr::pacman::commons::types::names /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::services::SecurityUtils /]
+
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[template public daoTest(e : Entity, referentiel : Boolean)]
+[licence()/]
+package [buildPackagePersistenceApiEntity(e)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[e.writeImports(referentiel)/]
+
+// [/protected]
+
+/**
+ * Classe de test du dao '[buildDaoInterfaceName(e)/]'.
+ * @author [getAuthorName()/]
+ */
+// Annotation for class
+// [protected (e.getUserCodeId('Annotation for class'))]
+// [/protected]
+public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs()/]
+{
+
+   /** Le 'UserPersistence' de l'application. */
+   private static [buildUserPersistenceAppClassName()/] [apply_attributeStatic('user persistence')/];
+
+   /** Le '[buildDaoInterfaceName(e)/]' teste. */
+   [if not useTestsCRUD()]
+   @SuppressWarnings("all")
+   [/if]
+   private static [buildDaoInterfaceName(e)/] [apply_attributeStatic('dao')/];
+
+   /** L'id du '[buildEntityInterfaceName(e)/]' stocke en base. */
+   private static Long [apply_attributeStatic('crud id')/];
+
+[if useTestsCRUD()]
+   /**
+    * Definition du [apply_attributeStatic('crud id')/].
+    * @param [apply_parameterMethodClassicIn('crud id')/]
+    *           le [apply_attributeStatic('crud id')/]
+    */
+   public static void [apply_methodDefault('set crud id')/] (final Long [apply_parameterMethodClassicIn('crud id')/])
+   {
+      [buildDaoTestClassName(e)/].[apply_attributeStatic('crud id')/] = [apply_parameterMethodClassicIn('crud id')/];
+   }
+
+[/if]
+   /**
+    * Methode d'initialisation de la classe de tests.
+    */
+   @BeforeAll
+   public static void [apply_methodDefault('set up before class')/] ()
+   {
+      [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
+      [apply_attributeStatic('dao')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get ' + buildDaoName(e))/]();
+
+      // set up before class
+      // [protected (e.getUserCodeId('set up before class'))]
+      // [/protected]
+   }
+
+   /**
+    * Methode d'initialisation de tests.
+    */
+   @BeforeEach
+   public void [apply_methodDefault('set up')/] ()
+   {
+      [apply_attributeStatic('user persistence')/].begin();
+
+      // set up
+      // [protected (e.getUserCodeId('set up'))]
+      // [/protected]
+   }
+
+[if useTestsCRUD()]
+   /**
+    * Test de recherche de toutes les entitys.
+[if not referentiel]
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+[/if]
+    */
+   @Test
+   public void [apply_methodDefault('test find all')/] ()[if not referentiel] throws Throwable[/if]
+   {
+[if referentiel]
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('dao')/].findAll();
+
+      assertTrue(![apply_variableFinal('all')/].isEmpty(), "Aucune entity n'a ete trouve dans le referentiel");
+
+      final [buildEntityInterfaceName(e)/] [apply_variableFinal('first')/] = [apply_variableFinal('all')/].get(0);
+      [apply_methodDefault('set crud id')/]([apply_variableFinal('first')/].getId());
+
+      assertNotNull([apply_attributeStatic('crud id')/], "La premiere entity trouve dans le referentiel n'a pas de cle primaire");
+
+[else]
+      [apply_methodDefault('test create')/]();
+
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('dao')/].findAll();
+      assertNotNull(EntityUtil.findInCollectionById([apply_variableFinal('all')/], [apply_attributeStatic('crud id')/]), 
+			"L'entity n'a pas ete trouvee dans la liste de toutes les entitys");
+
+[/if]
+      // findAll assertions
+      // [protected (e.getUserCodeId('findAll assertions'))]
+
+      // [/protected]
+   }
+
+[if not referentiel]
+   /**
+    * Test de creation de l'entity.
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+    */
+   @Test
+   public void [apply_methodDefault('test create')/] () throws Throwable
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
+
+      // create
+      // [protected (e.getUserCodeId('create'))]
+      // TODO renseigner donnees de test
+      [for (a : Attribute | e.attributesNoPk())]
+      [if (not a.isComputed())]
+      [apply_variableDefault('entity')/].[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]setIdentifiant[else][apply_methodSet(nameSimpleProperty(a))/][/if]([if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name/]")[else][defaultValueForColumnType(a.genPropertyType())/][/if]);
+      [/if][/for]
+      [completeTestCreateMethod(e)/]
+      // [/protected]
+
+	  [finalizeTestCreateMethod(e, 'entity')/]
+	  assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
+
+      // create assertions
+      // [protected (e.getUserCodeId('create assertions'))]
+
+      // [/protected]
+   }
+
+   [if (hasMandatoryFieldsForDaoTest(e))]
+   /**
+    * Test de (non) creation de l'entity avec 
+    * des valeurs nulles sur des champs obligatoires.
+    * @throws Throwable
+    *            si erreur .
+    */
+   @Test
+   public void [apply_methodDefault('test create with null on mandatory fields')/] () throws Throwable
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
+
+      // create null on mandatory
+      // [protected (e.getUserCodeId('create null on mandatory'))]
+      // TODO renseigner donnees de test
+      [for (a : Attribute | e.attributesNoPk())]
+      [if (not a.isComputed())]
+      [apply_variableDefault('entity')/].[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]setIdentifiant[else][apply_methodSet(nameSimpleProperty(a))/][/if]([if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name/]")[else]null[/if]);
+      [/if][/for]
+      [completeTestCreateMethod(e)/]
+      // [/protected]    
+
+      try{
+        [finalizeTestCreateMethod(e, 'entity')/]
+		assertNull([apply_variableDefault('entity')/].getId(), "L'entity ne devrait pas avoir été créé");
+      }
+      catch(Spi4jValidationException p_e){
+           assertTrue(Boolean.TRUE);
+      }
+   }
+  [/if]
+
+  [if (hasNullFields(e))]
+   /**
+    * Test de creation de l'entity avec des valeurs nulles.
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+    */
+   @Test
+   public void [apply_methodDefault('test create with null')/] () throws Throwable
+   {
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
+
+      // create with null values
+      // [protected (e.getUserCodeId('create with null values'))]
+      // TODO renseigner donnees de test
+      [for (a : Attribute | e.attributesNoPk())]
+      [if (not a.isComputed())]
+      [apply_variableDefault('entity')/].[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]setIdentifiant[else][apply_methodSet(nameSimpleProperty(a))/][/if]([if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name/]")[else][if a.isMandatory()][defaultValueForColumnType(a.genPropertyType())/][else]null[/if][/if]);
+      [/if][/for]
+      [completeTestCreateMethod(e)/]
+      // [/protected]
+
+	  [finalizeTestCreateMethod(e, 'entity')/]
+	  assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
+
+      // create assertions with null values
+      // [protected (e.getUserCodeId('create assertions with null values'))]
+
+      // [/protected]
+   }
+  [/if]
+[/if]
+   /**
+    * Test de recherche par identifiant de l'entity.
+[if not referentiel]
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+[/if]
+    */
+   @Test
+   public void [apply_methodDefault('test find by id')/] ()[if not referentiel] throws Throwable[/if]
+   {
+[if referentiel]
+      // effectuer le findAll avant le findById pour assurer que crudId soit rempli
+      if ([apply_attributeStatic('crud id')/] == null)
+      {
+         [apply_methodDefault('test find all')/]();
+      }
+[else]
+      [apply_methodDefault('test create')/]();
+
+[/if]
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('dao')/].findById(crudId);
+      assertNotNull([apply_variableDefault('entity')/], "L'entity devrait exister dans le referentiel");
+      assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
+      assertNotNull([apply_variableDefault('entity')/].toString(), "L'entity creee devrait avoir un toString");
+
+      // findById assertions
+      // [protected (e.getUserCodeId('findById assertions'))]
+
+      // [/protected]
+   }
+
+[if not referentiel]
+   /**
+    * Test d egalite entre les champs de l entite pre et post insertion.
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+    */
+   @Test
+   public void [apply_methodDefault('test all field inserted')/] () throws Throwable
+   {
+
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity insert')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
+
+      // findAllFieldInserted create
+      // [protected (e.getUserCodeId('findAllFieldInserted create'))]
+      // TODO renseigner donnees de test
+  [for (a : Attribute | e.attributesNoPk())]
+      [apply_variableDefault('entity insert')/].[apply_methodSet(nameSimpleProperty(a))/]([if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name/]")[else][defaultValueForColumnType(a.genPropertyType())/][/if]);
+  [/for]
+  [for (a : Attribute | e.getInheritDtoAttributes())]
+      [apply_variableDefault('entity insert')/].[apply_methodSet(nameSimpleProperty(a))/]([if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name/]")[else][defaultValueForColumnType(a.genPropertyType())/][/if]);
+  [/for]
+  [if hasAutomaticColumns()]
+  [for (columnProp : String | get_automaticColumnsProperties())]
+      [e.apply_variableDefault('entity insert')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]([defaultValueForColumnType(e.get_typeColumn(columnProp))/]);
+  [/for]
+  [/if]
+  [for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if (r.containingType.oclAsType(entity::Entity) = e)]
+      [apply_variableDefault('entity insert')/].[apply_methodSet(nameSimpleProperty(r))/](1L);
+  [/if]
+  [/for]
+  [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if r.oppositeOf.oclIsUndefined()]
+      [apply_variableDefault('entity insert')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/](1L);
+  [/if]
+  [/for]
+      // [/protected]
+
+      [apply_attributeStatic('dao')/].create([apply_variableDefault('entity insert')/]);
+      [apply_methodDefault('set crud id')/]([apply_variableDefault('entity insert')/].getId());
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity read')/] = [apply_attributeStatic('dao')/].findById(crudId);
+
+      // findAllFieldInserted assertions
+      // [protected (e.getUserCodeId('findAllFieldInserted assertions'))]
+      HashCodeBuilder [apply_variableDefault('hash code builder entity insert')/] = new HashCodeBuilder();
+
+  [for (a : Attribute | e.attributesNoPk())]
+	  [if not a.genPropertyType().equalsIgnoreCase('Binary')]
+      [apply_variableDefault('hash code builder entity insert')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(a))/]());
+	  [/if]
+  [/for]
+  [for (a : Attribute | e.getInheritDtoAttributes())]
+      [if not a.genPropertyType().equalsIgnoreCase('Binary')]
+      [apply_variableDefault('hash code builder entity insert')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(a))/]());
+      [/if]
+  [/for]
+  [if hasAutomaticColumns()]
+  [for (columnProp : String | get_automaticColumnsProperties())]
+      [e.apply_variableDefault('hash code builder entity insert')/].append([e.apply_variableDefault('entity insert')/].[e.apply_methodGet(e.get_nameColumn(columnProp).toLower())/]()[e.completeXtopSupValue(columnProp)/]);
+  [/for]
+  [/if]
+  [for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if (r.containingType.oclAsType(entity::Entity) = e)]
+      [apply_variableDefault('hash code builder entity insert')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(r))/]());
+  [/if]
+  [/for]
+  [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if r.oppositeOf.oclIsUndefined()]
+      [apply_variableDefault('hash code builder entity insert')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
+  [/if]
+  [/for]
+
+      int  [apply_variableDefault('hash code entity insert')/] = [apply_variableDefault('hash code builder entity insert')/].toHashCode();
+      HashCodeBuilder [apply_variableDefault('hash code builder entity read')/] = new HashCodeBuilder();
+
+  [for (a : Attribute | e.attributesNoPk())]
+	 [if not a.genPropertyType().equalsIgnoreCase('Binary')]
+      [apply_variableDefault('hash code builder entity read')/].append([apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(a))/]());
+     [/if] 
+ [/for]
+ [for (a : Attribute | e.getInheritDtoAttributes())]
+      [if not a.genPropertyType().equalsIgnoreCase('Binary')]
+      [apply_variableDefault('hash code builder entity read')/].append([apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(a))/]());
+      [/if]
+  [/for]
+  [if hasAutomaticColumns()]
+  [for (columnProp : String | get_automaticColumnsProperties())]
+      [e.apply_variableDefault('hash code builder entity read')/].append([e.apply_variableDefault('entity read')/].[e.apply_methodGet(e.get_nameColumn(columnProp).toLower())/]()[e.completeXtopSupValue(columnProp)/]);
+  [/for]
+  [/if]
+ [for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if (r.containingType.oclAsType(entity::Entity) = e)]
+      [apply_variableDefault('hash code builder entity read')/].append([apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(r))/]());
+  [/if]
+  [/for]
+  [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if r.oppositeOf.oclIsUndefined()]
+      [apply_variableDefault('hash code builder entity read')/].append([apply_variableDefault('entity read')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
+  [/if]
+  [/for]
+
+      int  [apply_variableDefault('hash code entity read')/] = [apply_variableDefault('hash code builder entity read')/].toHashCode();
+      EqualsBuilder [apply_variableDefault('equals builder')/] = new EqualsBuilder();
+
+  [for (a : Attribute | e.attributesNoPk())]
+     [if not a.genPropertyType().equalsIgnoreCase('Binary')]
+      [apply_variableDefault('equals builder')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(a))/](), [apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(a))/]());
+     [/if]
+  [/for]
+ [for (a : Attribute | e.getInheritDtoAttributes())]
+      [if not a.genPropertyType().equalsIgnoreCase('Binary')]
+      [apply_variableDefault('equals builder')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(a))/](), [apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(a))/]());
+      [/if]
+  [/for]
+  [if hasAutomaticColumns()]
+  [for (columnProp : String | get_automaticColumnsProperties())]
+      [e.apply_variableDefault('equals builder')/].append([e.apply_variableDefault('entity insert')/].[e.apply_methodGet(e.get_nameColumn(columnProp).toLower())/]()[e.completeXtopSupValue(columnProp)/], [e.apply_variableDefault('entity read')/].[e.apply_methodGet(e.get_nameColumn(columnProp).toLower())/]()[e.completeXtopSupValue(columnProp)/]);
+  [/for]
+  [/if]
+ [for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if (r.containingType.oclAsType(entity::Entity) = e)]
+      [apply_variableDefault('equals builder')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(r))/](), [e.apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(r))/]());
+  [/if]
+  [/for]
+  [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+  [if r.oppositeOf.oclIsUndefined()]
+      [apply_variableDefault('equals builder')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/](), [apply_variableDefault('entity read')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
+  [/if]
+  [/for]
+
+      assertEquals([apply_variableDefault('hash code entity insert')/],[apply_variableDefault('hash code entity read')/]);
+      assertTrue([apply_variableDefault('equals builder')/].isEquals());
+
+  [for (a : Attribute | e.attributesNoPk())]
+     [if a.genPropertyType().equalsIgnoreCase('Binary')]
+      byte ['[]'/][apply_variableDefault('entity insert byte ' + a.name)/] = [apply_variableDefault('entity insert')/].[apply_methodGet(nameSimpleProperty(a))/]().toByteArray();
+      Blob [apply_variableDefault('entity read ' + a.name)/] = [apply_variableDefault('entity read')/].[apply_methodGet(nameSimpleProperty(a))/]().getBlobSql();
+      byte ['[]'/][apply_variableDefault('entity read byte ' + a.name)/] = [apply_variableDefault('entity read ' + a.name)/].getBytes(1, (int)[apply_variableDefault('entity read ' + a.name)/].length());
+      assertTrue(Arrays.equals([apply_variableDefault('entity insert byte ' + a.name)/], [apply_variableDefault('entity read byte ' + a.name)/]));
+     [/if]
+  [/for]
+      // [/protected]
+   }
+
+[/if]
+   /**
+    * Test de recherche par colonne.
+[if not referentiel]
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+[/if]
+    */
+   @Test
+   public void [apply_methodDefault('test find by column')/] ()[if not referentiel] throws Throwable[/if]
+   {
+[if referentiel]
+      // effectuer le findAll avant le findById pour assurer que crudId soit rempli
+      if ([apply_attributeStatic('crud id')/] == null)
+      {
+         [apply_methodDefault('test find all')/]();
+      }
+[else]
+      [apply_methodDefault('test create')/]();
+
+[/if]
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableDefault('entitys')/] = [apply_attributeStatic('dao')/].findByColumn([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/], crudId);
+      assertEquals(1, [apply_variableDefault('entitys')/].size(), "Il ne devrait exister qu'une entity");
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_variableDefault('entitys')/].get(0);
+      assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
+
+      // findByColumn assertions
+      // [protected (e.getUserCodeId('findByColumn assertions'))]
+
+      // [/protected]
+   }
+
+   /**
+    * Test de recherche par critere.
+[if not referentiel]
+    * @throws Throwable
+    *            si erreur de recherche de l'entity.
+[/if]
+    */
+   @Test
+   public void [apply_methodDefault('test find by criteria')/] ()[if not referentiel] throws Throwable[/if]
+   {
+[if referentiel]
+      // effectuer le findAll avant le findById pour assurer que crudId soit rempli
+      if ([apply_attributeStatic('crud id')/] == null)
+      {
+         [apply_methodDefault('test find all')/]();
+      }
+[else]
+      [apply_methodDefault('test create')/]();
+
+[/if]
+      final TableCriteria<[buildEntityColumnEnumName(e)/]> [apply_variableFinal('table')/] = new TableCriteria<>(
+               "Test 'find by criteria' en cherchant sur l'id");
+      [apply_variableFinal('table')/].addCriteria([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/], Operator_Enum.equals, [apply_attributeStatic('crud id')/]);
+      [apply_variableFinal('table')/].addOrderByDesc([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/]);
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableDefault('entitys')/] = [apply_attributeStatic('dao')/].findByCriteria([apply_variableFinal('table')/]);
+      assertEquals(1, [apply_variableDefault('entitys')/].size(), "Il ne devrait exister qu'une entity");
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_variableDefault('entitys')/].get(0);
+      assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
+
+      // findByCriteria assertions
+      // [protected (e.getUserCodeId('findByCriteria assertions'))]
+
+      // [/protected]
+   }
+
+[if not referentiel]
+   /**
+    * Test de mise a jour de l'entity.
+    * @throws Throwable
+    *            si erreur de mise a jour de l'entity.
+    */
+   @Test
+   public void [apply_methodDefault('test update')/] () throws Throwable
+   {
+      [apply_methodDefault('test create')/]();
+
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('dao')/].findById(crudId);
+
+      // update
+      // [protected (e.getUserCodeId('update'))]
+
+      // [/protected]
+
+      [apply_attributeStatic('dao')/].update([apply_variableDefault('entity')/]);
+
+      assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity mise a jour devrait avoir une cle primaire renseignee");
+
+      // update assertions
+      // [protected (e.getUserCodeId('update assertions'))]
+
+      // [/protected]
+   }
+
+   /**
+    * Test de suppression de l'entity.
+    * @throws Throwable
+    *            si erreur de creation de l'entity.
+    */
+   @Test
+   public void [apply_methodDefault('test delete')/] () throws Throwable
+   {
+      [apply_methodDefault('test create')/]();
+
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('dao')/].findById(crudId);
+
+      [apply_attributeStatic('dao')/].delete([apply_variableDefault('entity')/]);
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('dao')/].findAll();
+      assertNull(EntityUtil.findInCollectionById([apply_variableFinal('all')/], crudId), 
+			"L'entity ne devrait plus exister dans la liste de toutes les entitys");
+
+      // delete assertions
+      // [protected (e.getUserCodeId('delete assertions'))]
+
+      // [/protected]
+   }
+
+[/if]
+[/if]
+   /**
+    * Test de l'enumeration des colonnes de l'entity.
+    */
+   @Test
+   public void [apply_methodDefault('test columns')/] ()
+   {
+      for (final [buildEntityColumnEnumName(e)/] [apply_variableFinal('column')/] : [buildEntityColumnEnumName(e)/].values())
+      {
+         assertNotNull([apply_variableFinal('column')/].toString(), "name");
+         assertNotNull([apply_variableFinal('column')/].getLogicalColumnName(), "logicalColumnName");
+         assertNotNull([apply_variableFinal('column')/].getCompletePhysicalName(), "completePhysicalName");
+         assertNotNull([apply_variableFinal('column')/].getSize(), "size");
+         assertNotNull([apply_variableFinal('column')/].getTypeColumn(), "typeColumn");
+         assertNotNull([apply_variableFinal('column')/].isMandatory(), "mandatory");
+         assertNotNull([apply_variableFinal('column')/].isId(), "id");
+      }
+   }
+
+   /**
+    * Test de validation d'une entity.
+    */
+   @Test
+   public void [apply_methodDefault('test validate')/] ()
+   {
+      // generation des champs
+[if hasAutomaticColumns()]
+[comment : optionnal additional fields. /]
+[for (columnProp : String | get_automaticColumnsProperties())]
+      final [e.get_typeColumn(columnProp)/] [e.apply_variableFinal(e.get_nameColumn(columnProp).toLower())/] = getRandom[e.get_typeColumn(columnProp)/]([if isTypeAcceptSize(e.get_typeColumn(columnProp))][e.get_sizeColumn(columnProp)/][/if]);
+[/for][/if]
+[comment : all attributs and references. /]
+[for (a : Attribute | e.attributesNoPk())]
+    [if (not a.isComputed())]
+      final [a.genPropertyType()/] [apply_variableFinal(nameSimpleProperty(a))/] = [if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]")[else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.atributeHasSize() and isTypeAcceptSize(a.type.name)][e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize()[/if])[/if];
+    [/if]
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+    [if (not a.isComputed())]
+      final [a.genPropertyType()/] [apply_variableFinal(nameSimpleProperty(a))/] = [if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]")[else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.atributeHasSize() and isTypeAcceptSize(a.type.name)][e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize()[/if])[/if];
+    [/if]
+[/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.containingType.oclAsType(entity::Entity) = e)]
+    [if (not r.isComputed())]
+      final [genPkType()/] [apply_variableFinal(nameSimpleProperty(r))/] = getRandom[genPkType()/]();
+    [/if]
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.oppositeOf.oclIsUndefined())]
+    [if (not r.isComputed())]
+      final [genPkType()/] [apply_variableFinal(nameSimplePropertyInverse(r))/] = getRandom[genPkType()/]();
+    [/if]
+[/if]
+[/for]
+
+      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
+      [apply_methodDefault('validate')/]([apply_variableDefault('entity')/]);
+[if hasAutomaticColumns()]
+[for (columnProp : String | e.get_automaticColumnsProperties())]
+      [e.apply_variableDefault('entity')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]([e.apply_variableFinal(e.get_nameColumn(columnProp).toLower())/]);
+      [e.apply_methodDefault('validate')/]([e.apply_variableDefault('entity')/]);
+[/for][/if]
+[for (a : Attribute | e.attributesNoPk())]
+    [if (not a.isComputed())]
+      [apply_variableDefault('entity')/].[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]setIdentifiant[else][e.apply_methodSet(nameSimpleProperty(a))/][/if]([apply_variableFinal(nameSimpleProperty(a))/]);
+      [apply_methodDefault('validate')/]([apply_variableDefault('entity')/]);
+    [/if]
+[/for]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+    [if (not a.isComputed())]
+      [apply_variableDefault('entity')/].[e.apply_methodSet(nameSimpleProperty(a))/]([apply_variableFinal(nameSimpleProperty(a))/]);
+      [apply_methodDefault('validate')/]([apply_variableDefault('entity')/]);
+    [/if]
+[/for]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.containingType.oclAsType(entity::Entity) = e)]
+    [if (not r.isComputed())]
+      [apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(r))/]([apply_variableFinal(nameSimpleProperty(r))/]);
+      [apply_methodDefault('validate')/]([apply_variableDefault('entity')/]);
+    [/if]
+[/if]
+[/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.oppositeOf.oclIsUndefined())]
+    [if (not r.isComputed())]
+      [apply_variableDefault('entity')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/]([apply_variableFinal(nameSimplePropertyInverse(r))/]);
+      [apply_methodDefault('validate')/]([apply_variableDefault('entity')/]);
+    [/if]
+[/if]
+[/for]
+
+      // test validate
+      // [protected (e.getUserCodeId('test validate'))]
+
+      // [/protected]
+
+      // derniere validation avec entity valide
+      try
+      {
+         [apply_variableDefault('entity')/].validate();
+      }
+      catch (final Spi4jValidationException [apply_variableFinal('e')/])
+      {
+         fail([apply_variableFinal('e')/].toString());
+      }
+   }
+
+   /**
+    * Validation de l'entity.
+    * @param [apply_parameterMethodClassicIn('entity')/]
+    *           l'entity a valider
+    */
+   private void [apply_methodDefault('validate')/] (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/])
+   {
+      try
+      {
+         [apply_parameterMethodClassicIn('entity')/].validate();
+      }
+      catch (final Spi4jValidationException [apply_variableFinal('e')/])
+      {
+         assertTrue([apply_variableFinal('e')/].getMessage().startsWith("Champ(s)"), "Message incorrect");
+      }
+   }
+
+   /**
+    * Methode de fin de test : rollback.
+    */
+   @AfterEach
+   public void [apply_methodDefault('tear down')/] ()
+   {
+      [apply_attributeStatic('user persistence')/].rollback();
+
+      // tear down
+      // [protected (e.getUserCodeId('tear down'))]
+      // [/protected]
+   }
+
+[for (a : Attribute | e.attributesNoPk())]
+    [if ((not isStandardType(a.type.name)) and (not a.type.oclIsKindOf(Enumeration)))]
+   /**
+    * getRandom[genPropertyTypeNoGenerics(a)/]
+    */
+   private [a.type.name.toUpperFirst()/] getRandom[genPropertyTypeNoGenerics(a)/] ()
+   {
+      // getRandom_[a.type.name.toUpperFirst()/]
+      // [protected (a.getUserCodeId('getRandom_'+a.type.name.toUpperFirst()))]
+
+      return [if ((a.type.name <> null) and (a.type.name.contains('<')))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
+
+      // [/protected]
+
+   }
+    [/if]
+[/for]
+
+   // specific service test
+   // [protected (e.getUserCodeId('specific service test'))]
+
+   // [/protected]
+
+}
+[/template]
+
+[template private completeTestCreateMethod (e : Entity) post (trim())]
+[for (a : Attribute | e.getInheritDtoAttributes())]
+[if (not a.isComputed())]
+[apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(a))/]([if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]")[else][defaultValueForColumnType(a.genPropertyType())/][/if]);
+[/if][/for]
+[if hasAutomaticColumns()]
+[for (columnProp : String | get_automaticColumnsProperties())]
+[e.apply_variableDefault('entity')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]([defaultValueForColumnType(e.get_typeColumn(columnProp))/]);
+[/for][/if]
+[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if (r.containingType.oclAsType(entity::Entity) = e)]
+[if (not r.isComputed())]
+[apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(r))/](1L);
+[/if][/if][/for]
+[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
+[if r.oppositeOf.oclIsUndefined()]
+[if (not r.isComputed())]
+[apply_variableDefault('entity')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/](1L);
+[/if][/if][/for]
+[/template]
+
+[template private finalizeTestCreateMethod (e : Entity, s : String) post (trim())]
+[apply_attributeStatic('dao')/].create([apply_variableDefault(s)/]);
+[apply_methodDefault('set crud id')/]([apply_variableDefault(s)/].getId());
+[/template]
+
+[template private defaultValueForColumnType(type : String)]
+[if type.equalsIgnoreCase('String')]
+"t"[elseif type.equalsIgnoreCase('Boolean')]
+false[elseif type.equalsIgnoreCase('Integer')]
+1[elseif type.equalsIgnoreCase('XtopSup')]
+new XtopSup(DatabaseLineStatus_Enum.active)[elseif type.equalsIgnoreCase('Long')]
+1L[elseif type.equalsIgnoreCase('Float')]
+1F[elseif type.equalsIgnoreCase('Double')]
+1D[elseif type.equalsIgnoreCase('Date')]
+new Date()[elseif type.equalsIgnoreCase('Char')]
+'t'[elseif type.equalsIgnoreCase('Binary')]
+getRandomBinary()[elseif type.equalsIgnoreCase('Timestamp')]
+new Timestamp(1L)[elseif type.equalsIgnoreCase('Time')]
+new Time(1L)[else]"Type non reconnu : "[type/]![/if]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports (e : Entity, referentiel : Boolean) post(trim())]
+[e.initImports()/]
+[e.addImport('java.util.List')/]
+[e.addImport('java.util.Date')/]
+[e.addImport('org.apache.commons.lang3.builder.EqualsBuilder')/]
+[e.addImport('org.apache.commons.lang3.builder.HashCodeBuilder')/]
+[e.addImport('org.junit.jupiter.api.AfterEach')/]
+[e.addImport('org.junit.jupiter.api.BeforeAll')/]
+[e.addImport('org.junit.jupiter.api.BeforeEach')/]
+[e.addImport('org.junit.jupiter.api.Test')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertEquals')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.assertTrue')/]
+[e.addImport('static org.junit.jupiter.api.Assertions.fail')/]
+[e.addImport(buildPackagePersistence() + '.' + buildParamPersistenceClassName())/]
+[e.addImport(buildPackagePersistence() + '.' + buildUserPersistenceAppClassName())/]
+[e.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+[e.addImport('fr.spi4j.persistence.dao.Operator_Enum')/]
+[e.addImport('fr.spi4j.persistence.dao.TableCriteria')/]
+[e.addImport(getImportForBeanTester_Abs())/]
+[e.addImport('fr.spi4j.type.XtopSup')/]
+
+[if not referentiel]
+	[e.addImport('fr.spi4j.persistence.entity.EntityUtil')/]
+[/if]
+
+[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
+	[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
+[/for]
+[e.flushImports()/]
+[/template]
+
+[comment : 10/03/2021 correctif temporaire pour les champs additionnels. /]
+[query private isTypeAcceptSize (t : String) : Boolean = 
+	 t.equalsIgnoreCase('String') or t.equalsIgnoreCase('Integer') or t.equalsIgnoreCase('Long')
+/]
+

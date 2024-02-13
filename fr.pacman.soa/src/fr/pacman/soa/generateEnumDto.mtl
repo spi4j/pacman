@@ -1,0 +1,24 @@
+[comment encoding = UTF-8 /]
+[module generateEnumDto('http://www.obeonetwork.org/dsl/soa/4.0.0',
+						'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::types::genEnum /]
+
+[comment : ****************************************************************/]
+[comment : En OCL on a toujours pris une seule lettre pour les parametres. /]
+[comment : pour eviter de confondre avec les services, System = m.         /]
+[comment : ****************************************************************/]
+[comment : Generation complete a partir du systeme.                        /]
+[comment : ****************************************************************/]
+[template public generateEnumDto(m : System)]
+[comment @main /]
+
+[comment : agglomération des mains /]
+
+[for (enum: Enumeration | m.eAllContents(Enumeration))]
+[genEnum(enum)/]
+[/for]
+
+[/template]
+
+

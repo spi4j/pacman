@@ -1,0 +1,332 @@
+[comment encoding = UTF-8 /]
+[module attributes('http://www.obeonetwork.org/dsl/entity/3.0.0',
+                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[*********************
+ * Paramétrage Début
+*/]
+
+[template public getProperty(a : Attribute) post (trim())]
+private [a.getTypeAndName()/]
+[/template]
+
+[template public getProperty(r : Reference) post (trim())]
+private [getTypeAndName(r)/]
+[/template]
+
+[template public getPropertyInverse(r : Reference) post (trim())]
+private [getTypeAndNameInverse(r)/]
+[/template]
+
+[template public getTypeAndName(a : Attribute) post (trim())]
+[a.genPropertyType()/] [apply_attributeDefault(a.nameSimpleProperty())/]
+[/template]
+
+[template public getTypeAndName(r : Reference) post (trim())]
+[r.genPropertyType()/] [apply_attributeDefault(r.nameSimpleProperty())/]
+[/template]
+
+[template public getTypeAndNameInverse(r : Reference) post (trim())]
+[r.genPropertyType()/] [apply_attributeDefault(r.nameSimplePropertyInverse())/][namePK_ID()/]
+[/template]
+
+[template public getRefListe(r : Reference)]
+private List<[r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/]> [apply_attributeMultiple(r.name.toLowerFirst())/];
+[/template]
+
+
+[*********************
+ * Paramétrage fin
+*/]
+
+[template public genPropertyTypeOrPK(a : Attribute)]
+[if (a.isIdentifier)]
+[genPkType()/]
+[elseif (a.type.oclIsInvalid() or a.type.oclIsUndefined())]
+String
+[else][a.type.genTypeName()/][/if]
+[/template]
+
+[template public genPropertyType(a : Attribute) post (trim())]
+[if (isMultiple(a))]
+List<[genPropertyTypeOrPK(a)/]>
+[else][genPropertyTypeOrPK(a)/]
+[/if]
+[/template]
+
+[template public genPropertyTypeNoGenerics(a : Attribute) post (trim())]
+[genPropertyType(a)/]
+[/template]
+
+[comment] la multiplicité n'est pas gérée car les ref* sont des ref qui pointent vers l'entité [/comment]
+[template public genPropertyType(r : Reference) post (trim())]
+[genFkType()/]
+[/template]
+
+[template public mandatory(p : Property)]
+[if (isMandatory(p))]true[else]false[/if]
+[/template]
+
+[template public genTypeName(t : Type)]
+[if t.oclIsKindOf(Enumeration)]
+[apply_classEnum(t.name)/][else][t.name.sanitize()/][/if]
+[/template]
+
+[comment : Placé ici car concerne la récupération de l'attribut xtopsup. /]
+[template public completeXtopSupValue (e : Entity, columnProp : String)]
+[if 'xtopsup'.equalsIgnoreCase(e.get_nameColumn(columnProp))].get_value()[/if]
+[/template]
+
+[comment] les attributs d'une entité qui ne sont pas des clé primaires [/comment]
+[query public attributesNoPk(e : Entity) : OrderedSet(Attribute) =
+    e.attributes->select(a : environment::Attribute | not a.isIdentifier and not a.isComputed())->asOrderedSet()
+/]
+
+[comment] les attributs d'une entité qui ne sont pas des clé primaires [/comment]
+[query public attributesIncludingComputedNoPk(e : Entity) : OrderedSet(Attribute) =
+    e.attributes->select(a : environment::Attribute | not a.isIdentifier)->asOrderedSet()
+/]
+
+[comment] les attributs d'une entité qui ne sont pas des clé primaires [/comment]
+[query public attributes(e : Entity) : OrderedSet(Attribute) =
+    e.attributes->asOrderedSet()
+/]
+
+[query public attributesNoPkNoVersion(e : Entity) : OrderedSet(Attribute) =
+    e.attributes->select(a : Attribute | not a.isIdentifier and not a.isVersion())->asOrderedSet()
+/]
+
+[comment] les références d'une entité sans multiplicité et les références multiple vers cette entité [/comment]
+[query public referencesNoStarAndReferencingStar(e : Entity) : OrderedSet(Reference) =
+    e.referencesNoStar()->union(e.referencingStar())->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références d'une entité sans multiplicité et les références multiple vers cette entité , navigables ou non[/comment]
+[query public referencesNoStarAndReferencingStarAllNavigability(e : Entity) : OrderedSet(Reference) =
+    e.referencesNoStarAllNavigability()->union(e.referencingStarAllNavigability())->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références d'une entité sans multiplicité et les références multiple vers cette entité , navigables ou non, pour une entité fk donnée[/comment]
+[query public referencesNoStarAndReferencingStarAllNavigability(e : Entity, entFk : Entity) : OrderedSet(Reference) =
+    referencesNoStarAllNavigability(e, entFk)->union(referencingStarAllNavigability(e, entFk))->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références d'une entité sans multiplicité [/comment]
+[query public referencesNoStar(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | not isMultiple(r) and r.navigable)
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références d'une entité sans multiplicité [/comment]
+[query public referencesNoStarAllNavigability(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | not isMultiple(r))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références d'une entité sans multiplicité, pour une entité référencée donnée [/comment]
+[query public referencesNoStarAllNavigability(e : Entity, entReferencee : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | not isMultiple(r) and  r.referencedType.oclAsType(entity::Entity) = entReferencee)
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références d'une entité avec multiplicité Navigable[/comment]
+[query public referencesStar(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | isMultiple(r) and r.navigable)
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références avec multiplicité vers une entité [/comment]
+[query public referencingStar(e : Entity) : OrderedSet(Reference) =
+if (e.eContainer(Root).oclIsUndefined()) then
+    Sequence{}->asOrderedSet()
+else
+    e.eContainer(Root).eAllContents(Reference)
+            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and r.navigable and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()))
+    ->asOrderedSet()->sortedBy(name.toLower())
+endif
+/]
+
+[comment] les références avec multiplicité vers une entité [/comment]
+[query public referencingStarAllNavigability(e : Entity, entReferencante : Entity) : OrderedSet(Reference) =
+if (e.eContainer(Root).oclIsUndefined()) then
+    Sequence{}->asOrderedSet()
+else
+    e.eContainer(Root).eAllContents(Reference)
+            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and (r.containingType = entReferencante) and (r.oppositeOf.oclIsUndefined()))
+    ->asOrderedSet()->sortedBy(name.toLower())
+endif
+/]
+
+[comment] les références avec multiplicité vers une entité [/comment]
+[query public referencingStarAllNavigability(e : Entity) : OrderedSet(Reference) =
+if (e.eContainer(Root).oclIsUndefined()) then
+    Sequence{}->asOrderedSet()
+else
+    e.eContainer(Root).eAllContents(Reference)
+            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()))
+    ->asOrderedSet()->sortedBy(name.toLower())
+endif
+/]
+
+
+[query public referencesStarStar(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+[comment] les références sans multiplicité vers une entité et naviagagle pour le génération sans match[/comment]
+[query public referencesStarStarNotMulti(e : Entity) : OrderedSet(Reference) =
+    e.ownedReferences->select(r : Reference | not isMultiple(r) and r.navigable)
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment] les références avec multiplicité vers une entité et naviagagle pour le génération sans match[/comment]
+[query public referencesStarStarMulti(e : Entity) : OrderedSet(Reference) =
+    e.ownedReferences->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined())
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query public referencesStarStarOwned(e : Entity) : OrderedSet(Reference) =
+    e.ownedReferences->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query private referencesStarStarAllNavigability(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | isMultiple(r) and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query public referencingStarStar(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | isMultiple(r) and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple() and r.oppositeOf.navigable)
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query public referencesStarNoStar(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | isMultiple(r) and r.navigable and not (not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple()))
+    ->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[query public hasMandatoryFields(e : Entity) : Boolean =
+    e.attributesNoPk()->exists(a : Attribute | isMandatory(a)) or e.referencesNoStarAndReferencingStar()->exists(r : Reference | isMandatory(r))
+/]
+
+[query public hasMandatoryFieldsForDaoTest(e : Entity) : Boolean =
+	e.attributesNoPk()->exists(a : Attribute | isMandatory(a))
+/]
+
+[query public hasNullFields(e : Entity) : Boolean = 
+    e.attributesNoPk()->exists(a : Attribute | not isMandatory(a))
+/]
+
+[query public hasStringFieldWithSize(e : Entity) : Boolean =
+    e.attributesNoPk()->exists(a : Attribute | atributeHasSize(a))
+/]
+
+[query public hasEnumImport(e : Entity) : Boolean =
+    e.attributesNoPk()->exists(a : Attribute | hasSize(a.metadatas) and a.type.name = 'String')
+/]
+
+[comment] est ce que l entite a des références avec multiplicité la referencant [/comment]
+[query public hasReferencingStar(e : Entity) : Boolean =
+if (e.eContainer(Root).oclIsUndefined()) then
+    false
+else
+    e.eContainer(Root).eAllContents(Reference)
+            ->exists(r : Reference | isMultiple(r) and (r.referencedType = e) and r.navigable and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()))
+endif
+/]
+
+[comment] est ce que l entite a des références * * [/comment]
+[query public hasReferencesStarStar(e : Entity) : Boolean =
+    e.references
+            ->exists(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())
+/]
+
+[comment]Retourne true si la propriété possède une taille[/comment]
+[query public atributeHasSize(p : Property) : Boolean =
+    if (p.metadatas <> null) then
+        hasSize(p.metadatas)
+    else
+        false
+    endif
+/]
+
+[query public getInheritDtoAttributes(e : Entity) : OrderedSet(Attribute) =
+    invoke('fr.pacman.commons.services.EntityFromDtoUtils', 'getAttributes(org.obeonetwork.dsl.entity.Entity)', Sequence{e})
+/]
+
+[query public isReferenceNoStar(e : Entity, r : Reference) : Boolean =
+    e.references->includes(r) and not r.isMultiple() and r.navigable
+/]
+
+[query public isReferenceStar(e : Entity, r : Reference) : Boolean =
+    e.references->includes(r) and r.isMultiple() and r.navigable
+/]
+
+[query public isReferencingStar(e : Entity, r : Reference) : Boolean =
+    r.isMultiple() and r.referencedType = e and r.navigable
+/]
+
+[query public isComputed(p : Property) : Boolean =
+    not p.metadatas.oclIsUndefined()
+    and p.metadatas.metadatas->
+        exists(m : MetaData |
+            not m.oclIsUndefined()
+            and not m.oclAsType(Annotation).title.oclIsUndefined()
+            and m.oclAsType(Annotation).title.equalsIgnoreCase('COMPUTED'))
+/]
+
+[query public navigableProperties1(e : Entity) : OrderedSet(Property) =
+    e.attributesNoPk()->union(
+        e.references->select(r : Reference | r.navigable)->union(e.referencingStar())->asOrderedSet()->sortedBy(name.toLower())
+    )->asOrderedSet()
+/]
+ 
+[query public navigableProperties(e : Entity) : OrderedSet(Property) =
+    e.attributesNoPk()->union(
+    e.ownedReferences->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined()))->union(e.ownedReferences->select(r : Reference | not isMultiple(r) and r.navigable))->asOrderedSet()->sortedBy(name.toLower()
+    )->asOrderedSet()
+/]
+
+[comment] Renvoie sous la forme d'un OrderedSet la liste des attributs d'une Entity qui possèdent une méta-donnée Annotation de titre "COMPUTED". [/comment]
+[query public attributesNotComputed(e : Entity) : OrderedSet(Attribute) =
+    (e.getAttributes()->select(a : Attribute | not a.isComputed())->asOrderedSet())
+/]
+
+[query public getAttributes(e : Entity) : OrderedSet(Attribute) =
+    invoke('fr.pacman.commons.services.EntityFromDtoUtils', 'getAttributes(org.obeonetwork.dsl.environment.Entity)', Sequence{e})
+/]
+
+[comment] les entites referencees ou referencantes [/comment]
+[query public entitiesReferencedOrReferencing( e : Entity) : OrderedSet(Entity) =
+    (   (e.referencesNoStarAllNavigability()).referencedType.oclAsType(Entity)->union(
+           (e.referencingStarAllNavigability()).containingType.oclAsType(Entity)
+        )
+     )->asOrderedSet()
+/]
+
+[query public isTypeOfEnumeration(a: Attribute) : Boolean = 
+	(a.type.oclIsTypeOf(Enumeration) and not a.type.oclAsType(Enumeration)->isEmpty())
+/]
+
+[comment : Retourne la taille de l'attribut selon que cela soit une énumération ou un primitif/]
+[query public attributeSize(a : Attribute) : String = 
+	if (isTypeOfEnumeration(a)) then
+		invoke('fr.pacman.commons.services.EnumerationUtils', 
+		'getMaxSqlSizeForEnumeration(org.obeonetwork.dsl.environment.Enumeration)', Sequence{a.type.oclAsType(Enumeration)})
+	else
+		size(a.metadatas)
+	endif
+/]

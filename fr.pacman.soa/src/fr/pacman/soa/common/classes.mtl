@@ -1,0 +1,199 @@
+[comment encoding = UTF-8 /]
+[module classes('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[*******************
+ * Paramétrage début
+*/]
+
+[query public buildSecurityWebAppHelperName(any : OclAny) : String =
+apply_classDefault(getApplicationNameUpperFirst() + ' security web app helper')
+/]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildEntityColumnEnumName(d : DTO) : String =
+apply_classEnum(buildSimpleDtoName(d) + ' columns')
+ /]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildEntityInterfaceName(d : DTO) : String =
+apply_classInterface(buildSimpleDtoName(d) + ' entity')
+ /]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildEntityName(d : DTO) : String =
+apply_classDefault(buildSimpleDtoName(d) + ' entity')
+ /]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildEntityClassName(d : DTO) : String =
+apply_classImplem(buildSimpleDtoName(d) + ' entity')
+ /]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildDaoInterfaceName(d : DTO) : String =
+apply_classInterface(buildSimpleDtoName(d) + ' dao')
+ /]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildDaoName(d : DTO) : String =
+apply_classDefault(buildSimpleDtoName(d) + ' dao')
+ /]
+
+[comment  utilisé dans le matching 1 pour 1/]
+[query public buildDaoClassName(d : DTO) : String =
+apply_classImplem(buildSimpleDtoName(d) + ' dao')
+ /]
+
+[query public buildAppliMatchAbstractName(any : OclAny) : String =
+apply_classAbstract(getApplicationName() + ' match')
+ /]
+
+[query public buildAppliMatchName(d : DTO) : String =
+apply_classDefault(buildSimpleDtoName(d) + ' match')
+ /]
+
+[query public buildAppliMatchClassName(d : DTO) : String =
+apply_classImplem(buildSimpleDtoName(d) + ' match')
+ /]
+
+[query public buildAppliMatchInterfaceName(d : DTO) : String =
+apply_classInterface(buildSimpleDtoName(d) + ' match')
+ /]
+
+[query public buildServiceName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classDefault(buildSimpleServiceName(s) + ' service')
+ else d.apply_classDefault(buildSimpleDtoName(d) + ' service')
+ endif
+ /]
+
+[query public buildServiceName(d : DTO) : String =
+ d.apply_classDefault(buildSimpleDtoName(d) + ' service')
+ /]
+
+[query public buildServiceClassName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classImplem(buildSimpleServiceName(s) + ' service')
+ else d.apply_classImplem(buildSimpleDtoName(d) + ' service')
+ endif
+ /]
+
+[query public buildServiceClassName(d : DTO) : String =
+ d.apply_classImplem(buildSimpleDtoName(d) + ' service')
+ /]
+
+[query public buildServiceFacadeCXFClassName(s : Service) : String =
+apply_classImplem(buildSimpleServiceName(s) + ' service CXF facade')
+ /]
+
+[query public buildServiceFacadeCXFInterfaceName(s : Service) : String =
+apply_classInterface(buildSimpleServiceName(s) + ' service CXF facade')
+ /]
+
+[query public buildServiceInterfaceName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classInterface(buildSimpleServiceName(s) + ' service')
+ else d.apply_classInterface(buildSimpleDtoName(d) + ' service')
+ endif
+ /]
+
+[query public buildServiceRequirementsClassName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classDefault(buildSimpleServiceName(s) + ' service requirements')
+ else d.apply_classDefault(buildSimpleDtoName(d) + ' service requirements')
+ endif
+ /]
+
+[query public buildServiceGwtInterfaceName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classDefault(buildSimpleServiceName(s) + ' gwt service')
+ else d.apply_classDefault(buildSimpleDtoName(d) + ' gwt service')
+ endif
+ /]
+
+[query public buildServiceGwtImplementationName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classDefault(buildSimpleServiceName(s) + ' gwt service impl')
+ else d.apply_classDefault(buildSimpleDtoName(d) + ' gwt service impl')
+ endif
+ /]
+
+[query public buildServiceGwtAsyncClassName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classDefault(buildSimpleServiceName(s) + ' gwt service async')
+ else d.apply_classDefault(buildSimpleDtoName(d) + ' gwt service async')
+ endif
+ /]
+
+[query public buildServiceTestClassName(s : Service, d : DTO) : String =
+ if (not s.oclIsUndefined()) then s.apply_classTest(buildSimpleServiceName(s) + ' service')
+ else d.apply_classTest(buildSimpleDtoName(d) + ' service')
+ endif
+ /]
+
+[template public buildService(s : Service, d : DTO)]
+[if not s.oclIsUndefined()]
+[buildSimpleServiceName(s)/][else]
+[if not d.oclIsUndefined()]
+[buildSimpleDtoName(d)/][else]
+NAME NOT FOUND FOR SERVICE AND DTO NULL[/if]
+[/if]
+[/template]
+
+[query public buildUserMatchingGenClassName(any : OclAny) : String =
+apply_classDefault(getApplicationName() + ' user matching')
+ /]
+
+[query public buildAppliUserMapperGenClassName(any : OclAny) : String =
+apply_classDefault(getApplicationName() + ' user mapper')
+ /]
+
+[query public buildAppliPermissionsInterfaceName(any : OclAny) : String =
+apply_classInterface(getApplicationName() + ' permissions')
+ /]
+
+[query public buildDtoTestClassName(d : DTO) : String =
+apply_classTest(buildSimpleDtoName(d) + ' dto')
+ /]
+
+[query public buildMapperClassName(d : DTO) : String =
+apply_classImplem(buildSimpleDtoName(d) + ' mapper')
+ /]
+
+[query public buildMapperInterfaceName(d : DTO) : String =
+apply_classInterface(buildSimpleDtoName(d) + ' mapper')
+ /]
+
+[query public buildFetchingStrategyClassName(d : DTO) : String =
+apply_classDefault(buildSimpleDtoName(d) + ' fetching strategy')
+ /]
+
+[query public buildFetchingStrategyTestClassName(d : DTO) : String =
+apply_classTest(buildSimpleDtoName(d) + ' fetching strategy')
+ /]
+
+[*******************
+ * Paramétrage fin
+*/]
+
+[query public hasSpecificIdAppli(d : DTO) : Boolean = hasSpecificAnnotation(d, 'IdAppli') /]
+
+[query private hasSpecificAnnotation(d : DTO, annotation : String) : Boolean =
+invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotationBodyRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', Sequence{d, annotation}) <> null
+ /]
+
+[template private specificIdAppli(d : DTO)]
+[specificAnnotation(d, 'idAppli').toUpperFirst()/]
+[/template]
+
+[template public specificOrDefaultIdAppli(d : DTO)]
+[if hasSpecificIdAppli(d)][specificIdAppli(d)/][else][getApplicationName()/][/if]
+[/template]
+
+
+[query private specificAnnotation(d : DTO, annotation : String) : String =
+invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotationBodyRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', Sequence{d, annotation})
+/]
+
+[comment]SOA : Teste si une propriété (attribut ou référence) est obligatoire[/comment]
+[query public isMandatory(p : environment::Property) : Boolean =
+invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatorySoa(org.obeonetwork.dsl.environment.Property)', Sequence{p})
+/]

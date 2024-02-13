@@ -1,0 +1,108 @@
+[comment encoding = UTF-8 /]
+[module serviceGwtImpl('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                       'http://www.obeonetwork.org/dsl/environment/3.0.0',
+						'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::commentaires /]
+[import fr::pacman::soalight::common::attributes /]
+[import fr::pacman::soalight::common::methodes /]
+[import fr::pacman::soalight::common::classes /]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+
+
+[comment] le Service existe sans Entity [/comment]
+
+[template public serviceGwtImpl(s : Service)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else 'PACKAGE NOT FOUND FOR SERVICE' endif]
+package [buildPackageBusinessGwtServerService(s)/];
+
+// [protected ('for imports')]
+
+import fr.spi4j.ui.gwt.server.SpiRemoteServiceImpl;
+import java.util.List;
+import java.util.Date;
+import jakarta.servlet.http.HttpServletRequest;
+import com.google.gwt.user.server.rpc.SerializationPolicy;
+import [buildPackageBusinessApiService(s)/].[buildServiceInterfaceName(s)/];
+import [buildPackageBusinessGwtClientService(s)/].[buildServiceGwtInterfaceName(s)/];
+import [buildPackageBusiness()/].[buildAppliUserBusinessGenClassName()/];
+import [buildPackageMapper()/].[buildAppliUserMapperGenClassName()/];
+
+// [/protected]
+
+/**
+ * Interface de services appelables par le client.
+ * @author [getAuthorName()/]
+ */
+public class [buildServiceGwtImplementationName(s)/] extends SpiRemoteServiceImpl implements [buildServiceGwtInterfaceName(s)/]
+{
+
+   private static final long serialVersionUID = 1L;
+
+   /**
+    * @return le service réel
+    */
+   protected [buildServiceInterfaceName(s)/] getService ()
+   {
+      return [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s))/]();
+   }
+
+	@Override
+   protected SerializationPolicy doGetSerializationPolicy (final HttpServletRequest request,
+            final String moduleBaseURL, final String strongName)
+   {
+      // TODO Auto-generated method stub
+      return super.doGetSerializationPolicy(request, getServletContext().getInitParameter("moduleBaseURL"), strongName);
+   }
+
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[if not s.ownedInterface.ownedOperations->isEmpty()]
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+   // [userCodeForOperation(o)/]
+   // [protected (o.getUserCodeId(userCodeForOperation(o)))]
+   @Override
+   public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/])
+   {
+[if o.paramOutXto() <> 'void']
+      return [if not o.output->first().type.oclIsKindOf(PrimitiveType)]
+[buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + o.output->first().buildMapperClassName())/] ().convert[if isMultiple(o.output->first())]List[/if]EntityTo[if isMultiple(o.output->first())]List[/if]Xto( [buildAppliUserBusinessGenClassName()/].get[nameService(s)/] ().[o.nameOperation()/] ([o.input.parameterWs()->sep(', ') /]));	  
+[else]
+[buildAppliUserBusinessGenClassName()/].get[nameService(s)/] ().[o.nameOperation()/] ([o.input.parameterWs()->sep(', ')/]);
+[/if]
+[else]
+     [buildAppliUserBusinessGenClassName()/].get[nameService(s)/] ().[o.nameOperation()/] ([o.input.parameterWs()->sep(', ') /]);
+[/if]
+   }
+
+   // [/protected]
+
+[/for]
+[/if]
+[/if]
+
+   // [nameServiceInterfaceGwt(s)/]
+   // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s)))]
+
+   // [/protected]
+}[/let]
+[/template]
+
+[template private parametersInXto (p : Parameter)]
+      [apply_parameterMethodClassicIn(p.name)/]
+[/template]
+

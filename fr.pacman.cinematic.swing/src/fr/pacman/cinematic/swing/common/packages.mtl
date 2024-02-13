@@ -1,0 +1,40 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::swing::common::swing-widgets /]
+
+[query public namePackageSwing(any : OclAny) : String =
+    namePackageClient() + '.swing'
+/]
+[query public namePackageMain(any : OclAny) : String =
+    namePackageClient() + '.main'
+/]
+
+[query public namePackageViewContainerImplementation(viewContainer : ViewContainer) : String =
+    namePackageSwing() + packageHierarchy(viewContainer)
+/]
+
+[template public importWidgetsImplementations(widgets : Set(Widget))]
+[for (widget : Widget | widgets)]
+import [getImplementationPackage(widget)/].[getImplementationClassNameForImport(widget)/];
+[/for]
+[/template]
+
+[template public importViewElementsImplementations(viewElements : Set(ViewElement))]
+[importWidgetsImplementations(viewElements.widget->asSet()->orderWidgets())/]
+[importViewElementsDependencies(viewElements, true)/]
+[/template]
+
+[query private orderWidgets(widgets : Set(Widget)) : OrderedSet(Widget) =
+widgets->sortedBy(w : Widget | widgetComparator(w))
+/]
+
+[query private widgetComparator(widget : Widget) : String =
+    if widget.oclIsUndefined() or widget.name.oclIsUndefined() then
+        ''
+    else
+        widget.name
+    endif
+/]

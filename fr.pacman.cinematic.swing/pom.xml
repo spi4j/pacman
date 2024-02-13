@@ -1,0 +1,150 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>fr.pacman</groupId>
+		<artifactId>pacman-parent</artifactId>
+		<version>4.4.0</version>
+	</parent>
+	
+	<artifactId>fr.pacman.cinematic.swing</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<name>fr.pacman.cinematic.swing</name>
+	<description>Projet Pacman Cinematic Swing pour Safr@n.</description>
+
+	<profiles>
+		<!-- Default profile. -->
+		<profile>
+			<id>integration</id>
+			<activation>
+				<activeByDefault />
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.acceleo</groupId>
+						<artifactId>org.eclipse.acceleo.maven</artifactId>
+						<version>${acceleo-version}</version>
+						<configuration>
+							<useBinaryResources>false</useBinaryResources>
+							<usePlatformResourcePath>true</usePlatformResourcePath>
+							<failOnError>true</failOnError>
+							<acceleoProject>
+								<root>${project.basedir}</root>
+								<entries>
+									<entry>
+										<input>src</input>
+										<output>target/classes</output>
+									</entry>
+								</entries>
+								<jars>
+									<jar>fr.pacman:fr.pacman.commons</jar>
+									<jar>fr.pacman:fr.pacman.cinematic.api</jar>
+								</jars>
+							</acceleoProject>
+							<packagesToRegister>
+								<packageToRegister>org.eclipse.ocl.ecore.EcorePackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.cinematic.CinematicPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.entity.EntityPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.environment.EnvironmentPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.overview.OverviewPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.requirement.RequirementPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.soa.SoaPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.graal.GraalPackage</packageToRegister>
+							</packagesToRegister>
+							<uriHandler>org.eclipse.acceleo.maven.AcceleoURIHandler</uriHandler>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Test profile. -->
+		<profile>
+			<id>test</id>
+			<activation>
+				<property>
+					<name>pacman.test</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.acceleo</groupId>
+						<artifactId>org.eclipse.acceleo.maven</artifactId>
+						<version>${acceleo-version}</version>
+						<configuration>
+							<useBinaryResources>false</useBinaryResources>
+							<usePlatformResourcePath>true</usePlatformResourcePath>
+							<failOnError>true</failOnError>
+							<acceleoProject>
+								<root>${project.basedir}</root>
+								<entries>
+									<entry>
+										<input>src</input>
+										<output>target/classes</output>
+									</entry>
+									<entry>
+										<input>test</input>
+										<output>target/test-classes</output>
+									</entry>
+								</entries>
+								<jars>
+									<jar>fr.pacman:fr.pacman.commons</jar>
+									<jar>fr.pacman:fr.pacman.cinematic.api</jar>
+								</jars>
+							</acceleoProject>
+							<packagesToRegister>
+								<packageToRegister>org.obeonetwork.dsl.environment.EnvironmentPackage</packageToRegister>
+								<packageToRegister>org.obeonetwork.dsl.cinematic.CinematicPackage</packageToRegister>
+							</packagesToRegister>
+							<!-- <uriHandler>org.eclipse.acceleo.maven.AcceleoURIHandler</uriHandler> -->
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho
+										</groupId>
+										<artifactId>
+											tycho-compiler-plugin
+										</artifactId>
+										<versionRange>
+											[${tycho-version},)
+										</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

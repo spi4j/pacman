@@ -1,0 +1,42 @@
+[comment encoding = UTF-8 /]
+[module serviceRequirements('http://www.obeonetwork.org/dsl/environment/3.0.0',
+					         'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::serviceutils /]
+
+[import fr::pacman::commons::common::names /]
+
+[comment] Entity [/comment]
+
+
+[template public serviceRequirements(e : Entity)]
+[licence()/]
+[let self : OclAny = if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR AND Entity NULL' endif]
+package [buildPackageBusinessImplementationServiceEntity(e)/];
+
+// [protected ('for imports')]
+
+// [/protected]
+
+/**
+ * Implémentations des exigences métiers de '[buildServiceClassName(e)/]'.
+ * @author [getAuthorName()/]
+ */
+public class [buildServiceRequirementsClassName(e)/]
+{
+
+   // [buildServiceRequirementsClassName(e)/]
+   // [protected (e.getUserCodeId(buildServiceRequirementsClassName(e)))]
+
+   // [/protected]
+
+}[/let]
+[/template]

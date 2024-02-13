@@ -1,0 +1,133 @@
+[comment encoding = UTF-8 /]
+[module ClientJavaWebStart('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::configuration::common::webXml /]
+
+[template public javaWebStartPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>[getApplicationPackage()/]</groupId>
+        <artifactId>[getApplicationName()/]</artifactId>
+        <version>[getVersion()/]</version>
+    </parent>
+    <artifactId>[getClientJavaWebStartProjectName()/]</artifactId>
+    <packaging>jar</packaging>
+    <name>[getApplicationName()/] - Packaging webapp JavaWebStart</name>
+
+	<!--
+	// [protected ('for custom code')]
+	-->
+	
+	<!--
+	// [/protected]
+	-->
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>[getApplicationName()/]-client-[getClient()/]</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- monitoring des telechargements et demandes si mise a jour
+        (le volume par reponse http est la moyenne du volume du jar.pack.gz 
+		si telechargement et de 0 si client deja a jour)-->
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+            <version>${javamelody-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax-servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+		<!--
+		// [protected ('for dependencies')]
+		-->
+		
+		<!--
+		// [/protected]
+		-->
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <executions>
+                    <!-- On ne veut pas mettre le packaging war sur ce pom pour ne pas perturber les configurations eclipse des autres projets,
+                    mais par contre on veut fabriquer un war pour avoir les jars des dependencies afin d'utiliser ces jars dans la tâche ant ci-dessous -->
+                    <execution>
+                        <id>War</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <executions>
+                    <execution>
+                        <id>WarBuild</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target><ant antfile="build-jws.xml" target="javawebstart" /></target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Attachement du war en tant qu'artefact pour qu'il soit installe et déployé dans les repositories -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/${project.artifactId}-${project.version}.war</file>
+                                    <type>war</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<!--
+			// [protected ('for plugins')]
+			-->
+		
+			<!--
+			// [/protected]
+			-->
+        </plugins>
+    </build>
+</project>
+[/template]

@@ -1,0 +1,12 @@
+[comment encoding = UTF-8 /]
+[module counterQueries('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[query public initCounter(key : String) : OclAny =
+invoke('fr.pacman.commons.services.PropertyCounter', 'initPropertyCount(java.lang.String)', Sequence{key})
+/]
+
+[comment
+Cette fonction ne marche pas
+query public incrementCounter(key : String) : Integer =
+invoke('fr.pacman.commons.services.PropertyCounter', 'incrementPropertyCount(java.lang.String)', Sequence{key})
+/]

@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genServiceRequirements('http://www.obeonetwork.org/dsl/environment/3.0.0',
+							   'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::jdbc::service::serviceRequirements /]
+[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::commons::common::classes /]
+
+[template public genServiceRequirements(e : Entity)]
+[file (filename(getClientGwtSourceDir(), buildPackageBusinessImplementationServiceEntity(e), buildServiceRequirementsClassName(e) + '.java'), false, 'UTF-8')]
+[serviceRequirements(e)/]
+[/file]
+[/template]

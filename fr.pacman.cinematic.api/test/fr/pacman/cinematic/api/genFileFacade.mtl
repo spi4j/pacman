@@ -1,0 +1,23 @@
+[comment encoding = UTF-8 /]
+[module genFileFacade('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::cinematic::api::files::genAppliEventTypeEnum /]
+[import fr::pacman::cinematic::api::files::genAppliEventGlobalAttributesItf /]
+[import fr::pacman::cinematic::api::files::genViewInterface /]
+
+[template public genAppliEventGlobalAttributesItf_facade(root : CinematicRoot)]
+[comment @main/]
+[genAppliEventGlobalAttributesItf(root, 'client.no_impl')/]
+[/template]
+
+[template public genAppliEventTypeEnum_facade(root : CinematicRoot)]
+[comment @main/]
+[genAppliEventTypeEnum(root, 'client.no_impl')/]
+[/template]
+
+[template public genViewInterface_facade(root : CinematicRoot)]
+[comment @main/]
+[for (viewContainer : ViewContainer | root.eAllContents(ViewContainer))]
+[genViewInterface(root, 'client.no_impl', viewContainer, false)/]
+[/for]
+[/template]

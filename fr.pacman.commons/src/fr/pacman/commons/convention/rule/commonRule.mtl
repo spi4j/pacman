@@ -1,0 +1,26 @@
+[comment encoding = UTF-8 /]
+[module commonRule('http://www.eclipse.org/ocl/1.1.0/Ecore')]
+
+[query public getListPrefix(any : OclAny) : String =
+    getListPrefix_invoke().trim()
+/]
+
+[query private getListPrefix_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.rule.CommonRule','getListPrefix()', Sequence{})
+/]
+
+[query public getMapPrefix(any : OclAny) : String =
+    getMapPrefix_invoke().trim()
+/]
+
+[query private getMapPrefix_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.rule.CommonRule','getMapPrefix()', Sequence{})
+/]
+
+[query public getAffectationPrefix(any : OclAny) : String =
+    getAffectationPrefix_invoke().trim()
+/]
+
+[query private getAffectationPrefix_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.rule.CommonRule','getAffectationPrefix()', Sequence{})
+/]

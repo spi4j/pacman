@@ -1,0 +1,87 @@
+[comment encoding = UTF-8 /]
+[module names('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[query public buildJSFContextXmlName(any : OclAny) : String =
+	getApplicationName() + '-jsf'
+/]
+
+[query public buildAppliIdConverterXmlName(any : OclAny) : String =
+	getApplicationNameUpperFirst() + 'Converter'
+/]
+
+[query public buildInfoClassName(any : OclAny) : String =
+    apply_classDefault(getApplicationNameUpperFirst() + ' build info')
+/]
+
+[query public buildInitializationListenerClassName(any : OclAny) : String =
+   apply_classDefault(' initialization listener')
+/]
+
+[query public buildConfigProviderClassName(any : OclAny) : String =
+    apply_classDefault(getApplicationNameUpperFirst() + ' config provider')
+/]
+
+[query public buildInfoServletClassName(any : OclAny) : String =
+   apply_classDefault(getApplicationNameUpperFirst() + ' build info servlet') 
+/]
+
+[query public buildCacheManagerClassName(any : OclAny) : String =
+   apply_classDefault(getApplicationNameUpperFirst() + ' cache manager') 
+/]
+
+[query public buildAdministrationServiceEnumName(any : OclAny) : String =
+   apply_classEnum(getApplicationNameUpperFirst() + ' administration service') 
+/]
+
+[query public buildAdministrationServletClassName(any : OclAny) : String =
+   apply_classDefault(getApplicationNameUpperFirst() + ' administration servlet') 
+/]
+
+[query public buildSecurityManagerClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' security manager') 
+/]
+
+[query public buildSecurityInitializationClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' security initialization')
+/]
+
+[query public buildSecurityListenerClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' security listener')
+/]
+
+[query public buildStepsGivenClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' steps given')
+/]
+
+[query public buildStepsThenClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' steps then')
+/]
+
+[query public buildStoryAbstractClassName(any : OclAny) : String =
+	apply_classAbstract(getApplicationNameUpperFirst() + ' story')
+/]
+
+[query public buildXXXStoryClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + 'xxx_ story')
+/]
+
+[query public buildXXXStory(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + 'xxx')
+/]
+
+[query public buildMockitoViewsClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' mockito views')
+/]
+
+[query public buildGwtUserBusinessIntegration(any : OclAny) : String =
+	apply_classDefault(getApplicationNameUpperFirst() + ' gwt user business integration')
+/]
+
+[query public buildServicesXmlName(any : OclAny) : String =
+   'services_' + getApplicationName() + '.xml'
+/]
+
+

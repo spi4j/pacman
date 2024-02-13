@@ -1,0 +1,63 @@
+[comment encoding = UTF-8 /]
+[module dropIndex('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::sql::genTable /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+
+[template public dropIndex(r : Root, databaseType : String)]
+/****************************************************************/
+[genSlashedLine('Indexs', sizeHeader())/]
+/****************************************************************/
+[for (n : environment::Namespace | r.ownedNamespaces)]
+[dropIndex(n, databaseType)/]
+[/for]
+[/template]
+
+
+[template private dropIndex(n : environment::Namespace, databaseType : String)]
+[for (e : Entity | n.types->select(el|el.oclIsKindOf(entity::Entity)))]
+[if hasUniqueIndex(e)]
+[dropUniqueIDXOnTable(e, databaseType, get_nbColumnsInUniqueConstraint(uniqueIndex(e)),e.get_counterUN(1)) /]
+[/if]
+[for (a : Attribute | e.attributes())]
+[if isUniqueIndex(a)]
+[dropUniqueIDX(e, a, databaseType, e.get_counterUN(1))  /]
+[/if]
+[/for]
+[for (ent : Entity | entitiesReferencedOrReferencing() )]
+[dropIDX(e, ent, databaseType, e.get_counterIDX(referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()))/][/for]
+[/for]
+[/template]
+
+[template private dropIDX(e : Entity, ent : Entity, databaseType : String , compteur : Integer)]
+[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
+[if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1]	
+[dropIDX(e, r, databaseType, compteur + (i-1))/];
+[else]	
+[dropIDX(e, r,databaseType, compteur)/];
+[/if][/for]
+[/template]
+
+[template private dropUniqueIDXOnTable(e : Entity, databaseType : String, nbCol : Integer, compteur : Integer)]
+drop index [nameUniqueIndex(e, nbCol, compteur)/];
+[/template]
+
+[template private dropUniqueIDX(e : Entity, a : Attribute, databaseType : String, compteur : Integer )]
+drop index [nameUniqueIndex(e, a, 1, compteur)/];
+[/template]
+
+[template private dropIDX(e : Entity, r : Reference, databaseType : String, compteur : Integer)]
+drop index [nameIndex(r, compteur)/][nameTableIDX(e,databaseType)/]
+[/template]
+
+[template private nameTableIDX(e : Entity, databaseType : String)]
+[if (databaseType.isDbMsqlType())] on [nameTableWithSchema(e)/][else][/if]
+[/template]
+

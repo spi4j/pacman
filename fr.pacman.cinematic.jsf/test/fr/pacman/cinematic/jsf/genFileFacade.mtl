@@ -1,0 +1,23 @@
+[comment encoding = UTF-8 /]
+[module genFileFacade('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::cinematic::jsf::files::genBean /]
+[import fr::pacman::cinematic::jsf::files::genViewImplementation /]
+
+[template public genBean_facade(root : CinematicRoot)]
+[comment @main/]
+[for (aViewState : ViewState | root.eAllContents(ViewState))]
+	[for (viewContainer : ViewContainer | aViewState.viewContainers)]
+		[genBean(viewContainer, aViewState)/]
+	[/for]
+[/for]
+[/template]
+
+[template public genViewImplementation_facade(root : CinematicRoot)]
+[comment @main/]
+[for (aViewState : ViewState | root.eAllContents(ViewState))]
+	[for (viewContainer : ViewContainer | aViewState.viewContainers)]		
+		[genViewImplementation(viewContainer, aViewState)/]
+	[/for]
+[/for]
+[/template]

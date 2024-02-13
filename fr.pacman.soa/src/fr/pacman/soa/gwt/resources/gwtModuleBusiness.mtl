@@ -1,0 +1,35 @@
+[comment encoding = UTF-8 /]
+[module gwtModuleBusiness('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                          'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::soa::common::outils /]
+[import fr::pacman::soa::common::imports /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::commons::soa::common::comments /]
+[import fr::pacman::soa::common::attributes /]
+[import fr::pacman::soa::common::methodes /]
+[import fr::pacman::soa::common::classes /]
+
+
+[template public gwtModuleBusiness(n : Namespace)]
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+
+  <inherits name='fr.spi4j.spi4j_ui'/>
+  <inherits name='fr.spi4j.ui.gwt.spi4j_gwt'/>
+
+  <source path='client'/>
+
+  <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
+
+  <!--
+  [protected ('Module Business')]
+  -->
+
+  <!-- [/protected] -->
+
+</module>
+[/template]

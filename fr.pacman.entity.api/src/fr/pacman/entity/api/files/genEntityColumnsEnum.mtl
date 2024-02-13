@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genEntityColumnsEnum('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::api::block::columnEnum /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[template public genEntityColumnsEnum(e : Entity)]
+[file (filename(getServerSourceDir(), buildPackagePersistenceApiEntity(e), buildEntityColumnEnumName(e) + '.java'), false, 'UTF-8')]
+[colomnEnum(e)/]
+[/file]
+[/template]

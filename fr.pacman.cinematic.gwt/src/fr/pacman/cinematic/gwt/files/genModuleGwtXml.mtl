@@ -1,0 +1,19 @@
+[comment encoding = UTF-8 /]
+[module genModuleGwtXml('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::cinematic::gwt::resources::moduleGwtXml /]
+
+[template public genModuleGwtXml(any : OclAny)]
+[file (filename(getClientGwtResourcesDir(), getApplicationPackage(), filename()), false, 'UTF-8')]
+[moduleGwtXml()/]
+[/file]
+[/template]
+
+[query private filename(any : OclAny) : String =
+    getApplicationNameUpperFirst() + '.gwt.xml'
+/]
+

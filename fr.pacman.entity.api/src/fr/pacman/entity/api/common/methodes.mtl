@@ -1,0 +1,96 @@
+[comment encoding = UTF-8 /]
+[module methodes('http://www.obeonetwork.org/dsl/entity/3.0.0' ,'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+
+[*********************
+ * Paramétrage Début
+*/]
+
+[template public gen_getter(a : Attribute)]
+public [a.genPropertyType()/] [apply_methodGet(nameSimpleProperty(a))/] ()
+[/template]
+
+[template public gen_getterEnum(a : Attribute)]
+public String [apply_methodGet(nameSimpleProperty(a))/] ()  
+[/template]
+
+[template public gen_getter(r : Reference)]
+public [r.genPropertyType()/] [apply_methodGet(nameSimpleProperty(r))/] ()
+[/template]
+
+[template public gen_getterInverse(r : Reference)]
+public [r.genPropertyType()/] [apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/] ()
+[/template]
+
+[template public getGetterListEntity(r : Reference)]
+public List<[r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/]> [getNameGetterListEntity(r)/] ()
+[/template]
+
+[template public gen_setter(a : Attribute)]
+public void [apply_methodSet(nameSimpleProperty(a))/] (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimpleProperty(a))/])
+[/template]
+
+[template public gen_setterEnum(a : Attribute)]
+public void [apply_methodSet(nameSimpleProperty(a))/] (final String [apply_parameterMethodClassicIn(nameSimpleProperty(a))/])   
+[/template]
+
+[template public gen_setter(r : Reference)]
+public void [apply_methodSet(nameSimpleProperty(r))/] (final [r.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimpleProperty(r))/])
+[/template]
+
+[template public gen_setterInverse(r : Reference)]
+public void [apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/] (final [r.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimplePropertyInverse(r))/][namePK_ID()/])
+[/template]
+
+[template public getSetterListEntity(r : Reference)]
+public void [getNameSetterListEntity(r)/] (final List<[r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/]> [apply_parameterMethodMultiple(r.referencedType.oclAsType(Entity).name.normalize())/])
+[/template]
+
+[template public gen_getterInterface(a : Attribute)]
+[a.genPropertyType()/] [apply_methodGet(nameSimpleProperty(a))/] ();
+[/template]
+
+[template public gen_getterInterface(r : Reference)]
+[r.genPropertyType()/] [apply_methodGet(nameSimpleProperty(r))/] ();
+[/template]
+
+[template public gen_getterInverseInterface(r : Reference, compteur : Integer)]
+[r.genPropertyType()/] [apply_methodGet(nameSimplePropertyInverse(r, compteur))/][namePK_ID()/] ();
+[/template]
+
+[template public gen_setterInterface(a : Attribute)]
+void [apply_methodSet(nameSimpleProperty(a))/] (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimpleProperty(a))/]);
+[/template]
+
+[template public gen_setterInverseInterface(r : Reference)]
+void [apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/] (final [r.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimplePropertyInverse(r))/][namePK_ID()/]);
+[/template]
+
+[template public gen_setterInterface(r : Reference)]
+void [apply_methodSet(nameSimpleProperty(r))/] (final [r.genPropertyType()/] [apply_parameterMethodClassicIn(nameSimpleProperty(r))/]);
+[/template]
+
+[template public getGetterIdEntity(r : Reference)]
+public [genPkType()/] [apply_methodGet(r.name.normalize())/][namePK_ID()/] ()
+[/template]
+
+[template public getSetterIdEntity(r : Reference)]
+public void [apply_methodSet(r.name.normalize())/][namePK_ID()/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.name.normalize())/][namePK_ID()/])
+[/template]
+
+[template public getFindListRefByEntity(r : Reference, e : Entity)]
+[apply_methodDefault('find list ' + r.name.normalize() + ' by ' + r.containingType.oclAsType(Entity).name)/]
+[/template]
+
+[*********************
+ * Paramétrage fin
+*/]
+

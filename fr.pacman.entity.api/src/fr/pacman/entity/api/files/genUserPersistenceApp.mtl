@@ -1,0 +1,13 @@
+[comment encoding = UTF-8 /]
+[module genUserPersistenceApp('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::implementation::userPersistenceApp /]
+[import fr::pacman::commons::common::classes /]
+
+[template public genUserPersistenceApp(r : Root)]
+[file (filename(getServerSourceDir(), buildPackagePersistence(), buildUserPersistenceAppClassName() + '.java'), false, 'UTF-8')]
+[userPersistenceApp(r)/]
+[/file]
+[/template]

@@ -1,0 +1,13 @@
+[comment encoding = UTF-8 /]
+[module genIndex('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::cinematic::jsf::common::packages /]
+[import fr::pacman::cinematic::jsf::common::name /]
+[import fr::pacman::cinematic::jsf::client::ui::pkg::index /]
+
+[template public genIndex(root : CinematicRoot)]
+[file ('//src//main//webapp//pages//index.xhtml', false, 'UTF-8')]
+[index(root)/]
+[/file]
+[/template]
+

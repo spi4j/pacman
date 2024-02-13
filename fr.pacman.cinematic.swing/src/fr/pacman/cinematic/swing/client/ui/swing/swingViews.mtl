@@ -1,0 +1,77 @@
+[comment encoding = UTF-8 /]
+[module swingViews('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::swing::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::swing::common::name /]
+[import fr::pacman::commons::common::names /]
+
+[template public swingViews(e : OclAny, viewContainers : Sequence(ViewContainer))]
+[licence()/]
+package [namePackageSwing()/]; // NOPMD
+
+// [protected ('for imports')]
+
+import java.lang.reflect.Constructor;
+
+[for (viewContainer : ViewContainer | viewContainers)]
+import [namePackageViewContainerPresenter(viewContainer)/].[namePresenter(viewContainer)/];
+import [namePackageViewContainerImplementation(viewContainer)/].[nameViewImplementation(viewContainer)/];
+[/for]
+
+import fr.spi4j.exception.Spi4jRuntimeException;
+import fr.spi4j.ui.mvp.Presenter_Abs;
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.mvp.rda.RichViewsAssociation;
+
+// [/protected]
+
+/**
+ * Association des vues pour SWING.
+ * @author [getAuthorName()/]
+ */
+public class [nameSwingViews()/] extends RichViewsAssociation
+{
+   /**
+    * Constructeur.
+    */
+   // CHECKSTYLE:OFF
+   public SwingViews ()
+   {
+      // CHECKSTYLE:ON
+      super();
+[for (viewContainer : ViewContainer | viewContainers)]
+      addAssociation([namePresenter(viewContainer)/].class, [nameViewImplementation(viewContainer)/].class);
+[/for]
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public <TypeView extends View_Itf> TypeView getViewForPresenter (
+      final Presenter_Abs<TypeView, ?> p_presenter)
+   {
+      final Class<? extends View_Itf> v_viewClass = getAssociation((Class<? extends Presenter_Abs<? extends View_Itf, ?>>) p_presenter
+         .getClass());
+
+      try
+      {
+         final Constructor<? extends View_Itf> v_viewConstructor = v_viewClass
+            .getConstructor(p_presenter.getClass());
+         return (TypeView) v_viewConstructor.newInstance(p_presenter);
+      }
+      catch (final Exception v_e)
+      {
+         throw new Spi4jRuntimeException(v_e, "La vue Swing "
+            + v_viewClass.getSimpleName()
+            + " devrait avoir un constructeur avec un paramètre : "
+            + p_presenter.getClass().getSimpleName(),
+            "Ajouter un constructeur avec un paramètre : "
+            + p_presenter.getClass().getSimpleName()
+            + " dans la vue Swing "
+            + v_viewClass.getSimpleName());
+      }
+   }
+}
+[/template]

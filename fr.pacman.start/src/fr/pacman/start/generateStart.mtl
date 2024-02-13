@@ -1,0 +1,50 @@
+ [comment encoding = UTF-8 /]
+[module generateStart('http://www.obeonetwork.org/dsl/overview/2.0.0')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::start::files::genCommon /]
+[import fr::pacman::start::files::genModel /]
+[import fr::pacman::start::files::genReport /]
+[import fr::pacman::start::files::genRoot /]
+[import fr::pacman::start::files::genEjbJar /]
+
+[import fr::pacman::configuration::generateConfiguration/]
+
+[template public generateStart(r : Root)]
+
+[comment @main /]
+[comment : Generation 'main' config pour xxx-xxx /]
+[r.genRootConfig(true)/]
+[comment : Generation pour la racine /]
+[r.genRoot()/]
+[comment : Generation pour xxx-Model /]
+[r.genModel()/]
+[comment : Generation pour xxx-common /]
+[r.genCommon()/]
+[comment : Generation pour xxx-Report (pas genere actuellement)
+[genReport()/]
+
+[if useEjb()]
+[r.genEjbJar()/]
+[/if]
+[/template]
+
+[**
+ * Generer les composants pour permettre de prendre en compte la
+ * Politique Generale d'Ergonomie (PGE) de l'application.
+*/]
+[template public generatePge(any : OclAny)]
+[for (clientType : String | getClientTypes())]
+    [comment : PGE pour un client GWT /]
+    [if clientType.equalsIgnoreCase('GWT')]
+// TODO Non traite pour l'instant
+
+    [comment : PGE pour un client Swing /]
+    [elseif clientType.equalsIgnoreCase('Swing')]
+[comment : generation des composants PGE Swing au niveau de l'application /]
+[comment : genSwingSpiButton()/]
+    [/if]
+[/for]
+[/template]

@@ -1,0 +1,24 @@
+[comment encoding = UTF-8 /]
+[module genRequirementVersionTest('http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::requirement::requirements::reqVersionTest /]
+
+[**
+ * Génération à partir de la racine.
+ */]
+[template public genRequirementVersionTest(repo : Repository)]
+[file (filename(getCommonsTestDir(), buildPackageRequirement(), apply_classTest('requirement version') + '.java'), false, 'UTF-8')]
+[reqVersionTest(repo)/]
+[/file]
+[/template]
+
+[**
+ * Génération à partir d'une catégorie.
+ */]
+[template public genRequirementVersionTest(cat : Category)]
+[file (filename(getCommonsTestDir(), buildPackageRequirementForCategory(cat), apply_classTest('requirement ' + cat.id + ' version') + '.java'), false, 'UTF-8')]
+[reqVersionTest(cat)/]
+[/file]
+[/template]

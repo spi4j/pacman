@@ -1,0 +1,24 @@
+[comment encoding = UTF-8 /]
+[module genServiceTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                       'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::server::business::api::category::serviceTest /]
+[import fr::pacman::soa::common::classes /]
+
+[comment] le Service existe sans DTO [/comment]
+[template public genServiceTest(s : Service)]
+[file (filename(getServerTestDir(), buildPackageBusinessApiServiceDto(s, null), buildServiceTestClassName(s, null) + '.java'), false, 'UTF-8')]
+[serviceTest(s)/]
+[/file]
+[/template]
+
+[comment] le Service et le DTO existent [/comment]
+[template public genServiceTest(s : Service, d : DTO)]
+[file (filename(d.getServerTestDir(), buildPackageBusinessApiServiceDto(s, d), buildServiceTestClassName(s, d) + '.java'), false, 'UTF-8')]
+[serviceTest(s, d, isReferentiel(d))/]
+[/file]
+[/template]

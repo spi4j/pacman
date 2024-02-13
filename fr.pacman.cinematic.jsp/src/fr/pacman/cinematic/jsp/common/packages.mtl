@@ -1,0 +1,37 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 
+				 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::model /]
+
+[query public namePackageContainerController(viewContainer : ViewContainer) : String =
+    namePackageController() + packageHierarchy(viewContainer)
+/]
+
+[query public namePackageContainerController(viewState : ViewState) : String =
+    namePackageController() + packageHierarchy(viewState)
+/]
+
+[query public namePackageController(any : OclAny) : String =
+    getApplicationPackage() + '.controller'
+/]
+
+[query public namePackageViewContainer(viewContainer : ViewContainer) : String =
+  	(getJspPageUriFragment() + '/' + packageHierarchy(viewContainer).toPath()).normalizePath()
+/]
+
+[query public namePackageJspUseBeanType(d : DTO) : String = 
+	d.buildPackageBusinessApi() + d.categoryHierarchy() +'.'+ d.buildDtoClassName()
+/]
+
+[query public categoryHierarchy(d : DTO) : String =
+    if (d.ancestors(Namespace)->size() < 1) then '' else        
+		'.' + d.ancestors(Namespace)->select(oclIsTypeOf(Namespace) 
+         and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+/]

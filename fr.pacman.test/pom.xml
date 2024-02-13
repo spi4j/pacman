@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>fr.pacman</groupId>
+		<artifactId>pacman-parent</artifactId>
+		<version>4.4.0</version>
+	</parent>
+
+	<artifactId>fr.pacman.test</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<name>fr.pacman.test</name>
+	<description>Projet de test des generateurs Pacman pour Safr@n.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.9.3</version>
+		</dependency>
+	</dependencies>
+</project>

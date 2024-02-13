@@ -1,0 +1,34 @@
+[comment encoding = UTF-8 /]
+[module genView('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+
+[import fr::pacman::cinematic::api::common::model /]
+
+[import fr::pacman::cinematic::jsp::common::packages /]
+[import fr::pacman::cinematic::jsp::common::names /]
+[import fr::pacman::cinematic::jsp::client::ui::pkg::view /]
+
+[template public genViewError(root : CinematicRoot)]
+[file (filename(getClientJspSourceDir(), getJspPageUriFragment(), 'defaultErrorView.jsp'), false, 'UTF-8')]
+[root.viewDefaultError()/]
+[/file]
+[/template]
+
+[template public genView(viewContainer : ViewContainer, viewState : ViewState)]
+[file (filename(getClientJspWebappDir(), viewContainer.namePackageViewContainer(), viewContainer.nameViewImplementation() + '.jsp'), false, 'UTF-8')]
+[viewContainer.view(viewState)/]
+[/file]
+[/template]
+
+[template public genViewIndex(root : CinematicRoot)]
+[file (filename(getClientJspWebappDir(),'', 'index.jsp'), false, 'UTF-8')]
+[root.viewIndex() /]
+[/file]
+[/template]
+
+[template public genViewMessenger(root : CinematicRoot)]
+[file (filename(getClientJspWebappDir(), getJspPageUriFragment(), 'messenger.jsp'), false, 'UTF-8')]
+[root.viewMessenger()/]
+[/file]
+[/template]

@@ -1,0 +1,189 @@
+package fr.appwhite1.client.ui.gwt;
+
+// Start of user code for imports
+
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.gwt.client.SpiViewPanel;
+
+import fr.appwhite1.client.ui.MainView_Itf;
+import fr.appwhite1.client.ui.MainPresenter;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+import fr.spi4j.ui.gwt.client.SpiViewPanel;
+
+import fr.spi4j.ui.HasString_Itf;
+
+
+import fr.spi4j.ui.gwt.client.SpiButton;
+
+
+
+import com.google.gwt.user.client.ui.RootPanel;
+
+// End of user code
+
+public class MainViewGwt extends SpiViewPanel<MainPresenter> implements MainView_Itf
+{
+
+   // Start of user code Déclaration btConnexion_SpiButton
+
+   private final SpiButton _btConnexion;
+
+   // End of user code
+
+   // Start of user code Déclaration btDeconnexion_SpiButton
+
+   private final SpiButton _btDeconnexion;
+
+   // End of user code
+
+   // Start of user code Attributs
+   private final VerticalPanel _content;
+
+   // End of user code
+   /**
+    * Constructeur de la vue.
+    * @param p_presenter
+    *           le présenteur de la vue
+    */
+   public MainViewGwt (final MainPresenter p_presenter)
+   {
+      super(p_presenter);
+
+      // Start of user code avant initialisation
+      _content = new VerticalPanel();
+      _content.add(new HTML("<h1>Main</h1>"));
+
+      // End of user code
+
+      // initialisation des composants
+      // Start of user code Paramétrage btConnexion_SpiButton
+
+      _btConnexion = new SpiButton();
+      _btConnexion.setText("btConnexion");
+      _content.add(_btConnexion);
+
+      // End of user code
+
+      _btConnexion.addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick (final ClickEvent p_event)
+         {
+            getPresenter().connexion();
+         }
+      });
+
+      // Start of user code Paramétrage btDeconnexion_SpiButton
+
+      _btDeconnexion = new SpiButton();
+      _btDeconnexion.setText("btDeconnexion");
+      _content.add(_btDeconnexion);
+
+      // End of user code
+
+      _btDeconnexion.addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick (final ClickEvent p_event)
+         {
+            getPresenter().deconnexion();
+         }
+      });
+
+      // Start of user code après initialisation
+      add(_content);
+
+      // récupération du contenu global
+      RootPanel.get().add(this);
+
+      // End of user code
+   }
+
+   @Override
+   public void addView (final View_Itf p_view)
+   {
+      // Start of user code addView
+      if (p_view instanceof IsWidget)
+      {
+         if (p_view instanceof DialogBox)
+         {
+            ((DialogBox) p_view).center();
+         }
+         else
+         {
+            _content.add((IsWidget) p_view);
+         }
+      }
+      else
+      {
+         Window.alert("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   @Override
+   public void restoreView (final View_Itf p_view)
+   {
+      // Start of user code restoreView
+
+      // End of user code
+   }
+
+   @Override
+   public void removeView (final View_Itf p_view)
+   {
+      // Start of user code removeView
+      if (p_view instanceof IsWidget)
+      {
+         if (p_view instanceof DialogBox)
+         {
+            ((DialogBox) p_view).hide();
+         }
+         else
+         {
+            _content.remove((IsWidget) p_view);
+         }
+      }
+      else
+      {
+         Window.alert("Vue inconnue : " + p_view.getClass().getName());
+      }
+      // End of user code
+   }
+
+   // Start of user code Getter btConnexion_SpiButton
+
+   @Override
+   public HasString_Itf get_btConnexion ()
+   {
+      return _btConnexion;
+   }
+
+   // End of user code
+
+   // Start of user code Getter btDeconnexion_SpiButton
+
+   @Override
+   public HasString_Itf get_btDeconnexion ()
+   {
+      return _btDeconnexion;
+   }
+
+   // End of user code
+
+   // Start of user code MainViewGwt
+
+   // End of user code
+
+}

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: fr.pacman.configuration
+Bundle-ManifestVersion: 2
+Bundle-Name: Pacman - Configuration
+Bundle-SymbolicName: fr.pacman.configuration
+Bundle-Version: 4.4.0.qualifier
+Bundle-Activator: fr.pacman.configuration.Activator
+Bundle-Vendor: Safr@n
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.acceleo.engine,
+ org.obeonetwork.dsl.entity,
+ org.obeonetwork.dsl.soa,
+ fr.pacman.commons
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: fr.pacman.configuration,
+ fr.pacman.configuration.common
+Import-Package: org.eclipse.sirius.business.api.session

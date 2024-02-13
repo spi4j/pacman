@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension 
+   		point="org.obeonetwork.dsl.cinematic.providedToolkit">
+   		<toolkit uri="pathmap://cinematic/toolkits/Safran-standard"/>
+		<toolkit uri="pathmap://cinematic/toolkits/Safran-jsp"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.uri_mapping">
+      <mapping
+            source="pathmap://cinematic/toolkits/Safran-standard"
+            target="platform:/plugin/fr.pacman.cinematic.api/toolkits/Safran-standard.cinematic_toolkits"/>
+       <mapping
+            source="pathmap://cinematic/toolkits/Safran-jsp"
+            target="platform:/plugin/fr.pacman.cinematic.api/toolkits/Safran-jsp.cinematic_toolkits"/>
+   </extension>
+</plugin>

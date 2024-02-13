@@ -1,0 +1,13 @@
+[comment encoding = UTF-8 /]
+[module model('http://www.obeonetwork.org/dsl/environment/3.0.0', 
+			  'http://www.obeonetwork.org/dsl/soa/4.0.0',)/]
+
+[comment : /]
+[query public hasOutputDto (o : Operation) : Boolean = 
+	not o.output->isEmpty() 
+	and not o.output->first().oclIsUndefined() 
+	and o.output->first().type.oclIsTypeOf(DTO)
+/]
+
+[query public paramsIn(inputs : OrderedSet(Parameter)) : Sequence(String) = inputs.paramIn() /]
+[query private paramIn(param : Parameter) : String = 'null'/]

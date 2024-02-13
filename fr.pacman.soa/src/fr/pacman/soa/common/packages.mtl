@@ -1,0 +1,105 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+
+[import fr::pacman::commons::soa::common::packages /]
+
+[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::name /]
+
+[*******************
+ * Paramétrage Début
+*/]
+
+[query public buildPackagePersistenceApiDto(d : DTO) : String =
+    buildPackagePersistenceApi() + categoryHierarchy(d)
+/]
+
+[query public buildPackageBusinessImplementationServiceDto(s : Service, d : DTO) : String =
+    if not s.oclIsUndefined() then
+        buildPackageImplBusiness(s) + '.' + nameComponent(s)
+    else if not d.oclIsUndefined() then
+        buildPackageImplBusiness(d) + categoryHierarchy(d)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL'
+    endif endif
+/]
+
+[query public buildPackageMatchingInterfaceDto(d : DTO) : String =
+    buildPackageMatching() + categoryHierarchy(d)
+/]
+
+[query public buildPackageFetchingStrategyDto(d : DTO) : String =
+    buildPackageBusinessApi(d) + categoryHierarchy(d) + '.fetching'
+/]
+
+[query public buildPackageBusinessGwtClient(any : OclAny) : String =
+    buildPackageGwtClient() + '.' + getPackageBusiness()
+/]
+
+[query public buildPackageMapperDto(d : DTO) : String =
+    buildPackageMapper() + categoryHierarchy(d)
+/]
+
+[query public buildPackageBusinessGwtClientServiceDto(s : Service, d : DTO) : String =
+    if not s.oclIsUndefined() then
+        buildPackageBusinessGwtClient(s) + '.' + nameComponent(s)
+    else if not d.oclIsUndefined() then
+        buildPackageBusinessGwtClientDto(d)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL'
+    endif endif
+/]
+
+[query public buildPackageBusinessGwtServerServiceDto(s : Service, d : DTO) : String =
+    if not s.oclIsUndefined() then
+        buildPackageBusinessGwtServer(s) + '.' + nameComponent(s)
+    else if not d.oclIsUndefined() then
+        buildPackageBusinessGwtServerDto(d)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL'
+    endif endif
+/]
+
+[query public buildPackageBusinessGwtClientDto(d : DTO) : String =
+    buildPackageBusinessGwtClient(d) + categoryHierarchy(d)
+/]
+
+[query private buildPackageBusinessGwtServer(any : OclAny) : String =
+    buildPackageGwtServer() + '.' + getPackageBusiness()
+/]
+
+[query private buildPackageGwtClient(any : OclAny) : String =
+    getApplicationPackage() + '.client'
+/]
+
+[query private buildPackageGwtServer(any : OclAny) : String =
+    getApplicationPackage() + '.server'
+/]
+
+[query public buildPackageBusinessGwtServerDto(d : DTO) : String =
+    buildPackageBusinessGwtServer(d) + categoryHierarchy(d)
+/]
+
+[query public buildPackageBusinessApiServiceDto(s : Service, d : DTO) : String =
+    if not s.oclIsUndefined() then
+        buildPackageBusinessApi(s) + '.' + nameComponent(s)
+    else if not d.oclIsUndefined() then
+        buildPackageBusinessApiDto(d)
+    else
+        'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL'
+    endif endif
+/]
+
+[comment fin packages /]
+
+[*******************
+ * Paramétrage fin
+*/]
+
+
+[comment transforme un nom de package en uri, ex : fr.pacman -> pacman.fr /]
+[query public packageToUri(s : String) : String = (s.tokenize('.'))->reverse()->sep('.')->toString()/]

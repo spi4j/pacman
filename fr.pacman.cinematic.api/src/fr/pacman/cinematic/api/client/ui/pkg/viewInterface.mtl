@@ -1,0 +1,83 @@
+[comment encoding = UTF-8 /]
+[module viewInterface('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::properties /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::standard-widgets /]
+[import fr::pacman::cinematic::api::common::model /]
+
+
+[template public viewInterface(viewContainer : ViewContainer, clientPropertiesPrefix : String, IsDto : Boolean)]
+[licence()/]
+package [namePackageViewContainerInterface(viewContainer)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[viewContainer.writeImports(IsDto)/]
+
+// [/protected]
+
+/**
+ * Interface de vue.
+ * @author [getAuthorName()/]
+ */
+// annotation class
+// [protected (viewContainer.getUserCodeId('annotation class'))]
+@UserView("[viewContainer.name/]")
+// [/protected]
+public interface [nameViewInterface(viewContainer)/] extends View_Itf
+{
+
+[for (element : ViewElement | viewContainer.viewElements)]
+   [if not (clientPropertiesPrefix = 'client.swing' and element.widget.name = 'Button')]
+   // [element.name + '_' + getInterfaceName(element.widget)/]
+   // [protected (element.getUserCodeId(element.name + '_' + getInterfaceName(element.widget)))]
+
+   /**
+[if element.description <> null]
+    * @return [element.name/] : [element.description/]
+[else]
+    * @return [element.name/]
+[/if]
+    */
+   @Field("[element.name/]")
+	[if (useWS())] 	
+   	[genericType(element, getInterfaceName(element.widget), IsDto)/] [nameGetterViewElement(element)/] ();		
+	[else]
+	[genericTypeEntity(element, getInterfaceName(element.widget))/] [nameGetterViewElement(element)/] ();	
+	[/if]
+   // [/protected]
+
+   [/if]
+[/for]
+   // [nameViewInterface(viewContainer)/]
+   // [protected (viewContainer.getUserCodeId(nameViewInterface(viewContainer)))]
+
+   // [/protected]
+
+}
+
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(v : ViewContainer, isDto : Boolean) post(trim())]
+[v.initImports()/]
+[v.addImport('fr.spi4j.ui.mvp.View_Itf')/]
+[v.addImport('fr.spi4j.ui.graal.Field', not v.viewElements->isEmpty())/]
+[v.addImport('fr.spi4j.ui.graal.UserView')/]
+
+[comment : List all widgets./]
+[if not v.widget.oclIsUndefined()]
+	[for (widget : Widget | Set{v.widget})]
+		[v.addImport(getInterfacePackage(widget) + '.' + getInterfaceNameForImport(widget))/]
+	[/for]
+[/if]
+
+[v.flushImports()/]
+[/template]
+

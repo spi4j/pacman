@@ -1,0 +1,18 @@
+[comment encoding = UTF-8 /]
+[module genRequirementEnum('http://www.obeonetwork.org/dsl/requirement/1.0')/]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::requirement::requirements::reqEnum /]
+
+[template public genRequirementEnum(repo : Repository)]
+[file (filename(getCommonsSourceDir(), buildPackageRequirement(), apply_classEnum('requirement') + '.java'), false, 'UTF-8')]
+[reqEnum(repo)/]
+[/file]
+[/template]
+
+[template public genRequirementEnum(cat : Category)]
+[file (filename(getCommonsSourceDir(), buildPackageRequirementForCategory(cat), apply_classEnum('requirement ' + cat.id) + '.java'), false, 'UTF-8')]
+[reqEnum(cat)/]
+[/file]
+[/template]

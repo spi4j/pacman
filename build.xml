@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ 
+<project basedir="." default="all" name="Pacman"> 
+ 
+    <target name="all" depends="update_site, zip" /> 
+     
+    <!-- Archivage Update Site --> 
+    <target name="update_site"> 
+        <delete dir="." includes="fr.pacman.update_*.zip" /> 
+        <copy todir="."> 
+            <fileset dir="SCRIPTS/fr.pacman.update/target"> 
+                <include name="fr.pacman.update_*.zip"/> 
+            </fileset> 
+        </copy> 
+    </target> 
+ 
+    <!-- Zip de tous les soures de tous les projets Pacman --> 
+    <target name="zip" depends=""> 
+        <echo message="Construction du zip des sources Pacman" level="info" /> 
+        <tstamp> 
+            <format property="TODAY" pattern="yyyyMMdd" /> 
+        </tstamp> 
+        <delete dir="." includes="*-sources.zip" /> 
+        <zip destfile="pacman-${TODAY}-sources.zip"> 
+            <!-- on exclut les repertoires bin des builds eclipse et le repertoire des docs Acceleo (les repertoires .svn de subversion seront exclus automatiquement par Ant) --> 
+            <zipfileset dir="." excludes="**/target/**,**/bin/**,pacman*.zip,DOC/Acceleo/**,INIT/**,SCRIPTS/build-release.xml" /> 
+        </zip> 
+    </target> 
+ 
+</project>  

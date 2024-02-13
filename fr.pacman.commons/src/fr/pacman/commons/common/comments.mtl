@@ -1,0 +1,70 @@
+[comment encoding = UTF-8 /]
+[module comments('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::properties /]
+
+[comment : Get a random secured label for the name of the user code protected zone. / ]
+[comment : deprecated -> cause .lost files with regenerations. /]
+[query public randomUserCodeForOperation (o : Operation, s : String) : String =
+	o.getRandom_invoke(s)
+/]
+
+[comment : Get a random number for the user code zone. /]
+[query private getRandom_invoke(o : Operation, s : String) : String = 
+	invoke('fr.pacman.commons.services.CommentsUtils'
+		,'getRandomUserCodeForOperation(org.obeonetwork.dsl.soa.Operation, java.lang.String)'
+		, Sequence{o, s})
+/]
+
+[comment : Get the name for the operation with all parameters for Java method. /]
+[template public userCodeForJavaOperation(o : Operation) post(trim())]
+[o.name/][o.userCodeForOperation_ouput(true)/][o.userCodeForOperation_input(true)/]
+[/template]
+
+[comment : Get the name for the operation with all parameters (avoid warning if bad modelisation) (1/3). /]
+[template public userCodeForOperation(o : Operation) post(trim())]
+[o.name/][o.userCodeForOperation_ouput(false)/][o.userCodeForOperation_input(false)/]
+[/template]
+
+[comment : Get the name for the operation with all parameters (2/3). /]
+[template public userCodeForOperation_ouput(o : Operation, b : Boolean) post(trim())]
+[if not o.output->isEmpty()][let p : Parameter = o.output->first()][p.addParamTypeAndName(b)/][/let][/if]
+[/template]
+
+[comment : Get the name for the operation with all parameters (3/3). /]
+[template public userCodeForOperation_input(o : Operation, b : Boolean) post(trim())]
+[if not o.input->isEmpty()][for (p : Parameter | o.input)][p.addParamTypeAndName(b)/][/for][/if]
+[/template]
+
+[comment : Get the type and name for the specific parameter. /]
+[template private addParamTypeAndName (p : Parameter, b : Boolean) post(trim())]
+[if not p.type.oclIsUndefined()][if b][p.sanitizeParamTypeAndName()/][else]_[p.type.name/]_[p.name/][/if][/if]
+[/template]
+
+[comment : Get the type the specific parameter and sanitize if wanted . /]
+[template private sanitizeParamTypeAndName (p : Parameter) post(trim())]
+_[p.type.name.replaceAll('[<>,]', '_')/]_[p.name/]
+[/template]
+
+
+[comment : deprecated temporary here for history. /]
+[query private userCodeForOperationOld(operation : Operation) : String =
+    if (useDeprecatedSOAUserCodeParams(operation)) then
+        if (operation.input->isEmpty() and operation.output->isEmpty()) then
+            operation.name
+        else
+            if (operation.input->isEmpty()) then
+                operation.name + '_' + operation.output.type.name->sep('_')
+            else
+                if (operation.output->isEmpty()) then
+                    operation.name + '_' + operation.input.type.name->sep('_')
+                else
+                    operation.name + '_' + operation.input.type.name->sep('_') + '_' + operation.output.type.name->sep('_')
+                endif
+            endif
+        endif
+    else
+        operation.name
+    endif
+/]

@@ -1,0 +1,59 @@
+[comment encoding = UTF-8 /]
+[module manageEvent('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::swing::common::name /]
+[import fr::pacman::cinematic::swing::common::packages /]
+[import fr::pacman::cinematic::api::common::model /]
+
+[import fr::pacman::commons::common::imports /]
+
+
+[template public gestionTransition (etat : FlowState, evenement : String, fromMainPanel : Boolean) ]
+[for (state : FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
+  [if state.oclIsKindOf(ViewState)]
+      // [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(ViewState).name))]
+    [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
+      [namePresenter(nextView)/] v_[namePresenter(nextView).toLowerFirst()/] = getViewManager().getPresenter([namePresenter(nextView)/].class);
+      if (v_[namePresenter(nextView).toLowerFirst()/] == null)
+      {
+            [if fromMainPanel]
+         v_[namePresenter(nextView).toLowerFirst()/] = new [namePresenter(nextView)/]();
+            [else]
+         v_[namePresenter(nextView).toLowerFirst()/] = new [namePresenter(nextView)/](this);
+         getView().addView(v_[namePresenter(nextView).toLowerFirst()/].getView());
+            [/if]
+      }
+      else
+      {
+         getView().restoreView(v_[namePresenter(nextView).toLowerFirst()/].getView());
+      }
+    [/for]
+
+      // [/protected]
+   [elseif state.oclIsKindOf(SubflowState)]
+      // [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(SubflowState).name))]
+      final [nameFlow(state.oclAsType(SubflowState).subflow)/] v_[nameFlow(state.oclAsType(SubflowState).subflow).toLowerFirst()/] = new [nameFlow(state.oclAsType(SubflowState).subflow)/](this);
+      v_[nameFlow(state.oclAsType(SubflowState).subflow).toLowerFirst()/].start();
+      // [/protected]
+   [elseif state.oclIsKindOf(ActionState)]
+      // [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(ActionState).name))]
+      // TODO [state.oclAsType(ActionState).name/]
+      // [/protected]
+
+   [/if]
+[/for]
+[/template]
+
+[query public getViewEvents(event : Event) : Set(ViewEvent) =
+    if (event.oclIsTypeOf(ViewEvent)) then
+        Set{event}
+    else
+        if (event.oclIsTypeOf(FlowEvent)) then
+            event.oclAsType(FlowEvent).binds.getViewEvents()
+        else
+            Set{}
+        endif
+    endif
+/]

@@ -1,0 +1,65 @@
+package fr.appwhite2.client.business.annuaire;
+
+// Start of user code for imports
+
+import java.util.List;
+
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
+import fr.appwhite2.ws.api.annuaire.CompetenceXto;
+import fr.appwhite2.ws.api.annuaire.PersonneXto;
+import fr.referentiel.ws.api.ref.GradeXto;
+import fr.spi4j.ui.gwt.client.services.GwtRemoteService;
+
+// End of user code
+
+/**
+ * Interface de services appelables par le client.
+ * @author MINARM
+ */
+@RemoteServiceRelativePath("../appli1/PersonneService")
+public interface PersonneGwtService extends GwtRemoteService<Long, PersonneXto>
+{
+
+   /**
+    * Obtenir la liste d'objets de type 'Competence' associés à l'instance de type 'Personne'.
+    * @param p_personne_id
+    *           (In)(*) Personne.
+    * @return une liste de CompetenceXto
+    */
+   List<CompetenceXto> findListCompetencesByPersonne (final Long p_personne_id);
+
+   // Start of user code findListPersonneByGrade_Grade_Personne
+
+   /**
+    * Recherche la liste des personnes par grade.
+    * @param p_grade
+    *           (In)(*) le grade recherché.
+    * @return la liste des personnes qui ont ce grade.
+    */
+   List<PersonneXto> findListPersonneByGrade (final GradeXto p_grade);
+
+   // End of user code
+
+   // Start of user code findAllFetchAdresses_Personne
+
+   /**
+    * Recherche toutes les personnes, avec leurs adresses préchargées.
+    * @return toutes les personnes avec leurs adresses.
+    */
+   List<PersonneXto> findAllFetchAdresses ();
+
+   // End of user code
+
+   // Start of user code PersonneService
+
+   // exemple de service spécifique ajouté manuellement par un développeur après génération
+   /**
+    * Effacer la personne avec tous les éléments connexes (adresses de la personne).
+    * @param p_Personne
+    *           (In)(*) La personne à effacer (obligatoire).
+    */
+   void deleteCascade (PersonneXto p_Personne);
+
+   // End of user code
+}

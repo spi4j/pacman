@@ -1,0 +1,179 @@
+[comment encoding = UTF-8 /]
+[module CXFServlet('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                      'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::soa::common::services /]
+
+[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::outils /]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
+[template public CXFServlet(m : System)]
+[licence()/]
+package [buildPackageCXFServlet()/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[m.writeImports()/]
+
+// [/protected]
+
+/**
+ * Servlet d'enregistrement des webservices.
+ * @author [getAuthorName()/]
+ */
+public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/]
+{
+   private static final long serialVersionUID = 1L;
+
+   @Override
+   public void loadBus (final ServletConfig [apply_parameterMethodClassicIn('servlet config')/])
+   {
+      super.loadBus([apply_parameterMethodClassicIn('servlet config')/]);
+      [apply_attributeFinalStatic('log')/].info("Déploiement des WebServices");
+      // Déploiement des WebServices
+	 /**
+	  * Ajouter le deploiement de services selon l'exemple suivant :
+      * deployWebService(new MonServiceFacade(), "/MonServiceService");
+      */
+[for (service : Service | m.eAllContents(Service))]
+[if service.hasCXFOperations()]
+	// [buildServiceName(service, null)/]
+	// [protected (service.getUserCodeId(buildServiceName(service, null)))]
+
+	  // Déploiement du Webservice  [buildServiceName(service, null) /]
+	  [apply_attributeFinalStatic('log')/].info("Déploiement du WebService : [buildServiceName(service, null) /]");
+	  deployWebService(new [buildServiceFacadeCXFClassName(service)/](), "/[buildServiceName(service, null) /]");
+
+	// [/protected]
+
+[/if]
+[/for]
+   }
+}
+
+[/template]
+
+[template public CXFServlet(component : Component)]
+[licence()/]
+package [buildPackageCXFServlet()/];
+
+import java.util.ArrayList;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.xml.ws.Endpoint;
+
+import org.apache.cxf.BusFactory;
+
+[for (service : Service | component.eAllContents(Service))]
+[if service.hasPublicOperations()]
+import [buildPackageImplWs(service)/].[buildServiceFacadeCXFClassName(service)/];
+[/if]
+[/for]
+
+/**
+ * Servlet d'enregistrement des webservices.
+ * @author [getAuthorName()/]
+ */
+public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/]
+{
+   private static final long serialVersionUID = 1L;
+
+
+   @Override
+   public void loadBus (final ServletConfig [apply_parameterMethodClassicIn('servlet config')/])
+   {
+      super.loadBus([apply_parameterMethodClassicIn('servlet config')/]);
+
+      // Déploiement des WebServices
+	 /**
+	  * Ajouter le deploiement de services selon l'exemple suivant :
+      * deployWebService(new MonServiceFacade(), "/MonServiceService");
+      */
+[for (service : Service | component.eAllContents(Service))]
+	[if service.hasCXFOperations()]
+	 // [buildServiceName(service, null)/]
+	 // [protected (service.getUserCodeId(buildServiceName(service, null)))]
+
+     // Déploiement du Webservice  [buildServiceName(service, null) /]
+
+	  [apply_attributeFinalStatic('log')/].info("Déploiement du WebService : [buildServiceName(service, null) /]");
+	  deployWebService(new [buildServiceFacadeCXFClassName(service)/](), "/[buildServiceName(service, null) /]");
+
+	 // [/protected]
+	[/if]
+[/for]
+   }
+}
+
+[/template]
+
+[template public CXFServlet(service : Service)]
+[licence()/]
+package [buildPackageCXFServlet()/];
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.xml.ws.Endpoint;
+
+import org.apache.cxf.BusFactory;
+import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
+
+import [buildPackageImplWs(service)/].[buildServiceFacadeCXFClassName(service)/];
+
+/**
+ * Servlet d'enregistrement des webservices.
+ * @author [getAuthorName()/]
+ */
+public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/]
+{
+   private static final long serialVersionUID = 1L;
+
+   @Override
+   public void loadBus (final ServletConfig [apply_parameterMethodClassicIn('servlet config')/])
+   {
+      super.loadBus([apply_parameterMethodClassicIn('servlet config')/]);
+
+      // Déploiement des WebServices
+	 /**
+	  * Ajouter le deploiement de services selon l'exemple suivant :
+      * deployWebService(new MonServiceFacade(), "/MonServiceService");
+      */
+
+      // [buildServiceName(service, null)/]
+      // [protected (service.getUserCodeId(buildServiceName(service, null)))]
+
+      // Déploiement du Webservice  [buildServiceName(service, null) /]
+
+      [apply_attributeFinalStatic('log')/].info("Déploiement du WebService : [buildServiceName(service, null) /]");
+	  deployWebService(new [buildServiceFacadeCXFClassName(service)/](), "/[buildServiceName(service, null) /]");
+
+     // [/protected]
+   }
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(m : System) post(trim())]
+[m.initImports(true)/]
+[m.addImport('jakarta.servlet.ServletConfig')/]
+
+[comment : List all services. /]
+[for (service : Service | m.eAllContents(Service))]
+	[m.addImport(buildPackageImplWs(service) + '.' + buildServiceFacadeCXFClassName(service), service.hasCXFOperations())/]
+[/for]
+
+[m.flushImports()/]
+[/template]
+

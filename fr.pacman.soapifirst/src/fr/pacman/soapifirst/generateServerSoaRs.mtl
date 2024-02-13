@@ -1,0 +1,74 @@
+[comment encoding = UTF-8 /]
+[module generateServerSoaRs('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                            'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::soa::common::services /]
+
+[import fr::pacman::soapifirst::common::services /]
+[import fr::pacman::soapifirst::files::genRSFrontServer /]
+
+
+[comment : ******************************************************/]
+[comment : Generation for all resources in (Application)-server ./]
+[comment : ******************************************************/]
+[template public GenerateServerSystem(m : System)]
+[comment @main /]
+
+[comment : Create for the unique component a configuration.properties file. /]
+[m.getComponent().genRSConfigurationFile()/]
+
+[comment : Create the Helper class for testing the resources (JUnit tests). /]
+[m.getComponent().genRSFrontResourceTestHelper()/]
+
+[comment : Create the configurator for the token(s). /]
+[m.getComponent().genRSFrontResourceTokensConfigurator()/]
+
+[comment : Create README.txt file. (root (Application)-server). /]
+[m.genRSReadMeFile()/]
+
+[comment : Create all frontal resources (clients) from present services (+ Junit Tests). /]
+[for (s : Service | m.eAllContents(Service)->asSet())]
+	[comment : Main resources (One file per service). /]
+	[s.genRSFrontResource()/]
+	[comment: Delegate for the main resources (One file per service)./]
+	[s.genRSFrontDelegate()/]
+	[comment : JUnit Test. (One file per service). /]
+	[s.genRSFrontResourceTest()/]
+[/for]
+[/template]
+
+
+
+[comment : **************************************************************************/]
+[comment : Partial generation at component level (but on now, only one component !). /]
+[comment : **************************************************************************/]
+[template public GenerateServerComponent (c : Component)]
+[comment @main /]
+
+[comment : Create all frontal resources (clients) from present services IN component (+ Junit Tests). /]
+[for (s : Service | c.eAllContents(Service)->asSet())]
+	[comment: Delegate for the main resources (One file per service)./]
+	[s.genRSFrontDelegate()/]
+	[comment : Main resources (One file per service). /]
+	[s.genRSFrontResource()/]
+	[comment : JUnit test. (One file per service). /]
+	[s.genRSFrontResourceTest()/]
+[/for]
+[/template]
+
+
+[comment : *************************************/]
+[comment : Partial generation at service level. /]
+[comment : *************************************/]
+[template public GenerateServerService (s :Service)]
+[comment @main /]
+
+[comment: Delegate for the main resources (One file per service)./]
+[s.genRSFrontDelegate()/]
+[comment : Create the frontal resource (client). /]
+[s.genRSFrontResource()/]
+[comment : The Junit test for the service. /]
+[s.genRSFrontResourceTest()/]
+[/template]

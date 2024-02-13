@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: fr.pacman.entity.api
+Bundle-ManifestVersion: 2
+Bundle-Name: PacMan - Entity API
+Bundle-SymbolicName: fr.pacman.entity.api
+Bundle-Version: 4.4.0.qualifier
+Bundle-Activator: fr.pacman.entity.api.Activator
+Bundle-Vendor: Safr@n
+Require-Bundle: org.eclipse.core.runtime,
+ org.obeonetwork.dsl.entity,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.ocl,
+ org.eclipse.ocl.ecore,
+ org.eclipse.acceleo.model,
+ org.eclipse.acceleo.engine,
+ fr.pacman.commons,
+ fr.pacman.test;resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Eclipse-LazyStart: true
+Export-Package: fr.pacman.entity.api,
+ fr.pacman.entity.api.dbpopulate,
+ fr.pacman.entity.api.dbreferentiel,
+ fr.pacman.entity.api.sql,
+ fr.pacman.entity.api.xmi

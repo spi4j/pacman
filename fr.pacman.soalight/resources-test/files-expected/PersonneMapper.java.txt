@@ -1,0 +1,81 @@
+package fr.appwhite2.mapper.annuaire;
+
+// Start of user code for imports
+
+import fr.appwhite2.mapper.Appli1UserMapper;
+import fr.appwhite2.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.appwhite2.persistence.impl_jdbc.annuaire.PersonneEntity;
+import fr.appwhite2.ws.api.annuaire.PersonneXto;
+import fr.referentiel.mapper.Referentiel1UserMapper;
+import fr.spi4j.mapper.EntityMapper_Abs;
+import fr.spi4j.mapper.EntityMapper_Itf;
+import fr.spi4j.persistence.entity.Entity_Itf;
+import fr.spi4j.ws.xto.Xto_Itf;
+
+// End of user code
+
+/**
+ * Implémentation pour le Mapper (= Entity <-> Xto) sur le type 'Personne'.
+ * @author MINARM
+ */
+public class PersonneMapper extends EntityMapper_Abs<PersonneEntity_Itf, PersonneXto> implements PersonneMapper_Itf
+{
+
+   @Override
+   public PersonneXto convertEntityToXto (final PersonneEntity_Itf p_entity)
+   {
+      final PersonneXto v_xto = super.convertEntityToXto(p_entity);
+
+      // Start of user code convertEntityToXto
+
+      // End of user code
+
+      return v_xto;
+   }
+
+   @Override
+   public PersonneEntity_Itf convertXtoToEntity (final PersonneXto p_xto)
+   {
+      final PersonneEntity_Itf v_entity = super.convertXtoToEntity(p_xto);
+
+      // Start of user code convertXtoToDto
+
+      // End of user code
+
+      return v_entity;
+   }
+
+   @Override
+   protected PersonneEntity getInstanceOfEntity ()
+   {
+      return new PersonneEntity();
+   }
+
+   @Override
+   protected PersonneXto getInstanceOfXto ()
+   {
+      return new PersonneXto();
+   }
+
+   @Override
+   protected EntityMapper_Itf<? extends Entity_Itf<?>, ? extends Xto_Itf<?>> getSpecificMapper (final String p_fieldName)
+   {
+      if ("_grade".equals(p_fieldName))
+      {
+         return Referentiel1UserMapper.getGradeEntityMapper();
+      }
+      if ("_tab_competences".equals(p_fieldName))
+      {
+         return Appli1UserMapper.getCompetenceMapper();
+      }
+      if ("_tab_adresses".equals(p_fieldName))
+      {
+         return Appli1UserMapper.getAdresseMapper();
+      }
+      return super.getSpecificMapper(p_fieldName);
+   }
+
+   // Start of user code PersonneMapper
+
+   // End of user code
+}

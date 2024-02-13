@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module genServiceGwtAsync('http://www.obeonetwork.org/dsl/environment/3.0.0',                          
+						    'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::entity::jdbc::files::gwt::serviceGwtAsync /]
+[import fr::pacman::entity::api::common::serviceutils /]
+
+
+[template public genServiceGwtAsync(e : Entity)]
+[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtClientService(e), buildServiceGwtAsyncClassName(e) + '.java'), false, 'UTF-8')]
+[serviceGwtAsync(e)/]
+[/file]
+[/template]

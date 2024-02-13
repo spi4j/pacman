@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module standard-widgets('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[query public getInterfaceName(widget : Widget) : String =
+invoke('fr.pacman.cinematic.api.services.InterfaceWidgetUtils', 'getInterfaceName(org.obeonetwork.dsl.cinematic.toolkits.Widget)', Sequence{widget})
+/]
+
+[query public getInterfacePackage(widget : Widget) : String =
+invoke('fr.pacman.cinematic.api.services.InterfaceWidgetUtils', 'getInterfacePackage(org.obeonetwork.dsl.cinematic.toolkits.Widget)', Sequence{widget})
+/]
+
+[query public getInterfaceNameForImport(widget : Widget) : String =
+invoke('fr.pacman.cinematic.api.services.InterfaceWidgetUtils', 'getInterfaceNameForImport(org.obeonetwork.dsl.cinematic.toolkits.Widget)', Sequence{widget})
+/]
+

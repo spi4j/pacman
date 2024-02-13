@@ -1,0 +1,17 @@
+[comment encoding = UTF-8 /]
+[module genWebappRemotingServlet('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                      'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::server::webappRemotingServlet /]
+
+[template public genWebappRemotingServlet(any : OclAny)]
+[comment Creation du fichier WebappRemotingServlet.java /]
+[file (filename(getServerSourceDir(), getApplicationPackage(), 'WebappRemotingServlet.java'), false, 'UTF-8')]
+[webappRemotingServlet() /]
+[/file]
+[/template]
+

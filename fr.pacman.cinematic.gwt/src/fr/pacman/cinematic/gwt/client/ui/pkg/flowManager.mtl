@@ -1,0 +1,112 @@
+[comment encoding = UTF-8 /]
+[module flowManager('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::model /]
+[import fr::pacman::cinematic::gwt::common::name /]
+[import fr::pacman::cinematic::gwt::client::ui::pkg::manageEvent /]
+[import fr::pacman::cinematic::gwt::common::gwt-commons /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+
+[template public flowManager(flow : Flow)]
+[licence()/]
+package [namePackageFlowManager(flow)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[flow.writeImports()/]
+
+// [/protected]
+
+/**
+ * Flow [flow.name/].
+ * @author [getAuthorName()/]
+ */
+public class [nameFlow(flow)/] extends SpiFlowManager_Abs
+{
+
+   // Attributs [nameFlow(flow)/]
+   // [protected (flow.getUserCodeId('Attributs ' + nameFlow(flow)))]
+
+   // [/protected]
+
+[if flowHasMainPanel(flow)]
+   /**
+    * Constructeur du flow.
+    */
+   public [nameFlow(flow)/] ()
+   {
+      this(null);
+   }
+
+[/if]
+   /**
+    * Constructeur du flow.
+    * @param p_previousPresenter
+    *           le présenteur en amont de ce flow
+    */
+   public [nameFlow(flow)/] (final Presenter_Abs<?, ?> p_previousPresenter)
+   {
+      super(p_previousPresenter);
+   }
+
+   @Override
+   public void onStart ()
+   {
+      // Pre onStart
+      // [protected (flow.getUserCodeId('Pre onStart'))]
+
+[if not flow.getInitialState().getAllFollowingStatesWithoutGardOrEvent(false)->filter(ViewState).viewContainers->isEmpty() and not flowHasMainPanel(flow) and hasRootPresenter(flow)]
+      final [getRootPresenterName(flow)/] [apply_variableDefault('rootPresenter')/] = getViewManager().getPresenter([getRootPresenterName(flow)/].class);
+[/if]
+      // [/protected]
+
+[gestionTransition(flow.getInitialState(), 'onStart', flowHasMainPanel(flow))/]
+
+      // Post onStart
+      // [protected (flow.getUserCodeId('Post onStart'))]
+
+      // [/protected]
+
+   }
+
+   // Méthodes [nameFlow(flow)/]
+   // [protected (flow.getUserCodeId('Méthodes ' + nameFlow(flow)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(f : Flow) post(trim())]
+[f.initImports()/]
+[f.addImport('fr.spi4j.ui.mvp.Presenter_Abs')/]
+[f.addImport('fr.spi4j.ui.mvp.SpiFlowManager_Abs')/]
+[f.addImport('fr.spi4j.ui.mvp.ViewAlreadyRegisteredException')/]
+
+[if f.hasRootPresenter()]
+	[f.addImport(namePackageViewContainerPresenter(f.getRootPresenter()) + '.' + namePresenter(f.getRootPresenter()))/]
+[/if]
+
+[for (state : FlowState | f.getInitialState().getAllFollowingStatesWithoutGardOrEvent(false))]
+  [if state.oclIsKindOf(ViewState)]
+    [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
+		[f.addImport(namePackageViewContainerPresenter(nextView) + '.' + namePresenter(nextView))/]
+    [/for]
+  [elseif state.oclIsKindOf(SubflowState)]
+		[f.addImport(namePackageFlowManager(state.oclAsType(SubflowState).subflow) + '.' + nameFlow(state.oclAsType(SubflowState).subflow))/];
+  [/if]
+[/for]
+
+[f.flushImports()/]
+[/template]
+
+
+

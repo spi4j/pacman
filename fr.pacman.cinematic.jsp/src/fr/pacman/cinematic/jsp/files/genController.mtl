@@ -1,0 +1,21 @@
+[comment encoding = UTF-8 /]
+[module genController('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::jsp::common::packages /]
+[import fr::pacman::cinematic::jsp::client::ui::pkg::controller /]
+
+[template public genController(viewContainer : ViewContainer, viewState : ViewState)]
+[file (filename(getClientJspSourceDir(), viewContainer.namePackageContainerController(), viewState.buildJspControllerClassName() + '.java'), false, 'UTF-8')]
+[viewState.controller(viewContainer)/]
+[/file]
+[/template]
+
+[template public genReferentialController(viewState : ViewState)]
+[file (filename(getClientJspSourceDir(), viewState.namePackageContainerController(), viewState.buildJspControllerClassName() + '.java'), false, 'UTF-8')]
+[viewState.controller()/]
+[/file]
+[/template]

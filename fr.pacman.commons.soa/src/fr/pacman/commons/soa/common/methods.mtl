@@ -1,0 +1,219 @@
+[comment encoding = UTF-8 /]
+[module methods('http://www.obeonetwork.org/dsl/soa/4.0.0',
+			    'http://www.obeonetwork.org/dsl/entity/3.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::attributes /]
+
+[import fr::pacman::commons::soa::common::attributes /]
+[import fr::pacman::commons::soa::common::names /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+[comment : Check if the operation has an XTO parameter (DTO, Enum or Primitive) for output in WS (=1 not >0 !). /]
+[query public hasParamOutXto(o : Operation) : Boolean =
+o.output->size() = 1 and not o.output->first().type.oclIsUndefined()
+/]
+
+[comment : Check if the operation has an XTO parameter (DTO, Enum or Primitive) for input in WS (=1 not >0 !). /]
+[query public hasParamInXto(o : Operation) : Boolean =
+o.input->size() = 1 and not o.input->first().type.oclIsUndefined()
+/]
+
+[comment : sanitize the name of the DTO. /]
+[query public simpleTypeDto(p : Parameter) : String =
+if (p.type.name.size() > 3 and p.type.name.substring(p.type.name.size() - 2).equalsIgnoreCase('dto')) then
+    p.type.name.substring(1, p.type.name.size() - 3).sanitize()
+else
+    p.type.name.sanitize()
+endif
+/]
+
+[comment : Check if the output parameter of an operation is type of DTO in WS. /]
+[query public hasDtoParamOutXto (o : Operation) : Boolean =
+o.hasParamOutXto() and o.output->first().type.oclIsTypeOf(DTO)
+/]
+
+[comment : Check if the output parameter of an operation is type of Entity in WS. /]
+[query public hasEntityParamOutXto (o : Operation) : Boolean =
+o.hasParamOutXto() and o.output->first().type.oclIsTypeOf(Entity)
+/]
+
+[comment : Check if the input parameter of an operation is type of Entity in WS. /]
+[query public hasEntityParamInXto (o : Operation) : Boolean =
+o.hasParamInXto() and o.input->first().type.oclIsTypeOf(Entity)
+/]
+
+[comment : /]
+[query private paramsIn(inputs : OrderedSet(Parameter)) : Sequence(String) =
+inputs.paramIn()
+/]
+
+[comment : /]
+[query public paramIn(param : Parameter) : String =
+'final ' + param.paramType() + ' ' + apply_parameterMethodClassicIn(param.name.sanitize())
+ /]
+
+[comment : /]
+[query private paramsInXto(inputs : OrderedSet(Parameter)) : Sequence(String) =
+inputs.paramInXto()
+/]
+
+[comment : /]
+[query private paramsInXtoRS(inputs : OrderedSet(Parameter)) : Sequence(String) =
+inputs.paramInXtoRS()
+/]
+
+[comment : /]
+[query private paramInXtoRS(param : Parameter) : String =
+param.addPathModeToParamInXtoRS() + param.addQueryModeToParamInXtoRS() + param.addHeaderModeToParamInXtoRS()
++ 'final ' + param.paramTypeXto() + ' ' + apply_parameterMethodClassicIn(param.name.sanitize())
+ /]
+
+[comment : / ]
+[query private addPathModeToParamInXtoRS (param : Parameter) : String =
+if (param.restData.passingMode = soa::ParameterPassingMode::PATH) then
+  '@PathParam("' + param.restData.restId + '") ' else '' endif
+/]
+
+[comment : / ]
+[query private addQueryModeToParamInXtoRS (param : Parameter) : String =
+if (param.restData.passingMode = soa::ParameterPassingMode::QUERY) then
+  '@QueryParam("' + param.addParamForPassingModeXtoRs() + '") ' else '' endif
+/]
+
+[comment : / ]
+[query private addHeaderModeToParamInXtoRS (param : Parameter) : String =
+if (param.restData.passingMode = soa::ParameterPassingMode::HEADER) then
+  '@HeaderParam("' + param.addParamForPassingModeXtoRs() + '") ' else '' endif
+/]
+
+[comment : / ]
+[query private addParamForPassingModeXtoRs(param : Parameter) : String =
+if (not param.restData.restId.oclIsUndefined() and param.restData.restId.size() > 0)
+	then param.restData.restId else param.name endif
+/]
+
+
+[comment : /]
+[query public paramInXto(param : Parameter) : String =
+'final ' + param.paramTypeXto() + ' ' + apply_parameterMethodClassicIn(param.name.sanitize())
+ /]
+
+[comment : write the code for operation's out parameter in WS. /]
+[query public paramOutXto(o : Operation) : String =
+if (o.output->size() <> 1 or o.output->first().type.oclIsUndefined()) then
+    'void'
+else
+    paramTypeXto(o.output->first())
+endif
+/]
+
+[comment : Write the correct type and multiplicity for the Xto parameter. /]
+[template public paramTypeXto(p : Parameter)]
+[if p.isMultiple()]
+List<[typeXto(p)/]>[else]
+[typeXto(p)/][/if]
+[/template]
+
+[comment : Write the correct type for the Xto parameter. /]
+[template public typeXto(p : Parameter)]
+[comment p.type.name.sanitize()/]
+[if p.type.oclIsKindOf(PrimitiveType)][p.type.name.sanitize()/][elseif ((p.type.name <> null) and (p.type.name.contains('<')))]
+[p.type.name.substring(1,p.type.name.indexOf('<')-1)/][elseif (p.type.oclIsKindOf(Enumeration))][apply_classEnum(p.type.name)/][else][simpleTypeDto(p)+'Xto'/][/if]
+[/template]
+
+[comment : /]
+[template public paramsIn(o : Operation)]
+[paramsIn(o.input)->sep(', ')/]
+[/template]
+
+[comment : /]
+[template public paramOut(o : Operation)]
+[if o.output->size() <> 1]
+void[else]
+[paramType(o.output->first())/][/if]
+[/template]
+
+[comment : /]
+[template private paramType(p : Parameter)]
+[if p.isMultiple()]
+List<[type(p)/]>[else]
+[type(p)/][/if]
+[/template]
+
+[comment : /]
+[template private type(p : Parameter)]
+[p.type.name.sanitize()/]
+[/template]
+
+[comment : /]
+[template public paramsInXto(o : Operation)]
+[paramsInXto(o.input)->sep(', ')/]
+[/template]
+
+[comment : /]
+[template public paramsInXtoRS(o : Operation)]
+[paramsInXtoRS(o.input)->sep(', ')/]
+[/template]
+
+[comment : /]
+[template public parametersXtoRS (p : Parameter)]
+[apply_parameterMethodClassicIn(p.name)/]
+[/template]
+
+[comment : /]
+[template public getGetter(a : Attribute)]
+public [a.genPropertyType()/] [apply_methodGet(a.name.normalize())/] ()
+[/template]
+
+[comment : /]
+[template public getSetter(a : Attribute)]
+public void [apply_methodSet(a.name.normalize())/] (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(a.name.normalize())/])
+[/template]
+
+[comment : /]
+[template public getSetterIdDto(r : Reference)]
+public void [apply_methodSet(r.name.toLowerFirst())/][namePK_ID()/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.name.toLowerFirst())/][namePK_ID()/])
+[/template]
+
+[comment : /]
+[template public getGetterXto(r : Reference)]
+public [buildXtoClassNameFromDto(r.referencedType.oclAsType(environment::DTO))/] [apply_methodGet(r.name.toLowerFirst())/] ()
+[/template]
+
+[comment : /]
+[template public getGetterIdDto(r : Reference)]
+public [genPkType()/] [apply_methodGet(r.name.toLowerFirst())/][namePK_ID()/] ()
+[/template]
+
+[comment : /]
+[template public getSetterXtoReference(r : Reference)]
+public void [apply_methodSet(r.name.toLowerFirst())/] (final [r.referencedType.oclAsType(environment::DTO).buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(r.name.toLowerFirst())/])
+[/template]
+
+[comment : /]
+[template public getSetterListXto(r : Reference)]
+public void [getNameSetterListDto(r)/] (final List<[r.referencedType.oclAsType(environment::DTO).buildXtoClassNameFromDto()/]> [apply_parameterMethodMultiple(r.referencedType.oclAsType(environment::DTO).name.normalize())/])
+[/template]
+
+[comment : /]
+[template public getGetterListXto(r : Reference)]
+public List<[r.referencedType.oclAsType(environment::DTO).buildXtoClassNameFromDto()/]> [getNameGetterListDto(r)/] ()
+[/template]
+
+[comment : /]
+[template public getGetterInverseIdDto(r : Reference)]
+public [genPkType()/] [apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/] ()
+[/template]
+
+[comment : /]
+[template public getSetterInverseIdDto(r : Reference)]
+public void [apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/])
+[/template]

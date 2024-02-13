@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genMatch('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::server::matching::category::match /]
+[import fr::pacman::soa::common::classes /]
+
+[template public genMatch(d : DTO)]
+[file (filename(getServerSourceDir(), buildPackageMatchingInterfaceDto(d), buildAppliMatchClassName(d) + '.java'), false, 'UTF-8')]
+[comment] TODO traiter les cas ou la correspondance DTO Entity n'est pas 1 - 1 lorsque le DSL de Matching existera[/comment]
+[match11(d)/]
+[/file]
+[/template]

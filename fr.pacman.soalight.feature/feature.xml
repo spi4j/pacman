@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.pacman.soalight.feature"
+      label="PacMan - SOA Light"
+      version="4.4.0.qualifier"
+      provider-name="Safr@n"
+      plugin="fr.pacman.branding">
+         
+   <includes
+      id="fr.pacman.commons.soa.feature"
+      version="0.0.0"/>
+      
+   <includes
+      id="fr.pacman.entity.api.feature"
+      version="0.0.0"/>
+
+   <plugin
+         id="fr.pacman.soalight"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
+

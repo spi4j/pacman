@@ -1,0 +1,22 @@
+[comment encoding = UTF-8 /]
+[module genLog4j('http://www.obeonetwork.org/dsl/soa/4.0.0',
+				'http://www.obeonetwork.org/dsl/environment/3.0.0',
+				'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::classes /]
+[import fr::pacman::commons::common::log4j /]
+
+[template public genLog4j(n : Namespace, project : String)]
+[if (project = 'server')]
+[file (filename(getServerResourcesDir(), '', 'log4j2.xml'), false, 'ISO-8859-1')]
+[log4j(n,'server')/]
+[/file]
+[elseif (project = 'commons')]
+[file (filename(getCommonsTestDir(), '', 'log4j2.xml'), false, 'ISO-8859-1')]
+[log4j(n,'commons')/]
+[/file]
+[/if]
+[/template]

@@ -1,0 +1,270 @@
+[comment encoding = UTF-8 /]
+[module DbReferentiel('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::requests::counterQueries /]
+
+[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::methodes /]
+[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::classesEntity /]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+
+
+[template public createReferentiel(b : environment::Namespace)]
+[file (filename(getServerSourceDir(), buildPackagePersistenceReferentiel(), buildReferentielClassName(b) + '.java'), false, 'UTF-8')]
+[licence()/]
+package [buildPackagePersistenceReferentiel()/];
+
+// [protected ('for imports')]
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import fr.spi4j.Parameters;
+
+import [buildPackagePersistence()/].[buildParamPersistenceClassName()/];
+
+[for (e : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+import [buildPackagePersistenceReferentielEntity(e)/].[buildReferentielEntityClassName(e)/];
+[/for]
+
+[for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+   [for (r : Reference | it.references)]
+      [if (r.navigable)]
+[if (isRelationN1(r))]
+import [buildPackagePersistenceReferentielReference(r)/].[buildReferentielReferenceClassName(r)/];
+[/if]
+      [/if]
+   [/for]
+[/for]
+
+// [/protected]
+
+/**
+ * Permet d'effectuer le remplissage référentiel du Namespace '[b.name/]'.
+ */
+public class [buildReferentielClassName(b)/]
+{
+    // CONSTANTES
+	
+	/** Le repertoire des csv, a recuperer via la variable d'environnement [getApplicationName()/].dbreferentiel.[b.name/].repcsv */
+	private static final String [apply_attributeFinalStatic('rep csv')/] = Parameters.getParameter( "[getApplicationName()/].dbreferentiel.[b.name/].repcsv", "" );
+
+	/** Le repertoire des logs, a recuperer via a recuperer via la variable d'environnement [getApplicationName()/].dbreferentiel.replogs  */
+	private static final String [apply_attributeFinalStatic('rep logs')/] = Parameters.getParameter( "[getApplicationName()/].dbreferentiel.[b.name/].replogs", "" );
+
+	/** Le logger  */
+    private static final Logger [apply_attributeFinalStatic('LOG')/] = LogManager.getLogger( [buildReferentielClassName(b)/].class );
+
+   // Constantes [buildReferentielClassName(b)/]
+   // [protected (b.getUserCodeId('Constantes ' + buildReferentielClassName(b)))]
+
+   // [/protected]
+
+
+	// ATTRIBUTS
+
+	/** Le flag indiquant si on commite le traitement */
+	private static boolean [apply_attributeStatic('commit traitement')/] = true;
+
+   // Attributs [buildReferentielClassName(b)/]
+   // [protected (b.getUserCodeId('Attributs ' + buildReferentielClassName(b)))]
+
+   // [/protected]
+
+
+	// METHODES
+
+    /**
+    * Obtenir le répertoire où se trouvent les fichiers à importer
+    * @return String [apply_parameterMethodClassicIn ('rep csv')/]
+    */
+    public static synchronized String [apply_methodDefault('get rep csv')/] ()
+    {
+    	return [apply_attributeFinalStatic('rep csv')/];
+    }
+
+    /**
+    * Obtenir le répertoire où se trouvent les fichiers de log
+    * @return String [apply_parameterMethodClassicIn ('rep logs')/]
+    */
+    public static synchronized String [apply_methodDefault('get rep logs')/] ()
+    {
+    	return [apply_attributeFinalStatic('rep logs')/];
+    }
+
+    /**
+    * Obtenir la valeur du flag indiquant si on commite le traitement
+    * @return boolean [apply_parameterMethodClassicIn ('rep csv')/]
+    */
+    public static synchronized boolean [apply_methodDefault('get commit traitement')/] ()
+    {
+    	return  [apply_attributeStatic('commit traitement')/];
+    }
+
+    /**
+    * Set le flag indiquant si on commite le traitement
+    * @param boolean [apply_parameterMethodClassicIn ('commit traitement')/]
+    */
+    public static synchronized void [apply_methodDefault('set commit traitement')/] ( boolean [apply_parameterMethodClassicIn ('commit traitement value')/] )
+    {
+    	 [apply_attributeStatic('commit traitement')/] = [apply_parameterMethodClassicIn ('commit traitement value')/];
+    }
+
+   /**
+    * Initialisation du chargement. Debute une transaction et logs d information sur les ressources du programme. 
+    */
+   public static void [apply_methodDefault('init traitement')/] ()
+   {
+	  [apply_attributeFinalStatic('LOG')/].info( "/******* DEBUT de la transaction du chargement dans [buildReferentielClassName(b)/]  *******/" );
+	  [apply_attributeFinalStatic('LOG')/].info( "Nom du repertoire des csv (variable d environment [getApplicationName()/].[b.name/].dbreferentiel.repcsv): " + [apply_classDefault(b.name + ' referentiel')/].[apply_methodDefault('get rep csv')/]() );
+	  [apply_attributeFinalStatic('LOG')/].info( "Nom du repertoire de log (variable d environment [getApplicationName()/].[b.name/].dbreferentiel.replogs): " + [apply_attributeFinalStatic('rep logs')/] + "\n");
+
+	  [buildParamPersistenceClassName()/].getUserPersistence().begin();	 
+	  [buildReferentielClassName(b)/].[apply_methodDefault('set commit traitement')/](true);
+   }
+
+   /**
+    * Finalisation du chargement. Commit ou rollback une transaction selon l'absence ou la présence d'erreur dans le chargement 
+    */
+   public static void [apply_methodDefault('finalize traitement')/] ()
+   {
+	  if ( [buildReferentielClassName(b)/].[apply_methodDefault('get commit traitement')/]() )
+	  {
+       	 [buildParamPersistenceClassName()/].getUserPersistence().commit();
+	  	 [apply_attributeFinalStatic('LOG')/].info( "/******* FIN de la transaction du chargement dans [buildReferentielClassName(b)/] : COMMIT  *******/" );
+	  }
+	  else
+	  {
+		[buildParamPersistenceClassName()/].getUserPersistence().rollback();
+	  	[apply_attributeFinalStatic('LOG')/].info( "/******* FIN de la transaction du chargement dans [buildReferentielClassName(b)/] : ROLLBACK  *******/" );
+		[apply_classDefault('referentiel utils')/].[apply_methodDefault('send error mail')/](
+			"Erreur dans le chargement de referentiel", 
+			"Le chargement du referentiel [b.name/] a généré des erreurs; le détail des erreurs est dans la log du programme."
+		);
+
+	  }
+   }
+
+
+   /**
+    * Executable.
+    * @param [apply_parameterMethodClassicIn('args')/]
+    *           arguments
+    * @throws Throwable
+    *            exception
+    */
+   public static synchronized void main ( final String['['/]] [apply_parameterMethodClassicIn('args')/] ) throws Throwable
+   {
+
+	  /** Debut de la transaction d'import du referentiel */
+	  [apply_methodDefault('init traitement ')/]();
+
+	  /** Import des entites qui ne sont pas referencees par des relations 0..* ou 1..* */
+      [for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+		[if not it.hasReferencingStar()] 
+	  [buildReferentielEntityClassName(it)/].[apply_methodDefault('charge entity')/](); 
+		[/if]
+      [/for]
+
+	  /** Import des entites qui sont referencees par des relations 0..* ou 1..* */
+      [for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+		[if it.hasReferencingStar()] 
+	  [buildReferentielEntityClassName(it)/].[apply_methodDefault('charge entity')/](); 
+		[/if]
+      [/for]
+
+	  /** Import des references 0..1 */
+[for (it : Entity | b.types->select(el|el.oclIsKindOf(entity::Entity)))]
+   [for (r : Reference | it.references)]
+      [if (r.navigable)]
+[if (isRelationN1(r))]
+	  [buildReferentielReferenceClassName(r)/].[apply_methodDefault('maj fk')/](); 
+[/if]
+      [/if]
+   [/for]
+[/for]
+
+      /** Fin de la transaction d'import du referentiel */
+	  [apply_methodDefault('finalize traitement ')/]();
+
+   }
+
+   // Methodes [buildReferentielClassName(b)/]
+   // [protected (b.getUserCodeId('Methodes ' + buildReferentielClassName(b)))]
+
+   // [/protected]
+
+
+}
+[/file]
+
+[/template]
+
+
+[query private isRelationNN(r : Reference) : Boolean =
+    if (r.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+        if (not r.oppositeOf.oclIsUndefined()) then
+            if (r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+                true
+            else
+                false
+            endif
+        else
+            false
+        endif
+    else
+        false
+    endif
+/]
+
+[query private isRelationN1(r : Reference) : Boolean =
+    if (r.multiplicity = environment::MultiplicityKind::ZERO_ONE or r.multiplicity = environment::MultiplicityKind::ONE) then
+        if (not r.oppositeOf.oclIsUndefined()) then
+            if (r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+                true
+            else
+                false
+            endif
+        else
+            true
+        endif
+    else
+        false
+    endif
+/]
+
+[query private isRelation1N(r : Reference) : Boolean =
+    if (r.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.multiplicity = environment::MultiplicityKind::ONE_STAR) then
+        if (not r.oppositeOf.oclIsUndefined()) then
+            if (r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_ONE or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE) then
+                true
+            else
+                false
+            endif
+        else
+            true
+        endif
+    else
+        false
+    endif
+/]
+
+

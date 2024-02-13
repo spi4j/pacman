@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-release">
+    <description>
+            Release de Pacman
+    </description>
+
+    <path id="path.svnant">
+        <fileset dir="lib">
+          <include name="**/*.jar"/>
+        </fileset>
+    </path>
+	
+    <typedef 
+        resource="org/tigris/subversion/svnant/svnantlib.xml" 
+        classpathref="path.svnant"
+    />
+	
+	<svnSetting 
+		  javahl="false"
+          svnkit="false"
+		  username="admin1"
+		  password="Cosmopolit@n3"
+          id="svn.settings"
+      />
+
+    <target name="release" description="Commit des fichiers liés aux plugins Eclipse">
+    	<svn refid="svn.settings">
+    		<commit message="[Pacman Release] Livraison">
+    			<fileset dir="${basedir}">
+                	<include name="**/MANIFEST.MF"/>
+                	<include name="**/plugin.xml"/>
+                	<include name="**/feature.xml"/>
+                	<include name="**/site.xml"/>
+    				<exclude name="**/target/**"/>
+            	</fileset>
+    		</commit>
+    	</svn>
+    </target>
+
+    <target name="post-release" description="Commit des fichiers liés aux plugins Eclipse">
+    	<svn refid="svn.settings">
+    		<commit message="[Pacman Release] Fin Livraison">
+    			<fileset dir="${basedir}">
+                	<include name="**/MANIFEST.MF"/>
+                	<include name="**/plugin.xml"/>
+                	<include name="**/feature.xml"/>
+                	<include name="**/site.xml"/>
+                	<include name="**/pom.xml"/>
+    				<exclude name="**/target/**"/>
+            	</fileset>
+    		</commit>
+    	</svn>
+    </target>
+	
+</project>

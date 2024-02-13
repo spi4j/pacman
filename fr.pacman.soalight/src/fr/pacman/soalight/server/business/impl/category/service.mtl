@@ -1,0 +1,131 @@
+[comment encoding = UTF-8 /]
+[module service('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0',
+                'http://www.obeonetwork.org/dsl/requirement/1.0',
+				'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::attributes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::soalight::common::imports /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::attributes /]
+[import fr::pacman::soalight::common::methodes /]
+[import fr::pacman::soalight::common::outils /]
+[import fr::pacman::soalight::common::classes /]
+[import fr::pacman::soalight::common::commentaires /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::project::surcouche /]
+
+[import fr::pacman::commons::common::properties /]
+
+
+[comment] le Service existe sans Entity [/comment]
+
+[template public service(s : Service)]
+[licence()/]
+[let self : OclAny = if not s.oclIsUndefined() then s else  'PACKAGE NOT FOUND FOR SERVICE' endif]
+package [buildPackageBusinessImplementationService(s)/];
+
+// [protected ('for imports')]
+
+[getImportServiceInterface(s)/]
+import [getImportForEntityService_Abs()/];
+import java.util.List;
+[if useServiceRequirements()]
+[getImportServiceRequirements(s)/]
+[/if]
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[if s.ownedInterface.ownedOperations->exists(o : Operation | not getRequirements(o)->isEmpty())]
+import [buildPackageRequirement()/].[apply_classAnnotation('requirement')/];
+import [buildPackageRequirement()/].[apply_classEnum('requirement')/];
+[/if]
+[/if]
+[if useEjb()]
+import jakarta.ejb.Stateless;
+[/if]
+
+// [/protected]
+
+/**
+ * Implémentation du contrat de services spécifiques. <br>
+ * Pour rappel, les services sont sans état.
+ * @author [getAuthorName()/]
+ */
+// Annotations Service
+// [protected (s.getUserCodeId('Annotations Service'))]
+[if useEjb()]
+@Stateless
+[/if]
+// [/protected]
+public class [buildServiceClassName(s)/]  [if isFromEntityService(s) ]extends [getClassNameForEntityService_Abs()/]<[genPkType()/], [buildEntityInterfaceNameFromService(s)/], [buildEntityColumnEnumNamefromService(s)/]> [/if]implements [buildServiceInterfaceName(s)/]
+{
+
+   // Rappel : les services sont sans état.
+   // attributs
+   // [protected (s.getUserCodeId('attributs'))]
+
+   // [/protected]
+ 
+[if useServiceRequirements()]
+   @SuppressWarnings("all")
+   private final [buildServiceRequirementsClassName(s)/] [apply_attributeFinal('requirements')/] = new [buildServiceRequirementsClassName(s)/](); // NOPMD
+[/if]
+	
+[if s <> null and not s.ownedInterface.oclIsUndefined()]
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+[let requirements : Sequence(Requirement) = getRequirements(o)]
+[comment TODO : on ne gère que les annotations automatiques sur les services si on n'a pas demandé le découpage de l'énumération (requirement.category.base.level=0) car sinon c'est trop complexe (pour le moment) /]
+	/**
+	* [o.description/]
+[getComParamsIn(o)/][comParamOut(o)/]
+	 */
+[if useServiceRequirements()]
+[if requirementBaseCategoryLevel() = 0 and not requirements->isEmpty()]
+[if requirements->size() = 1]
+   @[apply_classAnnotation('requirement')/]([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][requirements->first().id /])
+[else]
+   @[apply_classAnnotation('requirement')/](value =
+   {[apply_classEnum('requirement') + '.' + getServiceRequirementsPrefix() + requirements.id->sep(', ' + apply_classEnum('requirement') + '.' + getServiceRequirementsPrefix())/] })
+[/if]
+[/if]
+[/if]
+   public [paramOut(o)/] [apply_methodDefault(o.name.sanitize())/] ([paramsIn(o)/])
+   {
+	  [if useServiceRequirements()]
+      [for (req : Requirement | requirements)]
+      [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id /]();
+      [/for]
+	  [/if]
+	  // [userCodeForOperation(o)/]
+	  // [protected (o.getUserCodeId(userCodeForOperation(o)))]
+	  // TODO Méthode à implémenter
+      throw new UnsupportedOperationException();
+
+      // [/protected]
+   }
+
+[/let]
+[/for]
+[/if]
+   // Methodes [buildServiceClassName(s)/]
+   // [protected (s.getUserCodeId('Methodes ' + buildServiceClassName(s)))]
+
+   // [/protected]
+}[/let]
+[/template]
+
+[query private getRequirements(o : Operation) : Sequence(Requirement) =
+invoke('fr.pacman.soalight.services.RequirementUtils', 'getRequirements(org.eclipse.emf.ecore.EObject)', Sequence{o})
+/]

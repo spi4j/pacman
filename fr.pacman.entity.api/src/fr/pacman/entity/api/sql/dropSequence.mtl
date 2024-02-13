@@ -1,0 +1,33 @@
+[comment encoding = UTF-8 /]
+[module dropSequence('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::commons::common::properties /]
+
+[template public dropSequence(r : Root)]
+/****************************************************************/
+[genSlashedLine('Sequences', sizeHeader())/]
+/****************************************************************/
+[for (n : environment::Namespace | r.ownedNamespaces)]
+[dropSequence(n)/]
+[/for]
+[/template]
+
+[template private dropSequence(n : environment::Namespace)]
+[for (sn : environment::Namespace | n.ownedNamespaces)]
+[dropSequence(sn)/]
+[/for]
+[for (e : Entity | n.types->select(e| e.oclIsKindOf(entity::Entity)))]
+[if not e.isNotPersistent() or useMatching()]
+[dropSequence(e)/]
+[/if]
+[/for]
+[/template]
+
+[template private dropSequence(e : Entity)]
+drop sequence [nameSequence(e)/];
+[/template]
+

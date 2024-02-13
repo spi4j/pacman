@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.*"
+            id="fr.pacman.entity.sql.ui.popup.contribution.IFile">
+         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
+               <groupMarker name="acceleo"/> 
+         </menu>
+         <action
+               class="fr.pacman.entity.dbreferentiel.ui.popup.AcceleoGenerateDbReferentielAction"
+               enablesFor="+"
+               id="fr.pacman.entity.sql.ui.popup.AcceleoGenerateDbReferentielAction"
+               icon="icons/safran.png"
+               label="Génération Import Référentiel"
+               menubarPath="org.obeonetwork.is.designer.menu/moe"
+               tooltip="Génère les classes Java d import de la base de données"/>
+      </objectContribution>
+   </extension>
+</plugin>

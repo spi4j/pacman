@@ -1,0 +1,53 @@
+/**
+ * (C) Copyright Ministère des Armées (France)
+ *
+ * Apache License 2.0
+ */
+package fr.appwhite1.client.ui.annuaire;
+
+// Start of user code for imports
+
+import fr.spi4j.ui.mvp.View_Itf;
+import fr.spi4j.ui.graal.Field;
+import fr.spi4j.ui.graal.UserView;
+import fr.spi4j.ui.HasString_Itf;
+
+
+
+// End of user code
+
+/**
+ * Interface de vue.
+ * @author Pacman
+ */
+// Start of user code annotation class
+@UserView("DetailPersonne")
+// End of user code
+public interface DetailPersonneView_Itf extends View_Itf
+{
+
+   // Start of user code btAnnuler_HasString_Itf
+
+   /**
+    * @return btAnnuler
+    */
+   @Field("btAnnuler")
+   HasString_Itf get_btAnnuler ();
+
+   // End of user code
+
+   // Start of user code btEnregistrer_HasString_Itf
+
+   /**
+    * @return btEnregistrer
+    */
+   @Field("btEnregistrer")
+   HasString_Itf get_btEnregistrer ();
+
+   // End of user code
+
+   // Start of user code DetailPersonneView_Itf
+
+   // End of user code
+
+}

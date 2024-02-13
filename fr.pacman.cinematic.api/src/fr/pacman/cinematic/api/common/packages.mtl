@@ -1,0 +1,96 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+                 'http://www.obeonetwork.org/dsl/soa/4.0.0',
+				 'http://www.obeonetwork.org/dsl/entity/3.0.0',
+                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::cinematic::api::common::standard-widgets /]
+
+[query public packageHierarchy(any : OclAny) : String =
+    if (any.oclIsUndefined() or any.ancestors(Package)->isEmpty()) then
+        ''
+    else
+        '.' + any.ancestors(Package).name.sanitize().toLower()->reverse()->sep('.')
+    endif
+/]
+
+[query public namePackageClient(any : OclAny) : String =
+    getApplicationPackage() + '.client.ui'
+/]
+
+[query public namePackageViewContainerInterface(viewContainer : ViewContainer) : String =
+    namePackageClient() + packageHierarchy(viewContainer)
+/]
+
+[query public namePackageViewContainerPresenter(viewContainer : ViewContainer) : String =
+    namePackageClient() + packageHierarchy(viewContainer)
+/]
+
+[query public namePackageFlowManager(flow : Flow) : String =
+    namePackageClient() + packageHierarchy(flow)
+/]
+
+
+[query private orderWidgets(widgets : Set(Widget)) : OrderedSet(Widget) =
+widgets->sortedBy(w : Widget | widgetComparator(w))
+/]
+
+[query private widgetComparator(widget : Widget) : String =
+    if widget.oclIsUndefined() or widget.name.oclIsUndefined() then
+        ''
+    else
+        widget.name
+    endif
+/]
+
+[template public importViewElementsDependencies(viewElements : Set(ViewElement), IsDto : Boolean)]
+[comment][if IsDto]
+[for (viewElement : ViewElement | viewElements)]
+    [if (not viewElement.type.oclIsUndefined() and viewElement.type.oclIsKindOf(ServiceDTO))]
+import [namePackageDto(viewElement.type.oclAsType(ServiceDTO))/].[buildDtoClassName(viewElement.type.oclAsType(ServiceDTO))/];
+    [/if]
+[/for]
+[else]
+[for (viewElement : ViewElement | viewElements)]
+    [if (not viewElement.type.oclIsUndefined() and viewElement.type.oclIsKindOf(ServiceDTO))]
+import [namePackageXto(viewElement.type.oclAsType(ServiceDTO))/].[buildXtoClassName(viewElement.type.oclAsType(ServiceDTO))/];
+    [/if]
+[/for]
+[/if][/comment]
+[/template]
+
+[query public namePackageXto(d : DTO) : String =
+    mainPackage(d) + '.ws.api' + categoryHierarchy(d)
+/]
+[query public namePackageDto(d : DTO) : String =
+    mainPackage(d) + '.business.api' + categoryHierarchy(d)
+/]
+
+[query public namePackageDtoJsf(d : DTO) : String =
+    getApplicationPackage() + '.business.api' + categoryHierarchy(d)
+/]
+
+[query public namePackageEntityJsf(e : Entity) : String =
+    getApplicationPackage() + '.persistence.impl_jdbc' + categoryHierarchy(e)
+/]
+
+[query private categoryHierarchy(d : DTO) : String =
+    if (d.oclIsUndefined() or d.ancestors(Namespace)->isEmpty()) then
+        ''
+    else
+        '.' + d.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+/]
+
+[query private categoryHierarchy(e : Entity) : String =
+    if (e.oclIsUndefined() or e.ancestors(Namespace)->isEmpty()) then
+        ''
+    else
+        '.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
+    endif
+/]

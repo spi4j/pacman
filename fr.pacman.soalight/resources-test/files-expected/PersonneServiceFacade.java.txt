@@ -1,0 +1,73 @@
+package fr.appwhite2.ws.impl_server.annuaire;
+
+// Start of user code for imports
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+import fr.appwhite2.business.Appli1UserBusiness;
+import fr.appwhite2.mapper.Appli1UserMapper;
+import fr.appwhite2.persistence.Appli1ParamPersistence;
+import fr.appwhite2.persistence.api.annuaire.AdresseColumns_Enum;
+import fr.appwhite2.persistence.api.annuaire.AdresseEntity_Itf;
+import fr.appwhite2.persistence.api.annuaire.PersonneColumns_Enum;
+import fr.appwhite2.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.appwhite2.ws.api.annuaire.PersonneServiceFacade_Itf;
+import fr.appwhite2.ws.api.annuaire.PersonneXto;
+import fr.referentiel.ws.api.ref.GradeXto;
+import fr.spi4j.business.dto.DtoUtil;
+import fr.spi4j.persistence.dao.TableCriteria;
+
+// End of user code
+
+/**
+ * Implémentation de la façade du web service.
+ * @author MINARM
+ */
+@WebService(serviceName = "PersonneService", portName = "PersonneServicePort", targetNamespace = "http://annuaire.api.ws.appwhite2.fr/")
+public class PersonneServiceFacade implements PersonneServiceFacade_Itf
+{
+
+   // Start of user code findListPersonneByGrade_Grade_Personne
+
+   @WebMethod
+   @Override
+   public List<PersonneXto> findListPersonneByGrade (final GradeXto p_grade)
+   {
+      final List<PersonneEntity_Itf> v_personnes = Appli1UserBusiness.getPersonneService().findListPersonneByGrade(p_grade.getId());
+
+      // chargement du grade dans la personne (et initialisation des adresses pour éviter lazy loading)
+      for (final PersonneEntity_Itf v_personne : v_personnes)
+      {
+//         v_personne.get_grade();
+//         v_personne.set_tab_adresses(new ArrayList<AdresseDto>());
+      }
+
+      // chargement des adresses dans la personne (requête avec jointure)
+      final TableCriteria<AdresseColumns_Enum> v_adressesParGradeCriteria = new TableCriteria<>(
+               "Recherche d'adresses de personnes par grade");
+      v_adressesParGradeCriteria.addInnerJoin(AdresseColumns_Enum.proprietaire_id, PersonneColumns_Enum.Personne_id,
+               PersonneColumns_Enum.grade_id + " = :grade");
+      final Map<String, Object> v_parameters = new HashMap<>(v_adressesParGradeCriteria.getMapValue());
+      v_parameters.put("grade", p_grade.getId());
+      final List<AdresseEntity_Itf> v_adressesDeGrade = Appli1ParamPersistence.getUserPersistence().getAdresseDao().findByCriteria(v_adressesParGradeCriteria.getCriteriaSql(), v_parameters);
+      final Map<Long, PersonneEntity_Itf> v_mapPersonnesId = DtoUtil.createMapById(v_personnes);
+      for (final AdresseEntity_Itf v_adresse : v_adressesDeGrade)
+      {
+         final PersonneEntity_Itf v_personne = v_mapPersonnesId.get(v_adresse.get_proprietaire_id());
+         Appli1UserBusiness.getAdresseService().findListAdressesByPersonne(v_personne.getId());
+         //v_personne.get_tab_adresses().add(v_adresse);
+      }
+      return Appli1UserMapper.getPersonneMapper().convertListEntityToListXto(v_personnes);
+   }
+
+   // End of user code
+
+   // Start of user code PersonneServiceFacade
+
+   // End of user code
+}

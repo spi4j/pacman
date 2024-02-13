@@ -1,0 +1,316 @@
+[comment encoding = UTF-8 /]
+[module ClientGwt('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::properties / ]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+
+[import fr::pacman::configuration::common::pomXml /]
+[import fr::pacman::configuration::common::webXml /]
+[import fr::pacman::configuration::common::properties /]
+
+[template public clientGwtPom(any : OclAny) post (trim())]
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>[getApplicationPackage()/]</groupId>
+        <artifactId>[getApplicationName()/]</artifactId>
+        <version>[getVersion()/]</version>
+    </parent>
+    <artifactId>[getClientGwtProjectName()/]</artifactId>
+    <packaging>jar</packaging>
+    <name>[getApplicationName()/] - Client RIA GWT</name>
+
+	<!--
+	// [protected ('for custom code')]
+	-->
+	
+	<!--
+	// [/protected]
+	-->
+
+    <dependencies>
+        <!-- dependance vers gwt-servlet amenee transitivement par spi4j-gwt -->
+        <!-- <dependency> -->
+        <!-- <groupId>com.google.gwt</groupId> -->
+        <!-- <artifactId>gwt-servlet</artifactId> -->
+        <!-- <version>2.7.0</version> -->
+        <!-- </dependency> -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt-user.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>[getApplicationPackage()/]</groupId>
+            <artifactId>[getServerProjectName()/]</artifactId>
+            <version>${project.version}</version>
+			[if useWS() and not hasHttpEmbeddedServer()]
+            <!-- Ce client leger n'a pas besoin des web services -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-transports-http</artifactId>
+                </exclusion>
+            </exclusions>
+			[/if]
+        </dependency>
+		[if useTestBDD()]
+        <dependency>
+			<groupId>fr.spi4j</groupId>
+			<artifactId>spi4j-lib-jbehave</artifactId>
+			<version>${spi4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		[/if]
+		[comment : si Jbehave on utilise le jupiter de jbehave. /]
+		[if not useTestBDD()]
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+		[/if]
+        <dependency>
+            <groupId>fr.spi4j</groupId>
+            <artifactId>spi4j-gwt</artifactId>
+            <version>${spi4j.version}</version>
+        </dependency>
+        <!-- dependance vers spi4j-gwt avec classifier gwt pour avoir les sources -->
+        <dependency>
+            <groupId>fr.spi4j</groupId>
+            <artifactId>spi4j-gwt</artifactId>
+            <version>${spi4j.version}</version>
+            <classifier>gwt</classifier>
+        </dependency>
+        <!-- dependance vers spi4j-lib-security-commons avec classifier gwt pour avoir les sources -->
+        <dependency>
+            <groupId>fr.spi4j</groupId>
+			<artifactId>spi4j-lib-security-commons</artifactId>
+            <version>${spi4j.version}</version>
+            <classifier>gwt</classifier>
+        </dependency>
+        <dependency>
+            <!-- activation du monitoring -->
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+            <version>${javamelody-core.version}</version>
+        </dependency>
+        <!-- Dependance iText pour exports PDF dans le monitoring -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>${itext.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcmail-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bcprov-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bctsp-jdk14</artifactId>
+                    <groupId>bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Dependances pour compilation GWT : les sources de l'application sont requises -->
+        <dependency>
+            <groupId>[getApplicationPackage()/]</groupId>
+            <artifactId>[getCommonProjectName()/]</artifactId>
+            <version>${project.version}</version>
+            <type>java-source</type>
+        </dependency>
+
+		[if hasAdditionnalLibraries()]
+		[for (prop : String | getAdditionnalLibraries())]
+		<!-- Librairie additionnelle utilisateur. -->
+		<dependency>
+			<groupId>[getLibraryPackage(prop)/]</groupId>
+			<artifactId>[getLibraryName(prop)/]-commons</artifactId>
+			<version>${user-library-[getLibraryName(prop)/].version}</version>
+		</dependency>
+		<dependency>
+			<groupId>[getLibraryPackage(prop)/]</groupId>
+			<artifactId>[getLibraryName(prop)/]-server</artifactId>
+			<version>${user-library-[getLibraryName(prop)/].version}</version>
+		</dependency>
+		[/for][/if]
+		<!--
+		// [protected ('for dependencies')]
+		-->
+		
+		<!--
+		// [/protected]
+		-->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+					<release>${java.version}</release>
+                    <compilerArgument>-Xlint</compilerArgument>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+			[if useTestBDD()]
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<!-- -Dfile.encoding=UTF-8 est nécessaire pour que les tests jbehave 
+						dans maven sous windows fonctionnent (car JBehave ne sait lire les fichiers 
+						story qu'avec le charset par défaut, Cp1252 sous Windows, et n'accepte aucune 
+						configuration) -->
+					<!-- Utilisation d'une base H2 pour le lancement des tests -->
+					<argLine>-Xmx128m -Dfile.encoding=UTF-8 -Dtest.h2=true</argLine>
+					<includes>
+						<include>**/stories/**/*.java</include>
+						<include>**/*_Test.java</include>
+						<include>**/Test*.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			[jBehaveDependencyPlugin()/]
+			[/if]
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <!-- le driver H2 est une dependance Maven de ce module (via le module
+                    [getServerProjectName()/]) pour que l'on puisse facilement lancer la webapp dans Tomcat
+                    depuis Eclipse sans configurer de datasource, mais le jar du driver jdbc
+                    n'est pas inclus dans le fichier war de cette webapp et c'est le serveur
+                    d'application (Tomcat ou GlassFish) qui doit fournir la datasource jdbc a
+                    partir du driver jdbc inlus dans le serveur (%TOMCAT_HOME%/lib/h2database.jar
+                    par exemple) -->
+                <!-- On exclut egalement toutes les dependances avec classifier gwt car elles font doublons -->
+                <configuration>
+                    <packagingExcludes>WEB-INF/lib/h2*.jar,WEB-INF/lib/*-gwt.jar</packagingExcludes>
+                </configuration>
+                <executions>
+                    <!-- On ne veut pas mettre le packaging war sur ce pom pour ne pas perturber
+                        les configurations eclipse des autres projets, mais par contre on veut fabriquer
+                        un war qui contiendra l'application -->
+                    <execution>
+                        <id>War</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>WarBuild</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Pour avoir en plus un nom de fichier war independant de la version
+                                    Maven et qui servira comme nom de webapp dans Tomcat via la configuration
+                                    de deploiement automatique dans Jenkins -->
+                                <copy file="target/${project.artifactId}-${project.version}.war" tofile="target/[getClientGwtProjectName()/].war" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<!--
+			// [protected ('for plugins')]
+			-->
+		
+			<!--
+			// [/protected]
+			-->
+        </plugins>
+		[if useTestBDD()]
+		[jBehavePluginManagement() /]
+		[jBehaveTestResources() /]
+		[/if]
+    </build>
+</project>
+[/template]
+
+[template public clientGwtWebXml(any : OclAny) post (trim())]
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [protected ('web.xml -->')]
+<!DOCTYPE web-app
+    ['['/]
+        <!ENTITY services[getApplicationName()/] SYSTEM "services_[getApplicationName()/].xml">
+    [']'/]>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+
+	[melodyConfiguration()/]
+	[initializationListener()/]
+
+    <!-- Services -->
+    &services[getApplicationName()/];
+
+	<!--
+        Variable utilisee dans le XXXGwtServiceImpl et les classes de service qui heritent de SpiRemoteServiceImpl et GwtRemoteService
+        Chemin vers les fichiers RPC   
+     -->
+     <context-param>
+        <param-name>moduleBaseURL</param-name>
+        <param-value>http://localhost:PORT/WEB_APP/REPERTOIRE_RPC</param-value>
+     </context-param>
+
+	[melodyFilters()/]
+
+	[adminServlet()/]
+	[dummyRSServlet()/]
+	[securityInitialization()/]
+	[configFilesInitialization()/]
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- time out des sessions en minutes (il est recommande 30 ou 60 minutes
+        pour le timeout) -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+	[basicAuth()/]
+	[userCode()/]
+
+</web-app>
+
+<!-- [/protected] -->
+[/template]

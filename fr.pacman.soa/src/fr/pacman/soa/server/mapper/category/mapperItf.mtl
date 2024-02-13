@@ -1,0 +1,53 @@
+[comment encoding = UTF-8 /]
+[module mapperItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                  'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports /]
+
+[import fr::pacman::commons::soa::common::packages /]
+[import fr::pacman::commons::soa::common::names /]
+
+[import fr::pacman::soa::common::packages /]
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::classes /]
+
+[import fr::pacman::commons::convention::project::surcouche /]
+
+
+[template public mapperItf(d : DTO)]
+[licence()/]
+package [buildPackageMapperDto(d)/];
+// [protected ('for imports')]
+
+[comment : Write all required imports. /]
+[d.writeImports()/]
+
+// [/protected]
+
+/**
+ * L'interface définissant le contrat pour le Mapper (= Dto <-> Xto) sur le type '[nameClassDto(d)/]'.
+ * @author [getAuthorName()/]
+ */
+public interface [buildMapperInterfaceName(d)/] extends [getClassNameForMapper_Itf()/]<[buildDtoClassName(d)/], [buildXtoClassNameFromDto(d)/]>
+{
+
+   // [nameMapperInterface(d)/]
+   // [protected (d.getUserCodeId(nameMapperInterface(d)))]
+
+   // [/protected]
+
+}
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(d : DTO) post(trim())]
+[d.initImports()/]
+[d.addImport(getImportForMapper_Itf())/]
+[d.addImport(d.buildPackageBusinessApiDto() + '.' + d.buildDtoClassName())/]
+[d.addImport(d.buildPackageWsApiDto() + '.' + d.buildXtoClassNameFromDto())/]
+[d.flushImports()/]
+[/template]
+

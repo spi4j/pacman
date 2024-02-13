@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module genPresenter('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::commons::common::properties /]
+[import fr::pacman::cinematic::swing::client::ui::pkg::presenter /]
+
+[template public genPresenter(viewContainer : ViewContainer)]
+[file (filename(getClientSwingSourceDir(), viewContainer.namePackageViewContainerPresenter(), viewContainer.namePresenter() + '.java'), false, 'UTF-8')]
+[presenter(viewContainer)/]
+[/file]
+[/template]
+

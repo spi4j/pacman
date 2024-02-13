@@ -1,0 +1,22 @@
+package fr.appwhite2.mapper.annuaire;
+
+// Start of user code for imports
+
+import fr.appwhite2.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.appwhite2.ws.api.annuaire.PersonneXto;
+import fr.spi4j.mapper.EntityMapper_Itf;
+
+// End of user code
+
+/**
+ * L'interface définissant le contrat pour le Mapper (= Entity <-> Xto) sur le type 'Personne'.
+ * @author MINARM
+ */
+public interface PersonneMapper_Itf extends EntityMapper_Itf<PersonneEntity_Itf, PersonneXto>
+{
+
+   // Start of user code PersonneMapper_Itf
+
+   // End of user code
+
+}

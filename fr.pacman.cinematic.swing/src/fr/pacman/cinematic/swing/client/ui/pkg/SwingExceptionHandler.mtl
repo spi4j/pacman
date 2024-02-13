@@ -1,0 +1,99 @@
+[comment encoding = UTF-8 /]
+[module SwingExceptionHandler('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::cinematic::swing::common::packages /]
+[import fr::pacman::cinematic::swing::common::name /]
+[import fr::pacman::cinematic::api::common::packages /]
+[import fr::pacman::cinematic::api::common::name /]
+[import fr::pacman::cinematic::api::common::model /]
+[import fr::pacman::cinematic::swing::common::swing-commons /]
+[import fr::pacman::commons::common::names /]
+
+[template public SwingExceptionHandler(viewContainer : ViewContainer)][comment q chqnger /]
+[licence()/]
+package [namePackageMain()/];
+
+import fr.spi4j.ui.swing.SpiEventExceptionHandler;
+
+/**
+ * Gestionnaire des exceptions non catchées dans l'application cliente.
+ * 
+ * @author [getAuthorName()/]
+ */
+public class SwingExceptionHandler extends SpiEventExceptionHandler {
+
+   private static final SwingExceptionHandler c_handler = new SwingExceptionHandler();
+
+   /**
+    * Constructeur : ce constructeur doit être public et sans paramètre pour
+    * l'installation dans l'EDT.
+    */
+   public SwingExceptionHandler() {
+      super();
+   }
+
+   @Override
+   protected void exceptionCaught(final Throwable p_throwable) {
+      // // si timeout
+      // if (p_throwable instanceof UnauthentifiedUserException)
+      // {
+      // if (Spi4jSecurity_Abs.getInstance().getCurrentUser() != null)
+      // {
+      // // fermer toutes les fenêtres ouvertes
+      // Collection<Presenter_Abs<? extends View_Itf, ?>> v_presenters =
+      // MVPUtils.getInstance().getViewManager()
+      // .getActivePresenters();
+      // while (!v_presenters.isEmpty())
+      // {
+      // v_presenters.iterator().next().close();
+      // v_presenters =
+      // MVPUtils.getInstance().getViewManager().getActivePresenters();
+      // }
+      //
+      // // afficher popup timeout
+      // JOptionPane.showMessageDialog(null, "Session expirée.", null,
+      // JOptionPane.ERROR_MESSAGE);
+      // // afficher LoginView
+      // //final LoginPresenter v_login = new LoginPresenter();
+      // //final SpiViewPanel<?> v_view = (SpiViewPanel<?>) v_login.getView();
+      // final SpiFrame v_frame = new SpiFrame()
+      // {
+      // private static final long serialVersionUID = 1L;
+      // };
+      // v_frame.setContentPane(v_view);
+      // v_frame.setTitle(v_view.getTitle());
+      // v_frame.display();
+      // v_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      //
+      // Spi4jSecurity_Abs.getInstance().setCurrentUser(null);
+      // }
+      // }
+      // else
+      // {
+      // // dans le cadre de l'application blanche, on log et on affiche une
+      // simple popup en cas d'erreur
+      // super.exceptionCaught(p_throwable);
+      // SpiErrorDialog.showError(p_throwable);
+      // }
+   }
+
+   /**
+    * Initialisation.
+    */
+   public static void initialize() {
+      // installe le handler pour l'EventDispatchThread d'AWT/Swing (EDT)
+      install(SwingExceptionHandler.class);
+
+      // installe le handler pour les threads autres que l'EDT
+      Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+         @Override
+         public void uncaughtException(final Thread p_thread,
+               final Throwable p_throwable) {
+            c_handler.exceptionCaught(p_throwable);
+         }
+      });
+   }
+}
+
+[/template]

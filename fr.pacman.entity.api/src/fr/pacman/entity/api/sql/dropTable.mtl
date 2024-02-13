@@ -1,0 +1,38 @@
+[comment encoding = UTF-8 /]
+[module dropTable('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::entity::api::sql::common /]
+[import fr::pacman::entity::api::sql::genTable /]
+[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::commons::common::properties /]
+
+[template public dropTable(r : Root)]
+[for (n : environment::Namespace | r.ownedNamespaces)]
+[dropTable(n)/]
+[/for]
+[/template]
+
+[template public dropTable(n : environment::Namespace)]
+[for (sn : environment::Namespace | n.ownedNamespaces)]
+[dropTable(sn)/]
+[/for]
+[for (e : Entity | n.types->select(e| e.oclIsKindOf(entity::Entity)))]
+[if not e.isNotPersistent() or useMatching()]
+/****************************************************************/
+[genSlashedLine(headerTable(e), sizeHeader())/]
+/****************************************************************/
+drop table [nameTableWithSchema(e)/];
+
+[for (r : environment::Reference | e.referencesStarStarOwned())]
+/****************************************************************/
+[genSlashedLine(headerTableJointure(r), sizeHeader())/]
+/****************************************************************/
+drop table [nameTableJointureWithSchema(r)/];
+
+[/for]
+[/if]
+[/for]
+[/template]
+

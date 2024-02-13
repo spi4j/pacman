@@ -1,0 +1,14 @@
+[comment encoding = UTF-8 /]
+[module cinematicServices('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.eclipse.org/emf/2002/Ecore')/]
+
+[query public getNextStates(arg0 : FlowState, arg1 : Event) : Set(FlowState)
+	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getNextStates(org.obeonetwork.dsl.cinematic.flow.FlowState, org.obeonetwork.dsl.cinematic.Event)', Sequence{arg0, arg1}) /]
+
+[query public getID(any : OclAny) : String
+	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getId()', Sequence{}) /]
+
+[query public getUnBindedViewEvent(arg0 : ViewContainer) : Set(ViewEvent)
+	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getUnBindedViewEvent(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{arg0}) /]
+
+[query public getNbButtons(arg0 : ViewContainer) : Integer
+	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getNbButtons(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{arg0}) /]

@@ -1,0 +1,24 @@
+[comment encoding = UTF-8 /]
+[module packages('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::packages /]
+
+[**
+ * Paramétrage début
+*/]
+
+[query public buildPackageEnum(e : Enumeration) : String =
+    buildPackagePersistenceApi() + blockHierarchy(e)
+ /]
+
+[**
+ * Paramétrage Fin
+*/]
+
+[template public blockHierarchy(e : Enumeration) post (trim())]
+[if (e.ancestors(Namespace)->size() < 1)]
+[else]
+.[e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')/]
+[/if]
+[/template]

@@ -1,0 +1,220 @@
+[comment encoding = UTF-8 /]
+[module methodes('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::attributes /]
+
+[import fr::pacman::commons::soa::common::methods /]
+[import fr::pacman::commons::soa::common::attributes /]
+[import fr::pacman::commons::soa::common::names /]
+
+[import fr::pacman::soa::common::name /]
+[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::attributes /]
+
+[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::classRule /]
+
+
+[**
+ * Parametrage PacMan
+*/]
+
+[**
+ * getters
+*/]
+
+[template public getGetter(r : Reference)]
+public [buildDtoClassName(r.referencedType.oclAsType(environment::DTO))/] [apply_methodGet(r.name.toLowerFirst())/] ()
+[/template]
+
+[template public getGetterListDto(r : Reference)]
+public List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [getNameGetterListDto(r)/] ()
+[/template]
+
+[**
+ * setters
+*/]
+
+[template public getSetterDtoReference(r : Reference)]
+public void [apply_methodSet(r.name.toLowerFirst())/] (final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [apply_parameterMethodClassicIn(r.name.toLowerFirst())/])
+[/template]
+
+[template public getSetterListDto(r : Reference)]
+public void [getNameSetterListDto(r)/] (final List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [apply_parameterMethodMultiple(r.referencedType.oclAsType(environment::DTO).name.normalize())/])
+[/template]
+
+[**
+ * autres
+*/]
+
+[template public getFindListRefByDto(r : Reference, d : DTO)]
+[apply_methodDefault('find list ' + r.name.normalize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/]
+[/template]
+
+[template public getFindListRefInverseByDto(r : Reference, d : DTO)]
+[apply_methodDefault('find list ' + r.name.normalize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/]
+[/template]
+
+[**
+ * Fin ParamÃ©trage
+*/]
+
+[comment] Les Getters [/comment]
+[comment]-------------[/comment]
+
+[template public genGetter(a : Attribute)]
+public [a.genPropertyType()/] [a.nameGetter()/] ()
+[/template]
+
+[template public nameGetterIdDto(r : Reference)]
+public [genPkType()/] get[namePropertyId()/] ()
+[/template]
+
+[template public nameGetterInverseIdDto(r : Reference)]
+public [genPkType()/] get[namePropertyInverseId()/] ()
+[/template]
+
+[template public nameGetter(r : Reference)]
+public [nameDto()/] get[nameProperty()/] ()
+[/template]
+
+[template public nameGetterXto(r : Reference)]
+public [nameXto()/] get[nameProperty()/] ()
+[/template]
+
+[template public getterInstanceService(r : Reference)]
+get[r.nameClassDto()/]Service()
+[/template]
+
+[template public getterInstanceService(d : DTO)]
+get[d.nameClassDto()/]Service()
+[/template]
+
+[template public getterListDto(r : Reference)]
+public List<[r.nameDto()/]> get[r.namePropertyTab()/] ()
+[/template]
+
+[template public getterListXto(r : Reference)]
+public List<[r.nameXto()/]> get[r.namePropertyTab()/] ()
+[/template]
+
+[comment] Les Setters [/comment]
+[comment]-------------[/comment]
+
+[template public genSetter(a : Attribute)]
+public void [a.nameSetter()/] (final [a.genPropertyType()/] [apply_parameterMethodClassicIn(a.nameParam())/])
+[/template]
+
+[template public nameSetterIdDto(r : Reference)]
+public void set[namePropertyId()/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamId())/])
+[/template]
+
+[template public nameSetterInverseIdDto(r : Reference)]
+public void set[namePropertyInverseId()/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamInverseId())/])
+[/template]
+
+[template public setterDtoReference(r : Reference)]
+public void set[r.nameProperty()/] (final [r.nameDto()/] [apply_parameterMethodClassicIn(r.nameParam())/])
+[/template]
+
+[template public setterListDto(r : Reference)]
+public void [r.nameSetterListDto()/] (final List<[r.nameDto()/]> [apply_parameterMethodClassicIn(r.nameParamTab())/])
+[/template]
+
+[template public setterXtoReference(r : Reference)]
+public void set[r.nameProperty()/] (final [r.nameXto()/] [apply_parameterMethodClassicIn(r.nameParam())/])
+[/template]
+
+[template public setterListXto(r : Reference)]
+public void [r.nameSetterListDto()/] (final List<[r.nameXto()/]> [apply_parameterMethodClassicIn(r.nameParamTab())/])
+[/template]
+
+[template public setAttribute(a : Attribute)]
+set[a.nameProperty()/]([apply_parameterMethodClassicIn(a.nameParam())/]);
+[/template]
+
+[template public setId(any : OclAny)]
+setId([apply_parameterMethodClassicIn(nameENUM_PK_ID().nameParam())/]);
+[/template]
+
+[template public setDtoReferenceId(r : Reference)]
+set[r.namePropertyId()/]([apply_parameterMethodClassicIn(r.nameParamId())/]);
+[/template]
+
+[template public setDtoReferenceInverseId(r : Reference)]
+set[r.namePropertyInverseId()/]([apply_parameterMethodClassicIn(r.nameParamInverseId())/]);
+[/template]
+
+[template public setDtoReference(r : Reference)]
+set[r.nameProperty()/]([apply_parameterMethodClassicIn(r.nameParam())/]);
+[/template]
+
+[template public setDtoReferenceStar(r : Reference)]
+      if ([r.nameParamInverse()/] == null)
+      {
+         set[r.namePropertyInverseId()/](null);
+      }
+      else
+      {
+         set[r.namePropertyInverseId()/]([apply_parameterMethodClassicIn(r.nameParamInverse())/].getId());
+      }
+[/template]
+
+[comment] Les Finders [/comment]
+[comment]-------------[/comment]
+
+[template public findListRefByDto(r : Reference, d : DTO)]
+findList[nameBaseReferenceUpperFirst(r)/]By[nameClassDto(r.containingType.oclAsType(DTO))/]
+[/template]
+
+[template public findListRefInverseByDto(r : Reference, d : DTO)]
+findList[nameBaseReferenceUpperFirst(r)/]By[nameClassDto(r.containingType.oclAsType(DTO))/]
+[/template]
+
+
+[comment] Parametres [/comment]
+[comment]------------[/comment]
+
+[template public paramOutDto(o : Operation)]
+[if o.output->size() <> 1]
+void[else]
+[paramTypeDto(o.output->first())/][/if]
+[/template]
+
+[template public paramsInDto(o : Operation)]
+[paramsInDto(o.input)->sep(', ')/]
+[/template]
+
+[comment : /]
+[template public parametersXtoFromDto (p : Parameter)]
+[if p.type.oclIsTypeOf(DTO)]
+[let return : DTO = p.type.oclAsType(DTO)][buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + return.buildMapperClassName())/] ().convert[if isMultiple(p)]List[/if]XtoTo[if isMultiple(p)]List[/if]Dto ([apply_parameterMethodClassicIn(p.name)/])[/let][else]
+[apply_parameterMethodClassicIn(p.name)/][/if]
+[/template]
+
+
+[query private paramsInDto(inputs : OrderedSet(Parameter)) : Sequence(String) =
+inputs.paramInDto()
+/]
+
+[query public paramInDto(param : Parameter) : String =
+'final ' + param.paramTypeDto() + ' ' + apply_parameterMethodClassicIn(param.name.sanitize())
+ /]
+
+[template private paramTypeDto(p : Parameter)]
+[if p.isMultiple()]
+List<[typeDto(p)/]>[else]
+[typeDto(p)/][/if]
+[/template]
+
+[template private typeDto(p : Parameter)]
+[if  p.type.oclIsKindOf(PrimitiveType)]
+[p.type.name.sanitize()/][else]
+[simpleTypeDto(p)+'Dto'/][/if]
+[/template]

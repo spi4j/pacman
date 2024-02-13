@@ -1,0 +1,58 @@
+[comment encoding = UTF-8 /]
+[module initializelistener('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
+                  'http://www.obeonetwork.org/dsl/environment/3.0.0')]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports /]
+
+[template public initializelistener(root : CinematicRoot)]
+[licence()/]
+package [getApplicationPackage()/];
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+
+import [getApplicationPackage()/].persistence.[buildParamPersistenceClassName()/];
+import fr.spi4j.Parameters;
+import fr.spi4j.filter.TransactionFilter;
+import fr.spi4j.persistence.TransactionInterceptor;
+
+/**
+ * Classe permettant de faire des initialisations complémentaires lors de l'initialisation de la webapp.
+ */
+public class InitializationListener implements ServletContextListener
+{
+   @Override
+   public void contextInitialized (final ServletContextEvent p_event)
+   {
+		// Context initialized
+	  	// [protected (root.getUserCodeId('context initialized'))]
+
+      	Parameters.initServletContext(p_event.getServletContext());
+
+      	TransactionInterceptor.initUserPersistence([buildParamPersistenceClassName()/].getUserPersistence());
+      	TransactionFilter.initUserPersistence([buildParamPersistenceClassName()/].getUserPersistence());
+
+ 		// [/protected]
+   }
+
+   @Override
+   public void contextDestroyed (final ServletContextEvent p_event)
+   {
+		// Context destroyed
+	  	// [protected (root.getUserCodeId('context destroyed'))]
+
+ 		// [/protected]
+   }
+   
+   // Méthodes
+   // [protected (root.getUserCodeId('Méthodes'))]
+
+   // [/protected]
+
+}
+
+[/template]

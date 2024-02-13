@@ -1,0 +1,15 @@
+[comment encoding = UTF-8 /]
+[module genServiceRequirements('http://www.obeonetwork.org/dsl/environment/3.0.0',
+                               'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::soalight::common::name /]
+[import fr::pacman::soalight::common::packages /]
+[import fr::pacman::soalight::server::business::impl::category::serviceRequirements /]
+[import fr::pacman::soalight::common::classes /]
+
+[template public genServiceRequirements(s : Service)]
+[file (filename(getServerSourceDir(), buildPackageBusinessImplementationService(s), buildServiceRequirementsClassName(s) + '.java'), false, 'UTF-8')]
+[serviceRequirements(s)/]
+[/file]
+[/template]
