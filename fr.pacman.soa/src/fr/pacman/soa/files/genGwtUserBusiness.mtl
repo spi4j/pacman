@@ -1,15 +1,14 @@
+[module genGwtUserBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::gwt::client::business::gwtUserBusiness/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genGwtUserBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0',
-							'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::gwt::client::business::gwtUserBusiness /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genGwtUserBusiness(n : Namespace)]
-[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtClient(), buildGwtUserBusinessClassName() + '.java'), false, 'UTF-8')]
-[gwtUserBusiness()/]
-[/file]
+[template public genGwtUserBusiness(n : environment::Namespace)]
+  [file (n.getClientGwtSourceDir().filename(n.buildPackageBusinessGwtClient(), n.buildGwtUserBusinessClassName() + '.java'), overwrite, 'UTF-8')]
+    [n.gwtUserBusiness()/]
+  [/file]
 [/template]

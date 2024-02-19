@@ -1,709 +1,702 @@
-[comment encoding = UTF-8 /]
 [module ClientJsf('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::imports /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::configuration::common::webXml/]
 [import fr::pacman::configuration::common::pomXml/]
-[import fr::pacman::configuration::common::properties /]
+[import fr::pacman::configuration::common::properties/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
+[comment encoding = UTF-8 /]
+[template public clientJsfPom(any : ecore::EObject) post(self.trim())]
+  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <parent>
+          <groupId>[any.getApplicationPackage()/]</groupId>
+          <artifactId>[any.getApplicationName()/]</artifactId>
+          <version>[any.getVersion()/]</version>
+      </parent>
+      <artifactId>[any.getClientJsfProjectName()/]</artifactId>
+      <packaging>war</packaging>
+      <name>[any.getApplicationName()/] - Client JSF</name>
+  
+  	<!--
+  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+     	-->
+     	
+     	<!--	
+   [/protected]
+  
+  	-->
+      <dependencies>
+          <dependency>
+              <groupId>[any.getApplicationPackage()/]</groupId>
+              <artifactId>[any.getServerProjectName()/]</artifactId>
+              <version>${project.version}</version>
+  [if (any.useWS() and not any.hasHttpEmbeddedServer())]
+                <!-- Ce client leger n'a pas besoin des web services -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.cxf</groupId>
+                        <artifactId>cxf-rt-transports-http</artifactId>
+                    </exclusion>
+                </exclusions>
+  [/if]
+          </dependency>
+          <dependency>
+              <groupId>[any.getApplicationPackage()/]</groupId>
+              <artifactId>[any.getCommonProjectName()/]</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+  [if (any.hasAdditionnalLibraries())]
+    [for (prop : String | any.getAdditionnalLibraries())]
+      		<!-- Librairie additionnelle utilisateur. -->
+      		<dependency>
+      			<groupId>[prop.getLibraryPackage(prop)/]</groupId>
+      			<artifactId>[prop.getLibraryName(prop)/]-commons</artifactId>
+      			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+      		</dependency>
+      		<dependency>
+      			<groupId>[prop.getLibraryPackage(prop)/]</groupId>
+      			<artifactId>[prop.getLibraryName(prop)/]-server</artifactId>
+      			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+      		</dependency>
+    [/for]
+  [/if]
+  		<dependency>
+  			<groupId>jakarta.servlet</groupId>
+  			<artifactId>jakarta.servlet-api</artifactId>
+  			<version>${jakarta-servlet-api.version}</version>
+  			<scope>provided</scope>
+  		</dependency>
+  		<dependency>
+  			<groupId>jakarta.transaction</groupId>
+  			<artifactId>jakarta.transaction-api</artifactId>
+  			<version>${jakarta-transaction-api.version}</version>
+  		</dependency>
+  [if (any.useEjb())]
+            <dependency>
+                <groupId>javax.ejb</groupId>
+                <artifactId>ejb-api</artifactId>
+                <version>${ejb-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+  [/if]
+          <!-- API et implementation JSF pour lancer l'appli dans Tomcat ou Jetty par exemple -->
+  		<dependency>
+  			<groupId>org.glassfish</groupId>
+  			<artifactId>jakarta.faces</artifactId>
+  			<version>${jakarta-faces.version}</version>
+  		</dependency>
+          <dependency>
+              <groupId>org.primefaces</groupId>
+              <artifactId>primefaces</artifactId>
+              <version>${primefaces.version}</version>
+          </dependency>
+          <dependency>
+              <!-- activation du monitoring -->
+              <groupId>net.bull.javamelody</groupId>
+              <artifactId>javamelody-core</artifactId>
+              <version>${javamelody-core.version}</version>
+          </dependency>
+  
+          <!-- Dependance iText pour exports PDF dans le monitoring -->
+          <dependency>
+              <groupId>com.lowagie</groupId>
+              <artifactId>itext</artifactId>
+              <version>${itext.version}</version>
+              <exclusions>
+                  <exclusion>
+                      <artifactId>bcmail-jdk14</artifactId>
+                      <groupId>bouncycastle</groupId>
+                  </exclusion>
+                  <exclusion>
+                      <artifactId>bcprov-jdk14</artifactId>
+                      <groupId>bouncycastle</groupId>
+                  </exclusion>
+                  <exclusion>
+                      <artifactId>bctsp-jdk14</artifactId>
+                      <groupId>bouncycastle</groupId>
+                  </exclusion>
+              </exclusions>
+          </dependency>
+          <dependency>
+              <groupId>org.mockito</groupId>
+              <artifactId>mockito-core</artifactId>
+              <version>${mockito-core.version}</version>
+              <scope>test</scope>
+          </dependency>
+          <!-- Utilisation d'une base h2 -->
+          <dependency>
+              <groupId>com.h2database</groupId>
+              <artifactId>h2</artifactId>
+              <version>${h2.version}</version>
+  [if (not any.useH2EmbeddedDatabase())]
+                <scope>test</scope>
+  [/if]
+          </dependency>
+  		[false.httpEmbeddedServerDependencies()/]
+  		<!--
+  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+      		-->
+      		
+      		<!--
+    [/protected]
+  
+  		-->
+      </dependencies>
+  
+      <build>
+          <plugins>
+  			[any.plugins(false)/]
+  			[false.httpEmbeddedServerPlugins()/]
+  			<!--
+  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+       			-->
+       		
+       			<!--
+     [/protected]
+  
+  			-->
+          </plugins>
+      </build>
+  </project>[/template]
 
-[template public clientJsfPom(any : OclAny) post (trim())]
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>[getApplicationPackage()/]</groupId>
-        <artifactId>[getApplicationName()/]</artifactId>
-        <version>[getVersion()/]</version>
-    </parent>
-    <artifactId>[getClientJsfProjectName()/]</artifactId>
-    <packaging>war</packaging>
-    <name>[getApplicationName()/] - Client JSF</name>
+[template public clientJsfFacesConfigXml(any : ecore::EObject) post(self.trim())]
+  <?xml version="1.0" encoding="UTF-8"?>
+  <faces-config
+      xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+      version="2.0">
+  
+       <converter>
+  [if (any.useMatching())]
+             <converter-for-class>fr.spi4j.business.dto.Dto_Itf</converter-for-class>
+  [else]
+             <converter-for-class>fr.spi4j.persistence.entity.Entity_Itf</converter-for-class>
+  [/if]
+           <converter-class>[any.getApplicationPackage()/].common.[any.getApplicationNameUpperFirst()/]Converter</converter-class>
+       </converter>
+  
+      <application>
+          <locale-config>
+             <default-locale>fr</default-locale>
+          </locale-config>
+      </application>
+  
+  </faces-config>[/template]
 
-	<!--
-	// [protected ('for custom code')]
-	-->
-	
-	<!--	
-	// [/protected]
-	-->
-    <dependencies>
-        <dependency>
-            <groupId>[getApplicationPackage()/]</groupId>
-            <artifactId>[getServerProjectName()/]</artifactId>
-            <version>${project.version}</version>
-			[if useWS() and not hasHttpEmbeddedServer()]
-            <!-- Ce client leger n'a pas besoin des web services -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-transports-http</artifactId>
-                </exclusion>
-            </exclusions>
-			[/if]
-        </dependency>
-        <dependency>
-            <groupId>[getApplicationPackage()/]</groupId>
-            <artifactId>[getCommonProjectName()/]</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		[if hasAdditionnalLibraries()]
-		[for (prop : String | getAdditionnalLibraries())]
-		<!-- Librairie additionnelle utilisateur. -->
-		<dependency>
-			<groupId>[getLibraryPackage(prop)/]</groupId>
-			<artifactId>[getLibraryName(prop)/]-commons</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		<dependency>
-			<groupId>[getLibraryPackage(prop)/]</groupId>
-			<artifactId>[getLibraryName(prop)/]-server</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		[/for][/if]
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>${jakarta-servlet-api.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.transaction</groupId>
-			<artifactId>jakarta.transaction-api</artifactId>
-			<version>${jakarta-transaction-api.version}</version>
-		</dependency>
-		[if useEjb()]
-        <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>ejb-api</artifactId>
-            <version>${ejb-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-		[/if]
-        <!-- API et implementation JSF pour lancer l'appli dans Tomcat ou Jetty par exemple -->
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>jakarta.faces</artifactId>
-			<version>${jakarta-faces.version}</version>
-		</dependency>
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>${primefaces.version}</version>
-        </dependency>
-        <dependency>
-            <!-- activation du monitoring -->
-            <groupId>net.bull.javamelody</groupId>
-            <artifactId>javamelody-core</artifactId>
-            <version>${javamelody-core.version}</version>
-        </dependency>
-
-        <!-- Dependance iText pour exports PDF dans le monitoring -->
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
-            <version>${itext.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bcmail-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>bcprov-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>bctsp-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito-core.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Utilisation d'une base h2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-			[if not useH2EmbeddedDatabase()]
-            <scope>test</scope>
-			[/if]
-        </dependency>
-		[httpEmbeddedServerDependencies(false)/]
-		<!--
-		// [protected ('for dependencies')]
-		-->
-		
-		<!--
-		// [/protected]
-		-->
-    </dependencies>
-
-    <build>
-        <plugins>
-			[plugins(false)/]
-			[httpEmbeddedServerPlugins(false)/]
-			<!--
-			// [protected ('for plugins')]
-			-->
-		
-			<!--
-			// [/protected]
-			-->
-        </plugins>
-    </build>
-</project>
-[/template] 
-
-[template public clientJsfFacesConfigXml(any : OclAny) post (trim())]
-<?xml version="1.0" encoding="UTF-8"?>
-<faces-config
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
-    version="2.0">
-
-     <converter>
-        [if useMatching()]
-         <converter-for-class>fr.spi4j.business.dto.Dto_Itf</converter-for-class>
-        [else]
-         <converter-for-class>fr.spi4j.persistence.entity.Entity_Itf</converter-for-class>
-        [/if]
-         <converter-class>[getApplicationPackage()/].common.[getApplicationNameUpperFirst()/]Converter</converter-class>
-     </converter>
-
-    <application>
-        <locale-config>
-           <default-locale>fr</default-locale>
-        </locale-config>
-    </application>
-
-</faces-config>
-[/template]
-
-[template public clientJsfConverter(any : OclAny) post (trim())]
-[licence()/]
-package [getApplicationPackage()/].common;
-// [protected ('Imports')]
-
-import java.util.HashMap;
-import java.util.Map;
- 
-import jakarta.faces.component.UIComponent;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.convert.Converter;
-import jakarta.faces.convert.FacesConverter;
- 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
-[if useMatching()]
-import fr.spi4j.business.dto.Dto_Itf;
-[else]
-import fr.spi4j.persistence.entity.Entity_Itf;
-[/if]
-
-// [/protected]
-
-/**
-* Converter
-*/
-@FacesConverter(value = "[getApplicationName().toLowerFirst()/]Converter")
-public class  [getApplicationNameUpperFirst()/]Converter implements Converter
-{
-
-    /**
-     * Logger
-     */
-    private static final Logger LOG = LogManager.getLogger(Converter.class);
- 
-    [if useMatching()]
-    /**
-     * Dto Map
-     */
-    private static Map<String, Object> dtos = new HashMap<String, Object>();
+[template public clientJsfConverter(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.getApplicationPackage()/].common;
+  [protected ('Imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import java.util.HashMap;
+    import java.util.Map;
+     
+    import jakarta.faces.component.UIComponent;
+    import jakarta.faces.context.FacesContext;
+    import jakarta.faces.convert.Converter;
+    import jakarta.faces.convert.FacesConverter;
+     
+    import org.apache.logging.log4j.Logger;
+    import org.apache.logging.log4j.LogManager;
+    
+    [if (any.useMatching())]
+      import fr.spi4j.business.dto.Dto_Itf;
     [else]
-    /**
-     * Entity Map
-     */
-    private static Map<String, Object> entities = new HashMap<String, Object>();
+      import fr.spi4j.persistence.entity.Entity_Itf;
     [/if]
-
-   // Attributs
-   // [protected (any.getUserCodeId('Attributs'))]
-
-   // [/protected]
-    [if useMatching()]
-    public String getAsString(final FacesContext context, final UIComponent component, final Object dto) {
-        synchronized (dtos) {
-            if (!(dto instanceof Dto_Itf)) {
-                LOG.error("L'objet  doit être un Dto");
-                throw new IllegalArgumentException("L'objet doit être un Dto");
+    
+  [/protected]
+  
+  
+  /**
+  * Converter
+  */
+  @FacesConverter(value = "[any.getApplicationName().toLowerFirst()/]Converter")
+  public class  [any.getApplicationNameUpperFirst()/]Converter implements Converter
+  {
+  
+      /**
+       * Logger
+       */
+      private static final Logger LOG = LogManager.getLogger(Converter.class);
+   
+  [if (any.useMatching())]
+        /**
+         * Dto Map
+         */
+        private static Map<String, Object> dtos = new HashMap<String, Object>();
+  [else]
+        /**
+         * Entity Map
+         */
+        private static Map<String, Object> entities = new HashMap<String, Object>();
+  [/if]
+  
+     // Attributs
+     [protected (any.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  [if (any.useMatching())]
+        public String getAsString(final FacesContext context, final UIComponent component, final Object dto) {
+            synchronized (dtos) {
+                if (!(dto instanceof Dto_Itf)) {
+                    LOG.error("L'objet  doit être un Dto");
+                    throw new IllegalArgumentException("L'objet doit être un Dto");
+                }
+     
+                final String clef = buildKey(dto.getClass(), ((Dto_Itf<?>) dto).getId());
+     
+                // Ajout de l'objet dans la map si pas encore utilise
+                if (!dtos.containsKey(clef)) {
+                    dtos.put(clef, dto);
+                }
+                return clef;
             }
- 
-            final String clef = buildKey(dto.getClass(), ((Dto_Itf<?>) dto).getId());
- 
-            // Ajout de l'objet dans la map si pas encore utilise
-            if (!dtos.containsKey(clef)) {
-                dtos.put(clef, dto);
-            }
-            return clef;
         }
-    }
-
-    public Object getAsObject(final FacesContext context, final UIComponent component, final String uuid) {
-        return dtos.get(uuid);
-    }
-    [else]
-    public String getAsString(final FacesContext context, final UIComponent component, final Object entity) {
-        synchronized (entities) {
-            if (!(entity instanceof Entity_Itf)) {
-                LOG.error("L'objet  doit être un Entity");
-                throw new IllegalArgumentException("L'objet doit être un Entity");
-            }
- 
-            final String clef = buildKey(entity.getClass(), ((Entity_Itf<?>) entity).getId());
- 
-            // Ajout de l'objet dans la map si pas encore utilise
-            if (!entities.containsKey(clef)) {
-                entities.put(clef, entity);
-            }
-            return clef;
+    
+        public Object getAsObject(final FacesContext context, final UIComponent component, final String uuid) {
+            return dtos.get(uuid);
         }
-    }
+  [else]
+        public String getAsString(final FacesContext context, final UIComponent component, final Object entity) {
+            synchronized (entities) {
+                if (!(entity instanceof Entity_Itf)) {
+                    LOG.error("L'objet  doit être un Entity");
+                    throw new IllegalArgumentException("L'objet doit être un Entity");
+                }
+     
+                final String clef = buildKey(entity.getClass(), ((Entity_Itf<?>) entity).getId());
+     
+                // Ajout de l'objet dans la map si pas encore utilise
+                if (!entities.containsKey(clef)) {
+                    entities.put(clef, entity);
+                }
+                return clef;
+            }
+        }
+    
+        public Object getAsObject(final FacesContext context, final UIComponent component, final String uuid) {
+            return entities.get(uuid);
+        }
+  [/if]
+      /**
+       * Construction de la cle de la map.
+       * @param clazz le type de l'entite
+       * @param id l'identifiant de l'entite
+       * @return la cle de la map
+       */
+      private String buildKey(final Class<?> clazz, final Object id) {
+          return (clazz.toString() + id.toString()).replace(" ", "");
+      }
+  
+     // Methode
+     [protected (any.getUserCodeId('Methode')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]
 
-    public Object getAsObject(final FacesContext context, final UIComponent component, final String uuid) {
-        return entities.get(uuid);
-    }
-    [/if]
-    /**
-     * Construction de la cle de la map.
-     * @param clazz le type de l'entite
-     * @param id l'identifiant de l'entite
-     * @return la cle de la map
-     */
-    private String buildKey(final Class<?> clazz, final Object id) {
-        return (clazz.toString() + id.toString()).replace(" ", "");
-    }
+[template public clientJsfWebXml(any : ecore::EObject) post(self.trim())]
+  <?xml version="1.0" encoding="UTF-8" ?>
+  <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
+      version="5.0">
+  
+      <display-name>Webapp JSF [any.getApplicationName()/]</display-name>
+      <distributable />
+  	[any.httpEmbeddedConfiguration()/]
+  
+      <welcome-file-list>
+          <welcome-file>pages/index.xhtml</welcome-file>
+      </welcome-file-list>
+  
+  	[any.melodyConfiguration()/]	
+  	[any.initializationListener()/]
+  
+      <!-- CONFIG JSF -->
+      <context-param>
+          <param-name>jakarta.faces.CONFIG_FILES</param-name>
+          <param-value>/WEB-INF/faces-config.xml</param-value>
+      </context-param>
+  
+      <context-param>
+          <param-name>primefaces.FONT_AWESOME</param-name>
+          <param-value>true</param-value>
+      </context-param>
+  
+      <context-param>
+          <param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
+          <param-value>true</param-value>
+      </context-param>
+  
+      <!-- A modifier selon l'étape de , Development, Production, SystemTest, UnitTest-->
+      <context-param>
+          <param-name>jakarta.faces.PROJECT_STAGE</param-name>
+          <param-value>Development</param-value>
+      </context-param>
+  	
+  	[any.melodyFilters()/]
+  
+      <!-- these are for getting the session for the current thread -->
+      <filter>
+          <filter-name>httpSessionInThread</filter-name>
+          <filter-class>fr.spi4j.filter.HttpSessionFilter</filter-class>
+      </filter>
+      <filter-mapping>
+          <filter-name>httpSessionInThread</filter-name>
+          <url-pattern>/remoting/*</url-pattern>
+      </filter-mapping>
+  
+      <!-- pour avoir une seule transaction dans les beans managés JSF et pour pouvoir rollbacker la transaction dans les beans managés -->
+      <filter>
+          <filter-name>transaction</filter-name>
+          <filter-class>fr.spi4j.filter.TransactionFilter</filter-class>
+      </filter>
+      <filter-mapping>
+          <filter-name>transaction</filter-name>
+          <url-pattern>/*</url-pattern>
+      </filter-mapping>
+  
+      <!-- Initialisation de la webapp -->
+      <listener>
+          <listener-class>[any.getApplicationPackage()/].InitializationListener</listener-class>
+      </listener>
+  
+      <!-- Servlet JSF -->
+      <servlet>
+          <servlet-name>Faces Servlet</servlet-name>
+          <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+          <load-on-startup>1</load-on-startup>
+      </servlet>
+      <servlet-mapping>
+          <servlet-name>Faces Servlet</servlet-name>
+          <url-pattern>*.xhtml</url-pattern>
+      </servlet-mapping>
+  	[any.dummyRSServlet()/]
+  	[any.adminServlet()/]
+  	[any.securityInitialization()/]
+  	[any.configFilesInitialization()/]
+  
+      <session-config>
+          <!-- time out des sessions en minutes -->
+          <session-timeout>15</session-timeout>
+      </session-config>
+  
+  	[any.basicAuth()/]
+  	[any.userCode()/]
+  </web-app>[/template]
 
-   // Methode
-   // [protected (any.getUserCodeId('Methode'))]
-
-   // [/protected]
-
-}
-[/template]
-
-[template public clientJsfWebXml(any : OclAny) post (trim())]
-<?xml version="1.0" encoding="UTF-8" ?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
-    version="5.0">
-
-    <display-name>Webapp JSF [getApplicationName()/]</display-name>
-    <distributable />
-	[httpEmbeddedConfiguration()/]
-
-    <welcome-file-list>
-        <welcome-file>pages/index.xhtml</welcome-file>
-    </welcome-file-list>
-
-	[melodyConfiguration()/]	
-	[initializationListener()/]
-
-    <!-- CONFIG JSF -->
-    <context-param>
-        <param-name>jakarta.faces.CONFIG_FILES</param-name>
-        <param-value>/WEB-INF/faces-config.xml</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>primefaces.FONT_AWESOME</param-name>
-        <param-value>true</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
-        <param-value>true</param-value>
-    </context-param>
-
-    <!-- A modifier selon l'étape de , Development, Production, SystemTest, UnitTest-->
-    <context-param>
-        <param-name>jakarta.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
-    </context-param>
-	
-	[melodyFilters()/]
-
-    <!-- these are for getting the session for the current thread -->
-    <filter>
-        <filter-name>httpSessionInThread</filter-name>
-        <filter-class>fr.spi4j.filter.HttpSessionFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>httpSessionInThread</filter-name>
-        <url-pattern>/remoting/*</url-pattern>
-    </filter-mapping>
-
-    <!-- pour avoir une seule transaction dans les beans managés JSF et pour pouvoir rollbacker la transaction dans les beans managés -->
-    <filter>
-        <filter-name>transaction</filter-name>
-        <filter-class>fr.spi4j.filter.TransactionFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>transaction</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <!-- Initialisation de la webapp -->
-    <listener>
-        <listener-class>[getApplicationPackage()/].InitializationListener</listener-class>
-    </listener>
-
-    <!-- Servlet JSF -->
-    <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.xhtml</url-pattern>
-    </servlet-mapping>
-	[dummyRSServlet()/]
-	[adminServlet()/]
-	[securityInitialization()/]
-	[configFilesInitialization()/]
-
-    <session-config>
-        <!-- time out des sessions en minutes -->
-        <session-timeout>15</session-timeout>
-    </session-config>
-
-	[basicAuth()/]
-	[userCode()/]
-</web-app>
-[/template]
-
-[template public clientJsfLayoutXhtml(any : OclAny) post (trim())]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html   xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-<h:head>
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-<h:outputStylesheet name="styles.css" library="css" />
-</h:head>
-<h:body>
-       <div id="page">
-            <div id="header">
-                <ui:insert name="header">
-                   <ui:include src="/WEB-INF/templates/header.xhtml" />
-                </ui:insert>
-            </div>
-            <div id="content">
-                <ui:insert name="content">
-                    <ui:include src="/WEB-INF/templates/content.xhtml" />
-                </ui:insert>
-            </div>
-            <div id="footer">
-                <ui:insert name="footer">
-                    <ui:include src="/WEB-INF/templates/footer.xhtml" />
-                </ui:insert>
-            </div>
-       </div>
-</h:body>
-</html>
-[/template]
-
-[template public clientJsfIndexXhtml(any : OclAny) post (trim())]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-<ui:composition template="/WEB-INF/templates/layout.xhtml">
-<ui:insert name="title">
-        Welcome
-</ui:insert>
-</ui:composition>
-</html>
-[/template]
-
-[template public clientJsfHeaderXhtml(any : OclAny) post (trim())]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://java.sun.com/jsf/html"
+[template public clientJsfLayoutXhtml(any : ecore::EObject) post(self.trim())]
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+            "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html   xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:p="http://primefaces.org/ui"
+        xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets">
-<body>
-   <ui:composition>
-        <div id="headWelcome">
-            <ui:insert name="welcome">
+  <h:head>
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+  <h:outputStylesheet name="styles.css" library="css" />
+  </h:head>
+  <h:body>
+         <div id="page">
+              <div id="header">
+                  <ui:insert name="header">
+                     <ui:include src="/WEB-INF/templates/header.xhtml" />
+                  </ui:insert>
+              </div>
+              <div id="content">
+                  <ui:insert name="content">
+                      <ui:include src="/WEB-INF/templates/content.xhtml" />
+                  </ui:insert>
+              </div>
+              <div id="footer">
+                  <ui:insert name="footer">
+                      <ui:include src="/WEB-INF/templates/footer.xhtml" />
+                  </ui:insert>
+              </div>
+         </div>
+  </h:body>
+  </html>[/template]
 
-            </ui:insert>
-        </div>
-        <div id="title">
-            <ui:insert name="headTitle">
-                 <h2>[getApplicationNameUpperFirst()/] - <ui:insert name="title">Default title</ui:insert></h2>
-            </ui:insert>
-        </div>
-   </ui:composition>
-</body>
-</html>
-[/template]
-
-[template public clientJsfFooterXhtml(any : OclAny) post (trim())]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:h="http://java.sun.com/jsf/html">
-<body>
-    <ui:composition>
-         <h:outputText value="(C) Copyright "/><h:link href="http://www.defense.gouv.fr" value="Ministere des Armees(France)" />
-    </ui:composition>
-</body>
-</html>
-[/template]
-
-[template public clientJsfContentXhtml(any : OclAny) post (trim())]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+[template public clientJsfIndexXhtml(any : ecore::EObject) post(self.trim())]
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:f="http://java.sun.com/jsf/core"
         xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:c="http://java.sun.com/jsp/jstl/core">
-<body>
-<ui:composition>
-        <ui:define name="content">
-                <div>Accueil</div>
-        </ui:define>
-</ui:composition>
-</body>
-</html>
-[/template]
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+  <ui:composition template="/WEB-INF/templates/layout.xhtml">
+  <ui:insert name="title">
+          Welcome
+  </ui:insert>
+  </ui:composition>
+  </html>[/template]
 
-[template public clientJsfStylesCss(any : OclAny) post (trim())]
-@CHARSET "ISO-8859-1";
+[template public clientJsfHeaderXhtml(any : ecore::EObject) post(self.trim())]
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:p="http://primefaces.org/ui"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+  <body>
+     <ui:composition>
+          <div id="headWelcome">
+              <ui:insert name="welcome">
+  
+              </ui:insert>
+          </div>
+          <div id="title">
+              <ui:insert name="headTitle">
+                   <h2>[any.getApplicationNameUpperFirst()/] - <ui:insert name="title">Default title</ui:insert></h2>
+              </ui:insert>
+          </div>
+     </ui:composition>
+  </body>
+  </html>[/template]
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-}
+[template public clientJsfFooterXhtml(any : ecore::EObject) post(self.trim())]
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:h="http://java.sun.com/jsf/html">
+  <body>
+      <ui:composition>
+           <h:outputText value="(C) Copyright "/><h:link href="http://www.defense.gouv.fr" value="Ministere des Armees(France)" />
+      </ui:composition>
+  </body>
+  </html>[/template]
 
-img {
-    border: 0px;
-}
+[template public clientJsfContentXhtml(any : ecore::EObject) post(self.trim())]
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:p="http://primefaces.org/ui"
+          xmlns:c="http://java.sun.com/jsp/jstl/core">
+  <body>
+  <ui:composition>
+          <ui:define name="content">
+                  <div>Accueil</div>
+          </ui:define>
+  </ui:composition>
+  </body>
+  </html>[/template]
 
-#title,#header,#content,#footer {
-    margin: 10px;
-    padding: 10px;
-}
+[template public clientJsfStylesCss(any : ecore::EObject) post(self.trim())]
+  @CHARSET "ISO-8859-1";
+  
+  body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+  }
+  
+  img {
+      border: 0px;
+  }
+  
+  #title,#header,#content,#footer {
+      margin: 10px;
+      padding: 10px;
+  }
+  
+  #title {
+      text-align: center;
+      text-shadow: 1px 1px 2px gray;
+      font-size: 26px;
+      padding: 10px;
+      border: 2px solid black;
+      border-radius: 7px;
+  }
+  
+  #header {
+  }
+  
+  #content {
+      border: solid gray 2px;
+  }
+  
+  #footer {
+      font-size: 9px;
+      text-align: center;
+  }[/template]
 
-#title {
-    text-align: center;
-    text-shadow: 1px 1px 2px gray;
-    font-size: 26px;
-    padding: 10px;
-    border: 2px solid black;
-    border-radius: 7px;
-}
+[template public clientJsfEjbJarXml(any : ecore::EObject) post(self.trim())]
+  <?xml version="1.0" encoding="UTF-8"?>
+  <ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" version="3.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd">
+      <interceptors>
+          <interceptor>
+              <interceptor-class>fr.spi4j.lib.security.SecurityInterceptor</interceptor-class>
+          </interceptor>
+          <interceptor>
+              <interceptor-class>fr.spi4j.persistence.TransactionInterceptor</interceptor-class>
+          </interceptor>
+          <interceptor>
+              <interceptor-class>fr.spi4j.business.ServiceLogInterceptor</interceptor-class>
+          </interceptor>
+          <interceptor>
+              <interceptor-class>fr.spi4j.business.MonitoringEjbInterceptor</interceptor-class>
+          </interceptor>
+          <interceptor>
+              <interceptor-class>fr.spi4j.business.ServiceCacheInterceptor</interceptor-class>
+          </interceptor>
+      </interceptors>
+      <assembly-descriptor>
+          <interceptor-binding>
+              <ejb-name>*</ejb-name>
+              <interceptor-class>fr.spi4j.lib.security.SecurityInterceptor</interceptor-class>
+              <interceptor-class>fr.spi4j.persistence.TransactionInterceptor</interceptor-class>
+              <interceptor-class>fr.spi4j.business.ServiceLogInterceptor</interceptor-class>
+              <interceptor-class>fr.spi4j.business.MonitoringEjbInterceptor</interceptor-class>
+              <!-- Note : le ServiceCacheInterceptor ne fera rien si le service n'implémente
+                  pas ServiceReferentiel_Itf -->
+              <interceptor-class>fr.spi4j.business.ServiceCacheInterceptor</interceptor-class>
+          </interceptor-binding>
+      </assembly-descriptor>
+  </ejb-jar>[/template]
 
-#header {
-}
-
-#content {
-    border: solid gray 2px;
-}
-
-#footer {
-    font-size: 9px;
-    text-align: center;
-}
-[/template]
-
-[template public clientJsfEjbJarXml(any : OclAny) post (trim())]
-<?xml version="1.0" encoding="UTF-8"?>
-<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" version="3.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd">
-    <interceptors>
-        <interceptor>
-            <interceptor-class>fr.spi4j.lib.security.SecurityInterceptor</interceptor-class>
-        </interceptor>
-        <interceptor>
-            <interceptor-class>fr.spi4j.persistence.TransactionInterceptor</interceptor-class>
-        </interceptor>
-        <interceptor>
-            <interceptor-class>fr.spi4j.business.ServiceLogInterceptor</interceptor-class>
-        </interceptor>
-        <interceptor>
-            <interceptor-class>fr.spi4j.business.MonitoringEjbInterceptor</interceptor-class>
-        </interceptor>
-        <interceptor>
-            <interceptor-class>fr.spi4j.business.ServiceCacheInterceptor</interceptor-class>
-        </interceptor>
-    </interceptors>
-    <assembly-descriptor>
-        <interceptor-binding>
-            <ejb-name>*</ejb-name>
-            <interceptor-class>fr.spi4j.lib.security.SecurityInterceptor</interceptor-class>
-            <interceptor-class>fr.spi4j.persistence.TransactionInterceptor</interceptor-class>
-            <interceptor-class>fr.spi4j.business.ServiceLogInterceptor</interceptor-class>
-            <interceptor-class>fr.spi4j.business.MonitoringEjbInterceptor</interceptor-class>
-            <!-- Note : le ServiceCacheInterceptor ne fera rien si le service n'implémente
-                pas ServiceReferentiel_Itf -->
-            <interceptor-class>fr.spi4j.business.ServiceCacheInterceptor</interceptor-class>
-        </interceptor-binding>
-    </assembly-descriptor>
-</ejb-jar>
-[/template]
-
-[template public clientJsfAbstractBean(any : OclAny) post (trim())]
-[licence()/]
-package [getApplicationPackage()/].beans;
-
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.application.FacesMessage.Severity;
-import jakarta.faces.context.ExternalContext;
-import jakarta.faces.context.FacesContext;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
-import fr.spi4j.filter.TransactionFilter;
-
-/**
- * Classe parente des beans manages JSF.
- * @author [getAuthorName()/]
- */
-public abstract class [buildJsfBeanAbstractName()/]
-{
-    /** Serail version uid */
-    private static final long serialVersionUID = 1L;
-
-    /** Log applicatifs */
-    private static final Logger [apply_attributeFinalStatic('log')/] = LogManager.getLogger([buildJsfBeanAbstractName()/].class);
-
-    // Attributs
-    // [protected (any.getUserCodeId('Attributs'))]
-
-    // [/protected]
-
-
-   /**
-    * @return le logger associé au bean courant
-    */
-   protected Logger [apply_methodGet('logger')/] () {
-       return LogManager.getLogger(getClass());
-   }
-
-   /**
-    * Ajoute un message pour une exception (avec un log et un rollback de la transaction base de données).
-    * @param [apply_parameterMethodClassicIn('throwable')/]
-    *           Throwable
-    */
-   protected void [apply_methodDefault('add exception')/] (final Throwable [apply_parameterMethodClassicIn('throwable')/])
-   {
-      [apply_attributeFinalStatic('log')/].info([apply_parameterMethodClassicIn('throwable')/].toString(), [apply_parameterMethodClassicIn('throwable')/]);
-      TransactionFilter.setRollbackOnly();
-      FacesContext.getCurrentInstance().addMessage("",
-               new FacesMessage(FacesMessage.SEVERITY_ERROR, [apply_parameterMethodClassicIn('throwable')/].getMessage(), ""));
-   }
-
-   /**
-    * @return le contexte externe de JSF
-    */
-   protected static ExternalContext [apply_methodGet('external context')/] ()
-   {
-      return FacesContext.getCurrentInstance().getExternalContext();
-   }
-
-   /**
-    * Construit une url de redirection JSF. <br>
-    * Par exemple : <code>
-    * getRedirectUrl("/pages/Mypages")
-    * </code>
-    * @param [apply_parameterMethodClassicIn('url')/]
-    *           String
-    * @param [apply_parameterMethodClassicIn('params')/]
-    *           Parametres a remplacer
-    * @return String
-    */
-   protected static String [apply_methodGet('redirect url')/] (final String [apply_parameterMethodClassicIn('url')/], final Object... [apply_parameterMethodClassicIn('params')/])
-   {
-      String [apply_variableDefault('result')/] = String.format([apply_parameterMethodClassicIn('url')/], [apply_parameterMethodClassicIn('params')/]);
-      if ([apply_parameterMethodClassicIn('params')/].length > 0 || [apply_parameterMethodClassicIn('url')/].indexOf('?') != -1)
-      {
-         [apply_variableDefault('result')/] += "&faces-redirect=true";
+[template public clientJsfAbstractBean(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.getApplicationPackage()/].beans;
+  
+  import jakarta.faces.application.FacesMessage;
+  import jakarta.faces.application.FacesMessage.Severity;
+  import jakarta.faces.context.ExternalContext;
+  import jakarta.faces.context.FacesContext;
+  
+  import org.apache.logging.log4j.Logger;
+  import org.apache.logging.log4j.LogManager;
+  
+  import fr.spi4j.filter.TransactionFilter;
+  
+  /**
+   * Classe parente des beans manages JSF.
+   * @author [any.getAuthorName()/]
+   */
+  public abstract class [any.buildJsfBeanAbstractName()/]
+  {
+      /** Serail version uid */
+      private static final long serialVersionUID = 1L;
+  
+      /** Log applicatifs */
+      private static final Logger ['log'.apply_attributeFinalStatic()/] = LogManager.getLogger([any.buildJsfBeanAbstractName()/].class);
+  
+      // Attributs
+      [protected (any.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+        
+      [/protected]
+  
+  
+  
+     /**
+      * @return le logger associé au bean courant
+      */
+     protected Logger ['logger'.apply_methodGet()/] () {
+         return LogManager.getLogger(getClass());
+     }
+  
+     /**
+      * Ajoute un message pour une exception (avec un log et un rollback de la transaction base de données).
+      * @param ['throwable'.apply_parameterMethodClassicIn()/]
+      *           Throwable
+      */
+     protected void ['add exception'.apply_methodDefault()/] (final Throwable ['throwable'.apply_parameterMethodClassicIn()/])
+     {
+        ['log'.apply_attributeFinalStatic()/].info(['throwable'.apply_parameterMethodClassicIn()/].toString(), ['throwable'.apply_parameterMethodClassicIn()/]);
+        TransactionFilter.setRollbackOnly();
+        FacesContext.getCurrentInstance().addMessage("",
+                 new FacesMessage(FacesMessage.SEVERITY_ERROR, ['throwable'.apply_parameterMethodClassicIn()/].getMessage(), ""));
+     }
+  
+     /**
+      * @return le contexte externe de JSF
+      */
+     protected static ExternalContext ['external context'.apply_methodGet()/] ()
+     {
+        return FacesContext.getCurrentInstance().getExternalContext();
+     }
+  
+     /**
+      * Construit une url de redirection JSF. <br>
+      * Par exemple : <code>
+      * getRedirectUrl("/pages/Mypages")
+      * </code>
+      * @param ['url'.apply_parameterMethodClassicIn()/]
+      *           String
+      * @param ['params'.apply_parameterMethodClassicIn()/]
+      *           Parametres a remplacer
+      * @return String
+      */
+     protected static String ['redirect url'.apply_methodGet()/] (final String ['url'.apply_parameterMethodClassicIn()/], final Object... ['params'.apply_parameterMethodClassicIn()/])
+     {
+        String ['result'.apply_variableDefault()/] = String.format(['url'.apply_parameterMethodClassicIn()/], ['params'.apply_parameterMethodClassicIn()/]);
+        if (['params'.apply_parameterMethodClassicIn()/].length > 0 || ['url'.apply_parameterMethodClassicIn()/].indexOf('?') != -1)
+        {
+           ['result'.apply_variableDefault()/] += "&faces-redirect=true";
+        }
+        else
+        {
+           ['result'.apply_variableDefault()/] += "?faces-redirect=true";
+        }
+        return ['result'.apply_variableDefault()/];
+     }
+  
+      /**
+       * Gestion d'erreur non déterminé
+       * @param ['e'.apply_parameterMethodClassicIn()/] l'erreur
+       */
+      protected void ['throws exception'.apply_methodDefault()/] (final Exception ['e'.apply_parameterMethodClassicIn()/]) {
+              ['logger'.apply_methodGet()/]().error(['e'.apply_parameterMethodClassicIn()/].toString(), ['e'.apply_parameterMethodClassicIn()/]);
+              FacesContext.getCurrentInstance().addMessage("",
+                              new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur : " + ['e'.apply_parameterMethodClassicIn()/].toString(), ""));
       }
-      else
-      {
-         [apply_variableDefault('result')/] += "?faces-redirect=true";
+  
+      /**
+       * Ajout d'un message a l'utilisateur
+       * @param ['severity info'.apply_parameterMethodClassicIn()/] niveau de severite
+       * @param ['message str'.apply_parameterMethodClassicIn()/] message a afficher
+       * @param ['target'.apply_parameterMethodClassicIn()/] cible dans le formuliare
+       */
+      protected void ['ajouter message utilisateur'.apply_methodDefault()/](final Severity ['severity info'.apply_parameterMethodClassicIn()/], final String ['message str'.apply_parameterMethodClassicIn()/], final String ['target'.apply_parameterMethodClassicIn()/]) {
+          final FacesContext ['context'.apply_variableFinal()/] = FacesContext.getCurrentInstance();
+          final FacesMessage ['message'.apply_variableFinal()/] = new FacesMessage();
+          ['message'.apply_variableFinal()/].setSeverity( ['severity info'.apply_parameterMethodClassicIn()/]);
+          ['message'.apply_variableFinal()/].setSummary( ['message str'.apply_parameterMethodClassicIn()/]);
+          ['context'.apply_variableFinal()/].addMessage( ['target'.apply_parameterMethodClassicIn()/], ['message'.apply_variableFinal()/]);
       }
-      return [apply_variableDefault('result')/];
-   }
-
-    /**
-     * Gestion d'erreur non déterminé
-     * @param [apply_parameterMethodClassicIn('e')/] l'erreur
-     */
-    protected void [apply_methodDefault('throws exception')/] (final Exception [apply_parameterMethodClassicIn('e')/]) {
-            [apply_methodGet('logger')/]().error([apply_parameterMethodClassicIn('e')/].toString(), [apply_parameterMethodClassicIn('e')/]);
-            FacesContext.getCurrentInstance().addMessage("",
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur : " + [apply_parameterMethodClassicIn('e')/].toString(), ""));
-    }
-
-    /**
-     * Ajout d'un message a l'utilisateur
-     * @param [apply_parameterMethodClassicIn('severity info')/] niveau de severite
-     * @param [apply_parameterMethodClassicIn('message str')/] message a afficher
-     * @param [apply_parameterMethodClassicIn('target')/] cible dans le formuliare
-     */
-    protected void [apply_methodDefault('ajouter message utilisateur')/](final Severity [apply_parameterMethodClassicIn('severity info')/], final String [apply_parameterMethodClassicIn('message str')/], final String [apply_parameterMethodClassicIn('target')/]) {
-        final FacesContext [apply_variableFinal('context')/] = FacesContext.getCurrentInstance();
-        final FacesMessage [apply_variableFinal('message')/] = new FacesMessage();
-        [apply_variableFinal('message')/].setSeverity( [apply_parameterMethodClassicIn('severity info')/]);
-        [apply_variableFinal('message')/].setSummary( [apply_parameterMethodClassicIn('message str')/]);
-        [apply_variableFinal('context')/].addMessage( [apply_parameterMethodClassicIn('target')/], [apply_variableFinal('message')/]);
-    }
-
-
-    // Methodes
-    // [protected (any.getUserCodeId('Methodes'))]
-
-    // [/protected]
-
-}
-[/template]
-
-
+  
+  
+      // Methodes
+      [protected (any.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
+        
+      [/protected]
+  
+  
+  }[/template]

@@ -1,19 +1,16 @@
-[comment encoding = UTF-8 /]
-[module genDtoParent('http://www.obeonetwork.org/dsl/environment/3.0.0',
-               'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+[module genDtoParent('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-
-[import fr::pacman::commons::soa::common::packages /]
-
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::soa::common::packages/]
 [import fr::pacman::soa::common::name/]
 [import fr::pacman::soa::common::packages/]
 [import fr::pacman::soa::commons::business::api::category::dtoParent/]
-[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::classes/]
 
-[template public genDtoParent(s : DTO)]
-[file (filename(getCommonsSourceDir(), buildPackageBusinessApiDto(s), buildDtoClassName(s) + '.java'), false, 'UTF-8')]
-[dtoParent(s)/]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genDtoParent(s : environment::DTO)]
+  [file (s.getCommonsSourceDir().filename(s.buildPackageBusinessApiDto(), s.buildDtoClassName() + '.java'), overwrite, 'UTF-8')]
+    [s.dtoParent()/]
+  [/file]
 [/template]

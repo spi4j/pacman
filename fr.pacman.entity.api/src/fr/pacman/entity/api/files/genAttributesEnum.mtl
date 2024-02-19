@@ -1,14 +1,13 @@
-[comment encoding = UTF-8 /]
-[module genAttributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                          'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[module genAttributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::attributes/]
 [import fr::pacman::entity::api::api::block::attributesEnum/]
-[import fr::pacman::entity::api::common::names /]
+[import fr::pacman::entity::api::common::names/]
 
-[template public genAttributesEnum(e : Entity)]
-[file (filename(getCommonsSourceDir(), buildPackageBusinessApiEntity(e), buildAttributesEnumName(e) + '.java'), false, 'UTF-8')]
-[attributesEnum(e)/]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genAttributesEnum(e : entity::Entity)]
+  [file (e.getCommonsSourceDir().filename(e.buildPackageBusinessApiEntity(), e.buildAttributesEnumName() + '.java'), overwrite, 'UTF-8')]
+    [e.attributesEnum()/]
+  [/file]
 [/template]

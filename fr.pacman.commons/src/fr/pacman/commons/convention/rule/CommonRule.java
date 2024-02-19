@@ -72,14 +72,20 @@ public class CommonRule extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_listPrefix);
    }
+
+public static String getListPrefixJavaService(Object object){return getListPrefix();}
    
    public static String getMapPrefix ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_mapPrefix);
    }
+
+public static String getMapPrefixJavaService(Object object){return getMapPrefix();}
    
    public static String getAffectationPrefix ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_affectation_prefix);
    }
+
+public static String getAffectationPrefixJavaService(Object object){return getAffectationPrefix();}
 }

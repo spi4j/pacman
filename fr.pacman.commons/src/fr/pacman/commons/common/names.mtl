@@ -1,188 +1,97 @@
+[module names('http://www.eclipse.org/ocl/1.1.0/Ecore', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::project::ProjectProperties/]
+
 [comment encoding = UTF-8 /]
-[module names('http://www.eclipse.org/ocl/1.1.0/Ecore',
-			  'http://www.obeonetwork.org/dsl/environment/3.0.0',
-			  'http://www.obeonetwork.org/dsl/entity/3.0.0',
-              'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+[query public getApplicationName(any : ecore::EObject) : String = any.getApplicationName_invoke().trim()/]
 
-[import fr::pacman::commons::common::utils /]
+[query public getApplicationNameUpperFirst(any : ecore::EObject) : String = any.getApplicationName().toUpperFirst()/]
 
-[query public getApplicationName(any : OclAny) : String = 
-	getApplicationName_invoke().trim()
-/]
+[query private getApplicationName_invoke(any : ecore::EObject) : String = any.getApplicationNameJavaService()/]
 
-[query public getApplicationNameUpperFirst(any : OclAny) : String =
-   	getApplicationName().toUpperFirst()
-/]
+[query public getAuthorName(any : ecore::EObject) : String = any.getAuthorName_invoke().trim()/]
 
-[query private getApplicationName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getApplicationName()', Sequence{})
-/]
+[query private getAuthorName_invoke(any : ecore::EObject) : String = any.getAuthorNameJavaService()/]
 
-[query public getAuthorName(any : OclAny) : String =
-   	getAuthorName_invoke().trim()
-/]
+[query public getReportProjectName(any : ecore::EObject) : String = any.getReportProjectName_invoke().trim()/]
 
-[query private getAuthorName_invoke(any : OclAny) : String =
-   invoke('fr.pacman.commons.convention.project.ProjectProperties','getAuthorName()', Sequence{})
-/]
+[query private getReportProjectName_invoke(any : ecore::EObject) : String = any.getReportProjectNameJavaService()/]
 
-[query public getReportProjectName(any : OclAny) : String = 
-	getReportProjectName_invoke().trim()
-/]
+[query public getModelProjectName(any : ecore::EObject) : String = any.getModelProjectName_invoke().trim()/]
 
-[query private getReportProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getReportProjectName()', Sequence{})
-/]
+[query private getModelProjectName_invoke(any : ecore::EObject) : String = any.getModelProjectNameJavaService()/]
 
-[query public getModelProjectName(any : OclAny) : String = 
-	getModelProjectName_invoke().trim()
-/]
+[query public getClientJavaWebStartProjectName(any : ecore::EObject) : String = any.getClientJavaWebStartProjectName_invoke().trim()/]
 
-[query private getModelProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getModelProjectName()', Sequence{})
-/]
+[query private getClientJavaWebStartProjectName_invoke(any : ecore::EObject) : String = any.getClientJavaWebStartProjectNameJavaService()/]
 
-[query public getClientJavaWebStartProjectName(any : OclAny) : String = 
-	getClientJavaWebStartProjectName_invoke().trim()
-/]
+[query public getClientSwingProjectName(any : ecore::EObject) : String = any.getClientSwingProjectName_invoke().trim()/]
 
-[query private getClientJavaWebStartProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJavaWebStartProjectName()', Sequence{})
-/]
+[query private getClientSwingProjectName_invoke(any : ecore::EObject) : String = any.getClientSwingProjectNameJavaService()/]
 
-[query public getClientSwingProjectName(any : OclAny) : String = 
-	getClientSwingProjectName_invoke().trim()
-/]
+[query public getClientIntegrationProjectName(any : ecore::EObject) : String = any.getClientIntegrationProjectName_invoke().trim()/]
 
-[query private getClientSwingProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientSwingProjectName()', Sequence{})
-/]
+[query private getClientIntegrationProjectName_invoke(any : ecore::EObject) : String = any.getClientIntegrationProjectNameJavaService()/]
 
-[query public getClientIntegrationProjectName(any : OclAny) : String = 
-	getClientIntegrationProjectName_invoke().trim()
-/]
+[query public getClientJsfProjectName(any : ecore::EObject) : String = any.getClientJsfProjectName_invoke().trim()/]
 
-[query private getClientIntegrationProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientIntegrationProjectName()', Sequence{})
-/]
+[query private getClientJsfProjectName_invoke(any : ecore::EObject) : String = any.getClientJsfProjectNameJavaService()/]
 
-[query public getClientJsfProjectName(any : OclAny) : String = 
-	getClientJsfProjectName_invoke().trim()
-/]
+[query public getClientJspProjectName(any : ecore::EObject) : String = any.getClientJspProjectName_invoke().trim()/]
 
-[query private getClientJsfProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJsfProjectName()', Sequence{})
-/]
+[query private getClientJspProjectName_invoke(any : ecore::EObject) : String = any.getClientJspProjectNameJavaService()/]
 
-[query public getClientJspProjectName(any : OclAny) : String = 
-	getClientJspProjectName_invoke().trim()
-/]
+[query public getClientGwtProjectName(any : ecore::EObject) : String = any.getClientGwtProjectName_invoke().trim()/]
 
-[query private getClientJspProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspProjectName()', Sequence{})
-/]
+[query private getClientGwtProjectName_invoke(any : ecore::EObject) : String = any.getClientGwtProjectNameJavaService()/]
 
-[query public getClientGwtProjectName(any : OclAny) : String = 
-	getClientGwtProjectName_invoke().trim()
-/]
+[query public getCommonProjectName(any : ecore::EObject) : String = any.getCommonProjectName_invoke().trim()/]
 
-[query private getClientGwtProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientGwtProjectName()', Sequence{})
-/]
+[query private getCommonProjectName_invoke(any : ecore::EObject) : String = any.getCommonProjectNameJavaService()/]
 
-[query public getCommonProjectName(any : OclAny) : String =
-    getCommonProjectName_invoke().trim()
-/]
+[query public getDeliveryProjectName(any : ecore::EObject) : String = any.getDeliveryProjectName_invoke().trim()/]
 
-[query private getCommonProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonProjectName()', Sequence{})
-/]
+[query private getDeliveryProjectName_invoke(any : ecore::EObject) : String = any.getDeliveryProjectNameJavaService()/]
 
-[query public getDeliveryProjectName(any : OclAny) : String =
-	getDeliveryProjectName_invoke().trim()
-/]
+[query public getServerProjectName(any : ecore::EObject) : String = any.getServerProjectName_invoke().trim()/]
 
-[query private getDeliveryProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getDeliveryProjectName()', Sequence{})
-/]
+[query private getServerProjectName_invoke(any : ecore::EObject) : String = any.getServerProjectNameJavaService()/]
 
-[query public getServerProjectName(any : OclAny) : String =
-    getServerProjectName_invoke().trim()
-/]
+[query public getWebappProjectName(any : ecore::EObject) : String = any.getWebappProjectName_invoke().trim()/]
 
-[query private getServerProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getServerProjectName()', Sequence{})
-/]
+[query private getWebappProjectName_invoke(any : ecore::EObject) : String = any.getWebappProjectNameJavaService()/]
 
-[query public getWebappProjectName(any : OclAny) : String = 
-	getWebappProjectName_invoke().trim()
-/]
-
-[query private getWebappProjectName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getWebappProjectName()', Sequence{})
-/]
-
-[query public getComponentName(s : Service) : String = 
-	s.eContainer(Component).name.sanitize().toLower()
-/]
+[query public getComponentName(s : soa::Service) : String = s.eContainer(soa::Component).name.sanitize().toLower()/]
 
 [**
  * On enlève le 'DTO' en fin de nom
 */]
-[query public buildSimpleDtoName(d : DTO) : String =
-if (d.name.size() > 3 and d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto')) then
-    d.name.substring(1, d.name.size() - 3).sanitize()
-else
-    d.name.sanitize()
-endif
-/]
+[query public buildSimpleDtoName(d : environment::DTO) : String = if d.name.size() > 3 and d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') then d.name.substring(1, d.name.size() - 3).sanitize() else d.name.sanitize() endif/]
 
 [**
  * On enlève le 'DTOS' en fin de nom
 */]
-
-[query public buildSimpleRelationName(r : Reference) : String =
-if (r.name.size() > 4 and r.name.substring(r.name.size() - 3).equalsIgnoreCase('dtos')) then
-    r.name.substring(1, r.referencedType.oclAsType(DTO).name.size() - 4).sanitize()
-else
-    r.name.sanitize()
-endif
-/]
+[query public buildSimpleRelationName(r : environment::Reference) : String = if r.name.size() > 4 and r.name.substring(r.name.size() - 3).equalsIgnoreCase('dtos') then r.name.substring(1, r.referencedType.oclAsType(environment::DTO).name.size() - 4).sanitize() else r.name.sanitize() endif/]
 
 [**
  * On enlève le 'Entity' en fin de nom
 */]
-[query public buildSimpleEntityName(e : Entity) : String =
-if (e.name.size() > 6 and e.name.substring(e.name.size() - 5).equalsIgnoreCase('entity')) then
-    e.name.substring(1, e.name.size() - 6).sanitize()
-else
-    e.name.sanitize()
-endif
-/]
+[query public buildSimpleEntityName(e : entity::Entity) : String = if e.name.size() > 6 and e.name.substring(e.name.size() - 5).equalsIgnoreCase('entity') then e.name.substring(1, e.name.size() - 6).sanitize() else e.name.sanitize() endif/]
 
 [**
  * On enlève le 'Service' en fin de nom
 */]
-[query public buildSimpleServiceName(s : Service) : String =
-if (s.name.size() > 7 and s.name.substring(s.name.size() - 6).equalsIgnoreCase('service')) then
-    s.name.substring(1, s.name.size() - 7).sanitize()
-else
-    s.name.sanitize()
-endif
-/]
+[query public buildSimpleServiceName(s : soa::Service) : String = if s.name.size() > 7 and s.name.substring(s.name.size() - 6).equalsIgnoreCase('service') then s.name.substring(1, s.name.size() - 7).sanitize() else s.name.sanitize() endif/]
 
 [comment : Get and write the name for the primary key. /]
-[template public namePK_ID(any : OclAny)]
-_id
-[/template]
+[template public namePK_ID(any : ecore::EObject)]
+  _id[/template]
 
 [comment : get and write the name for the primary key in enum./]
-[template public nameENUM_PK_ID(any : OclAny)]
-id
-[/template]
+[template public nameENUM_PK_ID(any : ecore::EObject)]
+  id[/template]
 
 [comment : Get and write the name for the reference key. /]
-[template public nameSQL_REF_ID(any : OclAny)]
-[any.namePK_ID().toUpperCase() /]
-[/template]
-
+[template public nameSQL_REF_ID(any : ecore::EObject)]
+  [any.namePK_ID().toUpper()/][/template]

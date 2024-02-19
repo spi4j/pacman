@@ -1,19 +1,18 @@
-[comment encoding = UTF-8 /]
 [module Properties('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[template public readMeProperties(any : OclAny) post (trim())]
-##########################################
-# Parametrage des conventions de nommage #
-##########################################
-
-# Normes applicables :
-# CamelCase
-# CamelCaseIgnoreFirst
-# LanguageC
-# UpperFirst
-# LowerFirst
-# UpperAll
-# LowerAll
-# TrimLowerAll
-
+[comment encoding = UTF-8 /]
+[template public readMeProperties(any : ecore::EObject) post(self.trim())]
+  ##########################################
+  # Parametrage des conventions de nommage #
+  ##########################################
+  
+  # Normes applicables :
+  # CamelCase
+  # CamelCaseIgnoreFirst
+  # LanguageC
+  # UpperFirst
+  # LowerFirst
+  # UpperAll
+  # LowerAll
+  # TrimLowerAll
 [/template]

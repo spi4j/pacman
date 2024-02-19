@@ -1,216 +1,215 @@
-[comment encoding = UTF-8 /]
-[module referenceEntity('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module referenceEntity('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::requests::counterQueries /]
-
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::methodes /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::entity::api::common::classesEntity /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::requests::counterQueries/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::methodes/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::entity::api::common::classesEntity/]
 [import fr::pacman::entity::api::sql::common/]
-[import fr::pacman::entity::jdbc::common::packages /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::jdbc::common::packages/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
 
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-
-
+[comment encoding = UTF-8 /]
 [comment sur la base de PersonneEntity en r97 /]
-[template public referenceEntityJdbc(r : Reference)]
-[licence()/]
-package [buildPackagePersistenceImplementationJdbcEntity(r.containingType.oclAsType(entity::Entity))/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[r.writeImports()/]
-
-// [/protected]
-
-[comClass(roleEntity())/]
-public class [buildReferenceImplClassName(r)/] [if hasAutomaticColumns()]extends [buildAppliEntityAbstractClassName()/]<[genPkType()/]> [/if]implements [buildReferenceEntityInterfaceName(r)/][if hasVersion(r.containingType.oclAsType(entity::Entity))], JdbcOptimistLocked_Itf[/if]
-{
-   // CONSTANTES
-
-   /**
-    * SerialUid.
-    */
-   private static final long serialVersionUID = -1;
-
-   // Constantes [buildReferenceImplClassName(r)/]
-   // [protected (r.getUserCodeId('Constantes ' + buildReferenceImplClassName(r)))]
-
-   // [/protected]
-
-   // ATTRIBUTS
-  // Methodes [buildReferenceImplClassName(r)/]
-  // [protected (r.getUserCodeId('Methodes ' + buildReferenceImplClassName(r)))]
-
-   // [/protected]
- 	 /** Id. */
-    private [genPkType()/] [apply_attributeDefault(nameSimpleReferencePropertyID(r))/];
-
-	/** [nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/]. */
-    private [genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/];
-
-	/** [nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity))/]. */
-    private [genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/];
-	
-
-   // Attributs [buildReferenceImplClassName(r)/]
-   // [protected (r.getUserCodeId('Attributs ' + buildReferenceImplClassName(r)))]
-
-   // [/protected]
-
-   // METHODES
-
-   /**
-    * Constructeur sans paramètre de l'entité '[nameSimpleReference(r)/]'. <br>
-    * Attention à ne pas appeler ce constructeur directement, mais à bien passer par UserPersistence.
-    */
-   public [buildReferenceImplClassName(r)/] ()
-   {
-      super();
-   }
-
- @Override
-   public [genPkType()/] getId ()
-   {
-      return [apply_attributeDefault(nameSimpleReferencePropertyID(r))/];
-   }
-
+[template public referenceEntityJdbc(r : environment::Reference)]
+  [r.licence()/]
+  package [r.containingType.oclAsType(entity::Entity).buildPackagePersistenceImplementationJdbcEntity()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [r.writeImports()/]
+    
+  [/protected]
+  
+  
+  [r.comClass(r.roleEntity())/]
+  public class [r.buildReferenceImplClassName()/] [if (r.hasAutomaticColumns())]extends [r.buildAppliEntityAbstractClassName()/]<[r.genPkType()/]> [/if]
+  implements [r.buildReferenceEntityInterfaceName()/][if (r.containingType.oclAsType(entity::Entity).hasVersion())], JdbcOptimistLocked_Itf[/if]
+  
+  {
+     // CONSTANTES
+  
+     /**
+      * SerialUid.
+      */
+     private static final long serialVersionUID = -1;
+  
+     // Constantes [r.buildReferenceImplClassName()/]
+     [protected (r.getUserCodeId('Constantes ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+     // ATTRIBUTS
+    // Methodes [r.buildReferenceImplClassName()/]
+    [protected (r.getUserCodeId('Methodes ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+    [/protected]
+  
+   	 /** Id. */
+      private [r.genPkType()/] [r.nameSimpleReferencePropertyID().apply_attributeDefault()/];
+  
+  	/** [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID()/]. */
+      private [r.genPkType()/] [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
+  
+  	/** [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID()/]. */
+      private [r.genPkType()/] [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
+  	
+  
+     // Attributs [r.buildReferenceImplClassName()/]
+     [protected (r.getUserCodeId('Attributs ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+     // METHODES
+  
+     /**
+      * Constructeur sans paramètre de l'entité '[r.nameSimpleReference()/]'. <br>
+      * Attention à ne pas appeler ce constructeur directement, mais à bien passer par UserPersistence.
+      */
+     public [r.buildReferenceImplClassName()/] ()
+     {
+        super();
+     }
+  
    @Override
-   public void setId (final [genPkType()/] [apply_parameterMethodClassicIn('id')/])
-   {
-      [getAffectationPrefix()/][apply_attributeDefault(nameSimpleReferencePropertyID(r))/] = [apply_parameterMethodClassicIn('id')/];
-   }
-
-	/**
-        Obtenir [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]
-        @return [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]
-    */
-
- @Override
-   public [genPkType()/] [apply_methodGet(apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))))/] ()
-   {
-      return [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/];
-   }
-
-	 /**
-		Affecter [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]
-     */
-
+     public [r.genPkType()/] getId ()
+     {
+        return [r.nameSimpleReferencePropertyID().apply_attributeDefault()/];
+     }
+  
+     @Override
+     public void setId (final [r.genPkType()/] ['id'.apply_parameterMethodClassicIn()/])
+     {
+        [r.getAffectationPrefix()/][r.nameSimpleReferencePropertyID().apply_attributeDefault()/] = ['id'.apply_parameterMethodClassicIn()/];
+     }
+  
+  	/**
+          Obtenir [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]
+          @return [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]
+      */
+  
    @Override
-   public void [apply_methodSet(apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))) /]([genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/])
-   {
-      [getAffectationPrefix()/][apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/] = [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/];
-   }
+     public [r.genPkType()/] [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault().apply_methodGet()/] ()
+     {
+        return [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
+     }
+  
+  	 /**
+  		Affecter [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]
+       */
+  
+     @Override
+     public void [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault().apply_methodSet()/]([r.genPkType()/] [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/])
+     {
+        [r.getAffectationPrefix()/][r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/] = [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
+     }
+  
+  
+  	/**
+          Obtenir [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]
+          @return [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]
+      */
+  
+  	@Override
+     public [r.genPkType()/] [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault().apply_methodGet()/] ()
+     {
+        return [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
+     }
+  
+  	 /**
+          Affecter [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]
+       */
+  
+     @Override
+     public void [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault().apply_methodSet()/]([r.genPkType()/] [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/])
+     {
+        [r.getAffectationPrefix()/][r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/] = [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
+     }
+  
+  	
+  
+  
+  
+     @Override
+     public String toString ()
+     {
+        return super.toString() + " : " + [r.nameSimpleReferencePropertyID().apply_attributeDefault()/]  + ", " + [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/] + ", " + [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/] ;
+     }
+  
+     @Override
+     public void validate () throws Spi4jValidationException
+     {
+  	
+       	 // aucun champ obligatoire
+  	
+     }
+  
+  
+     // Methodes 2 [r.buildReferenceImplClassName()/]
+     [protected (r.getUserCodeId('Methodes 2 ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]
 
-
-	/**
-        Obtenir [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/]
-        @return [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/]
-    */
-
-	@Override
-   public [genPkType()/] [apply_methodGet(apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity))))/] ()
-   {
-      return [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/];
-   }
-
-	 /**
-        Affecter [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/]
-     */
-
-   @Override
-   public void [apply_methodSet(apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))) /]([genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/])
-   {
-      [getAffectationPrefix()/][apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/] = [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/];
-   }
-
-	
-
-
-
-   @Override
-   public String toString ()
-   {
-      return super.toString() + " : " + [apply_attributeDefault(nameSimpleReferencePropertyID(r))/]  + ", " + [apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/] + ", " + [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/] ;
-   }
-
-   @Override
-   public void validate () throws Spi4jValidationException
-   {
-	
-     	 // aucun champ obligatoire
-	
-   }
-
-
-   // Methodes 2 [buildReferenceImplClassName(r)/]
-   // [protected (r.getUserCodeId('Methodes 2 ' + buildReferenceImplClassName(r)))]
-
-   // [/protected]
-
-}
+[template private validProperty(e : entity::Entity, p : environment::Property)]
+  [if (p.isMandatory())]
+          ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField("[p.nameSimpleProperty()/]", [p.nameSimpleProperty().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
+  [/if]
+  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if]
 [/template]
 
-[template private validProperty(e : Entity, p : Property)]
-[if isMandatory(p)]
-      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimpleProperty(p)/]", [apply_attributeDefault(nameSimpleProperty(p))/], [apply_variableDefault('champs invalides')/]);
-[/if]
-[if p.oclIsTypeOf(Attribute)]
-[validateSize(e, p.oclAsType(Attribute))/][/if]
+[template private validInverseProperty(e : entity::Entity, r : environment::Reference)]
+  [if (r.isMandatory())]
+          ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField("[r.nameSimplePropertyInverse()/]", [r.nameSimplePropertyInverse().apply_attributeDefault()/][e.namePK_ID()/], ['champs invalides'.apply_variableDefault()/]);
+  [/if]
 [/template]
 
-[template private validInverseProperty(e : Entity, r : Reference)]
-[if isMandatory(r)]
-      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimplePropertyInverse(r)/]", [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
-[/if]
+[template private validPropertyWhenHasAutomaticColumns(e : entity::Entity, p : environment::Property)]
+  [if (p.isMandatory())]
+          ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField("[p.nameSimpleProperty()/]", [p.nameSimpleProperty().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
+  [/if]
+  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if]
 [/template]
 
-[template private validPropertyWhenHasAutomaticColumns(e : Entity, p : Property)]
-[if isMandatory(p)]
-      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimpleProperty(p)/]", [apply_attributeDefault(nameSimpleProperty(p))/], [apply_variableDefault('champs invalides')/]);
-[/if]
-[if p.oclIsTypeOf(Attribute)]
-[validateSize(e, p.oclAsType(Attribute))/][/if]
+[template private validInversePropertyWhenHasAutomaticColumns(e : entity::Entity, r : environment::Reference)]
+  [if (r.isMandatory())]
+          ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField("[r.nameSimplePropertyInverse()/]", [r.nameSimplePropertyInverse().apply_attributeDefault()/][e.namePK_ID()/], ['champs invalides'.apply_variableDefault()/]);
+  [/if]
 [/template]
 
-[template private validInversePropertyWhenHasAutomaticColumns(e : Entity, r : Reference)]
-[if isMandatory(r)]
-      [apply_variableDefault('champs invalides')/] = EntityUtil.checkMandatoryField("[nameSimplePropertyInverse(r)/]", [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/], [apply_variableDefault('champs invalides')/]);
-[/if]
-[/template]
+[query public roleEntity(r : environment::Reference) : String = 'Entité du type ' + r.buildReferenceImplClassName()/]
 
-[query public roleEntity(r : Reference) : String = 'Entité du type ' + buildReferenceImplClassName(r) /]
-
-[template private validateSize(e : Entity, a : Attribute)]
-[if hasSize(a.metadatas) and a.type.name = 'String']
-      [apply_variableDefault('champs invalides')/] = EntityUtil.checkFieldSize("[nameSimpleProperty(a)/]", [apply_attributeDefault(nameSimpleProperty(a))/], [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize(), [apply_variableDefault('champs invalides')/]);
-[/if]
+[template private validateSize(e : entity::Entity, a : environment::Attribute)]
+  [if (a.metadatas.hasSize() and a.type.name = 'String')]
+          ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkFieldSize("[a.nameSimpleProperty()/]", [a.nameSimpleProperty().apply_attributeDefault()/], [e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/].getSize(), ['champs invalides'.apply_variableDefault()/]);
+  [/if]
 [/template]
 
 [comment  : Write all required imports. /]
-[template private writeImports (r : Reference) post(trim())]
-[r.initImports()/]
-[r.addImport('fr.spi4j.persistence.entity.EntityUtil')/]
-[r.addImport('fr.spi4j.exception.Spi4jValidationException')/]
-[r.addImport('fr.spi4j.persistence.dao.jdbc.JdbcOptimistLocked_Itf', hasVersion(r.containingType.oclAsType(entity::Entity)))/]
-[r.addImport('fr.spi4j.persistence.dao.jdbc.JdbcVersion', hasVersion(r.containingType.oclAsType(entity::Entity)))/]
-[r.addImport(buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity)) + '.' + buildReferenceEntityInterfaceName(r))/]
-[r.addImport(buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity)) + '.' + buildReferenceColumnEnumName(r), hasEnumImport(r.containingType.oclAsType(entity::Entity)))/]
-[r.addImport(buildPackagePersistenceImplJdbc() + '.' + buildAppliEntityAbstractClassName(), r.hasAutomaticColumns())/]
-[r.flushImports()/]
-[/template]
+[template private writeImports(r : environment::Reference) post(self.trim())]
+  [r.initImports()/]
+  [r.addImport('fr.spi4j.persistence.entity.EntityUtil')/]
+  [r.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+  [r.addImport('fr.spi4j.persistence.dao.jdbc.JdbcOptimistLocked_Itf', r.containingType.oclAsType(entity::Entity).hasVersion())/]
+  [r.addImport('fr.spi4j.persistence.dao.jdbc.JdbcVersion', r.containingType.oclAsType(entity::Entity).hasVersion())/]
+  [r.addImport(r.containingType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.buildReferenceEntityInterfaceName())/]
+  [r.addImport(r.containingType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.buildReferenceColumnEnumName(), r.containingType.oclAsType(entity::Entity).hasEnumImport())/]
+  [r.addImport(r.buildPackagePersistenceImplJdbc() + '.' + r.buildAppliEntityAbstractClassName(), r.hasAutomaticColumns())/]
+  [r.flushImports()/][/template]

@@ -1,267 +1,241 @@
+[module serviceFacade('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::commons::crudRSFacades/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+
 [comment encoding = UTF-8 /]
-[module serviceFacade('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                      'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::names /]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::classes /]
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::names /]
-
-[import fr::pacman::soa::common::classes /]
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::commons::crudRSFacades /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-
-
 [comment : *********************************************************************************************/]
 [comment : Main entry : switch between the very specific authentication service and all other services. /]
 [comment : *********************************************************************************************/]
-[template public serviceFacade(s : Service, d : DTO)]
-package [buildPackageImplWs(s)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[s.writeImports(d)/]
-
-// [/protected]
-
-/**
- * Implémentation de la façade du service REST pour le service : [s.name/].
- * @author [getAuthorName()/]
- */
-[if useWsServiceInjection()]@Service[/if]
-public class [s.buildServiceFacadeRSClassName(d)/] implements [s.buildServiceFacadeRSInterfaceName(d)/]
-{
-	[comment : Use singleton pattern if no injection wanted. /]
-	[if not useWsServiceInjection()]
-	/**
-	* Instance du singleton pour la facade.
-	*/
-	public final static [s.buildServiceFacadeRSClassName(d)/] [apply_attributeFinal('instance')/]  = new [s.buildServiceFacadeRSClassName(d)/]();
-	[/if]
-	// attributs
-	// [protected (s.getUserCodeId('attributs'))]
-
-    // [/protected]
-
-	/**
-	* Constructeur.
-	*/
-	[if useWsServiceInjection()]public[else]private[/if] [s.buildServiceFacadeRSClassName(d)/](){
-		super();
-	}
-
-[comment : write crud operations if crud option selected in starter. /]
-[if d.isCrudApplication() and not d.oclIsUndefined() and s.oclIsUndefined()]
-	[d.writeCrudOperations(false)/]
-[/if]
-
-[if not s.oclIsUndefined() and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-[if o.isRSOperation()]
-    /**
-    * [o.description/]
-[o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/] 
-	*/
-   @Override
-   public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/][paramsInForPagingIfNeeded(o, true)/])
-   {
-	[if o.isDefinedForAuthentication() ]
-		[comment : write the specific code for authentication operation. /]
-		[o.authenticationOperationFacade(s)/]
-	[else]
-		[comment : write the generic code for all other operations. /]
-		[o.genericOperationFacade(s)/]
-	[/if]	
-   }
-
-   [comment : If paged list add a new method to get the total count og paged request. /]
-   [o.addMethodTotalCountForPagingIfNeeded(nameService(s, null), true)/]
-[/if]
-[/for]
-[/if]
-}
-[/template]
-
-
+[template public serviceFacade(s : soa::Service, d : environment::DTO)]
+  package [s.buildPackageImplWs()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports(d)/]
+    
+  [/protected]
+  
+  
+  /**
+   * Implémentation de la façade du service REST pour le service : [s.name/].
+   * @author [s.getAuthorName()/]
+   */
+  [if (s.useWsServiceInjection())]@Service[/if]
+  
+  public class [s.buildServiceFacadeRSClassName(d)/] implements [s.buildServiceFacadeRSInterfaceName(d)/]
+  {
+  [if (not s.useWsServiceInjection())]
+    	/**
+    	* Instance du singleton pour la facade.
+    	*/
+    	public final static [s.buildServiceFacadeRSClassName(d)/] ['instance'.apply_attributeFinal()/]  = new [s.buildServiceFacadeRSClassName(d)/]();
+  [/if]
+  	// attributs
+  	[protected (s.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+  
+  	/**
+  	* Constructeur.
+  	*/
+  	[if (s.useWsServiceInjection())]public[else]private[/if]
+   [s.buildServiceFacadeRSClassName(d)/](){
+  		super();
+  	}
+  
+  [if (d.isCrudApplication() and not (d = null) and s = null)]
+    	[d.writeCrudOperations(false)/]
+  [/if]
+  
+  [if (not (s = null) and not (s.ownedInterface = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.isRSOperation())]
+            /**
+            * [o.description/]
+        [o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/] 
+        	*/
+           @Override
+           public [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/][o.paramsInForPagingIfNeeded(true)/])
+           {
+        [if (o.isDefinedForAuthentication())]
+          		[o.authenticationOperationFacade(s)/]
+        [else]
+          		[o.genericOperationFacade(s)/]
+        [/if]
+           }
+        
+           [o.addMethodTotalCountForPagingIfNeeded(s.nameService(null), true)/]
+      [/if]
+    [/for]
+  [/if]
+  }[/template]
 
 [comment : ******************************************************************************/]
 [comment : Write the facade implementation for all operations other than authentication. /]
 [comment : ******************************************************************************/]
-[template public genericOperationFacade( o : Operation, s : Service)]
-[comment : something to return /]
-// for [o.userCodeForOperation()/]
-// [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
-
-[comment : something to return (DTO / Primitive)./]
-[if o.hasParamOutXto()]
-[comment : return a DTO./]
-[if ((o.output->first() <> null) and (o.output->first().type.oclIsTypeOf(DTO)))]
-
-[if (not isMultiple(o.output->first()))]return [else][o.paramOutXto()/] [apply_attributeFinal('result')/] = [/if][buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + o.output->first().type.oclAsType(DTO).buildMapperClassName())/] ()
-	.convert[if isMultiple(o.output->first())]List[/if]DtoTo[if isMultiple(o.output->first())]List[/if]Xto( [buildAppliUserBusinessGenClassName()/].get[nameService(s, null)/] ()
-	.[o.nameOperation()/] ([o.input.parametersXtoFromDto()->sep(', ')/][paramsInForPagingIfNeeded(o, false)/]));
-
-[if (isMultiple(o.output->first()))]
-if([apply_attributeFinal('result')/].isEmpty()){
-	throw new RsNoResultException();
-}
-return [apply_attributeFinal('result')/];
-[/if]
-[else]
-[comment : return a primitive./]
-return [buildAppliUserBusinessGenClassName()/].get[nameService(s, null)/] ()
-	.[o.nameOperation()/] ([o.input.parametersXtoFromDto()->sep(', ')/]);[/if]
-[comment : nothing to return /]
-[else]
-[buildAppliUserBusinessGenClassName()/].get[nameService(s, null)/] ()
-	.[o.nameOperation()/] ([o.input.parametersXtoFromDto()->sep(', ')/]);
-[/if]
-// [/protected]
+[template public genericOperationFacade(o : soa::Operation, s : soa::Service)]
+  // for [o.userCodeForOperation()/]
+  [protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [if (o.hasParamOutXto())]
+      [if (o.output->first() <> null and o.output->first().type.oclIsTypeOf(environment::DTO))]
+        
+        [if (not o.output->first().isMultiple())]return [else][o.paramOutXto()/] ['result'.apply_attributeFinal()/] = [/if]
+        [o.buildAppliUserMapperGenClassName()/].[('get ' + o.output->first().type.oclAsType(environment::DTO).buildMapperClassName()).apply_methodDefault()/] ()
+        	.convert[if (o.output->first().isMultiple())]List[/if]
+        DtoTo[if (o.output->first().isMultiple())]List[/if]
+        Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ()
+        	.[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/][o.paramsInForPagingIfNeeded(false)/]));
+        
+        [if (o.output->first().isMultiple())]
+          if(['result'.apply_attributeFinal()/].isEmpty()){
+          	throw new RsNoResultException();
+          }
+          return ['result'.apply_attributeFinal()/];
+        [/if]
+      [else]
+        return [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ()
+        	.[o.nameOperation()/] ([o.input->asSequence()->collect(temp2 | temp2.parametersXtoFromDto())->sep(', ')/]);[/if]
+    [else]
+      [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ()
+      	.[o.nameOperation()/] ([o.input->asSequence()->collect(temp3 | temp3.parametersXtoFromDto())->sep(', ')/]);
+    [/if]
+  [/protected]
 [/template]
-
-
 
 [comment : ***********************************************************************/]
 [comment : Write the facade implementation for specific authentication operation. /]
 [comment : ***********************************************************************/]
-[template public authenticationOperationFacade(o : Operation, s : Service)]
-// for [o.userCodeForOperation()/]
-// [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
-
-[comment : Only if the modelisation is correct (A DTO for output)./]
-[if o.hasDtoParamOutXto()]
-// Initialisation du jeton pour le XTO de retour.
-[paramOutXto(o)/] [apply_variableDefault(o.output->first().name) + 'container'/] = new [paramOutXto(o)/]();
-
-[comment : For GET operation add a supplemetary line for base64 decoding. /]
-[if soa::Verb::GET = o.verb]
-// Décodage de la chaine base64 pour les identifiants (login/mot de passe).
-final RsAuthCredentials [apply_variableFinal('credentials')/] 
-	= RsTokenHelper.decodeCredentials([apply_parameterMethodClassicIn(o.input->first().name)/]);
-[/if]
-
-// Récupération des données de l'utilisateur à partir de l'opération interne 
-// (opération non exposée).
-[let internalO : Operation = s.getInternalAuthTokenOperation()]
-[if not internalO.oclIsUndefined()]
-[buildDtoClassName(internalO.output->first().type.oclAsType(DTO))/] [apply_variableDefault(internalO.output->first().name)/] = [buildAppliUserBusinessGenClassName()/]
-	.get[s.nameService(null)/]().[internalO.nameOperation()/]([internalO.input.nullValueForColumnType()->sep(', ') /]); 
-
-// Vérifie si l'utilisateur a été trouvé (sinon 403).
-if(null == [apply_variableDefault(internalO.output->first().name)/]) 
-[else]
-if(false) 
-[/if][/let]
-	throw new RsForbiddenException();
-
-// Construction du token avec les paramètres personnalisés.
-// Ajouter autant de paramètres que nécessaire.
-final Claims [apply_variableFinal('claims')/] = new DefaultClaims();
-[apply_variableFinal('claims')/].put("key1","arg1");
-
-[comment : If we are here, there must be an access token available for the service (one or more...). /]
-final RsAuthTokenXtoWrapper [apply_variableFinal('token wrapper')/] 
-		= RsAuthTokenXtoWrapper.create("[s.getNameApiKeyScheme()/]" ,[apply_variableFinal('claims')/]);
-
-// Remplir le XTO de sortie avec les informations désirées en utilisant les données 
-// du "tokenWrapper" et en complétant avec vos propres données.
-// tokenWrapper.get_token() : Récupération du token d'authentification avec la signature.
-// tokenWrapper.get_type() : Récupération du type pour le token (Bearer).
-// tokenWrapper.get_expires() : Récupération de nombre de millisecondes avant expiration du token d'authentification.
-// tokenWrapper.get_refreshToken() : Récupération du token pour la demande de rafraîchissement.
-// tokenWrapper.get_refreshTokenExpiresIn() : Récupération du nombre de millisecondes avant expiration du token de rafraîchissement.
-[for (a : Attribute  | o.output->first().type.oclAsType(DTO).attributes)]
-[apply_variableDefault(o.output->first().name + 'container')/].[apply_methodSet(a.name)/](null);
-[/for] 
-
-return [apply_variableDefault(o.output->first().name + 'container')/];
-[else]
-throw new UnsupportedOperationException ();
-[/if]
-// [/protected]
+[template public authenticationOperationFacade(o : soa::Operation, s : soa::Service)]
+  // for [o.userCodeForOperation()/]
+  [protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [if (o.hasDtoParamOutXto())]
+      // Initialisation du jeton pour le XTO de retour.
+      [o.paramOutXto()/] [o.output->first().name.apply_variableDefault() + 'container'/] = new [o.paramOutXto()/]();
+      
+      [if (soa::Verb::GET = o.verb)]
+        // Décodage de la chaine base64 pour les identifiants (login/mot de passe).
+        final RsAuthCredentials ['credentials'.apply_variableFinal()/] 
+        	= RsTokenHelper.decodeCredentials([o.input->first().name.apply_parameterMethodClassicIn()/]);
+      [/if]
+      
+      // Récupération des données de l'utilisateur à partir de l'opération interne 
+      // (opération non exposée).
+      [let internalO : soa::Operation = s.getInternalAuthTokenOperation()]
+        [if (not (internalO = null))]
+          [internalO.output->first().type.oclAsType(environment::DTO).buildDtoClassName()/] [internalO.output->first().name.apply_variableDefault()/] = [o.buildAppliUserBusinessGenClassName()/]
+          	.get[s.nameService(null)/]().[internalO.nameOperation()/]([internalO.input->asSequence()->collect(temp4 | temp4.nullValueForColumnType())->sep(', ')/]); 
+          
+          // Vérifie si l'utilisateur a été trouvé (sinon 403).
+          if(null == [internalO.output->first().name.apply_variableDefault()/]) 
+        [else]
+          if(false) 
+        [/if]
+      [/let]
+      	throw new RsForbiddenException();
+      
+      // Construction du token avec les paramètres personnalisés.
+      // Ajouter autant de paramètres que nécessaire.
+      final Claims ['claims'.apply_variableFinal()/] = new DefaultClaims();
+      ['claims'.apply_variableFinal()/].put("key1","arg1");
+      
+      final RsAuthTokenXtoWrapper ['token wrapper'.apply_variableFinal()/] 
+      		= RsAuthTokenXtoWrapper.create("[s.getNameApiKeyScheme()/]" ,['claims'.apply_variableFinal()/]);
+      
+      // Remplir le XTO de sortie avec les informations désirées en utilisant les données 
+      // du "tokenWrapper" et en complétant avec vos propres données.
+      // tokenWrapper.get_token() : Récupération du token d'authentification avec la signature.
+      // tokenWrapper.get_type() : Récupération du type pour le token (Bearer).
+      // tokenWrapper.get_expires() : Récupération de nombre de millisecondes avant expiration du token d'authentification.
+      // tokenWrapper.get_refreshToken() : Récupération du token pour la demande de rafraîchissement.
+      // tokenWrapper.get_refreshTokenExpiresIn() : Récupération du nombre de millisecondes avant expiration du token de rafraîchissement.
+      [for (a : environment::Attribute | o.output->first().type.oclAsType(environment::DTO).attributes)]
+        [(o.output->first().name + 'container').apply_variableDefault()/].[a.name.apply_methodSet()/](null);
+      [/for]
+      
+      return [(o.output->first().name + 'container').apply_variableDefault()/];
+    [else]
+      throw new UnsupportedOperationException ();
+    [/if]
+  [/protected]
 [/template]
 
 [comment : Add the import for each XTO (input and output). /]
-[template private buildXtoImport (d : DTO) post(trim())]
-[d.buildPackageWsApiDto() + '.' + d.buildXtoClassNameFromDto()/]
-[/template]
+[template private buildXtoImport(d : environment::DTO) post(self.trim())]
+  [d.buildPackageWsApiDto() + '.' + d.buildXtoClassNameFromDto()/][/template]
 
 [comment : Add the import for each DTO (input and output). /]
-[template private buildDtoImport (d : DTO) post(trim())]
-[d.buildPackageBusinessApiDto() + '.' + d.buildDtoClassName()/]
-[/template]
+[template private buildDtoImport(d : environment::DTO) post(self.trim())]
+  [d.buildPackageBusinessApiDto() + '.' + d.buildDtoClassName()/][/template]
 
 [comment : Write all the required imports. /]
-[template private writeImports (s : Service, d : DTO) post(trim())]
-[s.initImports(true)/]
-[s.addImport(s.buildPackageWsApi() + '.' + s.buildServiceFacadeRSInterfaceName(d))/]
-[s.addImport(s.buildPackageBusiness() + '.' + s.buildAppliUserBusinessGenClassName())/]
-[s.addImport('fr.spi4j.ws.rs.exception.Spi4jValidationException')/]
-[s.addImport('fr.spi4j.ws.rs.exception.RsNoResultException', not s.isDefinedForAuthentication())/]
-[s.addImport(s.buildPackageMapper() + '.' + s.buildAppliUserMapperGenClassName(), not s.isDefinedForAuthentication())/]
-[s.addImport('org.jvnet.hk2.annotations.Service', s.useWsServiceInjection())/]
-[s.addImport('fr.spi4j.ws.rs.RsAuthTokenXtoWrapper', s.isDefinedForAuthentication())/]
-[s.addImport('fr.spi4j.ws.rs.RsAuthCredentials', s.isDefinedForAuthentication())/]
-[s.addImport('fr.spi4j.ws.rs.exception.RsForbiddenException', s.isDefinedForAuthentication())/]
-[s.addImport('io.jsonwebtoken.Claims', s.isDefinedForAuthentication())/]
-[s.addImport('io.jsonwebtoken.impl.DefaultClaims', s.isDefinedForAuthentication())/]
-
-[comment : Imports for all Xtos required for the service. /]
-[if not s.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-	[if o.isRSOperation()]
-		[if o.hasDtoParamOutXto()]
-			[s.addImport(buildImportXto(o.output->first().type.oclAsType(DTO)))/]
-		[/if]		
-		
-		[comment : List input params. /]	
-		[for (p : Parameter | o.input)]
-			[if p.type.oclIsTypeOf(DTO)][s.addImport(buildImportXto(p.type.oclAsType(DTO)))/][/if]
-		[/for]
-
-	[comment : search for non public authenticate method. /]
-	[elseif s.isDefinedForAuthentication() and not o.public]
-		[if o.hasDtoParamOutXto()][s.addImport(buildDtoImport(o.output->first().type.oclAsType(DTO)))/][/if]		
-
-		[comment : List input params. /]	
-		[for (p : Parameter | o.input)]
-			[if p.type.oclIsTypeOf(DTO)][s.addImport(buildImportXto(p.type.oclAsType(DTO)))/][/if]
-		[/for]
-	[/if]
-[/for][/if]
-
-[s.flushImports()/]
-[/template]
+[template private writeImports(s : soa::Service, d : environment::DTO) post(self.trim())]
+  [s.initImports(true)/]
+  [s.addImport(s.buildPackageWsApi() + '.' + s.buildServiceFacadeRSInterfaceName(d))/]
+  [s.addImport(s.buildPackageBusiness() + '.' + s.buildAppliUserBusinessGenClassName())/]
+  [s.addImport('fr.spi4j.ws.rs.exception.Spi4jValidationException')/]
+  [s.addImport('fr.spi4j.ws.rs.exception.RsNoResultException', not s.isDefinedForAuthentication())/]
+  [s.addImport(s.buildPackageMapper() + '.' + s.buildAppliUserMapperGenClassName(), not s.isDefinedForAuthentication())/]
+  [s.addImport('org.jvnet.hk2.annotations.Service', s.useWsServiceInjection())/]
+  [s.addImport('fr.spi4j.ws.rs.RsAuthTokenXtoWrapper', s.isDefinedForAuthentication())/]
+  [s.addImport('fr.spi4j.ws.rs.RsAuthCredentials', s.isDefinedForAuthentication())/]
+  [s.addImport('fr.spi4j.ws.rs.exception.RsForbiddenException', s.isDefinedForAuthentication())/]
+  [s.addImport('io.jsonwebtoken.Claims', s.isDefinedForAuthentication())/]
+  [s.addImport('io.jsonwebtoken.impl.DefaultClaims', s.isDefinedForAuthentication())/]
+  
+  [if (not (s = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.isRSOperation())]
+        [if (o.hasDtoParamOutXto())]
+          			[s.addImport(o.output->first().type.oclAsType(environment::DTO).buildImportXto())/]
+        [/if]
+        		
+        [for (p : soa::Parameter | o.input)]
+          			[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
+          
+        [/for]
+        
+      [elseif (s.isDefinedForAuthentication() and not o.public)]
+        		[if (o.hasDtoParamOutXto())][s.addImport(o.output->first().type.oclAsType(environment::DTO).buildDtoImport())/][/if]
+        		
+        
+        [for (p : soa::Parameter | o.input)]
+          			[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
+          
+        [/for]
+      [/if]
+    [/for]
+  [/if]
+  
+  [s.flushImports()/][/template]
 
 [comment : Get the default null value depends of the parameter's type. /]
-[template private nullValueForColumnType(p : Parameter)]
-[if type.name.equalsIgnoreCase('Boolean')]
-false[elseif type.name.equalsIgnoreCase('Integer')]
-0[elseif type.name.equalsIgnoreCase('Long')]
-0L[elseif type.name.equalsIgnoreCase('Float')]
-0F[elseif type.name.equalsIgnoreCase('Double')]
-0D[else]
-null[/if]
+[template private nullValueForColumnType(p : soa::Parameter)]
+  [if (p.type.name.equalsIgnoreCase('Boolean'))]false[elseif (p.type.name.equalsIgnoreCase('Integer'))]0[elseif (p.type.name.equalsIgnoreCase('Long'))]0L[elseif (p.type.name.equalsIgnoreCase('Float'))]0F[elseif (p.type.name.equalsIgnoreCase('Double'))]0D[else]null[/if]
 [/template]

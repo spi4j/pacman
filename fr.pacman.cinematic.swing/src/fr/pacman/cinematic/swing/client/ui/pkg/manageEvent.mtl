@@ -1,59 +1,50 @@
+[module manageEvent('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::swing::common::name/]
+[import fr::pacman::cinematic::swing::common::packages/]
+[import fr::pacman::cinematic::api::common::model/]
+[import fr::pacman::commons::common::imports/]
+
 [comment encoding = UTF-8 /]
-[module manageEvent('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
-
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::swing::common::name /]
-[import fr::pacman::cinematic::swing::common::packages /]
-[import fr::pacman::cinematic::api::common::model /]
-
-[import fr::pacman::commons::common::imports /]
-
-
-[template public gestionTransition (etat : FlowState, evenement : String, fromMainPanel : Boolean) ]
-[for (state : FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
-  [if state.oclIsKindOf(ViewState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(ViewState).name))]
-    [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
-      [namePresenter(nextView)/] v_[namePresenter(nextView).toLowerFirst()/] = getViewManager().getPresenter([namePresenter(nextView)/].class);
-      if (v_[namePresenter(nextView).toLowerFirst()/] == null)
-      {
-            [if fromMainPanel]
-         v_[namePresenter(nextView).toLowerFirst()/] = new [namePresenter(nextView)/]();
-            [else]
-         v_[namePresenter(nextView).toLowerFirst()/] = new [namePresenter(nextView)/](this);
-         getView().addView(v_[namePresenter(nextView).toLowerFirst()/].getView());
-            [/if]
-      }
-      else
-      {
-         getView().restoreView(v_[namePresenter(nextView).toLowerFirst()/].getView());
-      }
-    [/for]
-
-      // [/protected]
-   [elseif state.oclIsKindOf(SubflowState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(SubflowState).name))]
-      final [nameFlow(state.oclAsType(SubflowState).subflow)/] v_[nameFlow(state.oclAsType(SubflowState).subflow).toLowerFirst()/] = new [nameFlow(state.oclAsType(SubflowState).subflow)/](this);
-      v_[nameFlow(state.oclAsType(SubflowState).subflow).toLowerFirst()/].start();
-      // [/protected]
-   [elseif state.oclIsKindOf(ActionState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(ActionState).name))]
-      // TODO [state.oclAsType(ActionState).name/]
-      // [/protected]
-
-   [/if]
-[/for]
+[template public gestionTransition(etat : flow::FlowState, evenement : String, fromMainPanel : Boolean)]
+  [for (state : flow::FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
+    [if (state.oclIsKindOf(flow::ViewState))]
+            [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(flow::ViewState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+              [for (nextView : view::ViewContainer | state.oclAsType(flow::ViewState).viewContainers)]
+                      [nextView.namePresenter()/] v_[nextView.namePresenter().toLowerFirst()/] = getViewManager().getPresenter([nextView.namePresenter()/].class);
+                      if (v_[nextView.namePresenter().toLowerFirst()/] == null)
+                      {
+                [if (fromMainPanel)]
+                           v_[nextView.namePresenter().toLowerFirst()/] = new [nextView.namePresenter()/]();
+                [else]
+                           v_[nextView.namePresenter().toLowerFirst()/] = new [nextView.namePresenter()/](this);
+                           getView().addView(v_[nextView.namePresenter().toLowerFirst()/].getView());
+                [/if]
+                      }
+                      else
+                      {
+                         getView().restoreView(v_[nextView.namePresenter().toLowerFirst()/].getView());
+                      }
+              [/for]
+              
+            [/protected]
+      
+    [elseif (state.oclIsKindOf(flow::SubflowState))]
+            [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(flow::SubflowState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+                    final [state.oclAsType(flow::SubflowState).subflow.nameFlow()/] v_[state.oclAsType(flow::SubflowState).subflow.nameFlow().toLowerFirst()/] = new [state.oclAsType(flow::SubflowState).subflow.nameFlow()/](this);
+                    v_[state.oclAsType(flow::SubflowState).subflow.nameFlow().toLowerFirst()/].start();
+            [/protected]
+      
+    [elseif (state.oclIsKindOf(flow::ActionState))]
+            [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(flow::ActionState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+                    // TODO [state.oclAsType(flow::ActionState).name/]
+            [/protected]
+      
+      
+    [/if]
+  [/for]
 [/template]
 
-[query public getViewEvents(event : Event) : Set(ViewEvent) =
-    if (event.oclIsTypeOf(ViewEvent)) then
-        Set{event}
-    else
-        if (event.oclIsTypeOf(FlowEvent)) then
-            event.oclAsType(FlowEvent).binds.getViewEvents()
-        else
-            Set{}
-        endif
-    endif
-/]
+[query public getViewEvents(event : cinematic::Event) : OrderedSet(view::ViewEvent) = if event.oclIsTypeOf(view::ViewEvent) then OrderedSet{event} else if event.oclIsTypeOf(flow::FlowEvent) then event.oclAsType(flow::FlowEvent).binds->asSequence()->collect(temp1 | temp1.getViewEvents()) else OrderedSet{} endif endif/]

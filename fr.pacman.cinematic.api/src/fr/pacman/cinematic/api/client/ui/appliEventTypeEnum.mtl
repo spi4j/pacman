@@ -1,40 +1,40 @@
+[module appliEventTypeEnum('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::api::common::packages/]
+
 [comment encoding = UTF-8 /]
-[module appliEventTypeEnum('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::api::common::packages /]
-
-[template public appliEventTypeEnum(any : OclAny)]
-[licence()/]
-package [namePackageClient()/];
-// [protected ('for imports')]
-
-import fr.spi4j.ui.mvp.EventType;
-
-// [/protected]
-
-/**
- * Enumération des types d'événements possibles dans l'application.
- * @author [getAuthorName()/]
- */
-public enum [buildAppliEventTypeEnum()/] implements EventType
-{
-
-   // [buildAppliEventTypeEnum()/]
-   // [protected (any.getUserCodeId(buildAppliEventTypeEnum()))]
-
-   /** Erreur */
-   ERREUR,
-
-   /** Information */
-   INFORMATION;
-
-   // [/protected]
-
-}
-[/template]
+[template public appliEventTypeEnum(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.namePackageClient()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import fr.spi4j.ui.mvp.EventType;
+    
+  [/protected]
+  
+  
+  /**
+   * Enumération des types d'événements possibles dans l'application.
+   * @author [any.getAuthorName()/]
+   */
+  public enum [any.buildAppliEventTypeEnum()/] implements EventType
+  {
+  
+     // [any.buildAppliEventTypeEnum()/]
+     [protected (any.getUserCodeId(any.buildAppliEventTypeEnum())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+          /** Erreur */
+          ERREUR,
+       
+          /** Information */
+          INFORMATION;
+       
+     [/protected]
+  
+  
+  }[/template]

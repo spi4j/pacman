@@ -1,19 +1,16 @@
-[comment encoding = UTF-8 /]
-[module genAttributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                          'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+[module genAttributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
-[import fr::pacman::commons::common::packages /]
-
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::classes /]
-
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::classes/]
 [import fr::pacman::soa::common::name/]
 [import fr::pacman::soa::common::packages/]
 [import fr::pacman::soa::commons::business::api::category::attributesEnum/]
-[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::classes/]
 
-[template public genAttributesEnum(d : DTO)]
-[file (filename(getCommonsSourceDir(), d.buildPackageBusinessApiDto(), d.buildAttributesEnumName() + '.java'), false, 'UTF-8')]
-[d.attributesEnum()/]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genAttributesEnum(d : environment::DTO)]
+  [file (d.getCommonsSourceDir().filename(d.buildPackageBusinessApiDto(), d.buildAttributesEnumName() + '.java'), overwrite, 'UTF-8')]
+    [d.attributesEnum()/]
+  [/file]
 [/template]

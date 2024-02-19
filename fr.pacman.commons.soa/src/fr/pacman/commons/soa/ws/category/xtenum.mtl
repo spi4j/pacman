@@ -1,71 +1,70 @@
-[comment encoding = UTF-8 /]
-[module xtenum('http://www.obeonetwork.org/dsl/soa/4.0.0',
-             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module xtenum('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::imports /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::commons::soa::common::packages/]
 [import fr::pacman::commons::soa::convention::rule::enumerationRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
 
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-
+[comment encoding = UTF-8 /]
 [comment : **************************/]
 [comment : Create an Xt enumeration. /]
 [comment : **************************/]
-[template public xtEnum (e : Enumeration)]
-[licence()/]
-package [e.buildPackageWsApiEnum()/];
-// [protected ('for imports')]
-
-[e.writeImports()/]
-
-// [/protected]
-
-/**
-* Enumération. 
-* [if not e.description.oclIsUndefined() and e.description.size() > 0][e.description/][/if]
-*/
-public enum [e.buildClassNameFromEnumForXto() /] {
-
- 	// [e.buildClassNameFromEnumForXto()/]
- 	// [protected (e.getUserCodeId(e.buildClassNameFromEnumForXto()))]
-
-    [if not e.literals->isEmpty()]
- [e.literals.enumStruct(e)->sep(',\r\n')/];[/if]
-
-	// [/protected]	
-
-	/**
-	 * Valeur transmise pour l'énumeration.
-	 */
-	private String [apply_attributeDefault('value')/];
-
-	[e.buildClassNameFromEnumForXto()/](final String [apply_parameterMethodClassicIn('value')/]){
-		[getAffectationPrefix()/][apply_attributeDefault('value')/] = [apply_parameterMethodClassicIn('value')/];
-	}
-
-	@JsonValue
-	public String [apply_methodGet('value')/](){
-		return [apply_attributeDefault('value')/];
-	}
-}
-
+[template public xtEnum(e : environment::Enumeration)]
+  [e.licence()/]
+  package [e.buildPackageWsApiEnum()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [e.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+  * Enumération. 
+  * [if (not (e.description = null) and e.description.size() > 0)][e.description/][/if]
+  
+  */
+  public enum [e.buildClassNameFromEnumForXto()/] {
+  
+   	// [e.buildClassNameFromEnumForXto()/]
+   	[protected (e.getUserCodeId(e.buildClassNameFromEnumForXto())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [if (not e.literals->isEmpty())] [e.literals->asSequence()->collect(temp1 | temp1.enumStruct(e))->sep(',\r\n')/];[/if]
+      
+    [/protected]
+  	
+  
+  	/**
+  	 * Valeur transmise pour l'énumeration.
+  	 */
+  	private String ['value'.apply_attributeDefault()/];
+  
+  	[e.buildClassNameFromEnumForXto()/](final String ['value'.apply_parameterMethodClassicIn()/]){
+  		[e.getAffectationPrefix()/]['value'.apply_attributeDefault()/] = ['value'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	@JsonValue
+  	public String ['value'.apply_methodGet()/](){
+  		return ['value'.apply_attributeDefault()/];
+  	}
+  }
 [/template]
 
 [comment : the case for the original enums must not be modified ! -> to be completed /]
-[template private enumStruct (l : Literal, e : Enumeration)]
-   /** [if not l.name.oclIsUndefined() and l.name.trim().size() > 0][l.name/][else]BLANK[/if]. */
-   [if not l.name.oclIsUndefined() and l.name.trim().size() > 0][apply_enum(l.name) /][else]BLANK[/if]("[if not l.description.oclIsUndefined() and l.description.size() > 0][l.description/][else][l.name/][/if]")
-[/template]
+[template private enumStruct(l : environment::Literal, e : environment::Enumeration)]
+     /** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
+  . */
+     [if (not (l.name = null) and l.name.trim().size() > 0)][l.name.apply_enum()/][else]BLANK[/if]
+  ("[if (not (l.description = null) and l.description.size() > 0)][l.description/][else][l.name/][/if]
+  ")[/template]
 
 [comment : Write all required imports. /]
-[template private writeImports(e : Enumeration) post(trim())]
-[e.initImports()/]
-[e.addImport('com.fasterxml.jackson.annotation.JsonValue')/]
-[e.flushImports()/]
-[/template]
+[template private writeImports(e : environment::Enumeration) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('com.fasterxml.jackson.annotation.JsonValue')/]
+  [e.flushImports()/][/template]

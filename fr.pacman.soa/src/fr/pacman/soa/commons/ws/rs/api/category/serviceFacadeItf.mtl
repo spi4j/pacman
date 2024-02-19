@@ -1,79 +1,72 @@
-[comment encoding = UTF-8 /]
-[module serviceFacadeItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                         'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module serviceFacadeItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::classes /]
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::packages /]
-
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::commons::crudRSFacades /]
-
-[import fr::pacman::commons::soa::common::comments /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::commons::crudRSFacades/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::convention::rule::methodRule/]
 [import fr::pacman::commons::convention::rule::parameterRule/]
-[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::packages/]
 
-[template public serviceFacadeItf(s : Service, d : DTO) ]
-[licence()/]
-package [buildPackageWsApi(s)/];
-// [protected ('for imports')]
+[comment encoding = UTF-8 /]
+[template public serviceFacadeItf(s : soa::Service, d : environment::DTO)]
+  [s.licence()/]
+  package [s.buildPackageWsApi()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Definit le contrat de services spécifique pour les services REST.
+   * @author [s.getAuthorName()/]
+   */
+  public interface [s.buildServiceFacadeRSInterfaceName(d)/]
+  {
+  [if (d.isCrudApplication() and not (d = null) and s = null)]
+    	[d.writeCrudOperations(true)/]
+  [/if]
+  
+  [if (not (s = null) and not (s.ownedInterface = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.isRSOperation())]
+        
+           /**
+            * [o.description/].
+        [o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/]
+        	*/
+            [protected (o.getUserCodeId('Annotations Methode' + o.name)) startTagPrefix('// ') endTagPrefix('// ')]
+              
+            [/protected]
+        
+           [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/][o.paramsInForPagingIfNeeded(true)/]);
+        
+           [o.addInterfaceTotalCountForPagingIfNeeded()/]
+      [/if]
+    [/for]
+  [/if]
+  
+  }[/template]
 
-[s.writeImports()/]
-
-// [/protected]
-
-/**
- * Definit le contrat de services spécifique pour les services REST.
- * @author [getAuthorName()/]
- */
-public interface [s.buildServiceFacadeRSInterfaceName(d)/]
-{
-[comment : write crud operations if crud option active. /]
-[if d.isCrudApplication() and not d.oclIsUndefined() and s.oclIsUndefined()]
-	[d.writeCrudOperations(true)/]
-[/if]
-
-[if not s.oclIsUndefined() and not s.ownedInterface.oclIsUndefined()]
-	[for (o : Operation | s.ownedInterface.ownedOperations)]
-		[if o.isRSOperation()]
-
-   /**
-    * [o.description/].
-[o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/]
-	*/
-    // [protected (o.getUserCodeId('Annotations Methode' + o.name))]
-
-    // [/protected]
-   [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/][paramsInForPagingIfNeeded(o, true)/]);
-
-   [comment : If paged list add a new method to get the total count og paged request. /]
-   [o.addInterfaceTotalCountForPagingIfNeeded()/]
-		[/if]
-	[/for]
-[/if]
-
-}
-[/template]
-
-[comment : too complex, the CTRL + SHIFT + 0 should do the job. / ]
-[template private writeImports(s : Service) post(trim())]
-[s.initImports(true)/]
-[s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
-[s.flushImports()/]
-[/template]
+[comment : too complex, the CTRL + SHIFT + 0 should do the job. /]
+[template private writeImports(s : soa::Service) post(self.trim())]
+  [s.initImports(true)/]
+  [s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+  [s.flushImports()/][/template]

@@ -1,15 +1,14 @@
+[module genUserBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::commons::userBusiness/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genUserBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0',
-						'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::commons::userBusiness /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genUserBusiness(m : System)]
-[file (filename(getCommonsSourceDir(), buildPackageBusiness(), buildAppliUserBusinessGenClassName() + '.java'), false, 'UTF-8')]
-[m.userBusiness()/]
-[/file]
+[template public genUserBusiness(m : soa::System)]
+  [file (m.getCommonsSourceDir().filename(m.buildPackageBusiness(), m.buildAppliUserBusinessGenClassName() + '.java'), overwrite, 'UTF-8')]
+    [m.userBusiness()/]
+  [/file]
 [/template]

@@ -1,19 +1,16 @@
+[module genModuleGwtXml('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::cinematic::gwt::resources::moduleGwtXml/]
+
 [comment encoding = UTF-8 /]
-[module genModuleGwtXml('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::cinematic::gwt::resources::moduleGwtXml /]
-
-[template public genModuleGwtXml(any : OclAny)]
-[file (filename(getClientGwtResourcesDir(), getApplicationPackage(), filename()), false, 'UTF-8')]
-[moduleGwtXml()/]
-[/file]
+[template public genModuleGwtXml(any : ecore::EObject)]
+  [file (any.getClientGwtResourcesDir().filename(any.getApplicationPackage(), any.filename()), overwrite, 'UTF-8')]
+    [any.moduleGwtXml()/]
+  [/file]
 [/template]
 
-[query private filename(any : OclAny) : String =
-    getApplicationNameUpperFirst() + '.gwt.xml'
-/]
-
+[query private filename(any : ecore::EObject) : String = any.getApplicationNameUpperFirst() + '.gwt.xml'/]

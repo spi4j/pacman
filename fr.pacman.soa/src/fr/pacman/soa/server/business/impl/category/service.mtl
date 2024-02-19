@@ -1,310 +1,304 @@
+[module service('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+[import fr::pacman::soa::services::RequirementUtils/]
+
 [comment encoding = UTF-8 /]
-[module service('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0',
-                'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+[comment le Service existe sans DTO /]
+[template public service(s : soa::Service)]
+  [s.service(s.dtoFromService())/][/template]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::imports /]
+[template public service(d : environment::DTO)]
+  [d.serviceFromDto().service(d)/][/template]
 
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::names /]
-[import fr::pacman::commons::soa::common::utils /]
-
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::classes /]
-
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[comment] le Service existe sans DTO [/comment]
-[template public service(s : Service)]
-[service(s, dtoFromService(s))/]
-[/template]
-
-[template public service(d : DTO)]
-[service(serviceFromDto(d), d)/]
-[/template]
-
-[comment] le Service et le DTO existent [/comment]
-[template public service(s : Service, d : DTO)]
-[licence()/]
-[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
-package [buildPackageBusinessImplementationServiceDto(s, d)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[d.writeImports(s)/]
-
-// [/protected]
-
-/**
- * Implémentation du contrat de services spécifiques[if hasCrud(d)] pour un type '[nameClassDto(d)/]'[/if]. <br>
- * Pour rappel, les services sont sans état.
- * @author [getAuthorName()/]
- */
-// annotations service
-// [protected (s.getUserCodeId('annotations service'))]
-[if useEjb()]
-@Stateless
-[/if]
-// [/protected]
-public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNameForService_Abs()/]<[genPkType()/], [buildDtoClassName(d)/], [buildEntityColumnEnumName(d)/]> [/if]implements [buildServiceInterfaceName(s, d)/]
-{
-
-   // Rappel : les services sont sans état.
-   // attributs
-   // [protected (s.getUserCodeId('attributs'))]
-
-   // [/protected]
-
-[if useServiceRequirements()]
-   @SuppressWarnings("all")
-   private final [buildServiceRequirementsClassName(s, d)/] [apply_attributeFinal('requirements')/] = new [buildServiceRequirementsClassName(s, d)/] (); // NOPMD
-[/if]
-
-[if hasCrud(d)]
-   /**
-    * Obtenir l'instance de matching sur le type '[nameClassDto(d)/]'.
-    * @return L'instance désirée.
-    */
-   @Override
-   protected [buildAppliMatchInterfaceName(d)/] getMatch ()
-   {
-      return [buildUserMatchingGenClassName()/].[apply_methodDefault('get ' + buildAppliMatchName(d))/] ();
-   }
-
-[comment : create crud operations. NO USE FOR NOW - STANDBY! suppress 'and false'./]
-[if d.isCrudApplication() and false]
-   /**
-	* Lecture d'une instance de type : '[buildDtoClassName(d)/]', à partir de son identifiant.
-    *
-    * @param [apply_parameterMethodClassicIn('id')/] : Identifiant unique pour l'instance à obtenir.
-    * @return [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Read'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read'))]
-
-	// [/protected]
-	public [buildDtoClassName(d)/] read(final Long [apply_parameterMethodClassicIn('id')/]) {
-
-		return findById([apply_parameterMethodClassicIn('id')/]);
-	}
-
-   /**
-	* Création d'une nouvelle instance de type : '[buildDtoClassName(d)/]'.
-    *
-    * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-	* @return [buildDtoClassName(d)/] : la nouvelle instance de type '[buildDtoClassName(d)/]'.
-    * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Create'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create'))]
-
-	// [/protected]
-	public [buildDtoClassName(d)/] create(final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn(d.name)/]) throws Spi4jValidationException {
-	
-		return save([apply_parameterMethodClassicIn(d.name)/]);
-	}
-
-   /**
-	* Mise à jour d'une instance de type : '[buildDtoClassName(d)/]'.
-    *
-    * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-    * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Update'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update'))]
-
-	// [/protected]
-	public void update(final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn(d.name)/]) throws Spi4jValidationException  {
-	
- 		save([apply_parameterMethodClassicIn(d.name)/]);
-	}
-
-   /**
-	* Suppression physique d'une instance de type : '[buildDtoClassName(d)/]'.
-    *
-    * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-    * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Delete'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete'))]
-
-	// [/protected]
-	public void remove(final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn(d.name)/]) throws Spi4jValidationException {
-	
-		delete([apply_parameterMethodClassicIn(d.name)/]);
-	}
-[/if]
-
-[for (r : Reference | d.referencingStar())]
-   @Override
-   public List<[buildDtoClassName(d)/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamInverseId(r))/])
-   {
-      return findByColumn ([d.buildEntityColumnEnumName()/].[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/], [apply_parameterMethodClassicIn(nameParamInverseId(r))/]);
-   }
-
-[/for]
-[for (r : Reference | d.referencesStarStar())]
+[comment le Service et le DTO existent /]
+[template public service(s : soa::Service, d : environment::DTO)]
+  [s.licence()/]
+  [let self = if not (s = null) then s else if not (d = null) then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+    package [s.buildPackageBusinessImplementationServiceDto(d)/];
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [d.writeImports(s)/]
+      
+    [/protected]
+    
+    
     /**
-    * Sauvegarde les relations entre '[nameClassDto(d)/]' et '[nameClassDto(r)/]' pour ce dto.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le dto
-    * @param [apply_parameterMethodMultiple(r.name.normalize())/]
-    *           les relations à ajouter
-    */
-    @Override
-    public void [apply_methodDefault('save ' + r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/], final List<[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_parameterMethodMultiple(r.name.normalize())/])
-    {
-      getMatch ().[apply_methodDefault('save ' + r.name.normalize())/] ([apply_parameterMethodClassicIn('dto')/],[apply_parameterMethodMultiple(r.name.normalize())/]);
-    }
-
-    /**
-    * Obtenir la liste d'objets de type '[nameBaseDtoUP(r.referencedType.oclAsType(DTO))/]' associés à l'instance de type '[buildDtoClassName(r.referencedType.oclAsType(DTO))/]'.
-    * @param [apply_parameterMethodClassicIn(apply_parameterMethodClassicIn(d.buildSimpleDtoName()))/][namePK_ID()/]
-    *           (In)(*) [buildDtoClassName(r.referencedType.oclAsType(DTO))/]
-    * @return une liste de [buildDtoClassName(r.referencedType.oclAsType(DTO))/]
-    */
-    @Override
-    public List<[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(d.buildSimpleDtoName())/][namePK_ID()/])
-    {
-      return getMatch ().[apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] ([apply_parameterMethodClassicIn(d.buildSimpleDtoName() + namePK_ID())/]);
-    }
-
-    /**
-    * Supprime les relations [r.name/] entre '[nameClassDto(d)/]' et '[nameClassDto(r)/]' pour ce dto.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le dto
-    */
-   @Override
-   public void [apply_methodDefault('delete ' + r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/])
-   {
-      getMatch ().[apply_methodDefault('delete ' + r.name.normalize())/] ([apply_parameterMethodClassicIn('dto')/]);
-   }
-
-[/for]
-[/if]
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-   /**
-    * [o.description/]
-[comParamsIn(o)/]
-[comParamOut(o)/]
-    */
-[let requirements : Sequence(Requirement) = getRequirements(o)]
-[comment TODO : on ne gère que les annotations automatiques sur les services si on n'a pas demandé le découpage de l'énumération (requirement.category.base.level=0) car sinon c'est trop complexe (pour le moment) /]
-[if useServiceRequirements()]
-[if requirementBaseCategoryLevel() = 0 and not requirements->isEmpty()]
-[if requirements->size() = 1]
-   @[apply_classAnnotation('requirement')/]([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][requirements->first().id /])
-[else]
-   @[apply_classAnnotation('requirement')/](value =
-   {[apply_classEnum('requirement') + '.' + getServiceRequirementsPrefix() + requirements.id->sep(', ' + apply_classEnum('requirement') + '.' + getServiceRequirementsPrefix())/] })
-[/if]
-[/if]
-[/if]
-   @Override
-   public [paramOutDto(o)/] [apply_methodDefault(o.name.sanitize())/] ([paramsInDto(o)/][paramsInForPagingIfNeeded(o, true)/])
-   {
-
-      // Appel des exigences en provenance de la modélisation
-      [if useServiceRequirements()]
-      [for (req : Requirement | requirements)]
-      // [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id /] ();
-      [/for]
+     * Implémentation du contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if]
+    . <br>
+     * Pour rappel, les services sont sans état.
+     * @author [s.getAuthorName()/]
+     */
+    // annotations service
+    [protected (s.getUserCodeId('annotations service')) startTagPrefix('// ') endTagPrefix('// ')]
+      [if (s.useEjb())]
+        @Stateless
       [/if]
-
-      // [userCodeForOperation(o)/]
-      // [protected (o.getUserCodeId(userCodeForOperation(o)))]
-      // Appel des exigences
-      [if useServiceRequirements()]
-      [for (req : Requirement | requirements)]
-      [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id /] ();
-      [/for]
+    [/protected]
+    
+    public class [s.buildServiceClassName(d)/] [if (d.hasCrud())]extends [s.getClassNameForService_Abs()/]<[s.genPkType()/], [d.buildDtoClassName()/], [d.buildEntityColumnEnumName()/]> [/if]
+    implements [s.buildServiceInterfaceName(d)/]
+    {
+    
+       // Rappel : les services sont sans état.
+       // attributs
+       [protected (s.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    
+    [if (s.useServiceRequirements())]
+         @SuppressWarnings("all")
+         private final [s.buildServiceRequirementsClassName(d)/] ['requirements'.apply_attributeFinal()/] = new [s.buildServiceRequirementsClassName(d)/] (); // NOPMD
+    [/if]
+    
+    [if (d.hasCrud())]
+         /**
+          * Obtenir l'instance de matching sur le type '[d.nameClassDto()/]'.
+          * @return L'instance désirée.
+          */
+         @Override
+         protected [d.buildAppliMatchInterfaceName()/] getMatch ()
+         {
+            return [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ();
+         }
+      
+      [if (d.isCrudApplication() and false)]
+           /**
+        	* Lecture d'une instance de type : '[d.buildDtoClassName()/]', à partir de son identifiant.
+            *
+            * @param ['id'.apply_parameterMethodClassicIn()/] : Identifiant unique pour l'instance à obtenir.
+            * @return [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+        	*/
+        	// Annotations [d.name.sanitize() + '_Read'/]
+        	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read')) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+        
+        	public [d.buildDtoClassName()/] read(final Long ['id'.apply_parameterMethodClassicIn()/]) {
+        
+        		return findById(['id'.apply_parameterMethodClassicIn()/]);
+        	}
+        
+           /**
+        	* Création d'une nouvelle instance de type : '[d.buildDtoClassName()/]'.
+            *
+            * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+        	* @return [d.buildDtoClassName()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
+            * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
+        	*/
+        	// Annotations [d.name.sanitize() + '_Create'/]
+        	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create')) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+        
+        	public [d.buildDtoClassName()/] create(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException {
+        	
+        		return save([d.name.apply_parameterMethodClassicIn()/]);
+        	}
+        
+           /**
+        	* Mise à jour d'une instance de type : '[d.buildDtoClassName()/]'.
+            *
+            * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+            * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
+        	*/
+        	// Annotations [d.name.sanitize() + '_Update'/]
+        	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update')) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+        
+        	public void update(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException  {
+        	
+         		save([d.name.apply_parameterMethodClassicIn()/]);
+        	}
+        
+           /**
+        	* Suppression physique d'une instance de type : '[d.buildDtoClassName()/]'.
+            *
+            * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+            * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
+        	*/
+        	// Annotations [d.name.sanitize() + '_Delete'/]
+        	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete')) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+        
+        	public void remove(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException {
+        	
+        		delete([d.name.apply_parameterMethodClassicIn()/]);
+        	}
       [/if]
-      // TODO Méthode à implémenter
-      throw new UnsupportedOperationException ();
-
-      // [/protected]
-   }
-
-[/let]
-	[comment : If paged list add a new method to get the total count of paged request. true if RS facade/]
-	[o.addMethodTotalCountForPagingIfNeeded(null, false)/]
-[/for]
-[/if]
-
-   // [nameService(s, d)/]
-   // [protected (s.getUserCodeId(nameService(s, d)))]
-
-   // [/protected]
-}[/let]
+      
+      [for (r : environment::Reference | d.referencingStar())]
+           @Override
+           public List<[d.buildDtoClassName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.nameParamInverseId().apply_parameterMethodClassicIn()/])
+           {
+              return findByColumn ([d.buildEntityColumnEnumName()/].[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/], [r.nameParamInverseId().apply_parameterMethodClassicIn()/]);
+           }
+        
+      [/for]
+      [for (r : environment::Reference | d.referencesStarStar())]
+            /**
+            * Sauvegarde les relations entre '[d.nameClassDto()/]' et '[r.nameClassDto()/]' pour ce dto.
+            * @param ['dto'.apply_parameterMethodClassicIn()/]
+            *           le dto
+            * @param [r.name.normalize().apply_parameterMethodMultiple()/]
+            *           les relations à ajouter
+            */
+            @Override
+            public void [('save ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/], final List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [r.name.normalize().apply_parameterMethodMultiple()/])
+            {
+              getMatch ().[('save ' + r.name.normalize()).apply_methodDefault()/] (['dto'.apply_parameterMethodClassicIn()/],[r.name.normalize().apply_parameterMethodMultiple()/]);
+            }
+        
+            /**
+            * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(environment::DTO).nameBaseDtoUP()/]' associés à l'instance de type '[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]'.
+            * @param [d.buildSimpleDtoName().apply_parameterMethodClassicIn().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            *           (In)(*) [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]
+            * @return une liste de [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]
+            */
+            @Override
+            public List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [d.buildSimpleDtoName().apply_parameterMethodClassicIn()/][r.namePK_ID()/])
+            {
+              return getMatch ().[('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] ([(d.buildSimpleDtoName() + r.namePK_ID()).apply_parameterMethodClassicIn()/]);
+            }
+        
+            /**
+            * Supprime les relations [r.name/] entre '[d.nameClassDto()/]' et '[r.nameClassDto()/]' pour ce dto.
+            * @param ['dto'.apply_parameterMethodClassicIn()/]
+            *           le dto
+            */
+           @Override
+           public void [('delete ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/])
+           {
+              getMatch ().[('delete ' + r.name.normalize()).apply_methodDefault()/] (['dto'.apply_parameterMethodClassicIn()/]);
+           }
+        
+      [/for]
+    [/if]
+    [if (s <> null and not (s.ownedInterface = null))]
+      [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+           /**
+            * [o.description/]
+        [o.comParamsIn()/]
+        [o.comParamOut()/]
+            */
+        [let requirements : Sequence(requirement::Requirement) = o.getRequirements()]
+          [if (o.useServiceRequirements())]
+            [if (o.requirementBaseCategoryLevel() = 0 and not requirements->isEmpty())]
+              [if (requirements->size() = 1)]
+                   @['requirement'.apply_classAnnotation()/](['requirement'.apply_classEnum()/].[o.getServiceRequirementsPrefix()/][requirements->first().id/])
+              [else]
+                   @['requirement'.apply_classAnnotation()/](value =
+                   {['requirement'.apply_classEnum() + '.' + o.getServiceRequirementsPrefix() + requirements->collect(temp1 | temp1.id)->sep(', ' + 'requirement'.apply_classEnum() + '.' + o.getServiceRequirementsPrefix())/] })
+              [/if]
+            [/if]
+          [/if]
+             @Override
+             public [o.paramOutDto()/] [o.name.sanitize().apply_methodDefault()/] ([o.paramsInDto()/][o.paramsInForPagingIfNeeded(true)/])
+             {
+          
+                // Appel des exigences en provenance de la modélisation
+          [if (o.useServiceRequirements())]
+            [for (req : requirement::Requirement | requirements)]
+                    // ['requirements'.apply_attributeFinal()/].exigence[req.getServiceRequirementsPrefix()/][req.id/] ();
+            [/for]
+          [/if]
+          
+                // [o.userCodeForOperation()/]
+                [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+                        // Appel des exigences
+                  [if (o.useServiceRequirements())]
+                    [for (req : requirement::Requirement | requirements)]
+                            ['requirements'.apply_attributeFinal()/].exigence[req.getServiceRequirementsPrefix()/][req.id/] ();
+                    [/for]
+                  [/if]
+                        // TODO Méthode à implémenter
+                        throw new UnsupportedOperationException ();
+                  
+                [/protected]
+          
+             }
+          
+        [/let]
+        	[o.addMethodTotalCountForPagingIfNeeded(null, false)/]
+      [/for]
+    [/if]
+    
+       // [s.nameService(d)/]
+       [protected (s.getUserCodeId(s.nameService(d))) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    }[/let]
 [/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (d : DTO, s : Service) post(trim())]
-[comment : s is null tested in the method. /]
-[s.initImports()/]
-[s.addImport('java.util.Date')/]
-[s.addImport('java.util.List')/]
-[s.addImport('jakarta.ejb.Stateless', useEjb())/]
-[s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
-[s.addImport(getImportForService_Abs())/]
-[s.addImport(buildImportServiceInterface(s, d))/]
+[template private writeImports(d : environment::DTO, s : soa::Service) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport('java.util.Date')/]
+  [s.addImport('java.util.List')/]
+  [s.addImport('jakarta.ejb.Stateless', d.useEjb())/]
+  [s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+  [s.addImport(d.getImportForService_Abs())/]
+  [s.addImport(s.buildImportServiceInterface(d))/]
+  
+  [if (not (d = null) and d.hasCrud())]
+    [for (r : environment::Reference | d.referencesNoStar())]
+      		[s.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
+    [/for]
+    
+    	[s.addImport(d.buildImportDto())/]
+    	[s.addImport(d.buildImportEnum())/]
+    	[s.addImport(d.buildImportMatchingInterface())/]
+    	[s.addImport(d.buildPackageMatching() + '.' + d.buildUserMatchingGenClassName())/]
+  [/if]
+  
+  [if (d.useServiceRequirements())]
+    	[s.addImport(s.buildImportServiceRequirements(d))/]
+  [/if]
+  
+  [if (not (d = null))]
+    [for (r : environment::Reference | d.referencesStarStar())]
+      		[s.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
+    [/for]
+  [/if]
+  
+  [if (not (s = null) and not (s.ownedInterface = null))]
+    [if (s.ownedInterface.ownedOperations->exists(o | not o.getRequirements()->isEmpty()))]
+      		[s.addImport(d.buildPackageRequirement() + '.' + 'requirement'.apply_classAnnotation())/]
+      		[s.addImport(d.buildPackageRequirement() + '.' + 'requirement'.apply_classEnum())/]
+    [/if]
+  [/if]
+  
+  [s.flushImports()/][/template]
 
-[if not d.oclIsUndefined() and hasCrud(d)]
-	[for (r : Reference | d.referencesNoStar())]
-		[s.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-	[/for]
+[query private getRequirements(o : soa::Operation) : Sequence(requirement::Requirement) = o.getRequirementsJavaService()/]
 
-	[s.addImport(d.buildImportDto())/]
-	[s.addImport(d.buildImportEnum())/]
-	[s.addImport(d.buildImportMatchingInterface())/]
-	[s.addImport(buildPackageMatching() + '.' + buildUserMatchingGenClassName())/]
-[/if]
-
-[if useServiceRequirements()]
-	[s.addImport(buildImportServiceRequirements(s, d))/]
-[/if]
-
-[if not d.oclIsUndefined()]
-	[for (r : Reference | d.referencesStarStar())]
-		[s.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-	[/for]
-[/if]
-
-[if not s.oclIsUndefined() and not s.ownedInterface.oclIsUndefined()]
-	[if s.ownedInterface.ownedOperations->exists(o : Operation | not getRequirements(o)->isEmpty())]
-		[s.addImport(buildPackageRequirement() + '.' + apply_classAnnotation('requirement'))/]
-		[s.addImport(buildPackageRequirement() + '.' + apply_classEnum('requirement'))/]
-	[/if]
-[/if]
-
-[comment : no impact if s is null. /]
-[s.flushImports()/]
-[/template]
-
-[query private getRequirements(o : Operation) : Sequence(Requirement) =
-invoke('fr.pacman.soa.services.RequirementUtils', 'getRequirements(org.eclipse.emf.ecore.EObject)', Sequence{o})
-/]
-
-[query private hasCrud(d : DTO) : Boolean =
-   d <> null and not d.isNotPersistent()
-/]
+[query private hasCrud(d : environment::DTO) : Boolean = d <> null and not d.isNotPersistent()/]

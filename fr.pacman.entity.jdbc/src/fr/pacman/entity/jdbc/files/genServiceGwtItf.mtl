@@ -1,17 +1,15 @@
+[module genServiceGwtItf('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::classesEntity/]
+[import fr::pacman::entity::api::common::serviceutils/]
+[import fr::pacman::entity::jdbc::files::gwt::serviceGwtItf/]
+
 [comment encoding = UTF-8 /]
-[module genServiceGwtItf('http://www.obeonetwork.org/dsl/environment/3.0.0',                         
-						 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::classesEntity /]
-[import fr::pacman::entity::api::common::serviceutils /]
-[import fr::pacman::entity::jdbc::files::gwt::serviceGwtItf /]
-
-[template public genServiceGwtItf(e : Entity)]
-[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtClientService(e), buildServiceGwtInterfaceName(e) + '.java'), false, 'UTF-8')]
-[serviceGwtItf(e)/]
-[/file]
+[template public genServiceGwtItf(e : entity::Entity)]
+  [file (e.getClientGwtSourceDir().filename(e.buildPackageBusinessGwtClientService(), e.buildServiceGwtInterfaceName() + '.java'), overwrite, 'UTF-8')]
+    [e.serviceGwtItf()/]
+  [/file]
 [/template]

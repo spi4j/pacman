@@ -145,6 +145,8 @@ public class ImportsUtils
       return null;
    }
 
+public static String initImportsJavaService(final ObeoDSMObject p_object,final Boolean p_onlyPublic,final String p_notInAccount){return initImports(p_object,p_onlyPublic,p_notInAccount);}
+
    /**
     * Check if the import is already present. If not, add to the list.
     * 
@@ -166,6 +168,8 @@ public class ImportsUtils
       // Always send null.
       return null;
    }
+
+public static String addImportJavaService(final ObeoDSMObject p_object,final String p_import,final Boolean p_write){return addImport(p_object,p_import,p_write);}
 
    /**
     * Check if the import has already been writed to the document. If not, add to the list.
@@ -405,6 +409,8 @@ public class ImportsUtils
 
       return v_builder.toString();
    }
+
+public static String flushImportsJavaService(final ObeoDSMObject p_object){return flushImports(p_object);}
 
    /**
     * Reset a specific list of imports to not take in account (if needed). The imports must be separated by ','.

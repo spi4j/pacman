@@ -1,242 +1,226 @@
-	[comment encoding = UTF-8 /]
-[module genTable('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module genTable('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::requests::counterQueries/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::sql::typeSQL/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::sql::common/]
 
-[import fr::pacman::commons::requests::counterQueries /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::sql::typeSQL /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::sql::common /]
+[template private genTypeColumn(databaseType : String, a : environment::Attribute)]
+  [databaseType.typeDataBase(a, a.attributeSize())/][/template]
 
+[template private genTypeColumn(databaseType : String, r : environment::Reference)]
+  [databaseType.typeDataBase(r)/][/template]
 
-[template private genTypeColumn(databaseType : String, a : Attribute)]
-[typeDataBase(databaseType, a, attributeSize(a))/]
+[template private genColumn(databaseType : String, a : environment::Attribute)]
+  [a.nameColumn()/] [databaseType.genTypeColumn(a)/][if (a.isMandatory())] not null[/if]
+  [if (databaseType.isDbMsqlType())][a.genCommentMysql()/][/if]
 [/template]
 
-[template private genTypeColumn(databaseType : String, r : Reference)]
-[typeDataBase(databaseType, r)/]
+[template private genColumnReferenceId(databaseType : String, r : environment::Reference, compteur : Integer)]
+  [r.nameColumnId(compteur)/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
+  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
 [/template]
 
-[template private genColumn(databaseType : String, a : Attribute)]
-[nameColumn(a)/] [genTypeColumn(databaseType, a)/][if a.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(a)/][/if]
+[template private genColumnReferenceId(databaseType : String, r : environment::Reference)]
+  [r.nameColumnId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
+  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
 [/template]
 
-[template private genColumnReferenceId(databaseType : String, r : Reference , compteur : Integer)]
-[nameColumnId(r, compteur)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[template private genColumnReferencingId(databaseType : String, r : environment::Reference, compteur : Integer)]
+  [r.nameColumnReferencingId(compteur)/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
+  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
 [/template]
 
-[template private genColumnReferenceId(databaseType : String, r : Reference)]
-[nameColumnId(r)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[template private genColumnReferencingId(databaseType : String, r : environment::Reference)]
+  [r.nameColumnReferencingId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
+  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
 [/template]
 
-[template private genColumnReferencingId(databaseType : String, r : Reference, compteur : Integer)]
-[nameColumnReferencingId(r,compteur)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
-[/template]
+[template public genPK(databaseType : String, e : entity::Entity)]
+  [e.namePK()/] [databaseType.typeDataBaseID()/][/template]
 
-[template private genColumnReferencingId(databaseType : String, r : Reference)]
-[nameColumnReferencingId(r)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
-[/template]
+[template public genPKJointure(databaseType : String, e : entity::Entity)]
+  [e.namePK()/] [databaseType.typeDataBaseIDJointure()/][/template]
 
-[template public genPK(databaseType : String, e : Entity)]
-[namePK(e)/] [typeDataBaseID(databaseType)/]
-[/template]
+[template public genReferenceID(databaseType : String, r : environment::Reference)]
+  [r.nameReferenceID()/] [databaseType.typeDataBaseID()/][/template]
 
-[template public genPKJointure(databaseType : String, e : Entity)]
-[namePK(e)/] [typeDataBaseIDJointure(databaseType)/]
-[/template]
-
-[template public genReferenceID(databaseType : String,r : Reference)]
-[nameReferenceID(r)/] [typeDataBaseID(databaseType)/]
-[/template]
-
-[template public genTableCreate(databaseType : String, r : Root)]
-[for (n : environment::Namespace | r.ownedNamespaces)]
-[genTableCreate(databaseType, n)/]
-[/for]
+[template public genTableCreate(databaseType : String, r : entity::Root)]
+  [for (n : environment::Namespace | r.ownedNamespaces)]
+    [databaseType.genTableCreate(n)/]
+  [/for]
 [/template]
 
 [template public genTableCreate(databaseType : String, n : environment::Namespace)]
-[comment : recursivite pour les namespaces a l'interieur de namespaces. /]
-[for (sn :  environment::Namespace | n.ownedNamespaces)]
-[genTableCreate(databaseType, sn)/]
-[/for]
-
-[for (e : Entity | n.types->select(el|el.oclIsKindOf(entity::Entity)))]
-[if not e.isNotPersistent() or useMatching()]
-
-/****************************************************************/
-[genSlashedLine(headerTable(e), sizeHeader())/]
-/****************************************************************/
-create table [nameTableWithSchema(e).toUpper()/]
-(
-    [genPK(databaseType, e)/],
-[for (a : Attribute | e.attributesNoPk())]
-[if (not a.isComputed())]
-    [genColumn(databaseType, a)/][if hasDefaultValue(a)] DEFAULT '[defaultValue(a)/]'[/if],
-[/if]
-[/for]
-[for (a : Attribute | e.getInheritDtoAttributes())]
-[if (not a.isComputed())]
-    [genColumn(databaseType, a)/][if hasDefaultValue(a)] DEFAULT '[defaultValue(a)/]'[/if],
-[/if]
-[/for]
-
-[for (ent : Entity | entitiesReferencedOrReferencing() )]
-[if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1]
-[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
-[if r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
-    [genColumnReferenceId(databaseType, r, i)/],
-[elseif r.oppositeOf.oclIsUndefined() ][comment]referencing[/comment]
-    [genColumnReferencingId(databaseType, r, i)/],
-[/if]
-[/for]
-[else]
-[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
-[if r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
-    [genColumnReferenceId(databaseType, r)/],
-[elseif r.oppositeOf.oclIsUndefined() ][comment]referencing[/comment]
-    [genColumnReferencingId(databaseType, r)/],
-[/if]
-[/for]
-[/if]
-[/for]
-    [if hasAutomaticColumns()][get_automaticColumns(databaseType)/][/if][genConstraintPK(databaseType, e)/]
-);
-[if hasUniqueIndex(e)]
-[genUniqueIDXOnTable(e, databaseType, get_nbColumnsInUniqueConstraint(uniqueIndex(e)),e.get_counterUN(1))/]
-[/if]
-[for (a : Attribute | e.attributes())]
-[if (not a.isComputed() and isUniqueIndex(a))]
-[genUniqueIDX(e, a, databaseType, e.get_counterUN(1))/]
-[/if]
-[/for]
-[for (ent : Entity | entitiesReferencedOrReferencing())]
-[genIDX(e, ent, databaseType, e.get_counterIDX(referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()))/][/for]
-[if not databaseType.isDbMsqlType()]
-[genComment(e)/]
-[for (a : Attribute | e.attributesNoPk())]
-[comment on ne cree pas la colonne pour les champs calcules/]
-[if (not a.isComputed())]
-[genComment(e, a)/][/if]
-[/for]
-[for (a : Attribute | e.getInheritDtoAttributes())]
-[if (not a.isComputed())]
-[genComment(e, a)/][/if]
-[/for]
-[for (ent : Entity | entitiesReferencedOrReferencing() )]
-[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
-[if r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
-[genCommentReferenceId(e, r)/][elseif r.oppositeOf.oclIsUndefined()]
-[comment]referencing[/comment]
-[genCommentReferencingId(e, r)/][/if]
-[/for]
-[/for]
-[/if]
-[for (r : Reference | e.referencesStarStarOwned())]
-
-/****************************************************************/
-[genSlashedLine(headerTableJointure(r), sizeHeader())/]
-/****************************************************************/
-create table [nameTableJointureWithSchema(r).toUpper()/]
-(
-    [genPKJointure(databaseType, r.containingType.oclAsType(entity::Entity))/],
-    [genPKJointure(databaseType, r.referencedType.oclAsType(entity::Entity))/],
-	[comment : On ne prend que xdmaj et xtopsupp/]
-    [if hasXdMaj()][r.gen_automaticColumn(databaseType, getXdmajKey())/][/if]
-    [if hasXtopSup()][r.gen_automaticColumn(databaseType, getXtopSuppKey())/][/if]
-    [genConstraintPKJointure(databaseType, r,i)/]
-);
-[/for]
-[/if]
-[/for]
+  [for (sn : environment::Namespace | n.ownedNamespaces)]
+    [databaseType.genTableCreate(sn)/]
+  [/for]
+  
+  [for (e : entity::Entity | n.types->select(el | el.oclIsKindOf(entity::Entity)))]
+    [if (not e.isNotPersistent() or e.useMatching())]
+      
+      /****************************************************************/
+      [e.headerTable().genSlashedLine(e.sizeHeader())/]
+      /****************************************************************/
+      create table [e.nameTableWithSchema().toUpper()/]
+      (
+          [databaseType.genPK(e)/],
+      [for (a : environment::Attribute | e.attributesNoPk())]
+        [if (not a.isComputed())]
+              [databaseType.genColumn(a)/][if (a.hasDefaultValue())] DEFAULT '[a.defaultValue()/]'[/if]
+          ,
+        [/if]
+      [/for]
+      [for (a : environment::Attribute | e.getInheritDtoAttributes())]
+        [if (not a.isComputed())]
+              [databaseType.genColumn(a)/][if (a.hasDefaultValue())] DEFAULT '[a.defaultValue()/]'[/if]
+          ,
+        [/if]
+      [/for]
+      
+      [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
+        [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
+          [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+            [if (r.containingType.oclAsType(entity::Entity) = e)]
+                  [databaseType.genColumnReferenceId(r, i)/],
+            [elseif (r.oppositeOf = null)]
+                  [databaseType.genColumnReferencingId(r, i)/],
+            [/if]
+          [/for]
+        [else]
+          [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+            [if (r.containingType.oclAsType(entity::Entity) = e)]
+                  [databaseType.genColumnReferenceId(r)/],
+            [elseif (r.oppositeOf = null)]
+                  [databaseType.genColumnReferencingId(r)/],
+            [/if]
+          [/for]
+        [/if]
+      [/for]
+          [if (e.hasAutomaticColumns())][e.get_automaticColumns(databaseType)/][/if]
+      [databaseType.genConstraintPK(e)/]
+      );
+      [if (e.hasUniqueIndex())]
+        [e.genUniqueIDXOnTable(databaseType, e.get_nbColumnsInUniqueConstraint(e.uniqueIndex()), e.get_counterUN(1))/]
+      [/if]
+      [for (a : environment::Attribute | e.attributes())]
+        [if (not a.isComputed() and a.isUniqueIndex())]
+          [e.genUniqueIDX(a, databaseType, e.get_counterUN(1))/]
+        [/if]
+      [/for]
+      [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())][e.genIDX(ent, databaseType, e.get_counterIDX(e.referencesNoStarAndReferencingStarAllNavigability(ent)->size()))/][/for]
+      [if (not databaseType.isDbMsqlType())]
+        [e.genComment()/]
+        [for (a : environment::Attribute | e.attributesNoPk())]
+          [if (not a.isComputed())][e.genComment(a)/][/if]
+        [/for]
+        [for (a : environment::Attribute | e.getInheritDtoAttributes())]
+          [if (not a.isComputed())][e.genComment(a)/][/if]
+        [/for]
+        [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
+          [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+            [if (r.containingType.oclAsType(entity::Entity) = e)][e.genCommentReferenceId(r)/][elseif (r.oppositeOf = null)][e.genCommentReferencingId(r)/][/if]
+          [/for]
+        [/for]
+      [/if]
+      [for (r : environment::Reference | e.referencesStarStarOwned())]
+        
+        /****************************************************************/
+        [r.headerTableJointure().genSlashedLine(r.sizeHeader())/]
+        /****************************************************************/
+        create table [r.nameTableJointureWithSchema().toUpper()/]
+        (
+            [databaseType.genPKJointure(r.containingType.oclAsType(entity::Entity))/],
+            [databaseType.genPKJointure(r.referencedType.oclAsType(entity::Entity))/],
+            [if (r.hasXdMaj())][r.gen_automaticColumn(databaseType, r.getXdmajKey())/][/if]
+        
+            [if (r.hasXtopSup())][r.gen_automaticColumn(databaseType, r.getXtopSuppKey())/][/if]
+        
+            [databaseType.genConstraintPKJointure(r, i)/]
+        );
+      [/for]
+    [/if]
+  [/for]
 [/template]
 
 [comment : le nouveau template permet simplement de passer le compteur./]
-[template private genIDX(e : Entity, ent : Entity, databaseType : String , compteur : Integer)]
-[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
-[if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1]
-[if r.containingType.oclAsType(entity::Entity) = e]
-[genIDXMultiple(e, r, databaseType, compteur + (i-1), i)/]
-[elseif r.oppositeOf.oclIsUndefined()]
-[genIDXMultipleInverse(e, r, databaseType, compteur + (i-1), i)/]
-[/if][else][if r.containingType.oclAsType(entity::Entity) = e]
-[genIDXSimple(e, r, databaseType, compteur)/]
-[elseif r.oppositeOf.oclIsUndefined()]
-[genIDXInverse(e, r, databaseType, compteur)/]
-[/if][/if][/for]
+[template private genIDX(e : entity::Entity, ent : entity::Entity, databaseType : String, compteur : Integer)]
+  [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+    [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
+      [if (r.containingType.oclAsType(entity::Entity) = e)]
+        [e.genIDXMultiple(r, databaseType, compteur + i - 1, i)/]
+      [elseif (r.oppositeOf = null)]
+        [e.genIDXMultipleInverse(r, databaseType, compteur + i - 1, i)/]
+      [/if]
+    [else]
+      [if (r.containingType.oclAsType(entity::Entity) = e)]
+        [e.genIDXSimple(r, databaseType, compteur)/]
+      [elseif (r.oppositeOf = null)]
+        [e.genIDXInverse(r, databaseType, compteur)/]
+      [/if]
+    [/if]
+  [/for]
 [/template]
 
-[template private get_automaticColumns(void : OclAny, databaseType : String)]
-[for (columnProp : String | get_automaticColumnsProperties())]
-[void.gen_automaticColumn(databaseType, columnProp)/]
-[/for]
+[template private get_automaticColumns(void : ecore::EObject, databaseType : String)]
+  [for (columnProp : String | void.get_automaticColumnsProperties())]
+    [void.gen_automaticColumn(databaseType, columnProp)/]
+  [/for]
 [/template]
 
-[template private gen_automaticColumn(void : OclAny, databaseType : String, columnProp : String) post(trim())]
-[if (columnProp.hasToWriteColumn())]
-[get_nameColumn(columnProp)/] [gen_typeColumn(databaseType, columnProp)/][if columnHasDefault(columnProp)] default [get_defaultColumn(columnProp)/][/if][if columnNotNull(columnProp)] not null[/if],[/if]
+[template private gen_automaticColumn(void : ecore::EObject, databaseType : String, columnProp : String) post(self.trim())]
+  [if (columnProp.hasToWriteColumn())]
+    [void.get_nameColumn(columnProp)/] [void.gen_typeColumn(databaseType, columnProp)/][if (void.columnHasDefault(columnProp))] default [void.get_defaultColumn(columnProp)/][/if]
+    [if (void.columnNotNull(columnProp))] not null[/if]
+    ,[/if]
 [/template]
 
-[template private gen_typeColumn(void : OclAny, databaseType : String, columnProp : String)]
-[typeDataBase(databaseType, get_typeColumn(columnProp), get_sizeColumn(columnProp))/]
+[template private gen_typeColumn(void : ecore::EObject, databaseType : String, columnProp : String)]
+  [databaseType.typeDataBase(void.get_typeColumn(columnProp), void.get_sizeColumn(columnProp))/][/template]
+
+[template private genUniqueIDXOnTable(e : entity::Entity, databaseType : String, nbCol : Integer, compteur : Integer)]
+  create unique index [e.nameUniqueIndex(nbCol, compteur)/] on [e.nameTableWithSchema()/] ([e.uniqueIndex().replaceAll(':', ' ')/])[e.genTableSpace(databaseType)/];[/template]
+
+[template private genUniqueIDX(e : entity::Entity, a : environment::Attribute, databaseType : String, compteur : Integer)]
+  create unique index [e.nameUniqueIndex(a, 1, compteur)/] on [e.nameTableWithSchema()/] ([a.nameColumn()/] [a.uniqueIndex().replaceAll(':', ' ')/])[e.genTableSpace(databaseType)/];[/template]
+
+[template private genIDXMultiple(e : entity::Entity, r : environment::Reference, databaseType : String, compteur : Integer, i : Integer)]
+  create index [r.nameIndex(compteur)/] on [e.nameTableWithSchema()/] ([r.nameColumnId(i)/])[e.genTableSpace(databaseType)/];[/template]
+
+[template private genIDXSimple(e : entity::Entity, r : environment::Reference, databaseType : String, compteur : Integer)]
+  create index [r.nameIndex(compteur)/] on [e.nameTableWithSchema()/] ([r.nameColumnId()/])[e.genTableSpace(databaseType)/];[/template]
+
+[template private genIDXMultipleInverse(e : entity::Entity, r : environment::Reference, databaseType : String, compteur : Integer, i : Integer)]
+  create index [r.nameIndex(compteur)/] on [e.nameTableWithSchema()/] ([r.nameColumnReferencingId(i)/])[e.genTableSpace(databaseType)/];[/template]
+
+[template private genIDXInverse(e : entity::Entity, r : environment::Reference, databaseType : String, compteur : Integer)]
+  create index [r.nameIndex(compteur)/] on [e.nameTableWithSchema()/] ([r.nameColumnReferencingId()/])[e.genTableSpace(databaseType)/];[/template]
+
+[template private genComment(e : entity::Entity)]
+  [if (not (e.description = null) and e.description.size() <> 0)]comment on table [e.nameTableWithSchema()/] is '[e.description.toString().replaceAll('\'', '\'\'')/]';[/if]
 [/template]
 
-[template private genUniqueIDXOnTable(e : Entity, databaseType : String, nbCol : Integer, compteur : Integer)]
-create unique index [nameUniqueIndex(e, nbCol, compteur)/] on [nameTableWithSchema(e)/] ([uniqueIndex(e).replaceAll(':',' ')/])[genTableSpace(e, databaseType)/];
+[template private genComment(e : entity::Entity, a : environment::Attribute)]
+  [if (not (a.description = null) and a.description.size() <> 0)]
+    comment on column [e.nameTableWithSchema()/].[a.nameColumn()/] is '[a.description.toString().replaceAll('\'', '\'\'')/]';
+  [/if]
 [/template]
 
-[template private genUniqueIDX(e : Entity, a : Attribute, databaseType : String, compteur : Integer)]
-create unique index [nameUniqueIndex(e, a, 1, compteur)/] on [nameTableWithSchema(e)/] ([nameColumn(a)/] [uniqueIndex(a).replaceAll(':',' ')/])[genTableSpace(e, databaseType)/];
+[template private genCommentReferenceId(e : entity::Entity, r : environment::Reference)]
+  [if (not (r.description = null) and r.description.size() <> 0)]
+    comment on column [e.nameTableWithSchema()/].[r.nameColumnId()/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
+  [/if]
 [/template]
 
-[template private genIDXMultiple(e : Entity, r : Reference, databaseType : String, compteur : Integer, i : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnId(r,i)/])[genTableSpace(e, databaseType)/];
+[template private genCommentReferencingId(e : entity::Entity, r : environment::Reference)]
+  [if (not (r.description = null) and r.description.size() <> 0)]
+    comment on column [e.nameTableWithSchema()/].[r.nameColumnReferencingId()/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
+  [/if]
 [/template]
 
-[template private genIDXSimple(e : Entity, r : Reference, databaseType : String, compteur : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnId(r)/])[genTableSpace(e, databaseType)/];
-[/template]
-
-[template private genIDXMultipleInverse(e : Entity, r : Reference, databaseType : String, compteur : Integer, i : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnReferencingId(r, i)/])[genTableSpace(e, databaseType)/];
-[/template]
-
-[template private genIDXInverse(e : Entity, r : Reference, databaseType : String, compteur : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnReferencingId(r)/])[genTableSpace(e, databaseType)/];
-[/template]
-
-[template private genComment(e : Entity)]
-[if (not e.description.oclIsUndefined() and e.description.size() <> 0)]
-comment on table [nameTableWithSchema(e)/] is '[e.description.toString().replaceAll('\'', '\'\'')/]';[/if]
-[/template]
-
-[template private genComment(e : Entity, a : Attribute)]
-[if (not a.description.oclIsUndefined() and a.description.size() <> 0)]
-comment on column [nameTableWithSchema(e)/].[nameColumn(a)/] is '[a.description.toString().replaceAll('\'', '\'\'')/]';
-[/if]
-[/template]
-
-[template private genCommentReferenceId(e : Entity, r : Reference)]
-[if (not r.description.oclIsUndefined() and r.description.size() <> 0)]
-comment on column [nameTableWithSchema(e)/].[nameColumnId(r)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
-[/if]
-[/template]
-
-[template private genCommentReferencingId(e : Entity, r : Reference)]
-[if (not r.description.oclIsUndefined() and r.description.size() <> 0)]
-comment on column [nameTableWithSchema(e)/].[nameColumnReferencingId(r)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
-[/if]
-[/template]
-
-[query private genTableSpace(e : Entity, databaseType : String) : String =
-    if (databaseType.isDbOracleType() or databaseType.isDbOracle32Type() and getSQLOracleIndexTableSpace() <> null and getSQLOracleIndexTableSpace().trim().size() > 0) then
-        ' tablespace ' + getSQLOracleIndexTableSpace()
-    else
-        ''
-    endif
- /]
-
+[query private genTableSpace(e : entity::Entity, databaseType : String) : String = if databaseType.isDbOracleType() or databaseType.isDbOracle32Type() and e.getSQLOracleIndexTableSpace() <> null and e.getSQLOracleIndexTableSpace().trim().size() > 0 then ' tablespace ' + e.getSQLOracleIndexTableSpace() else '' endif/]

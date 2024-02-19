@@ -65,37 +65,55 @@ public class CinematicJspModelServices {
 		return _header;
 	}
 
+	public static ViewState get_headerStateJavaService(Object object){return get_headerState();}
+
 	public static ViewState get_footerState() {
 		return _footer;
 	}
 
+	public static ViewState get_footerStateJavaService(Object object){return get_footerState();}
+
 	public static ViewState get_referentialState() {
 		return _referential;
 	}
+
+	public static ViewState get_referentialStateJavaService(Object object){return get_referentialState();}
 	
 	public static ViewState get_errorState () {
 		return _error;
 	}
 
+	public static ViewState get_errorStateJavaService(Object object){return get_errorState();}
+
 	public static ViewState get_rootState() {
 		return _root;
 	}
+
+	public static ViewState get_rootStateJavaService(Object object){return get_rootState();}
 
 	public static boolean hasReferentialContainer() {
 		return _referential != null;
 	}
 
+	public static boolean hasReferentialContainerJavaService(Object object){return hasReferentialContainer();}
+
 	public static boolean hasHeaderContainer() {
 		return _header != null;
 	}
 
+	public static boolean hasHeaderContainerJavaService(Object object){return hasHeaderContainer();}
+
 	public static boolean hasFooterContainer() {
 		return _footer != null;
 	}
+
+	public static boolean hasFooterContainerJavaService(Object object){return hasFooterContainer();}
 	
 	public static boolean hasErrorContainer() {
 		return _error != null;
 	}
+
+	public static boolean hasErrorContainerJavaService(Object object){return hasErrorContainer();}
 
 	public static ViewContainer get_referentialContainer() {
 
@@ -108,6 +126,8 @@ public class CinematicJspModelServices {
 		return _referential.getViewContainers().get(0);
 	}
 
+	public static ViewContainer get_referentialContainerJavaService(Object object){return get_referentialContainer();}
+
 	public static ViewContainer get_headerContainer() {
 
 		if (null == _header)
@@ -119,6 +139,8 @@ public class CinematicJspModelServices {
 		return _header.getViewContainers().get(0);
 	}
 
+	public static ViewContainer get_headerContainerJavaService(Object object){return get_headerContainer();}
+
 	public static ViewContainer get_footerContainer() {
 
 		if (null == _footer)
@@ -129,6 +151,8 @@ public class CinematicJspModelServices {
 
 		return _footer.getViewContainers().get(0);
 	}
+
+	public static ViewContainer get_footerContainerJavaService(Object object){return get_footerContainer();}
 	
 	public static ViewContainer get_errorContainer() {
 
@@ -141,6 +165,8 @@ public class CinematicJspModelServices {
 		return _error.getViewContainers().get(0);
 	}
 
+	public static ViewContainer get_errorContainerJavaService(Object object){return get_errorContainer();}
+
 	public static String set_currentFormLayout(final Layout p_currentFormLayout) {
 		_formLayout = p_currentFormLayout;
 		return null;
@@ -149,6 +175,8 @@ public class CinematicJspModelServices {
 	public static Layout get_currentFormLayout() {
 		return _formLayout;
 	}
+
+	public static Layout get_currentFormLayoutJavaService(Object object){return get_currentFormLayout();}
 
 	/**
 	 * Simple "compteur" pour l'identifiant unique des divs 'virtuels'. On se

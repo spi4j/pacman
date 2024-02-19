@@ -1,21 +1,18 @@
+[module RSResources('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+
 [comment encoding = UTF-8 /]
-[module RSResources('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                    'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
-
 [comment : *************************************************************/]
 [comment : Generate the service (resource) with all the REST operations./]
 [comment : *************************************************************/]
-[template public RSResource(s : Service)]
-[licence()/]
-package [buildPackageRsResources(null)/];
-
+[template public RSResource(s : soa::Service)]
+  [s.licence()/]
+  package [s.buildPackageRsResources(null)/];
 [/template]

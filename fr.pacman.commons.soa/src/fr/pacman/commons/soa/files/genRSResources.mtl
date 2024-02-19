@@ -1,28 +1,25 @@
+[module genRSResources('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::soa::ws::rs::impl::category::RSResources/]
+
 [comment encoding = UTF-8 /]
-[module genRSResources('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                       'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::soa::common::classes /]
-[import fr::pacman::commons::soa::ws::rs::impl::category::RSResources /]
-
-
 [comment : *****************************************************************/]
 [comment : Generation of a common RS services factory for REST publication. /]
 [comment : *****************************************************************/]
-[template public genRSServicesFacadeFactory(m : System)]
-[file (filename(getServerSourceDir(),  buildPackageRS(), buildRSServicesFacadeFactoryClassName() + '.java'), false, 'UTF-8')]
-[m.RSServicesFacadeFactory()/]
-[/file]
+[template public genRSServicesFacadeFactory(m : soa::System)]
+  [file (m.getServerSourceDir().filename(m.buildPackageRS(), m.buildRSServicesFacadeFactoryClassName() + '.java'), overwrite, 'UTF-8')]
+    [m.RSServicesFacadeFactory()/]
+  [/file]
 [/template]
 
 [comment : ***************************************************************/]
 [comment : Generation of hk2/cdi binding (Impl/Itf) for REST publication. /]
 [comment : ***************************************************************/]
-[template public genRSApplicationConfig(m : System)]
-[file (filename(getServerSourceDir(),  buildPackageRS(), buildRSApplicationConfigClassName() + '.java'), false, 'UTF-8')]
-[m.RSApplicationConfig()/]
-[/file]
+[template public genRSApplicationConfig(m : soa::System)]
+  [file (m.getServerSourceDir().filename(m.buildPackageRS(), m.buildRSApplicationConfigClassName() + '.java'), overwrite, 'UTF-8')]
+    [m.RSApplicationConfig()/]
+  [/file]
 [/template]

@@ -1,41 +1,22 @@
-[comment encoding = UTF-8 /]
 [module names('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::names/]
 
+[comment encoding = UTF-8 /]
+[query public buildOisName(any : ecore::EObject) : String = any.getApplicationName() + '-model.ois'/]
 
-[query public buildOisName(any : OclAny) : String =
-   getApplicationName() + '-model.ois'
-/]
+[query public buildEntityModelName(any : ecore::EObject) : String = any.getApplicationName() + '-model.entity'/]
 
-[query public buildEntityModelName(any : OclAny) : String =
-   getApplicationName() + '-model.entity'
-/]
+[query public buildSoaModelName(any : ecore::EObject) : String = any.getApplicationName() + '-model.soa'/]
 
-[query public buildSoaModelName(any : OclAny) : String =
-   getApplicationName() + '-model.soa'
-/]
+[query public buildDatabaseModelName(any : ecore::EObject) : String = any.getApplicationName() + '-model.database'/]
 
-[query public buildDatabaseModelName(any : OclAny) : String =
-   getApplicationName() + '-model.database'
-/]
+[query public buildDatabaseModelNameWithoutExt(any : ecore::EObject) : String = any.getApplicationName() + '-model'/]
 
-[query public buildDatabaseModelNameWithoutExt(any : OclAny) : String =
-   getApplicationName() + '-model'
-/]
+[query public buildCinematicModelName(any : ecore::EObject) : String = any.getApplicationName() + '-model.cinematic'/]
 
-[query public buildCinematicModelName(any : OclAny) : String =
-   getApplicationName() + '-model.cinematic'
-/]
+[query public buildCinematicModelNameWithoutExt(any : ecore::EObject) : String = any.getApplicationName() + '-model'/]
 
-[query public buildCinematicModelNameWithoutExt(any : OclAny) : String =
-   getApplicationName() + '-model'
-/]
+[query public buildRequirementModelName(any : ecore::EObject) : String = any.getApplicationName() + '-model.requirement'/]
 
-[query public buildRequirementModelName(any : OclAny) : String =
-   getApplicationName() + '-model.requirement'
-/]
-
-[query public buildRequirementModelNameWithoutExt(any : OclAny) : String =
-   getApplicationName() + '-model'
-/]
+[query public buildRequirementModelNameWithoutExt(any : ecore::EObject) : String = any.getApplicationName() + '-model'/]

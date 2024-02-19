@@ -1,44 +1,41 @@
+[module mapperItf('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::project::surcouche/]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::imports/]
+
 [comment encoding = UTF-8 /]
-[module mapperItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
-			      'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::imports /]
-
-[template public mapperItf(e : Entity)]
-[licence()/]
-package [buildPackageEntityMapper(e)/];
-
-// [protected ('for imports')]
-
-import [getImportForEntityMapper_Itf()/];
-
-import [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/];
-import [buildPackagePersistenceImplementationJdbcEntity(e)/].[buildEntityImplClassName(e)/];
-import [buildPackageWsApiEntity(e)/].[buildXtoClassNameFromEntity(e)/];
-
-// [/protected]
-
-/**
- * L'interface définissant le contrat pour le Mapper (= Entity <-> Xto) sur le type '[buildEntityImplClassName(e)/]'.
- * @author [getAuthorName()/]
- */
-public interface [buildEntityMapperInterfaceName(e)/] extends [getClassNameForEntityMapper_Itf()/]<[buildEntityInterfaceName(e)/], [buildXtoClassNameFromEntity(e)/]>
-{
-
-   // [nameMapperInterface(e)/]
-   // [protected (e.getUserCodeId(nameMapperInterface(e)))]
-
-   // [/protected]
-
-}
-[/template]
+[template public mapperItf(e : entity::Entity)]
+  [e.licence()/]
+  package [e.buildPackageEntityMapper()/];
+  
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import [e.getImportForEntityMapper_Itf()/];
+    
+    import [e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/];
+    import [e.buildPackagePersistenceImplementationJdbcEntity()/].[e.buildEntityImplClassName()/];
+    import [e.buildPackageWsApiEntity()/].[e.buildXtoClassNameFromEntity()/];
+    
+  [/protected]
+  
+  
+  /**
+   * L'interface définissant le contrat pour le Mapper (= Entity <-> Xto) sur le type '[e.buildEntityImplClassName()/]'.
+   * @author [e.getAuthorName()/]
+   */
+  public interface [e.buildEntityMapperInterfaceName()/] extends [e.getClassNameForEntityMapper_Itf()/]<[e.buildEntityInterfaceName()/], [e.buildXtoClassNameFromEntity()/]>
+  {
+  
+     // [e.nameMapperInterface()/]
+     [protected (e.getUserCodeId(e.nameMapperInterface())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]

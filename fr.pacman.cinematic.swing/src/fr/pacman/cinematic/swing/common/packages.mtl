@@ -1,40 +1,26 @@
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::swing::common::swing_widgets/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+[query public namePackageSwing(any : ecore::EObject) : String = any.namePackageClient() + '.swing'/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::swing::common::swing-widgets /]
+[query public namePackageMain(any : ecore::EObject) : String = any.namePackageClient() + '.main'/]
 
-[query public namePackageSwing(any : OclAny) : String =
-    namePackageClient() + '.swing'
-/]
-[query public namePackageMain(any : OclAny) : String =
-    namePackageClient() + '.main'
-/]
+[query public namePackageViewContainerImplementation(viewContainer : view::ViewContainer) : String = viewContainer.namePackageSwing() + viewContainer.packageHierarchy()/]
 
-[query public namePackageViewContainerImplementation(viewContainer : ViewContainer) : String =
-    namePackageSwing() + packageHierarchy(viewContainer)
-/]
-
-[template public importWidgetsImplementations(widgets : Set(Widget))]
-[for (widget : Widget | widgets)]
-import [getImplementationPackage(widget)/].[getImplementationClassNameForImport(widget)/];
-[/for]
+[template public importWidgetsImplementations(widgets : OrderedSet(toolkits::Widget))]
+  [for (widget : toolkits::Widget | widgets)]
+    import [widget.getImplementationPackage()/].[widget.getImplementationClassNameForImport()/];
+  [/for]
 [/template]
 
-[template public importViewElementsImplementations(viewElements : Set(ViewElement))]
-[importWidgetsImplementations(viewElements.widget->asSet()->orderWidgets())/]
-[importViewElementsDependencies(viewElements, true)/]
-[/template]
+[template public importViewElementsImplementations(viewElements : OrderedSet(view::ViewElement))]
+  [viewElements->asSequence()->collect(temp1 | temp1.widget)->asSet().orderWidgets().importWidgetsImplementations()/]
+  [viewElements.importViewElementsDependencies(true)/][/template]
 
-[query private orderWidgets(widgets : Set(Widget)) : OrderedSet(Widget) =
-widgets->sortedBy(w : Widget | widgetComparator(w))
-/]
+[query private orderWidgets(widgets : OrderedSet(toolkits::Widget)) : OrderedSet(toolkits::Widget) = widgets->sortedBy(w | w.widgetComparator())/]
 
-[query private widgetComparator(widget : Widget) : String =
-    if widget.oclIsUndefined() or widget.name.oclIsUndefined() then
-        ''
-    else
-        widget.name
-    endif
-/]
+[query private widgetComparator(widget : toolkits::Widget) : String = if widget = null or widget.name = null then '' else widget.name endif/]

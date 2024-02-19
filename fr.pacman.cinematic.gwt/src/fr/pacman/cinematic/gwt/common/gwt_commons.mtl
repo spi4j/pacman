@@ -1,0 +1,8 @@
+[module gwt_commons('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[comment encoding = UTF-8 /]
+[query public getRootPresenter(any : ecore::EObject) : view::ViewContainer = if any.hasRootPresenter() then any.eContainer(cinematic::CinematicRoot).eAllContents(view::ViewContainer)->select(view | not (view.widget = null) and 'MainPanel'.equalsIgnoreCase(view.widget.name))->first() else null endif/]
+
+[query public hasRootPresenter(any : ecore::EObject) : Boolean = not any.eContainer(cinematic::CinematicRoot).eAllContents(view::ViewContainer)->select(view | not (view.widget = null) and 'MainPanel'.equalsIgnoreCase(view.widget.name))->isEmpty()/]
+
+[query public flowHasMainPanel(flow : flow::Flow) : Boolean = flow.states->filter(flow::ViewState)->exists(viewState | viewState.viewContainers->exists(view | not (view.widget = null) and 'MainPanel'.equalsIgnoreCase(view.widget.name)))/]

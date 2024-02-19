@@ -1,20 +1,19 @@
-[comment encoding = UTF-8 /]
 [module Model('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
 
-[template public ModelPom(any : OclAny)  post (trim())]
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>[getApplicationPackage()/]</groupId>
-        <artifactId>[getApplicationName()/]</artifactId>
-        <version>[getVersion()/]</version>
-    </parent>
-    <artifactId>[getModelProjectName()/]</artifactId>
-    <packaging>pom</packaging>
-    <name>[getApplicationName()/] - Modèles</name>
-</project>
-[/template]
+[comment encoding = UTF-8 /]
+[template public ModelPom(any : ecore::EObject) post(self.trim())]
+  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+      <parent>
+          <groupId>[any.getApplicationPackage()/]</groupId>
+          <artifactId>[any.getApplicationName()/]</artifactId>
+          <version>[any.getVersion()/]</version>
+      </parent>
+      <artifactId>[any.getModelProjectName()/]</artifactId>
+      <packaging>pom</packaging>
+      <name>[any.getApplicationName()/] - Modèles</name>
+  </project>[/template]

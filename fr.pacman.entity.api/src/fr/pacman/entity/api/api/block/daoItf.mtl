@@ -1,80 +1,70 @@
+[module daoItf('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::methodes/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+
 [comment encoding = UTF-8 /]
-[module daoItf('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::methodes /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[template public daoItf(e : Entity)]
-[licence()/]
-package [buildPackagePersistenceApiEntity(e)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[e.writeImports()/]
-
-// [/protected]
-
-[comClass(roleDaoItf())/]
-public interface [buildDaoInterfaceName(e)/] extends [getClassNameForDao_Itf()/]<[genPkType()/], [buildEntityInterfaceName(e)/], [buildEntityColumnEnumName(e)/]>
-{
-   // CONSTANTES
-
-   // Constantes [buildDaoInterfaceName(e)/]
-   // [protected (e.getUserCodeId('Constantes ' + buildDaoInterfaceName(e)))]
-
-   // [/protected]
-
-   // METHODES ABSTRAITES
-
-[for (r : Reference | e.referencesStarStarOwned())]
-   /**
-    * Obtenir la liste d'objets de type '[nameSimpleEntity(r.referencedType.oclAsType(entity::Entity))/]' associés à l'instance de type '[nameSimpleEntity(r.containingType.oclAsType(entity::Entity))/]'.
-    * @param [apply_parameterMethodObjectIn(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]
-    *           (In)(*) [nameSimpleEntity(r.containingType.oclAsType(entity::Entity))/].
-    * @return une liste de [buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))/]
-    */
-   List<[buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))/]> [apply_methodDefault('find list '+ r.name.normalize() +' by ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)))/] (final [genPkType()/] [apply_parameterMethodObjectIn(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]);
-
-[/for]
-   // Methodes [buildDaoInterfaceName(e)/]
-   // [protected (e.getUserCodeId('Methodes ' + buildDaoInterfaceName(e)))]
-
-   // [/protected]
-}
-[/template]
+[template public daoItf(e : entity::Entity)]
+  [e.licence()/]
+  package [e.buildPackagePersistenceApiEntity()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [e.writeImports()/]
+    
+  [/protected]
+  
+  
+  [e.comClass(e.roleDaoItf())/]
+  public interface [e.buildDaoInterfaceName()/] extends [e.getClassNameForDao_Itf()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/], [e.buildEntityColumnEnumName()/]>
+  {
+     // CONSTANTES
+  
+     // Constantes [e.buildDaoInterfaceName()/]
+     [protected (e.getUserCodeId('Constantes ' + e.buildDaoInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+     // METHODES ABSTRAITES
+  
+  [for (r : environment::Reference | e.referencesStarStarOwned())]
+       /**
+        * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(entity::Entity).nameSimpleEntity()/]' associés à l'instance de type '[r.containingType.oclAsType(entity::Entity).nameSimpleEntity()/]'.
+        * @param [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_parameterMethodObjectIn()/]
+        *           (In)(*) [r.containingType.oclAsType(entity::Entity).nameSimpleEntity()/].
+        * @return une liste de [r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/]
+        */
+       List<[r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/]> [('find list ' + r.name.normalize() + ' by ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_parameterMethodObjectIn()/]);
+    
+  [/for]
+     // Methodes [e.buildDaoInterfaceName()/]
+     [protected (e.getUserCodeId('Methodes ' + e.buildDaoInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  }[/template]
 
 [comment  : Write all required imports. /]
-[template private writeImports(e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport('java.util.List',not e.referencesStarStarOwned()->isEmpty())/]
-[e.addImport(getImportForDao_Itf())/]
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('java.util.List', not e.referencesStarStarOwned()->isEmpty())/]
+  [e.addImport(e.getImportForDao_Itf())/]
+  
+  [for (r : environment::Reference | e.referencesStarStarOwned())]
+    	[e.addImport(r.referencedType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName())/]
+  [/for]
+  
+  [e.flushImports()/][/template]
 
-[comment : List references. /]
-[for (r : Reference | e.referencesStarStarOwned())]
-	[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity)))/]
-[/for]
-
-[e.flushImports()/]
-[/template]
-
-
-
-
-
-
-
-
-[query public roleDaoItf(e : Entity) : String = 'Interface de services spécifiques pour le DAO ' + nameSimpleEntity(e) /]
+[query public roleDaoItf(e : entity::Entity) : String = 'Interface de services spécifiques pour le DAO ' + e.nameSimpleEntity()/]

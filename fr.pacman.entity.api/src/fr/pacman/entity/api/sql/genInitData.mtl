@@ -1,139 +1,118 @@
+[module genInitData('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::sql::typeSQL/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::sql::dropConstraint/]
+[import fr::pacman::entity::api::sql::genConstraint/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::utils/]
+
 [comment encoding = UTF-8 /]
-[module genInitData('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-
-
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::sql::typeSQL /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::sql::common /]
-[import fr::pacman::entity::api::sql::dropConstraint /]
-[import fr::pacman::entity::api::sql::genConstraint /]
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::utils /]
-
-[template public genInitData(r : Root, databaseType : String)]
-[releaseCounterForConstraints()/]
-[file (getServerSQLDir() + 'init_data_' + getApplicationName() + '.sql', false, 'UTF-8')]
-/*
-Ne pas décommenter ce code. Copier ce code d'exemple dans les balises User Code en fin de fichier.
-
-[releaseCounterForConstraints()/]
-[dropConstraintWithoutComment(r, databaseType)/]
-
-[for (n : environment::Namespace | r.ownedNamespaces)]
-[genInitData(n)/][/for]
-
-[genConstraintWithoutHeader(r)/]
-*/
-
-/*
-[protected ('init data')]
-*/
-
-[releaseCounterForConstraints()/]
-[dropConstraint(r, databaseType)/]
-
-[for (n : environment::Namespace | r.ownedNamespaces)]
-[genInitData(n)/][/for]
-
-[genConstraint(r)/]
-
-/*
-[/protected]
-*/
-[/file]
+[template public genInitData(r : entity::Root, databaseType : String)]
+  [r.releaseCounterForConstraints()/]
+  [file (r.getServerSQLDir() + 'init_data_' + r.getApplicationName() + '.sql', overwrite, 'UTF-8')]
+    /*
+    Ne pas décommenter ce code. Copier ce code d'exemple dans les balises User Code en fin de fichier.
+    
+    [r.releaseCounterForConstraints()/]
+    [r.dropConstraintWithoutComment(databaseType)/]
+    
+    [for (n : environment::Namespace | r.ownedNamespaces)][n.genInitData()/][/for]
+    
+    [r.genConstraintWithoutHeader()/]
+    */
+    
+    /*
+    [protected ('init data')]
+      */
+      
+      [r.releaseCounterForConstraints()/]
+      [r.dropConstraint(databaseType)/]
+      
+      [for (n : environment::Namespace | r.ownedNamespaces)][n.genInitData()/][/for]
+      
+      [r.genConstraint()/]
+      
+      /*
+    [/protected]
+    
+    */
+  [/file]
 [/template]
 
 [template public genInitData(n : environment::Namespace)]
-[releaseCounterForConstraints()/]
-[for (sb : environment::Namespace | n.ownedNamespaces)]
-[genInitData(sb)/]
-[/for]
-[for (e : Entity | n.types->select(el |el.oclIsKindOf(entity::Entity)))]
-[if not e.isNotPersistent() or useMatching()]
-insert into [nameTableWithSchema(e)/] ([columnsEntity(e)/])
-values ([valuesEntity(e)/]);
-[/if]
-[/for]
-[for (e : Entity | n.types->select(el |el.oclIsKindOf(entity::Entity)))]
-[if not e.isNotPersistent() or useMatching()]
-[for (r : Reference | e.referencesStarStarOwned())]
-insert into [nameTableJointureWithSchema(r)/] ([namePK(r.containingType.oclAsType(Entity))/], [namePK(r.referencedType.oclAsType(Entity))/][writeAdditionnalFields()/])
-values (1, 1[writeAdditionnalValues()/]);
-[/for]
-[/if]
-[/for]
+  [n.releaseCounterForConstraints()/]
+  [for (sb : environment::Namespace | n.ownedNamespaces)]
+    [sb.genInitData()/]
+  [/for]
+  [for (e : entity::Entity | n.types->select(el | el.oclIsKindOf(entity::Entity)))]
+    [if (not e.isNotPersistent() or e.useMatching())]
+      insert into [e.nameTableWithSchema()/] ([e.columnsEntity()/])
+      values ([e.valuesEntity()/]);
+    [/if]
+  [/for]
+  [for (e : entity::Entity | n.types->select(el | el.oclIsKindOf(entity::Entity)))]
+    [if (not e.isNotPersistent() or e.useMatching())]
+      [for (r : environment::Reference | e.referencesStarStarOwned())]
+        insert into [r.nameTableJointureWithSchema()/] ([r.containingType.oclAsType(entity::Entity).namePK()/], [r.referencedType.oclAsType(entity::Entity).namePK()/][r.writeAdditionnalFields()/])
+        values (1, 1[r.writeAdditionnalValues()/]);
+      [/for]
+    [/if]
+  [/for]
 [/template]
 
-[template private writeAdditionnalFields(any : OclAny)]
-[if hasXtopSup()], [get_nameColumn(getXtopSuppKey())/][/if][if hasXdMaj()], [get_nameColumn(getXdmajKey())/][/if]
+[template private writeAdditionnalFields(any : ecore::EObject)]
+  [if (any.hasXtopSup())], [any.get_nameColumn(any.getXtopSuppKey())/][/if]
+  [if (any.hasXdMaj())], [any.get_nameColumn(any.getXdmajKey())/][/if]
 [/template]
 
-[template private writeAdditionnalValues(any : OclAny)]
-[if hasXtopSup()], '0'[/if][if hasXdMaj()], current_date[/if]
+[template private writeAdditionnalValues(any : ecore::EObject)]
+  [if (any.hasXtopSup())], '0'[/if]
+  [if (any.hasXdMaj())], current_date[/if]
 [/template]
 
-[template private columnsEntity(e : Entity)]
-[namePK(e)/][if not e.attributesNoPk()->isEmpty()], [e.attributesNoPk().nameColumn()->sep(', ')/][/if][if not e.getInheritDtoAttributes()->isEmpty()], [e.getInheritDtoAttributes().nameColumn()->sep(', ')/][/if][for (ent : Entity | entitiesReferencedOrReferencing() )][if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1][for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))][if r.containingType.oclAsType(Entity) = e], [nameColumnId(r,i)/][elseif (r.oppositeOf.oclIsUndefined())], [nameColumnReferencingId(r,i)/][/if][/for][else][for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))][if r.containingType.oclAsType(Entity) = e], [nameColumnId(r)/][elseif (r.oppositeOf.oclIsUndefined())], [nameColumnReferencingId(r)/][/if][/for][/if][/for][if hasAutomaticColumns()], [get_automaticColumnsProperties().get_nameColumn(e)->sep(', ')/][/if]
+[template private columnsEntity(e : entity::Entity)]
+  [e.namePK()/][if (not e.attributesNoPk()->isEmpty())], [e.attributesNoPk()->asSequence()->collect(temp1 | temp1.nameColumn())->sep(', ')/][/if]
+  [if (not e.getInheritDtoAttributes()->isEmpty())], [e.getInheritDtoAttributes()->asSequence()->collect(temp2 | temp2.nameColumn())->sep(', ')/][/if]
+  [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
+    [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
+      [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+        [if (r.containingType.oclAsType(entity::Entity) = e)], [r.nameColumnId(i)/][elseif (r.oppositeOf = null)], [r.nameColumnReferencingId(i)/][/if]
+      [/for]
+    [else]
+      [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+        [if (r.containingType.oclAsType(entity::Entity) = e)], [r.nameColumnId()/][elseif (r.oppositeOf = null)], [r.nameColumnReferencingId()/][/if]
+      [/for]
+    [/if]
+  [/for]
+  [if (e.hasAutomaticColumns())], [e.get_automaticColumnsProperties()->collect(temp3 | temp3.get_nameColumn(e))->sep(', ')/][/if]
 [/template]
 
-[template private valuesEntity(e : Entity)]
-1[if not e.attributesNoPk()->isEmpty()], [e.attributesNoPk().defaultSQLValue()->sep(', ')/][/if][if not e.getInheritDtoAttributes()->isEmpty()], [e.getInheritDtoAttributes().defaultSQLValue()->sep(', ')/][/if][for (ent : Entity | entitiesReferencedOrReferencing() )][for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))][if r.containingType.oclAsType(Entity) = e], 1[elseif (r.oppositeOf.oclIsUndefined())], 1[/if][/for][/for][if hasAutomaticColumns()], [get_automaticColumnsProperties().get_typeColumn(e).defaultSQLValue()->sep(', ')/][/if]
+[template private valuesEntity(e : entity::Entity)]
+  1[if (not e.attributesNoPk()->isEmpty())], [e.attributesNoPk()->asSequence()->collect(temp4 | temp4.defaultSQLValue())->sep(', ')/][/if]
+  [if (not e.getInheritDtoAttributes()->isEmpty())], [e.getInheritDtoAttributes()->asSequence()->collect(temp5 | temp5.defaultSQLValue())->sep(', ')/][/if]
+  [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
+    [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+      [if (r.containingType.oclAsType(entity::Entity) = e)], 1[elseif (r.oppositeOf = null)], 1[/if]
+    [/for]
+  [/for]
+  [if (e.hasAutomaticColumns())], [e.get_automaticColumnsProperties()->collect(temp6 | temp6.get_typeColumn(e))->collect(temp7 | temp7.defaultSQLValue())->sep(', ')/][/if]
 [/template]
 
 [template private defaultSQLValue(type : environment::Type)]
-[if type.name.equalsIgnoreCase('String')]
-'S'[elseif type.name.equalsIgnoreCase('Boolean')]
-false[elseif 'Binary'.equalsIgnoreCase(type.name)]
-rawtohex('Test')[elseif type.name.equalsIgnoreCase('Integer')]
-0[elseif type.name.equalsIgnoreCase('Long')]
-0[elseif type.name.equalsIgnoreCase('Float')]
-0[elseif type.name.equalsIgnoreCase('Double')]
-0[elseif type.name.equalsIgnoreCase('Date')]
-current_date[elseif type.name.equalsIgnoreCase('Timestamp')]
-current_timestamp[elseif type.name.equalsIgnoreCase('Time')]
-current_timestamp[elseif (type.oclIsTypeOf(Enumeration))]
-'DEFAULTENUM'[elseif type.name.equalsIgnoreCase('Char')]
-'C'[elseif type.name.equalsIgnoreCase('XtopSup')]
-'0'[/if]
+  [if (type.name.equalsIgnoreCase('String'))]'S'[elseif (type.name.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(type.name))]rawtohex('Test')[elseif (type.name.equalsIgnoreCase('Integer'))]0[elseif (type.name.equalsIgnoreCase('Long'))]0[elseif (type.name.equalsIgnoreCase('Float'))]0[elseif (type.name.equalsIgnoreCase('Double'))]0[elseif (type.name.equalsIgnoreCase('Date'))]current_date[elseif (type.name.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (type.name.equalsIgnoreCase('Time'))]current_timestamp[elseif (type.oclIsTypeOf(environment::Enumeration))]'DEFAULTENUM'[elseif (type.name.equalsIgnoreCase('Char'))]'C'[elseif (type.name.equalsIgnoreCase('XtopSup'))]'0'[/if]
 [/template]
 
-[template private defaultSQLValue(a : Attribute)]
-[if a.type.name.equalsIgnoreCase('String')]
-'S'[elseif a.type.name.equalsIgnoreCase('Boolean')]
-false[elseif 'Binary'.equalsIgnoreCase(a.type.name)]
-rawtohex('Test')[elseif a.type.name.equalsIgnoreCase('Integer')]
-0[elseif a.type.name.equalsIgnoreCase('Long')]
-0[elseif a.type.name.equalsIgnoreCase('Float')]
-0[elseif a.type.name.equalsIgnoreCase('Double')]
-0[elseif a.type.name.equalsIgnoreCase('Date')]
-current_date[elseif type.name.equalsIgnoreCase('Timestamp')]
-current_timestamp[elseif type.name.equalsIgnoreCase('Time')]
-current_timestamp[elseif (a.type.oclIsTypeOf(Enumeration))]
-'[a.type.oclAsType(Enumeration).literals->first().name/]'[elseif a.type.name.equalsIgnoreCase('Char')]
-'C'[elseif type.name.equalsIgnoreCase('XtopSup')]
-'0'[/if]
+[template private defaultSQLValue(a : environment::Attribute)]
+  [if (a.type.name.equalsIgnoreCase('String'))]'S'[elseif (a.type.name.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(a.type.name))]rawtohex('Test')[elseif (a.type.name.equalsIgnoreCase('Integer'))]0[elseif (a.type.name.equalsIgnoreCase('Long'))]0[elseif (a.type.name.equalsIgnoreCase('Float'))]0[elseif (a.type.name.equalsIgnoreCase('Double'))]0[elseif (a.type.name.equalsIgnoreCase('Date'))]current_date[elseif (a.type.name.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (a.type.name.equalsIgnoreCase('Time'))]current_timestamp[elseif (a.type.oclIsTypeOf(environment::Enumeration))]'[a.type.oclAsType(environment::Enumeration).literals->first().name/]'[elseif (a.type.name.equalsIgnoreCase('Char'))]'C'[elseif (a.type.name.equalsIgnoreCase('XtopSup'))]'0'[/if]
 [/template]
 
 [template private defaultSQLValue(type : String)]
-[if type.equalsIgnoreCase('String')]
-'S'[elseif type.equalsIgnoreCase('Boolean')]
-false[elseif 'Binary'.equalsIgnoreCase(type)]
-rawtohex('Test')[elseif type.equalsIgnoreCase('Integer')]
-0[elseif type.equalsIgnoreCase('Long')]
-0[elseif type.equalsIgnoreCase('Float')]
-0[elseif type.equalsIgnoreCase('Double')]
-0[elseif type.equalsIgnoreCase('Date')]
-current_date[elseif type.equalsIgnoreCase('Timestamp')]
-current_timestamp[elseif type.equalsIgnoreCase('Time')]
-current_timestamp[elseif type.equalsIgnoreCase('Char')]
-'C'[elseif type.equalsIgnoreCase('XtopSup')]
-'0'[else]'NULL'[/if]
+  [if (type.equalsIgnoreCase('String'))]'S'[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(type))]rawtohex('Test')[elseif (type.equalsIgnoreCase('Integer'))]0[elseif (type.equalsIgnoreCase('Long'))]0[elseif (type.equalsIgnoreCase('Float'))]0[elseif (type.equalsIgnoreCase('Double'))]0[elseif (type.equalsIgnoreCase('Date'))]current_date[elseif (type.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (type.equalsIgnoreCase('Time'))]current_timestamp[elseif (type.equalsIgnoreCase('Char'))]'C'[elseif (type.equalsIgnoreCase('XtopSup'))]'0'[else]'NULL'[/if]
 [/template]

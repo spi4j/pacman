@@ -161,6 +161,8 @@ public class DuplicateParamUtils {
 		return v_name;
 	}
 
+	public static String retreiveGlobalInputParamNameJavaService(final Parameter p_param,final Service p_service){return retreiveGlobalInputParamName(p_param,p_service);}
+
 	/**
 	 * Check if we have lost (by reset, or new studio opening, etc...) the list of
 	 * global params. Create the list again with all the parameters for all
@@ -202,6 +204,8 @@ public class DuplicateParamUtils {
 	public static void reset() {
 		_params = null;
 	}
+
+	public static void resetJavaService(Object object){reset();}
 
 	/**
 	 * Container for the global parameter.

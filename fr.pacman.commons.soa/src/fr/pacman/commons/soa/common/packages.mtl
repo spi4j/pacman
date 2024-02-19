@@ -1,61 +1,27 @@
+[module packages('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::services::StringUtils/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/soa/4.0.0',
-			    'http://www.obeonetwork.org/dsl/entity/3.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::utils /]
+[comment : /]
+[query public buildPackageWsApiDto(d : environment::DTO) : String = d.buildPackageWs() + '.' + d.getPackageApi() + d.categoryHierarchy()/]
 
 [comment : /]
-[query public buildPackageWsApiDto(d : DTO) : String =
-    buildPackageWs() + '.' + getPackageApi() + categoryHierarchy(d)
-/]
+[query public buildPackageWsApiEnum(e : environment::Enumeration) : String = e.buildPackageWs() + '.' + e.getPackageApi() + e.categoryHierarchy()/]
 
 [comment : /]
-[query public buildPackageWsApiEnum(e : Enumeration) : String =
-    buildPackageWs() + '.' + getPackageApi() + categoryHierarchy(e)
-/]
+[query public buildPackageBusinessApiDto(d : environment::DTO) : String = d.buildPackageBusinessApi() + d.categoryHierarchy()/]
 
 [comment : /]
-[query public buildPackageBusinessApiDto(d : DTO) : String =
-    buildPackageBusinessApi(d) + categoryHierarchy(d)
-/]
-
-[comment : /]
-[query public getNamespaceXto(d : DTO) : String =
-    invoke(
-        'fr.pacman.commons.services.StringUtils',
-        'reverse(java.lang.String, java.lang.String, java.lang.String)',
-        Sequence{getApplicationPackage() + categoryHierarchy(d), '\\.', '.'})
-/]
-
+[query public getNamespaceXto(d : environment::DTO) : String = (d.getApplicationPackage() + d.categoryHierarchy()).reverse('\\.', '.')/]
 
 [comment :  Try to mutualize ? /]
-[query public categoryHierarchy(e : Entity) : String =
-    if (e.ancestors(Namespace)->size() < 1) then
-        ''
-    else        
-		'.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
-    endif
-
-/]
+[query public categoryHierarchy(e : entity::Entity) : String = if e.ancestors(environment::Namespace)->size() < 1 then '' else '.' + e.ancestors(environment::Namespace)->select(temp1 | temp1.oclIsTypeOf(environment::Namespace) and not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.') endif/]
 
 [comment : Try to mutualize ? /]
-[query public categoryHierarchy(d : DTO) : String =
-    if (d.ancestors(Namespace)->size() < 1) then
-        ''
-    else        
-		'.' + d.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
-    endif
-
-/]
+[query public categoryHierarchy(d : environment::DTO) : String = if d.ancestors(environment::Namespace)->size() < 1 then '' else '.' + d.ancestors(environment::Namespace)->select(temp6 | temp6.oclIsTypeOf(environment::Namespace) and not (temp6.name = null))->reverse()->collect(temp7 | temp7.oclAsType(environment::Namespace))->collect(temp8 | temp8.name)->collect(temp9 | temp9.sanitize())->collect(temp10 | temp10.toLower())->sep('.') endif/]
 
 [comment :  Try to mutualize ? /]
-[query public categoryHierarchy(e : Enumeration) : String =
-    if (e.ancestors(Namespace)->size() < 1) then
-        ''
-    else        
-		'.' + e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
-    endif
-
-/]
+[query public categoryHierarchy(e : environment::Enumeration) : String = if e.ancestors(environment::Namespace)->size() < 1 then '' else '.' + e.ancestors(environment::Namespace)->select(temp11 | temp11.oclIsTypeOf(environment::Namespace) and not (temp11.name = null))->reverse()->collect(temp12 | temp12.oclAsType(environment::Namespace))->collect(temp13 | temp13.name)->collect(temp14 | temp14.sanitize())->collect(temp15 | temp15.toLower())->sep('.') endif/]

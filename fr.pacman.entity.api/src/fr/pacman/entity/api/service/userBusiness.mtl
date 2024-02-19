@@ -1,104 +1,100 @@
+[module userBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::entity::api::common::serviceutils/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+[import fr::pacman::commons::common::names/]
+
 [comment encoding = UTF-8 /]
-[module userBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0',
-					 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::entity::api::common::serviceutils /]
 [comment import fr::pacman::entity::api::common::query /]
 [comment import fr::pacman::entity::api::common::imports /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[import fr::pacman::commons::common::names /]
-
-[template public userBusiness(r : Root)]
-[licence()/]
-// CHECKSTYLE:OFF
-package [buildPackageBusiness()/]; // NOPMD
-// CHECKSTYLE:ON
-
-// [protected ('for imports')]
-
-import fr.spi4j.exception.Spi4jRuntimeException;
-import [getImportForUserPersistence_Abs()/];
-import [buildPackageBusiness()/].[buildAppliUserBusinessEntityGenClassName()/];
-
-// [/protected]
-
-/**
- * Classe permettant de centraliser les factories business de l'application.
- * @author [getAuthorName()/]
- */
-public final class [buildAppliUserBusinessGenClassName()/] extends [buildAppliUserBusinessEntityGenClassName()/]
-{
-
-   /** Singleton. */
-   private static [buildAppliUserBusinessGenClassName()/] [apply_attributeStatic('singleton')/] = new [buildAppliUserBusinessGenClassName()/]();
-
-   /**
-    * Constructeur privé.
-    */
-   private [buildAppliUserBusinessGenClassName()/] ()
-   {
-      super();
-   }
-
-   /**
-    * @return le [apply_attributeStatic('singleton')/] de cette factory
-    */
-   public static [buildAppliUserBusinessGenClassName()/] getSingleton ()
-   {
-      return [apply_attributeStatic('singleton')/];
-   }
-
-   @Override
-   protected [getClassNameForUserPersistence_Abs()/] getUserPersistence ()
-   {
-	  [if usePersistence()]
-      // dans cette factory de la partie commune entre un client et le serveur
-      // on ne référence pas les classes d'implémentations "serveur" des services
-      // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
-
-      try
-      {
-         return ([getClassNameForUserPersistence_Abs()/]) Class.forName("[buildPackagePersistence()/].[buildParamPersistenceClassName()/]")
-                  .getMethod("[apply_methodDefault('get user persistence')/]").invoke(null);
-      }
-      catch (final Exception [apply_variableFinal('ex')/])
-      {
-         // ne devrait jamais arriver grâce à la génération de code
-         throw new Spi4jRuntimeException([apply_variableFinal('ex')/], 
-			[apply_variableFinal('ex')/].toString(), "Vérifier si la source de données est active et atteignable.");
-      }
-	  [else]
-	  	// Pas de persistance pour cette application.
-		// Cette méthode n'a aucunne raison d'être appelée par spi4j.
-	  	return null;
-	  [/if]
-   }
-
-   // CHECKSTYLE:OFF
-   @Override
-   // CHECKSTYLE:ON
-   public void initBindings () // NOPMD
-   {
-      // dans cette factory de la partie commune entre un client et le serveur
-      // on ne référence pas les classes d'implémentations "serveur" des services
-      // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
-
-		super.initBindingsEntities();	 
-
-   }
-}
-[/template]
+[template public userBusiness(r : entity::Root)]
+  [r.licence()/]
+  // CHECKSTYLE:OFF
+  package [r.buildPackageBusiness()/]; // NOPMD
+  // CHECKSTYLE:ON
+  
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import fr.spi4j.exception.Spi4jRuntimeException;
+    import [r.getImportForUserPersistence_Abs()/];
+    import [r.buildPackageBusiness()/].[r.buildAppliUserBusinessEntityGenClassName()/];
+    
+  [/protected]
+  
+  
+  /**
+   * Classe permettant de centraliser les factories business de l'application.
+   * @author [r.getAuthorName()/]
+   */
+  public final class [r.buildAppliUserBusinessGenClassName()/] extends [r.buildAppliUserBusinessEntityGenClassName()/]
+  {
+  
+     /** Singleton. */
+     private static [r.buildAppliUserBusinessGenClassName()/] ['singleton'.apply_attributeStatic()/] = new [r.buildAppliUserBusinessGenClassName()/]();
+  
+     /**
+      * Constructeur privé.
+      */
+     private [r.buildAppliUserBusinessGenClassName()/] ()
+     {
+        super();
+     }
+  
+     /**
+      * @return le ['singleton'.apply_attributeStatic()/] de cette factory
+      */
+     public static [r.buildAppliUserBusinessGenClassName()/] getSingleton ()
+     {
+        return ['singleton'.apply_attributeStatic()/];
+     }
+  
+     @Override
+     protected [r.getClassNameForUserPersistence_Abs()/] getUserPersistence ()
+     {
+  [if (r.usePersistence())]
+          // dans cette factory de la partie commune entre un client et le serveur
+          // on ne référence pas les classes d'implémentations "serveur" des services
+          // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
+    
+          try
+          {
+             return ([r.getClassNameForUserPersistence_Abs()/]) Class.forName("[r.buildPackagePersistence()/].[r.buildParamPersistenceClassName()/]")
+                      .getMethod("['get user persistence'.apply_methodDefault()/]").invoke(null);
+          }
+          catch (final Exception ['ex'.apply_variableFinal()/])
+          {
+             // ne devrait jamais arriver grâce à la génération de code
+             throw new Spi4jRuntimeException(['ex'.apply_variableFinal()/], 
+    			['ex'.apply_variableFinal()/].toString(), "Vérifier si la source de données est active et atteignable.");
+          }
+  [else]
+    	  	// Pas de persistance pour cette application.
+    		// Cette méthode n'a aucunne raison d'être appelée par spi4j.
+    	  	return null;
+  [/if]
+     }
+  
+     // CHECKSTYLE:OFF
+     @Override
+     // CHECKSTYLE:ON
+     public void initBindings () // NOPMD
+     {
+        // dans cette factory de la partie commune entre un client et le serveur
+        // on ne référence pas les classes d'implémentations "serveur" des services
+        // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
+  
+  		super.initBindingsEntities();	 
+  
+     }
+  }[/template]

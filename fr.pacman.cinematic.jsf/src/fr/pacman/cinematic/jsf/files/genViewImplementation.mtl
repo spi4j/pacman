@@ -1,14 +1,14 @@
+[module genViewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::cinematic::jsf::common::packages/]
+[import fr::pacman::cinematic::jsf::common::name/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::cinematic::jsf::client::ui::pkg::viewImplementation/]
+
 [comment encoding = UTF-8 /]
-[module genViewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::cinematic::jsf::common::packages /]
-[import fr::pacman::cinematic::jsf::common::name /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::cinematic::jsf::client::ui::pkg::viewImplementation /]
-
-[template public genViewImplementation(viewContainer : ViewContainer, aViewState : ViewState)]
-[file (filename(getClientJsfWebappDir(), viewContainer.namePackagePagesContainer(), viewContainer.nameViewImplementation() + '.xhtml'), false, 'UTF-8')]
-[viewImplementation(viewContainer, aViewState)/]
-[/file]
+[template public genViewImplementation(viewContainer : view::ViewContainer, aViewState : flow::ViewState)]
+  [file (viewContainer.getClientJsfWebappDir().filename(viewContainer.namePackagePagesContainer(), viewContainer.nameViewImplementation() + '.xhtml'), overwrite, 'UTF-8')]
+    [viewContainer.viewImplementation(aViewState)/]
+  [/file]
 [/template]

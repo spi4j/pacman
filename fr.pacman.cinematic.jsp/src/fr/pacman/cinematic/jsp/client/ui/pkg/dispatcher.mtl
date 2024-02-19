@@ -1,163 +1,160 @@
+[module dispatcher('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::cinematic::jsp::common::names/]
+[import fr::pacman::cinematic::jsp::common::services/]
+[import fr::pacman::cinematic::api::common::model/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+
 [comment encoding = UTF-8 /]
-[module dispatcher('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::cinematic::jsp::common::names /]
-[import fr::pacman::cinematic::jsp::common::services /]
-
-[import fr::pacman::cinematic::api::common::model /]
-[import fr::pacman::cinematic::api::common::packages /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-
-
-[template public applicationDispatcher(root : CinematicRoot) post (trim())]
-[licence()/]
-package [getApplicationPackage()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[root.writeImports()/]
-
-// [/protected]
-
-/**
- * Enumeration déstinée à effectuer la concentration de l'ensemble des routes
- * de l'application.
- *
- * @author [getAuthorName()/]
- */
-public enum [buildJspDispatcherClassName()/] implements JspDispatcherEnum_Itf {
-
-	// Placer ici des énumérations supplémentaires si besoin.	
-	
-	// define enumeration sub controllers
-	// [protected (root.getUserCodeId('define enumeration sub controllers'))]
-
-	// [/protected]
-
-	[for (viewState : ViewState | root.eAllContents(ViewState))]
-	[apply_attributeEnum(viewState.getJspControllerForDispatcherClassName() + '_init')/]([viewState.getDispatchForInit()/], false),
-
-	[for (viewContainer : ViewContainer | viewState.viewContainers)]
-	[comment : on teste si le conteneur n'est pas de type form. Permet de contrer un bug sur les transitions recursives. /]
-	[if viewContainer.isViewPanel() ][for (event : ViewEvent | viewContainer.getEventsForViewContainer())][if not event.name.oclIsUndefined()]	
-	[apply_attributeEnum(viewState.getJspControllerForDispatcherClassName() +'_'+ event.getEventName())/]([viewState.getDispatch(event)/], false),
-
-	[else]	
-	// FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements 
-	// des transitions issues de l'état : [viewState.nameViewStateImplementation()/]
-
-	[/if]
-	[/for][/if][/for][/for]
-	[comment : route par defaut pour la page d'erreur. /]
-	[apply_attributeEnum('systemViewState_error')/]("[getDispatchForError()/]", true, false);
-
-	/**
-	 * La chaine de routage pour le request dispatcher.
-	 */
-	private final String [apply_attributeFinal('dispatch')/];
-
-	/**
-	 * La demande de redirection pour le request dispatcher.
-	 */
-	private final boolean [apply_attributeFinal('redirect')/];
-
-	/**
-	 * Indique si la route est issue du menu principal de l'application.
-	 */
-	private final boolean [apply_attributeFinal('menu')/];
-
-	/**
-	 * Contructeur pour l'énumération.
-	 * 
-	 * @param [apply_parameterMethodClassicIn('dispatch')/] : la chaine de routage pour la méthode.
-	 * @param [apply_parameterMethodClassicIn('redirect')/] : une redirection est elle demandée ?
-	 * @param [apply_parameterMethodClassicIn('menu')/] : la chaine provient elle du menu principal ?
-	 */
-	[buildJspDispatcherClassName()/] (final String [apply_parameterMethodClassicIn('dispatch')/], 
-		final boolean [apply_parameterMethodClassicIn('redirect')/], 
-		final boolean [apply_parameterMethodClassicIn('menu')/]) {
-		[getAffectationPrefix()/][apply_attributeFinal('dispatch')/] = [apply_parameterMethodClassicIn('dispatch')/];
-		[getAffectationPrefix()/][apply_attributeFinal('redirect')/] = [apply_parameterMethodClassicIn('redirect')/];
-		[getAffectationPrefix()/][apply_attributeFinal('menu')/] = [apply_parameterMethodClassicIn('menu')/];
-	}
-
-	/**
-	 * Permet de savoir si une redirection est nécessaire pour le
-	 * 'requestDispatcher'.
-	 */
-	public boolean [apply_methodDefault('redirect')/](){
-		return [apply_attributeFinal('redirect')/];
-	}
-
-	/**
-	 * Permet de savoir si la route provient du menu principal de l'application (un
-	 * menu dans le header de la page).
-	 */
-	public boolean [apply_methodDefault('menu')/](){
-		return [apply_attributeFinal('menu')/];
-	}
-
-	/**
-	 * Retourne la chaine de routage complétée avec les informations racine.
-	 * <p>
-	 * (si le dévelopeur désire modifier la racine des appels aux controlleurs, ne
-	 * pas oublier d'effectuer aussi la modification au niveau du fichier de
-	 * configuration 'web.xml' pour le contrôleur principal).
-	 */
-	public String [apply_methodDefault('dispatch')/](){
-		
-		// Modifier ici la chaine de routage si besoin.		
-
-		// [apply_methodDefault('dispatch')/]
-		// [protected (root.getUserCodeId(apply_methodDefault('dispatch')))]
-
-		if([apply_methodDefault('redirect')/]()){
-			return "[getJspCtrlUriFragment()/]" + [apply_attributeFinal('dispatch')/];
-		} else {
-			return  "[getJspPageUriFragment()/]" + [apply_attributeFinal('dispatch')/];
-		}
-		// [/protected]
-	}
-}
-[/template]
+[template public applicationDispatcher(root : cinematic::CinematicRoot) post(self.trim())]
+  [root.licence()/]
+  package [root.getApplicationPackage()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [root.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Enumeration déstinée à effectuer la concentration de l'ensemble des routes
+   * de l'application.
+   *
+   * @author [root.getAuthorName()/]
+   */
+  public enum [root.buildJspDispatcherClassName()/] implements JspDispatcherEnum_Itf {
+  
+  	// Placer ici des énumérations supplémentaires si besoin.	
+  	
+  	// define enumeration sub controllers
+  	[protected (root.getUserCodeId('define enumeration sub controllers')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+  
+  [for (viewState : flow::ViewState | root.eAllContents(flow::ViewState))]
+    	[(viewState.getJspControllerForDispatcherClassName() + '_init').apply_attributeEnum()/]([viewState.getDispatchForInit()/], false),
+    
+    [for (viewContainer : view::ViewContainer | viewState.viewContainers)]
+      [if (viewContainer.isViewPanel())]
+        [for (event : view::ViewEvent | viewContainer.getEventsForViewContainer())]
+          [if (not (event.name = null))]
+            	[(viewState.getJspControllerForDispatcherClassName() + '_' + event.getEventName()).apply_attributeEnum()/]([viewState.getDispatch(event)/], false),
+            
+          [else]
+            	// FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements 
+            	// des transitions issues de l'état : [viewState.nameViewStateImplementation()/]
+            
+          [/if]
+        [/for]
+      [/if]
+    [/for]
+  [/for]
+  	['systemViewState_error'.apply_attributeEnum()/]("[root.getDispatchForError()/]", true, false);
+  
+  	/**
+  	 * La chaine de routage pour le request dispatcher.
+  	 */
+  	private final String ['dispatch'.apply_attributeFinal()/];
+  
+  	/**
+  	 * La demande de redirection pour le request dispatcher.
+  	 */
+  	private final boolean ['redirect'.apply_attributeFinal()/];
+  
+  	/**
+  	 * Indique si la route est issue du menu principal de l'application.
+  	 */
+  	private final boolean ['menu'.apply_attributeFinal()/];
+  
+  	/**
+  	 * Contructeur pour l'énumération.
+  	 * 
+  	 * @param ['dispatch'.apply_parameterMethodClassicIn()/] : la chaine de routage pour la méthode.
+  	 * @param ['redirect'.apply_parameterMethodClassicIn()/] : une redirection est elle demandée ?
+  	 * @param ['menu'.apply_parameterMethodClassicIn()/] : la chaine provient elle du menu principal ?
+  	 */
+  	[root.buildJspDispatcherClassName()/] (final String ['dispatch'.apply_parameterMethodClassicIn()/], 
+  		final boolean ['redirect'.apply_parameterMethodClassicIn()/], 
+  		final boolean ['menu'.apply_parameterMethodClassicIn()/]) {
+  		[root.getAffectationPrefix()/]['dispatch'.apply_attributeFinal()/] = ['dispatch'.apply_parameterMethodClassicIn()/];
+  		[root.getAffectationPrefix()/]['redirect'.apply_attributeFinal()/] = ['redirect'.apply_parameterMethodClassicIn()/];
+  		[root.getAffectationPrefix()/]['menu'.apply_attributeFinal()/] = ['menu'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	/**
+  	 * Permet de savoir si une redirection est nécessaire pour le
+  	 * 'requestDispatcher'.
+  	 */
+  	public boolean ['redirect'.apply_methodDefault()/](){
+  		return ['redirect'.apply_attributeFinal()/];
+  	}
+  
+  	/**
+  	 * Permet de savoir si la route provient du menu principal de l'application (un
+  	 * menu dans le header de la page).
+  	 */
+  	public boolean ['menu'.apply_methodDefault()/](){
+  		return ['menu'.apply_attributeFinal()/];
+  	}
+  
+  	/**
+  	 * Retourne la chaine de routage complétée avec les informations racine.
+  	 * <p>
+  	 * (si le dévelopeur désire modifier la racine des appels aux controlleurs, ne
+  	 * pas oublier d'effectuer aussi la modification au niveau du fichier de
+  	 * configuration 'web.xml' pour le contrôleur principal).
+  	 */
+  	public String ['dispatch'.apply_methodDefault()/](){
+  		
+  		// Modifier ici la chaine de routage si besoin.		
+  
+  		// ['dispatch'.apply_methodDefault()/]
+  		[protected (root.getUserCodeId('dispatch'.apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		if(['redirect'.apply_methodDefault()/]()){
+      			return "[root.getJspCtrlUriFragment()/]" + ['dispatch'.apply_attributeFinal()/];
+      		} else {
+      			return  "[root.getJspPageUriFragment()/]" + ['dispatch'.apply_attributeFinal()/];
+      		}
+    [/protected]
+  
+  	}
+  }[/template]
 
 [comment : On considere un seul conteneur pour un controleur ! /]
-[template private getDispatch(viewState : ViewState, event : ViewEvent) post (trim())]
-[if not getNextViewStateFromEvent(viewState, event).oclIsUndefined()]
-"/[getNextViewStateFromEvent(viewState, event).nameViewStateImplementation()/]", true
-[else][viewState.getDispatchForInit()/][/if]
+[template private getDispatch(viewState : flow::ViewState, event : view::ViewEvent) post(self.trim())]
+  [if (not (viewState.getNextViewStateFromEvent(event) = null))]
+    "/[viewState.getNextViewStateFromEvent(event).nameViewStateImplementation()/]", true
+  [else][viewState.getDispatchForInit()/][/if]
 [/template]
 
 [comment : On considere un seul conteneur pour un controleur !  /]
-[template private getDispatchForInit(viewState : ViewState) post (trim())]
-[let viewContainer : ViewContainer = viewState.viewContainers->first()]
-"[viewContainer.packageHierarchy().replaceAll('\\.', '/')/]/[viewContainer.nameViewImplementation()/].jsp", false
-[/let]
+[template private getDispatchForInit(viewState : flow::ViewState) post(self.trim())]
+  [let viewContainer : view::ViewContainer = viewState.viewContainers->first()]
+    "[viewContainer.packageHierarchy().replaceAll('\\.', '/')/]/[viewContainer.nameViewImplementation()/].jsp", false
+  [/let]
 [/template]
 
 [comment : recuperation du routage pour la page d'erreur. /]
-[template private getDispatchForError(any : OclAny) post(trim())]
-[if any.hasErrorView()]/[any.getErrorState().nameViewStateImplementation()/][else]/defaultErrorView.jsp[/if]
+[template private getDispatchForError(any : ecore::EObject) post(self.trim())]
+  [if (any.hasErrorView())]/[any.getErrorState().nameViewStateImplementation()/][else]/defaultErrorView.jsp[/if]
 [/template]
 
 [comment : Write all imports for the dispatcher./]
-[template private writeImports (root : CinematicRoot) post(trim())]
-[comment : reset the duplicate import utility. /]
-[root.initImports(false)/]
-
-[root.addImport('fr.spi4j.ui.jsp.JspDispatcherEnum_Itf')/]
-
-[comment : Flush all imports to the file. /]
-[root.flushImports()/]
-[/template]
+[template private writeImports(root : cinematic::CinematicRoot) post(self.trim())]
+  [root.initImports(false)/]
+  
+  [root.addImport('fr.spi4j.ui.jsp.JspDispatcherEnum_Itf')/]
+  
+  [root.flushImports()/][/template]

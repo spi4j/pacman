@@ -1,55 +1,54 @@
+[module userMapper('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
+
 [comment encoding = UTF-8 /]
-[module userMapper('http://www.obeonetwork.org/dsl/environment/3.0.0',
-					'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
-
-[template public userMapper(r : Root)]
-[licence()/]
-package [buildPackageMapper()/]; // NOPMD
-
-// [protected ('for imports')]
-
-[for (e : Entity | r.eAllContents(Entity))]
-import [buildPackageEntityMapper(e)/].[buildEntityMapperInterfaceName(e)/];
-import [buildPackageEntityMapper(e)/].[buildEntityMapperImplClassName(e)/];
-[/for]
-
-// [/protected]
-
-/**
- * Factory permettant de récupérer les instances de classes de mapper.
- * @author [getAuthorName()/]
- */
-public final class [buildAppliUserMapperGenClassName()/]
-{
-
-   /**
-    * Constructeur privé.
-    */
-   private [buildAppliUserMapperGenClassName()/] ()
-   {
-      super();
-   }
-
-[for (e : Entity | r.eAllContents(Entity))]
-
-   /**
-    * Obtenir la façade de services '[buildEntityMapperInterfaceName(e)/]'.
-    * @return L'instance désirée.
-    */
-   public static [buildEntityMapperInterfaceName(e)/] [apply_methodDefault('get ' + buildEntityMapperImplClassName(e))/] ()
-   {
-      return new [buildEntityMapperImplClassName(e)/]();
-   }
-
-[/for]
-}
-[/template]
+[template public userMapper(r : entity::Root)]
+  [r.licence()/]
+  package [r.buildPackageMapper()/]; // NOPMD
+  
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [for (e : entity::Entity | r.eAllContents(entity::Entity))]
+      import [e.buildPackageEntityMapper()/].[e.buildEntityMapperInterfaceName()/];
+      import [e.buildPackageEntityMapper()/].[e.buildEntityMapperImplClassName()/];
+    [/for]
+    
+  [/protected]
+  
+  
+  /**
+   * Factory permettant de récupérer les instances de classes de mapper.
+   * @author [r.getAuthorName()/]
+   */
+  public final class [r.buildAppliUserMapperGenClassName()/]
+  {
+  
+     /**
+      * Constructeur privé.
+      */
+     private [r.buildAppliUserMapperGenClassName()/] ()
+     {
+        super();
+     }
+  
+  [for (e : entity::Entity | r.eAllContents(entity::Entity))]
+    
+       /**
+        * Obtenir la façade de services '[e.buildEntityMapperInterfaceName()/]'.
+        * @return L'instance désirée.
+        */
+       public static [e.buildEntityMapperInterfaceName()/] [('get ' + e.buildEntityMapperImplClassName()).apply_methodDefault()/] ()
+       {
+          return new [e.buildEntityMapperImplClassName()/]();
+       }
+    
+  [/for]
+  }[/template]

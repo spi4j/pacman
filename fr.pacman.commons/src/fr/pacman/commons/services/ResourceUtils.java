@@ -57,4 +57,6 @@ public class ResourceUtils
    {
       return !getLibraryName(p_entity, p_projectName).equals(p_projectName);
    }
+
+public static boolean isLibraryEntityJavaService(final Entity p_entity,final String p_projectName){return isLibraryEntity(p_entity,p_projectName);}
 }

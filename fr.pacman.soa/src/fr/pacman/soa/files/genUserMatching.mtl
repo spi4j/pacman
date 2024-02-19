@@ -1,14 +1,13 @@
+[module genUserMatching('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::server::matching::userMatching/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genUserMatching('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                     'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::server::matching::userMatching /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genUserMatching(m : System)]
-[file (filename(getServerSourceDir(), buildPackageMatching(), buildUserMatchingGenClassName() + '.java'), false, 'UTF-8')]
-[m.userMatching()/]
-[/file]
+[template public genUserMatching(m : soa::System)]
+  [file (m.getServerSourceDir().filename(m.buildPackageMatching(), m.buildUserMatchingGenClassName() + '.java'), overwrite, 'UTF-8')]
+    [m.userMatching()/]
+  [/file]
 [/template]

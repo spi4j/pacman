@@ -1,233 +1,222 @@
-[comment encoding = UTF-8 /]
-[module fetchingStrategy('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                         'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module fetchingStrategy('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::attributes/]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::imports /]
-
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::commons::soa::common::classes/]
 [import fr::pacman::commons::soa::common::references/]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::names /]
-[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::classes /]
-[import fr::pacman::soa::common::name /]
+[comment encoding = UTF-8 /]
+[template public fetchingStrategy(d : environment::DTO)]
+  [d.licence()/]
+  package [d.buildPackageFetchingStrategyDto()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [d.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * FetchingStrategy '[d.nameClassDto()/]'
+   * @author [d.getAuthorName()/]
+   */
+  public class [d.buildFetchingStrategyClassName()/] extends FetchingStrategy_Abs<[d.genPkType()/], [d.buildDtoClassName()/]>
+  {
+     private static final long serialVersionUID = 1L;
+  
+  [for (r : environment::Reference | d.referencesNoStar())]
+       @XmlElement(name = "[r.nameBaseReference()/]")
+       private [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] [(r.name + ' fetching strategy').apply_attributeDefault()/];
+    
+  [/for]
+  [for (r : environment::Reference | d.referencesStar())]
+       @XmlElement(name = "[r.nameBaseReferenceTab()/]")
+       private [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] [(r.name + ' fetching strategy').apply_attributeMultiple()/];
+    
+  [/for]
+     /**
+      * Constructeur.
+      */
+     public [d.buildFetchingStrategyClassName()/] ()
+     {
+        super();
+     }
+  
+     /**
+      * Constructeur.
+      * @param ['name'.apply_parameterMethodClassicIn()/]
+      *           Nom
+      * @param ['parent'.apply_parameterMethodClassicIn()/]
+      *           Parent
+      */
+     protected [d.buildFetchingStrategyClassName()/] (final [d.getClassNameForAttributesNames_Itf()/] ['name'.apply_parameterMethodClassicIn()/], final FetchingStrategy_Abs<?, ?> ['parent'.apply_parameterMethodClassicIn()/])
+     {
+        super(['name'.apply_parameterMethodClassicIn()/], ['parent'.apply_parameterMethodClassicIn()/]);
+     }
+  
+  [for (r : environment::Reference | d.references->select(r | not r.isComputed()))]
+    [if (r.navigable)]
+         /**
+          * FetchingStrategy '[(d.name + ' ' + r.name).apply_classDefault()/]'.
+          * @author [r.getAuthorName()/]
+          */
+         public static class [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] extends [r.referencedType.oclAsType(environment::DTO).buildFetchingStrategyClassName()/]
+         {
+            private static final long serialVersionUID = 1L;
+      
+            /**
+             * Constructeur.
+             * @param ['name'.apply_parameterMethodClassicIn()/]
+             *           Nom
+             * @param ['parent'.apply_parameterMethodClassicIn()/]
+             *           Parent
+             */
+            protected [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] (final [d.buildAttributesEnumName()/] ['name'.apply_parameterMethodClassicIn()/], final [d.buildFetchingStrategyClassName()/] ['parent'.apply_parameterMethodClassicIn()/])
+            {
+               super(['name'.apply_parameterMethodClassicIn()/], ['parent'.apply_parameterMethodClassicIn()/]);
+            }
+      
+            /**
+             * Remonte au parent.
+             * @return [d.buildFetchingStrategyClassName()/]
+             */
+            public [d.buildFetchingStrategyClassName()/] [if (r.isMultiple())][('end ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/][else][('end ' + r.name).apply_methodDefault()/][/if]
+       ()
+            {
+               return ([d.buildFetchingStrategyClassName()/]) getParent();
+            }
+         }
+      
+    [/if]
+  [/for]
+  [for (r : environment::Reference | d.referencesNoStar())]
+       /**
+        * Fetch de la relation '[r.nameBaseReference()/]'.
+        * @return [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/]
+        */
+       public [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] [('with ' + r.name).apply_methodDefault()/] ()
+       {
+          [('get ' + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/]().setFetch(true);
+          return [('get ' + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/]();
+       }
+    
+       /**
+        * Equivalent à [('with ' + r.name).apply_methodDefault()/]().[('end ' + r.name).apply_methodDefault()/]().
+        * @return [d.buildFetchingStrategyClassName()/]
+        */
+       public [d.buildFetchingStrategyClassName()/] [('fetch ' + r.name).apply_methodDefault()/] ()
+       {
+          [('get ' + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/]().setFetch(true);
+          return this;
+       }
+    
+       /**
+        * @return [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/]
+        */
+       protected [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] [('get ' + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/] ()
+       {
+          if ([(r.name + ' fetching strategy').apply_attributeDefault()/] == null)
+          {
+             // Instancier la FetchingStrategy
+             [(r.name + ' fetching strategy').apply_attributeDefault()/] = new [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/]([d.buildAttributesEnumName()/].[r.nameBaseReference()/], this);
+          }
+          return [(r.name + ' fetching strategy').apply_attributeDefault()/];
+       }
+    
+  [/for]
+  [for (r : environment::Reference | d.referencesStar())]
+       /**
+        * Fetch de la relation '[r.nameBaseReferenceTab()/]'.
+        * @return [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/]
+        */
+       public [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] [('with ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/] ()
+       {
+          [('get ' + r.getListPrefix() + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/]().setFetch(true);
+          return [('get ' + r.getListPrefix() + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/]();
+       }
+    
+       /**
+        * Equivalent à [('with ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/]().[('end ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/]().
+        * @return [d.buildFetchingStrategyClassName()/]
+        */
+       public [d.buildFetchingStrategyClassName()/] [('fetch ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/] ()
+       {
+          [('get ' + r.getListPrefix() + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/]().setFetch(true);
+          return this;
+       }
+    
+       /**
+        * @return [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/]
+        */
+       protected [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/] [('get ' + r.getListPrefix() + (d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()).apply_methodDefault()/] ()
+       {
+          // Si pas de FetchingStrategy
+          if ([(r.name + ' fetching strategy').apply_attributeMultiple()/] == null)
+          {
+             // Instancier la FetchingStrategy
+             [(r.name + ' fetching strategy').apply_attributeMultiple()/] = new [(d.name + ' ' + r.name + ' fetching strategy').apply_classDefault()/]([d.buildAttributesEnumName()/].[r.nameBaseReferenceTab()/], this);
+          }
+          return [(r.name + ' fetching strategy').apply_attributeMultiple()/];
+       }
+    
+  [/for]
+  [if (not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))]
+       @Override
+       public List<FetchingStrategy_Abs<[d.genPkType()/], ? extends Dto_Itf<[d.genPkType()/]>>> getChildren ()
+       {
+          final List<FetchingStrategy_Abs<[d.genPkType()/], ? extends Dto_Itf<[d.genPkType()/]>>> ['list'.apply_variableDefault()/] = new ArrayList<>();
+    [for (r : environment::Reference | d.referencesNoStar())]
+            ['list'.apply_variableDefault()/].add([(r.name + ' fetching strategy').apply_attributeDefault()/]);
+    [/for]
+    [for (r : environment::Reference | d.referencesStar())]
+            ['list'.apply_variableDefault()/].add([(r.name + ' fetching strategy').apply_attributeMultiple()/]);
+    [/for]
+          return ['list'.apply_variableDefault()/];
+       }
+  [/if]
+  }[/template]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[template public fetchingStrategy(d : DTO)]
-[licence()/]
-package [d.buildPackageFetchingStrategyDto()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[d.writeImports()/]
-
-// [/protected]
-
-/**
- * FetchingStrategy '[d.nameClassDto()/]'
- * @author [getAuthorName()/]
- */
-public class [d.buildFetchingStrategyClassName()/] extends FetchingStrategy_Abs<[genPkType()/], [d.buildDtoClassName()/]>
-{
-   private static final long serialVersionUID = 1L;
-
-[for (r : Reference | d.referencesNoStar())]
-   @XmlElement(name = "[r.nameBaseReference()/]")
-   private [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] [apply_attributeDefault(r.name + ' fetching strategy')/];
-
-[/for]
-[for (r : Reference | d.referencesStar())]
-   @XmlElement(name = "[r.nameBaseReferenceTab()/]")
-   private [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] [apply_attributeMultiple(r.name + ' fetching strategy')/];
-
-[/for]
-   /**
-    * Constructeur.
-    */
-   public [d.buildFetchingStrategyClassName()/] ()
-   {
-      super();
-   }
-
-   /**
-    * Constructeur.
-    * @param [apply_parameterMethodClassicIn('name')/]
-    *           Nom
-    * @param [apply_parameterMethodClassicIn('parent')/]
-    *           Parent
-    */
-   protected [d.buildFetchingStrategyClassName()/] (final [getClassNameForAttributesNames_Itf()/] [apply_parameterMethodClassicIn('name')/], final FetchingStrategy_Abs<?, ?> [apply_parameterMethodClassicIn('parent')/])
-   {
-      super([apply_parameterMethodClassicIn('name')/], [apply_parameterMethodClassicIn('parent')/]);
-   }
-
-[for (r : Reference | d.references->select(r : Reference | not isComputed(r)))]
-[if r.navigable]
-   /**
-    * FetchingStrategy '[apply_classDefault(d.name + ' ' + r.name)/]'.
-    * @author [getAuthorName()/]
-    */
-   public static class [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] extends [r.referencedType.oclAsType(DTO).buildFetchingStrategyClassName()/]
-   {
-      private static final long serialVersionUID = 1L;
-
-      /**
-       * Constructeur.
-       * @param [apply_parameterMethodClassicIn('name')/]
-       *           Nom
-       * @param [apply_parameterMethodClassicIn('parent')/]
-       *           Parent
-       */
-      protected [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] (final [d.buildAttributesEnumName()/] [apply_parameterMethodClassicIn('name')/], final [d.buildFetchingStrategyClassName()/] [apply_parameterMethodClassicIn('parent')/])
-      {
-         super([apply_parameterMethodClassicIn('name')/], [apply_parameterMethodClassicIn('parent')/]);
-      }
-
-      /**
-       * Remonte au parent.
-       * @return [d.buildFetchingStrategyClassName()/]
-       */
-      public [d.buildFetchingStrategyClassName()/] [if(isMultiple(r))][apply_methodDefault('end ' + getListPrefix() + ' ' + r.name)/][else][apply_methodDefault('end ' + r.name)/][/if] ()
-      {
-         return ([d.buildFetchingStrategyClassName()/]) getParent();
-      }
-   }
-
-[/if]
-[/for]
-[for (r : Reference | d.referencesNoStar())]
-   /**
-    * Fetch de la relation '[r.nameBaseReference()/]'.
-    * @return [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/]
-    */
-   public [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] [apply_methodDefault('with ' + r.name)/] ()
-   {
-      [apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]().setFetch(true);
-      return [apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]();
-   }
-
-   /**
-    * Equivalent à [apply_methodDefault('with ' + r.name)/]().[apply_methodDefault('end ' + r.name)/]().
-    * @return [d.buildFetchingStrategyClassName()/]
-    */
-   public [d.buildFetchingStrategyClassName()/] [apply_methodDefault('fetch ' + r.name)/] ()
-   {
-      [apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]().setFetch(true);
-      return this;
-   }
-
-   /**
-    * @return [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/]
-    */
-   protected [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] [apply_methodDefault('get ' + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/] ()
-   {
-      if ([apply_attributeDefault(r.name + ' fetching strategy')/] == null)
-      {
-         // Instancier la FetchingStrategy
-         [apply_attributeDefault(r.name + ' fetching strategy')/] = new [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/]([d.buildAttributesEnumName()/].[r.nameBaseReference()/], this);
-      }
-      return [apply_attributeDefault(r.name + ' fetching strategy')/];
-   }
-
-[/for]
-[comment AVOIR remplacer les noms de methodes XXXTabXXX par un template
- a repercuter dans fetchingStrategyTest /]
-[for (r : Reference | d.referencesStar())]
-   /**
-    * Fetch de la relation '[r.nameBaseReferenceTab()/]'.
-    * @return [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/]
-    */
-   public [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] [apply_methodDefault('with ' + getListPrefix() + ' ' + r.name)/] ()
-   {
-      [apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]().setFetch(true);
-      return [apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]();
-   }
-
-   /**
-    * Equivalent à [apply_methodDefault('with ' + getListPrefix() + ' ' + r.name)/]().[apply_methodDefault('end ' + getListPrefix() + ' ' + r.name)/]().
-    * @return [d.buildFetchingStrategyClassName()/]
-    */
-   public [d.buildFetchingStrategyClassName()/] [apply_methodDefault('fetch ' + getListPrefix() + ' ' + r.name)/] ()
-   {
-      [apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/]().setFetch(true);
-      return this;
-   }
-
-   /**
-    * @return [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/]
-    */
-   protected [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/] [apply_methodDefault('get ' + getListPrefix() + apply_classDefault(d.name + ' ' + r.name + ' fetching strategy'))/] ()
-   {
-      // Si pas de FetchingStrategy
-      if ([apply_attributeMultiple(r.name + ' fetching strategy')/] == null)
-      {
-         // Instancier la FetchingStrategy
-         [apply_attributeMultiple(r.name + ' fetching strategy')/] = new [apply_classDefault(d.name + ' ' + r.name + ' fetching strategy')/]([d.buildAttributesEnumName()/].[r.nameBaseReferenceTab()/], this);
-      }
-      return [apply_attributeMultiple(r.name + ' fetching strategy')/];
-   }
-
-[/for]
-[if not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty())]
-   @Override
-   public List<FetchingStrategy_Abs<[genPkType()/], ? extends Dto_Itf<[genPkType()/]>>> getChildren ()
-   {
-      final List<FetchingStrategy_Abs<[genPkType()/], ? extends Dto_Itf<[genPkType()/]>>> [apply_variableDefault('list')/] = new ArrayList<>();
-[for (r : Reference | d.referencesNoStar())]
-      [apply_variableDefault('list')/].add([apply_attributeDefault(r.name + ' fetching strategy')/]);
-[/for]
-[for (r : Reference | d.referencesStar())]
-      [apply_variableDefault('list')/].add([apply_attributeMultiple(r.name+ ' fetching strategy')/]);
-[/for]
-      return [apply_variableDefault('list')/];
-   }
-[/if]
-}
-[/template]
-
-[template private listChildren_ (d : DTO)]
-[listChildren(d)->sep(', ')/]
-[/template]
+[template private listChildren_(d : environment::DTO)]
+  [d.listChildren()->sep(', ')/][/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (d : DTO) post(trim())]
-[d.initImports()/]
-[d.addImport('fr.spi4j.business.fetching.FetchingStrategy_Abs')/]
-[d.addImport('java.util.ArrayList', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
-[d.addImport('java.util.List', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
-[d.addImport('fr.spi4j.business.dto.Dto_Itf', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
-[d.addImport('jakarta.xml.bind.annotation.XmlElement', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
-[d.addImport(d.buildImportDto())/]
-[d.addImport(getImportForAttributesNames_Itf())/]
-[d.addImport(buildPackageBusinessApiDto(d) + '.' + d.buildAttributesEnumName())/]
+[template private writeImports(d : environment::DTO) post(self.trim())]
+  [d.initImports()/]
+  [d.addImport('fr.spi4j.business.fetching.FetchingStrategy_Abs')/]
+  [d.addImport('java.util.ArrayList', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
+  [d.addImport('java.util.List', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
+  [d.addImport('fr.spi4j.business.dto.Dto_Itf', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
+  [d.addImport('jakarta.xml.bind.annotation.XmlElement', not (d.referencesStar()->isEmpty() and d.referencesNoStar()->isEmpty()))/]
+  [d.addImport(d.buildImportDto())/]
+  [d.addImport(d.getImportForAttributesNames_Itf())/]
+  [d.addImport(d.buildPackageBusinessApiDto() + '.' + d.buildAttributesEnumName())/]
+  
+  [for (r : environment::Reference | d.references)]
+    [if (d.buildPackageFetchingStrategyDto() <> r.referencedType.oclAsType(environment::DTO).buildPackageFetchingStrategyDto())]
+      		[d.addImport(r.referencedType.oclAsType(environment::DTO).buildPackageFetchingStrategyDto() + '.' + r.referencedType.oclAsType(environment::DTO).buildFetchingStrategyClassName())/]
+    [/if]
+  [/for]
+  
+  [d.flushImports()/][/template]
 
-[comment : List references. /]
-[for (r : Reference | d.references)]
-	[if d.buildPackageFetchingStrategyDto() <> buildPackageFetchingStrategyDto(r.referencedType.oclAsType(DTO))]
-		[d.addImport( buildPackageFetchingStrategyDto(r.referencedType.oclAsType(DTO)) + '.' + buildFetchingStrategyClassName(r.referencedType.oclAsType(DTO)))/]
-	[/if]
-[/for]
-
-[d.flushImports()/]
-[/template]
-
-[query public listChildren(d : DTO) : OrderedSet(String) =
-    (d.referencesNoStar().nameProperty()->union(d.referencesStar().namePropertyTab()).concat('FetchingStrategy')->asOrderedSet())
-/]
+[query public listChildren(d : environment::DTO) : OrderedSet(String) = d.referencesNoStar()->asSequence()->collect(temp1 | temp1.nameProperty())->union(d.referencesStar()->asSequence()->collect(temp2 | temp2.namePropertyTab()))->collect(temp3 | temp3.concat('FetchingStrategy'))->asOrderedSet()/]

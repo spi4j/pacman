@@ -1,30 +1,24 @@
+[module generateValidation('http://www.obeonetwork.org/dsl/requirement/1.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/graal/2.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::validation::files::genValidationOperations/]
+[import fr::pacman::validation::files::genValidationEntities/]
+[import fr::pacman::validation::files::genValidationGraal/]
+
 [comment encoding = UTF-8 /]
-[module generateValidation('http://www.obeonetwork.org/dsl/requirement/1.0',
-                           'http://www.obeonetwork.org/dsl/soa/4.0.0',
-                           'http://www.obeonetwork.org/dsl/graal/2.0.0',
-                           'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::validation::files::genValidationOperations /]
-[import fr::pacman::validation::files::genValidationEntities /]
-[import fr::pacman::validation::files::genValidationGraal /]
-
+[comment @main/]
 [template public generateValidationGraal(system : graal::System)]
-[comment @main /]
-[genValidationGraal(system) /]
+  [system.genValidationGraal()/][/template]
+
+[comment @main/]
+[template public generateValidationRequirement(repo : requirement::Repository)]
+  
 [/template]
 
-[template public generateValidationRequirement(repo : Repository)]
-[comment @main /]
-
-[/template]
-
+[comment @main/]
 [template public generateValidationSoa(s : soa::System)]
-[comment @main /]
-[genValidationOperations(s) /]
-[/template]
+  [s.genValidationOperations()/][/template]
 
-[template public generateValidationEntity(r : Root)]
-[comment @main /]
-[genValidationEntities(r) /]
-[/template]
+[comment @main/]
+[template public generateValidationEntity(r : entity::Root)]
+  [r.genValidationEntities()/][/template]

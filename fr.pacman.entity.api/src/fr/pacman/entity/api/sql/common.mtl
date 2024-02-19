@@ -1,314 +1,216 @@
-[comment encoding = UTF-8 /]
-[module common('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module common('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::utils/]
 [import fr::pacman::entity::api::common::buildClassesEntityApi/]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::entity::api::sql::ConstraintUtils/]
 
-
-[********************
+[comment encoding = UTF-8 /]
+[**
+ * *****************
  * Paramétrage PacMan
 */]
-
 [comment : Retourne le nom de la table avec le schema en prefixe. /]
-[template public nameTableWithSchema(e : Entity)]
-[e.get_schema()/][e.nameTable()/]
-[/template]
+[template public nameTableWithSchema(e : entity::Entity)]
+  [e.get_schema()/][e.nameTable()/][/template]
 
 [comment : Retourne le nom de la table dans la librairie avec le schema en prefixe. /]
-[template public nameLibraryTableWithSchema(e : Entity) post (trim())]
-[let libName : String = e.getLibraryNameForEntity(getApplicationName())]
-[for (prop : String | getAdditionnalLibraries())][if prop.indexOf(libName) > 0]
-[e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][physicalName(e).first(maxTableSize(e))/][/if][/for][/let]
+[template public nameLibraryTableWithSchema(e : entity::Entity) post(self.trim())]
+  [let libName : String = e.getLibraryNameForEntity(e.getApplicationName())]
+    [for (prop : String | e.getAdditionnalLibraries())]
+      [if (prop.indexOf(libName) > 0)][e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][e.physicalName().first(e.maxTableSize())/][/if]
+    [/for]
+  [/let]
 [/template]
 
 [comment : Retourne le nom de la table sans le schema en prefixe. /]
-[template public nameTable(e : Entity)]
-[get_prefix(e)/][physicalName(e).first(maxTableSize(e))/]
-[/template]
+[template public nameTable(e : entity::Entity)]
+  [e.get_prefix()/][e.physicalName().first(e.maxTableSize())/][/template]
 
 [comment : Retourne le prefixe pour l'ensemble des tables. /]
-[template public get_prefix(e : Entity)]
-[getSQLTablePrefix()/]
-[/template]
+[template public get_prefix(e : entity::Entity)]
+  [e.getSQLTablePrefix()/][/template]
 
 [comment : getSQLTableSchema() ne peut pas être null ou non défini (on peut enlever le test..). /]
-[template private get_schema(e : Entity)]
-[if hasSQLTableSchema()][getSQLTableSchema()/][/if]
+[template private get_schema(e : entity::Entity)]
+  [if (e.hasSQLTableSchema())][e.getSQLTableSchema()/][/if]
 [/template]
 
-[template public nameTableJointureWithSchema(r : Reference)]
-[get_schema(r.get_entity())/][nameTableJointure(r)/]
-[/template]
-
-[comment : ??? /]
-[template public nameTableJointureWithSchema(r : Reference, compteur : Integer)]
-[get_schema(r.get_entity())/][nameTableJointure(r, compteur)/]
-[/template]
-
-[template public nameTableJointure(r : Reference)]
-[get_prefix(r.get_entity())/][physicalNameJointure(r).first(maxTableSize(r.get_entity()))/]
-[/template]
+[template public nameTableJointureWithSchema(r : environment::Reference)]
+  [r.get_entity().get_schema()/][r.nameTableJointure()/][/template]
 
 [comment : ??? /]
-[template public nameTableJointure(r : Reference, compteur : Integer)]
-[get_prefix(r.get_entity())/][physicalNameJointure(r).first(maxTableSize(r.get_entity()))/]
-[/template]
+[template public nameTableJointureWithSchema(r : environment::Reference, compteur : Integer)]
+  [r.get_entity().get_schema()/][r.nameTableJointure(compteur)/][/template]
+
+[template public nameTableJointure(r : environment::Reference)]
+  [r.get_entity().get_prefix()/][r.physicalNameJointure().first(r.get_entity().maxTableSize())/][/template]
+
+[comment : ??? /]
+[template public nameTableJointure(r : environment::Reference, compteur : Integer)]
+  [r.get_entity().get_prefix()/][r.physicalNameJointure().first(r.get_entity().maxTableSize())/][/template]
 
 [comment : Get the entity from the reference. /]
-[query private get_entity(r : Reference) : Entity = 
-r.containingType.oclAsType(entity::Entity)
-/]
+[query private get_entity(r : environment::Reference) : entity::Entity = r.containingType.oclAsType(entity::Entity)/]
 
 [comment : Get the counter for foreign keys. /]
-[query public get_counterFK(e : Entity, nbRef : Integer) : Integer =
-invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForFK(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
-/]
+[query public get_counterFK(e : entity::Entity, nbRef : Integer) : Integer = e.getNextCounterForFK(nbRef)/]
 
 [comment : Get the counter or the indexs. /]
-[query public get_counterIDX(e : Entity, nbRef : Integer) : Integer =
-invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForIDX(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
-/]
+[query public get_counterIDX(e : entity::Entity, nbRef : Integer) : Integer = e.getNextCounterForIDX(nbRef)/]
 
 [comment : Get the counter for the indexs of unicity. /]
-[query public get_counterUN(e : Entity, nbRef : Integer) : Integer =
-invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForUN(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
-/]
+[query public get_counterUN(e : entity::Entity, nbRef : Integer) : Integer = e.getNextCounterForUN(nbRef)/]
 
 [comment : Get the counter for CK./]
-[query public get_counterCK(e : Entity) : Integer =
-invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForCK(org.obeonetwork.dsl.entity.Entity)', Sequence{e})
-/]
+[query public get_counterCK(e : entity::Entity) : Integer = e.getNextCounterForCK()/]
 
 [comment :  reset the counters. /]
-[query public releaseCounterForConstraints(any : OclAny) : String = 
-invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'resetCounterForConstraints(java.lang.Boolean)', Sequence{true})
-/]
+[query public releaseCounterForConstraints(any : ecore::EObject) : String = true.resetCounterForConstraints()/]
 
 [comment : get the number of columns for the unicity constrainte. /]
-[query public get_nbColumnsInUniqueConstraint(void : OclAny, lstColumns : String) : Integer =
-invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNbColumnsInUniqueIndex(java.lang.String)', Sequence{lstColumns})
-/]
+[query public get_nbColumnsInUniqueConstraint(void : ecore::EObject, lstColumns : String) : Integer = lstColumns.getNbColumnsInUniqueIndex()/]
 
-[query public get_hasXtopsup(any : OclAny) : Boolean =
-	get_automaticColumnsProperties().contains('xtopsup') <> false
-/]
+[query public get_hasXtopsup(any : ecore::EObject) : Boolean = any.get_automaticColumnsProperties()->collect(temp1 | temp1.contains('xtopsup')) <> false/]
 
-[query public get_nameEnumField(void : OclAny, columnProp : String) : String =
-    get_nameColumn(columnProp).toLower()
-/]
+[query public get_nameEnumField(void : ecore::EObject, columnProp : String) : String = void.get_nameColumn(columnProp).toLower()/]
 
-[query public get_nameColumn(void : OclAny, columnProp : String) : String =
-    getConfigValue(nameColumnProperty(columnProp))
-/]
+[query public get_nameColumn(void : ecore::EObject, columnProp : String) : String = columnProp.nameColumnProperty().getConfigValue()/]
 
-[query public get_nameColumn(columnProp : String, void : OclAny ) : String =
-    get_nameColumn(void,columnProp)
-/]
+[query public get_nameColumn(columnProp : String, void : ecore::EObject) : String = void.get_nameColumn(columnProp)/]
 
-[query public get_defaultColumn(void : OclAny, columnProp : String) : String =
-    getConfigValue(defaultColumnProperty(columnProp))
-/]
+[query public get_defaultColumn(void : ecore::EObject, columnProp : String) : String = columnProp.defaultColumnProperty().getConfigValue()/]
 
-[query public get_typeColumn(void : OclAny, columnProp : String) : String =
-    getConfigValue(typeColumnProperty(columnProp))
-/]
+[query public get_typeColumn(void : ecore::EObject, columnProp : String) : String = columnProp.typeColumnProperty().getConfigValue()/]
 
-[query public get_typeColumn(columnProp : String, any : OclAny) : String =
-    get_typeColumn(any,columnProp)
-/]
+[query public get_typeColumn(columnProp : String, any : ecore::EObject) : String = any.get_typeColumn(columnProp)/]
 
-[query public get_sizeColumn(any : OclAny, columnProp : String) : String =
-    getConfigValue(sizeColumnProperty(columnProp))
-/]
+[query public get_sizeColumn(any : ecore::EObject, columnProp : String) : String = columnProp.sizeColumnProperty().getConfigValue()/]
 
-[query public get_sizeColumn(columnProp : String, any : OclAny) : String =
-    get_sizeColumn(any,columnProp)
-/]
+[query public get_sizeColumn(columnProp : String, any : ecore::EObject) : String = any.get_sizeColumn(columnProp)/]
 
-[query public get_hasAutomaticColumnWithDate(any : OclAny) : Boolean =
-	hasAutomaticColumns() and get_automaticColumnsProperties()->exists(columnProp : String | get_typeColumn(columnProp).toString().equalsIgnoreCase('Date'))
-/]
+[query public get_hasAutomaticColumnWithDate(any : ecore::EObject) : Boolean = any.hasAutomaticColumns() and any.get_automaticColumnsProperties()->exists(columnProp | any.get_typeColumn(columnProp).toString().equalsIgnoreCase('Date'))/]
 
-[query private get_maxTableNameSize(e : Entity) : Integer = 30 - get_prefix(e).toString().size() /]
+[query private get_maxTableNameSize(e : entity::Entity) : Integer = 30 - e.get_prefix().toString().size()/]
 
-[******************
+[**
+ * ***************
  * Fin Paramétrage
 */]
+[query public sizeHeader(any : ecore::EObject) : Integer = 63/]
 
-[query public sizeHeader(any : OclAny) : Integer = 63 /]
-[query public headerTable(e : Entity) : String = 'Table: ' + nameTableWithSchema(e) /]
-[query public headerTableJointure(r : Reference) : String = 'Table: ' + nameTableJointureWithSchema(r) /]
+[query public headerTable(e : entity::Entity) : String = 'Table: ' + e.nameTableWithSchema()/]
 
+[query public headerTableJointure(r : environment::Reference) : String = 'Table: ' + r.nameTableJointureWithSchema()/]
 
-[query public nameTableShort(e : Entity) : String =
-if hasPhysicalShortName(e) then
-    physicalShortName(e)
-else
-    nameTable(e)
-endif
-/]
+[query public nameTableShort(e : entity::Entity) : String = if e.hasPhysicalShortName() then e.physicalShortName() else e.nameTable() endif/]
 
-[query public nameTableShortWithoutPrefix(e : Entity) : String =
-if hasPhysicalShortName(e) then
-    physicalShortName(e)
-else
-    physicalName(e)
-endif
-/]
+[query public nameTableShortWithoutPrefix(e : entity::Entity) : String = if e.hasPhysicalShortName() then e.physicalShortName() else e.physicalName() endif/]
 
-[template public nameColumn(a : Attribute)]
-[physicalName(a).first(maxColumnSize())/]
-[/template]
+[template public nameColumn(a : environment::Attribute)]
+  [a.physicalName().first(a.maxColumnSize())/][/template]
 
-[template public nameColumn(r : Reference)]
-[physicalName(r) /]
-[/template]
+[template public nameColumn(r : environment::Reference)]
+  [r.physicalName()/][/template]
 
-[template public nameColumn(r : Reference, compteur : Integer)]
-[physicalName(r, compteur) /]
-[/template]
+[template public nameColumn(r : environment::Reference, compteur : Integer)]
+  [r.physicalName(compteur)/][/template]
 
-[template public nameColumnId(r : Reference)]
-[physicalNameId(r) /]
-[/template]
+[template public nameColumnId(r : environment::Reference)]
+  [r.physicalNameId()/][/template]
 
-[template public nameColumnId(r : Reference, compteur : Integer)]
-[physicalNameId(r, compteur) /]
-[/template]
+[template public nameColumnId(r : environment::Reference, compteur : Integer)]
+  [r.physicalNameId(compteur)/][/template]
 
-[template public nameColumnReferencing(r : Reference)]
-[physicalNameReferencing(r) /]
-[/template]
+[template public nameColumnReferencing(r : environment::Reference)]
+  [r.physicalNameReferencing()/][/template]
 
-[template public nameColumnReferencing(r : Reference, compteur : Integer)]
-[physicalNameReferencing(r,compteur) /]
-[/template]
+[template public nameColumnReferencing(r : environment::Reference, compteur : Integer)]
+  [r.physicalNameReferencing(compteur)/][/template]
 
-[template public nameColumnReferencingId(r : Reference)]
-[physicalNameReferencingId(r) /]
-[/template]
+[template public nameColumnReferencingId(r : environment::Reference)]
+  [r.physicalNameReferencingId()/][/template]
 
-[template public nameColumnReferencingId(r : Reference, compteur : Integer)]
-[physicalNameReferencingId(r, compteur) /]
-[/template]
+[template public nameColumnReferencingId(r : environment::Reference, compteur : Integer)]
+  [r.physicalNameReferencingId(compteur)/][/template]
 
-[template public nameSequence(e : Entity)]
-[get_schema(e)/][get_prefix(e)/][physicalName(e).first(maxSequenceSize(e))/]_SEQ
-[/template]
+[template public nameSequence(e : entity::Entity)]
+  [e.get_schema()/][e.get_prefix()/][e.physicalName().first(e.maxSequenceSize())/]_SEQ[/template]
 
-[template public nameSequenceReference(r : Reference)]
-[get_prefix(r.referencedType.oclAsType(entity::Entity)
-)/][nameTableJointure(r)/]_SEQ
-[/template]
+[template public nameSequenceReference(r : environment::Reference)]
+  [r.referencedType.oclAsType(entity::Entity).get_prefix()/][r.nameTableJointure()/]_SEQ[/template]
 
-[template public nameConstraint(eFrom : Entity, r : Reference, compteur : Integer)]
-[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1' + '_' + compteur/]
-[/template]
+[template public nameConstraint(eFrom : entity::Entity, r : environment::Reference, compteur : Integer)]
+  [eFrom.nameTableShortWithoutPrefix().first(eFrom.maxConstraintSize()) + '_FK1' + '_' + compteur/][/template]
 
-[template public nameConstraint(eFrom : Entity, r : Reference)]
-[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1'/]
-[/template]
+[template public nameConstraint(eFrom : entity::Entity, r : environment::Reference)]
+  [eFrom.nameTableShortWithoutPrefix().first(eFrom.maxConstraintSize()) + '_FK1'/][/template]
 
-[template public nameConstraintInverse(eFrom : Entity, r : Reference, compteur : Integer)]
-[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1' + '_' + compteur  /]
-[/template]
+[template public nameConstraintInverse(eFrom : entity::Entity, r : environment::Reference, compteur : Integer)]
+  [eFrom.nameTableShortWithoutPrefix().first(eFrom.maxConstraintSize()) + '_FK1' + '_' + compteur/][/template]
 
-[template public nameConstraintCK(eFrom : Entity, compteur : Integer)]
-[nameTable(eFrom).first(maxConstraintSize())/]_CK1_[compteur/]
-[/template]
+[template public nameConstraintCK(eFrom : entity::Entity, compteur : Integer)]
+  [eFrom.nameTable().first(eFrom.maxConstraintSize())/]_CK1_[compteur/][/template]
 
-[template public nameConstraintInverse(eFrom : Entity, r : Reference)]
-[nameTableShortWithoutPrefix(eFrom).first(maxConstraintSize()) + '_FK1'/]
-[/template]
+[template public nameConstraintInverse(eFrom : entity::Entity, r : environment::Reference)]
+  [eFrom.nameTableShortWithoutPrefix().first(eFrom.maxConstraintSize()) + '_FK1'/][/template]
 
-[template public nameConstraintJointure1(r : Reference)]
-[nameTableJointure(r).first(maxJointureSize()) + '_FK1_1' /]
-[/template]
+[template public nameConstraintJointure1(r : environment::Reference)]
+  [r.nameTableJointure().first(r.maxJointureSize()) + '_FK1_1'/][/template]
 
-[template public nameConstraintJointure2(r : Reference)]
-[nameTableJointure(r).first(maxJointureSize()) + '_FK1_2' /]
-[/template]
+[template public nameConstraintJointure2(r : environment::Reference)]
+  [r.nameTableJointure().first(r.maxJointureSize()) + '_FK1_2'/][/template]
 
 [comment : unicity also relies to mandatory property (ONE_LITERAL | ONE_STAR_LITERAL). /]
-[template public nameUniqueIndex(e: Entity, compteurX : Integer, compteurY : Integer)]
-[nameTable(e)/][if e.isMandatory(e.uniqueIndex())]_UN[else]_IDX[/if][compteurX/]_[compteurY/]
-[/template]
+[template public nameUniqueIndex(e : entity::Entity, compteurX : Integer, compteurY : Integer)]
+  [e.nameTable()/][if (e.isMandatory(e.uniqueIndex()))]_UN[else]_IDX[/if]
+  [compteurX/]_[compteurY/][/template]
 
 [comment : unicity also relies to mandatory property (ONE_LITERAL | ONE_STAR_LITERAL). /]
-[template public nameUniqueIndex(e: Entity, a: Attribute,  compteurX : Integer, compteurY : Integer)]
-[nameTable(e)/][if a.isMandatory()]_UN[else]_IDX[/if][compteurX/]_[compteurY/]
+[template public nameUniqueIndex(e : entity::Entity, a : environment::Attribute, compteurX : Integer, compteurY : Integer)]
+  [e.nameTable()/][if (a.isMandatory())]_UN[else]_IDX[/if]
+  [compteurX/]_[compteurY/][/template]
+
+[template public namePK(e : entity::Entity)]
+  [if (e.ownedAttributes->exists(a | a.isIdentifier))][e.ownedAttributes->select(a | a.isIdentifier)->asSequence()->collect(temp2 | temp2.nameColumn())/][else][e.nameEntityPK()/][/if]
 [/template]
 
-[template public namePK(e : Entity)]
-[if e.ownedAttributes->exists(a : environment::Attribute | a.isIdentifier)]
-[e.ownedAttributes->select(a : environment::Attribute | a.isIdentifier).nameColumn()/][else]
-[nameEntityPK(e)/][/if]
-[/template]
+[template public nameReferenceID(r : environment::Reference)]
+  [r.nameTableJointure() + '_ID'/][/template]
 
-[template public nameReferenceID(r : Reference)]
-[nameTableJointure(r)+'_ID'/]
-[/template]
+[template public nameEntityPK(e : entity::Entity)]
+  [e.physicalName().first(e.maxColumnPKSize()) + '_ID'/][/template]
 
-[template public nameEntityPK(e : Entity)]
-[physicalName(e).first(maxColumnPKSize()) + '_ID' /]
+[template public nameIndex(r : environment::Reference, compteur : Integer)]
+  [if (r.isMultiple())][r.referencedType.oclAsType(entity::Entity).nameTableShort().first(r.maxIndexSize())/]_IDX1_[compteur/][else][r.containingType.oclAsType(entity::Entity).nameTableShort().first(r.maxIndexSize())/]_IDX1_[compteur/][/if]
 [/template]
-
-[template public nameIndex(r : Reference, compteur : Integer )]
-[if r.isMultiple()]
-[nameTableShort(r.referencedType.oclAsType(entity::Entity)).first(maxIndexSize())/]_IDX1_[compteur/][else]
-[nameTableShort(r.containingType.oclAsType(entity::Entity)).first(maxIndexSize())/]_IDX1_[compteur/][/if]
-[/template]
-
 
 [comment : Old = 26 - get_prefix(e).toString().size() /]
-[query private maxSequenceSize(e : Entity) : Integer = 
-    e.maxTableSize() - 4         
-/]
+[query private maxSequenceSize(e : entity::Entity) : Integer = e.maxTableSize() - 4/]
 
 [comment : Old = 27. /]
-[query private maxColumnPKSize(e : Entity) : Integer = 
-	calculMaxSize(0,3)
-/]
+[query private maxColumnPKSize(e : entity::Entity) : Integer = 0.calculMaxSize(3)/]
 
 [comment : Old = 30 - get_prefix(e).toString().size() /]
-[query private maxTableSize(e : Entity) : Integer = 
-	calculMaxSize(e.get_prefix().size(), 0)
-/]
+[query private maxTableSize(e : entity::Entity) : Integer = e.get_prefix().size().calculMaxSize(0)/]
 
 [comment : Old = 13. /]
-[query private maxIndexSize(any : OclAny) : Integer = 
-	calculMaxSize(0, 8) 
-/]
+[query private maxIndexSize(any : ecore::EObject) : Integer = 0.calculMaxSize(8)/]
 
 [comment : Old = 11. /]
-[query private maxConstraintSize(any : OclAny) : Integer = 
-	calculMaxSize(0, 7) 
-/]
+[query private maxConstraintSize(any : ecore::EObject) : Integer = 0.calculMaxSize(7)/]
 
 [comment : Pour les jointures on fait une seconde passe en enlevant cette fois le suffixe. /]
-[query private maxJointureSize(any : OclAny) : Integer = 
-	calculMaxSize(0, 6)
-/]
+[query private maxJointureSize(any : ecore::EObject) : Integer = 0.calculMaxSize(6)/]
 
 [comment : Old = 30. /]
-[query private maxColumnSize(any : OclAny) : Integer = 
-   calculMaxSize(0, 0)
-/]
+[query private maxColumnSize(any : ecore::EObject) : Integer = 0.calculMaxSize(0)/]
 
 [comment : Old = 27. /]
-[query private maxColumnReferenceSize(any : OclAny) : Integer = 
-	calculMaxSize(0, 0)
-/]
+[query private maxColumnReferenceSize(any : ecore::EObject) : Integer = 0.calculMaxSize(0)/]
 
 [comment : Calcul de la taille maximale en fonction de la base de données et de la cible. /]
 [comment : !!!! Attention aux problemes de performance on doit appeler a chaque fois le service Java..
 ce qui n'est absolument pas optimise. /]
-[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = 
-	if isDbOracle32() then
-		32 - (prefix + suffix) 
-	else 
-		128
-	endif
-/]
+[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = if prefix.isDbOracle32() then 32 - (prefix + suffix) else 128 endif/]

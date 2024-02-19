@@ -1,16 +1,14 @@
+[module genUserMapper('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::mapper::userMapper/]
+
 [comment encoding = UTF-8 /]
-[module genUserMapper('http://www.obeonetwork.org/dsl/environment/3.0.0',                      
-					  'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::mapper::userMapper /]
-
-
-[template public genUserMapper(r : Root)]
-[file (filename(getCommonsSourceDir(), buildPackageMapper(), buildAppliUserMapperGenClassName() + '.java'), false, 'UTF-8')]
-[userMapper()/]
-[/file]
+[template public genUserMapper(r : entity::Root)]
+  [file (r.getCommonsSourceDir().filename(r.buildPackageMapper(), r.buildAppliUserMapperGenClassName() + '.java'), overwrite, 'UTF-8')]
+    [r.userMapper()/]
+  [/file]
 [/template]

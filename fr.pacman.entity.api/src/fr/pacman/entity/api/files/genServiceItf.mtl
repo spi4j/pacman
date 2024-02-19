@@ -1,14 +1,13 @@
+[module genServiceItf('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::serviceutils/]
+[import fr::pacman::entity::api::service::serviceItf/]
+[import fr::pacman::commons::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genServiceItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                      'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::entity::api::common::serviceutils /]
-[import fr::pacman::entity::api::service::serviceItf /]
-[import fr::pacman::commons::common::classes /]
-
-[template public genServiceItf(e : Entity)]
-[file (filename(getCommonsSourceDir(), buildPackageServiceApiEntity(e), buildServiceInterfaceName(e) + '.java'), false, 'UTF-8')]
-[serviceItf(e)/]
-[/file]
+[template public genServiceItf(e : entity::Entity)]
+  [file (e.getCommonsSourceDir().filename(e.buildPackageServiceApiEntity(), e.buildServiceInterfaceName() + '.java'), overwrite, 'UTF-8')]
+    [e.serviceItf()/]
+  [/file]
 [/template]

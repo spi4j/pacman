@@ -1,175 +1,127 @@
+[module names('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+
 [comment encoding = UTF-8 /]
-[module names('http://www.obeonetwork.org/dsl/soa/4.0.0',
-			  'http://www.obeonetwork.org/dsl/entity/3.0.0',
-              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
+[comment : /]
+[template public nameBaseDtoUP(r : environment::Reference)]
+  [r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameBaseDtoUP(r : Reference)]
-[r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toUpperFirst()/]
-[/template]
+[template public nameBaseXtoUP(d : environment::DTO)]
+  [d.buildSimpleDtoName().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameBaseXtoUP(d : DTO)]
-[d.buildSimpleDtoName().toUpperFirst()/]
-[/template]
+[template public nameClassXto(r : environment::Reference)]
+  [r.nameBaseXto().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameClassXto(r : Reference)]
-[r.nameBaseXto().toUpperFirst()/]
-[/template]
+[template public nameBaseXto(r : environment::Reference)]
+  [r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/][/template]
 
 [comment : /]
-[template public nameBaseXto(r : Reference)]
-[r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/]
-[/template]
+[template public nameClassXto(d : environment::DTO)]
+  [d.nameBaseXto().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameClassXto(d : DTO)]
-[d.nameBaseXto().toUpperFirst()/]
-[/template]
-
-[comment : /]
-[template public nameBaseXto(d : DTO)]
-[d.buildSimpleDtoName().toLowerFirst()/]
-[/template]
+[template public nameBaseXto(d : environment::DTO)]
+  [d.buildSimpleDtoName().toLowerFirst()/][/template]
 
 [comment :/]
-[template public nameClassDto(d : DTO)]
-[d.nameBaseDto().toUpperFirst()/]
-[/template]
+[template public nameClassDto(d : environment::DTO)]
+  [d.nameBaseDto().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameBaseAttribute(a : Attribute)]
-[a.name.sanitize().toLowerFirst()/]
-[/template]
+[template public nameBaseAttribute(a : environment::Attribute)]
+  [a.name.sanitize().toLowerFirst()/][/template]
 
 [comment : /]
-[template public nameClassDto(r : Reference)]
-[r.nameBaseDto().toUpperFirst()/]
-[/template]
+[template public nameClassDto(r : environment::Reference)]
+  [r.nameBaseDto().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameParam(p : Property)]
-[nameBaseProperty(p)/]
-[/template]
+[template public nameParam(p : environment::Property)]
+  [p.nameBaseProperty()/][/template]
 
 [comment : /]
-[template public nameParamTab(r : Reference)]
-[nameBaseDto(r)/]
-[/template]
+[template public nameParamTab(r : environment::Reference)]
+  [r.nameBaseDto()/][/template]
 
 [comment : /]
-[template public nameParamInverseId(r : Reference)]
-[nameBaseReferenceInverse(r)/] id
-[/template]
+[template public nameParamInverseId(r : environment::Reference)]
+  [r.nameBaseReferenceInverse()/] id[/template]
 
 [comment : /]
-[template public nameParam(p : Parameter)]
-[nameBaseParameter(p)/]
-[/template]
+[template public nameParam(p : soa::Parameter)]
+  [p.nameBaseParameter()/][/template]
 
 [comment : /]
-[template private nameBaseParameter(p : Parameter)]
-[p.name.sanitize().toLowerFirst()/]
-[/template]
+[template private nameBaseParameter(p : soa::Parameter)]
+  [p.name.sanitize().toLowerFirst()/][/template]
 
 [comment : /]
-[template private nameBaseProperty(p : Property)]
-[p.name.sanitize().toLowerFirst()/]
-[/template]
+[template private nameBaseProperty(p : environment::Property)]
+  [p.name.sanitize().toLowerFirst()/][/template]
 
 [comment : /]
-[template public nameParamInverse(r : Reference)]
-[nameBaseReferenceInverse(r)/]
-[/template]
+[template public nameParamInverse(r : environment::Reference)]
+  [r.nameBaseReferenceInverse()/][/template]
 
 [comment : /]
-[template public nameParamId(r : Reference)]
-[nameBaseReference(r)/] id
+[template public nameParamId(r : environment::Reference)]
+  [r.nameBaseReference()/] id[/template]
+
+[comment  : /]
+[template public nameBaseReference(r : environment::Reference)]
+  [r.name.sanitize().toLowerFirst()/][/template]
+
+[comment : /]
+[template public nameBaseReferenceTab(r : environment::Reference)]
+  [if (r.getListPrefix().size() = 0)][r.nameBaseReference()/][else][r.getListPrefix()/]_[r.nameBaseReference()/][/if]
 [/template]
 
 [comment  : /]
-[template public nameBaseReference(r : Reference)]
-[r.name.sanitize().toLowerFirst()/]
+[template public nameBaseReferenceUpperFirst(r : environment::Reference)]
+  [r.referencedType.oclAsType(environment::DTO).name.sanitize().toUpperFirst()/][/template]
+
+[comment : /]
+[template public nameBaseDto(r : environment::Reference)]
+  [r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/][/template]
+
+[comment : /]
+[template public nameBaseReferenceInverse(r : environment::Reference)]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDto() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
 [/template]
 
 [comment : /]
-[template public nameBaseReferenceTab(r : Reference)]
-[if ((getListPrefix()).size() = 0)][r.nameBaseReference()/][else]
-[getListPrefix()/]_[r.nameBaseReference()/][/if]
+[template public nameBaseReferenceInverseUpperFirst(r : environment::Reference)]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/][else][r.oppositeOf.nameBaseReference().toString().toUpperFirst()/][/if]
 [/template]
 
 [comment  : /]
-[template public nameBaseReferenceUpperFirst(r : Reference)]
-[r.referencedType.oclAsType(DTO).name.sanitize().toUpperFirst()/]
-[/template]
+[template public nameBaseDto(d : environment::DTO)]
+  [d.buildSimpleDtoName().toLowerFirst()/][/template]
 
 [comment : /]
-[template public nameBaseDto(r : Reference)]
-[r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/]
-[/template]
+[template public nameBaseDtoUP(d : environment::DTO)]
+  [d.buildSimpleDtoName().toUpperFirst()/][/template]
 
 [comment : /]
-[template public nameBaseReferenceInverse(r : Reference)]
-[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(DTO).nameBaseDto() + r.name.toUpperFirst()/][else]
-[nameBaseReference(r.oppositeOf)/][/if]
-[/template]
+[template public getNameSetterListDto(r : environment::Reference)]
+  [('set ' + r.name.normalize()).apply_methodDefault()/][/template]
 
 [comment : /]
-[template public nameBaseReferenceInverseUpperFirst(r : Reference)]
-[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(DTO).nameBaseDtoUP()/][else]
-[nameBaseReference(r.oppositeOf).toString().toUpperFirst()/][/if]
-[/template]
-
-[comment  : /]
-[template public nameBaseDto(d : DTO)]
-[d.buildSimpleDtoName().toLowerFirst()/]
-[/template]
-
-[comment : /]
-[template public nameBaseDtoUP(d : DTO)]
-[d.buildSimpleDtoName().toUpperFirst()/]
-[/template]
-
-[comment : /]
-[template public getNameSetterListDto(r : Reference)]
-[apply_methodDefault('set '+ 
-(r.name.normalize()) )/]
-[/template]
-
-[comment : /]
-[template public getNameGetterListDto(r : Reference)]
-[apply_methodDefault('get '+ apply_attributeMultiple(r.name.normalize()) )/]
-[/template]
+[template public getNameGetterListDto(r : environment::Reference)]
+  [('get ' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault()/][/template]
 
 [comment : Recuperation du nom pour un champ additionnel./]
 [template public getNameColumn(columnProp : String)]
-[getConfigValue(nameColumnProperty(columnProp)).toLower() /]
-[/template]
+  [columnProp.nameColumnProperty().getConfigValue().toLower()/][/template]
 
 [comment : /]
-[query public nameSimpleProperty(p : Property) : String =
-    if (p.oclIsKindOf(Reference)) then
-        if (p.name.oclIsUndefined() or p.name.size() = 0) then
-            if (p.oclAsType(Reference).containingType.oclIsUndefined()) then
-                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
-            else
-                'ref' + p.oclAsType(Reference).containingType.name.sanitize().toUpperFirst() + namePK_ID()
-            endif
-        else
-            p.name.sanitize().toLowerFirst() + namePK_ID()
-        endif
-    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
-        'XXXattribut sans nomXXX'
-    else
-        p.oclAsType(Reference).nameBaseReference()
-    endif endif
-/]
+[query public nameSimpleProperty(p : environment::Property) : String = if p.oclIsKindOf(environment::Reference) then if p.name = null or p.name.size() = 0 then if p.oclAsType(environment::Reference).containingType = null then 'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)' else 'ref' + p.oclAsType(environment::Reference).containingType.name.sanitize().toUpperFirst() + p.namePK_ID() endif else p.name.sanitize().toLowerFirst() + p.namePK_ID() endif else if p.name = null or p.name.size() = 0 then 'XXXattribut sans nomXXX' else p.oclAsType(environment::Reference).nameBaseReference() endif endif/]

@@ -1,477 +1,462 @@
-[comment encoding = UTF-8 /]
-[module referentielEntity('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module referentielEntity('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::imports /]
-
-
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::methodes /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::entity::api::common::classesEntity /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::methodes/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::entity::api::common::classesEntity/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
 [import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[template public referentielEntity(e : Entity)]
-[licence()/]
-package  [buildPackagePersistenceReferentielEntity(e)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[e.writeImports()/]
-
-// [/protected]
-
-[comClass(roleReferentielEntity())/]
-public final class [buildReferentielEntityClassName(e)/]
-{
-
-    // CONSTANTES
-
-    /** Le formater des dates lues dans les fichiers csv */
-    private static final DateFormat [apply_attributeFinalStatic('date format csv')/] = new SimpleDateFormat( "dd/MM/yyyy" );
-
-    /** Le logger de la classe */
-    private static final Logger [apply_attributeFinalStatic('LOG')/] = LogManager.getLogger( [buildReferentielEntityClassName(e)/].class );
-
-    /** Le dao de l'entite [e.name/] */
-    private static final [e.buildDaoInterfaceName()/] [apply_attributeFinalStatic(e.name + ' dao')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildDaoName(e))/]();
-    [for (r : Reference | e.referencingStar())]
-
-    /** Le dao de l'entite [r.containingType.oclAsType(entity::Entity).name/] */
-    private static final [r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName()/] [apply_attributeFinalStatic(r.containingType.oclAsType(entity::Entity).name + ' dao')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildDaoName(r.containingType.oclAsType(entity::Entity)))/]();
-    [/for]
-
-    // Constantes [buildReferentielEntityClassName(e)/]
-    // [protected (e.getUserCodeId('Constantes ' + buildReferentielEntityClassName(e)))]
-
-    // [/protected]
-
-
-   // ATTRIBUTS
-
-   // Attributs [buildReferentielEntityClassName(e)/]
-   // [protected (e.getUserCodeId('Attributs ' + buildReferentielEntityClassName(e)))]
-
-   // [/protected]
-
-
-   // METHODES
-
-    /**
-     * Constructeur.
-     */
-    private [buildReferentielEntityClassName(e)/] ()
-    {
-    }
-
-
-   /**
-    * Chargement référentiel de l'entité '[e.name/]'.
-    */
-   public static void [apply_methodDefault('charge entity')/] ()
-   {
-      /** Initialisations, Log de début de traitement */
-      String [apply_variableDefault('nom fic csv')/] = "[e.ficCsv()/]";
-      String [apply_variableDefault('nom fic csv complet')/] = [apply_classDefault( e.ancestors(Namespace).oclAsType(Namespace).name  + ' referentiel')/].[apply_methodDefault('get rep csv')/]() + [apply_variableDefault('nom fic csv')/];
-      String [apply_variableDefault('physical unique')/] = "[physicalUnique(e)/]";
-    [if e.hasExcludeCriteria()]
-      String [apply_variableDefault('exclude criteria')/] = "[excludeCriteria(e)/]";
-      MultiMap <String,String> [apply_variableDefault('map exclude criteria')/] = [apply_classDefault('referentiel utils')/].[apply_methodDefault('split filter criteria')/] ([apply_variableDefault('exclude criteria')/]);
-    [/if]
-    [if e.hasIncludeCriteria()]
-      String [apply_variableDefault('include criteria')/] = "[includeCriteria(e)/]";
-      MultiMap <String,String> [apply_variableDefault('map include criteria')/] = [apply_classDefault('referentiel utils')/].[apply_methodDefault('split filter criteria')/] ([apply_variableDefault('include criteria')/]);
-    [/if]
-
-      [apply_attributeFinalStatic('LOG')/].info( "/** DEBUT Import Referentiel Entity [e.name/] **/" );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nom du fichier: " + [apply_variableDefault('nom fic csv')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], metadata PHYSICAL_UNIQUE: " + [apply_variableDefault('physical unique')/] );
-    [if e.hasReferencingStar()]
-    [for (r : Reference | e.referencingStar())]
-      final String [apply_variableFinal('Fk Critere ' + r.containingType.name)/] = "[fkCritere(r)/]" ;
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], Relation de [r.containingType.name/] vers [r.referencedType.name/], nom du fkCritere: " + [apply_variableFinal('Fk Critere ' + r.containingType.name)/] );
-    [/for]
-    [/if]
-
-      long [apply_variableDefault('nb lignes traitees')/] = 0;
-      long [apply_variableDefault('nb lignes filtrees')/] = 0;
-      long [apply_variableDefault('nb lignes create')/] = 0;
-      long [apply_variableDefault('nb lignes update')/] = 0;
-      long [apply_variableDefault('nb lignes delete')/] = 0;
-      long [apply_variableDefault('nb lignes sans traitement')/] = 0;
-      Date [apply_variableDefault('today')/] = new Date();
-
-      try
+[comment encoding = UTF-8 /]
+[template public referentielEntity(e : entity::Entity)]
+  [e.licence()/]
+  package  [e.buildPackagePersistenceReferentielEntity()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [e.writeImports()/]
+    
+  [/protected]
+  
+  
+  [e.comClass(e.roleReferentielEntity())/]
+  public final class [e.buildReferentielEntityClassName()/]
+  {
+  
+      // CONSTANTES
+  
+      /** Le formater des dates lues dans les fichiers csv */
+      private static final DateFormat ['date format csv'.apply_attributeFinalStatic()/] = new SimpleDateFormat( "dd/MM/yyyy" );
+  
+      /** Le logger de la classe */
+      private static final Logger ['LOG'.apply_attributeFinalStatic()/] = LogManager.getLogger( [e.buildReferentielEntityClassName()/].class );
+  
+      /** Le dao de l'entite [e.name/] */
+      private static final [e.buildDaoInterfaceName()/] [(e.name + ' dao').apply_attributeFinalStatic()/] = [e.buildParamPersistenceClassName()/].getUserPersistence().[('get ' + e.buildDaoName()).apply_methodDefault()/]();
+  [for (r : environment::Reference | e.referencingStar())]
+    
+        /** Le dao de l'entite [r.containingType.oclAsType(entity::Entity).name/] */
+        private static final [r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName()/] [(r.containingType.oclAsType(entity::Entity).name + ' dao').apply_attributeFinalStatic()/] = [r.buildParamPersistenceClassName()/].getUserPersistence().[('get ' + r.containingType.oclAsType(entity::Entity).buildDaoName()).apply_methodDefault()/]();
+  [/for]
+  
+      // Constantes [e.buildReferentielEntityClassName()/]
+      [protected (e.getUserCodeId('Constantes ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+        
+      [/protected]
+  
+  
+  
+     // ATTRIBUTS
+  
+     // Attributs [e.buildReferentielEntityClassName()/]
+     [protected (e.getUserCodeId('Attributs ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  
+     // METHODES
+  
+      /**
+       * Constructeur.
+       */
+      private [e.buildReferentielEntityClassName()/] ()
       {
-
-        /** Exception si le nom de fichier ou la contrainte d'unicite ne sont pas renseignés */
-        if ( "".equals ( [apply_variableDefault('nom fic csv')/] ) )
-        {
-          throw new Spi4jValidationException( "Nom de fichier non renseigné dans la metaData FIC_CSV de [e.name/]" );
-        }
-        if ( "".equals ( [apply_variableDefault('physical unique')/] ) )
-        {
-          throw new Spi4jValidationException( "Contrainte d'unicité non renseignée dans la metaData PHYSICAL_UNIQUE de [e.name/]" );
-        }
-    [if e.hasReferencingStar()]
-
-        /** Initialisation  des noms des FK_CRITERE; exception si ils sont mal renseignés */
-    [for (r : Reference | e.referencingStar())]
-        [buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity))/] [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/] = null;
-        [buildEntityColumnEnumName(r.containingType.oclAsType(entity::Entity))/] [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/] = null;
-          [for (att : Attribute | r.referencedType.oclAsType(entity::Entity).attributes )]
-           [if (physicalName(att).equalsIgnoreCase(fkCritere(r)))]
-        [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/] = [buildEntityColumnEnumName(r.referencedType.oclAsType(entity::Entity))/].[apply_attributeEnum(att.nameSimpleProperty())/];
-           [/if]
-          [/for]
-          [for (att : Attribute | r.containingType.oclAsType(entity::Entity).attributes )]
-            [if (physicalName(att).equalsIgnoreCase(fkCritere(r)))]
-        [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/] = [buildEntityColumnEnumName(r.containingType.oclAsType(entity::Entity))/].[apply_attributeEnum(att.nameSimpleProperty())/];
-            [/if]
-          [/for]
-        if ( ( [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/] == null ) || ( [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/] == null ) )
-        {
-          throw new Spi4jValidationException( "Metadata FK_CRITERE mal renseignée dans la relation de [r.containingType.name/] vers [e.name/]" );
-        }
+      }
+  
+  
+     /**
+      * Chargement référentiel de l'entité '[e.name/]'.
+      */
+     public static void ['charge entity'.apply_methodDefault()/] ()
+     {
+        /** Initialisations, Log de début de traitement */
+        String ['nom fic csv'.apply_variableDefault()/] = "[e.ficCsv()/]";
+        String ['nom fic csv complet'.apply_variableDefault()/] = [(e.ancestors(environment::Namespace)->collect(temp1 | temp1.oclAsType(environment::Namespace))->collect(temp2 | temp2.name) + ' referentiel').apply_classDefault()/].['get rep csv'.apply_methodDefault()/]() + ['nom fic csv'.apply_variableDefault()/];
+        String ['physical unique'.apply_variableDefault()/] = "[e.physicalUnique()/]";
+  [if (e.hasExcludeCriteria())]
+          String ['exclude criteria'.apply_variableDefault()/] = "[e.excludeCriteria()/]";
+          MultiMap <String,String> ['map exclude criteria'.apply_variableDefault()/] = ['referentiel utils'.apply_classDefault()/].['split filter criteria'.apply_methodDefault()/] (['exclude criteria'.apply_variableDefault()/]);
+  [/if]
+  [if (e.hasIncludeCriteria())]
+          String ['include criteria'.apply_variableDefault()/] = "[e.includeCriteria()/]";
+          MultiMap <String,String> ['map include criteria'.apply_variableDefault()/] = ['referentiel utils'.apply_classDefault()/].['split filter criteria'.apply_methodDefault()/] (['include criteria'.apply_variableDefault()/]);
+  [/if]
+  
+        ['LOG'.apply_attributeFinalStatic()/].info( "/** DEBUT Import Referentiel Entity [e.name/] **/" );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nom du fichier: " + ['nom fic csv'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], metadata PHYSICAL_UNIQUE: " + ['physical unique'.apply_variableDefault()/] );
+  [if (e.hasReferencingStar())]
+    [for (r : environment::Reference | e.referencingStar())]
+            final String [('Fk Critere ' + r.containingType.name).apply_variableFinal()/] = "[r.fkCritere()/]" ;
+            ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], Relation de [r.containingType.name/] vers [r.referencedType.name/], nom du fkCritere: " + [('Fk Critere ' + r.containingType.name).apply_variableFinal()/] );
     [/for]
-    [/if]
-	    
-        /** Ouverture du reader Csv, on ignore la premiere ligne qui correspond à l entete */
-        CSVReader [apply_variableDefault('csv reader')/] =  new CSVReader (new FileReader( [apply_variableDefault('nom fic csv complet')/]), ';', '"', 1);
-        String ['['/]] [apply_variableDefault('csv line')/];
-
-   	    // PreTraitement [buildReferentielEntityClassName(e)/]
-   	    // [protected (e.getUserCodeId('PreTraitement ' + buildReferentielEntityClassName(e)))]
-
-        // [/protected]
-
-        /** Parcours une à une des lignes du fichier Csv */
-        while ( ( [apply_variableDefault('csv line')/] = [apply_variableDefault('csv reader')/].readNext() ) != null )
+  [/if]
+  
+        long ['nb lignes traitees'.apply_variableDefault()/] = 0;
+        long ['nb lignes filtrees'.apply_variableDefault()/] = 0;
+        long ['nb lignes create'.apply_variableDefault()/] = 0;
+        long ['nb lignes update'.apply_variableDefault()/] = 0;
+        long ['nb lignes delete'.apply_variableDefault()/] = 0;
+        long ['nb lignes sans traitement'.apply_variableDefault()/] = 0;
+        Date ['today'.apply_variableDefault()/] = new Date();
+  
+        try
         {
-          /** les variables de la boucle de chargement de fichier */
-          int  [apply_variableDefault('cptr criteria')/] = 0;
-          boolean [apply_variableDefault('suppression enregistrement')/] = false;
-          boolean [apply_variableDefault('filter enregistrement')/] = false;
-          String [apply_variableDefault(getXtopSupName())/] =  DatabaseLineStatus_Enum.deletedForNewReference.get_value();
-          /** TableCriteria de recherche de l'entite existante '[e.name/]', à partir du critere d unicite '[physicalUnique(e)/]' */
-          final TableCriteria <[e.buildEntityColumnEnumName()/]> [apply_variableFinal('tableCriteria ' + e.name)/] = new TableCriteria <> ("find by criteria en cherchant sur [e.name/]");
-          /** La variable entity renseignée par le contenu du fichier [e.ficCsv()/] */
-          [buildEntityInterfaceName(e)/] [apply_variableDefault(e.name + ' fichier')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildEntityName(e))/]();
-
-
-    [for (a : Attribute | e.attributesNoPk())]
-          /** L'attribut [a.name/]	*/
-          [apply_variableDefault(e.name + ' fichier')/].[apply_methodSet(nameSimpleProperty(a))/]( [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][valueForColumn(a, e.buildEntityColumnEnumName(), apply_variableDefault('csv line'))/][/if] );
-       [if e.hasExcludeCriteria()]
-         [if e.excludeCriteria().contains(a.physicalName().toString())]
-          @SuppressWarnings("unchecked")
-          Collection <String> [apply_variableDefault('values exclude ' + a.nameSimpleProperty())/] = (Collection <String>) [apply_variableDefault('map exclude criteria')/].get( "[a.physicalName()/]" );
-          if ( [apply_variableDefault('values exclude ' + a.nameSimpleProperty())/].contains( [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][valueForColumn(a, e.buildEntityColumnEnumName(), apply_variableDefault('csv line'))/][/if] ) )
+  
+          /** Exception si le nom de fichier ou la contrainte d'unicite ne sont pas renseignés */
+          if ( "".equals ( ['nom fic csv'.apply_variableDefault()/] ) )
           {
-            [apply_variableDefault('filter enregistrement')/] = true;
+            throw new Spi4jValidationException( "Nom de fichier non renseigné dans la metaData FIC_CSV de [e.name/]" );
           }
-         [/if]
-       [/if]
-       [if e.hasIncludeCriteria()]
-         [if e.includeCriteria().contains(a.physicalName().toString())]
-          @SuppressWarnings("unchecked")
-          Collection <String> [apply_variableDefault('values include ' + a.nameSimpleProperty())/] = (Collection <String>) [apply_variableDefault('map include criteria')/].get( "[a.physicalName()/]" );
-          if ( ![apply_variableDefault('values include ' + a.nameSimpleProperty())/].contains( [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][valueForColumn(a, e.buildEntityColumnEnumName(), apply_variableDefault('csv line'))/][/if] ) )
+          if ( "".equals ( ['physical unique'.apply_variableDefault()/] ) )
           {
-  	        [apply_variableDefault('filter enregistrement')/] = true;
+            throw new Spi4jValidationException( "Contrainte d'unicité non renseignée dans la metaData PHYSICAL_UNIQUE de [e.name/]" );
           }
-         [/if]
-       [/if]
-       [if a.physicalName().toString().contains('_MAJ')]
-          if ( "S".equals ([apply_variableDefault(e.name + ' fichier')/].[apply_methodGet(nameSimpleProperty(a))/]()) )
-          {
-            [apply_variableDefault('suppression enregistrement')/] = true;
-          }
-       [/if]
-       [if a.physicalName().toString().contains('_DTDEB')]
-          if ( [apply_variableDefault(e.name + ' fichier')/] .[apply_methodGet(nameSimpleProperty(a))/]().after([apply_variableDefault('today')/]) )
-          {
-            [apply_variableDefault(getXtopSupName())/] = DatabaseLineStatus_Enum.active.get_value();
-          }
-       [/if]
-       [if a.physicalName().toString().contains('_DTFIN')]
-          if ( [apply_variableDefault(e.name + ' fichier')/] .[apply_methodGet(nameSimpleProperty(a))/]().before([apply_variableDefault('today')/]) )
-          {
-            [apply_variableDefault(getXtopSupName())/] = DatabaseLineStatus_Enum.active.get_value();
-          }
-       [/if]
-       [if physicalUnique(e).toString().contains(a.physicalName())]
-          if ( [apply_variableDefault('cptr criteria')/] > 0 )
-          {
-             [apply_variableDefault('tableCriteria ' + e.name)/].addCriteria( OperatorLogical_Enum.and, [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/], Operator_Enum.equals, [apply_variableDefault(e.name + ' fichier')/].[apply_methodGet(nameSimpleProperty(a))/]() );
-          }
-          else
-          {
-             [apply_variableDefault('tableCriteria ' + e.name)/].addCriteria( [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/], Operator_Enum.equals, [apply_variableDefault(e.name + ' fichier')/].[apply_methodGet(nameSimpleProperty(a))/]() );
-          }
-          [apply_variableDefault('cptr criteria')/] ++;
-       [/if]
-
-	[/for]
-    [for (a : Attribute | e.getInheritDtoAttributes())]
-          /** L'attribut [a.name/]	*/
-          [apply_variableDefault(e.name + ' fichier')/].[apply_methodSet(nameSimpleProperty(a))/]( [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][valueForColumn(a, e.buildEntityColumnEnumName(), apply_variableDefault('csv line'))/][/if] );
-       [if e.hasExcludeCriteria()]
-         [if e.excludeCriteria().contains(a.physicalName().toString())]
-          @SuppressWarnings("unchecked")
-          Collection <String> [apply_variableDefault('values exclude ' + a.nameSimpleProperty())/] = (Collection <String>) [apply_variableDefault('map exclude criteria')/].get( "[a.physicalName()/]" );
-          if ( [apply_variableDefault('values exclude ' + a.nameSimpleProperty())/].contains( [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][valueForColumn(a, e.buildEntityColumnEnumName(), apply_variableDefault('csv line'))/][/if] ) )
-          {
-            [apply_variableDefault('filter enregistrement')/] = true;
-          }
-         [/if]
-       [/if]
-       [if e.hasIncludeCriteria()]
-         [if e.includeCriteria().contains(a.physicalName().toString())]
-         @SuppressWarnings("unchecked")	
-         Collection <String> [apply_variableDefault('values include ' + a.nameSimpleProperty())/] = (Collection <String>) [apply_variableDefault('map include criteria')/].get( "[a.physicalName()/]" );
-         if ( ![apply_variableDefault('values include ' + a.nameSimpleProperty())/].contains( [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][valueForColumn(a, e.buildEntityColumnEnumName(), apply_variableDefault('csv line'))/][/if] ) )
-         {
-            [apply_variableDefault('filter enregistrement')/] = true;
-         }
-         [/if]
-       [/if]
-       [if a.physicalName().toString().contains('_MAJ')]
-          if ( "S".equals ([apply_variableDefault(e.name + ' fichier')/].[apply_methodGet(nameSimpleProperty(a))/]()) )
-		  {
-            [apply_variableDefault('suppression enregistrement')/] = true;
-          }
-       [/if]
-       [if a.physicalName().toString().contains('_DTDEB')]
-          if ( [apply_variableDefault(e.name + ' fichier')/] .[apply_methodGet(nameSimpleProperty(a))/]().after([apply_variableDefault('today')/]) )
-          {
-            [apply_variableDefault(getXtopSupName())/] = DatabaseLineStatus_Enum.active.get_value();
-          }
-       [/if]
-       [if a.physicalName().toString().contains('_DTFIN')]
-          if ( [apply_variableDefault(e.name + ' fichier')/] .[apply_methodGet(nameSimpleProperty(a))/]().before([apply_variableDefault('today')/]) )
-		  {
-            [apply_variableDefault(getXtopSupName())/] = DatabaseLineStatus_Enum.active.get_value();
-          }
-       [/if]
-       [if physicalUnique(e).toString().contains(a.physicalName())]
-          if ( [apply_variableDefault('cptr criteria')/] > 0 )
-          {
-             [apply_variableDefault('tableCriteria ' + e.name)/].addCriteria( OperatorLogical_Enum.and, [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/], Operator_Enum.equals, [apply_variableDefault(e.name + ' fichier')/].[apply_methodGet(nameSimpleProperty(a))/]() );
-          }
-          else
-          {
-             [apply_variableDefault('tableCriteria ' + e.name)/].addCriteria( [e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/], Operator_Enum.equals, [apply_variableDefault(e.name + ' fichier')/].[apply_methodGet(nameSimpleProperty(a))/]() );
-          }
-          [apply_variableDefault('cptr criteria')/] ++;
-       [/if]
-
+  [if (e.hasReferencingStar())]
+    
+            /** Initialisation  des noms des FK_CRITERE; exception si ils sont mal renseignés */
+    [for (r : environment::Reference | e.referencingStar())]
+              [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/] [(r.referencedType.name + 'Column' + r.containingType.name).apply_variableDefault()/] = null;
+              [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/] [(r.containingType.name + 'Column' + r.containingType.name).apply_variableDefault()/] = null;
+      [for (att : environment::Attribute | r.referencedType.oclAsType(entity::Entity).attributes)]
+        [if (att.physicalName().equalsIgnoreCase(r.fkCritere()))]
+                  [(r.referencedType.name + 'Column' + r.containingType.name).apply_variableDefault()/] = [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[att.nameSimpleProperty().apply_attributeEnum()/];
+        [/if]
+      [/for]
+      [for (att : environment::Attribute | r.containingType.oclAsType(entity::Entity).attributes)]
+        [if (att.physicalName().equalsIgnoreCase(r.fkCritere()))]
+                  [(r.containingType.name + 'Column' + r.containingType.name).apply_variableDefault()/] = [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[att.nameSimpleProperty().apply_attributeEnum()/];
+        [/if]
+      [/for]
+              if ( ( [(r.referencedType.name + 'Column' + r.containingType.name).apply_variableDefault()/] == null ) || ( [(r.containingType.name + 'Column' + r.containingType.name).apply_variableDefault()/] == null ) )
+              {
+                throw new Spi4jValidationException( "Metadata FK_CRITERE mal renseignée dans la relation de [r.containingType.name/] vers [e.name/]" );
+              }
     [/for]
-    [if hasAutomaticColumns()]
-
-
-         [for (columnProp : String | get_automaticColumnsProperties())]
-          /** La colonne automatique [e.get_nameColumn(columnProp).toLower()/] */
-            [if columnProp.contains('xtopsup')]
-          [apply_variableDefault(e.name + ' fichier')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]( [apply_variableDefault(getXtopSupName())/] );
-            [else]
-          [apply_variableDefault(e.name + ' fichier')/].[e.apply_methodSet(e.get_nameColumn(columnProp).toLower())/]( [defaultValueForColumnType(e, e.get_typeColumn(columnProp))/] );
-            [/if]
-
-         [/for]
+  [/if]
+  	    
+          /** Ouverture du reader Csv, on ignore la premiere ligne qui correspond à l entete */
+          CSVReader ['csv reader'.apply_variableDefault()/] =  new CSVReader (new FileReader( ['nom fic csv complet'.apply_variableDefault()/]), ';', '"', 1);
+          String ['['/]] ['csv line'.apply_variableDefault()/];
+  
+     	    // PreTraitement [e.buildReferentielEntityClassName()/]
+     	    [protected (e.getUserCodeId('PreTraitement ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+            
+          [/protected]
+  
+  
+          /** Parcours une à une des lignes du fichier Csv */
+          while ( ( ['csv line'.apply_variableDefault()/] = ['csv reader'.apply_variableDefault()/].readNext() ) != null )
+          {
+            /** les variables de la boucle de chargement de fichier */
+            int  ['cptr criteria'.apply_variableDefault()/] = 0;
+            boolean ['suppression enregistrement'.apply_variableDefault()/] = false;
+            boolean ['filter enregistrement'.apply_variableDefault()/] = false;
+            String [e.getXtopSupName().apply_variableDefault()/] =  DatabaseLineStatus_Enum.deletedForNewReference.get_value();
+            /** TableCriteria de recherche de l'entite existante '[e.name/]', à partir du critere d unicite '[e.physicalUnique()/]' */
+            final TableCriteria <[e.buildEntityColumnEnumName()/]> [('tableCriteria ' + e.name).apply_variableFinal()/] = new TableCriteria <> ("find by criteria en cherchant sur [e.name/]");
+            /** La variable entity renseignée par le contenu du fichier [e.ficCsv()/] */
+            [e.buildEntityInterfaceName()/] [(e.name + ' fichier').apply_variableDefault()/] = [e.buildParamPersistenceClassName()/].getUserPersistence().[('get ' + e.buildEntityName()).apply_methodDefault()/]();
+  
+  
+  [for (a : environment::Attribute | e.attributesNoPk())]
+              /** L'attribut [a.name/]	*/
+              [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
+     );
+    [if (e.hasExcludeCriteria())]
+      [if (e.excludeCriteria().contains(a.physicalName().toString()))]
+                  @SuppressWarnings("unchecked")
+                  Collection <String> [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map exclude criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
+                  if ( [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
+         ) )
+                  {
+                    ['filter enregistrement'.apply_variableDefault()/] = true;
+                  }
+      [/if]
     [/if]
-    [if e.hasReferencingStar()]
-
-
-    [for (r : Reference | e.referencingStar())]
-          /** Chargement de la foreign key de '[e.name/]' vers '[r.containingType.name/]', à partir du fkCritere '[fkCritere(r)/]' */
-          final TableCriteria <[r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/]> [apply_variableFinal('tableCriteria ' + r.containingType.name)/] = new TableCriteria <> ("find by criteria en cherchant sur [r.containingType.name/]");
-          [apply_variableDefault('tableCriteria ' + r.containingType.name)/].addOrderByDesc( [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeEnum('date de debut')/] );
-          [apply_variableDefault('tableCriteria ' + r.containingType.name)/].addCriteria( [apply_variableDefault(r.containingType.name + 'Column' + r.containingType.name )/], Operator_Enum.equals, [apply_variableDefault('csv line')/]['['/] [apply_variableDefault(r.referencedType.name + 'Column' + r.containingType.name )/].ordinal() - 1 [']'/] );
-          final List <[buildEntityInterfaceName(r.containingType.oclAsType(entity::Entity))/]> [apply_variableFinal('all ' + r.containingType.name)/] =  [apply_attributeFinalStatic(r.containingType.name + ' dao')/].findByCriteria( [apply_variableDefault('tableCriteria ' + r.containingType.name)/] );
-          [buildEntityInterfaceName(r.containingType.oclAsType(entity::Entity))/] [apply_variableDefault('entity ' + r.containingType.name)/] = null;
-          if ( [apply_variableFinal('all ' + r.containingType.name)/].size() > 0)
-          {
-            [apply_variableDefault('entity' + r.containingType.name)/] = [apply_variableFinal('all ' + r.containingType.name)/].get( 0 );
-          }
-          if ( [apply_variableDefault('entity ' + r.containingType.name)/] != null )
-          {
-            [apply_variableDefault(e.name + ' fichier')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/]( [apply_variableDefault('entity ' + r.containingType.name)/].getId() );
-          }
-
-    [/for]
+    [if (e.hasIncludeCriteria())]
+      [if (e.includeCriteria().contains(a.physicalName().toString()))]
+                  @SuppressWarnings("unchecked")
+                  Collection <String> [('values include ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map include criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
+                  if ( ![('values include ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
+         ) )
+                  {
+          	        ['filter enregistrement'.apply_variableDefault()/] = true;
+                  }
+      [/if]
     [/if]
-
-          // PreSave [buildReferentielEntityClassName(e)/]
-          // [protected (e.getUserCodeId('PreSave ' + buildReferentielEntityClassName(e)))]
-
-          // [/protected]
-
-          /** On recupere les enregistrements en base de l'entite [e.name/] correspondant à la ligne lue */
-          final List <[buildEntityInterfaceName(e)/]> [apply_variableFinal('all ' + e.name)/] =  [apply_attributeFinalStatic(e.name + ' dao')/].findByCriteria( [apply_variableDefault('tableCriteria ' + e.name)/] );
-
-          /** Enregistrement modification ou suppression selon le code modification et l'existant en base pour l'entite [e.name/] */
-          if (	[apply_variableDefault('filter enregistrement')/] )
-          {
-            [apply_variableDefault('nb lignes filtrees')/] ++;
-          }
-          else
-          {
-            if ( [apply_variableFinal('all ' + e.name)/].size() == 0 )
-            {
-                if ( [apply_variableDefault('suppression enregistrement')/] == false )
+    [if (a.physicalName().toString().contains('_MAJ'))]
+                if ( "S".equals ([(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]()) )
                 {
-                    [apply_attributeFinalStatic(e.name + ' dao')/].create( [apply_variableDefault(e.name + ' fichier')/] );
-                    [apply_variableDefault('nb lignes create')/] ++;
+                  ['suppression enregistrement'.apply_variableDefault()/] = true;
+                }
+    [/if]
+    [if (a.physicalName().toString().contains('_DTDEB'))]
+                if ( [(e.name + ' fichier').apply_variableDefault()/] .[a.nameSimpleProperty().apply_methodGet()/]().after(['today'.apply_variableDefault()/]) )
+                {
+                  [a.getXtopSupName().apply_variableDefault()/] = DatabaseLineStatus_Enum.active.get_value();
+                }
+    [/if]
+    [if (a.physicalName().toString().contains('_DTFIN'))]
+                if ( [(e.name + ' fichier').apply_variableDefault()/] .[a.nameSimpleProperty().apply_methodGet()/]().before(['today'.apply_variableDefault()/]) )
+                {
+                  [a.getXtopSupName().apply_variableDefault()/] = DatabaseLineStatus_Enum.active.get_value();
+                }
+    [/if]
+    [if (e.physicalUnique().toString().contains(a.physicalName()))]
+                if ( ['cptr criteria'.apply_variableDefault()/] > 0 )
+                {
+                   [('tableCriteria ' + e.name).apply_variableDefault()/].addCriteria( OperatorLogical_Enum.and, [e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/], Operator_Enum.equals, [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]() );
                 }
                 else
                 {
-                    [apply_variableDefault('nb lignes sans traitement')/] ++;
+                   [('tableCriteria ' + e.name).apply_variableDefault()/].addCriteria( [e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/], Operator_Enum.equals, [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]() );
                 }
+                ['cptr criteria'.apply_variableDefault()/] ++;
+    [/if]
+    
+  [/for]
+  [for (a : environment::Attribute | e.getInheritDtoAttributes())]
+              /** L'attribut [a.name/]	*/
+              [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
+     );
+    [if (e.hasExcludeCriteria())]
+      [if (e.excludeCriteria().contains(a.physicalName().toString()))]
+                  @SuppressWarnings("unchecked")
+                  Collection <String> [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map exclude criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
+                  if ( [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
+         ) )
+                  {
+                    ['filter enregistrement'.apply_variableDefault()/] = true;
+                  }
+      [/if]
+    [/if]
+    [if (e.hasIncludeCriteria())]
+      [if (e.includeCriteria().contains(a.physicalName().toString()))]
+                 @SuppressWarnings("unchecked")	
+                 Collection <String> [('values include ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map include criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
+                 if ( ![('values include ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
+         ) )
+                 {
+                    ['filter enregistrement'.apply_variableDefault()/] = true;
+                 }
+      [/if]
+    [/if]
+    [if (a.physicalName().toString().contains('_MAJ'))]
+                if ( "S".equals ([(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]()) )
+      		  {
+                  ['suppression enregistrement'.apply_variableDefault()/] = true;
+                }
+    [/if]
+    [if (a.physicalName().toString().contains('_DTDEB'))]
+                if ( [(e.name + ' fichier').apply_variableDefault()/] .[a.nameSimpleProperty().apply_methodGet()/]().after(['today'.apply_variableDefault()/]) )
+                {
+                  [a.getXtopSupName().apply_variableDefault()/] = DatabaseLineStatus_Enum.active.get_value();
+                }
+    [/if]
+    [if (a.physicalName().toString().contains('_DTFIN'))]
+                if ( [(e.name + ' fichier').apply_variableDefault()/] .[a.nameSimpleProperty().apply_methodGet()/]().before(['today'.apply_variableDefault()/]) )
+      		  {
+                  [a.getXtopSupName().apply_variableDefault()/] = DatabaseLineStatus_Enum.active.get_value();
+                }
+    [/if]
+    [if (e.physicalUnique().toString().contains(a.physicalName()))]
+                if ( ['cptr criteria'.apply_variableDefault()/] > 0 )
+                {
+                   [('tableCriteria ' + e.name).apply_variableDefault()/].addCriteria( OperatorLogical_Enum.and, [e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/], Operator_Enum.equals, [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]() );
+                }
+                else
+                {
+                   [('tableCriteria ' + e.name).apply_variableDefault()/].addCriteria( [e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/], Operator_Enum.equals, [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]() );
+                }
+                ['cptr criteria'.apply_variableDefault()/] ++;
+    [/if]
+    
+  [/for]
+  [if (e.hasAutomaticColumns())]
+    
+    
+    [for (columnProp : String | e.get_automaticColumnsProperties())]
+                /** La colonne automatique [e.get_nameColumn(columnProp).toLower()/] */
+      [if (columnProp.contains('xtopsup'))]
+                  [(e.name + ' fichier').apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodSet()/]( [columnProp.getXtopSupName().apply_variableDefault()/] );
+      [else]
+                  [(e.name + ' fichier').apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodSet()/]( [e.defaultValueForColumnType(e.get_typeColumn(columnProp))/] );
+      [/if]
+      
+    [/for]
+  [/if]
+  [if (e.hasReferencingStar())]
+    
+    
+    [for (r : environment::Reference | e.referencingStar())]
+                /** Chargement de la foreign key de '[e.name/]' vers '[r.containingType.name/]', à partir du fkCritere '[r.fkCritere()/]' */
+                final TableCriteria <[r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/]> [('tableCriteria ' + r.containingType.name).apply_variableFinal()/] = new TableCriteria <> ("find by criteria en cherchant sur [r.containingType.name/]");
+                [('tableCriteria ' + r.containingType.name).apply_variableDefault()/].addOrderByDesc( [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].['date de debut'.apply_attributeEnum()/] );
+                [('tableCriteria ' + r.containingType.name).apply_variableDefault()/].addCriteria( [(r.containingType.name + 'Column' + r.containingType.name).apply_variableDefault()/], Operator_Enum.equals, ['csv line'.apply_variableDefault()/]['['/] [(r.referencedType.name + 'Column' + r.containingType.name).apply_variableDefault()/].ordinal() - 1 ] );
+                final List <[r.containingType.oclAsType(entity::Entity).buildEntityInterfaceName()/]> [('all ' + r.containingType.name).apply_variableFinal()/] =  [(r.containingType.name + ' dao').apply_attributeFinalStatic()/].findByCriteria( [('tableCriteria ' + r.containingType.name).apply_variableDefault()/] );
+                [r.containingType.oclAsType(entity::Entity).buildEntityInterfaceName()/] [('entity ' + r.containingType.name).apply_variableDefault()/] = null;
+                if ( [('all ' + r.containingType.name).apply_variableFinal()/].size() > 0)
+                {
+                  [('entity' + r.containingType.name).apply_variableDefault()/] = [('all ' + r.containingType.name).apply_variableFinal()/].get( 0 );
+                }
+                if ( [('entity ' + r.containingType.name).apply_variableDefault()/] != null )
+                {
+                  [(e.name + ' fichier').apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodSet()/][r.namePK_ID()/]( [('entity ' + r.containingType.name).apply_variableDefault()/].getId() );
+                }
+      
+    [/for]
+  [/if]
+  
+            // PreSave [e.buildReferentielEntityClassName()/]
+            [protected (e.getUserCodeId('PreSave ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+              
+            [/protected]
+  
+  
+            /** On recupere les enregistrements en base de l'entite [e.name/] correspondant à la ligne lue */
+            final List <[e.buildEntityInterfaceName()/]> [('all ' + e.name).apply_variableFinal()/] =  [(e.name + ' dao').apply_attributeFinalStatic()/].findByCriteria( [('tableCriteria ' + e.name).apply_variableDefault()/] );
+  
+            /** Enregistrement modification ou suppression selon le code modification et l'existant en base pour l'entite [e.name/] */
+            if (	['filter enregistrement'.apply_variableDefault()/] )
+            {
+              ['nb lignes filtrees'.apply_variableDefault()/] ++;
             }
             else
             {
-                [buildEntityInterfaceName(e)/] [apply_variableDefault(e.name + ' existant')/] = [apply_variableFinal('all ' + e.name)/].get(0);
-                if ( [apply_variableDefault('suppression enregistrement')/] == true )
-                {
-                    [apply_attributeFinalStatic(e.name + ' dao')/].delete( [apply_variableDefault(e.name + ' existant')/] );
-                    [apply_variableDefault('nb lignes delete')/] ++;
-                }
-                else
-                {
-                    [apply_variableDefault(e.name + ' fichier')/].setId( [apply_variableDefault(e.name + ' existant')/].getId() );
-                    [apply_attributeFinalStatic(e.name + ' dao')/].update( [apply_variableDefault(e.name + ' fichier')/] );
-                    [apply_variableDefault('nb lignes update')/] ++;
-                }
+              if ( [('all ' + e.name).apply_variableFinal()/].size() == 0 )
+              {
+                  if ( ['suppression enregistrement'.apply_variableDefault()/] == false )
+                  {
+                      [(e.name + ' dao').apply_attributeFinalStatic()/].create( [(e.name + ' fichier').apply_variableDefault()/] );
+                      ['nb lignes create'.apply_variableDefault()/] ++;
+                  }
+                  else
+                  {
+                      ['nb lignes sans traitement'.apply_variableDefault()/] ++;
+                  }
+              }
+              else
+              {
+                  [e.buildEntityInterfaceName()/] [(e.name + ' existant').apply_variableDefault()/] = [('all ' + e.name).apply_variableFinal()/].get(0);
+                  if ( ['suppression enregistrement'.apply_variableDefault()/] == true )
+                  {
+                      [(e.name + ' dao').apply_attributeFinalStatic()/].delete( [(e.name + ' existant').apply_variableDefault()/] );
+                      ['nb lignes delete'.apply_variableDefault()/] ++;
+                  }
+                  else
+                  {
+                      [(e.name + ' fichier').apply_variableDefault()/].setId( [(e.name + ' existant').apply_variableDefault()/].getId() );
+                      [(e.name + ' dao').apply_attributeFinalStatic()/].update( [(e.name + ' fichier').apply_variableDefault()/] );
+                      ['nb lignes update'.apply_variableDefault()/] ++;
+                  }
+              }
             }
+            /** Incrementation du nombre de lignes traitees */
+            ['nb lignes traitees'.apply_variableDefault()/] ++;
+  
+            // PostSave [e.buildReferentielEntityClassName()/]
+            [protected (e.getUserCodeId('PostSave ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+              
+            [/protected]
+  
+  
           }
-          /** Incrementation du nombre de lignes traitees */
-          [apply_variableDefault('nb lignes traitees')/] ++;
-
-          // PostSave [buildReferentielEntityClassName(e)/]
-          // [protected (e.getUserCodeId('PostSave ' + buildReferentielEntityClassName(e)))]
-
-          // [/protected]
-
+          /** Fermeture du reader Csv */
+          ['csv reader'.apply_variableDefault()/].close();
         }
-        /** Fermeture du reader Csv */
-        [apply_variableDefault('csv reader')/].close();
-      }
-      /** En cas d erreur, on affiche dans la log, et on positionne le flag de transaction à rollback */
-      catch ( Exception [apply_variableDefault('exception')/] )
-      {
-         [apply_attributeFinalStatic('LOG')/].error ( [apply_variableDefault('exception')/] );
-         [apply_classDefault(e.ancestors(Namespace).oclAsType(Namespace).name  + ' referentiel')/].[apply_methodDefault('set commit traitement')/](false);
-      }
+        /** En cas d erreur, on affiche dans la log, et on positionne le flag de transaction à rollback */
+        catch ( Exception ['exception'.apply_variableDefault()/] )
+        {
+           ['LOG'.apply_attributeFinalStatic()/].error ( ['exception'.apply_variableDefault()/] );
+           [(e.ancestors(environment::Namespace)->collect(temp3 | temp3.oclAsType(environment::Namespace))->collect(temp4 | temp4.name) + ' referentiel').apply_classDefault()/].['set commit traitement'.apply_methodDefault()/](false);
+        }
+  
+        /** Log de fin du traitement */
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nombre de ligne(s) traitee(s): " + ['nb lignes traitees'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nombre de ligne(s) filtree(s): " + ['nb lignes filtrees'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nombre de ligne(s) create: " + ['nb lignes create'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nombre de ligne(s) update: " + ['nb lignes update'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nombre de ligne(s) delete: " + ['nb lignes delete'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "Import Referentiel [e.name/], nombre de ligne(s) sans traitement (delete d'un non existant): " + ['nb lignes sans traitement'.apply_variableDefault()/] );
+        ['LOG'.apply_attributeFinalStatic()/].info( "/** FIN Import Referentiel Entity [e.name/] **/\n" );
+  
+        // PostTraitement [e.buildReferentielEntityClassName()/]
+        [protected (e.getUserCodeId('PostTraitement ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+  
+     }
+  
+     // Methodes [e.buildReferentielEntityClassName()/]
+     [protected (e.getUserCodeId('Methodes ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  
+  }[/template]
 
-      /** Log de fin du traitement */
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) traitee(s): " + [apply_variableDefault('nb lignes traitees')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) filtree(s): " + [apply_variableDefault('nb lignes filtrees')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) create: " + [apply_variableDefault('nb lignes create')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) update: " + [apply_variableDefault('nb lignes update')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) delete: " + [apply_variableDefault('nb lignes delete')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) sans traitement (delete d'un non existant): " + [apply_variableDefault('nb lignes sans traitement')/] );
-      [apply_attributeFinalStatic('LOG')/].info( "/** FIN Import Referentiel Entity [e.name/] **/\n" );
-
-      // PostTraitement [buildReferentielEntityClassName(e)/]
-      // [protected (e.getUserCodeId('PostTraitement ' + buildReferentielEntityClassName(e)))]
-
-      // [/protected]
-
-   }
-
-   // Methodes [buildReferentielEntityClassName(e)/]
-   // [protected (e.getUserCodeId('Methodes ' + buildReferentielEntityClassName(e)))]
-
-   // [/protected]
-
-
-}
+[template private valueForColumn(a : environment::Attribute, entityColumnEnum : String, csvLine : String)]
+  [if (a.genPropertyType().equalsIgnoreCase('String'))][csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ][elseif (a.genPropertyType().equalsIgnoreCase('Integer'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).intValue()[elseif (a.genPropertyType().equalsIgnoreCase('Long'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).longValue()[elseif (a.genPropertyType().equalsIgnoreCase('Float'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).floatValue()[elseif (a.genPropertyType().equalsIgnoreCase('Double'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).doubleValue()[elseif (a.genPropertyType().equalsIgnoreCase('Boolean'))]Boolean.parseBoolean([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ])[elseif (a.genPropertyType().equalsIgnoreCase('Date'))]['date format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ])[elseif (a.genPropertyType().equalsIgnoreCase('Timestamp'))]new Timestamp( ['today'.apply_variableDefault()/].getTime() )[elseif (a.genPropertyType().equalsIgnoreCase('Time'))]new Time( ['today'.apply_variableDefault()/].getTime() )[/if]
 [/template]
 
-[template private valueForColumn(a : Attribute, entityColumnEnum : String, csvLine : String)]
-[if a.genPropertyType().equalsIgnoreCase('String')]
-[csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/][elseif a.genPropertyType().equalsIgnoreCase('Integer')]
-[apply_attributeFinalStatic('number format csv')/].parse([csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/]).intValue()[elseif a.genPropertyType().equalsIgnoreCase('Long')]
-[apply_attributeFinalStatic('number format csv')/].parse([csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/]).longValue()[elseif a.genPropertyType().equalsIgnoreCase('Float')]
-[apply_attributeFinalStatic('number format csv')/].parse([csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/]).floatValue()[elseif a.genPropertyType().equalsIgnoreCase('Double')]
-[apply_attributeFinalStatic('number format csv')/].parse([csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/]).doubleValue()[elseif a.genPropertyType().equalsIgnoreCase('Boolean')]
-Boolean.parseBoolean([csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/])[elseif a.genPropertyType().equalsIgnoreCase('Date')]
-[apply_attributeFinalStatic('date format csv')/].parse([csvLine/]['['/] [entityColumnEnum/].[apply_attributeEnum(a.nameSimpleProperty())/].ordinal() - 1 [']'/])[elseif a.genPropertyType().equalsIgnoreCase('Timestamp')]
-new Timestamp( [apply_variableDefault('today')/].getTime() )[elseif a.genPropertyType().equalsIgnoreCase('Time')]
-new Time( [apply_variableDefault('today')/].getTime() )[/if]
-[/template]
-
-[template private defaultValueForColumnType(o : OclAny, type : String)]
-[if type.equalsIgnoreCase('String')]
-"s" + [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Boolean')]
-false[elseif type.equalsIgnoreCase('Integer')]
-(int) [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Long')]
-[apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Float')]
-(float) [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Double')]
-(double) [apply_variableDefault('i')/][elseif type.equalsIgnoreCase('Date')]
-new Date()[elseif type.equalsIgnoreCase('Timestamp')]
-new Timestamp( [apply_variableDefault('today')/].getTime() )[elseif type.equalsIgnoreCase('Time')]
-new Time( [apply_variableDefault('today')/].getTime() )[elseif type.equalsIgnoreCase('Char')]
-'c'[elseif type.equalsIgnoreCase('byte[]')]
-new byte['['/]0[']'/][/if]
+[template private defaultValueForColumnType(o : ecore::EObject, type : String)]
+  [if (type.equalsIgnoreCase('String'))]"s" + ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))](int) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Long'))]['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Float'))](float) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Double'))](double) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp( ['today'.apply_variableDefault()/].getTime() )[elseif (type.equalsIgnoreCase('Time'))]new Time( ['today'.apply_variableDefault()/].getTime() )[elseif (type.equalsIgnoreCase('Char'))]'c'[elseif (type.equalsIgnoreCase('byte[]'))]new byte['['/]0][/if]
 [/template]
 
 [comment : Write all imports. /]
-[template private writeImports (e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport('java.io.FileReader')/]
-[e.addImport('java.text.DateFormat')/]
-[e.addImport('java.text.SimpleDateFormat')/]
-[e.addImport('java.util.List')/]
-[e.addImport('java.util.Date')/]
-[e.addImport('fr.spi4j.exception.Spi4jValidationException')/]
-[e.addImport('fr.spi4j.persistence.dao.TableCriteria')/]
-[e.addImport('fr.spi4j.persistence.dao.Operator_Enum')/]
-[e.addImport('fr.spi4j.persistence.dao.OperatorLogical_Enum')/]
-[e.addImport('fr.spi4j.persistence.DatabaseLineStatus_Enum', hasXtopSup())/]
-[e.addImport('com.opencsv.CSVReader')/]
-[e.addImport('org.apache.logging.log4j.Logger')/]
-[e.addImport('org.apache.logging.log4j.LogManager')/]
-[e.addImport('java.util.Collection', e.hasExcludeCriteria() or e.hasIncludeCriteria())/]
-[e.addImport('org.apache.commons.collections4.MultiMap', e.hasExcludeCriteria() or e.hasIncludeCriteria())/]
-[e.addImport(buildPackagePersistenceReferentiel() + '.ReferentielUtils', e.hasExcludeCriteria() or e.hasIncludeCriteria())/]
-[e.addImport(buildPackagePersistence() + '.' + buildParamPersistenceClassName())/]
-[e.addImport(buildPackagePersistenceReferentiel() + '.' + apply_classDefault(e.ancestors(Namespace).oclAsType(Namespace).name + ' referentiel'))/]
-[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + e.buildDaoInterfaceName())/]
-[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e))/]
-[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildEntityColumnEnumName(e))/]
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('java.io.FileReader')/]
+  [e.addImport('java.text.DateFormat')/]
+  [e.addImport('java.text.SimpleDateFormat')/]
+  [e.addImport('java.util.List')/]
+  [e.addImport('java.util.Date')/]
+  [e.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+  [e.addImport('fr.spi4j.persistence.dao.TableCriteria')/]
+  [e.addImport('fr.spi4j.persistence.dao.Operator_Enum')/]
+  [e.addImport('fr.spi4j.persistence.dao.OperatorLogical_Enum')/]
+  [e.addImport('fr.spi4j.persistence.DatabaseLineStatus_Enum', e.hasXtopSup())/]
+  [e.addImport('com.opencsv.CSVReader')/]
+  [e.addImport('org.apache.logging.log4j.Logger')/]
+  [e.addImport('org.apache.logging.log4j.LogManager')/]
+  [e.addImport('java.util.Collection', e.hasExcludeCriteria() or e.hasIncludeCriteria())/]
+  [e.addImport('org.apache.commons.collections4.MultiMap', e.hasExcludeCriteria() or e.hasIncludeCriteria())/]
+  [e.addImport(e.buildPackagePersistenceReferentiel() + '.ReferentielUtils', e.hasExcludeCriteria() or e.hasIncludeCriteria())/]
+  [e.addImport(e.buildPackagePersistence() + '.' + e.buildParamPersistenceClassName())/]
+  [e.addImport(e.buildPackagePersistenceReferentiel() + '.' + (e.ancestors(environment::Namespace)->collect(temp5 | temp5.oclAsType(environment::Namespace))->collect(temp6 | temp6.name) + ' referentiel').apply_classDefault())/]
+  [e.addImport(e.buildPackagePersistenceApiEntity() + '.' + e.buildDaoInterfaceName())/]
+  [e.addImport(e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityInterfaceName())/]
+  [e.addImport(e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityColumnEnumName())/]
+  
+  [for (r : environment::Reference | e.referencingStar())]
+    	[e.addImport(r.containingType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName())/]
+    	[e.addImport(r.containingType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.containingType.oclAsType(entity::Entity).buildEntityInterfaceName())/]
+    	[e.addImport(r.containingType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName())/]
+  [/for]
+  
+  [for (r : environment::Reference | e.referencesStarStarOwned())]
+    import [r.referencedType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity()/].[r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/];
+  [/for]
+  
+  [e.flushImports()/][/template]
 
-[comment : List references./]
-[for (r : Reference | e.referencingStar())]
-	[e.addImport(buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity)) + '.' + r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName())/]
-	[e.addImport(buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity)) + '.' + buildEntityInterfaceName(r.containingType.oclAsType(entity::Entity)))/]
-	[e.addImport(buildPackagePersistenceApiEntity(r.containingType.oclAsType(entity::Entity)) + '.' + buildEntityColumnEnumName(r.containingType.oclAsType(entity::Entity)))/]
-[/for]
-
-[comment : Liste references./]
-[for (r : Reference | e.referencesStarStarOwned())]
-import [buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity))/].[buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))/];
-[/for]
-
-[e.flushImports()/]
-[/template]
-
-
-[query public roleReferentielEntity(e : Entity) : String = 'Classe de chargement de referentiel pour l entite ' + nameSimpleEntity(e) /]
+[query public roleReferentielEntity(e : entity::Entity) : String = 'Classe de chargement de referentiel pour l entite ' + e.nameSimpleEntity()/]

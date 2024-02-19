@@ -1,15 +1,13 @@
-[comment encoding = UTF-8 /]
-[module genService('http://www.obeonetwork.org/dsl/environment/3.0.0',                   
-				   'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[module genService('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
 
-[import fr::pacman::commons::common::packages /]
-
-[import fr::pacman::entity::api::common::serviceutils /]
-[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::serviceutils/]
+[import fr::pacman::entity::api::common::packages/]
 [import fr::pacman::entity::jdbc::service::service/]
 
-[template public genService(e : Entity)]
-[file (filename(getServerSourceDir(), buildPackageBusinessImplementationServiceEntity(e), e.buildServiceClassImplName() + '.java'), false, 'UTF-8')]
-[service(e)/]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genService(e : entity::Entity)]
+  [file (e.getServerSourceDir().filename(e.buildPackageBusinessImplementationServiceEntity(), e.buildServiceClassImplName() + '.java'), overwrite, 'UTF-8')]
+    [e.service()/]
+  [/file]
 [/template]

@@ -1,64 +1,62 @@
-[comment encoding = UTF-8 /]
 [module listeners('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::configuration::common::names/]
 
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-
-[import fr::pacman::configuration::common::names /]
-
-[template public clientInitialiseListener(any : OclAny) post (trim())]
-[licence()/]
-package [getApplicationPackage()/];
-
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-
-//import [getApplicationPackage()/].persistence.[buildParamPersistenceClassName()/];
-import fr.spi4j.Parameters;
-import fr.spi4j.filter.TransactionFilter;
-import fr.spi4j.persistence.TransactionInterceptor;
-
-/**
- * Classe permettant de faire des initialisations complementaires lors de l'initialisation de la webapp.
- * @author [getAuthorName()/]
- */
-public class [buildInitializationListenerClassName()/] implements ServletContextListener
-{
-   @Override
-   public void contextInitialized (final ServletContextEvent [apply_parameterMethodClassicIn('event')/])
-   {
-      	Parameters.initServletContext([apply_parameterMethodClassicIn('event')/].getServletContext());
-
-      	// contextInitialized
-      	// [protected (any.getUserCodeId('context initialized'))]
-		[if useEjb()]
-        //TransactionInterceptor.initUserPersistence([buildParamPersistenceClassName()/].getUserPersistence());[/if]
-        //TransactionFilter.initUserPersistence([buildParamPersistenceClassName()/].getUserPersistence());
-		[if useConfigFileSpi4jFrwk()]
-		[buildConfigProviderClassName()/].init();[/if]
-
-      	// [/protected]
-   }
-
-   @Override
-   public void contextDestroyed (final ServletContextEvent [apply_parameterMethodClassicIn('event')/])
-   {
-      	// contextDestroyed
-      	// [protected (any.getUserCodeId('context destroyed'))]
-
-      	// [/protected]
-   }
-
-   // Methodes
-   // [protected (any.getUserCodeId('Methodes'))]
-
-   // [/protected]
-}
-[/template]
+[comment encoding = UTF-8 /]
+[template public clientInitialiseListener(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.getApplicationPackage()/];
+  
+  import jakarta.servlet.ServletContextEvent;
+  import jakarta.servlet.ServletContextListener;
+  
+  //import [any.getApplicationPackage()/].persistence.[any.buildParamPersistenceClassName()/];
+  import fr.spi4j.Parameters;
+  import fr.spi4j.filter.TransactionFilter;
+  import fr.spi4j.persistence.TransactionInterceptor;
+  
+  /**
+   * Classe permettant de faire des initialisations complementaires lors de l'initialisation de la webapp.
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildInitializationListenerClassName()/] implements ServletContextListener
+  {
+     @Override
+     public void contextInitialized (final ServletContextEvent ['event'.apply_parameterMethodClassicIn()/])
+     {
+        	Parameters.initServletContext(['event'.apply_parameterMethodClassicIn()/].getServletContext());
+  
+        	// contextInitialized
+        	[protected (any.getUserCodeId('context initialized')) startTagPrefix('// ') endTagPrefix('// ')]
+           [if (any.useEjb())]        //TransactionInterceptor.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());[/if]
+                   //TransactionFilter.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
+           [if (any.useConfigFileSpi4jFrwk())]		[any.buildConfigProviderClassName()/].init();[/if]
+           
+         [/protected]
+  
+     }
+  
+     @Override
+     public void contextDestroyed (final ServletContextEvent ['event'.apply_parameterMethodClassicIn()/])
+     {
+        	// contextDestroyed
+        	[protected (any.getUserCodeId('context destroyed')) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+  
+     }
+  
+     // Methodes
+     [protected (any.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  }[/template]

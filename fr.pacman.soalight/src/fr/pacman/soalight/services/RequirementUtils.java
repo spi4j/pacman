@@ -71,6 +71,8 @@ public class RequirementUtils
       return v_requirements;
    }
 
+public List<Requirement> getRequirementsJavaService(final EObject p_object){return getRequirements(p_object);}
+
    /**
     * Retourne la liste des exigences (uniques) liées à un service.
     * 
@@ -99,6 +101,8 @@ public class RequirementUtils
       orderRequirements(v_requirementsList);
       return v_requirementsList;
    }
+
+public List<Requirement> getAllRequirementsForServiceJavaService(final Service p_service){return getAllRequirementsForService(p_service);}
 
    /**
     * Tri des exigences par id.

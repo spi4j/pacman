@@ -1,14 +1,13 @@
+[module generateDbPopulate('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::dbpopulate::DbPopulate/]
+
 [comment encoding = UTF-8 /]
-[module generateDbPopulate('http://www.obeonetwork.org/dsl/entity/3.0.0',
-                           'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::entity::api::dbpopulate::DbPopulate /]
-
-[template public generate(r : Root)]
-[comment @main /]
-
-[for (b : Namespace | r.eAllContents(Namespace))]
-    [populate(b)/]
-[/for]
-
+[comment @main/]
+[template public generate(r : entity::Root)]
+  
+  [for (b : environment::Namespace | r.eAllContents(environment::Namespace))]
+        [b.populate()/]
+  [/for]
+  
 [/template]

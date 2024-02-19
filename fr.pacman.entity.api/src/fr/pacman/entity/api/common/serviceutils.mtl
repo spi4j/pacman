@@ -1,153 +1,93 @@
+[module serviceutils('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::commons::services::MandatoryUtils/]
+
 [comment encoding = UTF-8 /]
-[module serviceutils('http://www.obeonetwork.org/dsl/environment/3.0.0',
-			 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[template public comParamInverseIdIn(r : environment::Reference)]
+      * @param [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::entity::api::common::packages /]
+[comment OA : Teste si une propriété (attribut ou référence) est obligatoire/]
+[query public isMandatory(p : environment::Property) : Boolean = p.isMandatorySoa()/]
 
+[template public getImportEntity(e : entity::Entity)]
+  import [e.buildPackageBusinessApiEntity()/].[e.buildEntityImplClassName()/];[/template]
 
-[template public comParamInverseIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameParamInverseId(r))/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
+[template public getImportServiceRequirements(e : entity::Entity)]
+  import [e.buildPackageBusinessImplementationServiceEntity()/].[e.buildServiceRequirementsClassName()/];[/template]
+
+[template public nameBaseReference(r : environment::Reference)]
+  [r.name.sanitize().toLowerFirst()/][/template]
+
+[template public nameParamInverseId(r : environment::Reference)]
+  [r.nameBaseReferenceInverse()/] id[/template]
+
+[template public nameBaseReferenceInverse(r : environment::Reference)]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).buildSimpleEntityName().toLowerFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
 [/template]
 
-[comment]SOA : Teste si une propriété (attribut ou référence) est obligatoire[/comment]
-[query public isMandatory(p : environment::Property) : Boolean =
-invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatorySoa(org.obeonetwork.dsl.environment.Property)', Sequence{p})
-/]
+[template public getImportEnum(e : entity::Entity)]
+  import [e.buildPackagePersistenceApiEntity()/].[e.buildEntityColumnEnumName()/];[/template]
 
-[template public getImportEntity(e : Entity)]
-import [buildPackageBusinessApiEntity(e)/].[e.buildEntityImplClassName()/];
-[/template]
+[query public buildServiceClassImplName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' service').apply_classImplem()/]
 
-[template public getImportServiceRequirements(e : Entity)]
-import [buildPackageBusinessImplementationServiceEntity(e)/].[buildServiceRequirementsClassName(e)/];
-[/template]
+[template public getImportServiceInterface(e : entity::Entity)]
+  import [e.buildPackageBusinessApiServiceEntity()/].[e.buildServiceInterfaceName()/];[/template]
 
-[template public nameBaseReference(r : Reference)]
-[r.name.sanitize().toLowerFirst()/]
-[/template]
+[query public buildServiceTestClassName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' service').apply_classTest()/]
 
-[template public nameParamInverseId(r : Reference)]
-[nameBaseReferenceInverse(r)/] id
-[/template]
+[query public buildPackageBusinessImplementation(any : ecore::EObject) : String = any.getApplicationPackage() + '.' + any.getPackageBusiness() + '.' + any.getPackageImplServer()/]
 
-[template public nameBaseReferenceInverse(r : Reference)]
-[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(Entity).buildSimpleEntityName().toLowerFirst()/][else]
-[nameBaseReference(r.oppositeOf)/][/if]
-[/template]
+[query public buildPackageBusinessApiEntity(e : entity::Entity) : String = e.buildPackageBusinessApi() + e.categoryHierarchy()/]
 
-[template public getImportEnum(e : Entity)]
-import [buildPackagePersistenceApiEntity(e)/].[e.buildEntityColumnEnumName()/];
-[/template]
+[query public buildPackageBusinessApiServiceEntity(e : entity::Entity) : String = if not (e = null) then e.buildPackageBusinessApiEntity() else 'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL' endif/]
 
-[query public buildServiceClassImplName(e : Entity) : String =
-	apply_classImplem(buildSimpleEntityName(e) + ' service')
- /]
+[query public buildPackageBusinessGwtClientService(e : entity::Entity) : String = if not (e = null) then e.buildPackageBusinessGwtClient() + e.categoryHierarchy() else 'PACKAGE NOT FOUND FOR Service Entity' endif/]
 
-[template public getImportServiceInterface(e : Entity)]
-import [buildPackageBusinessApiServiceEntity(e)/].[buildServiceInterfaceName(e)/];
-[/template]
+[query public buildServiceGwtInterfaceName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' gwt service').apply_classDefault()/]
 
-[query public buildServiceTestClassName(e : Entity) : String =
-    apply_classTest(nameSimpleEntity(e) + ' service')
- /]
+[query public buildPackageBusinessGwtClient(any : ecore::EObject) : String = any.buildPackageGwtClient() + '.' + any.getPackageBusiness()/]
 
-[query public buildPackageBusinessImplementation(any : OclAny) : String =
-    getApplicationPackage() + '.' + getPackageBusiness() + '.' + getPackageImplServer()
-/]
+[query private buildPackageGwtClient(any : ecore::EObject) : String = any.getApplicationPackage() + '.client'/]
 
-[query public buildPackageBusinessApiEntity(e : Entity) : String =
-    buildPackageBusinessApi(e) + categoryHierarchy(e)
-/]
+[query public buildServiceGwtAsyncClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' gwt service async').apply_classDefault()/]
 
-[query public buildPackageBusinessApiServiceEntity(e : Entity) : String =
-    if not e.oclIsUndefined() then
-        buildPackageBusinessApiEntity(e)
-    else
-        'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL'
-    endif
-/]
+[query public buildPackageBusinessGwtServerService(e : entity::Entity) : String = if not (e = null) then e.buildPackageBusinessGwtServer() + e.categoryHierarchy() else 'PACKAGE NOT FOUND FOR SERVICE' endif/]
 
-[query public buildPackageBusinessGwtClientService(e : Entity) : String =
-    if not e.oclIsUndefined() then        
-  		buildPackageBusinessGwtClient(e) + categoryHierarchy(e)
-    else
-        'PACKAGE NOT FOUND FOR Service Entity'
-    endif
-/]
+[query private buildPackageBusinessGwtServer(any : ecore::EObject) : String = any.buildPackageGwtServer() + '.' + any.getPackageBusiness()/]
 
-[query public buildServiceGwtInterfaceName(e : Entity) : String =
- e.apply_classDefault(buildSimpleEntityName(e) + ' gwt service')
- /]
+[query private buildPackageGwtServer(any : ecore::EObject) : String = any.getApplicationPackage() + '.server'/]
 
-[query public buildPackageBusinessGwtClient(any : OclAny) : String =
-    buildPackageGwtClient() + '.' + getPackageBusiness()
-/]
+[query public buildServiceGwtImplementationName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' gwt service impl').apply_classDefault()/]
 
-[query private buildPackageGwtClient(any : OclAny) : String =
-    getApplicationPackage() + '.client'
-/]
-
-[query public buildServiceGwtAsyncClassName(e : Entity) : String =
- e.apply_classDefault(buildSimpleEntityName(e) + ' gwt service async')
- /]
-
-[query public buildPackageBusinessGwtServerService(e : Entity) : String =
-    if not e.oclIsUndefined() then
-        buildPackageBusinessGwtServer(e) + categoryHierarchy(e)    
-    else
-        'PACKAGE NOT FOUND FOR SERVICE'
-    endif 
-/]
-
-[query private buildPackageBusinessGwtServer(any : OclAny) : String =
-    buildPackageGwtServer() + '.' + getPackageBusiness()
-/]
-
-[query private buildPackageGwtServer(any : OclAny) : String =
-    getApplicationPackage() + '.server'
-/]
-
-[query public buildServiceGwtImplementationName(e : Entity) : String =
- e.apply_classDefault(buildSimpleEntityName(e) + ' gwt service impl')
- /]
-
-[template public getImportXtoGwt(e : Entity)]
-import [buildPackageWsApiEntity(e)/].[e.buildXtoClassNameFromEntity()/];
-[/template]
+[template public getImportXtoGwt(e : entity::Entity)]
+  import [e.buildPackageWsApiEntity()/].[e.buildXtoClassNameFromEntity()/];[/template]
 
 [comment : interface -> impl  ????????!!!!! /]
-[template public nameServiceInterfaceGwt(e : Entity)]
-[buildServiceImplClassName(e)/]
-[/template]
+[template public nameServiceInterfaceGwt(e : entity::Entity)]
+  [e.buildServiceImplClassName()/][/template]
 
-[query public buildMapperClassName(e : Entity) : String =
-apply_classImplem(buildSimpleEntityName(e) + ' mapper')
- /]
+[query public buildMapperClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' mapper').apply_classImplem()/]
 
-[query public buildMapperInterfaceName(e : Entity) : String =
-apply_classInterface(buildSimpleEntityName(e) + ' mapper')
- /]
+[query public buildMapperInterfaceName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' mapper').apply_classInterface()/]
 
-[template public nameParamId(e : Entity)]
-[nameBaseEntity(e)/] id
-[/template]
+[template public nameParamId(e : entity::Entity)]
+  [e.nameBaseEntity()/] id[/template]
 
-[template public nameBaseEntity(e : Entity)]
-[e.buildSimpleEntityName().toLowerFirst()/]
-[/template]
+[template public nameBaseEntity(e : entity::Entity)]
+  [e.buildSimpleEntityName().toLowerFirst()/][/template]
 
-[template public nameParamInverse(r : Reference)]
-[nameBaseReferenceInverse(r)/]
-[/template]
-
+[template public nameParamInverse(r : environment::Reference)]
+  [r.nameBaseReferenceInverse()/][/template]

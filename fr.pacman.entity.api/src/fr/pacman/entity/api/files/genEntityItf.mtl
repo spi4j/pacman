@@ -1,15 +1,15 @@
-[comment encoding = UTF-8 /]
-[module genEntityItf('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[module genEntityItf('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::entity::api::common::packages /]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::packages/]
 [import fr::pacman::entity::api::common::names/]
-[import fr::pacman::entity::api::api::block::entityItf /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::api::block::entityItf/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
 
-[template public genEntityItf(e : Entity)]
-
-[file (filename(getServerSourceDir(), buildPackagePersistenceApiEntity(e), buildEntityInterfaceName(e) + '.java'), false, 'UTF-8')]
-[entityItf(e)/]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genEntityItf(e : entity::Entity)]
+  
+  [file (e.getServerSourceDir().filename(e.buildPackagePersistenceApiEntity(), e.buildEntityInterfaceName() + '.java'), overwrite, 'UTF-8')]
+    [e.entityItf()/]
+  [/file]
 [/template]

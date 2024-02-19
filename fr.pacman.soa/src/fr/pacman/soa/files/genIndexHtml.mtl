@@ -1,16 +1,15 @@
+[module genIndexHtml('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::gwt::webapp::gwtIndexHtml/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genIndexHtml('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                     'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::gwt::webapp::gwtIndexHtml /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genIndexHtml(n : Namespace)]
-[file (filename(getClientGwtWebappDir(), '', 'index.html'), false, 'UTF-8')]
-[gwtIndexHtml(n)/]
-[/file]
+[template public genIndexHtml(n : environment::Namespace)]
+  [file (n.getClientGwtWebappDir().filename('', 'index.html'), overwrite, 'UTF-8')]
+    [n.gwtIndexHtml()/]
+  [/file]
 [/template]

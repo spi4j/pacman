@@ -1,16 +1,15 @@
-[comment encoding = UTF-8 /]
 [module genModel('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::start::project::Model /]
-[import fr::pacman::start::common::names]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::start::project::Model/]
+[import fr::pacman::start::common::names/]
 
-[template public genModel(any : OclAny)]
-
-[comment : Creation du pom de xxx-Model /]
-[file (filename(getModelProjectName(), '', 'pom.xml'), false, 'UTF-8')]
-[ModelPom() /]
-[/file]
-
+[comment encoding = UTF-8 /]
+[template public genModel(any : ecore::EObject)]
+  
+  [file (any.getModelProjectName().filename('', 'pom.xml'), overwrite, 'UTF-8')]
+    [any.ModelPom()/]
+  [/file]
+  
 [/template]

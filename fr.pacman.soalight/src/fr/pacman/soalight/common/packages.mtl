@@ -1,79 +1,39 @@
+[module packages('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::soalight::common::name/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                 'http://www.obeonetwork.org/dsl/entity/3.0.0',
-                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::commons::soa::common::packages /]
-
-[import fr::pacman::soalight::common::classes /]
-[import fr::pacman::soalight::common::name /]
-
-
-[*******************
+[**
+ * ****************
  * Paramétrage Début
 */]
+[query public buildPackageBusinessImplementationService(s : soa::Service) : String = if not (s = null) then s.buildPackageImplBusiness() + '.' + s.nameComponent() else 'PACKAGE NOT FOUND FOR SERVICE NULL' endif/]
 
-[query public buildPackageBusinessImplementationService(s : Service) : String =
-    if not s.oclIsUndefined() then
-        buildPackageImplBusiness(s) + '.' + nameComponent(s)
-    else
-        'PACKAGE NOT FOUND FOR SERVICE NULL'
-    endif
-/]
+[query public buildPackageBusinessGwtClient(any : ecore::EObject) : String = any.buildPackageGwtClient() + '.' + any.getPackageBusiness()/]
 
-[query public buildPackageBusinessGwtClient(any : OclAny) : String =
-    buildPackageGwtClient() + '.' + getPackageBusiness()
-/]
+[query public buildPackageBusinessGwtClientService(s : soa::Service) : String = if not (s = null) then s.buildPackageBusinessGwtClient() + '.' + s.nameComponent() else 'PACKAGE NOT FOUND FOR SERVICE' endif/]
 
-[query public buildPackageBusinessGwtClientService(s : Service) : String =
-    if not s.oclIsUndefined() then
-        buildPackageBusinessGwtClient(s) + '.' + nameComponent(s)
-    else
-        'PACKAGE NOT FOUND FOR SERVICE'
-    endif
-/]
+[query private buildPackageBusinessGwtServer(any : ecore::EObject) : String = any.buildPackageGwtServer() + '.' + any.getPackageBusiness()/]
 
-[query private buildPackageBusinessGwtServer(any : OclAny) : String =
-    buildPackageGwtServer() + '.' + getPackageBusiness()
-/]
+[query private buildPackageGwtClient(any : ecore::EObject) : String = any.getApplicationPackage() + '.client'/]
 
-[query private buildPackageGwtClient(any : OclAny) : String =
-    getApplicationPackage() + '.client'
-/]
+[query private buildPackageGwtServer(any : ecore::EObject) : String = any.getApplicationPackage() + '.server'/]
 
-[query private buildPackageGwtServer(any : OclAny) : String =
-    getApplicationPackage() + '.server'
-/]
+[query public buildPackageBusinessApiService(s : soa::Service) : String = if not (s = null) then s.buildPackageBusinessApi() + '.' + s.nameComponent() else 'PACKAGE NOT FOUND FOR SERVICE AND Entity NULL' endif/]
 
-[query public buildPackageBusinessApiService(s : Service) : String =
-    if not s.oclIsUndefined() then
-        buildPackageBusinessApi(s) + '.' + nameComponent(s)    
-    else
-        'PACKAGE NOT FOUND FOR SERVICE AND Entity NULL'
-    endif
-/]
-
-[query public buildPackageBusinessGwtServerService(s : Service) : String =
-    if not s.oclIsUndefined() then
-        buildPackageBusinessGwtServer(s) + '.' + nameComponent(s)    
-    else
-        'PACKAGE NOT FOUND FOR SERVICE'
-    endif 
-/]
+[query public buildPackageBusinessGwtServerService(s : soa::Service) : String = if not (s = null) then s.buildPackageBusinessGwtServer() + '.' + s.nameComponent() else 'PACKAGE NOT FOUND FOR SERVICE' endif/]
 
 [comment : /]
-[query public buildPackageWsApiEntity(e : Entity) : String =
-    buildPackageWs() + '.' + getPackageApi() + e.categoryHierarchy()
-/]
+[query public buildPackageWsApiEntity(e : entity::Entity) : String = e.buildPackageWs() + '.' + e.getPackageApi() + e.categoryHierarchy()/]
 
 [comment fin packages /]
-
-[*******************
+[**
+ * ****************
  * Paramétrage fin
 */]
-
 [comment transforme un nom de package en uri, ex : fr.pacman -> pacman.fr /]
-[query public packageToUri(s : String) : String = (s.tokenize('.'))->reverse()->toString()/]
+[query public packageToUri(s : String) : String = s.tokenize('.')->reverse()->toString()/]

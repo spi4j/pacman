@@ -1,62 +1,32 @@
+[module utils('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::services::AnnotationUtils/]
+[import fr::pacman::commons::services::ResourceUtils/]
+[import fr::pacman::commons::services::StringUtils/]
+
 [comment encoding = UTF-8 /]
-[module utils('http://www.obeonetwork.org/dsl/environment/3.0.0',
-			  'http://www.obeonetwork.org/dsl/soa/4.0.0',
-			  'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[query public sanitize(msg : String) : String = msg.normalize().sanitizeJavaService()/]
 
-[import fr::pacman::commons::common::properties /]
+[query public normalize(msg : String) : String = msg.normalizeJavaService()/]
 
+[query public genSlashedLine(str : String, size : Integer) : String = str.genSlashedLineJavaService(size)/]
 
-[query public sanitize(msg : String) : String =
-    invoke('fr.pacman.commons.services.StringUtils', 'sanitize(java.lang.String)', Sequence{msg.normalize()})
-/]
+[query public date(format : String) : String = format.dateJavaService()/]
 
-[query public normalize(msg : String) : String =
-    invoke('fr.pacman.commons.services.StringUtils', 'normalize(java.lang.String)', Sequence{msg})
-/]
+[query public escape(str : String) : String = str.escapeJavaService()/]
 
-[query public genSlashedLine(str : String, size : Integer) : String =
-	invoke('fr.pacman.commons.services.StringUtils', 'genSlashedLine(java.lang.String, java.lang.Integer)', Sequence{str, size})
-/]
+[query public isLibraryEntity(e : entity::Entity, s : String) : Boolean = if not e.hasAdditionnalLibraries() then false else e.isLibraryEntity_invoke(s) endif/]
 
-[query public date(format : String) : String =
-	invoke('fr.pacman.commons.services.StringUtils', 'date(java.lang.String)', Sequence{format})
-/]
+[query public isLibraryEntity_invoke(e : entity::Entity, s : String) : Boolean = e.isLibraryEntityJavaService(s)/]
 
-[query public escape(str : String) : String =
-	invoke('fr.pacman.commons.services.StringUtils', 'escape(java.lang.String)', Sequence{str}) 
-/]
+[query public getLibraryNameForEntity(e : entity::Entity, s : String) : String = e.getLibraryName(s)/]
 
-[query public isLibraryEntity (e : Entity, s : String) : Boolean =
-   if(not hasAdditionnalLibraries()) then false else e.isLibraryEntity_invoke(s) endif 
-/]
+[query public toPath(pkg : String) : String = pkg.replaceAll('\\.', '/')/]
 
-[query public isLibraryEntity_invoke (e : Entity, s : String) : Boolean =
-	invoke('fr.pacman.commons.services.ResourceUtils', 'isLibraryEntity(org.obeonetwork.dsl.entity.Entity, java.lang.String)', Sequence{e, s}) 
-/]
+[query public normalizePath(path : String) : String = path.replaceAll('/+', '/').trim()/]
 
-[query public getLibraryNameForEntity (e : Entity, s : String ) : String =
-	invoke('fr.pacman.commons.services.ResourceUtils', 'getLibraryName(org.obeonetwork.dsl.entity.Entity, java.lang.String)', Sequence{e, s}) 
-/]
-
-[query public toPath(pkg : String) : String  = 
-    pkg.replaceAll('\\.', '/')
-/]
-
-[query public normalizePath(path : String) : String =
-    path.replaceAll('/+', '/').trim()
-/]
-
-[query public ensureTrailingSlash(path : String) : String =
-if (path = null) then
-    '/'
-else
-    if (path.endsWith('/')) then
-        path
-    else
-        path + '/'
-    endif
-endif
-/]
+[query public ensureTrailingSlash(path : String) : String = if path = null then '/' else if path.endsWith('/') then path else path + '/' endif endif/]
 
 [comment : Vérifie si un DTO/ENTITY?/Attribut ne doit pas etre persistant. /]
 [comment : Cette methode est tres importante elle est remontee au plus haut pour l'instant (peut-etre a tord)/]
@@ -65,54 +35,31 @@ endif
 	- Une annotation NOT_PERSISTENT est presente au niveau du systeme (au plus haut niveau).
 	- Une annotation NOT_PERSISTENT est presente au niveau de l'objet.
 /]
-[query public isNotPersistent(e : ObeoDSMObject) : Boolean =
-	not e.usePersistence() or e.isNotPersistentObject()
-/]
+[query public isNotPersistent(e : environment::ObeoDSMObject) : Boolean = not e.usePersistence() or e.isNotPersistentObject()/]
 
-[query private isNotPersistentObject(e : ObeoDSMObject) : Boolean =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'annotationExistsRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', 
-    Sequence{e, 'NOT_PERSISTENT'})
-/]
+[query private isNotPersistentObject(e : environment::ObeoDSMObject) : Boolean = e.annotationExistsRecursively('NOT_PERSISTENT')/]
 
 [**
  * Retrouve le package parent d'un objet,
  * on prend la ressource physique de l'objet,
  * on extrait la partie de l'uri qui correspond au folder.
 */]
-[query public getModuleFolderFromUri(any : OclAny) : String =
-	invoke('fr.pacman.commons.services.StringUtils',
-	'getModuleFolderFromEObject(org.eclipse.emf.ecore.EObject)', Sequence{any})
-/]
+[query public getModuleFolderFromUri(any : ecore::EObject) : String = any.getModuleFolderFromEObject()/]
 
 [comment : Check if the property is a list. /]
-[query public isMultiple(p : Property) : Boolean = 
-    p.multiplicity = environment::MultiplicityKind::ONE_STAR
-    or p.multiplicity = environment::MultiplicityKind::ZERO_STAR
-/]
+[query public isMultiple(p : environment::Property) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE_STAR or p.multiplicity = environment::MultiplicityKind::ZERO_STAR/]
 
 [comment : Check if the parameter is a list. /]
-[query public isMultiple(p : Parameter) : Boolean = 
-	p.multiplicity = environment::MultiplicityKind::ONE_STAR
-    or p.multiplicity = environment::MultiplicityKind::ZERO_STAR
-/]
+[query public isMultiple(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE_STAR or p.multiplicity = environment::MultiplicityKind::ZERO_STAR/]
 
 [comment : Check if the object exists and is valid. /]
-[query public isValidObject(e : ObeoDSMObject) : Boolean = 
-	not e.oclIsUndefined() and not e.oclIsInvalid()
-/]
+[query public isValidObject(e : environment::ObeoDSMObject) : Boolean = not (e = null) and not e.oclIsInvalid()/]
 
 [comment : Search for xtsopsup existence. /]
-[query public hasXtopSup(any : OclAny) : Boolean = 
-	get_automaticColumnsProperties().contains('xtopsup') <> false
-/]
+[query public hasXtopSup(any : ecore::EObject) : Boolean = any.get_automaticColumnsProperties()->collect(temp1 | temp1.contains('xtopsup')) <> false/]
 
 [comment : Search for xdmaj existence. /]
-[query public hasXdMaj(any : OclAny) : Boolean = 
-	get_automaticColumnsProperties().contains('xdmaj') <> false
-/]
+[query public hasXdMaj(any : ecore::EObject) : Boolean = any.get_automaticColumnsProperties()->collect(temp2 | temp2.contains('xdmaj')) <> false/]
 
 [comment : Search for xdmaj or xtopsup existence. Must be optimised. /]
-[query public hasXtoSup_XdMaj(any : OclAny) : Boolean = 
-	hasXtopSup() or hasXdMaj()
-/]
+[query public hasXtoSup_XdMaj(any : ecore::EObject) : Boolean = any.hasXtopSup() or any.hasXdMaj()/]

@@ -1,126 +1,123 @@
+[module serviceItf('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::common::serviceutils/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+
 [comment encoding = UTF-8 /]
-[module serviceItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
-				   'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[comment le Service /]
+[template public serviceItf(e : entity::Entity)]
+  [e.licence()/]
+  [let self = if not (e = null) then e else 'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL' endif]
+    package [e.buildPackageServiceApiEntity()/];
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [e.writeImports()/]
+      
+    [/protected]
+    
+    
+    /**
+     * Définit le contrat de services spécifiques pour le type : '[e.buildEntityImplClassName()/].
+     * @author [e.getAuthorName()/]
+     */
+    // Annotations Service
+    [protected (e.getUserCodeId('Annotations Service')) startTagPrefix('// ') endTagPrefix('// ')]
+      [if (e.useEjb())]
+        @Local
+      [/if]
+    [/protected]
+    
+    public interface [e.buildServiceInterfaceName()/] extends [if (not e.isNotPersistent())]
+                                                                [e.getClassNameForEntityService_Itf()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/]> [if (e.isReferentiel())], [e.getClassNameForServiceReferentiel_Itf()/][/if]
+                                                              [else]ApplicationService_Itf[/if]
+    
+    {
+    
+    	// Methodes [e.buildServiceInterfaceName()/]
+    	[protected (e.getUserCodeId('Methodes ' + e.buildServiceInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+       [if (not e.isNotPersistent())]
+         [for (r : environment::Reference | e.referencingStar())]
+              /**
+               * Obtenir la liste d'objets de type '[e.buildEntityInterfaceName()/]' associés à l'instance de type '[r.containingType.oclAsType(entity::Entity).buildEntityImplClassName()/]'.
+           [r.comParamInverseIdIn()/]
+               * @return une liste de [e.buildEntityImplClassName()/] ayant [r.nameParamInverseId().apply_parameterMethodClassicIn()/] = [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+               */
+              List<[e.buildEntityInterfaceName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity()).apply_methodDefault()/] (final [r.genPkType()/] [r.nameParamInverseId().apply_parameterMethodClassicIn()/]);
+           
+         [/for]
+         [for (r : environment::Reference | e.referencesStarStar())]
+           	/**
+               * Sauvegarde les relations entre '[e.buildEntityImplClassName()/]' et '[r.referencedType.oclAsType(entity::Entity).nameSimpleEntity()/]' pour l'entity.
+               * @param ['entity'.apply_parameterMethodClassicIn()/]
+               *           le entity
+               * @param [r.name.normalize().apply_parameterMethodMultiple()/]
+               *           les relations à ajouter
+               */
+               void [('save ' + r.name.normalize()).apply_methodDefault()/] (final [e.buildEntityInterfaceName()/] ['entity'.apply_parameterMethodClassicIn()/], final List<[r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/]> [r.name.normalize().apply_parameterMethodMultiple()/]);
+           
+              /**
+               * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(entity::Entity).buildEntityImplClassName().toUpperFirst()/]' associés à l'instance de type '[r.containingType.oclAsType(entity::Entity).buildEntityImplClassName().toUpperFirst()/]'.
+               * @param [r.containingType.oclAsType(entity::Entity).buildEntityImplClassName().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+               *           (In)(*) [r.containingType.oclAsType(entity::Entity).buildEntityImplClassName().toUpperFirst()/].
+               * @return une liste de [r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/]
+               */
+              List<[r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.oclAsType(entity::Entity).buildEntityInterfaceName().apply_parameterMethodClassicIn()/][r.namePK_ID()/]);
+           
+           	/**
+               * Supprime les relations [r.name/] entre '[e.buildEntityImplClassName()/]' et '[r.referencedType.oclAsType(entity::Entity).nameSimpleEntity()/]' pour ce Entity.
+               * @param ['entity'.apply_parameterMethodClassicIn()/]
+               *           le Entity
+               */
+               void [('delete ' + r.name.normalize()).apply_methodDefault()/] (final [e.buildEntityInterfaceName()/] ['entity'.apply_parameterMethodClassicIn()/]) ;
+           
+         [/for]
+       [/if]
+       
+     [/protected]
+    
+    
+    }[/let]
+[/template]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::common::serviceutils /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-
-[comment] le Service [/comment]
-[template public serviceItf(e : Entity)]
-[licence()/]
-[let self : OclAny = if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL' endif]
-package [buildPackageServiceApiEntity(e)/];
-// [protected ('for imports')]
+[template public getImportEntity(e : entity::Entity)]
+  import [e.buildPackageBusinessApiEntity()/].[e.buildEntityInterfaceName()/];[/template]
 
 [comment : Write all required imports. /]
-[e.writeImports()/]
-
-// [/protected]
-
-/**
- * Définit le contrat de services spécifiques pour le type : '[buildEntityImplClassName(e)/].
- * @author [getAuthorName()/]
- */
-// Annotations Service
-// [protected (e.getUserCodeId('Annotations Service'))]
-[if useEjb()]
-@Local
-[/if]
-// [/protected]
-public interface [buildServiceInterfaceName(e)/] extends [if not e.isNotPersistent()][getClassNameForEntityService_Itf()/]<[genPkType()/], [buildEntityInterfaceName(e)/]> [if isReferentiel(e)], [getClassNameForServiceReferentiel_Itf()/][/if][else]ApplicationService_Itf[/if]
-{
-
-	// Methodes [buildServiceInterfaceName(e)/]
-	// [protected (e.getUserCodeId('Methodes ' + buildServiceInterfaceName(e)))]
-
-[if not e.isNotPersistent()]
-[for (r : Reference | e.referencingStar())]
-   /**
-    * Obtenir la liste d'objets de type '[buildEntityInterfaceName(e)/]' associés à l'instance de type '[buildEntityImplClassName(r.containingType.oclAsType(Entity))/]'.
-[comParamInverseIdIn(r)/]
-    * @return une liste de [buildEntityImplClassName(e)/] ayant [apply_parameterMethodClassicIn(nameParamInverseId(r))/] = [apply_parameterMethodClassicIn(nameParamInverseId(r))/]
-    */
-   List<[buildEntityInterfaceName(e)/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamInverseId(r))/]);
-
-[/for]
-[for (r : Reference | e.referencesStarStar())]
-	/**
-    * Sauvegarde les relations entre '[buildEntityImplClassName(e)/]' et '[nameSimpleEntity(r.referencedType.oclAsType(Entity))/]' pour l'entity.
-    * @param [apply_parameterMethodClassicIn('entity')/]
-    *           le entity
-    * @param [apply_parameterMethodMultiple(r.name.normalize())/]
-    *           les relations à ajouter
-    */
-    void [apply_methodDefault('save ' + r.name.normalize())/] (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/], final List<[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> [apply_parameterMethodMultiple(r.name.normalize())/]);
-
-   /**
-    * Obtenir la liste d'objets de type '[buildEntityImplClassName(r.referencedType.oclAsType(Entity)).toUpperFirst()/]' associés à l'instance de type '[buildEntityImplClassName(r.containingType.oclAsType(Entity)).toUpperFirst()/]'.
-    * @param [apply_parameterMethodClassicIn(r.containingType.oclAsType(Entity).buildEntityImplClassName())/][namePK_ID()/]
-    *           (In)(*) [buildEntityImplClassName(r.containingType.oclAsType(Entity)).toUpperFirst()/].
-    * @return une liste de [buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]
-    */
-   List<[buildEntityInterfaceName(r.referencedType.oclAsType(Entity))/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(Entity).nameSimpleEntity())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.oclAsType(Entity).buildEntityInterfaceName())/][namePK_ID()/]);
-
-	/**
-    * Supprime les relations [r.name/] entre '[buildEntityImplClassName(e)/]' et '[nameSimpleEntity(r.referencedType.oclAsType(Entity))/]' pour ce Entity.
-    * @param [apply_parameterMethodClassicIn('entity')/]
-    *           le Entity
-    */
-    void [apply_methodDefault('delete ' + r.name.normalize())/] (final [buildEntityInterfaceName(e)/] [apply_parameterMethodClassicIn('entity')/]) ;
-
-[/for]
-[/if]
-
-    // [/protected]
-
-}[/let]
-[/template]
-
-[template public getImportEntity(e : Entity)]
-import [buildPackageBusinessApiEntity(e)/].[e.buildEntityInterfaceName()/];
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport('jakarta.ejb.Local', useEjb())/]
-[e.addImport(buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e))/]
-[e.addImport(getImportForEntityService_Itf(), not e.isNotPersistent())/]
-[e.addImport('fr.spi4j.business.ApplicationService_Itf', e.isNotPersistent())/]
-[e.addImport(getImportForServiceReferentiel_Itf(), e.isReferentiel())/]
-
-[comment : List references./]
-[for (r : Reference | e.referencingStar())]
-	[if not (buildEntityInterfaceName(e).equalsIgnoreCase(buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity))))]
-		[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(entity::Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(entity::Entity)))/]
-	[/if]
-	[if not (buildEntityImplClassName(e).equalsIgnoreCase(buildEntityImplClassName(r.referencedType.oclAsType(Entity))))]
-		[e.addImport(buildPackagePersistenceImplementationJdbcEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityImplClassName(r.referencedType.oclAsType(entity::Entity)))/]
-	[/if]
-[/for]
-
-[comment : Liste references. /]
-[for (r : Reference | e.referencesStarStar())]
-	[e.addImport(buildPackagePersistenceApiEntity(r.referencedType.oclAsType(Entity)) + '.' + buildEntityInterfaceName(r.referencedType.oclAsType(Entity)))/]
-[/for]
-
-[e.flushImports()/]
-[/template]
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('jakarta.ejb.Local', e.useEjb())/]
+  [e.addImport(e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityInterfaceName())/]
+  [e.addImport(e.getImportForEntityService_Itf(), not e.isNotPersistent())/]
+  [e.addImport('fr.spi4j.business.ApplicationService_Itf', e.isNotPersistent())/]
+  [e.addImport(e.getImportForServiceReferentiel_Itf(), e.isReferentiel())/]
+  
+  [for (r : environment::Reference | e.referencingStar())]
+    [if (not e.buildEntityInterfaceName().equalsIgnoreCase(r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()))]
+      		[e.addImport(r.referencedType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName())/]
+    [/if]
+    [if (not e.buildEntityImplClassName().equalsIgnoreCase(r.referencedType.oclAsType(entity::Entity).buildEntityImplClassName()))]
+      		[e.addImport(r.referencedType.oclAsType(entity::Entity).buildPackagePersistenceImplementationJdbcEntity() + '.' + r.referencedType.oclAsType(entity::Entity).buildEntityImplClassName())/]
+    [/if]
+  [/for]
+  
+  [for (r : environment::Reference | e.referencesStarStar())]
+    	[e.addImport(r.referencedType.oclAsType(entity::Entity).buildPackagePersistenceApiEntity() + '.' + r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName())/]
+  [/for]
+  
+  [e.flushImports()/][/template]

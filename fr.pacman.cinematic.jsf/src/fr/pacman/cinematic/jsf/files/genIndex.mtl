@@ -1,13 +1,12 @@
+[module genIndex('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::jsf::common::packages/]
+[import fr::pacman::cinematic::jsf::common::name/]
+[import fr::pacman::cinematic::jsf::client::ui::pkg::index/]
+
 [comment encoding = UTF-8 /]
-[module genIndex('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::cinematic::jsf::common::packages /]
-[import fr::pacman::cinematic::jsf::common::name /]
-[import fr::pacman::cinematic::jsf::client::ui::pkg::index /]
-
-[template public genIndex(root : CinematicRoot)]
-[file ('//src//main//webapp//pages//index.xhtml', false, 'UTF-8')]
-[index(root)/]
-[/file]
+[template public genIndex(root : cinematic::CinematicRoot)]
+  [file ('//src//main//webapp//pages//index.xhtml', overwrite, 'UTF-8')]
+    [root.index()/]
+  [/file]
 [/template]
-

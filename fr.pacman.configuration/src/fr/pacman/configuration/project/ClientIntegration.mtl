@@ -1,248 +1,248 @@
-[comment encoding = UTF-8 /]
 [module ClientIntegration('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::configuration::common::pomXml/]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
+[comment encoding = UTF-8 /]
+[template public integrationPom(any : ecore::EObject) post(self.trim())]
+  <project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <parent>
+          <groupId>[any.getApplicationPackage()/]</groupId>
+          <artifactId>[any.getApplicationName()/]</artifactId>
+          <version>[any.getVersion()/]</version>
+      </parent>
+      <artifactId>[any.getClientIntegrationProjectName()/]</artifactId>
+      <packaging>jar</packaging>
+      <name>[any.getApplicationName()/] - Partie integration</name>
+  
+  	<!--
+  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+     	-->
+     	
+     	<!--
+   [/protected]
+  
+  	-->
+  
+      <dependencies>
+          <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>[any.getCommonProjectName()/]</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>[any.getClientSwingProjectName()/]</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>[any.getServerProjectName()/]</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+  [if (any.hasAdditionnalLibraries())]
+    [for (prop : String | any.getAdditionnalLibraries())]
+      		<!-- Librairie additionnelle utilisateur. -->
+      		<!-- On inclut ici [prop.getApplicationName()/]-commons, même si [prop.getApplicationName()/]-client et [prop.getApplicationName()/]-server 
+      		ont déjà la dépendance, car sinon les dépendances transitives de referentiel-commons 
+      		pourrait être omises au profit de versions présentes dans spi4j-lib-jebhave 
+      		(par ex. dans jbehave-core) -->
+      		<dependency>
+      			<groupId>[prop.getLibraryPackage(prop)/]</groupId>
+      			<artifactId>[prop.getLibraryName(prop)/]-commons</artifactId>
+      			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+      		</dependency>
+      		<dependency>
+      			<groupId>[prop.getLibraryPackage(prop)/]</groupId>
+      			<artifactId>[prop.getLibraryName(prop)/]-server</artifactId>
+      			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+      		</dependency>
+    [/for]
+  [/if]
+  [if (any.useTestBDD())]
+            <dependency>
+                <groupId>fr.spi4j</groupId>
+                <artifactId>spi4j-lib-jbehave</artifactId>
+                <version>${spi4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+  [/if]
+          <dependency>
+              <groupId>javax.servlet</groupId>
+              <artifactId>javax.servlet-api</artifactId>
+              <version>${javax-servlet-api.version}</version>
+              <scope>provided</scope>
+          </dependency>
+  		<dependency>
+  			<groupId>jakarta.transaction</groupId>
+  			<artifactId>jakarta.transaction-api</artifactId>
+  			<version>${jakarta-transaction-api.version}</version>
+  		</dependency>
+  [if (any.useEjb())]
+            <dependency>
+                <groupId>javax.ejb</groupId>
+                <artifactId>ejb-api</artifactId>
+                <version>${ejb-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+  [/if]
+  		<!-- Utilisation d'une base h2 pour les tests -->
+          <dependency>
+              <groupId>com.h2database</groupId>
+              <artifactId>h2</artifactId>
+              <version>${h2.version}</version>
+          </dependency>
+  		<!--
+  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+      		-->
+      		
+      		<!--
+    [/protected]
+  
+  		-->
+      </dependencies>
+  
+      <build>
+          <plugins>
+              <plugin>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <version>${maven-surefire-plugin.version}</version>
+                  <configuration>
+                      <testFailureIgnore>true</testFailureIgnore>
+  [if (any.useTestBDD())]
+                        <!-- -Dfile.encoding=UTF-8 est necessaire pour que les tests jbehave
+                            dans maven sous windows fonctionnent (car JBehave ne sait lire les fichiers
+                            story qu'avec le charset par defaut, Cp1252 sous Windows, et n'accepte aucune
+                            configuration) -->
+  [/if]
+                      <!-- Utilisation d'une base H2 pour le lancement des stories -->
+                      <argLine>-Xmx128m -Dfile.encoding=${project.build.sourceEncoding} -Dtest.h2=true</argLine>
+                      <includes>
+  [if (any.useTestBDD())]
+                            <include>**/stories/**/*.java</include>
+                            <include>**/*_Behavior.java</include>
+  [/if]
+                          <include>**/*_Test.java</include>
+                          <include>**/*_Tst.java</include>
+                          <include>**/Test*.java</include>
+                      </includes>
+                  </configuration>
+              </plugin>
+  [if (any.useTestBDD())]
+    			[any.jBehaveDependencyPlugin()/]
+  [/if]
+  			<!--
+  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+       			-->
+       		
+       			<!--
+     [/protected]
+  
+  			-->
+  		</plugins>
+  [if (any.useTestBDD())]
+    		[any.jBehavePluginManagement()/]
+    		[any.jBehaveTestResources()/]
+  [/if]
+      </build>
+  
+      <reporting>
+          <plugins>
+              <!-- Rapport pmd -->
+              <plugin>
+                  <artifactId>maven-pmd-plugin</artifactId>
+                  <version>${maven-pmd-plugin.version}</version>
+                  <configuration>
+                      <enableRulesSummary>false</enableRulesSummary>
+                      <source>${java.version}</source>
+                      <targetJdk>${java.version}</targetJdk>
+                      <linkXRef>false</linkXRef>
+                      <sourceEncoding>${project.reporting.outputEncoding}</sourceEncoding>
+                      <minimumPriority>4</minimumPriority>
+                      <skip>true</skip>
+                      <rulesets>
+                          <ruleset>../[any.getCommonProjectName()/][any.getCommonsConfDir().ensureTrailingSlash()/]PMD_Spi4j.xml</ruleset>
+                      </rulesets>
+                  </configuration>
+              </plugin>
+              <!-- Rapport findbugs -->
+              <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>findbugs-maven-plugin</artifactId>
+                  <version>${findbugs-maven-plugin.version}</version>
+                  <configuration>
+                      <onlyAnalyze>none</onlyAnalyze>
+                  </configuration>
+              </plugin>
+          </plugins>
+      </reporting>
+  </project>[/template]
 
-[import fr::pacman::configuration::common::pomXml /]
-
-[template public integrationPom(any : OclAny) post (trim())]
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>[getApplicationPackage()/]</groupId>
-        <artifactId>[getApplicationName()/]</artifactId>
-        <version>[getVersion()/]</version>
-    </parent>
-    <artifactId>[getClientIntegrationProjectName()/]</artifactId>
-    <packaging>jar</packaging>
-    <name>[getApplicationName()/] - Partie integration</name>
-
-	<!--
-	// [protected ('for custom code')]
-	-->
-	
-	<!--
-	// [/protected]
-	-->
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>[getCommonProjectName()/]</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>[getClientSwingProjectName()/]</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>[getServerProjectName()/]</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		[if hasAdditionnalLibraries()]
-		[for (prop : String | getAdditionnalLibraries())]
-		<!-- Librairie additionnelle utilisateur. -->
-		<!-- On inclut ici [getApplicationName()/]-commons, même si [getApplicationName()/]-client et [getApplicationName()/]-server 
-		ont déjà la dépendance, car sinon les dépendances transitives de referentiel-commons 
-		pourrait être omises au profit de versions présentes dans spi4j-lib-jebhave 
-		(par ex. dans jbehave-core) -->
-		<dependency>
-			<groupId>[getLibraryPackage(prop)/]</groupId>
-			<artifactId>[getLibraryName(prop)/]-commons</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		<dependency>
-			<groupId>[getLibraryPackage(prop)/]</groupId>
-			<artifactId>[getLibraryName(prop)/]-server</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		[/for][/if]
-		[if useTestBDD()]
-        <dependency>
-            <groupId>fr.spi4j</groupId>
-            <artifactId>spi4j-lib-jbehave</artifactId>
-            <version>${spi4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-		[/if]
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax-servlet-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-		<dependency>
-			<groupId>jakarta.transaction</groupId>
-			<artifactId>jakarta.transaction-api</artifactId>
-			<version>${jakarta-transaction-api.version}</version>
-		</dependency>
-		[if useEjb()]
-        <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>ejb-api</artifactId>
-            <version>${ejb-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-		[/if]
-		<!-- Utilisation d'une base h2 pour les tests -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-        </dependency>
-		<!--
-		// [protected ('for dependencies')]
-		-->
-		
-		<!--
-		// [/protected]
-		-->
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
-					[if useTestBDD()]
-                    <!-- -Dfile.encoding=UTF-8 est necessaire pour que les tests jbehave
-                        dans maven sous windows fonctionnent (car JBehave ne sait lire les fichiers
-                        story qu'avec le charset par defaut, Cp1252 sous Windows, et n'accepte aucune
-                        configuration) -->
-					[/if]
-                    <!-- Utilisation d'une base H2 pour le lancement des stories -->
-                    <argLine>-Xmx128m -Dfile.encoding=${project.build.sourceEncoding} -Dtest.h2=true</argLine>
-                    <includes>
-					[if useTestBDD()]
-                        <include>**/stories/**/*.java</include>
-                        <include>**/*_Behavior.java</include>
-					[/if]
-                        <include>**/*_Test.java</include>
-                        <include>**/*_Tst.java</include>
-                        <include>**/Test*.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-			[if useTestBDD()]
-			[jBehaveDependencyPlugin() /]
-			[/if]
-			<!--
-			// [protected ('for plugins')]
-			-->
-		
-			<!--
-			// [/protected]
-			-->
-		</plugins>
-		[if useTestBDD()]
-		[jBehavePluginManagement() /]
-		[jBehaveTestResources() /]
-		[/if]
-    </build>
-
-    <reporting>
-        <plugins>
-            <!-- Rapport pmd -->
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${maven-pmd-plugin.version}</version>
-                <configuration>
-                    <enableRulesSummary>false</enableRulesSummary>
-                    <source>${java.version}</source>
-                    <targetJdk>${java.version}</targetJdk>
-                    <linkXRef>false</linkXRef>
-                    <sourceEncoding>${project.reporting.outputEncoding}</sourceEncoding>
-                    <minimumPriority>4</minimumPriority>
-                    <skip>true</skip>
-                    <rulesets>
-                        <ruleset>../[getCommonProjectName()/][getCommonsConfDir().ensureTrailingSlash()/]PMD_Spi4j.xml</ruleset>
-                    </rulesets>
-                </configuration>
-            </plugin>
-            <!-- Rapport findbugs -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs-maven-plugin.version}</version>
-                <configuration>
-                    <onlyAnalyze>none</onlyAnalyze>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-</project>
-[/template]
-
-[template public integrationSwingLanceurDev(any : OclAny) post (trim())]
-[licence()/]
-package [getApplicationPackage()/].ui.main;
-
-import fr.spi4j.business.DefaultServerProxyFactory;
-import fr.spi4j.remoting.ServiceSimulatedRemotingProxy;
-
-// @TODO : Lignes a decommenter apres generation de la cinematique Swing
-//import [getApplicationPackage()/].business.[buildAppliUserBusinessGenClassName()/];
-//import [getApplicationPackage()/].client.ui.main.SwingLanceur;
-
-/**
- * Point d'entree de l'application Swing en mode developpement.
- * @author [getAuthorName()/]
- */
-public final class SwingLanceurDev
-{
-   /**
-    * Constructeur prive.
-    */
-   private SwingLanceurDev ()
-   {
-      super();
-   }
-
-   /**
-    * Lanceur.
-    * 
-    * @param [apply_parameterMethodClassicIn('args')/]
-    *            .
-    */
-   public static void main (final String['[]'/] [apply_parameterMethodClassicIn('args')/])
-   {
-// @TODO : Lignes a decommenter apres generation de la cinematique Swing
-
-      // cette classe est generee par le generateur Pacman cinematic Swing
-//      SwingLanceur.init([apply_parameterMethodClassicIn('args')/]);
-//
-//      [buildAppliUserBusinessGenClassName()/].getSingleton().setProxyFactory(
-//               new DefaultServerProxyFactory([buildAppliUserBusinessGenClassName()/].getSingleton())
-//               {
-//                  @Override
-//                  public <TypeService> TypeService getProxiedService (final Class<TypeService> [apply_parameterMethodClassicIn('interface service')/],
-//                           final TypeService [apply_parameterMethodClassicIn('service')/])
-//                  {
-//                     TypeService [apply_variableDefault('proxy')/] = super.getProxiedService([apply_parameterMethodClassicIn('interface service')/], [apply_parameterMethodClassicIn('service')/]);
-//                     [apply_variableDefault('proxy')/] = ServiceSimulatedRemotingProxy.createProxy([apply_parameterMethodClassicIn('interface service')/], [apply_variableDefault('proxy')/]);
-//                     return [apply_variableDefault('proxy')/];
-//                  }
-//               });
-
-//      SwingLanceur.start();
-   }
-}
-[/template]
+[template public integrationSwingLanceurDev(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.getApplicationPackage()/].ui.main;
+  
+  import fr.spi4j.business.DefaultServerProxyFactory;
+  import fr.spi4j.remoting.ServiceSimulatedRemotingProxy;
+  
+  // @TODO : Lignes a decommenter apres generation de la cinematique Swing
+  //import [any.getApplicationPackage()/].business.[any.buildAppliUserBusinessGenClassName()/];
+  //import [any.getApplicationPackage()/].client.ui.main.SwingLanceur;
+  
+  /**
+   * Point d'entree de l'application Swing en mode developpement.
+   * @author [any.getAuthorName()/]
+   */
+  public final class SwingLanceurDev
+  {
+     /**
+      * Constructeur prive.
+      */
+     private SwingLanceurDev ()
+     {
+        super();
+     }
+  
+     /**
+      * Lanceur.
+      * 
+      * @param ['args'.apply_parameterMethodClassicIn()/]
+      *            .
+      */
+     public static void main (final String['['/]] ['args'.apply_parameterMethodClassicIn()/])
+     {
+  // @TODO : Lignes a decommenter apres generation de la cinematique Swing
+  
+        // cette classe est generee par le generateur Pacman cinematic Swing
+  //      SwingLanceur.init(['args'.apply_parameterMethodClassicIn()/]);
+  //
+  //      [any.buildAppliUserBusinessGenClassName()/].getSingleton().setProxyFactory(
+  //               new DefaultServerProxyFactory([any.buildAppliUserBusinessGenClassName()/].getSingleton())
+  //               {
+  //                  @Override
+  //                  public <TypeService> TypeService getProxiedService (final Class<TypeService> ['interface service'.apply_parameterMethodClassicIn()/],
+  //                           final TypeService ['service'.apply_parameterMethodClassicIn()/])
+  //                  {
+  //                     TypeService ['proxy'.apply_variableDefault()/] = super.getProxiedService(['interface service'.apply_parameterMethodClassicIn()/], ['service'.apply_parameterMethodClassicIn()/]);
+  //                     ['proxy'.apply_variableDefault()/] = ServiceSimulatedRemotingProxy.createProxy(['interface service'.apply_parameterMethodClassicIn()/], ['proxy'.apply_variableDefault()/]);
+  //                     return ['proxy'.apply_variableDefault()/];
+  //                  }
+  //               });
+  
+  //      SwingLanceur.start();
+     }
+  }[/template]

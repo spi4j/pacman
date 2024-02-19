@@ -51,6 +51,8 @@ public class SwingWidgetUtils extends WidgetUtils_Abs
       }
    }
 
+public String getImplementationClassJavaService(final Widget p_widget){return getImplementationClass(p_widget);}
+
    /**
     * Retourne la classe d'implémentation du widget ou une chaine d'erreur si le widget est inconnu.
     * @param p_widget
@@ -65,6 +67,8 @@ public class SwingWidgetUtils extends WidgetUtils_Abs
       }
       return v_interfaceName;
    }
+
+public String getImplementationClassNameForImportJavaService(final Widget p_widget){return getImplementationClassNameForImport(p_widget);}
 
    /**
     * Retourne le package de la classe d'implémentation du widget ou une chaine d'erreur si le widget est inconnu.
@@ -102,6 +106,8 @@ public class SwingWidgetUtils extends WidgetUtils_Abs
          return "ERREUR [ " + v_e.getMessage() + ']';
       }
    }
+
+public String getImplementationPackageJavaService(final Widget p_widget){return getImplementationPackage(p_widget);}
 
    /**
     * Récupère une énumération correspondant au widget

@@ -1,87 +1,45 @@
-[comment encoding = UTF-8 /]
 [module names('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::convention::rule::classRule/]
 
-[query public buildJSFContextXmlName(any : OclAny) : String =
-	getApplicationName() + '-jsf'
-/]
+[comment encoding = UTF-8 /]
+[query public buildJSFContextXmlName(any : ecore::EObject) : String = any.getApplicationName() + '-jsf'/]
 
-[query public buildAppliIdConverterXmlName(any : OclAny) : String =
-	getApplicationNameUpperFirst() + 'Converter'
-/]
+[query public buildAppliIdConverterXmlName(any : ecore::EObject) : String = any.getApplicationNameUpperFirst() + 'Converter'/]
 
-[query public buildInfoClassName(any : OclAny) : String =
-    apply_classDefault(getApplicationNameUpperFirst() + ' build info')
-/]
+[query public buildInfoClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' build info').apply_classDefault()/]
 
-[query public buildInitializationListenerClassName(any : OclAny) : String =
-   apply_classDefault(' initialization listener')
-/]
+[query public buildInitializationListenerClassName(any : ecore::EObject) : String = ' initialization listener'.apply_classDefault()/]
 
-[query public buildConfigProviderClassName(any : OclAny) : String =
-    apply_classDefault(getApplicationNameUpperFirst() + ' config provider')
-/]
+[query public buildConfigProviderClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' config provider').apply_classDefault()/]
 
-[query public buildInfoServletClassName(any : OclAny) : String =
-   apply_classDefault(getApplicationNameUpperFirst() + ' build info servlet') 
-/]
+[query public buildInfoServletClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' build info servlet').apply_classDefault()/]
 
-[query public buildCacheManagerClassName(any : OclAny) : String =
-   apply_classDefault(getApplicationNameUpperFirst() + ' cache manager') 
-/]
+[query public buildCacheManagerClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' cache manager').apply_classDefault()/]
 
-[query public buildAdministrationServiceEnumName(any : OclAny) : String =
-   apply_classEnum(getApplicationNameUpperFirst() + ' administration service') 
-/]
+[query public buildAdministrationServiceEnumName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' administration service').apply_classEnum()/]
 
-[query public buildAdministrationServletClassName(any : OclAny) : String =
-   apply_classDefault(getApplicationNameUpperFirst() + ' administration servlet') 
-/]
+[query public buildAdministrationServletClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' administration servlet').apply_classDefault()/]
 
-[query public buildSecurityManagerClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' security manager') 
-/]
+[query public buildSecurityManagerClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' security manager').apply_classDefault()/]
 
-[query public buildSecurityInitializationClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' security initialization')
-/]
+[query public buildSecurityInitializationClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' security initialization').apply_classDefault()/]
 
-[query public buildSecurityListenerClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' security listener')
-/]
+[query public buildSecurityListenerClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' security listener').apply_classDefault()/]
 
-[query public buildStepsGivenClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' steps given')
-/]
+[query public buildStepsGivenClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' steps given').apply_classDefault()/]
 
-[query public buildStepsThenClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' steps then')
-/]
+[query public buildStepsThenClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' steps then').apply_classDefault()/]
 
-[query public buildStoryAbstractClassName(any : OclAny) : String =
-	apply_classAbstract(getApplicationNameUpperFirst() + ' story')
-/]
+[query public buildStoryAbstractClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' story').apply_classAbstract()/]
 
-[query public buildXXXStoryClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + 'xxx_ story')
-/]
+[query public buildXXXStoryClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + 'xxx_ story').apply_classDefault()/]
 
-[query public buildXXXStory(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + 'xxx')
-/]
+[query public buildXXXStory(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + 'xxx').apply_classDefault()/]
 
-[query public buildMockitoViewsClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' mockito views')
-/]
+[query public buildMockitoViewsClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' mockito views').apply_classDefault()/]
 
-[query public buildGwtUserBusinessIntegration(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' gwt user business integration')
-/]
+[query public buildGwtUserBusinessIntegration(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' gwt user business integration').apply_classDefault()/]
 
-[query public buildServicesXmlName(any : OclAny) : String =
-   'services_' + getApplicationName() + '.xml'
-/]
-
-
+[query public buildServicesXmlName(any : ecore::EObject) : String = 'services_' + any.getApplicationName() + '.xml'/]

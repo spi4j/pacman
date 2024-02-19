@@ -1,19 +1,11 @@
+[module names('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::convention::rule::pageRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+
 [comment encoding = UTF-8 /]
-[module names('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
-			'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query public nameViewImplementation(viewContainer : view::ViewContainer) : String = viewContainer.name.apply_pageDefault()/]
 
-[import fr::pacman::commons::convention::rule::pageRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
+[query public nameViewStateImplementation(viewState : flow::ViewState) : String = viewState.name.apply_methodDefault()/]
 
-[query public nameViewImplementation(viewContainer : ViewContainer) : String =
-	  apply_pageDefault(viewContainer.name)
-/]
-
-[query public nameViewStateImplementation(viewState : ViewState) : String =
-	  apply_methodDefault(viewState.name)
-/]
-
-[query public nameBeanImplementation (t : StructuredType) : String = 
-	t.name + 'Bean'
-/]
-
+[query public nameBeanImplementation(t : environment::StructuredType) : String = t.name + 'Bean'/]

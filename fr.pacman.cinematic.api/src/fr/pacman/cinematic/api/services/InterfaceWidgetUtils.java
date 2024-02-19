@@ -48,6 +48,8 @@ public class InterfaceWidgetUtils extends WidgetUtils_Abs
       }
    }
 
+public String getInterfaceNameJavaService(final Widget p_widget){return getInterfaceName(p_widget);}
+
    /**
     * Retourne le nom de l'interface du widget ou une chaine d'erreur si le widget est inconnu.
     * @param p_widget
@@ -62,6 +64,8 @@ public class InterfaceWidgetUtils extends WidgetUtils_Abs
       }
       return v_interfaceName;
    }
+
+public String getInterfaceNameForImportJavaService(final Widget p_widget){return getInterfaceNameForImport(p_widget);}
 
    /**
     * Retourne le nom de l'interface du widget ou une chaine d'erreur si le widget est inconnu.
@@ -100,6 +104,8 @@ public class InterfaceWidgetUtils extends WidgetUtils_Abs
          return "ERREUR [ " + v_e.getMessage() + ']';
       }
    }
+
+public String getInterfacePackageJavaService(final Widget p_widget){return getInterfacePackage(p_widget);}
    /**
     * Récupère une énumération correspondant au widget
     * @param p_widget

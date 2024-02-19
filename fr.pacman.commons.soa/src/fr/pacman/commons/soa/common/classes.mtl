@@ -1,39 +1,19 @@
+[module classes('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::convention::rule::classRule/]
+
 [comment encoding = UTF-8 /]
-[module classes('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query public buildAttributesEnumName(d : environment::DTO) : String = (d.buildSimpleDtoName() + ' attributes').apply_classEnum()/]
 
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::convention::rule::classRule /]
+[query public buildXtoTestClassName(d : environment::DTO) : String = (d.buildSimpleDtoName() + ' xto').apply_classTest()/]
 
+[query public buildRSServicesFacadeFactoryClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' services facade factory').apply_classDefault()/]
 
-[query public buildAttributesEnumName(d : DTO) : String =
-	apply_classEnum(buildSimpleDtoName(d) + ' attributes')
- /]
+[query public buildServiceFacadeRSClassName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.buildSimpleServiceName() + ' service RS facade').apply_classImplem() else (d.buildSimpleDtoName() + ' CRUD service RS facade').apply_classImplem() endif/]
 
-[query public buildXtoTestClassName(d : DTO) : String =
-	apply_classTest(buildSimpleDtoName(d) + ' xto')
- /]
+[query public buildServiceFacadeRSInterfaceName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.buildSimpleServiceName() + ' service RS facade').apply_classInterface() else (d.buildSimpleDtoName() + ' CRUD service RS facade').apply_classInterface() endif/]
 
-[query public buildRSServicesFacadeFactoryClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' services facade factory')
- /]
+[query public buildRSResourceClassName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.name + ' resources').apply_classDefault() else (d.buildSimpleDtoName() + ' CRUD resources').apply_classDefault() endif/]
 
-[query public buildServiceFacadeRSClassName(s : Service, d : DTO) : String =
-	if not s.oclIsUndefined() then apply_classImplem(s.buildSimpleServiceName() + ' service RS facade')
-	else apply_classImplem(d.buildSimpleDtoName() + ' CRUD service RS facade') endif
- /]
-
-[query public buildServiceFacadeRSInterfaceName(s : Service, d : DTO) : String = 
-	if not s.oclIsUndefined() then apply_classInterface(s.buildSimpleServiceName() + ' service RS facade') 
-    else d.apply_classInterface(d.buildSimpleDtoName() + ' CRUD service RS facade') endif
- /]
-
-[query public buildRSResourceClassName(s : Service, d : DTO) : String =
-	if not s.oclIsUndefined() then  apply_classDefault(s.name + ' resources')
-	else d.apply_classDefault(d.buildSimpleDtoName() + ' CRUD resources') endif 
- /]
-
-[query public buildRSResourceTestClassName(s : Service, d : DTO) : String = 
-	if not s.oclIsUndefined() then  apply_classTest(s.name + ' resources')
-	else d.apply_classTest(d.buildSimpleDtoName() + ' resources') endif 
- /]
+[query public buildRSResourceTestClassName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.name + ' resources').apply_classTest() else (d.buildSimpleDtoName() + ' resources').apply_classTest() endif/]

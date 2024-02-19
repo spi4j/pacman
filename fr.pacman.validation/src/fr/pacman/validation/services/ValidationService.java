@@ -60,6 +60,9 @@ public final class ValidationService
       }
    }
 
+// TODO Méthode à supprimer
+   @Deprecated public static String updviewJavaService(final EObject p_obj,final int p_niveau,final String p_message){return updview(p_obj,p_niveau,p_message);}
+
    /**
     * Met à jour la vue pour un nouveau problème.
     * 
@@ -81,13 +84,18 @@ public final class ValidationService
       final EStructuralFeature v_nameFeature = p_obj.eClass().getEStructuralFeature("name");
       if (v_nameFeature != null)
       {
-         return (p_niveau + "  " + p_obj.getClass().getName() + "  " + p_message + ".  Nom de l'élément : " + p_obj.eGet(v_nameFeature));
+         return (p_niveau + "  " + p_obj.getClass().getName() + "  " + p_message + ".  Nom de l'élément : " + p_ob
+
+message du problème
+* @return une chai 'infor ation  e l'er updviewJavaService( @deprecated Méthode appe,e uniquement dans ,s modules Acceleo (*.m){return updview( appe,nt dans ,eleo (*.m);}j.eGet(v_nameFeature));
       }
       else
       {
          return (p_niveau + "  " + p_obj.getClass().getName() + "  " + p_message + ".  L'élément n'a pas d'attribut \"nom\"");
       }
    }
+
+@Deprecated public static String updviewJavaService(final ObeoDSMObject p_obj,final int p_niveau,final String p_message){return updview(p_obj,p_niveau,p_message);}
 
    /**
     * Détecter les cycles dans les liaisons de tâches GRAAL.

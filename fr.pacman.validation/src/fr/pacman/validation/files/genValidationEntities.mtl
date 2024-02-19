@@ -1,16 +1,7 @@
+[module genValidationEntities('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+
 [comment encoding = UTF-8 /]
-[module genValidationEntities('http://www.obeonetwork.org/dsl/entity/3.0.0',
-                              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-
-[template public genValidationEntities(r : Root)]
-    [comment]Vérification des entités[/comment]
-    [comment][file ('warnings_entites.txt', false, 'UTF-8')]
-        [for (e : Entity | r.eAllContents(Entity))]
-            [if (e.attributes->size() <= 1)]
-Entité avec 0 ou 1 attribut : [e.block.name /].[e.name/]
-            [/if]
-        [/for]
-    [/file][/comment]
+[template public genValidationEntities(r : entity::Root)]
 [/template]

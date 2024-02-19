@@ -1,38 +1,34 @@
+[module genSequence('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::commons::common::properties/]
+
 [comment encoding = UTF-8 /]
-[module genSequence('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::sql::common /]
-[import fr::pacman::commons::common::properties /]
-
-
-[template public genSequence(databaseType : String, r : Root)]
-/****************************************************************/
-[genSlashedLine('Sequences', sizeHeader())/]
-/****************************************************************/
-[for (n : environment::Namespace | r.ownedNamespaces)]
-[genSequence(databaseType,n)/]
-[/for]
+[template public genSequence(databaseType : String, r : entity::Root)]
+  /****************************************************************/
+  ['Sequences'.genSlashedLine(databaseType.sizeHeader())/]
+  /****************************************************************/
+  [for (n : environment::Namespace | r.ownedNamespaces)]
+    [databaseType.genSequence(n)/]
+  [/for]
 [/template]
+
 [template private genSequence(databaseType : String, n : environment::Namespace)]
-[for (sn : environment::Namespace | n.ownedNamespaces)]
-[genSequence(databaseType,sn)/]
-[/for]
-[for (e : Entity | n.types->select(el|el.oclIsKindOf(entity::Entity)))]
-[if not e.isNotPersistent() or useMatching()]
-[genSequence(databaseType,e)/]
-[/if]
-[/for]
+  [for (sn : environment::Namespace | n.ownedNamespaces)]
+    [databaseType.genSequence(sn)/]
+  [/for]
+  [for (e : entity::Entity | n.types->select(el | el.oclIsKindOf(entity::Entity)))]
+    [if (not e.isNotPersistent() or e.useMatching())]
+      [databaseType.genSequence(e)/]
+    [/if]
+  [/for]
 [/template]
 
-[template public genSequence(databaseType : String, e : Entity)]
-create sequence [nameSequence(e)/] start with 1000;
-[/template]
+[template public genSequence(databaseType : String, e : entity::Entity)]
+  create sequence [e.nameSequence()/] start with 1000;[/template]
 
-[template private genSequence(e : Entity)]
-create sequence [nameSequence(e)/] start with 1000;
-[/template]
-
-
+[template private genSequence(e : entity::Entity)]
+  create sequence [e.nameSequence()/] start with 1000;[/template]

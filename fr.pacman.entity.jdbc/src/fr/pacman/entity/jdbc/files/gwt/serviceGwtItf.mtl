@@ -1,85 +1,78 @@
+[module serviceGwtItf('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::entity::api::common::serviceutils/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::xtoutils/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+
 [comment encoding = UTF-8 /]
-[module serviceGwtItf('http://www.obeonetwork.org/dsl/entity/3.0.0',
-                      'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::entity::api::common::serviceutils /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::xtoutils /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-
-[template public serviceGwtItf(e : Entity)]
-[licence()/]
-[let self : OclAny = if not e.oclIsUndefined() then e else 'Entity NULL' endif]
-package [buildPackageBusinessGwtClientService(e)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[e.writeImports()/]
-
-// [/protected]
-
-/**
- * Interface de services appelables par le client.
- * @author [getAuthorName()/]
- */
-@RemoteServiceRelativePath("../[getApplicationName()/]/[buildServiceClassName(e)/]")
-public interface [buildServiceGwtInterfaceName(e)/] extends GwtRemoteService<[genPkType()/], [buildXtoClassNameFromEntity(e)/]>
-{
-
-[if not e.isNotPersistent()]
-[for (r : Reference | e.referencingStar())]
-   /**
-    * Obtenir la liste d'objets de type '[buildEntityImplClassName(e)/]' associés à l'instance de type '[buildEntityImplClassName(r.containingType.oclAsType(Entity))/]'.
-[getComParamInverseIdIn(r)/]
-    * @return une liste de [buildXtoClassNameFromEntity(e)/] ayant [apply_attributeDefault(nameBaseReferenceInverse(r))/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/]
-    */
-   List<[buildXtoClassNameFromEntity(e)/]> [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/]);
-
-[/for]
-[for (r : Reference | e.referencesStarStar())]
-   /**
-    * Obtenir la liste d'objets de type '[buildEntityImplClassName(r.referencedType.oclAsType(Entity))/]' associés à l'instance de type '[buildEntityImplClassName(r.containingType.oclAsType(Entity))/]'.
-    * @param [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/]
-    *           (In)(*) [buildEntityImplClassName(r.containingType.oclAsType(Entity))/].
-    * @return une liste de [buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity))/]
-    */
-   List<[buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity))/]> [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/]);
-
-[/for]
-[/if]
-   // [nameServiceInterfaceGwt(e)/]
-   // [protected (e.getUserCodeId(nameServiceInterfaceGwt(e)))]
-
-   // [/protected]
-}[/let]
+[template public serviceGwtItf(e : entity::Entity)]
+  [e.licence()/]
+  [let self = if not (e = null) then e else 'Entity NULL' endif]
+    package [e.buildPackageBusinessGwtClientService()/];
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [e.writeImports()/]
+      
+    [/protected]
+    
+    
+    /**
+     * Interface de services appelables par le client.
+     * @author [e.getAuthorName()/]
+     */
+    @RemoteServiceRelativePath("../[e.getApplicationName()/]/[e.buildServiceClassName()/]")
+    public interface [e.buildServiceGwtInterfaceName()/] extends GwtRemoteService<[e.genPkType()/], [e.buildXtoClassNameFromEntity()/]>
+    {
+    
+    [if (not e.isNotPersistent())]
+      [for (r : environment::Reference | e.referencingStar())]
+           /**
+            * Obtenir la liste d'objets de type '[e.buildEntityImplClassName()/]' associés à l'instance de type '[r.containingType.oclAsType(entity::Entity).buildEntityImplClassName()/]'.
+        [r.getComParamInverseIdIn()/]
+            * @return une liste de [e.buildXtoClassNameFromEntity()/] ayant [r.nameBaseReferenceInverse().apply_attributeDefault()/][r.namePK_ID()/] = [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            */
+           List<[e.buildXtoClassNameFromEntity()/]> [('find list ' + r.name + ' by ' + r.containingType.oclAsType(entity::Entity).buildSimpleEntityName()).apply_methodDefault()/] (final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]);
+        
+      [/for]
+      [for (r : environment::Reference | e.referencesStarStar())]
+           /**
+            * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(entity::Entity).buildEntityImplClassName()/]' associés à l'instance de type '[r.containingType.oclAsType(entity::Entity).buildEntityImplClassName()/]'.
+            * @param [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            *           (In)(*) [r.containingType.oclAsType(entity::Entity).buildEntityImplClassName()/].
+            * @return une liste de [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]
+            */
+           List<[r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]> [('find list ' + r.name + ' by ' + r.containingType.oclAsType(entity::Entity).buildSimpleEntityName()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/]);
+        
+      [/for]
+    [/if]
+       // [e.nameServiceInterfaceGwt()/]
+       [protected (e.getUserCodeId(e.nameServiceInterfaceGwt())) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    }[/let]
 [/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport('fr.spi4j.ui.gwt.client.services.GwtRemoteService')/]
-[e.addImport('com.google.gwt.user.client.rpc.RemoteServiceRelativePath')/]
-[if not e.oclIsUndefined()]
-	[e.addImport(e.getImportXtoGwt())/]
-  	[for (r : Reference | e.referencesStarStar())]
-		[e.addImport(getImportXtoGwt(r.referencedType.oclAsType(Entity)))/]
-  	[/for]
-[/if]
-[e.flushImports()/]
-[/template]
-
-
-
-
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('fr.spi4j.ui.gwt.client.services.GwtRemoteService')/]
+  [e.addImport('com.google.gwt.user.client.rpc.RemoteServiceRelativePath')/]
+  [if (not (e = null))]
+    	[e.addImport(e.getImportXtoGwt())/]
+    [for (r : environment::Reference | e.referencesStarStar())]
+      		[e.addImport(r.referencedType.oclAsType(entity::Entity).getImportXtoGwt())/]
+    [/for]
+  [/if]
+  [e.flushImports()/][/template]

@@ -65,6 +65,8 @@ public class WSUtils
       return v_xtos;
    }
 
+public Set<Entity> xtoAGenererJavaService(final List<Operation> p_operations){return xtoAGenerer(p_operations);}
+
    /**
     * Cherche les dépendances d'un type.
     * @param p_dependencies

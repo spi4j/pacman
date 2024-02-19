@@ -1,571 +1,560 @@
-[comment encoding = UTF-8 /]
 [module ClientBDD('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages / ]
-[import fr::pacman::commons::common::names / ]
-[import fr::pacman::commons::common::imports / ]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::configuration::common::names/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::common::classes/]
 
-[import fr::pacman::configuration::common::names /]
+[comment encoding = UTF-8 /]
+[template public jBehaveStepsGiven(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildJBehaveStepPackage()/];
+  
+  import fr.spi4j.lib.jbehave.SpiSteps_Abs;
+  import fr.spi4j.lib.jbehave.SpiStory_Abs;
+  
+  /**
+   * Liste des steps "Given".
+   * 
+   * Dans le projet spi4j-lib-jbehave existent déjà des steps basiques (ne portant
+   * aucune information sur le métier) capables de s’interfacer avec
+   * l’implémentation du Design Pattern Model-View-Presenter (MVP) définie dans
+   * Spi4J. Les steps définis dans le projet spi4j-lib-jbehave ont pour but de
+   * faciliter le travail de manipulation de l’interface graphique, ou tout du
+   * moins du comportement de l’application cliente.
+   *
+   * Ce step permet de démarrer un écran. Il cherche parmi toutes les vues connues
+   * celle dont l’interface est annotée avec <code>@UserView(name)</code>.
+   * 
+   * Le presenter associé à la vue trouvée est alors instancié (sans paramètres).
+   * A partir de cet instant, l’écran est considéré comme démarré et actif. Si un
+   * problème a lieu lors de l’instanciation du presenter ou si aucune vue ne
+   * porte l’annotation @UserView cherchée, le step est considéré comme dans
+   * l’état FAILED.
+   *
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildStepsGivenClassName()/] extends SpiSteps_Abs
+  {
+  	/**
+      * Construit une classe de steps.
+      * @param ['story'.apply_parameterMethodClassicIn()/]
+      *           la story en cours
+      */
+  	public [any.buildStepsGivenClassName()/] (final SpiStory_Abs ['story'.apply_parameterMethodClassicIn()/])
+  	{
+  		super(['story'.apply_parameterMethodClassicIn()/]);
+  	}
+  }[/template]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
+[template public jBehaveStepsThen(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildJBehaveStepPackage()/];
+  
+  import fr.spi4j.lib.jbehave.SpiSteps_Abs;
+  import fr.spi4j.lib.jbehave.SpiStory_Abs;
+  
+  /**
+   * Liste des steps "Then".
+   *
+   * Dans le projet spi4j-lib-jbehave existent déjà des steps basiques (ne portant
+   * aucune information sur le métier) capables de s’interfacer avec
+   * l’implémentation du Design Pattern Model-View-Presenter (MVP) définie dans
+   * Spi4J. Les steps définis dans le projet spi4j-lib-jbehave ont pour but de
+   * faciliter le travail de manipulation de l’interface graphique, ou tout du
+   * moins du comportement de l’application cliente.
+   * 
+   * <code>viewIsActive(name)</code> : Ce step liste les vues actives et vérifie
+   * qu’il y en a une dont l’interface porte l’annotation
+   * <code>@UserView(name)</code>. Si aucune interface parmi les vues actives ne
+   * porte cette annotation, le step est considéré comme dans l’état FAILED.
+   * 
+   * <code>activeViewTitleIs(titre)</code> : Ce step liste les vues actives et
+   * vérifie qu’il y en a une qui porte le bon titre. Si aucune vue parmi les vues
+   * actives ne porte le bon titre, le step est considéré comme dans l’état
+   * FAILED.
+   * 
+   * <code>listContainsValue(liste, valeur)</code> : Ce step vérifie qu’une liste
+   * contient la valeur souhaitée. Il va tout d’abord rechercher parmi les vues
+   * actives celle qui possède la liste souhaitée. Cela correspond à un getter
+   * dans l’interface de vue qui doit être annoté avec <code>@Field(liste)</code>.
+   * 
+   * Ce champ doit être une liste, donc doit être typé
+   * <code>HasSelection_Itf<…></code>. Une fois le champ trouvé, on parcourt les
+   * valeurs possibles dans la liste et on vérifie que le paramètre du step en
+   * fait partie (en utilisant la méthode toString()). Si la liste n’a pas été
+   * trouvée parmi les vues actives ou si la liste ne contient pas la valeur
+   * attendue, le step est considéré comme dans l’état FAILED.
+   * 
+   * <code>listContainsValues(liste, valeurs)</code> : Ce step est similaire au
+   * précédent, mais il permet en plus de vérifier qu’une liste contient plusieurs
+   * valeurs. Les valeurs doivent être séparées par un point virgule (;).
+   * 
+   * <code>listDoesntContainValue(liste, valeur)(champ, valeur)</code> : Ce step
+   * est l’opposé des deux précédents et sert à vérifier qu’une liste ne contient
+   * pas une certaine valeur.
+   * 
+   * <code>fieldValueIs(champ, valeur)</code> : Ce step vérifie qu’un champ
+   * contient une certaine valeur. Il va tout d’abord rechercher parmi les vues
+   * actives celle qui possède le champ souhaité. Cela correspond à un getter dans
+   * l’interface de vue qui doit être annoté <code>@Field(champ)</code>.
+   * 
+   * Ce champ doit être un champ de saisie (texte, date, nombre, checkbox, liste,
+   * …) et doit donc être typé <code>HasValue<…></code>. Une fois le champ trouvé,
+   * on vérifie que sa valeur correspond au paramètre du step (en utilisant la
+   * méthode toString()). Si le champ n’a pas été trouvé parmi les vues actives ou
+   * si la valeur du champ n’est pas celle attendue, le step est considéré comme
+   * dans l’était FAILED.
+   * 
+   * <code>activeViewIsModal</code> : Ce step vérifie que la dernière vue ouverte
+   * est modale.
+   * 
+   * <code>activeViewIsNotModal</code> : Ce step vérifie que la dernière vue
+   * ouverte est n’est pas modale.
+   * 
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildStepsThenClassName()/] extends SpiSteps_Abs
+  {
+  	/**
+      * Construit une classe de steps.
+      * @param ['story'.apply_parameterMethodClassicIn()/]
+      *           la story en cours
+      */
+  	public [any.buildStepsThenClassName()/] (final SpiStory_Abs ['story'.apply_parameterMethodClassicIn()/])
+  	{
+  		super(['story'.apply_parameterMethodClassicIn()/]);
+  	}
+  }[/template]
 
-[import fr::pacman::commons::common::classes / ]
+[template public jBehaveStory(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildJBehaveStepPackage()/];
+  
+  import static org.junit.jupiter.api.Assertions.fail;
+  
+  import java.lang.reflect.Method;
+  import java.util.List;
+  
+  import org.apache.logging.log4j.LogManager;
+  import org.jbehave.core.steps.SilentStepMonitor;
+  import org.junit.jupiter.api.AfterEach;
+  import org.junit.jupiter.api.BeforeEach;
+  
+  import fr.spi4j.Parameters;
+  import fr.spi4j.lib.jbehave.SaveDtoProxy;
+  import fr.spi4j.lib.jbehave.SpiStory_Abs;
+  import fr.spi4j.requirement.Requirement_Itf;
+  import fr.spi4j.ui.mvp.MVPUtils;
+  import fr.spi4j.ui.mvp.ViewsAssociation;
+  import fr.spi4j.ProxyFactory_Itf;
+  import fr.spi4j.business.DefaultClientProxyFactory;
+  import fr.spi4j.remoting.ServiceRemotingProxy;
+  import fr.spi4j.remoting.ServiceSimulatedRemotingProxy;
+  import fr.spi4j.lib.jbehave.requirement.RequirementsInServiceProxy;
+  [if ('swing'.equalsIgnoreCase(any.getClient()))]
+    import fr.spi4j.ui.swing.SpiDialog;
+    import fr.spi4j.ui.mvp.rda.RichViewManager;
+  [/if]
+  [if ('gwt'.equalsIgnoreCase(any.getClient()))]
+    import fr.spi4j.ui.gwt.client.mvp.GWTViewManager;
+    import fr.spi4j.ui.gwt.client.services.DefaultAsyncCallback;
+  [/if]
+  [if (any.useSpi4jSecurity())]
+    import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+    import fr.spi4j.lib.security.client.Spi4jClientSecurity;
+    import [any.getApplicationPackage()/].[any.buildSecurityManagerClassName()/];
+  [/if]
+  import jakarta.transaction.Status;
+  import jakarta.transaction.SystemException;
+  import [any.buildJBehaveUiPackage()/].[any.buildMockitoViewsClassName()/];
+  import [any.getApplicationPackage()/].[any.buildInfoClassName()/];
+  
+  /**
+   * Classe ancêtre des storys JBehave, avec chargement des Steps.
+   * 
+   * Cette classe utilise une configuration de JBehave qui permet de répercuter
+   * les erreurs JBehave en tant qu’erreurs d’exécution dans JUnit, ainsi que
+   * d’afficher des traces d’erreur en cohérence avec l’erreur réelle.
+   * 
+   * Lorsque le concepteur de story s’attachera à la création de nouveaux steps,
+   * le plus simple est de créer une nouvelle classe dans son projet contenant les
+   * stories, qui implémentera la classe abstraite SpiSteps_Abs.
+   * 
+   * Dans le projet spi4j-lib-jbehave existent déjà des steps basiques (ne portant
+   * aucune information sur le métier) capables de s’interfacer avec
+   * l’implémentation du Design Pattern Model-View-Presenter (MVP) définie dans
+   * Spi4J. Les steps définis dans le projet spi4j-lib-jbehave ont pour but de
+   * faciliter le travail de manipulation de l’interface graphique, ou tout du
+   * moins du comportement de l’application cliente.
+  
+   * @author [any.getAuthorName()/]
+   */
+  public abstract class [any.buildStoryAbstractClassName()/] extends SpiStory_Abs
+  {
+  
+  	private static String ['server url'.apply_attributeStatic()/];
+  	private boolean ['transactionnal'.apply_attributeDefault()/];
+  
+     	static
+     	{
+  		[any.getApplicationNameUpperFirst()/]BuildInfo.logBuildInfo();
+  
+  		// si le parametre serverUrl est defini dans une propriete systeme 
+  		// ou dans l'environnement du systeme alors on utilise via le remoting, 
+  		// le serveur (ou le cluster) distant defini dans l'url pour executer les services
+  		// au lieu d'utiliser l'implementation des services en local (cela peut 
+  		// être utile pour des tests de charge par exemple)
+  
+  		['server url'.apply_attributeStatic()/] = Parameters.getParameter("serverUrl", null);
+  		['init services in user business'.apply_methodDefault()/]();
+  	}
+  
+     /**
+      * Une story qui n'utilise pas le remoting et qui 
+  	* fait une transaction qui sera rollbackee.
+      */
+  	public [any.buildStoryAbstractClassName()/] ()
+  	{
+  		this(true);
+  	}
+  
+     /**
+      * Une story avec possibilite de transaction rollbackee
+      * @param ['transaction'.apply_parameterMethodClassicIn()/]
+      *           si la story doit utiliser une transaction
+      */
+  	public [any.buildStoryAbstractClassName()/] (final boolean ['transaction'.apply_parameterMethodClassicIn()/])
+  	{
+  		[any.getAffectationPrefix()/]['transactionnal'.apply_attributeDefault()/] = ['server url'.apply_attributeStatic()/] == null && ['transaction'.apply_parameterMethodClassicIn()/];
+  
+  		// Modification de la configuration de la story pour gestion des transactions invalidees
+  		configuration().useStepMonitor(new SilentStepMonitor()
+  		{
+  			@Override
+  			public void beforePerforming (final String ['step'.apply_parameterMethodClassicIn()/], final boolean ['dry run'.apply_parameterMethodClassicIn()/], final Method ['method'.apply_parameterMethodClassicIn()/])
+  			{
+  				// Si la transaction a ete marquee en rollback only, 
+  				// alors il faut faire un rollback et en commencer une nouvelle
+  				// pour que la story puisse continuer a s'executer.
+  
+  				[any.displayCommentForActiveJdbc()/]
+              	if (['transactionnal'.apply_attributeDefault()/]) {
+  				//	try {
+  				//		final int ['transaction status'.apply_variableFinal()/] = [any.getApplicationNameUpperFirst()/]ParamPersistence.getUserPersistence().getUserTransaction()
+                  //           .getStatus();
+  				//		if (['transaction status'.apply_variableFinal()/] == Status.STATUS_MARKED_ROLLBACK) {
+  				//			[any.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]().rollback();
+  				//			[any.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]().begin();
+  				//		}
+  				//	}
+                 	//	catch (final SystemException v_e) {
+                  //  		fail(v_e.toString());
+  				//	}
+  				}
+  
+  				super.beforePerforming(['step'.apply_parameterMethodClassicIn()/], ['dry run'.apply_parameterMethodClassicIn()/], ['method'.apply_parameterMethodClassicIn()/]);
+     			}
+  		});
+  	}
+  
+      /**
+  	 * Initialisation d'une transaction en debut de chaque story. Cette méthode peut
+  	 * être redéfinie pour rajouter une transaction autour de la story par exemple.
+       */
+  	@BeforeEach
+  	@Override
+  	public void setUp ()
+  	{
+  [if ('gwt'.equalsIgnoreCase(any.getClient()))]
+    		MVPUtils.setViewManager(new GWTViewManager());
+    		[any.getAffectationPrefix()/]['transactionnal'.apply_attributeDefault()/] = !isLoadTesting();
+  [/if]
+  [if ('swing'.equalsIgnoreCase(any.getClient()))]
+    		MVPUtils.setViewManager(new RichViewManager());
+  [/if]
+  		if ([any.getAffectationPrefix()/]['transactionnal'.apply_attributeDefault()/]) {
+  
+  			[any.displayCommentForActiveJdbc()/]
+  
+  			//[any.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]().begin();
+  		}
+  		super.setUp();
+  		SaveDtoProxy.setStory(this);
+  	}
+  
+  	/**
+  	 * Cette méthode permet de définir quelles sont les classes à charger pour
+  	 * renseigner le référentiel de steps disponibles.
+  	 */
+  	@Override
+  	public List<Object> getStepsClassesInstances ()
+  	{
+  		final List<Object> v_classes = super.getStepsClassesInstances();
+  		v_classes.add(new [any.buildStepsGivenClassName()/](this));
+  		v_classes.add(new [any.buildStepsThenClassName()/](this));
+  		return v_classes;
+  	}
+  
+  	/**
+  	 * Cette méthode indique quelles sont les vues à utiliser lors du déroulement
+  	 * des scenarii (vues réelles ou vues mockées ).
+  	 */
+  	@Override
+  	public ViewsAssociation getViewsAssociation ()
+  	{
+  [if ('gwt'.equalsIgnoreCase(any.getClient()))]
+    		DefaultAsyncCallback.forceNoPopup();
+  [/if]
+  [if ('swing'.equalsIgnoreCase(any.getClient()))]
+    		SpiDialog.forceNotModal();
+  [/if]
+  		return new [any.buildMockitoViewsClassName()/] ();
+  	}
+  
+  	/**
+  	 * Cette méthode permet de retrouver une exigence à partir de son id.
+  	 */
+  	@Override
+  	public Requirement_Itf findRequirement (final String ['req'.apply_parameterMethodClassicIn()/])
+  	{
+  		[any.displayCommentForActiveJdbc()/] 		
+  	
+  		//return ['requirement'.apply_classEnum()/].valueOf(['req'.apply_parameterMethodClassicIn()/]);
+          return null;
+  	}
+  
+  	/**
+  	 * Cette méthode indique si la story doit vérifier l’exécution des exigences.
+  	 */
+  	@Override
+  	public boolean shouldCheckRequirements ()
+  	{
+  [if ('swing'.equalsIgnoreCase(any.getClient()))]
+    		return !isLoadTesting() && ['server url'.apply_attributeStatic()/] == null;
+  [/if]
+  [if ('gwt'.equalsIgnoreCase(any.getClient()))]
+    		return ['server url'.apply_attributeStatic()/] == null;
+  [/if]
+  	}
+  
+  	/**
+  	 * Indiquer ici la politique de création des rapports pour JBehave.
+  	 */
+  	@Override
+  	public boolean shouldGenerateViewAfterStories () 
+      {
+  		return false;
+  	}
+  
+  	/**
+  	 * Cette méthode retourne le nombre de processus à activer pour la story.
+  	 * 
+  	 * @return le nombre de processus demandés pour le test.
+  	 */
+  	public int getThreadsToLaunch() {
+  		return 1;
+  	}
+  
+  	/**
+  	 * Finalisation de chaque story : rollback de la transaction. Cette méthode peut
+  	 * être redéfinie pour rajouter une transaction autour de la story par exemple.
+       */
+  	@AfterEach
+  	@Override
+  	public void tearDown ()
+  	{
+  		super.tearDown();
+  		if ([any.getAffectationPrefix()/]['transactionnal'.apply_attributeFinal()/]){
+  
+  		  	[any.displayCommentForActiveJdbc()/]
+  
+  			//[any.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]().rollback();
+  		}
+  		SaveDtoProxy.endTest();
+     }
+  
+      /**
+  	 * Initialisation des services. Cette méthode permet de redéfinir les proxies
+  	 * placés sur les services métiers lors du déroulement des scenarii, avec par
+  	 * exemple un proxy pour sauvegarder en mémoire les nouveaux objets enregistrés
+  	 * (SaveDtoProxy).
+       */
+  	private static void ['init services in user business'.apply_methodDefault()/] ()
+  	{
+  [if (any.useSpi4jSecurity())]
+    		// Activation de la couche de securite.
+          	Spi4jSecurity_Abs.setInstance(new Spi4jClientSecurity());
+          	Spi4jSecurity_Abs.getInstance().enable();
+          	Spi4jSecurity_Abs.getInstance().setAuthorizationService(new [any.buildSecurityManagerClassName()/]());
+  [/if]
+  		
+  		if (['server url'.apply_attributeStatic()/] != null) {
+   			LogManager.getLogger([any.buildStoryAbstractClassName()/].class).info("Connexion au serveur distant : " + ['server url'.apply_attributeStatic()/]);
+   			ServiceRemotingProxy.setServerUrl(['server url'.apply_attributeStatic()/]);
+  
+  			final ProxyFactory_Itf ['client proxy factory'.apply_variableFinal()/] = createClientProxyFactory(['server url'.apply_attributeStatic()/]);
+              
+  		   	[any.displayCommentForActiveJdbc()/]
+  
+  			//[any.buildAppliUserBusinessGenClassName()/].getSingleton().setProxyFactory(['client proxy factory'.apply_variableFinal()/]);
+  		} else {
+  			
+  			[any.displayCommentForActiveJdbc()/]
+  
+  			//[any.buildAppliUserBusinessGenClassName()/].getSingleton()
+  			//		.setProxyFactory(new DefaultServerProxyFactory([any.buildAppliUserBusinessGenClassName()/].getSingleton()) {
+  			//			@Override
+  			//			public <TypeService> TypeService getProxiedService(final Class<TypeService> ['interface service'.apply_parameterMethodClassicIn()/],
+  			//					final TypeService ['service'.apply_parameterMethodClassicIn()/]) {
+  [if (any.useServiceRequirements())]
+    			//				// ajout du proxy pour le contrôle des requirements.
+    			//				TypeService ['proxy'.apply_variableDefault()/] = RequirementsInServiceProxy.createProxy(['service'.apply_parameterMethodClassicIn()/], Requirement.class);							
+  [/if]
+  			//				// ajout du proxy pour sauvegarde des DTO
+  [if (any.useServiceRequirements())]
+    			//				['proxy'.apply_variableDefault()/] = SaveDtoProxy.createProxy(['proxy'.apply_parameterMethodClassicIn()/]);
+  [else]
+    			//				TypeService ['proxy'.apply_variableDefault()/] = SaveDtoProxy.createProxy(['service'.apply_parameterMethodClassicIn()/]);
+  [/if]
+  			//				return super.getProxiedService(['interface service'.apply_parameterMethodClassicIn()/], ['proxy'.apply_variableDefault()/]);
+  			//			}
+  			//		});
+  		}
+  	}
+  
+     /**
+      * @param ['server url'.apply_parameterMethodClassicIn()/]
+      *           l'url du serveur
+      * @return la factory de services cote client dediee aux stories, avec SaveDtoProxy
+      */
+  	private static DefaultClientProxyFactory ['create client proxy factory'.apply_methodDefault()/] (final String ['server url'.apply_parameterMethodClassicIn()/])
+  	{
+  		return new DefaultClientProxyFactory(['server url'.apply_parameterMethodClassicIn()/])
+  		{
+  			@Override
+  			public <TypeService> TypeService getProxiedService (final Class<TypeService> ['interface service'.apply_parameterMethodClassicIn()/],
+                    final TypeService ['service'.apply_parameterMethodClassicIn()/])
+  			{
+  				final TypeService ['proxy'.apply_variableFinal()/] = super.getProxiedService(['interface service'.apply_parameterMethodClassicIn()/], ['service'.apply_parameterMethodClassicIn()/]);
+  				// ajout du proxy pour sauvegarde des DTO
+  				return SaveDtoProxy.createProxy(['proxy'.apply_variableFinal()/]);
+  			}
+  		};
+  	}
+  }[/template]
 
-[template public jBehaveStepsGiven(any : OclAny) post (trim())]
-[licence()/]
-package [buildJBehaveStepPackage()/];
+[template public jBehaveMockitoViews(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildJBehaveUiPackage()/];
+  
+  import fr.spi4j.lib.jbehave.mockito.SpiMockito;
+  import fr.spi4j.ui.mvp.Presenter_Abs;
+  import fr.spi4j.ui.mvp.View_Itf;
+  import fr.spi4j.ui.mvp.rda.RichViewsAssociation;
+  
+  /**
+   * Association des vues pour Mockito (Tests JBehave).
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildMockitoViewsClassName()/] extends RichViewsAssociation
+  {
+  	/**
+      * Constructeur.
+      */
+     	public [any.buildMockitoViewsClassName()/] ()
+  	{
+        super();
+  		
+  	  //addAssociation(MainPresenter.class, MainView_Itf.class);
+  	}
+  
+  	@SuppressWarnings("unchecked")
+  	@Override
+  	public <TypeView extends View_Itf> TypeView getViewForPresenter (final Presenter_Abs<TypeView, ?> ['presenter'.apply_parameterMethodClassicIn()/])
+  	{
+  		return (TypeView) SpiMockito.mockViewBean(
+  			getAssociation((Class<? extends Presenter_Abs<? extends View_Itf, ?>>)  ['presenter'.apply_parameterMethodClassicIn()/].getClass()),
+  			 ['presenter'.apply_parameterMethodClassicIn()/], true);
+     }
+  }[/template]
 
-import fr.spi4j.lib.jbehave.SpiSteps_Abs;
-import fr.spi4j.lib.jbehave.SpiStory_Abs;
+[template public jBehaveStorySample(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildJBehaveStoriesPackage()/];
+  
+  import [any.buildJBehaveStepPackage()/].[any.buildStoryAbstractClassName()/];
+  
+  /**
+   * Classe exemple de story.
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildXXXStoryClassName()/] extends [any.buildStoryAbstractClassName()/]
+  {
+  	// Appel automatique de la story associée (fichier.story avec le même nom).
+  }[/template]
 
-/**
- * Liste des steps "Given".
- * 
- * Dans le projet spi4j-lib-jbehave existent déjà des steps basiques (ne portant
- * aucune information sur le métier) capables de s’interfacer avec
- * l’implémentation du Design Pattern Model-View-Presenter (MVP) définie dans
- * Spi4J. Les steps définis dans le projet spi4j-lib-jbehave ont pour but de
- * faciliter le travail de manipulation de l’interface graphique, ou tout du
- * moins du comportement de l’application cliente.
- *
- * Ce step permet de démarrer un écran. Il cherche parmi toutes les vues connues
- * celle dont l’interface est annotée avec <code>@UserView(name)</code>.
- * 
- * Le presenter associé à la vue trouvée est alors instancié (sans paramètres).
- * A partir de cet instant, l’écran est considéré comme démarré et actif. Si un
- * problème a lieu lors de l’instanciation du presenter ou si aucune vue ne
- * porte l’annotation @UserView cherchée, le step est considéré comme dans
- * l’état FAILED.
- *
- * @author [getAuthorName()/]
- */
-public class [buildStepsGivenClassName()/] extends SpiSteps_Abs
-{
-	/**
-    * Construit une classe de steps.
-    * @param [apply_parameterMethodClassicIn('story')/]
-    *           la story en cours
-    */
-	public [buildStepsGivenClassName()/] (final SpiStory_Abs [apply_parameterMethodClassicIn('story')/])
-	{
-		super([apply_parameterMethodClassicIn('story')/]);
-	}
-}
-[/template]
+[template public jBehaveGwtUserBusinessIntegration(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildJBehaveUiPackage()/];
+  
+  import fr.spi4j.lib.jbehave.SaveDtoProxy;
+  import fr.spi4j.ui.gwt.proxy.AsyncProxy;
+  
+  /**
+   * Association des vues pour Mockito (Tests JBehave).
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildGwtUserBusinessIntegration()/] extends [any.buildGwtUserBusinessClassName()/]
+  {
+  
+     @Override
+     public void initBindings ()
+     {
+  	  // bin GWT Service
+  	  [protected (any.getUserCodeId('bin GWT Service')) startTagPrefix('// ') endTagPrefix('// ')]
+       	  /** Genererer les bindings de services Gwt
+             /** bind(XXXGwtService.class, wrapIntegrationService(XXXGwtServiceAsync.class, new XXXGwtServiceImpl())); */
+       
+     [/protected]
+  
+     }
+  
+     /**
+      * Ajoute des proxies sur les services, en mode integration.
+      * @param <TypeService>
+      *           le type du service
+      * @param ['interface class'.apply_parameterMethodClassicIn()/]
+      *           l'interface asynchrone
+      * @param ['service'.apply_parameterMethodClassicIn()/]
+      *           l'implementation
+      * @return le service avec ses aspects
+      */
+     @SuppressWarnings("unchecked")
+     private <TypeService> TypeService  ['wrap integration service'.apply_methodDefault()/] (final Class<TypeService> ['interface class'.apply_parameterMethodClassicIn()/],
+              final Object ['service'.apply_parameterMethodClassicIn()/])
+     {
+        // On place le proxy de sauvegarde du DTO en premier pour avoir le retour de la fonction (avant de simuler l'asynchrone)
+        // La classe SaveDtoProxy peut être utilisee aussi dans le cas d'une architecture simplifiee entity
+  
+        Object ['service proxy'.apply_variableDefault()/] = SaveDtoProxy.createProxy(['service'.apply_parameterMethodClassicIn()/]);
+        ['service proxy'.apply_variableDefault()/] = AsyncProxy.createProxy(['interface class'.apply_parameterMethodClassicIn()/], ['service proxy'.apply_variableDefault()/]);
+        return (TypeService) ['service proxy'.apply_variableDefault()/];
+     }
+  }[/template]
 
-[template public jBehaveStepsThen(any : OclAny) post (trim())]
-[licence()/]
-package [buildJBehaveStepPackage()/];
-
-import fr.spi4j.lib.jbehave.SpiSteps_Abs;
-import fr.spi4j.lib.jbehave.SpiStory_Abs;
-
-/**
- * Liste des steps "Then".
- *
- * Dans le projet spi4j-lib-jbehave existent déjà des steps basiques (ne portant
- * aucune information sur le métier) capables de s’interfacer avec
- * l’implémentation du Design Pattern Model-View-Presenter (MVP) définie dans
- * Spi4J. Les steps définis dans le projet spi4j-lib-jbehave ont pour but de
- * faciliter le travail de manipulation de l’interface graphique, ou tout du
- * moins du comportement de l’application cliente.
- * 
- * <code>viewIsActive(name)</code> : Ce step liste les vues actives et vérifie
- * qu’il y en a une dont l’interface porte l’annotation
- * <code>@UserView(name)</code>. Si aucune interface parmi les vues actives ne
- * porte cette annotation, le step est considéré comme dans l’état FAILED.
- * 
- * <code>activeViewTitleIs(titre)</code> : Ce step liste les vues actives et
- * vérifie qu’il y en a une qui porte le bon titre. Si aucune vue parmi les vues
- * actives ne porte le bon titre, le step est considéré comme dans l’état
- * FAILED.
- * 
- * <code>listContainsValue(liste, valeur)</code> : Ce step vérifie qu’une liste
- * contient la valeur souhaitée. Il va tout d’abord rechercher parmi les vues
- * actives celle qui possède la liste souhaitée. Cela correspond à un getter
- * dans l’interface de vue qui doit être annoté avec <code>@Field(liste)</code>.
- * 
- * Ce champ doit être une liste, donc doit être typé
- * <code>HasSelection_Itf<…></code>. Une fois le champ trouvé, on parcourt les
- * valeurs possibles dans la liste et on vérifie que le paramètre du step en
- * fait partie (en utilisant la méthode toString()). Si la liste n’a pas été
- * trouvée parmi les vues actives ou si la liste ne contient pas la valeur
- * attendue, le step est considéré comme dans l’état FAILED.
- * 
- * <code>listContainsValues(liste, valeurs)</code> : Ce step est similaire au
- * précédent, mais il permet en plus de vérifier qu’une liste contient plusieurs
- * valeurs. Les valeurs doivent être séparées par un point virgule (;).
- * 
- * <code>listDoesntContainValue(liste, valeur)(champ, valeur)</code> : Ce step
- * est l’opposé des deux précédents et sert à vérifier qu’une liste ne contient
- * pas une certaine valeur.
- * 
- * <code>fieldValueIs(champ, valeur)</code> : Ce step vérifie qu’un champ
- * contient une certaine valeur. Il va tout d’abord rechercher parmi les vues
- * actives celle qui possède le champ souhaité. Cela correspond à un getter dans
- * l’interface de vue qui doit être annoté <code>@Field(champ)</code>.
- * 
- * Ce champ doit être un champ de saisie (texte, date, nombre, checkbox, liste,
- * …) et doit donc être typé <code>HasValue<…></code>. Une fois le champ trouvé,
- * on vérifie que sa valeur correspond au paramètre du step (en utilisant la
- * méthode toString()). Si le champ n’a pas été trouvé parmi les vues actives ou
- * si la valeur du champ n’est pas celle attendue, le step est considéré comme
- * dans l’était FAILED.
- * 
- * <code>activeViewIsModal</code> : Ce step vérifie que la dernière vue ouverte
- * est modale.
- * 
- * <code>activeViewIsNotModal</code> : Ce step vérifie que la dernière vue
- * ouverte est n’est pas modale.
- * 
- * @author [getAuthorName()/]
- */
-public class [buildStepsThenClassName()/] extends SpiSteps_Abs
-{
-	/**
-    * Construit une classe de steps.
-    * @param [apply_parameterMethodClassicIn('story')/]
-    *           la story en cours
-    */
-	public [buildStepsThenClassName()/] (final SpiStory_Abs [apply_parameterMethodClassicIn('story')/])
-	{
-		super([apply_parameterMethodClassicIn('story')/]);
-	}
-}
-[/template]
-
-[template public jBehaveStory(any : OclAny) post (trim())]
-[licence()/]
-package [buildJBehaveStepPackage()/];
-
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.lang.reflect.Method;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.jbehave.core.steps.SilentStepMonitor;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
-import fr.spi4j.Parameters;
-import fr.spi4j.lib.jbehave.SaveDtoProxy;
-import fr.spi4j.lib.jbehave.SpiStory_Abs;
-import fr.spi4j.requirement.Requirement_Itf;
-import fr.spi4j.ui.mvp.MVPUtils;
-import fr.spi4j.ui.mvp.ViewsAssociation;
-import fr.spi4j.ProxyFactory_Itf;
-import fr.spi4j.business.DefaultClientProxyFactory;
-import fr.spi4j.remoting.ServiceRemotingProxy;
-import fr.spi4j.remoting.ServiceSimulatedRemotingProxy;
-import fr.spi4j.lib.jbehave.requirement.RequirementsInServiceProxy;
-[if 'swing'.equalsIgnoreCase(getClient())]
-import fr.spi4j.ui.swing.SpiDialog;
-import fr.spi4j.ui.mvp.rda.RichViewManager;
-[/if]
-[if 'gwt'.equalsIgnoreCase(getClient())]
-import fr.spi4j.ui.gwt.client.mvp.GWTViewManager;
-import fr.spi4j.ui.gwt.client.services.DefaultAsyncCallback;
-[/if]
-[if useSpi4jSecurity()]
-import fr.spi4j.lib.security.Spi4jSecurity_Abs;
-import fr.spi4j.lib.security.client.Spi4jClientSecurity;
-import [getApplicationPackage()/].[buildSecurityManagerClassName()/];
-[/if]
-import jakarta.transaction.Status;
-import jakarta.transaction.SystemException;
-import [buildJBehaveUiPackage()/].[buildMockitoViewsClassName()/];
-import [getApplicationPackage()/].[buildInfoClassName()/];
-
-/**
- * Classe ancêtre des storys JBehave, avec chargement des Steps.
- * 
- * Cette classe utilise une configuration de JBehave qui permet de répercuter
- * les erreurs JBehave en tant qu’erreurs d’exécution dans JUnit, ainsi que
- * d’afficher des traces d’erreur en cohérence avec l’erreur réelle.
- * 
- * Lorsque le concepteur de story s’attachera à la création de nouveaux steps,
- * le plus simple est de créer une nouvelle classe dans son projet contenant les
- * stories, qui implémentera la classe abstraite SpiSteps_Abs.
- * 
- * Dans le projet spi4j-lib-jbehave existent déjà des steps basiques (ne portant
- * aucune information sur le métier) capables de s’interfacer avec
- * l’implémentation du Design Pattern Model-View-Presenter (MVP) définie dans
- * Spi4J. Les steps définis dans le projet spi4j-lib-jbehave ont pour but de
- * faciliter le travail de manipulation de l’interface graphique, ou tout du
- * moins du comportement de l’application cliente.
-
- * @author [getAuthorName()/]
- */
-public abstract class [buildStoryAbstractClassName()/] extends SpiStory_Abs
-{
-
-	private static String [apply_attributeStatic('server url')/];
-	private boolean [apply_attributeDefault('transactionnal')/];
-
-   	static
-   	{
-		[getApplicationNameUpperFirst()/]BuildInfo.logBuildInfo();
-
-		// si le parametre serverUrl est defini dans une propriete systeme 
-		// ou dans l'environnement du systeme alors on utilise via le remoting, 
-		// le serveur (ou le cluster) distant defini dans l'url pour executer les services
-		// au lieu d'utiliser l'implementation des services en local (cela peut 
-		// être utile pour des tests de charge par exemple)
-
-		[apply_attributeStatic('server url')/] = Parameters.getParameter("serverUrl", null);
-		[apply_methodDefault('init services in user business')/]();
-	}
-
-   /**
-    * Une story qui n'utilise pas le remoting et qui 
-	* fait une transaction qui sera rollbackee.
-    */
-	public [buildStoryAbstractClassName()/] ()
-	{
-		this(true);
-	}
-
-   /**
-    * Une story avec possibilite de transaction rollbackee
-    * @param [apply_parameterMethodClassicIn('transaction')/]
-    *           si la story doit utiliser une transaction
-    */
-	public [buildStoryAbstractClassName()/] (final boolean [apply_parameterMethodClassicIn('transaction')/])
-	{
-		[getAffectationPrefix()/][apply_attributeDefault('transactionnal')/] = [apply_attributeStatic('server url')/] == null && [apply_parameterMethodClassicIn('transaction')/];
-
-		// Modification de la configuration de la story pour gestion des transactions invalidees
-		configuration().useStepMonitor(new SilentStepMonitor()
-		{
-			@Override
-			public void beforePerforming (final String [apply_parameterMethodClassicIn('step')/], final boolean [apply_parameterMethodClassicIn('dry run')/], final Method [apply_parameterMethodClassicIn('method')/])
-			{
-				// Si la transaction a ete marquee en rollback only, 
-				// alors il faut faire un rollback et en commencer une nouvelle
-				// pour que la story puisse continuer a s'executer.
-
-				[displayCommentForActiveJdbc()/]
- 				[comment : ne pas mettre de prefixe pour la variable d'instance dans ce cas particulier. /]
-            	if ([apply_attributeDefault('transactionnal')/]) {
-				//	try {
-				//		final int [apply_variableFinal('transaction status')/] = [getApplicationNameUpperFirst()/]ParamPersistence.getUserPersistence().getUserTransaction()
-                //           .getStatus();
-				//		if ([apply_variableFinal('transaction status')/] == Status.STATUS_MARKED_ROLLBACK) {
-				//			[buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]().rollback();
-				//			[buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]().begin();
-				//		}
-				//	}
-               	//	catch (final SystemException v_e) {
-                //  		fail(v_e.toString());
-				//	}
-				}
-
-				super.beforePerforming([apply_parameterMethodClassicIn('step')/], [apply_parameterMethodClassicIn('dry run')/], [apply_parameterMethodClassicIn('method')/]);
-   			}
-		});
-	}
-
-    /**
-	 * Initialisation d'une transaction en debut de chaque story. Cette méthode peut
-	 * être redéfinie pour rajouter une transaction autour de la story par exemple.
-     */
-	@BeforeEach
-	@Override
-	public void setUp ()
-	{
-		[if 'gwt'.equalsIgnoreCase(getClient())]
-		MVPUtils.setViewManager(new GWTViewManager());
-		[getAffectationPrefix()/][apply_attributeDefault('transactionnal')/] = !isLoadTesting();
-		[/if]
-		[if 'swing'.equalsIgnoreCase(getClient())]
-		MVPUtils.setViewManager(new RichViewManager());
-		[/if]
-		if ([getAffectationPrefix()/][apply_attributeDefault('transactionnal')/]) {
-
-			[displayCommentForActiveJdbc()/]
-
-			//[buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]().begin();
-		}
-		super.setUp();
-		SaveDtoProxy.setStory(this);
-	}
-
-	/**
-	 * Cette méthode permet de définir quelles sont les classes à charger pour
-	 * renseigner le référentiel de steps disponibles.
-	 */
-	@Override
-	public List<Object> getStepsClassesInstances ()
-	{
-		final List<Object> v_classes = super.getStepsClassesInstances();
-		v_classes.add(new [buildStepsGivenClassName()/](this));
-		v_classes.add(new [buildStepsThenClassName()/](this));
-		return v_classes;
-	}
-
-	/**
-	 * Cette méthode indique quelles sont les vues à utiliser lors du déroulement
-	 * des scenarii (vues réelles ou vues mockées ).
-	 */
-	@Override
-	public ViewsAssociation getViewsAssociation ()
-	{
-		[if 'gwt'.equalsIgnoreCase(getClient())]
-		DefaultAsyncCallback.forceNoPopup();
-		[/if]
-		[if 'swing'.equalsIgnoreCase(getClient())]
-		SpiDialog.forceNotModal();
-		[/if]
-		return new [buildMockitoViewsClassName()/] ();
-	}
-
-	/**
-	 * Cette méthode permet de retrouver une exigence à partir de son id.
-	 */
-	@Override
-	public Requirement_Itf findRequirement (final String [apply_parameterMethodClassicIn('req')/])
-	{
-		[displayCommentForActiveJdbc()/] 		
-	
-		//return [apply_classEnum('requirement')/].valueOf([apply_parameterMethodClassicIn('req')/]);
-        return null;
-	}
-
-	/**
-	 * Cette méthode indique si la story doit vérifier l’exécution des exigences.
-	 */
-	@Override
-	public boolean shouldCheckRequirements ()
-	{
-		[if 'swing'.equalsIgnoreCase(getClient())]
-		return !isLoadTesting() && [apply_attributeStatic('server url')/] == null;
-		[/if]
-		[if 'gwt'.equalsIgnoreCase(getClient())]
-		return [apply_attributeStatic('server url')/] == null;
-		[/if]
-	}
-
-	/**
-	 * Indiquer ici la politique de création des rapports pour JBehave.
-	 */
-	@Override
-	public boolean shouldGenerateViewAfterStories () 
-    {
-		return false;
-	}
-
-	/**
-	 * Cette méthode retourne le nombre de processus à activer pour la story.
-	 * 
-	 * @return le nombre de processus demandés pour le test.
-	 */
-	public int getThreadsToLaunch() {
-		return 1;
-	}
-
-	/**
-	 * Finalisation de chaque story : rollback de la transaction. Cette méthode peut
-	 * être redéfinie pour rajouter une transaction autour de la story par exemple.
-     */
-	@AfterEach
-	@Override
-	public void tearDown ()
-	{
-		super.tearDown();
-		if ([getAffectationPrefix()/][apply_attributeFinal('transactionnal')/]){
-
-		  	[displayCommentForActiveJdbc()/]
-
-			//[buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]().rollback();
-		}
-		SaveDtoProxy.endTest();
-   }
-
-    /**
-	 * Initialisation des services. Cette méthode permet de redéfinir les proxies
-	 * placés sur les services métiers lors du déroulement des scenarii, avec par
-	 * exemple un proxy pour sauvegarder en mémoire les nouveaux objets enregistrés
-	 * (SaveDtoProxy).
-     */
-	private static void [apply_methodDefault('init services in user business')/] ()
-	{
-		[if useSpi4jSecurity()]
-		// Activation de la couche de securite.
-      	Spi4jSecurity_Abs.setInstance(new Spi4jClientSecurity());
-      	Spi4jSecurity_Abs.getInstance().enable();
-      	Spi4jSecurity_Abs.getInstance().setAuthorizationService(new [buildSecurityManagerClassName()/]());
-		[/if]
-		
-		if ([apply_attributeStatic('server url')/] != null) {
- 			LogManager.getLogger([buildStoryAbstractClassName()/].class).info("Connexion au serveur distant : " + [apply_attributeStatic('server url')/]);
- 			ServiceRemotingProxy.setServerUrl([apply_attributeStatic('server url')/]);
-
-			final ProxyFactory_Itf [apply_variableFinal('client proxy factory')/] = createClientProxyFactory([apply_attributeStatic('server url')/]);
-            
-		   	[displayCommentForActiveJdbc()/]
-
-			//[buildAppliUserBusinessGenClassName()/].getSingleton().setProxyFactory([apply_variableFinal('client proxy factory')/]);
-		} else {
-			
-			[displayCommentForActiveJdbc()/]
-
-			//[buildAppliUserBusinessGenClassName()/].getSingleton()
-			//		.setProxyFactory(new DefaultServerProxyFactory([buildAppliUserBusinessGenClassName()/].getSingleton()) {
-			//			@Override
-			//			public <TypeService> TypeService getProxiedService(final Class<TypeService> [apply_parameterMethodClassicIn('interface service')/],
-			//					final TypeService [apply_parameterMethodClassicIn('service')/]) {
-			[if useServiceRequirements()]
-			//				// ajout du proxy pour le contrôle des requirements.
-			//				TypeService [apply_variableDefault('proxy')/] = RequirementsInServiceProxy.createProxy([apply_parameterMethodClassicIn('service')/], Requirement.class);							
-			[/if]
-			//				// ajout du proxy pour sauvegarde des DTO
-			[if useServiceRequirements()]
-			//				[apply_variableDefault('proxy')/] = SaveDtoProxy.createProxy([apply_parameterMethodClassicIn('proxy')/]);
-			[else]
-			//				TypeService [apply_variableDefault('proxy')/] = SaveDtoProxy.createProxy([apply_parameterMethodClassicIn('service')/]);
-			[/if]
-			//				return super.getProxiedService([apply_parameterMethodClassicIn('interface service')/], [apply_variableDefault('proxy')/]);
-			//			}
-			//		});
-		}
-	}
-
-   /**
-    * @param [apply_parameterMethodClassicIn('server url')/]
-    *           l'url du serveur
-    * @return la factory de services cote client dediee aux stories, avec SaveDtoProxy
-    */
-	private static DefaultClientProxyFactory [apply_methodDefault('create client proxy factory')/] (final String [apply_parameterMethodClassicIn('server url')/])
-	{
-		return new DefaultClientProxyFactory([apply_parameterMethodClassicIn('server url')/])
-		{
-			@Override
-			public <TypeService> TypeService getProxiedService (final Class<TypeService> [apply_parameterMethodClassicIn('interface service')/],
-                  final TypeService [apply_parameterMethodClassicIn('service')/])
-			{
-				final TypeService [apply_variableFinal('proxy')/] = super.getProxiedService([apply_parameterMethodClassicIn('interface service')/], [apply_parameterMethodClassicIn('service')/]);
-				// ajout du proxy pour sauvegarde des DTO
-				return SaveDtoProxy.createProxy([apply_variableFinal('proxy')/]);
-			}
-		};
-	}
-}
-[/template]
-
-[template public jBehaveMockitoViews(any : OclAny) post (trim())]
-[licence()/]
-package [buildJBehaveUiPackage()/];
-
-import fr.spi4j.lib.jbehave.mockito.SpiMockito;
-import fr.spi4j.ui.mvp.Presenter_Abs;
-import fr.spi4j.ui.mvp.View_Itf;
-import fr.spi4j.ui.mvp.rda.RichViewsAssociation;
-
-/**
- * Association des vues pour Mockito (Tests JBehave).
- * @author [getAuthorName()/]
- */
-public class [buildMockitoViewsClassName()/] extends RichViewsAssociation
-{
-	/**
-    * Constructeur.
-    */
-   	public [buildMockitoViewsClassName()/] ()
-	{
-      super();
-		
-	  //addAssociation(MainPresenter.class, MainView_Itf.class);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <TypeView extends View_Itf> TypeView getViewForPresenter (final Presenter_Abs<TypeView, ?> [apply_parameterMethodClassicIn('presenter')/])
-	{
-		return (TypeView) SpiMockito.mockViewBean(
-			getAssociation((Class<? extends Presenter_Abs<? extends View_Itf, ?>>)  [apply_parameterMethodClassicIn('presenter')/].getClass()),
-			 [apply_parameterMethodClassicIn('presenter')/], true);
-   }
-}
-[/template]
-
-
-[template public jBehaveStorySample (any : OclAny) post (trim())]
-[licence()/]
-package [buildJBehaveStoriesPackage()/];
-
-import [buildJBehaveStepPackage()/].[buildStoryAbstractClassName()/];
-
-/**
- * Classe exemple de story.
- * @author [getAuthorName()/]
- */
-public class [buildXXXStoryClassName()/] extends [buildStoryAbstractClassName()/]
-{
-	// Appel automatique de la story associée (fichier.story avec le même nom).
-}
-[/template]
-
-[template public jBehaveGwtUserBusinessIntegration(any : OclAny) post (trim())]
-[licence()/]
-package [buildJBehaveUiPackage()/];
-
-import fr.spi4j.lib.jbehave.SaveDtoProxy;
-import fr.spi4j.ui.gwt.proxy.AsyncProxy;
-
-/**
- * Association des vues pour Mockito (Tests JBehave).
- * @author [getAuthorName()/]
- */
-public class [buildGwtUserBusinessIntegration()/] extends [buildGwtUserBusinessClassName()/]
-{
-
-   @Override
-   public void initBindings ()
-   {
-	  // bin GWT Service
-	  // [protected (any.getUserCodeId('bin GWT Service'))]
-	  /** Genererer les bindings de services Gwt
-      /** bind(XXXGwtService.class, wrapIntegrationService(XXXGwtServiceAsync.class, new XXXGwtServiceImpl())); */
-
-	  // [/protected]
-   }
-
-   /**
-    * Ajoute des proxies sur les services, en mode integration.
-    * @param <TypeService>
-    *           le type du service
-    * @param [apply_parameterMethodClassicIn('interface class')/]
-    *           l'interface asynchrone
-    * @param [apply_parameterMethodClassicIn('service')/]
-    *           l'implementation
-    * @return le service avec ses aspects
-    */
-   @SuppressWarnings("unchecked")
-   private <TypeService> TypeService  [apply_methodDefault('wrap integration service')/] (final Class<TypeService> [apply_parameterMethodClassicIn('interface class')/],
-            final Object [apply_parameterMethodClassicIn('service')/])
-   {
-      // On place le proxy de sauvegarde du DTO en premier pour avoir le retour de la fonction (avant de simuler l'asynchrone)
-      // La classe SaveDtoProxy peut être utilisee aussi dans le cas d'une architecture simplifiee entity
-
-      Object [apply_variableDefault('service proxy')/] = SaveDtoProxy.createProxy([apply_parameterMethodClassicIn('service')/]);
-      [apply_variableDefault('service proxy')/] = AsyncProxy.createProxy([apply_parameterMethodClassicIn('interface class')/], [apply_variableDefault('service proxy')/]);
-      return (TypeService) [apply_variableDefault('service proxy')/];
-   }
-}
-[/template]
-
-[template private displayCommentForActiveJdbc(any : OclAny)]
-/**
- * Decommenter cette partie de code une fois que la generation de la persistance
- * aura ete effectuee (click droit 'Generer persistance JDBC' dans le projet de
- * modelisation). 
- */
-[/template]
+[template private displayCommentForActiveJdbc(any : ecore::EObject)]
+  /**
+   * Decommenter cette partie de code une fois que la generation de la persistance
+   * aura ete effectuee (click droit 'Generer persistance JDBC' dans le projet de
+   * modelisation). 
+   */[/template]

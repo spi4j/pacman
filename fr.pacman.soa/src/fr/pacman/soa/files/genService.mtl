@@ -1,21 +1,20 @@
+[module genService('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::server::business::impl::category::service/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genService('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                   'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::server::business::impl::category::service /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genService(s : Service)]
-[file (filename(getServerSourceDir(), buildPackageBusinessImplementationServiceDto(s, null), buildServiceClassName(s, null) + '.java'), false, 'UTF-8')]
-[service(s)/]
-[/file]
+[template public genService(s : soa::Service)]
+  [file (s.getServerSourceDir().filename(s.buildPackageBusinessImplementationServiceDto(null), s.buildServiceClassName(null) + '.java'), overwrite, 'UTF-8')]
+    [s.service()/]
+  [/file]
 [/template]
 
-[template public genService(s : Service, d : DTO)]
-[file (filename(d.getServerSourceDir(), buildPackageBusinessImplementationServiceDto(s, d), buildServiceClassName(s, d) + '.java'), false, 'UTF-8')]
-[service(s, d)/]
-[/file]
+[template public genService(s : soa::Service, d : environment::DTO)]
+  [file (d.getServerSourceDir().filename(s.buildPackageBusinessImplementationServiceDto(d), s.buildServiceClassName(d) + '.java'), overwrite, 'UTF-8')]
+    [s.service(d)/]
+  [/file]
 [/template]

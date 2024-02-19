@@ -1,223 +1,224 @@
+[module ReferentielUtils('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::requests::counterQueries/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+
 [comment encoding = UTF-8 /]
-[module ReferentielUtils('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::commons::requests::counterQueries /]
-
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-
-[template public createReferentielUtils(r : Root)]
-[file (filename(getServerSourceDir(), buildPackagePersistenceReferentiel(), apply_classDefault('referentiel utils') + '.java'), false, 'UTF-8')]
-[licence()/]
-package [buildPackagePersistenceReferentiel()/];
-
-// [protected ('for imports')]
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-import org.apache.commons.collections4.MultiMap;
-import org.apache.commons.collections4.map.MultiValueMap;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
-import fr.spi4j.Parameters;
-
-// [/protected]
-
-/**
- * Classe d utilitaires pour le chargement des fichiers dans le referentiel
- */
-public class [apply_classDefault('referentiel utils')/]
-{
-
-	// CONSTANTES
-
-	/**  Le logger  */
-    private static final Logger [apply_attributeFinalStatic('LOG')/] = LogManager.getLogger ( [apply_classDefault('referentiel utils')/].class );
-
-    // Constantes [apply_classDefault('referentiel utils')/]
-    // [protected (r.getUserCodeId('Constantes ' + apply_classDefault('referentiel utils')))]
-
-    // [/protected]
-
-
-   // ATTRIBUTS
-
-    // Attributs [apply_classDefault('referentiel utils')/]
-    // [protected (r.getUserCodeId('Attributs ' + apply_classDefault('referentiel utils')))]
-
-    // [/protected]
-
-
-   // METHODES
-
-   /**
-    * Obtenir la multimap <String,String> correspondant à la String [apply_parameterMethodClassicIn('filter criteria')/] passée en parametre
-    * @param String [apply_parameterMethodClassicIn('filter criteria')/]
-    * @return MultiMap <String,String> [apply_variableDefault('map filter criteria')/]
-    */
-   public static MultiMap <String,String> [apply_methodDefault('split filter criteria')/] ( String [apply_parameterMethodClassicIn('filter criteria')/] )
-   {
-	   /** On declare la multimap qui servira de resultat */
-	   MultiMap <String,String> [apply_variableDefault('map filter criteria')/] = new MultiValueMap <String,String>();
-
-	   /** On transforme la chaine du type filterCrit1,filterCrit2,...,filterCritn en un tableau de chaine filterCrt, via le separateur ',' */
-	   String ['[]'/] [apply_variableDefault('list filter criteria')/] = [apply_parameterMethodClassicIn('filter criteria')/].split (",");
-
-	   /** On parcoure le tableau de chaines de filterCriteria */
-	   for (String [apply_variableDefault('value criteria')/] : [apply_variableDefault('list filter criteria')/] )
-	   {
-		   /** On transforme un filter criteria de type champN=valN en un tableau, via le separateur '='*/
-		   String ['[]'/] [apply_variableDefault('key value filter criteria')/] = [apply_variableDefault('value criteria')/].split("=");
-			
-           /** Dans le cas 'champN=', on cree une entree multimap de cle champN, et de valeur chaine vide */
-		   if ( ( [apply_variableDefault('key value filter criteria')/].length == 1 ) && ( [apply_variableDefault('value criteria')/].contains("=") ) )  
-		   {
-			   [apply_variableDefault('map filter criteria')/].put ( [apply_variableDefault('key value filter criteria')/]['[0]'/].trim() , "");
-		   }
-		   
-		   /** Dans le cas normal 'champN=valN', on cree une entree multimap de cle champN, et de valeur valN */
-		   if ( [apply_variableDefault('key value filter criteria')/].length == 2 ) 
-		   {
-			   [apply_variableDefault('map filter criteria')/].put ( [apply_variableDefault('key value filter criteria')/]['[0]'/].trim() , [apply_variableDefault('key value filter criteria')/]['[1]'/].trim());
-		   }
-		   
-		   /** Dans tous les autres cas (plus que 1 '=' dans le filtercriteria) on est dans un filter criteria erronné, on ne fait rien */		
-
-	   }
-
-	   /** On retourne la multimap générée */
-	   return [apply_variableDefault('map filter criteria')/];	   
-   }
-
-
-   /**
-    * Ecrire dans un fichier la liste des relations en erreur du traitement en cours
-    * @param String [apply_parameterMethodClassicIn('entete')/]
-    * @param List<String> [apply_parameterMethodClassicIn('source list')/]
-    * @param String [apply_parameterMethodClassicIn ('file name')/]
-    */
-   public static void [apply_methodDefault('store list')/] ( String [apply_parameterMethodClassicIn('entete')/],  List<String> [apply_parameterMethodClassicIn('source list')/], String [apply_parameterMethodClassicIn ('file name')/] ) 
-   {
-	   /** On declare la chaine de travail */
-       StringBuilder [apply_variableDefault('string builder')/] = new StringBuilder();
-
-	   /** On ajoute l'entete a la chaine de travail */       
-       [apply_variableDefault('string builder')/].append([apply_parameterMethodClassicIn('entete')/]);
-       [apply_variableDefault('string builder')/].append(System.lineSeparator());
-
-       /** Pour tous les elements de la liste, on les ajoute a la chaine de travail */
-       for (String [apply_parameterMethodClassicIn('list element')/] : [apply_parameterMethodClassicIn('source list')/])
+[template public createReferentielUtils(r : entity::Root)]
+  [file (r.getServerSourceDir().filename(r.buildPackagePersistenceReferentiel(), 'referentiel utils'.apply_classDefault() + '.java'), overwrite, 'UTF-8')]
+    [r.licence()/]
+    package [r.buildPackagePersistenceReferentiel()/];
+    
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      import java.nio.charset.StandardCharsets;
+      import java.nio.file.Files;
+      import java.nio.file.Paths;
+      import java.util.ArrayList;
+      import java.util.Arrays;
+      import java.util.Date;
+      import java.util.List;
+      import java.util.Properties;
+      
+      import javax.mail.Message;
+      import javax.mail.Session;
+      import javax.mail.Transport;
+      import javax.mail.internet.InternetAddress;
+      import javax.mail.internet.MimeMessage;
+      
+      import org.apache.commons.collections4.MultiMap;
+      import org.apache.commons.collections4.map.MultiValueMap;
+      import org.apache.logging.log4j.Logger;
+      import org.apache.logging.log4j.LogManager;
+      
+      import fr.spi4j.Parameters;
+      
+    [/protected]
+    
+    
+    /**
+     * Classe d utilitaires pour le chargement des fichiers dans le referentiel
+     */
+    public class ['referentiel utils'.apply_classDefault()/]
+    {
+    
+    	// CONSTANTES
+    
+    	/**  Le logger  */
+        private static final Logger ['LOG'.apply_attributeFinalStatic()/] = LogManager.getLogger ( ['referentiel utils'.apply_classDefault()/].class );
+    
+        // Constantes ['referentiel utils'.apply_classDefault()/]
+        [protected (r.getUserCodeId('Constantes ' + 'referentiel utils'.apply_classDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+    
+    
+    
+       // ATTRIBUTS
+    
+        // Attributs ['referentiel utils'.apply_classDefault()/]
+        [protected (r.getUserCodeId('Attributs ' + 'referentiel utils'.apply_classDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+    
+    
+    
+       // METHODES
+    
+       /**
+        * Obtenir la multimap <String,String> correspondant à la String ['filter criteria'.apply_parameterMethodClassicIn()/] passée en parametre
+        * @param String ['filter criteria'.apply_parameterMethodClassicIn()/]
+        * @return MultiMap <String,String> ['map filter criteria'.apply_variableDefault()/]
+        */
+       public static MultiMap <String,String> ['split filter criteria'.apply_methodDefault()/] ( String ['filter criteria'.apply_parameterMethodClassicIn()/] )
        {
-           [apply_variableDefault('string builder')/].append([apply_parameterMethodClassicIn('list element')/]);
-           [apply_variableDefault('string builder')/].append(System.lineSeparator());
+    	   /** On declare la multimap qui servira de resultat */
+    	   MultiMap <String,String> ['map filter criteria'.apply_variableDefault()/] = new MultiValueMap <String,String>();
+    
+    	   /** On transforme la chaine du type filterCrit1,filterCrit2,...,filterCritn en un tableau de chaine filterCrt, via le separateur ',' */
+    	   String ['['/]] ['list filter criteria'.apply_variableDefault()/] = ['filter criteria'.apply_parameterMethodClassicIn()/].split (",");
+    
+    	   /** On parcoure le tableau de chaines de filterCriteria */
+    	   for (String ['value criteria'.apply_variableDefault()/] : ['list filter criteria'.apply_variableDefault()/] )
+    	   {
+    		   /** On transforme un filter criteria de type champN=valN en un tableau, via le separateur '='*/
+    		   String ['['/]] ['key value filter criteria'.apply_variableDefault()/] = ['value criteria'.apply_variableDefault()/].split("=");
+    			
+               /** Dans le cas 'champN=', on cree une entree multimap de cle champN, et de valeur chaine vide */
+    		   if ( ( ['key value filter criteria'.apply_variableDefault()/].length == 1 ) && ( ['value criteria'.apply_variableDefault()/].contains("=") ) )  
+    		   {
+    			   ['map filter criteria'.apply_variableDefault()/].put ( ['key value filter criteria'.apply_variableDefault()/]['['/]0].trim() , "");
+    		   }
+    		   
+    		   /** Dans le cas normal 'champN=valN', on cree une entree multimap de cle champN, et de valeur valN */
+    		   if ( ['key value filter criteria'.apply_variableDefault()/].length == 2 ) 
+    		   {
+    			   ['map filter criteria'.apply_variableDefault()/].put ( ['key value filter criteria'.apply_variableDefault()/]['['/]0].trim() , ['key value filter criteria'.apply_variableDefault()/]['['/]1].trim());
+    		   }
+    		   
+    		   /** Dans tous les autres cas (plus que 1 '=' dans le filtercriteria) on est dans un filter criteria erronné, on ne fait rien */		
+    
+    	   }
+    
+    	   /** On retourne la multimap générée */
+    	   return ['map filter criteria'.apply_variableDefault()/];	   
        }
-
-       /** On ecrit la chaine de travail dans le fichier */
-       String [apply_parameterMethodClassicIn('list string')/] = [apply_variableDefault('string builder')/].toString().trim();
-       byte['[]'/] [apply_parameterMethodClassicIn('list bytes')/] = [apply_parameterMethodClassicIn('list string')/].getBytes(StandardCharsets.UTF_8);
-	   try
-	   {
-       		Files.write(Paths.get([apply_parameterMethodClassicIn ('file name')/]), [apply_parameterMethodClassicIn('list bytes')/]);
-	   }
-	   catch ( Exception [apply_variableDefault('exception')/] ) 
-	   {
-	       /** En cas d erreur de traitement, on affiche une ligne d'erreur en log  */		   
-    		[apply_attributeFinalStatic('LOG')/].error ( "Probleme d'ecriture dans le fichier de detail des lignes en erreur: "+ [apply_parameterMethodClassicIn ('file name')/], [apply_variableDefault('exception')/] );
-	   }	 
-   }
-
-   /**
-    * Envoi un mail en cas d erreur dans un traitement de chargement de referentiel
-    * @param String [apply_parameterMethodClassicIn('subject')/]
-    * @param String [apply_parameterMethodClassicIn('content')/]
-    */
-   public static void [apply_methodDefault('send error mail')/] ( String [apply_parameterMethodClassicIn('subject')/], String [apply_parameterMethodClassicIn('content')/] ) 
-   {
-		try 
-		{
-			/** On récupère le serveur d envoi de mail via variable d environnement */
-			String [apply_variableDefault('mail server')/] = Parameters.getParameter( "dbreferentiel.mailserver", "" ); 
-			
-			/** On cree le message */
-			Properties [apply_variableDefault('prop')/] = System.getProperties();
-			[apply_variableDefault('prop')/].put( "mail.smtp.host", [apply_variableDefault('mail server')/] );
-			Session [apply_variableDefault('session')/] = Session.getDefaultInstance( [apply_variableDefault('prop')/] , null );
-			Message [apply_variableDefault('message')/] = new MimeMessage( [apply_variableDefault('session')/] );
-
-			/** On récupère l emetteur de mail via variable d environnement */
-			String [apply_variableDefault('mail from')/] = Parameters.getParameter( "dbreferentiel.mailfrom", "" );
-			[apply_variableDefault('message')/].setFrom(new InternetAddress([apply_variableDefault('mail from')/]));
-			
-			/** On récupère le(s) destinataire(s) de mail via variable d environnement */
-			String [apply_variableDefault('mail to')/] = Parameters.getParameter( "dbreferentiel.mailto", "" );			
-			List <InternetAddress> [apply_variableDefault('list internet address')/] = new ArrayList<InternetAddress>();
-			for (String [apply_variableDefault('dest')/] : Arrays.asList( [apply_variableDefault('mail to')/].split( ";" ) ) )
-			{
-				[apply_variableDefault('list internet address')/].add(new InternetAddress( [apply_variableDefault('dest')/] ));
-			}
-			InternetAddress [apply_variableDefault('tab internet adress')/]['['/]] = new InternetAddress ['['/] [apply_variableDefault('list internet address')/].size() [']'/];
-			[apply_variableDefault('message')/].setRecipients( Message.RecipientType.TO,[apply_variableDefault('list internet address')/].toArray( [apply_variableDefault('tab internet adress')/] ) );
-			
-			/** On remplit le sujet et le contenu d apres les parametrages de la fonction*/
-			[apply_variableDefault('message')/].setSubject( [apply_parameterMethodClassicIn('subject')/] );
-			[apply_variableDefault('message')/].setText( [apply_parameterMethodClassicIn('content')/] );
-			
-			/** On remplit les autres proprietes techniques du mail */
-			[apply_variableDefault('message')/].setHeader( "X-Mailer", "Java" );
-			[apply_variableDefault('message')/].setSentDate( new Date() );
-			[apply_variableDefault('session')/].setDebug( false );
-
-			/** On indique en logs les informations du message qui va etre envoye */
-			[apply_attributeFinalStatic('LOG')/].info("[apply_methodDefault('send error mail')/], pre envoi: "
-					+"\nRELAIS SMTP= " + [apply_variableDefault('mail server')/] 
-					+"\nFROM= " + [apply_variableDefault('mail from')/] 
-					+"\nDEST= " + [apply_variableDefault('mail to')/]
-					+"\nSUBJECT= " + [apply_parameterMethodClassicIn('subject')/]
-					+"\nCONTENT= " + [apply_parameterMethodClassicIn('content')/]
-					);
-
-			/** On envoit le mail */
-			Transport.send( [apply_variableDefault('message')/] );
-		} 
-		catch ( Exception [apply_variableDefault('exception')/] ) 
-		{
-			/** En cas d'erreur, on affiche une erreur en log  */
-			[apply_attributeFinalStatic('LOG')/].error( [apply_variableDefault('exception')/] );
-		} 
-   }
-
-
-   // Methodes [apply_classDefault('referentiel utils')/]
-   // [protected (r.getUserCodeId('Methodes ' + apply_classDefault('referentiel utils')))]
-
-   // [/protected]
-
-}
-[/file]
-
+    
+    
+       /**
+        * Ecrire dans un fichier la liste des relations en erreur du traitement en cours
+        * @param String ['entete'.apply_parameterMethodClassicIn()/]
+        * @param List<String> ['source list'.apply_parameterMethodClassicIn()/]
+        * @param String ['file name'.apply_parameterMethodClassicIn()/]
+        */
+       public static void ['store list'.apply_methodDefault()/] ( String ['entete'.apply_parameterMethodClassicIn()/],  List<String> ['source list'.apply_parameterMethodClassicIn()/], String ['file name'.apply_parameterMethodClassicIn()/] ) 
+       {
+    	   /** On declare la chaine de travail */
+           StringBuilder ['string builder'.apply_variableDefault()/] = new StringBuilder();
+    
+    	   /** On ajoute l'entete a la chaine de travail */       
+           ['string builder'.apply_variableDefault()/].append(['entete'.apply_parameterMethodClassicIn()/]);
+           ['string builder'.apply_variableDefault()/].append(System.lineSeparator());
+    
+           /** Pour tous les elements de la liste, on les ajoute a la chaine de travail */
+           for (String ['list element'.apply_parameterMethodClassicIn()/] : ['source list'.apply_parameterMethodClassicIn()/])
+           {
+               ['string builder'.apply_variableDefault()/].append(['list element'.apply_parameterMethodClassicIn()/]);
+               ['string builder'.apply_variableDefault()/].append(System.lineSeparator());
+           }
+    
+           /** On ecrit la chaine de travail dans le fichier */
+           String ['list string'.apply_parameterMethodClassicIn()/] = ['string builder'.apply_variableDefault()/].toString().trim();
+           byte['['/]] ['list bytes'.apply_parameterMethodClassicIn()/] = ['list string'.apply_parameterMethodClassicIn()/].getBytes(StandardCharsets.UTF_8);
+    	   try
+    	   {
+           		Files.write(Paths.get(['file name'.apply_parameterMethodClassicIn()/]), ['list bytes'.apply_parameterMethodClassicIn()/]);
+    	   }
+    	   catch ( Exception ['exception'.apply_variableDefault()/] ) 
+    	   {
+    	       /** En cas d erreur de traitement, on affiche une ligne d'erreur en log  */		   
+        		['LOG'.apply_attributeFinalStatic()/].error ( "Probleme d'ecriture dans le fichier de detail des lignes en erreur: "+ ['file name'.apply_parameterMethodClassicIn()/], ['exception'.apply_variableDefault()/] );
+    	   }	 
+       }
+    
+       /**
+        * Envoi un mail en cas d erreur dans un traitement de chargement de referentiel
+        * @param String ['subject'.apply_parameterMethodClassicIn()/]
+        * @param String ['content'.apply_parameterMethodClassicIn()/]
+        */
+       public static void ['send error mail'.apply_methodDefault()/] ( String ['subject'.apply_parameterMethodClassicIn()/], String ['content'.apply_parameterMethodClassicIn()/] ) 
+       {
+    		try 
+    		{
+    			/** On récupère le serveur d envoi de mail via variable d environnement */
+    			String ['mail server'.apply_variableDefault()/] = Parameters.getParameter( "dbreferentiel.mailserver", "" ); 
+    			
+    			/** On cree le message */
+    			Properties ['prop'.apply_variableDefault()/] = System.getProperties();
+    			['prop'.apply_variableDefault()/].put( "mail.smtp.host", ['mail server'.apply_variableDefault()/] );
+    			Session ['session'.apply_variableDefault()/] = Session.getDefaultInstance( ['prop'.apply_variableDefault()/] , null );
+    			Message ['message'.apply_variableDefault()/] = new MimeMessage( ['session'.apply_variableDefault()/] );
+    
+    			/** On récupère l emetteur de mail via variable d environnement */
+    			String ['mail from'.apply_variableDefault()/] = Parameters.getParameter( "dbreferentiel.mailfrom", "" );
+    			['message'.apply_variableDefault()/].setFrom(new InternetAddress(['mail from'.apply_variableDefault()/]));
+    			
+    			/** On récupère le(s) destinataire(s) de mail via variable d environnement */
+    			String ['mail to'.apply_variableDefault()/] = Parameters.getParameter( "dbreferentiel.mailto", "" );			
+    			List <InternetAddress> ['list internet address'.apply_variableDefault()/] = new ArrayList<InternetAddress>();
+    			for (String ['dest'.apply_variableDefault()/] : Arrays.asList( ['mail to'.apply_variableDefault()/].split( ";" ) ) )
+    			{
+    				['list internet address'.apply_variableDefault()/].add(new InternetAddress( ['dest'.apply_variableDefault()/] ));
+    			}
+    			InternetAddress ['tab internet adress'.apply_variableDefault()/]['['/]] = new InternetAddress ['['/] ['list internet address'.apply_variableDefault()/].size() ];
+    			['message'.apply_variableDefault()/].setRecipients( Message.RecipientType.TO,['list internet address'.apply_variableDefault()/].toArray( ['tab internet adress'.apply_variableDefault()/] ) );
+    			
+    			/** On remplit le sujet et le contenu d apres les parametrages de la fonction*/
+    			['message'.apply_variableDefault()/].setSubject( ['subject'.apply_parameterMethodClassicIn()/] );
+    			['message'.apply_variableDefault()/].setText( ['content'.apply_parameterMethodClassicIn()/] );
+    			
+    			/** On remplit les autres proprietes techniques du mail */
+    			['message'.apply_variableDefault()/].setHeader( "X-Mailer", "Java" );
+    			['message'.apply_variableDefault()/].setSentDate( new Date() );
+    			['session'.apply_variableDefault()/].setDebug( false );
+    
+    			/** On indique en logs les informations du message qui va etre envoye */
+    			['LOG'.apply_attributeFinalStatic()/].info("['send error mail'.apply_methodDefault()/], pre envoi: "
+    					+"\nRELAIS SMTP= " + ['mail server'.apply_variableDefault()/] 
+    					+"\nFROM= " + ['mail from'.apply_variableDefault()/] 
+    					+"\nDEST= " + ['mail to'.apply_variableDefault()/]
+    					+"\nSUBJECT= " + ['subject'.apply_parameterMethodClassicIn()/]
+    					+"\nCONTENT= " + ['content'.apply_parameterMethodClassicIn()/]
+    					);
+    
+    			/** On envoit le mail */
+    			Transport.send( ['message'.apply_variableDefault()/] );
+    		} 
+    		catch ( Exception ['exception'.apply_variableDefault()/] ) 
+    		{
+    			/** En cas d'erreur, on affiche une erreur en log  */
+    			['LOG'.apply_attributeFinalStatic()/].error( ['exception'.apply_variableDefault()/] );
+    		} 
+       }
+    
+    
+       // Methodes ['referentiel utils'.apply_classDefault()/]
+       [protected (r.getUserCodeId('Methodes ' + 'referentiel utils'.apply_classDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    
+    }
+  [/file]
+  
 [/template]

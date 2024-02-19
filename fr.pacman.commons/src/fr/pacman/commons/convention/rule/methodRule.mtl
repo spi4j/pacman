@@ -1,44 +1,30 @@
+[module methodRule('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::ApplyNorme/]
+
 [comment encoding = UTF-8 /]
-[module methodRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
-
-[import fr::pacman::commons::common::utils]
-
 [template public apply_methodDefault(value : String)]
-[norme_methodDefault(value)/]
-[/template]
+  [value.norme_methodDefault()/][/template]
 
-[query private norme_methodDefault(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodDefault(java.lang.String)', Sequence{value})
- /]
+[query private norme_methodDefault(value : String) : String = value.norme_methodDefaultJavaService()/]
 
 [template public apply_methodMultiple(value : String)]
-[norme_methodMultiple(value)/]
-[/template]
+  [value.norme_methodMultiple()/][/template]
 
-[query private norme_methodMultiple(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodMultiple(java.lang.String)', Sequence{value})
- /]
+[query private norme_methodMultiple(value : String) : String = value.norme_methodMultipleJavaService()/]
 
 [template public apply_methodGet(value : String)]
-[norme_methodGet(value)/]
-[/template]
+  [value.norme_methodGet()/][/template]
 
-[query private norme_methodGet(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodGet(java.lang.String)', Sequence{value})
- /]
+[query private norme_methodGet(value : String) : String = value.norme_methodGetJavaService()/]
 
 [template public apply_methodReset(value : String)]
-[norme_methodReset(value)/]
-[/template]
+  [value.norme_methodReset()/][/template]
 
-[query private norme_methodReset(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodReset(java.lang.String)', Sequence{value})
- /]
+[query private norme_methodReset(value : String) : String = value.norme_methodResetJavaService()/]
 
 [template public apply_methodSet(value : String)]
-[norme_methodSet(value)/]
-[/template]
+  [value.norme_methodSet()/][/template]
 
-[query private norme_methodSet(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_methodSet(java.lang.String)', Sequence{value})
- /]
+[query private norme_methodSet(value : String) : String = value.norme_methodSetJavaService()/]

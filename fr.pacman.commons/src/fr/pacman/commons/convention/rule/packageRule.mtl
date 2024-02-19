@@ -1,28 +1,21 @@
+[module packageRule('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::ApplyNorme/]
+
 [comment encoding = UTF-8 /]
-[module packageRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
-
-[import fr::pacman::commons::common::utils /]
-
 [**
  * Obtenir les conventions des packages.
 */]
-
 [template public apply_packageApi(value : String)]
-[norme_packageApi(value)/]
-[/template]
+  [value.norme_packageApi()/][/template]
 
-[query private norme_packageApi(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_packageApi(java.lang.String)', Sequence{value})
- /]
+[query private norme_packageApi(value : String) : String = value.norme_packageApiJavaService()/]
 
 [template public apply_packageImplemJdbc(value : String)]
-[norme_packageImplemJdbc(value)/]
-[/template]
+  [value.norme_packageImplemJdbc()/][/template]
 
-[query private norme_packageImplemJdbc(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_packageImplemJdbc(java.lang.String)', Sequence{value})
- /]
-
+[query private norme_packageImplemJdbc(value : String) : String = value.norme_packageImplemJdbcJavaService()/]
 
 [comment][template public apply_packageImplemJpa(value : String)]
 [norme_packageImplemJpa(value)/]
@@ -32,45 +25,27 @@
 invoke('fr.pacman.commons.convention.ApplyNorme',
 'norme_packageImplemJpa(java.lang.String)', Sequence{value})
  /][/comment]
-
-
 [template public apply_packageImplemServer(value : String)]
-[norme_packageImplemServer(value)/]
-[/template]
+  [value.norme_packageImplemServer()/][/template]
 
-[query private norme_packageImplemServer(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_packageImplemServer(java.lang.String)', Sequence{value})
- /]
+[query private norme_packageImplemServer(value : String) : String = value.norme_packageImplemServerJavaService()/]
 
 [template public apply_packageMatching(value : String)]
-[norme_packageMatching(value)/]
-[/template]
+  [value.norme_packageMatching()/][/template]
 
-[query private norme_packageMatching(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_packageMatching(java.lang.String)', Sequence{value})
- /]
+[query private norme_packageMatching(value : String) : String = value.norme_packageMatchingJavaService()/]
 
 [template public apply_packagePersistence(value : String)]
-[norme_packagePersistence(value)/]
-[/template]
+  [value.norme_packagePersistence()/][/template]
 
-[query private norme_packagePersistence(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_packagePersistence(java.lang.String)', Sequence{value})
- /]
+[query private norme_packagePersistence(value : String) : String = value.norme_packagePersistenceJavaService()/]
 
 [template public apply_packageBusiness(value : String)]
-[norme_packageBusiness(value)/]
-[/template]
+  [value.norme_packageBusiness()/][/template]
 
-[query private norme_packageBusiness(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme',
-'norme_packageBusiness(java.lang.String)', Sequence{value})
- /]
+[query private norme_packageBusiness(value : String) : String = value.norme_packageBusinessJavaService()/]
 
 [template public apply_packageRequirement(value : String)]
-[norme_packageRequirement(value)/]
-[/template]
+  [value.norme_packageRequirement()/][/template]
 
-[query private norme_packageRequirement(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_packageRequirement(java.lang.String)', Sequence{value})
- /]
+[query private norme_packageRequirement(value : String) : String = value.norme_packageRequirementJavaService()/]

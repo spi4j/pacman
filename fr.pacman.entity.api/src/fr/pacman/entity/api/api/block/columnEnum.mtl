@@ -1,210 +1,206 @@
+[module columnEnum('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::entity::api::common::methodes/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+
 [comment encoding = UTF-8 /]
-[module columnEnum('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[template public enumStruct(p : environment::Property)]
+  XXX columnEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX[/template]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::imports /]
+[template private enumStructAttribute(a : environment::Attribute)]
+     /** [a.nameSimpleProperty().apply_attributeEnum()/]. */
+     [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if]
+  , false)[/template]
 
-[import fr::pacman::entity::api::common::methodes /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::sql::common /]
+[template private enumStructReferenceId(r : environment::Reference, compteur : Integer)]
+     /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
+     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  , false)[/template]
 
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
+[template private enumStructReferenceId(r : environment::Reference)]
+     /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
+     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  , false)[/template]
 
-[template public enumStruct (p : Property)]
-XXX columnEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX
-[/template]
+[template private enumStructReferencingId(r : environment::Reference, compteur : Integer)]
+     /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
+     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  , false)[/template]
 
-[template private enumStructAttribute (a : Attribute)]
-   /** [apply_attributeEnum(a.nameSimpleProperty())/]. */
-   [apply_attributeEnum(a.nameSimpleProperty())/]("[apply_attributeEnum(a.nameSimpleProperty())/]", "[nameColumn(a)/]", [a.type.genTypeName()/].class, [mandatory(a)/], [if hasSize(a.metadatas)][size(a.metadatas)/][else]-1[/if], false)
-[/template]
-
-[template private enumStructReferenceId (r : Reference, compteur : Integer)]
-   /** [apply_attributeEnum(r.nameSimpleProperty())/]. */
-   [apply_attributeEnum(r.nameSimpleProperty())/]("[apply_attributeEnum(r.nameSimpleProperty())/]", "[nameColumnId(r,compteur)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
-[/template]
-
-[template private enumStructReferenceId (r : Reference)]
-   /** [apply_attributeEnum(r.nameSimpleProperty())/]. */
-   [apply_attributeEnum(r.nameSimpleProperty())/]("[apply_attributeEnum(r.nameSimpleProperty())/]", "[nameColumnId(r)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
-[/template]
-
-[template private enumStructReferencingId (r : Reference, compteur : Integer)]
-   /** [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]. */
-   [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]("[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]", "[nameColumnReferencingId(r,compteur)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
-[/template]
-
-[template private enumStructReferencingId (r : Reference)]
-   /** [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]. */
-   [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]("[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]", "[nameColumnReferencingId(r)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
-[/template]
-
+[template private enumStructReferencingId(r : environment::Reference)]
+     /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
+     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  , false)[/template]
 
 [comment sur la base de PersonneColomn_Enum en r97 /]
-[template public colomnEnum(e : Entity)]
-[licence()/]
-package [buildPackagePersistenceApiEntity(e)/];
+[template public colomnEnum(e : entity::Entity)]
+  [e.licence()/]
+  package [e.buildPackagePersistenceApiEntity()/];
+  
+  [e.writeImports()/]
+  
+  [e.comClass(e.roleEnum())/]
+  public enum [e.buildEntityColumnEnumName()/] implements [e.getClassNameForColumnsNames_Itf()/]
+  {
+     /** [e.nameSimplePropertyID()/]. */
+     [e.nameSimplePropertyID()/]("[e.nameSimplePropertyID().apply_attributeDefault()/]", "[e.namePK()/]", [e.genPkType()/].class, true, -1, true)[if (not e.attributesNoPk()->isEmpty())]
+                                                                                                                                                   ,
+                                                                                                                                                   [e.attributesNoPk()->asSequence()->collect(temp1 | temp1.enumStructAttribute())->sep(',\r\n')/][/if]
+  [if (not e.getInheritDtoAttributes()->isEmpty())]
+    ,
+    [e.getInheritDtoAttributes()->asSequence()->collect(temp2 | temp2.enumStructAttribute())->sep(',\r\n')/][/if]
+  [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
+    [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
+      [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+        [if (r.oppositeOf = null and r.isMultiple())]
+          ,
+          [r.enumStructReferencingId(i)/][elseif (r.containingType.oclAsType(entity::Entity) = e)]
+                                           ,
+                                           [r.enumStructReferenceId(i)/][/if]
+      [/for]
+    [else]
+      [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
+        [if (r.oppositeOf = null and r.isMultiple())]
+          ,
+          [r.enumStructReferencingId()/][elseif (r.containingType.oclAsType(entity::Entity) = e)]
+                                          ,
+                                          [r.enumStructReferenceId()/][/if]
+      [/for]
+    [/if]
+  [/for]
+  ;
+  
+     /**
+      * Le nom physique de la table.
+      */
+     public static final String ['table name'.apply_attributeFinalStatic()/] = "[e.nameTableWithSchema()/]";
+  
+  [for (r : environment::Reference | e.referencesStarStarOwned())]
+       /**
+        * Le nom physique de la table de jointure avec [r.referencedType.oclAsType(entity::Entity).nameSimpleEntity()/].
+        */
+       public static final String [('table name ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.sanitize()).apply_attributeFinalStatic()/] = "[r.nameTableJointureWithSchema()/]";
+    
+  [/for]
+     /** Le nom logique de la colonne. */
+     private final String ['logical column name'.apply_attributeFinal()/];
+  
+     /** Le nom physique de la colonne. */
+     private final String ['physical column name'.apply_attributeFinal()/];
+  
+     /** Le type associe a la colonne. */
+     private final Class<?> ['type column'.apply_attributeFinal()/];
+  
+     /** Est-ce que la saisie de la valeur est obligatoire pour cette colonne ? */
+     private final boolean ['mandatory'.apply_attributeFinal()/];
+  
+     /** La taille de la colonne. */
+     private final int ['size'.apply_attributeFinal()/];
+  
+     /** Est-ce que la colonne est la cle primaire ? */
+     private final boolean ['id'.apply_attributeFinal()/];
+  
+     /**
+      * Constructeur permettant de spécifier le type de la colonne.
+      * @param ['logical column name'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) Le nom logique de la colonne.
+      * @param ['physical column name'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) Le nom physique de la colonne.
+      * @param ['class type'.apply_parameterMethodObjectIn()/]
+      *           (In)(*) Le type de la colonne.
+      * @param ['mandatory'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) Est-ce que la saisie de la valeur est obligatoire pour cette colonne?
+      * @param ['size'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) La taille de la colonne
+      * @param ['id'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) Est-ce que la colonne est la clé primaire?
+      */
+     private [e.buildEntityColumnEnumName()/] (final String ['logical column name'.apply_parameterMethodClassicIn()/], final String ['physical column name'.apply_parameterMethodClassicIn()/],
+              final Class<?> ['class type'.apply_parameterMethodObjectIn()/], final boolean ['mandatory'.apply_parameterMethodClassicIn()/], final int ['size'.apply_parameterMethodClassicIn()/], final boolean ['id'.apply_parameterMethodClassicIn()/])
+     {
+        [e.getAffectationPrefix()/]['logical column name'.apply_attributeFinal()/] = ['logical column name'.apply_parameterMethodClassicIn()/];
+        [e.getAffectationPrefix()/]['physical column name'.apply_attributeFinal()/] = ['physical column name'.apply_parameterMethodClassicIn()/];
+        [e.getAffectationPrefix()/]['type column'.apply_attributeFinal()/] = ['class type'.apply_parameterMethodObjectIn()/];
+        [e.getAffectationPrefix()/]['mandatory'.apply_attributeFinal()/] = ['mandatory'.apply_parameterMethodClassicIn()/];
+        [e.getAffectationPrefix()/]['size'.apply_attributeFinal()/] = ['size'.apply_parameterMethodClassicIn()/];
+        [e.getAffectationPrefix()/]['id'.apply_attributeFinal()/] = ['id'.apply_parameterMethodClassicIn()/];
+     }
+  
+     @Override
+     public String getLogicalColumnName ()
+     {
+        return ['logical column name'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public String getPhysicalColumnName ()
+     {
+        return ['physical column name'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public boolean isMandatory ()
+     {
+        return ['mandatory'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public int getSize ()
+     {
+        return ['size'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public boolean isId ()
+     {
+        return ['id'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public Class<?> getTypeColumn ()
+     {
+        return ['type column'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public String toString ()
+     {
+        return ['physical column name'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public String getTableName ()
+     {
+        return ['table name'.apply_attributeFinalStatic()/];
+     }
+  
+     @Override
+     public String getCompletePhysicalName ()
+     {
+        return getTableName() + '.' + getPhysicalColumnName ();
+     }
+  }[/template]
 
 [comment : Write all required imports. /]
-[e.writeImports()/]
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport(e.getImportForColumnsNames_Itf())/]
+  [e.flushImports()/][/template]
 
-[comClass(roleEnum())/]
-public enum [buildEntityColumnEnumName(e)/] implements [getClassNameForColumnsNames_Itf()/]
-{
-   /** [nameSimplePropertyID(e)/]. */
-   [nameSimplePropertyID(e)/]("[apply_attributeDefault(nameSimplePropertyID(e))/]", "[namePK(e)/]", [genPkType()/].class, true, -1, true)[if not e.attributesNoPk()->isEmpty()],
-[e.attributesNoPk().enumStructAttribute()->sep(',\r\n')/][/if][if not e.getInheritDtoAttributes()->isEmpty()],
-[e.getInheritDtoAttributes().enumStructAttribute()->sep(',\r\n')/][/if]
-[for (ent : Entity | e.entitiesReferencedOrReferencing() )]
-[if e=ent or referencesNoStarAndReferencingStarAllNavigability(e, ent)->size()>1]
-[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
-[if r.oppositeOf.oclIsUndefined() and r.isMultiple() ][comment]referencing[/comment]
-,
-[enumStructReferencingId(r, i)/][elseif r.containingType.oclAsType(entity::Entity) = e]
-,
-[enumStructReferenceId(r, i)/][/if]
-[/for]
-[else]
-[for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
-[if r.oppositeOf.oclIsUndefined() and r.isMultiple()][comment]referencing[/comment]
-,
-[enumStructReferencingId(r)/][elseif r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
-,
-[enumStructReferenceId(r)/][/if]
-[/for]
-[/if]
-[/for];
-
-   /**
-    * Le nom physique de la table.
-    */
-   public static final String [apply_attributeFinalStatic('table name')/] = "[nameTableWithSchema(e)/]";
-
-   [for (r : Reference | e.referencesStarStarOwned())]
-   /**
-    * Le nom physique de la table de jointure avec [nameSimpleEntity(r.referencedType.oclAsType(entity::Entity))/].
-    */
-   public static final String [apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) + r.name.sanitize())/] = "[nameTableJointureWithSchema(r)/]";
-
-   [/for]
-   /** Le nom logique de la colonne. */
-   private final String [apply_attributeFinal('logical column name')/];
-
-   /** Le nom physique de la colonne. */
-   private final String [apply_attributeFinal('physical column name')/];
-
-   /** Le type associe a la colonne. */
-   private final Class<?> [apply_attributeFinal('type column')/];
-
-   /** Est-ce que la saisie de la valeur est obligatoire pour cette colonne ? */
-   private final boolean [apply_attributeFinal('mandatory')/];
-
-   /** La taille de la colonne. */
-   private final int [apply_attributeFinal('size')/];
-
-   /** Est-ce que la colonne est la cle primaire ? */
-   private final boolean [apply_attributeFinal('id')/];
-
-   /**
-    * Constructeur permettant de spécifier le type de la colonne.
-    * @param [apply_parameterMethodClassicIn('logical column name')/]
-    *           (In)(*) Le nom logique de la colonne.
-    * @param [apply_parameterMethodClassicIn('physical column name')/]
-    *           (In)(*) Le nom physique de la colonne.
-    * @param [apply_parameterMethodObjectIn('class type')/]
-    *           (In)(*) Le type de la colonne.
-    * @param [apply_parameterMethodClassicIn('mandatory')/]
-    *           (In)(*) Est-ce que la saisie de la valeur est obligatoire pour cette colonne?
-    * @param [apply_parameterMethodClassicIn('size')/]
-    *           (In)(*) La taille de la colonne
-    * @param [apply_parameterMethodClassicIn('id')/]
-    *           (In)(*) Est-ce que la colonne est la clé primaire?
-    */
-   private [buildEntityColumnEnumName()/] (final String [apply_parameterMethodClassicIn('logical column name')/], final String [apply_parameterMethodClassicIn('physical column name')/],
-            final Class<?> [apply_parameterMethodObjectIn('class type')/], final boolean [apply_parameterMethodClassicIn('mandatory')/], final int [apply_parameterMethodClassicIn('size')/], final boolean [apply_parameterMethodClassicIn('id')/])
-   {
-      [getAffectationPrefix()/][apply_attributeFinal('logical column name')/] = [apply_parameterMethodClassicIn('logical column name')/];
-      [getAffectationPrefix()/][apply_attributeFinal('physical column name')/] = [apply_parameterMethodClassicIn('physical column name')/];
-      [getAffectationPrefix()/][apply_attributeFinal('type column')/] = [apply_parameterMethodObjectIn('class type')/];
-      [getAffectationPrefix()/][apply_attributeFinal('mandatory')/] = [apply_parameterMethodClassicIn('mandatory')/];
-      [getAffectationPrefix()/][apply_attributeFinal('size')/] = [apply_parameterMethodClassicIn('size')/];
-      [getAffectationPrefix()/][apply_attributeFinal('id')/] = [apply_parameterMethodClassicIn('id')/];
-   }
-
-   @Override
-   public String getLogicalColumnName ()
-   {
-      return [apply_attributeFinal('logical column name')/];
-   }
-
-   @Override
-   public String getPhysicalColumnName ()
-   {
-      return [apply_attributeFinal('physical column name')/];
-   }
-
-   @Override
-   public boolean isMandatory ()
-   {
-      return [apply_attributeFinal('mandatory')/];
-   }
-
-   @Override
-   public int getSize ()
-   {
-      return [apply_attributeFinal('size')/];
-   }
-
-   @Override
-   public boolean isId ()
-   {
-      return [apply_attributeFinal('id')/];
-   }
-
-   @Override
-   public Class<?> getTypeColumn ()
-   {
-      return [apply_attributeFinal('type column')/];
-   }
-
-   @Override
-   public String toString ()
-   {
-      return [apply_attributeFinal('physical column name')/];
-   }
-
-   @Override
-   public String getTableName ()
-   {
-      return [apply_attributeFinalStatic('table name')/];
-   }
-
-   @Override
-   public String getCompletePhysicalName ()
-   {
-      return getTableName() + '.' + getPhysicalColumnName ();
-   }
-}
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport(getImportForColumnsNames_Itf())/]
-[e.flushImports()/]
-[/template]
-
-[query public roleEnum(e : Entity) : String = 'L\'énumeration définissant les informations de chaque colonne pour le type ' + nameSimpleEntity(e) /]
-
+[query public roleEnum(e : entity::Entity) : String = 'L\'énumeration définissant les informations de chaque colonne pour le type ' + e.nameSimpleEntity()/]

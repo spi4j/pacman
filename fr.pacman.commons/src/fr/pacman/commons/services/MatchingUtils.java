@@ -31,4 +31,6 @@ public final class MatchingUtils
    {
       return EcoreUtil.getRootContainer(p_dto);
    }
+
+public static EObject getRootJavaService(final EObject p_dto){return getRoot(p_dto);}
 }

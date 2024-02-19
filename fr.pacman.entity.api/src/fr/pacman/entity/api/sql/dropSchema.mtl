@@ -1,14 +1,13 @@
+[module dropSchema('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::commons::common::properties/]
+
 [comment encoding = UTF-8 /]
-[module dropSchema('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::entity::api::sql::common /]
-[import fr::pacman::commons::common::properties /]
-
-[template public dropSchema(databaseType : String, r : Root)]
-/****************************************************************/
-[genSlashedLine('Schema: ' + getSQLTableSchema().replaceAll('\\.', '') , sizeHeader())/]
-/****************************************************************/
-drop schema [getSQLTableSchema().replaceAll('\\.', '')/];
-
+[template public dropSchema(databaseType : String, r : entity::Root)]
+  /****************************************************************/
+  [('Schema: ' + databaseType.getSQLTableSchema().replaceAll('\\.', '')).genSlashedLine(databaseType.sizeHeader())/]
+  /****************************************************************/
+  drop schema [databaseType.getSQLTableSchema().replaceAll('\\.', '')/];
 [/template]

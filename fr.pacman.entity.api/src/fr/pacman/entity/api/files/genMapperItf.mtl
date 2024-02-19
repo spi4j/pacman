@@ -1,15 +1,14 @@
+[module genMapperItf('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::mapper::mapperItf/]
+[import fr::pacman::commons::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genMapperItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
-					  'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::mapper::mapperItf /]
-[import fr::pacman::commons::common::classes /]
-
-[template public genMapperItf(e : Entity)]
-[file (filename(getCommonsSourceDir(), buildPackageEntityMapper(e), buildEntityMapperInterfaceName(e) + '.java'), false, 'UTF-8')]
-[mapperItf(e)/]
-[/file]
+[template public genMapperItf(e : entity::Entity)]
+  [file (e.getCommonsSourceDir().filename(e.buildPackageEntityMapper(), e.buildEntityMapperInterfaceName() + '.java'), overwrite, 'UTF-8')]
+    [e.mapperItf()/]
+  [/file]
 [/template]

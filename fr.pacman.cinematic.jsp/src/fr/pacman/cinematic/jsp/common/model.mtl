@@ -1,13 +1,9 @@
+[module model('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
 [comment encoding = UTF-8 /]
-[module model('http://www.obeonetwork.org/dsl/environment/3.0.0', 
-			  'http://www.obeonetwork.org/dsl/soa/4.0.0',)/]
-
 [comment : /]
-[query public hasOutputDto (o : Operation) : Boolean = 
-	not o.output->isEmpty() 
-	and not o.output->first().oclIsUndefined() 
-	and o.output->first().type.oclIsTypeOf(DTO)
-/]
+[query public hasOutputDto(o : soa::Operation) : Boolean = not o.output->isEmpty() and not (o.output->first() = null) and o.output->first().type.oclIsTypeOf(environment::DTO)/]
 
-[query public paramsIn(inputs : OrderedSet(Parameter)) : Sequence(String) = inputs.paramIn() /]
-[query private paramIn(param : Parameter) : String = 'null'/]
+[query public paramsIn(inputs : OrderedSet(soa::Parameter)) : Sequence(String) = inputs->asSequence()->collect(temp1 | temp1.paramIn())/]
+
+[query private paramIn(param : soa::Parameter) : String = 'null'/]

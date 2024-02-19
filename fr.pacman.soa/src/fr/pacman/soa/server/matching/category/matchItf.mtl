@@ -1,103 +1,97 @@
-[comment encoding = UTF-8 /]
-[module matchItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module matchItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::commons::soa::common::classes/]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::classes /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[template public matchItf11(d : DTO)]
-[licence()/]
-package [buildPackageMatchingInterfaceDto(d)/];
-// [protected ('for imports')]
+[comment encoding = UTF-8 /]
+[template public matchItf11(d : environment::DTO)]
+  [d.licence()/]
+  package [d.buildPackageMatchingInterfaceDto()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [d.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * L'interface définissant le contrat pour le Matcher (= persistance <-> business) sur le type '[d.nameClassDto()/]'.
+   * @author [d.getAuthorName()/]
+   */
+  public interface [d.buildAppliMatchInterfaceName()/] extends [d.getClassNameForMatch_Itf()/]<[d.genPkType()/], [d.buildDtoClassName()/], [d.buildEntityInterfaceName()/], [d.buildEntityColumnEnumName()/]>
+  {
+  
+     /**
+      * Pour un matching 1 pour 1, retourne la colonne Entity associée à l'attribut DTO.
+      * @param ['attribute'.apply_parameterMethodClassicIn()/]
+      *           l'attribut DTO
+      * @return la colonne Entity
+      */
+     [d.buildEntityColumnEnumName()/] ['get column'.apply_methodDefault()/] (final [d.buildAttributesEnumName()/] ['attribute'.apply_parameterMethodClassicIn()/]);
+  
+  [for (r : environment::Reference | d.referencesStarStar())]
+    	
+    	/**
+        * Sauvegarde les relations entre '[d.nameClassDto()/]' et '[r.nameClassDto()/]' pour ce dto.
+        * @param ['dto'.apply_parameterMethodClassicIn()/]
+        *           le dto
+        * @param [r.referencedType.oclAsType(environment::DTO).name.normalize().apply_parameterMethodMultiple()/]
+        *           les relations à ajouter
+        */
+        void [('save ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/], final List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().apply_parameterMethodMultiple()/]);
+       
+    
+       /**
+        * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(environment::DTO).nameBaseDtoUP()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/]'.
+        * @param [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+        *           (In)(*) [r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/].
+        * @return une liste de [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]
+        */
+       List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/]);
+    
+       /**
+        * Supprime les relations [r.name/] entre '[d.nameClassDto()/]' et '[r.nameClassDto()/]' pour ce dto.
+        * @param ['dto'.apply_parameterMethodClassicIn()/]
+        *           le dto
+        */
+        void [('delete ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/]);
+    
+  [/for]
+     // [d.nameMatchInterface()/]
+     [protected (d.getUserCodeId(d.nameMatchInterface())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  }[/template]
 
 [comment : Write all required imports. /]
-[d.writeImports()/]
-
-// [/protected]
-
-/**
- * L'interface définissant le contrat pour le Matcher (= persistance <-> business) sur le type '[nameClassDto(d)/]'.
- * @author [getAuthorName()/]
- */
-public interface [buildAppliMatchInterfaceName(d)/] extends [getClassNameForMatch_Itf()/]<[genPkType()/], [buildDtoClassName(d)/], [buildEntityInterfaceName(d)/], [buildEntityColumnEnumName(d)/]>
-{
-
-   /**
-    * Pour un matching 1 pour 1, retourne la colonne Entity associée à l'attribut DTO.
-    * @param [apply_parameterMethodClassicIn('attribute')/]
-    *           l'attribut DTO
-    * @return la colonne Entity
-    */
-   [buildEntityColumnEnumName(d)/] [apply_methodDefault('get column')/] (final [buildAttributesEnumName(d)/] [apply_parameterMethodClassicIn('attribute')/]);
-
-[for (r : Reference | d.referencesStarStar())]
-	
-	/**
-    * Sauvegarde les relations entre '[nameClassDto(d)/]' et '[nameClassDto(r)/]' pour ce dto.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le dto
-    * @param [apply_parameterMethodMultiple(r.referencedType.oclAsType(DTO).name.normalize())/]
-    *           les relations à ajouter
-    */
-    void [apply_methodDefault('save ' + r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/], final List<[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_parameterMethodMultiple(r.referencedType.oclAsType(DTO).buildSimpleDtoName())/]);
-   
-
-   /**
-    * Obtenir la liste d'objets de type '[nameBaseDtoUP(r.referencedType.oclAsType(DTO))/]' associés à l'instance de type '[nameBaseDtoUP(r.containingType.oclAsType(DTO))/]'.
-    * @param [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/]
-    *           (In)(*) [nameBaseDtoUP(r.containingType.oclAsType(DTO))/].
-    * @return une liste de [buildDtoClassName(r.referencedType.oclAsType(DTO))/]
-    */
-   List<[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/]);
-
-   /**
-    * Supprime les relations [r.name/] entre '[nameClassDto(d)/]' et '[nameClassDto(r)/]' pour ce dto.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le dto
-    */
-    void [apply_methodDefault('delete ' +r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/]);
-
-[/for]
-   // [nameMatchInterface(d)/]
-   // [protected (d.getUserCodeId(nameMatchInterface(d)))]
-
-   // [/protected]
-}
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (d : DTO) post(trim())]
-[d.initImports()/]
-[d.addImport(getImportForMatch_Itf())/]
-[d.addImport(d.buildImportDto())/]
-[d.addImport(d.buildImportEnum())/]
-[d.addImport(d.buildPackageBusinessApiDto() + '.' + d.buildAttributesEnumName())/]
-[d.addImport(d.buildImportEntityInterface())/]
-
-[comment : List all references for relational DTO./]
-[if not d.referencesStarStar()->isEmpty()]
-	[for (r : Reference | d.referencesStarStar())]
-		[d.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-	[/for]
-[/if]
-[d.flushImports()/]
-[/template]
+[template private writeImports(d : environment::DTO) post(self.trim())]
+  [d.initImports()/]
+  [d.addImport(d.getImportForMatch_Itf())/]
+  [d.addImport(d.buildImportDto())/]
+  [d.addImport(d.buildImportEnum())/]
+  [d.addImport(d.buildPackageBusinessApiDto() + '.' + d.buildAttributesEnumName())/]
+  [d.addImport(d.buildImportEntityInterface())/]
+  
+  [if (not d.referencesStarStar()->isEmpty())]
+    [for (r : environment::Reference | d.referencesStarStar())]
+      		[d.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
+    [/for]
+  [/if]
+  [d.flushImports()/][/template]

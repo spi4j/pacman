@@ -1,19 +1,16 @@
-[comment encoding = UTF-8 /]
-[module genDtoTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                   'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+[module genDtoTest('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-
-[import fr::pacman::commons::soa::common::packages /]
-
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::soa::common::packages/]
 [import fr::pacman::soa::common::name/]
 [import fr::pacman::soa::common::packages/]
 [import fr::pacman::soa::commons::business::api::category::dtoTest/]
-[import fr::pacman::soa::common::classes /]
+[import fr::pacman::soa::common::classes/]
 
-[template public genDtoTest(d : DTO)]
-[file (filename(getCommonsTestDir(), d.buildPackageBusinessApiDto(), d.buildDtoTestClassName() + '.java'), false, 'UTF-8')]
-[d.dtoTest()/]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genDtoTest(d : environment::DTO)]
+  [file (d.getCommonsTestDir().filename(d.buildPackageBusinessApiDto(), d.buildDtoTestClassName() + '.java'), overwrite, 'UTF-8')]
+    [d.dtoTest()/]
+  [/file]
 [/template]

@@ -1,392 +1,188 @@
+[module classes('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/requirement/1.0', 'http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::services::AnnotationUtils/]
+[import fr::pacman::commons::services::MatchingUtils/]
+[import fr::pacman::commons::services::StringUtils/]
+
 [comment encoding = UTF-8 /]
-[module classes('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                'http://www.obeonetwork.org/dsl/entity/3.0.0', 
-				'http://www.obeonetwork.org/dsl/soa/4.0.0', 
-                'http://www.obeonetwork.org/dsl/requirement/1.0',
-				'http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::common::names /]
-
-
 [comment : Recupere le nom de la couche business a partir d'un DTO. /]
-[query public buildAppliUserBusinessClassName(d : DTO) : String =
-	if d.isFromExternalLibrary() then
-		d.getExternalLibraryName().buildAppliUserBusinessClassName()
-	else
-		d.buildAppliUserBusinessGenClassName()
-	endif
- /]
+[query public buildAppliUserBusinessClassName(d : environment::DTO) : String = if d.isFromExternalLibrary() then d.getExternalLibraryName().buildAppliUserBusinessClassName() else d.buildAppliUserBusinessGenClassName() endif/]
 
-[comment: Recupere le nom de la couche business pour l'application (général). /]
-[query public buildAppliUserBusinessGenClassName(any : OclAny) : String =
-	buildAppliUserBusinessClassName(getApplicationName())
- /]
+[comment  Recupere le nom de la couche business pour l'application (général). /]
+[query public buildAppliUserBusinessGenClassName(any : ecore::EObject) : String = any.getApplicationName().buildAppliUserBusinessClassName()/]
 
-[comment: Recupere le nom de la couche business à partir du nom (String) injecté. /] 
-[query private buildAppliUserBusinessClassName (s : String) : String = 
-	apply_classDefault(s + ' user business')
-/]
+[comment  Recupere le nom de la couche business à partir du nom (String) injecté. /]
+[query private buildAppliUserBusinessClassName(s : String) : String = (s + ' user business').apply_classDefault()/]
 
-[query public buildAppliUserBusinessEntityGenClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' user business entity')
- /]
+[query public buildAppliUserBusinessEntityGenClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' user business entity').apply_classDefault()/]
 
-[query public buildAppliEntityAbstractClassName(any : OclAny) : String =
-	apply_classAbstract(getApplicationName() + ' auto fields entity')
- /]
+[query public buildAppliEntityAbstractClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' auto fields entity').apply_classAbstract()/]
 
-[query public buildAppliDtoAbstractClassName(any : OclAny) : String =
-	apply_classAbstract(getApplicationName() + ' auto fields dto')
- /]
+[query public buildAppliDtoAbstractClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' auto fields dto').apply_classAbstract()/]
 
-[query public buildAppliXtoAbstractClassName(any : OclAny) : String =
-	apply_classAbstract(getApplicationName() + ' auto fields xto')
- /]
+[query public buildAppliXtoAbstractClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' auto fields xto').apply_classAbstract()/]
 
-[query public buildAppliEntityInterfaceName(any : OclAny) : String =
-	apply_classInterface(getApplicationName() + ' auto fields entity')
- /]
+[query public buildAppliEntityInterfaceName(any : ecore::EObject) : String = (any.getApplicationName() + ' auto fields entity').apply_classInterface()/]
 
-[query public buildAppliColumnClassName(any : OclAny) : String =
-	apply_classEnum(getApplicationName() + ' auto fields columns')
- /]
+[query public buildAppliColumnClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' auto fields columns').apply_classEnum()/]
 
-[query public buildSecurityManagerClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' security manager') 
-/]
+[query public buildSecurityManagerClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' security manager').apply_classDefault()/]
 
-[query public buildParamPersistenceClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' param persistence')
- /]
+[query public buildParamPersistenceClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' param persistence').apply_classDefault()/]
 
-[query public buildParamPersistenceLibraryClassName(s : String) : String =
-	apply_classDefault(s + ' param persistence')
- /]
+[query public buildParamPersistenceLibraryClassName(s : String) : String = (s + ' param persistence').apply_classDefault()/]
 
-[query public buildUserPersistenceAppClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' user persistence')
- /]
+[query public buildUserPersistenceAppClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' user persistence').apply_classDefault()/]
 
-[query public buildParamAppliClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' param appli')
- /]
+[query public buildParamAppliClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' param appli').apply_classDefault()/]
 
-[query public buildBoostrapClassName(any : OclAny) : String =
-	apply_classDefault(getHttpEmbeddedServer() + ' boostrap')
-/]
+[query public buildBoostrapClassName(any : ecore::EObject) : String = (any.getHttpEmbeddedServer() + ' boostrap').apply_classDefault()/]
 
-[query public buildGwtUserBusinessClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' gwt user business')
- /]
+[query public buildGwtUserBusinessClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' gwt user business').apply_classDefault()/]
 
-[query public buildCXFServletClassName(any : OclAny) : String =
-	apply_classDefault(' CXF servlet')
- /]
+[query public buildCXFServletClassName(any : ecore::EObject) : String = ' CXF servlet'.apply_classDefault()/]
 
-[query public buildRSContextResolverClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' context resolver')
- /]
+[query public buildRSContextResolverClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' context resolver').apply_classDefault()/]
 
-[query public buildRSExceptionHandlerClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' exception handler')
- /]
+[query public buildRSExceptionHandlerClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' exception handler').apply_classDefault()/]
 
-[query public buildRSGenericFilterClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' generic filter')
- /]
+[query public buildRSGenericFilterClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' generic filter').apply_classDefault()/]
 
-[query public buildRSTokensConfiguratorClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' tokens config')
- /]
+[query public buildRSTokensConfiguratorClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' tokens config').apply_classDefault()/]
 
-[query public buildRSTechnichalResourcesClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' tokens')
- /]
+[query public buildRSTechnichalResourcesClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' tokens').apply_classDefault()/]
 
-[query public buildRSAuthenticationResourceClassName(s : SecurityScheme) : String =
-	apply_classDefault(getApplicationName() + ' token ' + s.name + ' resources')
- /]
+[query public buildRSAuthenticationResourceClassName(s : soa::SecurityScheme) : String = (s.getApplicationName() + ' token ' + s.name + ' resources').apply_classDefault()/]
 
-[query public buildRSO2AuthenticationResourceClassName(s : SecurityScheme, f : Flow) : String =
-	apply_classDefault(getApplicationName() + ' token ' +  s.name + ' '
-    + f.flowType.toString().substring(1, 4).toLower() + ' resources')
- /]
+[query public buildRSO2AuthenticationResourceClassName(s : soa::SecurityScheme, f : soa::Flow) : String = (s.getApplicationName() + ' token ' + s.name + ' ' + f.flowType.toString().substring(1, 4).toLower() + ' resources').apply_classDefault()/]
 
-[query public buildCXFAbstractClassName(any : OclAny) : String =
-	apply_classAbstract(' CXF servlet')
- /]
+[query public buildCXFAbstractClassName(any : ecore::EObject) : String = ' CXF servlet'.apply_classAbstract()/]
 
-[query public buildXtoClassNameFromDto(d : DTO) : String =
-	apply_classDefault(buildSimpleDtoName(d) + ' xto')
- /]
+[query public buildXtoClassNameFromDto(d : environment::DTO) : String = (d.buildSimpleDtoName() + ' xto').apply_classDefault()/]
 
-[query public buildClassNameFromEnumForXto(e : Enumeration) : String =
-	apply_classEnum(e.name)
-/]
+[query public buildClassNameFromEnumForXto(e : environment::Enumeration) : String = e.name.apply_classEnum()/]
 
-[query public buildXtoClassNameFromEntity(e : Entity) : String =
-	apply_classDefault(buildSimpleEntityName(e) + ' xto')
- /]
+[query public buildXtoClassNameFromEntity(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' xto').apply_classDefault()/]
 
-[query public buildXtoClassNameFromReference(r : Reference) : String =
-	apply_classDefault(buildSimpleRelationName(r) + ' xto')
- /]
+[query public buildXtoClassNameFromReference(r : environment::Reference) : String = (r.buildSimpleRelationName() + ' xto').apply_classDefault()/]
 
-[query public buildXtoTestClassName(e : Entity) : String =
-	apply_classTest(buildSimpleEntityName(e) + ' xto')
- /]
+[query public buildXtoTestClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' xto').apply_classTest()/]
 
-[query public buildEntityClassNameImplFromDto(d : DTO) : String =
-	apply_classImplem(buildSimpleDtoName(d) + ' entity')
- /]
+[query public buildEntityClassNameImplFromDto(d : environment::DTO) : String = (d.buildSimpleDtoName() + ' entity').apply_classImplem()/]
 
-[query public buildDtoClassName(d : DTO) : String =
-	apply_classDefault(buildSimpleDtoName(d) + ' dto')
- /]
+[query public buildDtoClassName(d : environment::DTO) : String = (d.buildSimpleDtoName() + ' dto').apply_classDefault()/]
 
-[query public buildServiceRequirementsClassName(e : Entity) : String =
- 	apply_classDefault(buildSimpleEntityName(e) + ' service requirements')
- /]
+[query public buildServiceRequirementsClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' service requirements').apply_classDefault()/]
 
-[query public buildEntityColumnEnumName(e : Entity) : String =
-	apply_classEnum(buildSimpleEntityName(e) + ' columns')
- /]
+[query public buildEntityColumnEnumName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' columns').apply_classEnum()/]
 
-[query public buildAppliUserMapperGenClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' user mapper')
- /]
+[query public buildAppliUserMapperGenClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' user mapper').apply_classDefault()/]
 
-[query public buildServiceImplClassName(e : Entity) : String =
- 	e.apply_classImplem(buildSimpleEntityName(e) + ' service')
- /]
+[query public buildServiceImplClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' service').apply_classImplem()/]
 
-[query public buildServiceClassName(e : Entity) : String =
- 	e.apply_classDefault(buildSimpleEntityName(e) + ' service')
- /]
+[query public buildServiceClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' service').apply_classDefault()/]
 
-[query public buildServiceInterfaceName(e : Entity) : String =
- 	e.apply_classInterface(buildSimpleEntityName(e) + ' service')
- /]
+[query public buildServiceInterfaceName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' service').apply_classInterface()/]
 
-[query public buildAppliMatchAbstractName(any : OclAny) : String =
-	apply_classAbstract(getApplicationName() + ' match')
- /]
+[query public buildAppliMatchAbstractName(any : ecore::EObject) : String = (any.getApplicationName() + ' match').apply_classAbstract()/]
 
-[query public buildJsfBeanAbstractName(any : OclAny) : String =
-	apply_classAbstract(getApplicationName() + ' jsf bean')
- /]
+[query public buildJsfBeanAbstractName(any : ecore::EObject) : String = (any.getApplicationName() + ' jsf bean').apply_classAbstract()/]
 
-[query public buildRSApplicationConfigClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' app config')
- /]
+[query public buildRSApplicationConfigClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' app config').apply_classDefault()/]
 
-[query public buildUserMatchingGenClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' user matching')
- /]
+[query public buildUserMatchingGenClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' user matching').apply_classDefault()/]
 
-[query public buildSecurityWebAppHelperClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationNameUpperFirst() + ' security web app helper') 
-/]
+[query public buildSecurityWebAppHelperClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' security web app helper').apply_classDefault()/]
 
-[query public buildAppliPermissionsInterfaceName(any : OclAny) : String =
-	apply_classInterface(getApplicationName() + ' permissions')
- /]
+[query public buildAppliPermissionsInterfaceName(any : ecore::EObject) : String = (any.getApplicationName() + ' permissions').apply_classInterface()/]
 
 [comment : Get the name for the client factory for Api First import. /]
-[query public buildRSClientFactoryClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' client factory')
-/]
+[query public buildRSClientFactoryClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' client factory').apply_classDefault()/]
 
 [comment : Get the name for the exception to be thrown if status code != 200 / OK. /]
-[query public buildRSFrontExceptionClassName (any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' front rs exception')
-/]
+[query public buildRSFrontExceptionClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' front rs exception').apply_classDefault()/]
 
 [comment : Get the name for the Main super-classe for all the front resources./]
-[query public buildRSFrontResourcesAbstractClassName(any : OclAny) : String =
-	apply_classAbstract(getApplicationName() + ' front resources')
- /]
+[query public buildRSFrontResourcesAbstractClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' front resources').apply_classAbstract()/]
 
 [comment : Get the name for the generic default filter for all front resources. /]
-[query public buildRSFrontResourcesDefaultFilter(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' front resources filter')
- /]
+[query public buildRSFrontResourcesDefaultFilter(any : ecore::EObject) : String = (any.getApplicationName() + ' front resources filter').apply_classDefault()/]
 
 [comment : Get the name of the application dispatcher for jsp project. /]
-[query public buildJspDispatcherClassName(any : OclAny) : String = 
-	apply_classEnum(getApplicationNameUpperFirst() + ' dispatcher')
-/]
+[query public buildJspDispatcherClassName(any : ecore::EObject) : String = (any.getApplicationNameUpperFirst() + ' dispatcher').apply_classEnum()/]
 
 [comment : Get the name for a sub controller. /]
-[query public buildJspControllerClassName(viewState : ViewState) : String =
-    apply_classDefault(viewState.name + ' Controller')
-/]
+[query public buildJspControllerClassName(viewState : flow::ViewState) : String = (viewState.name + ' Controller').apply_classDefault()/]
 
 [comment : Get the name for a sub controller in the dispatcher (suppress controller). /]
-[query public getJspControllerForDispatcherClassName(viewState : ViewState) : String =
-    apply_classDefault(viewState.name)
-/]
+[query public getJspControllerForDispatcherClassName(viewState : flow::ViewState) : String = viewState.name.apply_classDefault()/]
 
 [comment : Get the name for the configuration loader and storage for the library. /]
-[query public buildRSFrontConfigClassName (any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' front configuration')
-/]
+[query public buildRSFrontConfigClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' front configuration').apply_classDefault()/]
 
 [comment : Get the name for the tokens configurator. /]
-[query public buildRSFrontTokensConfigClassName(any : OclAny) : String =
-apply_classDefault(getApplicationName() + ' tokens configuration')
- /]
+[query public buildRSFrontTokensConfigClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' tokens configuration').apply_classDefault()/]
 
 [comment : Get the name for the default empty interceptor for all front resources. /]
-[query public buildRSFrontResourcesDefaultInterceptor(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' front resources interceptor')
- /]
+[query public buildRSFrontResourcesDefaultInterceptor(any : ecore::EObject) : String = (any.getApplicationName() + ' front resources interceptor').apply_classDefault()/]
 
 [comment : Get the name for the inner class 'Hostname Verifier'. /]
-[query public buildInternalHostnameVerifier (any : OclAny) : String =
-	getApplicationNameUpperFirst() + apply_classDefault(' hostname verifier')
-/]
+[query public buildInternalHostnameVerifier(any : ecore::EObject) : String = any.getApplicationNameUpperFirst() + ' hostname verifier'.apply_classDefault()/]
 
 [comment : Get the name for the inner class 'Trust Manager'. /]
-[query public buildInternalTrustManager (any : OclAny) : String =
-	getApplicationNameUpperFirst() + apply_classDefault(' trust manager')
-/]
+[query public buildInternalTrustManager(any : ecore::EObject) : String = any.getApplicationNameUpperFirst() + ' trust manager'.apply_classDefault()/]
 
 [comment : Get the name for the default context holder for all the front resources. /]
-[query public buildRSFrontResourcesContextHolder(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' front context holder')
-/]
+[query public buildRSFrontResourcesContextHolder(any : ecore::EObject) : String = (any.getApplicationName() + ' front context holder').apply_classDefault()/]
 
-[comment]Retourne le système racine d'un objet[/comment]
-[query public getRoot(any : OclAny) : ObeoDSMObject =
-    invoke(
-        'fr.pacman.commons.services.MatchingUtils',
-        'getRoot(org.eclipse.emf.ecore.EObject)',
-        Sequence{any})
-/]
+[comment etourne le système racine d'un objet/]
+[query public getRoot(any : ecore::EObject) : environment::ObeoDSMObject = any.getRootJavaService()/]
 
 [comment : Retourne la valeur de la métadonnée 'LIBRARY_NAME' pour le DTO. /]
-[query private getExternalLibraryName (d : DTO) :  String =
-    invoke( 'fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-    Sequence{d.metadatas, 'LIBRARY_NAME'})	
-/]
+[query private getExternalLibraryName(d : environment::DTO) : String = d.metadatas.getAnnotationBody('LIBRARY_NAME')/]
 
-[comment: Retourne true si le DTO possède la metadonnee 'LIBRARY_NAME'./] 
-[comment: (le DTO est donc piloté par une librairie externe). /]
-[query public isFromExternalLibrary(d : DTO) : Boolean =
-    invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'annotationExistsRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', 
-    Sequence{d, 'LIBRARY_NAME'})
-/]
+[comment  Retourne true si le DTO possède la metadonnee 'LIBRARY_NAME'./]
+[comment  (le DTO est donc piloté par une librairie externe). /]
+[query public isFromExternalLibrary(d : environment::DTO) : Boolean = d.annotationExistsRecursively('LIBRARY_NAME')/]
 
-[comment]Retourne true si l'objet possède l'annotation Referentiel[/comment]
-[query public isReferentiel(o : ObeoDSMObject) : Boolean =
-    invoke('fr.pacman.commons.services.AnnotationUtils', 'annotationExistsRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', Sequence{o, 'REFERENTIEL'})
-/]
+[comment etourne true si l'objet possède l'annotation Referentiel/]
+[query public isReferentiel(o : environment::ObeoDSMObject) : Boolean = o.annotationExistsRecursively('REFERENTIEL')/]
 
-[comment]Retourne true si la propriété possède une taille[/comment]
-[query public hasSize(p : Property) : Boolean =
-    hasSize(p.metadatas)
-/]
+[comment etourne true si la propriété possède une taille/]
+[query public hasSize(p : environment::Property) : Boolean = p.metadatas.hasSize()/]
 
-[comment]Retourne la taille définie sur une propriété[/comment]
-[query public size(p : Property) : String =
-    if not p.oclIsUndefined() then
-        size(p.metadatas)
-    else
-        ''
-    endif
-/]
+[comment etourne la taille définie sur une propriété/]
+[query public size(p : environment::Property) : String = if not (p = null) then p.metadatas.size() else '' endif/]
 
-[comment]Retourne true si les métadonnées contiennent l'annotation PHYSICAL_SIZE[/comment]
-[query public hasSize(metadatas : MetaDataContainer) : Boolean =
-    invoke(
-        'fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-        Sequence{metadatas, 'PHYSICAL_SIZE'}) <> null
-/]
+[comment etourne true si les métadonnées contiennent l'annotation PHYSICAL_SIZE/]
+[query public hasSize(metadatas : environment::MetaDataContainer) : Boolean = metadatas.getAnnotationBody('PHYSICAL_SIZE') <> null/]
 
-[comment]Retourne le contenu de l'annotation PHYSICAL_SIZE dans ces métadonnées, ou rien si l'annotation n'existe pas[/comment]
-[query public size(metadatas : MetaDataContainer) : String =
-    if hasSize(metadatas) then
-        invoke(
-            'fr.pacman.commons.services.AnnotationUtils',
-            'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-            Sequence{metadatas, 'PHYSICAL_SIZE'})
-    else
-        ''
-    endif
-/]
+[comment etourne le contenu de l'annotation PHYSICAL_SIZE dans ces métadonnées, ou rien si l'annotation n'existe pas/]
+[query public size(metadatas : environment::MetaDataContainer) : String = if metadatas.hasSize() then metadatas.getAnnotationBody('PHYSICAL_SIZE') else '' endif/]
 
-[comment]Retourne true si l'entity associée à ce DTO possède un attribut avec un attribut Version[/comment]
-[query public hasEntityWithVersion(d : DTO) : Boolean =
-    d.findEntityForDto().hasVersion()
-/]
+[comment etourne true si l'entity associée à ce DTO possède un attribut avec un attribut Version/]
+[query public hasEntityWithVersion(d : environment::DTO) : Boolean = d.findEntityForDto().hasVersion()/]
 
-[comment]Retourne le type du champ qui porte la version sur l'entité associée à ce DTO[/comment]
-[query public getEntityVersionType(d : DTO) : PrimitiveType =
-    d.findEntityForDto().getVersionType()
-/]
+[comment etourne le type du champ qui porte la version sur l'entité associée à ce DTO/]
+[query public getEntityVersionType(d : environment::DTO) : environment::PrimitiveType = d.findEntityForDto().getVersionType()/]
 
-[comment]Retourne l'entity associée à un DTO[/comment]
-[query private findEntityForDto(d : DTO) : Entity =
-    if (not d.getRoot().oclIsUndefined() and d.getRoot().eAllContents(Entity)
-            ->exists(e : Entity | e.name.equalsIgnoreCase(d.name)
-                                or (d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') and e.name.equalsIgnoreCase(d.name.substring(1, d.name.size() - 3))))) then
-        d.getRoot().eAllContents(Entity)
-            ->select(e : Entity | e.name.equalsIgnoreCase(d.name)
-                                or (d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') and e.name.equalsIgnoreCase(d.name.substring(1, d.name.size() - 3))))
-            ->first()
-    else
-        null
-    endif
-/]
+[comment etourne l'entity associée à un DTO/]
+[query private findEntityForDto(d : environment::DTO) : entity::Entity = if not (d.getRoot() = null) and d.getRoot().eAllContents(entity::Entity)->exists(e | e.name.equalsIgnoreCase(d.name) or d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') and e.name.equalsIgnoreCase(d.name.substring(1, d.name.size() - 3))) then d.getRoot().eAllContents(entity::Entity)->select(e | e.name.equalsIgnoreCase(d.name) or d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') and e.name.equalsIgnoreCase(d.name.substring(1, d.name.size() - 3)))->first() else null endif/]
 
-[comment]Retourne true si l'entité possède un attribut avec l'annotation Version[/comment]
-[query public hasVersion(e : Entity) : Boolean =
-    if e.oclIsUndefined() then
-        false
-    else
-     e.attributes->exists(a: environment::Attribute| a.isVersion())
-    endif
-/]
+[comment etourne true si l'entité possède un attribut avec l'annotation Version/]
+[query public hasVersion(e : entity::Entity) : Boolean = if e = null then false else e.attributes->exists(a | a.isVersion()) endif/]
 
-[comment]Retourne le type du champ qui porte la version sur cette entité[/comment]
-[query public getVersionType(e : Entity) : PrimitiveType =
-    if e.oclIsUndefined() then
-        null
-    else
-        e.attributes->select(a : environment::Attribute | a.isVersion())->first().type
-    endif
-/]
+[comment etourne le type du champ qui porte la version sur cette entité/]
+[query public getVersionType(e : entity::Entity) : environment::PrimitiveType = if e = null then null else e.attributes->select(a | a.isVersion())->first().type endif/]
 
-[comment]Retourne true si l'attribut de l'entité possède l'annotation Version[/comment]
-[query public isVersion(a : environment::Attribute) : Boolean =
-    invoke(
-        'fr.pacman.commons.services.AnnotationUtils',
-        'annotationExists(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{a, 'VERSION', false})
-/]
+[comment etourne true si l'attribut de l'entité possède l'annotation Version/]
+[query public isVersion(a : environment::Attribute) : Boolean = a.annotationExists('VERSION', false)/]
 
-[query public getClientTypes(any : OclAny) : Sequence(String) =
-    invoke('fr.pacman.commons.services.StringUtils', 'getPropertyAsList(java.lang.Object, java.lang.String)', Sequence{getClient(), ','})
-/]
+[query public getClientTypes(any : ecore::EObject) : Sequence(String) = any.getClient().getPropertyAsList(',')/]
 
-[query public requirementBaseCategoryLevel(any : OclAny) : Integer =
-if getRequirementCategoryBaseLevel() <> null then
-    getRequirementCategoryBaseLevel().toInteger()
-else
-    0
-endif
-/]
+[query public requirementBaseCategoryLevel(any : ecore::EObject) : Integer = if any.getRequirementCategoryBaseLevel() <> null then any.getRequirementCategoryBaseLevel().toInteger() else 0 endif/]
 
-[query public getBaseCategoryForRequirement(req : Requirement) : Category =
-    if (req.oclIsUndefined() or requirementBaseCategoryLevel() = 0) then
-        null
-    else
-        req.ancestors(Category)->reverse()->at(requirementBaseCategoryLevel())
-    endif
-/]
+[query public getBaseCategoryForRequirement(req : requirement::Requirement) : requirement::Category = if req = null or req.requirementBaseCategoryLevel() = 0 then null else req.ancestors(requirement::Category)->reverse()->at(req.requirementBaseCategoryLevel()) endif/]

@@ -1,52 +1,35 @@
+[module variableRule('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::ApplyNorme/]
+
 [comment encoding = UTF-8 /]
-[module variableRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
-
-[import fr::pacman::commons::common::utils]
-
 [template public apply_variableDefault(value : String)]
-[norme_variableDefault(value)/]
-[/template]
+  [value.norme_variableDefault()/][/template]
 
-[query private norme_variableDefault(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_variableDefault(java.lang.String)', Sequence{value})
- /]
+[query private norme_variableDefault(value : String) : String = value.norme_variableDefaultJavaService()/]
 
 [template public apply_variableMultipleDefault(value : String)]
-[norme_variableMultipleDefault(value)/]
-[/template]
+  [value.norme_variableMultipleDefault()/][/template]
 
-[query private norme_variableMultipleDefault(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_variableMultipleDefault(java.lang.String)', Sequence{value})
- /]
+[query private norme_variableMultipleDefault(value : String) : String = value.norme_variableMultipleDefaultJavaService()/]
 
 [template public apply_variableMultipleMap(value : String)]
-[norme_variableMultipleMap(value)/]
-[/template]
+  [value.norme_variableMultipleMap()/][/template]
 
-[query private norme_variableMultipleMap(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_variableMultipleMap(java.lang.String)', Sequence{value})
- /]
+[query private norme_variableMultipleMap(value : String) : String = value.norme_variableMultipleMapJavaService()/]
 
 [template public apply_variableFinal(value : String)]
-[norme_variableFinal(value)/]
-[/template]
+  [value.norme_variableFinal()/][/template]
 
-[query private norme_variableFinal(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_variableFinal(java.lang.String)', Sequence{value})
- /]
+[query private norme_variableFinal(value : String) : String = value.norme_variableFinalJavaService()/]
 
 [template public apply_variableObjectDefault(value : String)]
-[norme_variableObjectDefault(value)/]
-[/template]
+  [value.norme_variableObjectDefault()/][/template]
 
-[query private norme_variableObjectDefault(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_variableObjectDefault(java.lang.String)', Sequence{value})
- /]
+[query private norme_variableObjectDefault(value : String) : String = value.norme_variableObjectDefaultJavaService()/]
 
 [template public apply_variableObjectFinal(value : String)]
-[norme_variableObjectFinal(value)/]
-[/template]
+  [value.norme_variableObjectFinal()/][/template]
 
-[query private norme_variableObjectFinal(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_variableObjectFinal(java.lang.String)', Sequence{value})
- /]
+[query private norme_variableObjectFinal(value : String) : String = value.norme_variableObjectFinalJavaService()/]

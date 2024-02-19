@@ -1,122 +1,119 @@
+[module serviceGwtAsync('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::common::properties/]
+
 [comment encoding = UTF-8 /]
-[module serviceGwtAsync('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                        'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[comment le Service existe sans DTO /]
+[template public serviceGwtAsync(s : soa::Service)]
+  [s.serviceGwtAsync(s.dtoFromService(), true)/][/template]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
+[template public serviceGwtAsync(d : environment::DTO)]
+  [d.serviceFromDto().serviceGwtAsync(d, false)/][/template]
 
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::names /]
+[comment le Service et le DTO existent /]
+[template public serviceGwtAsync(s : soa::Service, d : environment::DTO)]
+  [s.serviceGwtAsync(d, false)/][/template]
 
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::classes /]
-
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::common::properties /]
-
-[comment] le Service existe sans DTO [/comment]
-[template public serviceGwtAsync(s : Service)]
-[serviceGwtAsync(s, dtoFromService(s), true)/]
-[/template]
-
-[template public serviceGwtAsync(d : DTO)]
-[serviceGwtAsync(serviceFromDto(d), d, false)/]
-[/template]
-
-[comment] le Service et le DTO existent [/comment]
-[template public serviceGwtAsync(s : Service, d : DTO)]
-[serviceGwtAsync(s, d, false)/]
-[/template]
-
-[template public serviceGwtAsync(s : Service, d : DTO, serviceSeul : Boolean)]
-[licence()/]
-[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
-package [buildPackageBusinessGwtClientServiceDto(s, d)/];
-// [protected ('for imports')]
-
-[comment  : /Write all required imports. /]
-[s.writeImports(d, serviceSeul)/]
-
-// [/protected]
-
-/**
- * Interface de services appelables par le client.
- * @author [getAuthorName()/]
- */
-public interface [buildServiceGwtAsyncClassName(s, d)/][if not serviceSeul] extends GwtRemoteServiceAsync<[genPkType()/], [buildXtoClassNameFromDto(d)/]>[/if]
-{
-
-[if not serviceSeul]
-[for (r : Reference | d.referencingStar())]
-   /**
-    * Obtenir la liste d'objets de type '[nameClassDto(d)/]' associés à l'instance de type '[nameClassDto(r.containingType.oclAsType(DTO))/]'.
-[getComParamInverseIdIn(r)/]
-    * @param callback
-    *           le callback pour retourner une liste de [buildXtoClassNameFromDto(d)/] ayant [apply_attributeDefault(nameBaseReferenceInverse(r))/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/]
-    */
-   void [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/], final AsyncCallback<List<[buildXtoClassNameFromDto(d)/]>> callback);
-
-[/for]
-[for (r : Reference | d.referencesStarStar())]
-   /**
-    * Obtenir la liste d'objets de type '[nameBaseDtoUP(r.referencedType.oclAsType(DTO))/]' associés à l'instance de type '[nameBaseDtoUP(r.containingType.oclAsType(DTO))/]'.
-    * @param [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/]
-    *           (In)(*) [nameBaseDtoUP(r.containingType.oclAsType(DTO))/].
-    * @param callback
-    *           le callback pour retourner une liste de [buildXtoClassNameFromDto(r.referencedType.oclAsType(DTO))/]
-    */
-   void [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/], final AsyncCallback<List<[buildXtoClassNameFromDto(r.referencedType.oclAsType(DTO))/]>> callback);
-
-[/for]
-[/if]
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-   // [userCodeForOperation(o)/]
-   // [protected (o.getUserCodeId(userCodeForOperation(o)))]
-
-   /**
-    * [o.description/].
-[getComParamsIn(o)/][comParamOutCallback(o)/]    */
-   void [apply_methodDefault(o.name)/] ([paramsInXto(o)/][if not o.input->isEmpty()], [/if]final AsyncCallback<[if o.output->isEmpty()]Void[else][paramOutXto(o)/][/if]> callback);
-
-   // [/protected]
-
-[/for]
-[/if]
-   // [buildServiceGwtAsyncClassName(s, d)/]
-   // [protected (s.getUserCodeId(buildServiceGwtAsyncClassName(s, d)))]
-
-   // [/protected]
-}[/let]
+[template public serviceGwtAsync(s : soa::Service, d : environment::DTO, serviceSeul : Boolean)]
+  [s.licence()/]
+  [let self = if not (s = null) then s else if not (d = null) then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+    package [s.buildPackageBusinessGwtClientServiceDto(d)/];
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [s.writeImports(d, serviceSeul)/]
+      
+    [/protected]
+    
+    
+    /**
+     * Interface de services appelables par le client.
+     * @author [s.getAuthorName()/]
+     */
+    public interface [s.buildServiceGwtAsyncClassName(d)/][if (not serviceSeul)] extends GwtRemoteServiceAsync<[s.genPkType()/], [d.buildXtoClassNameFromDto()/]>[/if]
+    
+    {
+    
+    [if (not serviceSeul)]
+      [for (r : environment::Reference | d.referencingStar())]
+           /**
+            * Obtenir la liste d'objets de type '[d.nameClassDto()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameClassDto()/]'.
+        [r.getComParamInverseIdIn()/]
+            * @param callback
+            *           le callback pour retourner une liste de [d.buildXtoClassNameFromDto()/] ayant [r.nameBaseReferenceInverse().apply_attributeDefault()/][r.namePK_ID()/] = [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            */
+           void [('find list ' + r.name + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/], final AsyncCallback<List<[d.buildXtoClassNameFromDto()/]>> callback);
+        
+      [/for]
+      [for (r : environment::Reference | d.referencesStarStar())]
+           /**
+            * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(environment::DTO).nameBaseDtoUP()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/]'.
+            * @param [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            *           (In)(*) [r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/].
+            * @param callback
+            *           le callback pour retourner une liste de [r.referencedType.oclAsType(environment::DTO).buildXtoClassNameFromDto()/]
+            */
+           void [('find list ' + r.name + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/], final AsyncCallback<List<[r.referencedType.oclAsType(environment::DTO).buildXtoClassNameFromDto()/]>> callback);
+        
+      [/for]
+    [/if]
+    [if (s <> null and not (s.ownedInterface = null))]
+      [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+           // [o.userCodeForOperation()/]
+           [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+             
+                /**
+                 * [o.description/].
+             [o.getComParamsIn()/][o.comParamOutCallback()/]    */
+                void [o.name.apply_methodDefault()/] ([o.paramsInXto()/][if (not o.input->isEmpty())], [/if]
+             final AsyncCallback<[if (o.output->isEmpty())]Void[else][o.paramOutXto()/][/if]
+             > callback);
+             
+           [/protected]
+        
+        
+      [/for]
+    [/if]
+       // [s.buildServiceGwtAsyncClassName(d)/]
+       [protected (s.getUserCodeId(s.buildServiceGwtAsyncClassName(d))) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    }[/let]
 [/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (s : Service, d : DTO, serviceSeul : Boolean) post(trim())]
-[s.initImports()/]
-[s.addImport('com.google.gwt.user.client.rpc.AsyncCallback')/]
-
-[if not d.oclIsUndefined()]
-	[s.addImport(d.buildImportXtoGwt())/]
-  	[for (r : Reference | d.referencesStarStar())]
-		[s.addImport(buildImportXtoGwt(r.referencedType.oclAsType(DTO)))/]
-  	[/for]
-[/if]
-
-[if not serviceSeul]
-	[s.addImport('fr.spi4j.ui.gwt.client.services.GwtRemoteServiceAsync')/]
-[/if]
-[s.flushImports()/]
-[/template]
+[template private writeImports(s : soa::Service, d : environment::DTO, serviceSeul : Boolean) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport('com.google.gwt.user.client.rpc.AsyncCallback')/]
+  
+  [if (not (d = null))]
+    	[s.addImport(d.buildImportXtoGwt())/]
+    [for (r : environment::Reference | d.referencesStarStar())]
+      		[s.addImport(r.referencedType.oclAsType(environment::DTO).buildImportXtoGwt())/]
+    [/for]
+  [/if]
+  
+  [if (not serviceSeul)]
+    	[s.addImport('fr.spi4j.ui.gwt.client.services.GwtRemoteServiceAsync')/]
+  [/if]
+  [s.flushImports()/][/template]

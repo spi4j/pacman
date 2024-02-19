@@ -1,173 +1,168 @@
-[comment encoding = UTF-8 /]
 [module webXml('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::configuration::common::names/]
+[import fr::pacman::configuration::common::properties/]
 
-[import fr::pacman::configuration::common::names /]
-[import fr::pacman::configuration::common::properties /]
-
-[template public securityInitialization(any : OclAny)]
-[if useSpi4jSecurity()]
-<!-- Initialisation de la securite -->
-<listener>
-	<listener-class>[getApplicationPackage()/].[buildSecurityListenerClassName()/]</listener-class>
-</listener>
-[/if]
+[comment encoding = UTF-8 /]
+[template public securityInitialization(any : ecore::EObject)]
+  [if (any.useSpi4jSecurity())]
+    <!-- Initialisation de la securite -->
+    <listener>
+    	<listener-class>[any.getApplicationPackage()/].[any.buildSecurityListenerClassName()/]</listener-class>
+    </listener>
+  [/if]
 [/template]
 
-[template public configFilesInitialization(any : OclAny)]
-[if useConfigFileSpi4jFrwk()]
-<!-- Lancement de la lecture des fichiers de configurations si gerés par spi4j. -->
-<listener>
-	<listener-class>[getApplicationPackage()/].[buildInitializationListenerClassName()/]</listener-class>
-</listener>
-[/if]
+[template public configFilesInitialization(any : ecore::EObject)]
+  [if (any.useConfigFileSpi4jFrwk())]
+    <!-- Lancement de la lecture des fichiers de configurations si gerés par spi4j. -->
+    <listener>
+    	<listener-class>[any.getApplicationPackage()/].[any.buildInitializationListenerClassName()/]</listener-class>
+    </listener>
+  [/if]
 [/template]
 
-[template public adminServlet(any : OclAny)]
-<!-- Servlet pour les informations du Build  -->
-<servlet>
-	<servlet-name>BuildInfoServlet</servlet-name>
-	<servlet-class>[getApplicationPackage()/].[buildInfoServletClassName()/]</servlet-class>
-	<load-on-startup>1</load-on-startup>
-</servlet>
-<servlet-mapping>
-	<servlet-name>BuildInfoServlet</servlet-name>
-	<url-pattern>/version</url-pattern>
-</servlet-mapping>    
-<!-- Servlet d'administration -->
-<servlet>
-	<servlet-name>AdministrationServlet</servlet-name>
-	<servlet-class>[getApplicationPackage()/].[buildAdministrationServletClassName()/]</servlet-class>
-	<load-on-startup>1</load-on-startup>
-</servlet>
-<servlet-mapping>
-	<servlet-name>AdministrationServlet</servlet-name>
-	<url-pattern>/admin/*</url-pattern>
-</servlet-mapping>
-<!-- Listener pour les purges / rechargement du cache -->
-<!-- 
-<listener>
-	<description>Listener pour initialisation du batch de purge des caches</description>
-	<display-name>[buildCacheManagerClassName()/]</display-name>
-	<listener-class>[getApplicationPackage()/].[buildCacheManagerClassName()/]</listener-class>
-</listener>
--->
+[template public adminServlet(any : ecore::EObject)]
+  <!-- Servlet pour les informations du Build  -->
+  <servlet>
+  	<servlet-name>BuildInfoServlet</servlet-name>
+  	<servlet-class>[any.getApplicationPackage()/].[any.buildInfoServletClassName()/]</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>BuildInfoServlet</servlet-name>
+  	<url-pattern>/version</url-pattern>
+  </servlet-mapping>    
+  <!-- Servlet d'administration -->
+  <servlet>
+  	<servlet-name>AdministrationServlet</servlet-name>
+  	<servlet-class>[any.getApplicationPackage()/].[any.buildAdministrationServletClassName()/]</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AdministrationServlet</servlet-name>
+  	<url-pattern>/admin/*</url-pattern>
+  </servlet-mapping>
+  <!-- Listener pour les purges / rechargement du cache -->
+  <!-- 
+  <listener>
+  	<description>Listener pour initialisation du batch de purge des caches</description>
+  	<display-name>[any.buildCacheManagerClassName()/]</display-name>
+  	<listener-class>[any.getApplicationPackage()/].[any.buildCacheManagerClassName()/]</listener-class>
+  </listener>
+  -->[/template]
+
+[template public melodyConfiguration(any : ecore::EObject)]
+  <!-- configuration pour le monitoring javamelody -->
+  <context-param>
+  	<param-name>javamelody.log</param-name>
+  	<param-value>true</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>javamelody.sql-transform-pattern</param-name>
+  	<!-- regexp pour agreger les parametres bindes dans les criteres de requetes
+  		SQL tels que "in (?, ?, ?, ?)" et ainsi pour eviter que ces requetes ayant
+  		un nombre variable de parametres soient considerees comme differentes ;
+  		de fait cela agrege aussi les values des inserts -->
+  	<param-value>\(['['/]\?, ]+\)</param-value>
+  </context-param>
+  [if ('swing'.equalsIgnoreCase(any.getClient()))]
+    <!-- parametrage du monitoring specifique pour GWT -->
+    <context-param>
+    	<param-name>javamelody.http-transform-pattern</param-name>
+    	<param-value>['['/]A-F,0-9]+\.cache</param-value>
+    </context-param>
+  [/if]
 [/template]
 
-[template public melodyConfiguration(any : OclAny)]
-<!-- configuration pour le monitoring javamelody -->
-<context-param>
-	<param-name>javamelody.log</param-name>
-	<param-value>true</param-value>
-</context-param>
-<context-param>
-	<param-name>javamelody.sql-transform-pattern</param-name>
-	<!-- regexp pour agreger les parametres bindes dans les criteres de requetes
-		SQL tels que "in (?, ?, ?, ?)" et ainsi pour eviter que ces requetes ayant
-		un nombre variable de parametres soient considerees comme differentes ;
-		de fait cela agrege aussi les values des inserts -->
-	<param-value>\(['['/]\?, ]+\)</param-value>
-</context-param>
-[if 'swing'.equalsIgnoreCase(getClient())]
-<!-- parametrage du monitoring specifique pour GWT -->
-<context-param>
-	<param-name>javamelody.http-transform-pattern</param-name>
-	<param-value>['['/]A-F,0-9]+\.cache</param-value>
-</context-param>
-[/if]
-[/template]
+[template public melodyFilters(any : ecore::EObject)]
+  [if (any.useSpi4jSecurity())]
+    <!-- MDC de Log4j et affichage de l'identifiant utilisateur dans le monitoring -->
+    <filter>
+    	<filter-name>remoteUser</filter-name>
+    	<filter-class>fr.spi4j.lib.security.RemoteUserFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>remoteUser</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+  [/if]
+  
+  <!-- these are for monitoring -->
+  <filter>
+  	<filter-name>monitoring</filter-name>
+  	<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>monitoring</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+  	<listener-class>net.bull.javamelody.SessionListener</listener-class>
+  </listener>[/template]
 
-[template public melodyFilters(any : OclAny)]
-[if(useSpi4jSecurity())]
-<!-- MDC de Log4j et affichage de l'identifiant utilisateur dans le monitoring -->
-<filter>
-	<filter-name>remoteUser</filter-name>
-	<filter-class>fr.spi4j.lib.security.RemoteUserFilter</filter-class>
-</filter>
-<filter-mapping>
-	<filter-name>remoteUser</filter-name>
-	<url-pattern>/*</url-pattern>
-</filter-mapping>
-[/if]
+[template public basicAuth(any : ecore::EObject)]
+  <!-- Mise en place d'une securisation pour l'administration et le monitoring -->
+  <login-config>
+  	<auth-method>BASIC</auth-method>
+  	<!-- le nom du realm par defaut dans glassfish est "file" -->
+  	<realm-name>[any.getDefaultRealmParameter()/]</realm-name>
+  </login-config>
+  <security-role>
+  	<role-name>[any.getDefaultMonitoringParameter()/]</role-name>
+  </security-role>
+  <security-role>
+  	<role-name>[any.getDefaultAdminParameter()/]</role-name>
+  </security-role>
+  <security-constraint>
+  	<web-resource-collection>
+  		<web-resource-name>Monitoring</web-resource-name>
+  		<url-pattern>/[any.getDefaultMonitoringParameter()/]</url-pattern>
+  	</web-resource-collection>
+  	<web-resource-collection>
+  		<web-resource-name>Administration</web-resource-name>
+  		<url-pattern>/[any.getDefaultAdminParameter()/]/*</url-pattern>
+  	</web-resource-collection>
+  	<auth-constraint>
+  		<role-name>[any.getDefaultMonitoringParameter()/]</role-name>
+  		<role-name>[any.getDefaultAdminParameter()/]</role-name>
+  	</auth-constraint>
+  </security-constraint>[/template]
 
-<!-- these are for monitoring -->
-<filter>
-	<filter-name>monitoring</filter-name>
-	<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
-</filter>
-<filter-mapping>
-	<filter-name>monitoring</filter-name>
-	<url-pattern>/*</url-pattern>
-</filter-mapping>
-<listener>
-	<listener-class>net.bull.javamelody.SessionListener</listener-class>
-</listener>
-[/template]
+[template public userCode(any : ecore::EObject)]
+  
+  <!-- 
+  // Zone libre utilisateur
+  [protected (any.getUserCodeId('zone libre utilisateur')) startTagPrefix('// ') endTagPrefix('// ')]
+    -->
+    
+    
+    <!-- 
+  [/protected]
+  
+  -->[/template]
 
-[template public basicAuth(any : OclAny)]
-<!-- Mise en place d'une securisation pour l'administration et le monitoring -->
-<login-config>
-	<auth-method>BASIC</auth-method>
-	<!-- le nom du realm par defaut dans glassfish est "file" -->
-	<realm-name>[getDefaultRealmParameter()/]</realm-name>
-</login-config>
-<security-role>
-	<role-name>[getDefaultMonitoringParameter()/]</role-name>
-</security-role>
-<security-role>
-	<role-name>[getDefaultAdminParameter()/]</role-name>
-</security-role>
-<security-constraint>
-	<web-resource-collection>
-		<web-resource-name>Monitoring</web-resource-name>
-		<url-pattern>/[getDefaultMonitoringParameter()/]</url-pattern>
-	</web-resource-collection>
-	<web-resource-collection>
-		<web-resource-name>Administration</web-resource-name>
-		<url-pattern>/[getDefaultAdminParameter()/]/*</url-pattern>
-	</web-resource-collection>
-	<auth-constraint>
-		<role-name>[getDefaultMonitoringParameter()/]</role-name>
-		<role-name>[getDefaultAdminParameter()/]</role-name>
-	</auth-constraint>
-</security-constraint>
-[/template]
+[template public initializationListener(any : ecore::EObject)]
+  <!-- Lancement des actions à effectuer au démarrage de l'application. -->
+  <listener> 
+  	<listener-class>[any.getApplicationPackage()/].[any.buildInitializationListenerClassName()/]</listener-class>
+  </listener> [/template]
 
-[template public userCode(any : OclAny)]
-
-<!-- 
-// Zone libre utilisateur
-// [protected (any.getUserCodeId('zone libre utilisateur'))]
--->
-
-
-<!-- 
-// [/protected]
--->
-[/template]
-
-[template public initializationListener(any : OclAny)]
-<!-- Lancement des actions à effectuer au démarrage de l'application. -->
-<listener> 
-	<listener-class>[getApplicationPackage()/].[buildInitializationListenerClassName()/]</listener-class>
-</listener> 
-[/template]
-
-[template public dummyRSServlet(any : OclAny)]
-[if hasToWriteOtherWebappForApi()]
-<!-- En cas de serveur embarqué, cette définition de servlet sert juste 
-	a ne pas faire planter la lecture du fichier puisque le client embarque le 
-	serveur qui contient un fichier fragment. Cette pseudo définition du servlet 
-	pour les services Rest est écrasée par celle présente dans le fichier web.xml 
-	de la partie serveur. -->
-<servlet>
-	<servlet-name>RSServlet</servlet-name>
-	[comment : jetty est plus stricte que tomcat sur la definition des servlets. /]
-	[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>[/if]
-</servlet>
-[/if]
+[template public dummyRSServlet(any : ecore::EObject)]
+  [if (any.hasToWriteOtherWebappForApi())]
+    <!-- En cas de serveur embarqué, cette définition de servlet sert juste 
+    	a ne pas faire planter la lecture du fichier puisque le client embarque le 
+    	serveur qui contient un fichier fragment. Cette pseudo définition du servlet 
+    	pour les services Rest est écrasée par celle présente dans le fichier web.xml 
+    	de la partie serveur. -->
+    <servlet>
+    	<servlet-name>RSServlet</servlet-name>
+    	[if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>[/if]
+    
+    </servlet>
+  [/if]
 [/template]

@@ -1,135 +1,140 @@
+[module daoJdbcTest('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::entity::jdbc::common::packages/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::common::names/]
+
 [comment encoding = UTF-8 /]
-[module daoJdbcTest('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::entity::jdbc::common::packages /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::sql::common /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::common::names /]
-
-
-[template public daoJdbcTest(e : Entity)]
-[licence()/]
-package [buildPackagePersistenceImplementationJdbcEntity(e)/];
-// [protected ('for imports')]
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import fr.spi4j.Parameters;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import [buildPackagePersistence()/].[buildParamPersistenceClassName()/];
-import [buildPackagePersistence()/].[buildUserPersistenceAppClassName()/];
-import [buildPackagePersistenceApiEntity(e)/].[buildDaoInterfaceName(e)/];
-import [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/];
-
-// [/protected]
-
-/**
- * Classe de tests pour les méthodes spécifiques à l'implémentation JDBC du DAO. 
- * Cette classe est générée uniquement car '[nameSimpleEntity(e)/]' est annoté 'Referentiel'.
- * @author [getAuthorName()/]
- */
-// Annotation for class
-// [protected (e.getUserCodeId('Annotation for class'))]
-// [/protected]
-public class [buildDaoJdbcTestClassName(e)/]
-{
-
-   /** Le 'UserPersistence' de l'application. */
-   private static [buildUserPersistenceAppClassName()/] [apply_attributeStatic('user persistence')/];
-
-   /** Le '[buildDaoInterfaceName(e)/]' testé. */
-   private static [buildDaoInterfaceName(e)/] [apply_attributeStatic('dao')/];
-
-   /**
-    * Méthode d'initialisation de la classe de tests.
-    */
-   @BeforeAll
-   public static void [apply_methodDefault('set up before all')/] ()
-   {
-	  Parameters.setH2Database();
-      [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
-      [apply_attributeStatic('dao')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get ' + buildDaoName(e))/]();
-
-      // set up before all
-      // [protected (e.getUserCodeId('set up before all'))]
-      // [/protected]
-   }
-
-   /**
-    * Méthode d'initialisation de tests.
-    */
-   @BeforeEach
-   public void [apply_methodDefault('set up')/] ()
-   {
-      [apply_attributeStatic('user persistence')/].begin();
-
-      // set up
-      // [protected (e.getUserCodeId('set up'))]
-      // [/protected]
-   }
-
-   /**
-    * Construit une Map des valeurs de l'entity, ayant les noms logiques des colonnes comme clés.
-    */
-   @Test
-   public void [apply_methodDefault('get map value by logical name from entity')/] ()
-   {
-      assertTrue([apply_attributeStatic('dao')/] instanceof [buildDaoImplClassName(e)/], "Le DAO est bien une implémentation JDBC");
-      final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get ' + buildEntityName(e))/]();
-
-      // remplissage entity
-      // [protected (e.getUserCodeId('remplissage entity'))]
-
-      // [/protected]
-
-      final [buildDaoImplClassName(e)/] [apply_variableDefault('dao jdbc')/] = ([buildDaoImplClassName(e)/]) [apply_attributeStatic('dao')/];
-      final Map<String, Object> [apply_variableDefault('map')/] = [apply_variableDefault('dao jdbc')/].getMapValueByLogicalNameFromEntity([apply_variableDefault('entity')/]);
-      assertNotNull([apply_variableDefault('map')/], "La map est vide");
-      assertFalse([apply_variableDefault('map')/].isEmpty(), "La map est vide");
-
-      // vérification map
-      // [protected (e.getUserCodeId('vérification map'))]
-
-      // [/protected]
-   }
-
-   /**
-    * Méthode de fin de test : rollback.
-    */
-   @AfterEach
-   public void [apply_methodDefault('tear down')/] ()
-   {
-      [apply_attributeStatic('user persistence')/].rollback();
-
-      // tear down
-      // [protected (e.getUserCodeId('tear down'))]
-      // [/protected]
-   }
-
-   // specific service test
-   // [protected (e.getUserCodeId('specific service test'))]
-
-   // [/protected]
-
-}
-[/template]
+[template public daoJdbcTest(e : entity::Entity)]
+  [e.licence()/]
+  package [e.buildPackagePersistenceImplementationJdbcEntity()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import static org.junit.jupiter.api.Assertions.assertNotNull;
+    import static org.junit.jupiter.api.Assertions.assertFalse;
+    import static org.junit.jupiter.api.Assertions.assertTrue;
+    
+    import fr.spi4j.Parameters;
+    import java.util.List;
+    import java.util.Map;
+    
+    import org.junit.jupiter.api.AfterEach;
+    import org.junit.jupiter.api.BeforeAll;
+    import org.junit.jupiter.api.BeforeEach;
+    import org.junit.jupiter.api.Test;
+    
+    import [e.buildPackagePersistence()/].[e.buildParamPersistenceClassName()/];
+    import [e.buildPackagePersistence()/].[e.buildUserPersistenceAppClassName()/];
+    import [e.buildPackagePersistenceApiEntity()/].[e.buildDaoInterfaceName()/];
+    import [e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/];
+    
+  [/protected]
+  
+  
+  /**
+   * Classe de tests pour les méthodes spécifiques à l'implémentation JDBC du DAO. 
+   * Cette classe est générée uniquement car '[e.nameSimpleEntity()/]' est annoté 'Referentiel'.
+   * @author [e.getAuthorName()/]
+   */
+  // Annotation for class
+  [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
+  [/protected]
+  
+  public class [e.buildDaoJdbcTestClassName()/]
+  {
+  
+     /** Le 'UserPersistence' de l'application. */
+     private static [e.buildUserPersistenceAppClassName()/] ['user persistence'.apply_attributeStatic()/];
+  
+     /** Le '[e.buildDaoInterfaceName()/]' testé. */
+     private static [e.buildDaoInterfaceName()/] ['dao'.apply_attributeStatic()/];
+  
+     /**
+      * Méthode d'initialisation de la classe de tests.
+      */
+     @BeforeAll
+     public static void ['set up before all'.apply_methodDefault()/] ()
+     {
+  	  Parameters.setH2Database();
+        ['user persistence'.apply_attributeStatic()/] = [e.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]();
+        ['dao'.apply_attributeStatic()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildDaoName()).apply_methodDefault()/]();
+  
+        // set up before all
+        [protected (e.getUserCodeId('set up before all')) startTagPrefix('// ') endTagPrefix('// ')]
+        [/protected]
+  
+     }
+  
+     /**
+      * Méthode d'initialisation de tests.
+      */
+     @BeforeEach
+     public void ['set up'.apply_methodDefault()/] ()
+     {
+        ['user persistence'.apply_attributeStatic()/].begin();
+  
+        // set up
+        [protected (e.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
+        [/protected]
+  
+     }
+  
+     /**
+      * Construit une Map des valeurs de l'entity, ayant les noms logiques des colonnes comme clés.
+      */
+     @Test
+     public void ['get map value by logical name from entity'.apply_methodDefault()/] ()
+     {
+        assertTrue(['dao'.apply_attributeStatic()/] instanceof [e.buildDaoImplClassName()/], "Le DAO est bien une implémentation JDBC");
+        final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
+  
+        // remplissage entity
+        [protected (e.getUserCodeId('remplissage entity')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+  
+        final [e.buildDaoImplClassName()/] ['dao jdbc'.apply_variableDefault()/] = ([e.buildDaoImplClassName()/]) ['dao'.apply_attributeStatic()/];
+        final Map<String, Object> ['map'.apply_variableDefault()/] = ['dao jdbc'.apply_variableDefault()/].getMapValueByLogicalNameFromEntity(['entity'.apply_variableDefault()/]);
+        assertNotNull(['map'.apply_variableDefault()/], "La map est vide");
+        assertFalse(['map'.apply_variableDefault()/].isEmpty(), "La map est vide");
+  
+        // vérification map
+        [protected (e.getUserCodeId('vérification map')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+     }
+  
+     /**
+      * Méthode de fin de test : rollback.
+      */
+     @AfterEach
+     public void ['tear down'.apply_methodDefault()/] ()
+     {
+        ['user persistence'.apply_attributeStatic()/].rollback();
+  
+        // tear down
+        [protected (e.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
+        [/protected]
+  
+     }
+  
+     // specific service test
+     [protected (e.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]

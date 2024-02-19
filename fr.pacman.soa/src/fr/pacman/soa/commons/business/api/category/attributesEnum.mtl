@@ -1,234 +1,225 @@
-[comment encoding = UTF-8 /]
-[module attributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                       'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+[module attributesEnum('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-
-[import fr::pacman::commons::types::packages /]
-[import fr::pacman::commons::types::names /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::attributes /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::types::packages/]
+[import fr::pacman::commons::types::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::attributes/]
 [import fr::pacman::commons::soa::common::attributes/]
 [import fr::pacman::commons::soa::common::packages/]
 [import fr::pacman::commons::soa::common::utils/]
 [import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::classes /]
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::methodes /]
+[comment encoding = UTF-8 /]
+[template public enumStruct(p : environment::Property, s : environment::DTO)]
+  XXX attributesEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX[/template]
 
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::names /]
+[template public enumStruct(a : environment::Attribute, s : environment::DTO)]
+     /** [a.nameBaseAttribute()/]. */
+     [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.genClassTypeName()/], [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if]
+  )[/template]
 
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-
-[template public enumStruct (p : Property, s : DTO)]
-XXX attributesEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX
+[template public enumStruct(r : environment::Reference, s : environment::DTO)]
+  [if (s.isReferenceNoStar(r))]
+    [if (not r.isComputed() and not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+         [r.enumStructId()/],
+    [/if]
+       [r.enumStructReference()/][elseif (s.isReferenceStar(r))]
+                                      [r.enumStructTab()/][if (s.isReferencingStar(r))]
+                                                            ,
+                                                               [r.enumStructInverseId()/][/if]
+                                 [elseif (s.isReferencingStar(r))]   [r.enumStructInverseId()/][/if]
 [/template]
 
-[template public enumStruct (a : Attribute, s : DTO)]
-   /** [nameBaseAttribute(a)/]. */
-   [apply_attributeEnum(a.name.normalize())/]("[apply_attributeEnum(a.name.normalize())/]", "[a.description.escape()/]", [a.genClassTypeName()/], [mandatory(a)/], [if hasSize(a.metadatas)][size(a.metadatas)/][else]-1[/if])
-[/template]
+[template public enumStructId(r : environment::Reference)]
+  /** [r.nameBaseReference()/][r.namePK_ID()/]. */
+  [r.nameBaseReference()/][r.namePK_ID()/]("[r.nameBaseReference()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  )[/template]
 
-[template public enumStruct (r : Reference, s : DTO)]
-[if isReferenceNoStar(s, r)]
-   [if not isComputed(r) and not r.referencedType.oclAsType(DTO).isNotPersistent()]
-   [r.enumStructId()/],
-   [/if]
-   [r.enumStructReference()/][elseif isReferenceStar(s, r)]
-   [r.enumStructTab()/][if isReferencingStar(s, r)],
-   [r.enumStructInverseId()/][/if][elseif isReferencingStar(s, r)]
-   [r.enumStructInverseId()/][/if]
-[/template]
+[template public enumStructReference(r : environment::Reference)]
+  /** [r.nameBaseReference()/]. */
+  [r.nameBaseReference()/]("[r.nameBaseReference()/]", "[r.description.escape()/]", [r.nameDto()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  )[/template]
 
-[template public enumStructId (r : Reference)]
-/** [nameBaseReference(r)/][namePK_ID()/]. */
-[nameBaseReference(r)/][namePK_ID()/]("[nameBaseReference(r)/][namePK_ID()/]", "[r.description.escape()/]", [genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
-[/template]
+[template public enumStructTab(r : environment::Reference)]
+  /** [r.nameBaseReferenceTab()/]. */
+  [r.nameBaseReferenceTab()/]("[r.nameBaseReferenceTab()/]", "[r.description.escape()/]", List.class, false, [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  )[/template]
 
-[template public enumStructReference (r : Reference)]
-/** [nameBaseReference(r)/]. */
-[nameBaseReference(r)/]("[nameBaseReference(r)/]", "[r.description.escape()/]", [r.nameDto()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
-[/template]
+[template public enumStructInverseId(r : environment::Reference)]
+  /** [r.nameBaseReferenceInverse()/][r.namePK_ID()/]. */
+  [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
+  )[/template]
 
-[template public enumStructTab (r : Reference)]
-/** [nameBaseReferenceTab(r)/]. */
-[nameBaseReferenceTab(r)/]("[nameBaseReferenceTab(r)/]", "[r.description.escape()/]", List.class, false, [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
-[/template]
-
-[template public enumStructInverseId (r : Reference)]
-/** [nameBaseReferenceInverse(r)/][namePK_ID()/]. */
-[nameBaseReferenceInverse(r)/][namePK_ID()/]("[nameBaseReferenceInverse(r)/][namePK_ID()/]", "[r.description.escape()/]", [genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if])
-[/template]
-
-[template public attributesEnum(d : DTO)]
-[licence()/]
-package [buildPackageBusinessApiDto(d)/];
-// [protected ('for imports')]
-[comment : appel à cette méthode pour charger les attributs hérités de l'entité dans le DTO /]
-[let attributs : OrderedSet(Attribute) = d.getAttributes()/]
+[template public attributesEnum(d : environment::DTO)]
+  [d.licence()/]
+  package [d.buildPackageBusinessApiDto()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    [let attributs : OrderedSet(environment::Attribute) = d.getAttributes()]
+    [/let]
+    
+    [d.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * L'énumération définissant les informations de chaque attribut pour le type '[d.nameClassDto()/]'.
+   * @author [d.getAuthorName()/]
+   */
+  public enum [d.buildAttributesEnumName()/] implements [d.getClassNameForAttributesNames_Itf()/]
+  {
+  [if (d.isNotPersistent() and not d.isParent())]
+       // Enumeration Attributs
+       [protected (d.getUserCodeId('Enumeration Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    
+  [/if]
+     /** [d.nameENUM_PK_ID()/]. */
+     [d.nameENUM_PK_ID()/]("[d.nameENUM_PK_ID()/]", "id", [d.genPkType()/].class, true, -1)[if (not d.navigableProperties()->isEmpty())]
+                                                                                             ,
+                                                                                             [d.navigableProperties()->asSequence()->collect(temp1 | temp1.enumStruct(d))->sep(',\r\n')/][/if]
+  ;
+  
+     /** Le nom de l'attribut. */
+     private final String ['name'.apply_attributeFinal()/];
+  
+     /** La description de l'attribut. */
+     private final String ['description'.apply_attributeFinal()/];
+  
+     /** Le type associé à l'attribut. */
+     private final Class<?> ['type'.apply_attributeFinal()/];
+  
+     /** Est-ce que la saisie de la valeur est obligatoire pour cet attribut ? */
+     private final boolean ['mandatory'.apply_attributeFinal()/];
+  
+     /** La taille de l'attribut. */
+     private final int ['size'.apply_attributeFinal()/];
+  
+     /** La méthode du getter. */
+     private transient Method ['getter method'.apply_attributeDefault()/];
+  
+     /** La méthode du setter. */
+     private transient Method ['setter method'.apply_attributeDefault()/];
+  
+     /**
+      * Constructeur.
+      * @param ['name'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) Le nom de l'attribut.
+      * @param ['description'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) La description de l'attribut.
+      * @param ['class type'.apply_parameterMethodObjectIn()/]
+      *           (In)(*) Le type de l'attribut.
+      * @param ['mandatory'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) Est-ce que la saisie de la valeur est obligatoire pour cette colonne?
+      * @param ['size'.apply_parameterMethodClassicIn()/]
+      *           (In)(*) La taille de la colonne
+      */
+     private [d.buildAttributesEnumName()/] (final String ['name'.apply_parameterMethodClassicIn()/], final String ['description'.apply_parameterMethodClassicIn()/], final Class<?> ['class type'.apply_parameterMethodObjectIn()/], final boolean ['mandatory'.apply_parameterMethodClassicIn()/], final int ['size'.apply_parameterMethodClassicIn()/])
+     {
+        [d.getAffectationPrefix()/]['name'.apply_attributeFinal()/] = ['name'.apply_parameterMethodClassicIn()/];
+        [d.getAffectationPrefix()/]['description'.apply_attributeFinal()/] = ['description'.apply_parameterMethodClassicIn()/];
+        [d.getAffectationPrefix()/]['type'.apply_attributeFinal()/] = ['class type'.apply_parameterMethodObjectIn()/];
+        [d.getAffectationPrefix()/]['mandatory'.apply_attributeFinal()/] = ['mandatory'.apply_parameterMethodClassicIn()/];
+        [d.getAffectationPrefix()/]['size'.apply_attributeFinal()/] = ['size'.apply_parameterMethodClassicIn()/];
+     }
+  
+  
+     @Override
+     public String getName ()
+     {
+        return ['name'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public String getDescription ()
+     {
+        return ['description'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public Class<?> getType ()
+     {
+        return ['type'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public boolean isMandatory ()
+     {
+        return ['mandatory'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public int getSize ()
+     {
+        return ['size'.apply_attributeFinal()/];
+     }
+  
+     @Override
+     public Method getGetterMethod ()
+     {
+        if (['getter method'.apply_attributeDefault()/] == null)
+        {
+           ['getter method'.apply_attributeDefault()/] = DtoAttributeHelper.getInstance().getGetterMethodForAttribute([d.buildDtoClassName()/].class, getName());
+        }
+        return ['getter method'.apply_attributeDefault()/];
+     }
+  
+     @Override
+     public Method getSetterMethod ()
+     {
+        if (['setter method'.apply_attributeDefault()/] == null)
+        {
+           ['setter method'.apply_attributeDefault()/] = DtoAttributeHelper.getInstance().getSetterMethodForAttribute([d.buildDtoClassName()/].class, getName(), getType());
+        }
+        return ['setter method'.apply_attributeDefault()/];
+     }
+  
+     @Override
+     public String toString ()
+     {
+        return ['description'.apply_attributeFinal()/];
+     }
+  }[/template]
 
 [comment : Write all required imports. /]
-[d.writeImports()/]
-
-// [/protected]
-
-/**
- * L'énumération définissant les informations de chaque attribut pour le type '[d.nameClassDto()/]'.
- * @author [getAuthorName()/]
- */
-public enum [d.buildAttributesEnumName()/] implements [getClassNameForAttributesNames_Itf()/]
-{
-[if d.isNotPersistent() and not d.isParent()]
-   // Enumeration Attributs
-   // [protected (d.getUserCodeId('Enumeration Attributs'))]
-
-   // [/protected]
-
-[/if]
-   /** [nameENUM_PK_ID()/]. */
-   [nameENUM_PK_ID()/]("[nameENUM_PK_ID()/]", "id", [genPkType()/].class, true, -1)[if not d.navigableProperties()->isEmpty()],
-[d.navigableProperties().enumStruct(d)->sep(',\r\n')/][/if];
-
-   /** Le nom de l'attribut. */
-   private final String [apply_attributeFinal('name')/];
-
-   /** La description de l'attribut. */
-   private final String [apply_attributeFinal('description')/];
-
-   /** Le type associé à l'attribut. */
-   private final Class<?> [apply_attributeFinal('type')/];
-
-   /** Est-ce que la saisie de la valeur est obligatoire pour cet attribut ? */
-   private final boolean [apply_attributeFinal('mandatory')/];
-
-   /** La taille de l'attribut. */
-   private final int [apply_attributeFinal('size')/];
-
-   /** La méthode du getter. */
-   private transient Method [apply_attributeDefault('getter method')/];
-
-   /** La méthode du setter. */
-   private transient Method [apply_attributeDefault('setter method')/];
-
-   /**
-    * Constructeur.
-    * @param [apply_parameterMethodClassicIn('name')/]
-    *           (In)(*) Le nom de l'attribut.
-    * @param [apply_parameterMethodClassicIn('description')/]
-    *           (In)(*) La description de l'attribut.
-    * @param [apply_parameterMethodObjectIn('class type')/]
-    *           (In)(*) Le type de l'attribut.
-    * @param [apply_parameterMethodClassicIn('mandatory')/]
-    *           (In)(*) Est-ce que la saisie de la valeur est obligatoire pour cette colonne?
-    * @param [apply_parameterMethodClassicIn('size')/]
-    *           (In)(*) La taille de la colonne
-    */
-   private [d.buildAttributesEnumName()/] (final String [apply_parameterMethodClassicIn('name')/], final String [apply_parameterMethodClassicIn('description')/], final Class<?> [apply_parameterMethodObjectIn('class type')/], final boolean [apply_parameterMethodClassicIn('mandatory')/], final int [apply_parameterMethodClassicIn('size')/])
-   {
-      [getAffectationPrefix()/][apply_attributeFinal('name')/] = [apply_parameterMethodClassicIn('name')/];
-      [getAffectationPrefix()/][apply_attributeFinal('description')/] = [apply_parameterMethodClassicIn('description')/];
-      [getAffectationPrefix()/][apply_attributeFinal('type')/] = [apply_parameterMethodObjectIn('class type')/];
-      [getAffectationPrefix()/][apply_attributeFinal('mandatory')/] = [apply_parameterMethodClassicIn('mandatory')/];
-      [getAffectationPrefix()/][apply_attributeFinal('size')/] = [apply_parameterMethodClassicIn('size')/];
-   }
-
-
-   @Override
-   public String getName ()
-   {
-      return [apply_attributeFinal('name')/];
-   }
-
-   @Override
-   public String getDescription ()
-   {
-      return [apply_attributeFinal('description')/];
-   }
-
-   @Override
-   public Class<?> getType ()
-   {
-      return [apply_attributeFinal('type')/];
-   }
-
-   @Override
-   public boolean isMandatory ()
-   {
-      return [apply_attributeFinal('mandatory')/];
-   }
-
-   @Override
-   public int getSize ()
-   {
-      return [apply_attributeFinal('size')/];
-   }
-
-   @Override
-   public Method getGetterMethod ()
-   {
-      if ([apply_attributeDefault('getter method')/] == null)
-      {
-         [apply_attributeDefault('getter method')/] = DtoAttributeHelper.getInstance().getGetterMethodForAttribute([d.buildDtoClassName()/].class, getName());
-      }
-      return [apply_attributeDefault('getter method')/];
-   }
-
-   @Override
-   public Method getSetterMethod ()
-   {
-      if ([apply_attributeDefault('setter method')/] == null)
-      {
-         [apply_attributeDefault('setter method')/] = DtoAttributeHelper.getInstance().getSetterMethodForAttribute([d.buildDtoClassName()/].class, getName(), getType());
-      }
-      return [apply_attributeDefault('setter method')/];
-   }
-
-   @Override
-   public String toString ()
-   {
-      return [apply_attributeFinal('description')/];
-   }
-}
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (d : DTO) post(trim())]
-[d.initImports()/]
-[d.addImport('java.lang.reflect.Method')/]
-[d.addImport(getImportForAttributesNames_Itf())/]
-[d.addImport('fr.spi4j.business.dto.DtoAttributeHelper')/]
-[d.addImport('java.util.List', not d.referencesStar()->isEmpty())/]
-
-[comment : List all references for relational DTO. /]
-[for (r : Reference | d.referencesNoStar())]
-	[d.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-[/for]
-
-[comment : List all references for relational DTO. /]
-[for (r : Reference | d.referencesComputedNoStar())]
-	[d.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-[/for]
-
-[comment : List all enumerations. /]
-[for (enum: Enumeration | d.getRoot().eAllContents(Enumeration))]
-	[d.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/];
-[/for]
-
-[d.flushImports()/]
-[/template]
+[template private writeImports(d : environment::DTO) post(self.trim())]
+  [d.initImports()/]
+  [d.addImport('java.lang.reflect.Method')/]
+  [d.addImport(d.getImportForAttributesNames_Itf())/]
+  [d.addImport('fr.spi4j.business.dto.DtoAttributeHelper')/]
+  [d.addImport('java.util.List', not d.referencesStar()->isEmpty())/]
+  
+  [for (r : environment::Reference | d.referencesNoStar())]
+    	[d.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
+  [/for]
+  
+  [for (r : environment::Reference | d.referencesComputedNoStar())]
+    	[d.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
+  [/for]
+  
+  [for (enum : environment::Enumeration | d.getRoot().eAllContents(environment::Enumeration))]
+    	[d.addImport(enum.buildPackageEnum() + '.' + enum.buildEnumName())/];
+  [/for]
+  
+  [d.flushImports()/][/template]

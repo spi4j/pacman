@@ -1,70 +1,56 @@
-[comment encoding = UTF-8 /]
-[module imports('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0',
-                'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+[module imports('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/requirement/1.0')/]
 
 [import fr::pacman::commons::common::classes/]
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::soalight::common::classes/]
 [import fr::pacman::soalight::common::name/]
 [import fr::pacman::soalight::common::packages/]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::convention::project::surcouche /]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[*******************
+[comment encoding = UTF-8 /]
+[**
+ * ****************
  * Paramétrage Début
 */]
+[template public getImportUserBusinessGen(any : ecore::EObject)]
+  import [any.buildPackageBusiness()/].[any.buildAppliUserBusinessGenClassName()/];[/template]
 
-[template public getImportUserBusinessGen(any : OclAny)]
-import [buildPackageBusiness()/].[buildAppliUserBusinessGenClassName()/];
+[template public getImportParamPersistenceClass(any : ecore::EObject)]
+  import [any.buildPackagePersistence()/].[any.buildParamPersistenceClassName()/];[/template]
+
+[template public getImportUserPersistenceClass(any : ecore::EObject)]
+  import [any.buildPackagePersistence()/].[any.buildUserPersistenceAppClassName()/];[/template]
+
+[template public getImportServiceInterface(s : soa::Service)]
+  import [s.buildPackageBusinessApiService()/].[s.buildServiceInterfaceName()/];[/template]
+
+[template public getImportServiceRequirements(s : soa::Service)]
+  import [s.buildPackageBusinessImplementationService()/].[s.buildServiceRequirementsClassName()/];[/template]
+
+[template public importForEntityService_Abs(s : soa::Service)]
+  import [s.getImportForEntityService_Abs()/];[/template]
+
+[template public getImportRequirement(req : requirement::Requirement)]
+  [if (req.requirementBaseCategoryLevel() = 0)]
+    import [req.buildPackageRequirement()/].['requirement'.apply_classAnnotation()/];
+    import [req.buildPackageRequirement()/].['requirement'.apply_classEnum()/];
+  [else]
+    import [req.getBaseCategoryForRequirement().buildPackageRequirementForCategory()/].['requirement ' + req.getBaseCategoryForRequirement().id.apply_classAnnotation()/];
+    import [req.getBaseCategoryForRequirement().buildPackageRequirementForCategory()/].['requirement ' + req.getBaseCategoryForRequirement().id.apply_classEnum()/];
+  [/if]
 [/template]
-
-[template public getImportParamPersistenceClass(any : OclAny)]
-import [buildPackagePersistence()/].[buildParamPersistenceClassName()/];
-[/template]
-
-
-[template public getImportUserPersistenceClass(any : OclAny)]
-import [buildPackagePersistence()/].[buildUserPersistenceAppClassName()/];
-[/template]
-
-[template public getImportServiceInterface(s : Service)]
-import [buildPackageBusinessApiService(s)/].[buildServiceInterfaceName(s)/];
-[/template]
-
-[template public getImportServiceRequirements(s : Service)]
-import [buildPackageBusinessImplementationService(s)/].[buildServiceRequirementsClassName(s)/];
-[/template]
-
-[template public importForEntityService_Abs(s : Service)]
-import [getImportForEntityService_Abs()/];
-[/template]
-
-[template public getImportRequirement(req : Requirement)]
-[if requirementBaseCategoryLevel() = 0]
-import [buildPackageRequirement()/].[apply_classAnnotation('requirement')/];
-import [buildPackageRequirement()/].[apply_classEnum('requirement')/];
-[else]
-import [buildPackageRequirementForCategory(getBaseCategoryForRequirement(req))/].['requirement ' + apply_classAnnotation(getBaseCategoryForRequirement(req).id)/];
-import [buildPackageRequirementForCategory(getBaseCategoryForRequirement(req))/].['requirement ' + apply_classEnum(getBaseCategoryForRequirement(req).id)/];
-[/if]
-[/template]
-
 
 [comment todo: vérifier que ce n'est appelé que quand on a implicitement 1 entity - 1 dto/]
-
 [comment : GWT /]
+[template public getImportServiceInterfaceGwt(s : soa::Service)]
+  import [s.buildPackageBusinessGwtClientService()/].[s.buildServiceGwtInterfaceName()/];[/template]
 
-[template public getImportServiceInterfaceGwt(s : Service)]
-import [buildPackageBusinessGwtClientService(s)/].[buildServiceGwtInterfaceName(s)/];
-[/template]
+[template public getImportServiceInterfaceGwtAsync(s : soa::Service)]
+  import [s.buildPackageBusinessGwtClientService()/].[s.buildServiceGwtAsyncClassName()/];[/template]
 
-[template public getImportServiceInterfaceGwtAsync(s : Service)]
-import [buildPackageBusinessGwtClientService(s)/].[buildServiceGwtAsyncClassName(s)/];
-[/template]
-
-[*******************
+[**
+ * ****************
  * Paramétrage fin
 */]
-

@@ -1,116 +1,118 @@
-[comment encoding = UTF-8 /]
-[module crudRSFacades('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                     'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module crudRSFacades('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::soa::common::classes /]
-[import fr::pacman::soa::common::name /]
-
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::name/]
 [import fr::pacman::commons::convention::rule::parameterRule/]
 [import fr::pacman::commons::convention::rule::methodRule/]
 
+[comment encoding = UTF-8 /]
 [comment : /]
 [comment : b = true -> interface sinon implementation. /]
-[template public writeCrudOperations(d : DTO, b : Boolean) post(trim())]
-
-/**
- * Lecture d'une instance de type : '[buildDtoClassName(d)/]', à partir de son identifiant.
- *
- * @param [apply_parameterMethodClassicIn('id')/] : Identifiant unique pour l'instance à obtenir.
- * @return [d.buildXtoClassNameFromDto()/] : l'instance de type '[buildDtoClassName(d)/]'.
- */
- // Annotations [d.name.sanitize() + ' read'/]
- // [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' read'))]
-
- // [/protected]
- public [d.buildXtoClassNameFromDto()/] read(Long [apply_parameterMethodClassicIn('id')/])[endLine(b)/]
- [if not b]
-
-	return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + d.buildMapperClassName())/]()
-	    .convertDtoToXto([buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + nameService(null, d))/]()
-	    .findById([apply_parameterMethodClassicIn('id')/]));
- }
- [/if]
-
-/**
- * Création d'une nouvelle instance de type : '[buildDtoClassName(d)/]'.
- *
- * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
- * @return [buildXtoClassNameFromDto(d)/] : la nouvelle instance de type '[buildDtoClassName(d)/]'.
- */
- // Annotations [d.name.sanitize() + ' create'/]
- // [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' create'))]
-
- // [/protected]
- public [d.buildXtoClassNameFromDto()/] create(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]) [endLine(b)/]
- [if not b]
-
-	try {
- 		return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + d.buildMapperClassName())/]()
-			.convertDtoToXto([buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + nameService(null, d))/]()
-			.save([buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + d.buildMapperClassName())/]()
-			.convertXtoToDto([apply_parameterMethodClassicIn(d.name)/])));
-	
-	} catch (Spi4jValidationException e) {
-		throw new RsParameterException(e);
-	}
- }
- [/if]
-
-/**
- * Mise à jour d'une instance de type : '[buildDtoClassName(d)/]'.
- *
- * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
- * @return [d.buildXtoClassNameFromDto()/] : l'instance modifiée de type '[buildDtoClassName(d)/]'.
- */
- // Annotations [d.name.sanitize() + ' update'/]
- // [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' update'))]
-
- // [/protected]
- public [d.buildXtoClassNameFromDto()/] update(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]) [endLine(b)/]
- [if not b]
-
-	try {
-		return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + d.buildMapperClassName())/]()
-			.convertDtoToXto([buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + nameService(null, d))/]()
-			.save([buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + d.buildMapperClassName())/]()
-			.convertXtoToDto([apply_parameterMethodClassicIn(d.name)/])));
-	
-	} catch (Spi4jValidationException e) {
-		throw new RsParameterException(e);
-	}
- }
- [/if]
-
-/**
- * Suppression physique d'une instance de type : '[buildDtoClassName(d)/]'.
- *
- * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
- */
- // Annotations [d.name.sanitize() + ' delete'/]
- // [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' delete'))]
-
- // [/protected]
- public void delete(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/])[endLine(b)/]
- [if not b]
-	
-	try {
-		[buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + nameService(null, d))/]()
-			.save([buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + d.buildMapperClassName())/]()
-			.convertXtoToDto([apply_parameterMethodClassicIn(d.name)/]));
-	
-	} catch (Spi4jValidationException e) {
-		throw new RsParameterException(e);
-	}
- }
- [/if]
+[template public writeCrudOperations(d : environment::DTO, b : Boolean) post(self.trim())]
+  
+  /**
+   * Lecture d'une instance de type : '[d.buildDtoClassName()/]', à partir de son identifiant.
+   *
+   * @param ['id'.apply_parameterMethodClassicIn()/] : Identifiant unique pour l'instance à obtenir.
+   * @return [d.buildXtoClassNameFromDto()/] : l'instance de type '[d.buildDtoClassName()/]'.
+   */
+   // Annotations [d.name.sanitize() + ' read'/]
+   [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' read')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+   public [d.buildXtoClassNameFromDto()/] read(Long ['id'.apply_parameterMethodClassicIn()/])[b.endLine()/]
+  [if (not b)]
+    
+    	return [d.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]()
+    	    .convertDtoToXto([d.buildAppliUserBusinessGenClassName()/].[('get ' + null.nameService(d)).apply_methodDefault()/]()
+    	    .findById(['id'.apply_parameterMethodClassicIn()/]));
+     }
+  [/if]
+  
+  /**
+   * Création d'une nouvelle instance de type : '[d.buildDtoClassName()/]'.
+   *
+   * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+   * @return [d.buildXtoClassNameFromDto()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
+   */
+   // Annotations [d.name.sanitize() + ' create'/]
+   [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' create')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+   public [d.buildXtoClassNameFromDto()/] create(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]) [b.endLine()/]
+  [if (not b)]
+    
+    	try {
+     		return [d.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]()
+    			.convertDtoToXto([d.buildAppliUserBusinessGenClassName()/].[('get ' + null.nameService(d)).apply_methodDefault()/]()
+    			.save([d.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]()
+    			.convertXtoToDto([d.name.apply_parameterMethodClassicIn()/])));
+    	
+    	} catch (Spi4jValidationException e) {
+    		throw new RsParameterException(e);
+    	}
+     }
+  [/if]
+  
+  /**
+   * Mise à jour d'une instance de type : '[d.buildDtoClassName()/]'.
+   *
+   * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+   * @return [d.buildXtoClassNameFromDto()/] : l'instance modifiée de type '[d.buildDtoClassName()/]'.
+   */
+   // Annotations [d.name.sanitize() + ' update'/]
+   [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' update')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+   public [d.buildXtoClassNameFromDto()/] update(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]) [b.endLine()/]
+  [if (not b)]
+    
+    	try {
+    		return [d.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]()
+    			.convertDtoToXto([d.buildAppliUserBusinessGenClassName()/].[('get ' + null.nameService(d)).apply_methodDefault()/]()
+    			.save([d.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]()
+    			.convertXtoToDto([d.name.apply_parameterMethodClassicIn()/])));
+    	
+    	} catch (Spi4jValidationException e) {
+    		throw new RsParameterException(e);
+    	}
+     }
+  [/if]
+  
+  /**
+   * Suppression physique d'une instance de type : '[d.buildDtoClassName()/]'.
+   *
+   * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+   */
+   // Annotations [d.name.sanitize() + ' delete'/]
+   [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' delete')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+   public void delete(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/])[b.endLine()/]
+  [if (not b)]
+    	
+    	try {
+    		[d.buildAppliUserBusinessGenClassName()/].[('get ' + null.nameService(d)).apply_methodDefault()/]()
+    			.save([d.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]()
+    			.convertXtoToDto([d.name.apply_parameterMethodClassicIn()/]));
+    	
+    	} catch (Spi4jValidationException e) {
+    		throw new RsParameterException(e);
+    	}
+     }
+  [/if]
 [/template]
 
 [comment : /]
-[template private endLine(b : Boolean) post(trim())]
-[if(b)];[else] {
-[/if]
+[template private endLine(b : Boolean) post(self.trim())]
+  [if (b)];[else]
+              {
+           [/if]
 [/template]

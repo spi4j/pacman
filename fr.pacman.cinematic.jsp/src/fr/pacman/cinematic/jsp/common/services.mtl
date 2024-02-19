@@ -1,234 +1,134 @@
+[module services('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::cinematic::jsp::services::CinematicJspModelServices/]
+[import fr::pacman::commons::services::AnnotationUtils/]
+
 [comment encoding = UTF-8 /]
-[module services(	'http://www.obeonetwork.org/dsl/environment/3.0.0',
-					'http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+[query public isHeaderController(viewState : flow::ViewState) : Boolean = not (viewState.getHeaderState() = null) and viewState.getHeaderState().technicalid.equalsIgnoreCase(viewState.technicalid)/]
 
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
+[query public isFooterController(viewState : flow::ViewState) : Boolean = not (viewState.getFooterState() = null) and viewState.getFooterState().technicalid.equalsIgnoreCase(viewState.technicalid)/]
 
+[query public isReferentialController(viewState : flow::ViewState) : Boolean = not (viewState.getReferentialState() = null) and viewState.getReferentialState().technicalid.equalsIgnoreCase(viewState.technicalid)/]
 
-[query public isHeaderController(viewState : ViewState) : Boolean =
-	not viewState.getHeaderState().oclIsUndefined() 
-    and viewState.getHeaderState().technicalid.equalsIgnoreCase(viewState.technicalid)
-/]
+[query public isErrorController(viewState : flow::ViewState) : Boolean = not (viewState.getErrorState() = null) and viewState.getErrorState().technicalid.equalsIgnoreCase(viewState.technicalid)/]
 
-[query public isFooterController(viewState : ViewState) : Boolean =
-	not viewState.getFooterState().oclIsUndefined() 
-    and viewState.getFooterState().technicalid.equalsIgnoreCase(viewState.technicalid)
-/]
+[query public getImageName(viewElement : view::AbstractViewElement) : String = viewElement.metadatas.getAnnotationBody('IMAGE_NAME')/]
 
-[query public isReferentialController(viewState : ViewState) : Boolean =
-	not viewState.getReferentialState().oclIsUndefined() 
-    and viewState.getReferentialState().technicalid.equalsIgnoreCase(viewState.technicalid)
-/]
+[query public getScope(transition : flow::Transition) : String = transition.metadatas.getAnnotationBody('SCOPE')/]
 
-[query public isErrorController(viewState : ViewState) : Boolean =
-	not viewState.getErrorState().oclIsUndefined() 
-    and viewState.getErrorState().technicalid.equalsIgnoreCase(viewState.technicalid)
-/]
+[query public getMaxlenght(viewElement : view::AbstractViewElement) : String = viewElement.metadatas.getAnnotationBody('MAXLENGTH')/]
 
-[query public getImageName(viewElement : AbstractViewElement) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{viewElement.metadatas, 'IMAGE_NAME'})
-/]
+[query public getDefaultValue(viewElement : view::AbstractViewElement) : String = viewElement.metadatas.getAnnotationBody('DEFAULT_VALUE')/]
 
-[query public getScope(transition : Transition) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{transition.metadatas, 'SCOPE'})
-/]
+[query public getJsFunction(viewElement : view::AbstractViewElement) : String = viewElement.metadatas.getAnnotationBody('JS_FUNCTION')/]
 
-[query public getMaxlenght(viewElement : AbstractViewElement) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{viewElement.metadatas, 'MAXLENGTH'})
-/]
+[query public getCustomCode(viewElement : view::AbstractViewElement) : String = viewElement.metadatas.getAnnotationBody('CUSTOM_CODE')/]
 
-[query public getDefaultValue(viewElement : AbstractViewElement) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{viewElement.metadatas, 'DEFAULT_VALUE'})
-/]
+[query public getUrlCustomParams(viewElement : view::AbstractViewElement) : String = viewElement.metadatas.getAnnotationBody('CUSTOM_URL_PARAMS')/]
 
-[query public getJsFunction(viewElement : AbstractViewElement) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{viewElement.metadatas, 'JS_FUNCTION'})
-/]
+[query public hasJSFunctions(e : environment::ObeoDSMObject) : Boolean = e.annotationExistsRecursively('JSP_JS_FUNCTION')/]
 
-[query public getCustomCode(viewElement : AbstractViewElement) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{viewElement.metadatas, 'CUSTOM_CODE'})
-/]
+[query public storeCurrentFormLayout(layout : view::Layout) : String = layout.set_currentFormLayout()/]
 
-[query public getUrlCustomParams(viewElement : AbstractViewElement) : String =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)', 
-    Sequence{viewElement.metadatas, 'CUSTOM_URL_PARAMS'})
-/]
+[query public getCurrentFormLayout(any : ecore::EObject) : view::Layout = any.get_currentFormLayoutJavaService()/]
 
-[query public hasJSFunctions(e : ObeoDSMObject) : Boolean =
-	invoke('fr.pacman.commons.services.AnnotationUtils', 
-    'annotationExistsRecursively(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String)', 
-    Sequence{e, 'JSP_JS_FUNCTION'})
-/]
+[query public initCinematic(root : cinematic::CinematicRoot) : Boolean = root.init()/]
 
-[query public storeCurrentFormLayout(layout : Layout) : String =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 
-    'set_currentFormLayout(org.obeonetwork.dsl.cinematic.view.Layout)', 
-    Sequence{layout})
-/]
+[query public getDivId(any : ecore::EObject, pageName : String) : String = pageName.get_divId()/]
 
-[query public getCurrentFormLayout(any : OclAny) : Layout =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 
-    'get_currentFormLayout()', 
-    Sequence{})
-/]
+[query public hasToWriteHeaderView(viewContainer : view::ViewContainer) : Boolean = viewContainer.hasHeaderView() and (not viewContainer.isMainPanel() and not viewContainer.isHeaderPanel() or viewContainer.forceJspTopBottom())/]
 
-[query public initCinematic(root : CinematicRoot) : Boolean =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 
-    'init(org.obeonetwork.dsl.cinematic.CinematicRoot)', 
-    Sequence{root})
-/]
+[query public hasToWriteFooterView(viewContainer : view::ViewContainer) : Boolean = viewContainer.hasFooterView() and (not viewContainer.isMainPanel() and not viewContainer.isFooterPanel() or viewContainer.forceJspTopBottom())/]
 
-[query public getDivId( any : OclAny, pageName : String) : String = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 
-    'get_divId(java.lang.String)', Sequence{ pageName })
-/]
+[query public hasToWriteReferential(viewContainer : view::ViewContainer) : Boolean = viewContainer.hasReferential() and not viewContainer.isMainPanel()/]
 
-[query public hasToWriteHeaderView (viewContainer : ViewContainer) : Boolean = 
-	viewContainer.hasHeaderView() and (not viewContainer.isMainPanel()
-	and not viewContainer.isHeaderPanel() or forceJspTopBottom())
-/]
+[query private isOfType(viewElement : view::AbstractViewElement, type : String) : Boolean = not (viewElement.widget = null) and viewElement.widget.name.equalsIgnoreCase(type)/]
 
-[query public hasToWriteFooterView (viewContainer : ViewContainer) : Boolean = 
-	viewContainer.hasFooterView() and (not viewContainer.isMainPanel() 
-	and not viewContainer.isFooterPanel() or viewContainer.forceJspTopBottom())
-/]
+[query private getHeaderState(any : ecore::EObject) : flow::ViewState = any.get_headerStateJavaService()/]
 
-[query public hasToWriteReferential (viewContainer : ViewContainer) : Boolean = 
-	viewContainer.hasReferential() and not viewContainer.isMainPanel() 
-/]
+[query public getErrorState(any : ecore::EObject) : flow::ViewState = any.get_errorStateJavaService()/]
 
-[query private isOfType(viewElement : AbstractViewElement, type : String) : Boolean =
-	not viewElement.widget.oclIsUndefined() and viewElement.widget.name.equalsIgnoreCase(type)
-/]
+[query private getFooterState(any : ecore::EObject) : flow::ViewState = any.get_footerStateJavaService()/]
 
-[query private getHeaderState(any : OclAny) : ViewState =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_headerState()', Sequence{})
-/]
+[query public getReferentialState(any : ecore::EObject) : flow::ViewState = any.get_referentialStateJavaService()/]
 
-[query public getErrorState(any : OclAny) : ViewState =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_errorState()', Sequence{})
-/]
+[query public getRootState(any : ecore::EObject) : flow::ViewState = any.get_rootStateJavaService()/]
 
-[query private getFooterState(any : OclAny) : ViewState =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_footerState()', Sequence{})
-/]
+[query public hasReferential(any : ecore::EObject) : Boolean = any.hasReferentialContainerJavaService()/]
 
-[query public getReferentialState(any : OclAny) : ViewState = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_referentialState()', Sequence{})
-/]
+[query public hasErrorView(any : ecore::EObject) : Boolean = any.hasErrorContainerJavaService()/]
 
-[query public getRootState(any : OclAny) : ViewState = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_rootState()', Sequence{})
-/]
+[query private hasHeaderView(any : ecore::EObject) : Boolean = any.hasHeaderContainerJavaService()/]
 
-[query public hasReferential(any : OclAny) : Boolean =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'hasReferentialContainer()', Sequence{})
-/]
+[query private hasFooterView(any : ecore::EObject) : Boolean = any.hasFooterContainerJavaService()/]
 
-[query public hasErrorView(any : OclAny) : Boolean =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'hasErrorContainer()', Sequence{})
-/]
+[query public getHeaderView(any : ecore::EObject) : view::ViewContainer = any.get_headerContainerJavaService()/]
 
-[query private hasHeaderView(any : OclAny) : Boolean =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'hasHeaderContainer()', Sequence{})
-/]
+[query public getFooterView(any : ecore::EObject) : view::ViewContainer = any.get_footerContainerJavaService()/]
 
-[query private hasFooterView(any : OclAny) : Boolean =
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'hasFooterContainer()', Sequence{})
-/]
+[query public getErrorView(any : ecore::EObject) : view::ViewContainer = any.get_errorContainerJavaService()/]
 
-[query public getHeaderView(any : OclAny) : ViewContainer = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_headerContainer()', Sequence{})
-/]
+[query public getReferentialView(any : ecore::EObject) : view::ViewContainer = any.get_referentialContainerJavaService()/]
 
-[query public getFooterView(any : OclAny) : ViewContainer = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_footerContainer()', Sequence{})
-/]
+[query public isLayoutVirtual(layout : view::Layout) : Boolean = layout.viewElement = null/]
 
-[query public getErrorView(any : OclAny) : ViewContainer = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_errorContainer()', Sequence{})
-/]
+[query public isLayoutFormContainer(layout : view::Layout) : Boolean = not (layout.viewElement = null) and layout.viewElement.isFormPanel()/]
 
-[query public getReferentialView(any : OclAny) : ViewContainer = 
-	invoke('fr.pacman.cinematic.jsp.services.CinematicJspModelServices', 'get_referentialContainer()', Sequence{})
-/]
+[query public getLayoutName(layout : view::Layout) : String = if not (layout = null) and not layout.isLayoutVirtual() then layout.viewElement.name else 'virtual' endif/]
 
-[query public isLayoutVirtual(layout : Layout) : Boolean = 
-	layout.viewElement.oclIsUndefined()
-/]
+[query public getLayoutType(layout : view::Layout) : String = if not (layout = null) and not layout.isLayoutVirtual() then layout.viewElement.widget.name else 'virtual' endif/]
 
-[query public isLayoutFormContainer(layout : Layout) : Boolean = 
- 	not layout.viewElement.oclIsUndefined() and layout.viewElement.isFormPanel()
-/]
+[query public getLayoutSyle(layout : view::Layout) : view::ViewStyle = if not (layout = null) and not (layout.viewElement = null) then layout.viewElement.viewStyle else null endif/]
 
-[query public getLayoutName(layout : Layout) : String = 
-	if not layout.oclIsUndefined() 
-	and not layout.isLayoutVirtual() then layout.viewElement.name else 'virtual' endif
-/]
+[query public getLayoutElement(layout : view::Layout) : view::AbstractViewElement = if not (layout = null) and not (layout.viewElement = null) then layout.viewElement else null endif/]
 
-[query public getLayoutType(layout : Layout) : String = 
-	if not layout.oclIsUndefined() 
-	and not layout.isLayoutVirtual() then layout.viewElement.widget.name else 'virtual' endif
-/]
+[query public getEventName(viewEvent : cinematic::Event) : String = viewEvent.name/]
 
-[query public getLayoutSyle(layout : Layout) : ViewStyle = 
-	if not layout.oclIsUndefined() 
-	and not layout.viewElement.oclIsUndefined() then  layout.viewElement.viewStyle else null endif
-/]
-
-[query public getLayoutElement(layout : Layout) : AbstractViewElement = 
-	if not layout.oclIsUndefined() 
-	and not layout.viewElement.oclIsUndefined() then  layout.viewElement else null endif
-/]
-
-[query public getEventName(viewEvent : Event) : String = 
-	viewEvent.name
-/]
-
-[query public isControllerAttribut (viewElement : AbstractViewElement) : Boolean =  
-	viewElement.isText() or 
-	viewElement.isPassword() or 
-	viewElement.isTextarea() or 
-	viewElement.isCombobox()
-/]
+[query public isControllerAttribut(viewElement : view::AbstractViewElement) : Boolean = viewElement.isText() or viewElement.isPassword() or viewElement.isTextarea() or viewElement.isCombobox()/]
 
 [comment : Modifier tout ca pour faire un nouveau toolkit. /]
-[query public isMainPanel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('MainPanel') /]
-[query public isFooterPanel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('FooterPanel') /]
-[query public isHeaderPanel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('HeaderPanel') /]
-[query public isErrorPanel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('ErrorPanel')/]
-[query public isFormPanel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('FormPanel') /]
-[query public isPage(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('File') /]
-[query public isTable(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Table') /]
-[query public isPanel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('ViewPanel') /]
-[query public isText(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Text') /]
-[query public isTextarea(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Textarea') /]
-[query public isCheckbox(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('CheckBox') /]
-[query public isRadio(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Radio') /]
-[query public isButtonSubmit(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('SubmitButton') /]
-[query public isButtonSimple(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('SimpleButton') /]
-[query public isPassword(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Password') /]
-[query public isImage(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Image') /]
-[query public isLink(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Link') /]
-[query public isImageLink(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('ImageLink') /]
-[query public isCombobox(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('ComboBox') /]
-[query public isLabel(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Label') /]
-[query public isDate(viewElement : AbstractViewElement) : Boolean = viewElement.isOfType('Date') /]
-[query public isViewPanel(viewElement : AbstractViewElement) : Boolean = not viewElement.isFormPanel() /]
+[query public isMainPanel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('MainPanel')/]
 
+[query public isFooterPanel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('FooterPanel')/]
 
+[query public isHeaderPanel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('HeaderPanel')/]
 
+[query public isErrorPanel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('ErrorPanel')/]
+
+[query public isFormPanel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('FormPanel')/]
+
+[query public isPage(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('File')/]
+
+[query public isTable(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Table')/]
+
+[query public isPanel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('ViewPanel')/]
+
+[query public isText(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Text')/]
+
+[query public isTextarea(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Textarea')/]
+
+[query public isCheckbox(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('CheckBox')/]
+
+[query public isRadio(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Radio')/]
+
+[query public isButtonSubmit(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('SubmitButton')/]
+
+[query public isButtonSimple(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('SimpleButton')/]
+
+[query public isPassword(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Password')/]
+
+[query public isImage(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Image')/]
+
+[query public isLink(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Link')/]
+
+[query public isImageLink(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('ImageLink')/]
+
+[query public isCombobox(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('ComboBox')/]
+
+[query public isLabel(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Label')/]
+
+[query public isDate(viewElement : view::AbstractViewElement) : Boolean = viewElement.isOfType('Date')/]
+
+[query public isViewPanel(viewElement : view::AbstractViewElement) : Boolean = not viewElement.isFormPanel()/]

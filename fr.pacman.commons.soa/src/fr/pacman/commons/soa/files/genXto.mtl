@@ -1,23 +1,20 @@
+[module genXto('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::ws::category::xto/]
+
 [comment encoding = UTF-8 /]
-[module genXto('http://www.obeonetwork.org/dsl/environment/3.0.0',
-               'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::classes /]
-
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::ws::category::xto /]
-
-
-[template public genXto(d : DTO)]
-[file (filename(getCommonsSourceDir(), d.buildPackageWsApiDto(), d.buildXtoClassNameFromDto() + '.java'), false, 'UTF-8')]
-[d.xto()/]
-[/file]
+[template public genXto(d : environment::DTO)]
+  [file (d.getCommonsSourceDir().filename(d.buildPackageWsApiDto(), d.buildXtoClassNameFromDto() + '.java'), overwrite, 'UTF-8')]
+    [d.xto()/]
+  [/file]
 [/template]
 
-[template public genXtoAppliAbs(s : System)]
-[file (filename(getCommonsSourceDir(), s.buildPackageBusiness(), s.buildAppliXtoAbstractClassName() + '.java'), false, 'UTF-8')]
-[s.xtoAppliAbs()/]
-[/file]
+[template public genXtoAppliAbs(s : soa::System)]
+  [file (s.getCommonsSourceDir().filename(s.buildPackageBusiness(), s.buildAppliXtoAbstractClassName() + '.java'), overwrite, 'UTF-8')]
+    [s.xtoAppliAbs()/]
+  [/file]
 [/template]

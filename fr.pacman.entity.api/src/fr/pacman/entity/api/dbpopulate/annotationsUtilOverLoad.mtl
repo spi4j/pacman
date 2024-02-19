@@ -1,18 +1,13 @@
+[module annotationsUtilOverLoad('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::services::AnnotationUtils/]
+
 [comment encoding = UTF-8 /]
-[module annotationsUtilOverLoad('http://www.obeonetwork.org/dsl/entity/3.0.0',
-                                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
 [**
- ********
+ * *******
 */]
-[query public getAnnotation_VOL_NB_ROWS(entity : Entity) : Integer =
-    invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotation_VOL_NB_ROWS(org.obeonetwork.dsl.environment.ObeoDSMObject, boolean)', Sequence{entity, false})
-/]
-[query public getAnnotation_VOL_MAX_OCCURS(reference : Reference) : Integer =
-    invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotation_VOL_MAX_OCCURS(org.obeonetwork.dsl.environment.ObeoDSMObject, boolean)', Sequence{reference, false})
-/]
-[query public getAnnotation_VOL_MIN_OCCURS(reference : Reference) : Integer =
-    invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotation_VOL_MIN_OCCURS(org.obeonetwork.dsl.environment.ObeoDSMObject, boolean)', Sequence{reference, false})
-/]
+[query public getAnnotation_VOL_NB_ROWS(entity : entity::Entity) : Integer = entity.getAnnotation_VOL_NB_ROWS(false)/]
 
+[query public getAnnotation_VOL_MAX_OCCURS(reference : environment::Reference) : Integer = reference.getAnnotation_VOL_MAX_OCCURS(false)/]
+
+[query public getAnnotation_VOL_MIN_OCCURS(reference : environment::Reference) : Integer = reference.getAnnotation_VOL_MIN_OCCURS(false)/]

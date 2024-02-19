@@ -1,265 +1,246 @@
+[module viewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::gwt::common::packages/]
+[import fr::pacman::cinematic::gwt::common::name/]
+[import fr::pacman::cinematic::api::common::model/]
+[import fr::pacman::cinematic::gwt::common::gwt_widgets/]
+[import fr::pacman::cinematic::api::common::standard_widgets/]
+
 [comment encoding = UTF-8 /]
-[module viewImplementation('http://www.obeonetwork.org/dsl/cinematic/3.0.0',							
-                           'http://www.obeonetwork.org/dsl/environment/3.0.0')]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::gwt::common::packages /]
-[import fr::pacman::cinematic::gwt::common::name /]
-[import fr::pacman::cinematic::api::common::model /]
-[import fr::pacman::cinematic::gwt::common::gwt-widgets /]
-[import fr::pacman::cinematic::api::common::standard-widgets /]
-
-
-[template public viewImplementation(viewContainer : ViewContainer)]
-[licence()/]
-package [namePackageViewContainerImplementation(viewContainer)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[viewContainer.writeImports()/]
-
-// [/protected]
-
-public class [nameViewImplementation(viewContainer)/] extends [genericType(viewContainer, getImplementationClass(viewContainer.widget))/] implements [nameViewInterface(viewContainer)/]
-{
-
-[for (element : ViewElement | viewContainer.viewElements)]
-   // Declaration [element.name + '_' + genericType(element, getImplementationClass(element.widget), false)/]
-   // [protected (element.getUserCodeId('Declaration ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false)))]
-
-   private final [genericType(element, getImplementationClass(element.widget), false)/] [nameVariableElement(element)/];
-
-   // [/protected]
-
-[/for]
-   // Attributs
-   // [protected (viewContainer.getUserCodeId('Attributs'))]
-   private final VerticalPanel _content;
-
-   // [/protected]
-   /**
-    * Constructeur de la vue.
-    * @param p_presenter
-    *           le présenteur de la vue
-    */
-   public [nameViewImplementation(viewContainer)/] (final [namePresenter(viewContainer)/] p_presenter)
-   {
-      super(p_presenter);
-
-      // avant initialisation
-      // [protected (viewContainer.getUserCodeId('avant initialisation'))]
-      _content = new VerticalPanel();
-      _content.add(new HTML("<h1>[viewContainer.name/]</h1>"));
-
-      // [/protected]
-
-      // initialisation des composants
-[for (element : ViewElement | viewContainer.viewElements)]
-      // Parametrage [element.name + '_' + genericType(element, getImplementationClass(element.widget), false)/]
-      // [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false)))]
-
-      [nameVariableElement(element)/] = new [genericType(element, getImplementationClass(element.widget), false)/]([paramViewElementInConstructor(element)/]);
-  [if (getImplementationClass(element.widget) = 'SpiButton')]
-      [nameVariableElement(element)/].setText("[element.name/]");
-  [/if]
-      _content.add([nameVariableElement(element)/]);
-
-      // [/protected]
-
-  [for (viewEvent : ViewEvent | element.events)]
-    [if not viewEvent.type.oclIsUndefined() and 'onClick'.equalsIgnoreCase(viewEvent.type.name)]
-      [nameVariableElement(element)/].addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick (final ClickEvent p_event)
-    [elseif not viewEvent.type.oclIsUndefined() and 'onChange'.equalsIgnoreCase(viewEvent.type.name)]
-      [nameVariableElement(element)/].addValueChangeHandler(new ValueChangeHandler<[getElementType(element)/]>()
-      {
-         @Override
-         public void onValueChange (final ValueChangeEvent<[getElementType(element)/]> p_event)
-    [else]
-      // [protected (viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name))]
-      [nameVariableElement(element)/].addXXXHandler(new XXXHandler()
-      {
-         @Override
-         public void onXXX (final XXXEvent p_event)
-         // [/protected]
-    [/if]
-         {
-    [if viewContainer.getViewStatesForViewContainer()->exists(viewState : ViewState | viewState.getTransitionsFromState(true).on->includes(viewEvent))]
-            getPresenter().[viewEvent.nameActionPresenteur()/]();
-    [/if]
-    [for (flowEvent : FlowEvent | viewEvent.getFlowEventsForViewEvent())]
-       [if viewContainer.getViewStatesForViewContainer()->exists(viewState : ViewState | viewState.getTransitionsFromState(true).on->includes(flowEvent))]
-            getPresenter().[flowEvent.nameActionPresenteur()/]();
-       [/if]
+[template public viewImplementation(viewContainer : view::ViewContainer)]
+  [viewContainer.licence()/]
+  package [viewContainer.namePackageViewContainerImplementation()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [viewContainer.writeImports()/]
+    
+  [/protected]
+  
+  
+  public class [viewContainer.nameViewImplementation()/] extends [viewContainer.genericType(viewContainer.widget.getImplementationClass())/] implements [viewContainer.nameViewInterface()/]
+  {
+  
+  [for (element : view::ViewElement | viewContainer.viewElements)]
+       // Declaration [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
+       [protected (element.getUserCodeId('Declaration ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
+         
+            private final [element.genericType(element.widget.getImplementationClass(), false)/] [element.nameVariableElement()/];
+         
+       [/protected]
+    
+    
+  [/for]
+     // Attributs
+     [protected (viewContainer.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+          private final VerticalPanel _content;
+       
+     [/protected]
+  
+     /**
+      * Constructeur de la vue.
+      * @param p_presenter
+      *           le présenteur de la vue
+      */
+     public [viewContainer.nameViewImplementation()/] (final [viewContainer.namePresenter()/] p_presenter)
+     {
+        super(p_presenter);
+  
+        // avant initialisation
+        [protected (viewContainer.getUserCodeId('avant initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
+                _content = new VerticalPanel();
+                _content.add(new HTML("<h1>[viewContainer.name/]</h1>"));
+          
+        [/protected]
+  
+  
+        // initialisation des composants
+  [for (element : view::ViewElement | viewContainer.viewElements)]
+          // Parametrage [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
+          [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
+            
+                  [element.nameVariableElement()/] = new [element.genericType(element.widget.getImplementationClass(), false)/]([element.paramViewElementInConstructor()/]);
+            [if (element.widget.getImplementationClass() = 'SpiButton')]
+                    [element.nameVariableElement()/].setText("[element.name/]");
+            [/if]
+                  _content.add([element.nameVariableElement()/]);
+            
+          [/protected]
+    
+    
+    [for (viewEvent : view::ViewEvent | element.events)]
+      [if (not (viewEvent.type = null) and 'onClick'.equalsIgnoreCase(viewEvent.type.name))]
+              [element.nameVariableElement()/].addClickHandler(new ClickHandler()
+              {
+                 @Override
+                 public void onClick (final ClickEvent p_event)
+      [elseif (not (viewEvent.type = null) and 'onChange'.equalsIgnoreCase(viewEvent.type.name))]
+              [element.nameVariableElement()/].addValueChangeHandler(new ValueChangeHandler<[element.getElementType()/]>()
+              {
+                 @Override
+                 public void onValueChange (final ValueChangeEvent<[element.getElementType()/]> p_event)
+      [else]
+              [protected (viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name)) startTagPrefix('// ') endTagPrefix('// ')]
+                      [element.nameVariableElement()/].addXXXHandler(new XXXHandler()
+                      {
+                         @Override
+                         public void onXXX (final XXXEvent p_event)
+              [/protected]
+        
+      [/if]
+               {
+      [if (viewContainer.getViewStatesForViewContainer()->exists(viewState | viewState.getTransitionsFromState(true)->asSequence()->collect(temp1 | temp1.on)->includes(viewEvent)))]
+                    getPresenter().[viewEvent.nameActionPresenteur()/]();
+      [/if]
+      [for (flowEvent : flow::FlowEvent | viewEvent.getFlowEventsForViewEvent())]
+        [if (viewContainer.getViewStatesForViewContainer()->exists(viewState | viewState.getTransitionsFromState(true)->asSequence()->collect(temp2 | temp2.on)->includes(flowEvent)))]
+                      getPresenter().[flowEvent.nameActionPresenteur()/]();
+        [/if]
+      [/for]
+      [if (not (viewContainer.widget = null) and viewContainer.widget.name = 'Dialog')]
+                    // Cet écran est une fenêtre de dialogue, donc celle-ci est fermée par défaut dès qu'un événement intervient
+                    getPresenter().close();
+      [/if]
+               }
+            });
+      
     [/for]
-    [if not viewContainer.widget.oclIsUndefined() and viewContainer.widget.name = 'Dialog']
-            // Cet écran est une fenêtre de dialogue, donc celle-ci est fermée par défaut dès qu'un événement intervient
-            getPresenter().close();
-    [/if]
-         }
-      });
-
   [/for]
-[/for]
-      // après initialisation
-      // [protected (viewContainer.getUserCodeId('après initialisation'))]
-      add(_content);
-
-[if not viewContainer.widget.oclIsUndefined() and viewContainer.widget.name = 'MainPanel']
-      // récupération du contenu global
-      RootPanel.get().add(this);
-[/if]
-
-      // [/protected]
-   }
-
-   @Override
-   public void addView (final View_Itf p_view)
-   {
-      // addView
-      // [protected (viewContainer.getUserCodeId('addView'))]
-      if (p_view instanceof IsWidget)
-      {
-         if (p_view instanceof DialogBox)
-         {
-            ((DialogBox) p_view).center();
-         }
-         else
-         {
-            _content.add((IsWidget) p_view);
-         }
-      }
-      else
-      {
-         Window.alert("Vue inconnue : " + p_view.getClass().getName());
-      }
-      // [/protected]
-   }
-
-   @Override
-   public void restoreView (final View_Itf p_view)
-   {
-      // restoreView
-      // [protected (viewContainer.getUserCodeId('restoreView'))]
-
-      // [/protected]
-   }
-
-   @Override
-   public void removeView (final View_Itf p_view)
-   {
-      // removeView
-      // [protected (viewContainer.getUserCodeId('removeView'))]
-      if (p_view instanceof IsWidget)
-      {
-         if (p_view instanceof DialogBox)
-         {
-            ((DialogBox) p_view).hide();
-         }
-         else
-         {
-            _content.remove((IsWidget) p_view);
-         }
-      }
-      else
-      {
-         Window.alert("Vue inconnue : " + p_view.getClass().getName());
-      }
-      // [/protected]
-   }
-
-[for (element : ViewElement | viewContainer.viewElements)]
-   // Getter [element.name + '_' + genericType(element, getImplementationClass(element.widget), false)/]
-   // [protected (element.getUserCodeId('Getter ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false)))]
-
-   @Override
-   public [genericType(element, getInterfaceName(element.widget), false)/] [nameGetterViewElement(element)/] ()
-   {
-      return [nameVariableElement(element)/];
-   }
-
-   // [/protected]
-
-[/for]
-   // [nameViewImplementation(viewContainer)/]
-   // [protected (viewContainer.getUserCodeId(nameViewImplementation(viewContainer)))]
-
-   // [/protected]
-
-}
-[/template]
+        // après initialisation
+        [protected (viewContainer.getUserCodeId('après initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
+                add(_content);
+          
+          [if (not (viewContainer.widget = null) and viewContainer.widget.name = 'MainPanel')]
+                  // récupération du contenu global
+                  RootPanel.get().add(this);
+          [/if]
+          
+        [/protected]
+  
+     }
+  
+     @Override
+     public void addView (final View_Itf p_view)
+     {
+        // addView
+        [protected (viewContainer.getUserCodeId('addView')) startTagPrefix('// ') endTagPrefix('// ')]
+                if (p_view instanceof IsWidget)
+                {
+                   if (p_view instanceof DialogBox)
+                   {
+                      ((DialogBox) p_view).center();
+                   }
+                   else
+                   {
+                      _content.add((IsWidget) p_view);
+                   }
+                }
+                else
+                {
+                   Window.alert("Vue inconnue : " + p_view.getClass().getName());
+                }
+        [/protected]
+  
+     }
+  
+     @Override
+     public void restoreView (final View_Itf p_view)
+     {
+        // restoreView
+        [protected (viewContainer.getUserCodeId('restoreView')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+     }
+  
+     @Override
+     public void removeView (final View_Itf p_view)
+     {
+        // removeView
+        [protected (viewContainer.getUserCodeId('removeView')) startTagPrefix('// ') endTagPrefix('// ')]
+                if (p_view instanceof IsWidget)
+                {
+                   if (p_view instanceof DialogBox)
+                   {
+                      ((DialogBox) p_view).hide();
+                   }
+                   else
+                   {
+                      _content.remove((IsWidget) p_view);
+                   }
+                }
+                else
+                {
+                   Window.alert("Vue inconnue : " + p_view.getClass().getName());
+                }
+        [/protected]
+  
+     }
+  
+  [for (element : view::ViewElement | viewContainer.viewElements)]
+       // Getter [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
+       [protected (element.getUserCodeId('Getter ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
+         
+            @Override
+            public [element.genericType(element.widget.getInterfaceName(), false)/] [element.nameGetterViewElement()/] ()
+            {
+               return [element.nameVariableElement()/];
+            }
+         
+       [/protected]
+    
+    
+  [/for]
+     // [viewContainer.nameViewImplementation()/]
+     [protected (viewContainer.getUserCodeId(viewContainer.nameViewImplementation())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (v : ViewContainer) post(trim())]
-[v.initImports()/]
-[v.addImport('fr.spi4j.ui.mvp.View_Itf')/]
-[v.addImport('fr.spi4j.ui.gwt.client.SpiViewPanel')/]
-[v.addImport('com.google.gwt.event.dom.client.ClickEvent')/]
-[v.addImport('com.google.gwt.event.dom.client.ClickHandler')/]
-[v.addImport('com.google.gwt.event.logical.shared.ValueChangeEvent')/]
-[v.addImport('com.google.gwt.event.logical.shared.ValueChangeHandler')/]
-[v.addImport('com.google.gwt.user.client.Window')/]
-[v.addImport('com.google.gwt.user.client.ui.DialogBox')/]
-[v.addImport('com.google.gwt.user.client.ui.HTML')/]
-[v.addImport('com.google.gwt.user.client.ui.IsWidget')/]
-[v.addImport('com.google.gwt.user.client.ui.VerticalPanel')/]
-[v.addImport(v.namePackageViewContainerInterface() + '.' + v.nameViewInterface())/]
-[v.addImport(v.namePackageViewContainerPresenter() + '.' + v.namePresenter())/]
+[template private writeImports(v : view::ViewContainer) post(self.trim())]
+  [v.initImports()/]
+  [v.addImport('fr.spi4j.ui.mvp.View_Itf')/]
+  [v.addImport('fr.spi4j.ui.gwt.client.SpiViewPanel')/]
+  [v.addImport('com.google.gwt.event.dom.client.ClickEvent')/]
+  [v.addImport('com.google.gwt.event.dom.client.ClickHandler')/]
+  [v.addImport('com.google.gwt.event.logical.shared.ValueChangeEvent')/]
+  [v.addImport('com.google.gwt.event.logical.shared.ValueChangeHandler')/]
+  [v.addImport('com.google.gwt.user.client.Window')/]
+  [v.addImport('com.google.gwt.user.client.ui.DialogBox')/]
+  [v.addImport('com.google.gwt.user.client.ui.HTML')/]
+  [v.addImport('com.google.gwt.user.client.ui.IsWidget')/]
+  [v.addImport('com.google.gwt.user.client.ui.VerticalPanel')/]
+  [v.addImport(v.namePackageViewContainerInterface() + '.' + v.nameViewInterface())/]
+  [v.addImport(v.namePackageViewContainerPresenter() + '.' + v.namePresenter())/]
+  
+  [if (not (v.widget = null))]
+    [for (widget : toolkits::Widget | OrderedSet{v.widget})]
+      		[v.addImport(widget.getImplementationPackage() + '.' + widget.getImplementationClassNameForImport())/]
+      		[v.addImport(widget.getInterfacePackage() + '.' + widget.getInterfaceNameForImport())/]
+    [/for]
+  [/if]
+  
+  [if (not v.eContainer(cinematic::CinematicRoot).flows->isEmpty())]
+    [for (viewState : flow::ViewState | v.eContainer(cinematic::CinematicRoot).flows->first().getFirstViewStates())]
+      [if (viewState.viewContainers->includes(v))]
+        		[v.addImport('com.google.gwt.user.client.ui.RootPanel')/]
+      [/if]
+    [/for]
+  [/if]
+  
+  [v.flushImports()/][/template]
 
-[comment : List all widgets./]
-[if not v.widget.oclIsUndefined()]
-	[for (widget : Widget | Set{v.widget})]
-		[v.addImport(getImplementationPackage(widget) + '.' + getImplementationClassNameForImport(widget))/]
-		[v.addImport(getInterfacePackage(widget) + '.' + getInterfaceNameForImport(widget))/]
-	[/for]
-[/if]
+[query private nameVariableElement(element : view::ViewElement) : String = '_' + element.name/]
 
-[comment : /]
-[if not v.eContainer(CinematicRoot).flows->isEmpty()]
-  [for (viewState : ViewState | v.eContainer(CinematicRoot).flows->first().getFirstViewStates())]
-    [if viewState.viewContainers->includes(v)]
-		[v.addImport('com.google.gwt.user.client.ui.RootPanel')/]
-    [/if]
-  [/for]
-[/if]
+[query private paramViewElementInConstructor(element : view::ViewElement) : String = if not (element.widget = null) and element.widget.name = 'Table' then '"' + element.name + '"' else '' endif/]
 
-[v.flushImports()/]
-[/template]
-
-
-[query private nameVariableElement(element : ViewElement) : String =
-    '_' + element.name
-/]
-
-[query private paramViewElementInConstructor(element : ViewElement) : String =
-    if (not element.widget.oclIsUndefined() and element.widget.name = 'Table') then
-        '"' + element.name + '"'
-    else
-        ''
-    endif
-/]
-
-[query private getElementType (element : ViewElement) : String =
-    if (not element.oclIsUndefined() and not element.type.oclIsUndefined()) then
-		if (useMatching()) then
-        	if (element.type.oclIsKindOf(DTO)) then
-            	buildXtoClassNameFromDto(element.type.oclAsType(DTO))        
-        	else
-            	element.type.name
-        	endif
-		else
-			 getElementTypeEntity(element)
-		endif
-    else
-        '[ERREUR : Type inconnu pour ce widget]'
-    endif
-/]
+[query private getElementType(element : view::ViewElement) : String = if not (element = null) and not (element.type = null) then if element.useMatching() then if element.type.oclIsKindOf(environment::DTO) then element.type.oclAsType(environment::DTO).buildXtoClassNameFromDto() else element.type.name endif else element.getElementTypeEntity() endif else '[ERREUR : Type inconnu pour ce widget]' endif/]

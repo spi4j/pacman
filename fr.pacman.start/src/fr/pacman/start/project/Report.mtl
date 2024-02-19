@@ -1,49 +1,48 @@
-[comment encoding = UTF-8 /]
 [module Report('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
 
-[template public ReportPom(any : OclAny)]
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>[getApplicationPackage()/]</groupId>
-        <artifactId>[getApplicationName()/]</artifactId>
-        <version>[getVersion()/]</version>
-    </parent>
-    <artifactId>[getReportProjectName()/]</artifactId>
-    <packaging>jar</packaging>
-    <name>[getApplicationName()/] - Partie report</name>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>[getCommonProjectName()/]</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		[for (prop : String | getAdditionnalLibraries())]
-		<!-- Librairie additionnelle utilisateur. -->
-		<dependency>
-			<groupId>[getLibraryName(prop)/]</groupId>
-			<artifactId>[getLibraryPackage(prop)/]</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		[/for]
-        <dependency>
-            <groupId>fr.spi4j</groupId>
-            <artifactId>spi4j-report</artifactId>
-            <version>${spi4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-</project>
-
+[comment encoding = UTF-8 /]
+[template public ReportPom(any : ecore::EObject)]
+  <project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <parent>
+          <groupId>[any.getApplicationPackage()/]</groupId>
+          <artifactId>[any.getApplicationName()/]</artifactId>
+          <version>[any.getVersion()/]</version>
+      </parent>
+      <artifactId>[any.getReportProjectName()/]</artifactId>
+      <packaging>jar</packaging>
+      <name>[any.getApplicationName()/] - Partie report</name>
+      <dependencies>
+          <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>[any.getCommonProjectName()/]</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+  [for (prop : String | any.getAdditionnalLibraries())]
+    		<!-- Librairie additionnelle utilisateur. -->
+    		<dependency>
+    			<groupId>[prop.getLibraryName(prop)/]</groupId>
+    			<artifactId>[prop.getLibraryPackage(prop)/]</artifactId>
+    			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+    		</dependency>
+  [/for]
+          <dependency>
+              <groupId>fr.spi4j</groupId>
+              <artifactId>spi4j-report</artifactId>
+              <version>${spi4j.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.junit.jupiter</groupId>
+              <artifactId>junit-jupiter</artifactId>
+              <version>${junit.version}</version>
+              <scope>test</scope>
+          </dependency>
+      </dependencies>
+  </project>
 [/template]

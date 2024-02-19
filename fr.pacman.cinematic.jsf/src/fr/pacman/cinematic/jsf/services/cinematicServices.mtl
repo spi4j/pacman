@@ -1,14 +1,12 @@
+[module cinematicServices('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.eclipse.org/emf/2002/Ecore')/]
+
+[import fr::pacman::cinematic::jsf::services::CinematicServices/]
+
 [comment encoding = UTF-8 /]
-[module cinematicServices('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.eclipse.org/emf/2002/Ecore')/]
+[query public getNextStates(arg0 : flow::FlowState, arg1 : cinematic::Event) : OrderedSet(flow::FlowState) = arg0.getNextStatesJavaService(arg1)/]
 
-[query public getNextStates(arg0 : FlowState, arg1 : Event) : Set(FlowState)
-	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getNextStates(org.obeonetwork.dsl.cinematic.flow.FlowState, org.obeonetwork.dsl.cinematic.Event)', Sequence{arg0, arg1}) /]
+[query public getID(any : ecore::EObject) : String = any.getIdJavaService()/]
 
-[query public getID(any : OclAny) : String
-	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getId()', Sequence{}) /]
+[query public getUnBindedViewEvent(arg0 : view::ViewContainer) : OrderedSet(view::ViewEvent) = arg0.getUnBindedViewEventJavaService()/]
 
-[query public getUnBindedViewEvent(arg0 : ViewContainer) : Set(ViewEvent)
-	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getUnBindedViewEvent(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{arg0}) /]
-
-[query public getNbButtons(arg0 : ViewContainer) : Integer
-	= invoke('fr.pacman.cinematic.jsf.services.CinematicServices', 'getNbButtons(org.obeonetwork.dsl.cinematic.view.ViewContainer)', Sequence{arg0}) /]
+[query public getNbButtons(arg0 : view::ViewContainer) : Integer = arg0.getNbButtonsJavaService()/]

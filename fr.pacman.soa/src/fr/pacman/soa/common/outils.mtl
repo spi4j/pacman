@@ -1,92 +1,45 @@
+[module outils('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::soa::services::WSUtils/]
+
 [comment encoding = UTF-8 /]
-[module outils('http://www.obeonetwork.org/dsl/soa/4.0.0',
-              'http://www.obeonetwork.org/dsl/entity/3.0.0',
-              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query public dtoFromService(s : soa::Service) : environment::DTO = if not (s.systemeRacine() = null) and s.systemeRacine().eAllContents(environment::DTO)->exists(d | d.buildSimpleDtoName() = s.buildSimpleServiceName()) then s.systemeRacine().eAllContents(environment::DTO)->select(d | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first() else null endif/]
 
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::names /]
-
-[import fr::pacman::commons::soa::common::utils /]
-
-
-[query public dtoFromService(s : Service) : DTO =
-if not systemeRacine(s).oclIsUndefined() and systemeRacine(s).eAllContents(DTO)->exists(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName()) then
-    systemeRacine(s).eAllContents(DTO)->select(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first()
-else
-    null
-endif
-/]
-
-[query public serviceFromDto(d : DTO) : Service =
-if (not systemeRacine(d).oclIsUndefined() and systemeRacine(d).eAllContents(Service)->exists(s : Service | d.buildSimpleDtoName() = s.buildSimpleServiceName())) then
-    systemeRacine(d).eAllContents(Service)->select(s : Service | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first()
-else
-    null
-endif
-/]
+[query public serviceFromDto(d : environment::DTO) : soa::Service = if not (d.systemeRacine() = null) and d.systemeRacine().eAllContents(soa::Service)->exists(s | d.buildSimpleDtoName() = s.buildSimpleServiceName()) then d.systemeRacine().eAllContents(soa::Service)->select(s | d.buildSimpleDtoName() = s.buildSimpleServiceName())->first() else null endif/]
 
 [comment : Verifie si le nom du service = le nom d'un DTO present dans la liste des DTO qui existent. /]
-[query public serviceSeul(s : Service) : Boolean =
-    not systemeRacine(s).oclIsUndefined() and not systemeRacine(s).eAllContents(DTO)->exists(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName())
-/]
+[query public serviceSeul(s : soa::Service) : Boolean = not (s.systemeRacine() = null) and not s.systemeRacine().eAllContents(environment::DTO)->exists(d | d.buildSimpleDtoName() = s.buildSimpleServiceName())/]
 
-[query public serviceSeulFromSystem(s : Service, m  : System) : Boolean =
-    not m.listeDtosFromSystem()->exists(d : DTO | d.buildSimpleDtoName() = s.buildSimpleServiceName())
-/]
+[query public serviceSeulFromSystem(s : soa::Service, m : soa::System) : Boolean = not m.listeDtosFromSystem()->exists(d | d.buildSimpleDtoName() = s.buildSimpleServiceName())/]
 
-[query public xtoAGenerer(o : ObeoDSMObject) : Set(DTO) =
-    invoke('fr.pacman.soa.services.WSUtils', 'xtoAGenerer(java.util.List)', Sequence{o.eAllContents(Operation)})
-/]
+[query public xtoAGenerer(o : environment::ObeoDSMObject) : OrderedSet(environment::DTO) = o.eAllContents(soa::Operation).xtoAGenererJavaService()/]
 
-[query public listeDtos(n : Namespace) : Set(DTO) =
-    invoke('fr.pacman.soa.services.WSUtils', 'listeDtos(java.util.List)', Sequence{n.eAllContents(DTO)})
-/]
+[query public listeDtos(n : environment::Namespace) : OrderedSet(environment::DTO) = n.eAllContents(environment::DTO).listeDtosJavaService()/]
 
-[query public listeDtosFromSystem(m : System) : Set(DTO) =
-	invoke('fr.pacman.soa.services.WSUtils', 'listeDtos(java.util.List)', Sequence{m.eAllContents(DTO)})
-/]
+[query public listeDtosFromSystem(m : soa::System) : OrderedSet(environment::DTO) = m.eAllContents(environment::DTO).listeDtosJavaService()/]
 
-[query public listeServicesFromSystem(m : System) : Set(Service) =
-	invoke('fr.pacman.soa.services.WSUtils', 'listeServices(java.util.List)', Sequence{m.eAllContents(Service)})
-/]
+[query public listeServicesFromSystem(m : soa::System) : OrderedSet(soa::Service) = m.eAllContents(soa::Service).listeServices()/]
 
-[query public clientNeedXto(any : OclAny) : Boolean =
-    getClientTypes()->exists(client : String | client.equalsIgnoreCase('GWT'))
-/]
+[query public clientNeedXto(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('GWT'))/]
 
-[query public clientNeedRemotingServlet(any : OclAny) : Boolean =
-    getClientTypes()->exists(client : String | client.equalsIgnoreCase('SWING'))
-/]
+[query public clientNeedRemotingServlet(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('SWING'))/]
 
-[query public isAuthCode(f : Flow) : Boolean = 
- 	f.flowType = soa::FlowType::AUTHORIZATIONCODE
-/]
+[query public isAuthCode(f : soa::Flow) : Boolean = f.flowType = soa::FlowType::AUTHORIZATIONCODE/]
 
-[query public isAuthCredential(f : Flow) : Boolean = 
- 	f.flowType = soa::FlowType::CREDENTIALS
-/]
+[query public isAuthCredential(f : soa::Flow) : Boolean = f.flowType = soa::FlowType::CREDENTIALS/]
 
-[query public isAuthImplicit(f : Flow) : Boolean = 
- 	f.flowType = soa::FlowType::IMPLICIT
-/]
+[query public isAuthImplicit(f : soa::Flow) : Boolean = f.flowType = soa::FlowType::IMPLICIT/]
 
-[query public isAuthPassord(f : Flow) : Boolean = 
- 	f.flowType = soa::FlowType::PASSWORD
-/]
+[query public isAuthPassord(f : soa::Flow) : Boolean = f.flowType = soa::FlowType::PASSWORD/]
 
-[query public isAuthOidc(s : SecurityScheme) : Boolean = 
- 	s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT
-/]
+[query public isAuthOidc(s : soa::SecurityScheme) : Boolean = s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT/]
 
-[query public isAuthOauth2(s : SecurityScheme) : Boolean = 
- 	s.type = soa::SecuritySchemeType::OAUTH2
-/]
+[query public isAuthOauth2(s : soa::SecurityScheme) : Boolean = s.type = soa::SecuritySchemeType::OAUTH2/]
 
-[query public isAuthApiKey(s : SecurityScheme) : Boolean = 
- 	s.type = soa::SecuritySchemeType::API_KEY
-/]
+[query public isAuthApiKey(s : soa::SecurityScheme) : Boolean = s.type = soa::SecuritySchemeType::API_KEY/]
 
-[query public isWSCrudApplication(any : OclAny) : Boolean = 
-	any.useWS() and any.isCrudApplication()
-/]
+[query public isWSCrudApplication(any : ecore::EObject) : Boolean = any.useWS() and any.isCrudApplication()/]

@@ -1,13 +1,9 @@
-[comment encoding = UTF-8 /]
 [module scripts('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::names / ]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
 
-[query public buildEmbeddedHttpScriptName(any : OclAny) : String =
-	'Embedded' + getHttpEmbeddedServer().toUpperFirst() + '.bat'
-/]
+[comment encoding = UTF-8 /]
+[query public buildEmbeddedHttpScriptName(any : ecore::EObject) : String = 'Embedded' + any.getHttpEmbeddedServer().toUpperFirst() + '.bat'/]
 
-[query public buildEmbeddedHttpStartupScriptName(any : OclAny) : String =
-	getApplicationNameUpperFirst() + 'Startup.bat'
-/]
+[query public buildEmbeddedHttpStartupScriptName(any : ecore::EObject) : String = any.getApplicationNameUpperFirst() + 'Startup.bat'/]

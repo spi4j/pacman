@@ -1,21 +1,20 @@
+[module genServiceGwtAsync('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::gwt::client::business::category::serviceGwtAsync/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genServiceGwtAsync('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                           'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::gwt::client::business::category::serviceGwtAsync /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genServiceGwtAsync(s : Service)]
-[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtClientServiceDto(s, null), buildServiceGwtAsyncClassName(s, null) + '.java'), false, 'UTF-8')]
-[serviceGwtAsync(s)/]
-[/file]
+[template public genServiceGwtAsync(s : soa::Service)]
+  [file (s.getClientGwtSourceDir().filename(s.buildPackageBusinessGwtClientServiceDto(null), s.buildServiceGwtAsyncClassName(null) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceGwtAsync()/]
+  [/file]
 [/template]
 
-[template public genServiceGwtAsync(s : Service, d : DTO)]
-[file (filename(d.getClientGwtSourceDir(), buildPackageBusinessGwtClientServiceDto(s, d), buildServiceGwtAsyncClassName(s, d) + '.java'), false, 'UTF-8')]
-[serviceGwtAsync(s, d)/]
-[/file]
+[template public genServiceGwtAsync(s : soa::Service, d : environment::DTO)]
+  [file (d.getClientGwtSourceDir().filename(s.buildPackageBusinessGwtClientServiceDto(d), s.buildServiceGwtAsyncClassName(d) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceGwtAsync(d)/]
+  [/file]
 [/template]

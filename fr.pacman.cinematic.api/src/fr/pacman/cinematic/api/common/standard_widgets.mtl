@@ -1,0 +1,10 @@
+[module standard_widgets('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::api::services::InterfaceWidgetUtils/]
+
+[comment encoding = UTF-8 /]
+[query public getInterfaceName(widget : toolkits::Widget) : String = widget.getInterfaceNameJavaService()/]
+
+[query public getInterfacePackage(widget : toolkits::Widget) : String = widget.getInterfacePackageJavaService()/]
+
+[query public getInterfaceNameForImport(widget : toolkits::Widget) : String = widget.getInterfaceNameForImportJavaService()/]

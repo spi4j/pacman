@@ -1,70 +1,64 @@
-[comment encoding = UTF-8 /]
-[module appliEntityItf('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[module appliEntityItf('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::common::classes/]
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::imports/]
-
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::commentaires/]
 [import fr::pacman::entity::api::sql::common/]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
+[comment encoding = UTF-8 /]
+[template public appliEntityItf(r : entity::Root)]
+  [r.licence()/]
+  package [r.buildPackagePersistenceApi()/];
+  
+  [r.writeImports()/]
+  
+  /**
+   * Interface d'entité persistante pour les champs automatiques.
+   * @author [r.getAuthorName()/]
+   * @param <TypeId>
+   *           Le type générique de la clé primaire.
+   */
+  public interface [r.buildAppliEntityInterfaceName()/]<TypeId> extends [r.getClassNameForEntity_Itf()/]<TypeId>
+  {
+  [for (columnProp : String | r.get_automaticColumnsProperties())]
+    [r.genAutomaticGetterItf(columnProp)/]
+    
+    [r.genAutomaticSetterItf(columnProp)/]
+    
+  [/for]
+  }[/template]
 
-
-[template public appliEntityItf(r : Root)]
-[licence()/]
-package [buildPackagePersistenceApi()/];
-
-[comment : Add all required imports. /]
-[r.writeImports() /]
-
-/**
- * Interface d'entité persistante pour les champs automatiques.
- * @author [getAuthorName()/]
- * @param <TypeId>
- *           Le type générique de la clé primaire.
- */
-public interface [buildAppliEntityInterfaceName()/]<TypeId> extends [getClassNameForEntity_Itf()/]<TypeId>
-{
-[for (columnProp : String | get_automaticColumnsProperties())]
-[r.genAutomaticGetterItf(columnProp) /]
-
-[r.genAutomaticSetterItf(columnProp) /]
-
-[/for]
-}
+[template private genAutomaticGetterItf(void : ecore::EObject, columnProp : String)]
+  [if (columnProp.hasToWriteColumn())]
+       /**
+        * Obtenir [void.get_nameColumn(columnProp)/].
+        * @return [void.get_nameColumn(columnProp)/]
+        */
+       public [void.get_typeColumn(columnProp)/] [void.get_nameColumn(columnProp).toLower().apply_methodGet()/] ();[/if]
 [/template]
 
-[template private genAutomaticGetterItf(void : OclAny, columnProp : String)]
-[if (columnProp.hasToWriteColumn())]
-   /**
-    * Obtenir [get_nameColumn(columnProp)/].
-    * @return [get_nameColumn(columnProp)/]
-    */
-   public [get_typeColumn(columnProp)/] [apply_methodGet(get_nameColumn(columnProp).toLower())/] ();[/if]
-[/template]
-
-[template private genAutomaticSetterItf(void : OclAny, columnProp : String)]
-[if (columnProp.hasToWriteColumn())]
-   /**
-    * Affecter [get_nameColumn(columnProp)/].
-    * @param [apply_parameterMethodClassicIn(get_nameColumn(columnProp).toLower())/]
-    *           [get_nameColumn(columnProp)/]
-    */
-   public void [apply_methodSet(get_nameColumn(columnProp).toLower())/] (final [get_typeColumn(columnProp)/] [apply_parameterMethodClassicIn(get_nameColumn(columnProp).toLower())/]);[/if]
+[template private genAutomaticSetterItf(void : ecore::EObject, columnProp : String)]
+  [if (columnProp.hasToWriteColumn())]
+       /**
+        * Affecter [void.get_nameColumn(columnProp)/].
+        * @param [void.get_nameColumn(columnProp).toLower().apply_parameterMethodClassicIn()/]
+        *           [void.get_nameColumn(columnProp)/]
+        */
+       public void [void.get_nameColumn(columnProp).toLower().apply_methodSet()/] (final [void.get_typeColumn(columnProp)/] [void.get_nameColumn(columnProp).toLower().apply_parameterMethodClassicIn()/]);[/if]
 [/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (r : Root) post(trim())]
-[r.initImports()/]
-[r.addImport('fr.spi4j.type.XtopSup')/]
-[r.addImport(getImportForEntity_Itf())/]
-[r.flushImports()/]
-[/template]
+[template private writeImports(r : entity::Root) post(self.trim())]
+  [r.initImports()/]
+  [r.addImport('fr.spi4j.type.XtopSup')/]
+  [r.addImport(r.getImportForEntity_Itf())/]
+  [r.flushImports()/][/template]

@@ -31,6 +31,8 @@ public class SecurityUtils
       return AnnotationUtils.annotationExists(p_entity, "USER", false);
    }
 
+public boolean entityIsUserJavaService(final ObeoDSMObject p_entity){return entityIsUser(p_entity);}
+
    /**
     * Vérifie si un DTO est le DTO correspondant a l'utilisateur.
     * 
@@ -42,6 +44,8 @@ public class SecurityUtils
    {
       return AnnotationUtils.annotationExists(p_dto, "USER", false);
    }
+
+public boolean dtoIsUserJavaService(final ObeoDSMObject p_dto){return dtoIsUser(p_dto);}
    
    /**
     * Retourne une liste de permissions sur une opération, stockées dans une

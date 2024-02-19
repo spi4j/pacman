@@ -1,259 +1,258 @@
-[comment encoding = UTF-8 /]
 [module Webapp('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::configuration::common::webXml/]
+[import fr::pacman::configuration::common::pomXml/]
+[import fr::pacman::configuration::common::properties/]
+[import fr::pacman::configuration::common::names/]
 
-[import fr::pacman::configuration::common::webXml /]
-[import fr::pacman::configuration::common::pomXml /]
-[import fr::pacman::configuration::common::properties /]
-[import fr::pacman::configuration::common::names /]
+[comment encoding = UTF-8 /]
+[template public webappPom(any : ecore::EObject) post(self.trim())]
+  <project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <parent>
+          <groupId>[any.getApplicationPackage()/]</groupId>
+          <artifactId>[any.getApplicationName()/]</artifactId>
+          <version>[any.getVersion()/]</version>
+      </parent>
+      <artifactId>[any.getWebappProjectName()/]</artifactId>
+      <!-- Packaging war -->
+      <packaging>war</packaging>
+      <name>[any.getApplicationName()/] - Packaging webapp serveur</name>
+  
+  	<!--
+  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+     	-->
+     		
+     	<!--
+   [/protected]
+  
+  	-->
+  
+      <dependencies>
+          <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>[any.getServerProjectName()/]</artifactId>
+              <version>${project.version}</version>
+          </dependency>
+  [if (any.hasAdditionnalLibraries())]
+    [for (prop : String | any.getAdditionnalLibraries())]
+      		<!-- Librairie additionnelle utilisateur. -->
+      		<dependency>
+      			<groupId>[prop.getLibraryPackage(prop)/]</groupId>
+      			<artifactId>[prop.getLibraryName(prop)/]-server</artifactId>
+      			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+      		</dependency>
+    [/for]
+  [/if]
+  		<dependency>
+  			<groupId>jakarta.servlet</groupId>
+  			<artifactId>jakarta.servlet-api</artifactId>
+  			<version>${jakarta-servlet-api.version}</version>
+  			<scope>provided</scope>
+  		</dependency>
+  		<dependency>
+  			<groupId>jakarta.transaction</groupId>
+  			<artifactId>jakarta.transaction-api</artifactId>
+  			<version>${jakarta-transaction-api.version}</version>
+  		</dependency>
+          <dependency>
+              <!-- activation du monitoring -->
+              <groupId>net.bull.javamelody</groupId>
+              <artifactId>javamelody-core</artifactId>
+              <version>${javamelody-core.version}</version>
+          </dependency>
+  [if (any.useH2EmbeddedDatabase())]
+    		<dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
+  [/if]
+          <!-- Dependance iText pour exports PDF dans le monitoring -->
+          <dependency>
+              <groupId>com.lowagie</groupId>
+              <artifactId>itext</artifactId>
+              <version>${itext.version}</version>
+              <exclusions>
+                  <exclusion>
+                      <artifactId>bcmail-jdk14</artifactId>
+                      <groupId>bouncycastle</groupId>
+                  </exclusion>
+                  <exclusion>
+                      <artifactId>bcprov-jdk14</artifactId>
+                      <groupId>bouncycastle</groupId>
+                  </exclusion>
+                  <exclusion>
+                      <artifactId>bctsp-jdk14</artifactId>
+                      <groupId>bouncycastle</groupId>
+                  </exclusion>
+              </exclusions>
+          </dependency>
+  		[true.httpEmbeddedServerDependencies()/]
+  		<!--
+  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+      		-->
+      		
+      		<!--
+    [/protected]
+  
+  		-->
+      </dependencies>
+      <build>
+          <plugins>
+  			[any.plugins(true)/]
+  			[true.httpEmbeddedServerPlugins()/]
+  			<!--
+  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+       			-->
+       		
+       			<!--
+     [/protected]
+  
+  			-->
+          </plugins>
+      </build>
+  </project>[/template]
 
-
-[template public webappPom(any : OclAny) post (trim())]
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>[getApplicationPackage()/]</groupId>
-        <artifactId>[getApplicationName()/]</artifactId>
-        <version>[getVersion()/]</version>
-    </parent>
-    <artifactId>[getWebappProjectName()/]</artifactId>
-    <!-- Packaging war -->
-    <packaging>war</packaging>
-    <name>[getApplicationName()/] - Packaging webapp serveur</name>
-
-	<!--
-	// [protected ('for custom code')]
-	-->
-		
-	<!--
-	// [/protected]
-	-->
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>[getServerProjectName()/]</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		[if hasAdditionnalLibraries()]
-		[for (prop : String | getAdditionnalLibraries())]
-		<!-- Librairie additionnelle utilisateur. -->
-		<dependency>
-			<groupId>[getLibraryPackage(prop)/]</groupId>
-			<artifactId>[getLibraryName(prop)/]-server</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		[/for][/if]
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>${jakarta-servlet-api.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.transaction</groupId>
-			<artifactId>jakarta.transaction-api</artifactId>
-			<version>${jakarta-transaction-api.version}</version>
-		</dependency>
-        <dependency>
-            <!-- activation du monitoring -->
-            <groupId>net.bull.javamelody</groupId>
-            <artifactId>javamelody-core</artifactId>
-            <version>${javamelody-core.version}</version>
-        </dependency>
-		[if useH2EmbeddedDatabase()]		
-		<dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-        </dependency>
-		[/if]
-        <!-- Dependance iText pour exports PDF dans le monitoring -->
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
-            <version>${itext.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bcmail-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>bcprov-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>bctsp-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-		[httpEmbeddedServerDependencies(true)/]
-		<!--
-		// [protected ('for dependencies')]
-		-->
-		
-		<!--
-		// [/protected]
-		-->
-    </dependencies>
-    <build>
-        <plugins>
-			[plugins(true)/]
-			[httpEmbeddedServerPlugins(true)/]
-			<!--
-			// [protected ('for plugins')]
-			-->
-		
-			<!--
-			// [/protected]
-			-->
-        </plugins>
-    </build>
-</project>
-[/template]
-
-[template public webappWeb(any : OclAny) post (trim())]
-<?xml version="1.0" encoding="UTF-8" ?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
-    version="5.0">
-
-    <display-name>Serveur [getApplicationName()/]</display-name>
-    <distributable />
-	[httpEmbeddedConfiguration()/]
-	[melodyConfiguration()/]
-  	[melodyFilters()/]
-	[initializationListener()/]
-
-    <!-- these are for getting the session for the current thread -->
-    <filter>
-        <filter-name>httpSessionInThread</filter-name>
-        <filter-class>fr.spi4j.filter.HttpSessionFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>httpSessionInThread</filter-name>
-        <url-pattern>/remoting/*</url-pattern>
-    </filter-mapping>
-	[if 'gwt'.equalsIgnoreCase(getClient())]
-     <!--
-        Variable utilisee dans le XXXGwtServiceImpl et les classes de service qui heritent de SpiRemoteServiceImpl et GwtRemoteService
-        Chemin vers les fichiers RPC   
-      -->
-     <context-param>
-        <param-name>moduleBaseURL</param-name>
-        <param-value>http://localhost:PORT/WEB_APP/REPERTOIRE_RPC/</param-value>
-     </context-param>
-	[/if]
-	[if 'swing'.equalsIgnoreCase(getClient())]
- 	<!-- remoting a decommenter en cas d'implementation -->
-	<!--
-    <servlet>
-        <servlet-name>RemotingServlet</servlet-name>
-        <servlet-class>[getApplicationPackage()/].WebappRemotingServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>RemotingServlet</servlet-name>
-        <url-pattern>/remoting/*</url-pattern>
-    </servlet-mapping>
-	-->
-	[/if]
-	[if useWS()]
-	<!-- Parametrage du filtre Cross Domain Origin (REST) a decommenter en cas d'implementation -->
-	<!-- 
-	<filter>
-  		<filter-name>CorsFilter</filter-name>
-  		<filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-  		<init-param>
-			<param-name>cors.allowed.origins</param-name>
-			<param-value>*</param-value>
-		</init-param>
-		<init-param>
-    		<param-name>cors.allowed.methods</param-name>
-    		<param-value>GET,POST,PUT,DELETE,HEAD,OPTIONS</param-value>
-  		</init-param>
-  		<init-param>
-    		<param-name>cors.allowed.headers</param-name>
-    		<param-value>Content-Type, Authorization</param-value>
-  		</init-param>
-	</filter>
-	<filter-mapping>
-  		<filter-name>CorsFilter</filter-name>
-  		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-	-->
-	[/if]
-
-	[adminServlet()/]
-	[securityInitialization()/]
-	[configFilesInitialization()/]
-
-	[if useWS()]
-	<!-- Servlet pour architecture WS (Soap) -->
-    <servlet>
-		<servlet-name>CXFServlet</servlet-name>
-		<servlet-class>[buildPackageCXF()/].[buildCXFServletClassName()/]</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>CXFServlet</servlet-name>
-		<url-pattern>/ws/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- Servlet pour les services de type REST -->
-	<servlet>
-    	<servlet-name>RSServlet</servlet-name>
-    	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    	<init-param>
-        	<param-name>jersey.config.server.provider.packages</param-name>
-        	<param-value>[any.writeResourcesPackagesToScan()/];[buildPackageRS()/]</param-value>
-    	</init-param>
-		[if useWsServiceInjection()]
-		<!-- CDI injection (HK2) -->
-    	<init-param>
-       		<param-name>jakarta.ws.rs.Application</param-name>
-        	<param-value>[buildPackageRS()/].[buildRSApplicationConfigClassName()/]</param-value>
-    	</init-param>
-		[/if]
-    	<load-on-startup>1</load-on-startup>
-  	</servlet>
-	[/if]
-
-    <session-config>
-        <!-- time out des sessions en minutes -->
-        <session-timeout>60</session-timeout>
-        <!-- le HttpOnly est incompatible avec JavaWebStart v1.7.0_05+ et le remoting Spi4J
-        (car si HttpOnly, JavaWebStart masque le cookie a l'appli quel que soit le code de Spi4J ou de l'appli),
-        donc on desactive HttpOnly qui d'ailleurs n'apporte rien pour Spi4J et pour l'appli Swing -->
-        <cookie-config>
-            <http-only>false</http-only>
-        </cookie-config>
-    </session-config>
-
-	[basicAuth()/]
-	
-	[comment : A voir si toujours utile car semble fonctionner sans (en embarque). /]
-	[if useWS() and not hasHttpEmbeddedServer()]
-	<!-- Par defaut, tous les services rest sont sous le fragment d'URI : '/api'.  -->
-    <!-- Mais on laisse la possibilite de rajouter des URI personnalisees. -->
-	<!-- (Champ URI au  niveau de l'onglet 'Exposition' du composant). -->
-	<absolute-ordering>
-		<name>rest-mapping-fragment</name>
-	</absolute-ordering>
-	[/if]
-</web-app>
-[/template]
+[template public webappWeb(any : ecore::EObject) post(self.trim())]
+  <?xml version="1.0" encoding="UTF-8" ?>
+  <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
+      version="5.0">
+  
+      <display-name>Serveur [any.getApplicationName()/]</display-name>
+      <distributable />
+  	[any.httpEmbeddedConfiguration()/]
+  	[any.melodyConfiguration()/]
+    	[any.melodyFilters()/]
+  	[any.initializationListener()/]
+  
+      <!-- these are for getting the session for the current thread -->
+      <filter>
+          <filter-name>httpSessionInThread</filter-name>
+          <filter-class>fr.spi4j.filter.HttpSessionFilter</filter-class>
+      </filter>
+      <filter-mapping>
+          <filter-name>httpSessionInThread</filter-name>
+          <url-pattern>/remoting/*</url-pattern>
+      </filter-mapping>
+  [if ('gwt'.equalsIgnoreCase(any.getClient()))]
+         <!--
+            Variable utilisee dans le XXXGwtServiceImpl et les classes de service qui heritent de SpiRemoteServiceImpl et GwtRemoteService
+            Chemin vers les fichiers RPC   
+          -->
+         <context-param>
+            <param-name>moduleBaseURL</param-name>
+            <param-value>http://localhost:PORT/WEB_APP/REPERTOIRE_RPC/</param-value>
+         </context-param>
+  [/if]
+  [if ('swing'.equalsIgnoreCase(any.getClient()))]
+     	<!-- remoting a decommenter en cas d'implementation -->
+    	<!--
+        <servlet>
+            <servlet-name>RemotingServlet</servlet-name>
+            <servlet-class>[any.getApplicationPackage()/].WebappRemotingServlet</servlet-class>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>RemotingServlet</servlet-name>
+            <url-pattern>/remoting/*</url-pattern>
+        </servlet-mapping>
+    	-->
+  [/if]
+  [if (any.useWS())]
+    	<!-- Parametrage du filtre Cross Domain Origin (REST) a decommenter en cas d'implementation -->
+    	<!-- 
+    	<filter>
+      		<filter-name>CorsFilter</filter-name>
+      		<filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+      		<init-param>
+    			<param-name>cors.allowed.origins</param-name>
+    			<param-value>*</param-value>
+    		</init-param>
+    		<init-param>
+        		<param-name>cors.allowed.methods</param-name>
+        		<param-value>GET,POST,PUT,DELETE,HEAD,OPTIONS</param-value>
+      		</init-param>
+      		<init-param>
+        		<param-name>cors.allowed.headers</param-name>
+        		<param-value>Content-Type, Authorization</param-value>
+      		</init-param>
+    	</filter>
+    	<filter-mapping>
+      		<filter-name>CorsFilter</filter-name>
+      		<url-pattern>/api/*</url-pattern>
+    	</filter-mapping>
+    	-->
+  [/if]
+  
+  	[any.adminServlet()/]
+  	[any.securityInitialization()/]
+  	[any.configFilesInitialization()/]
+  
+  [if (any.useWS())]
+    	<!-- Servlet pour architecture WS (Soap) -->
+        <servlet>
+    		<servlet-name>CXFServlet</servlet-name>
+    		<servlet-class>[any.buildPackageCXF()/].[any.buildCXFServletClassName()/]</servlet-class>
+    		<load-on-startup>1</load-on-startup>
+    	</servlet>
+    	<servlet-mapping>
+    		<servlet-name>CXFServlet</servlet-name>
+    		<url-pattern>/ws/*</url-pattern>
+    	</servlet-mapping>
+    
+    	<!-- Servlet pour les services de type REST -->
+    	<servlet>
+        	<servlet-name>RSServlet</servlet-name>
+        	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        	<init-param>
+            	<param-name>jersey.config.server.provider.packages</param-name>
+            	<param-value>[any.writeResourcesPackagesToScan()/];[any.buildPackageRS()/]</param-value>
+        	</init-param>
+    [if (any.useWsServiceInjection())]
+      		<!-- CDI injection (HK2) -->
+          	<init-param>
+             		<param-name>jakarta.ws.rs.Application</param-name>
+              	<param-value>[any.buildPackageRS()/].[any.buildRSApplicationConfigClassName()/]</param-value>
+          	</init-param>
+    [/if]
+        	<load-on-startup>1</load-on-startup>
+      	</servlet>
+  [/if]
+  
+      <session-config>
+          <!-- time out des sessions en minutes -->
+          <session-timeout>60</session-timeout>
+          <!-- le HttpOnly est incompatible avec JavaWebStart v1.7.0_05+ et le remoting Spi4J
+          (car si HttpOnly, JavaWebStart masque le cookie a l'appli quel que soit le code de Spi4J ou de l'appli),
+          donc on desactive HttpOnly qui d'ailleurs n'apporte rien pour Spi4J et pour l'appli Swing -->
+          <cookie-config>
+              <http-only>false</http-only>
+          </cookie-config>
+      </session-config>
+  
+  	[any.basicAuth()/]
+  	
+  [if (any.useWS() and not any.hasHttpEmbeddedServer())]
+    	<!-- Par defaut, tous les services rest sont sous le fragment d'URI : '/api'.  -->
+        <!-- Mais on laisse la possibilite de rajouter des URI personnalisees. -->
+    	<!-- (Champ URI au  niveau de l'onglet 'Exposition' du composant). -->
+    	<absolute-ordering>
+    		<name>rest-mapping-fragment</name>
+    	</absolute-ordering>
+  [/if]
+  </web-app>[/template]
 
 [comment : Write the list of resources packages to scan for jersey. /]
-[template private writeResourcesPackagesToScan(any: OclAny) post(trim())]
-[any.buildPackageRsResources(false)/][if any.isCrudApplication()],[any.buildPackageRsResources(true)/][/if]
+[template private writeResourcesPackagesToScan(any : ecore::EObject) post(self.trim())]
+  [any.buildPackageRsResources(false)/][if (any.isCrudApplication())],[any.buildPackageRsResources(true)/][/if]
 [/template]

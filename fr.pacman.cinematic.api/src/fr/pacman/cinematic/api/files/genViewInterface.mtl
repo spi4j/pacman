@@ -1,16 +1,14 @@
+[module genViewInterface('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::api::client::ui::pkg::viewInterface/]
+
 [comment encoding = UTF-8 /]
-[module genViewInterface('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::api::client::ui::pkg::viewInterface /]
-
-[template public genViewInterface(e : OclAny, clientPropertiesPrefix : String, viewContainer : ViewContainer, IsDto : Boolean)]
-[file (filename(getConfigValue(clientPropertiesPrefix.toLower() + '.source.dir'), viewContainer.namePackageViewContainerInterface(), viewContainer.nameViewInterface() + '.java'), false, 'UTF-8')]
-[viewInterface(viewContainer, clientPropertiesPrefix, IsDto)/]
-[/file]
+[template public genViewInterface(e : ecore::EObject, clientPropertiesPrefix : String, viewContainer : view::ViewContainer, IsDto : Boolean)]
+  [file ((clientPropertiesPrefix.toLower() + '.source.dir').getConfigValue().filename(viewContainer.namePackageViewContainerInterface(), viewContainer.nameViewInterface() + '.java'), overwrite, 'UTF-8')]
+    [viewContainer.viewInterface(clientPropertiesPrefix, IsDto)/]
+  [/file]
 [/template]
-

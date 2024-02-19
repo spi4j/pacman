@@ -1,289 +1,291 @@
+[module controller('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::api::common::model/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::jsp::common::packages/]
+[import fr::pacman::cinematic::jsp::common::names/]
+[import fr::pacman::cinematic::jsp::common::services/]
+[import fr::pacman::cinematic::jsp::common::model/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+
 [comment encoding = UTF-8 /]
-[module controller('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 
-				   'http://www.obeonetwork.org/dsl/soa/4.0.0', 
-				   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::api::common::model /]
-[import fr::pacman::cinematic::api::common::packages /]
-
-[import fr::pacman::cinematic::jsp::common::packages /]
-[import fr::pacman::cinematic::jsp::common::names /]
-[import fr::pacman::cinematic::jsp::common::services /]
-[import fr::pacman::cinematic::jsp::common::model /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-
-
-[template public errorController(viewState : ViewState, viewContainer : ViewContainer)]
-
+[template public errorController(viewState : flow::ViewState, viewContainer : view::ViewContainer)]
+  
 [/template]
 
+[template public controller(viewState : flow::ViewState)]
+  [viewState.licence()/]
+  package [viewState.namePackageContainerController()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [viewState.writeImports()/]
+    
+  [/protected]
+  
+  /**
+   * Sous-contrôleur : correspond dans la modélisation à un composant de type :
+   * 'viewState'. Il s'agit ici du contrôleur qui sert de référentiel (pour les listes déroulantes, etc...). 
+   * Ce contrôleur sera automatiquement mis en scope 'application' dans les différentes pages jsp 
+   * de l'application.
+   *
+   * @author [viewState.getAuthorName()/]
+   */
+  public class [viewState.buildJspControllerClassName()/] { 
+  
+  	// attributs for controller
+  	[protected (viewState.getUserCodeId('attributs for controller')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+  
+  	public [viewState.buildJspControllerClassName()/]() {
+  	
+  	}
+  }[/template]
 
-[template public controller(viewState : ViewState)]
-[licence()/]
-package [viewState.namePackageContainerController()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[viewState.writeImports()/]
-
-// [/protected]
-/**
- * Sous-contrôleur : correspond dans la modélisation à un composant de type :
- * 'viewState'. Il s'agit ici du contrôleur qui sert de référentiel (pour les listes déroulantes, etc...). 
- * Ce contrôleur sera automatiquement mis en scope 'application' dans les différentes pages jsp 
- * de l'application.
- *
- * @author [getAuthorName()/]
- */
-public class [viewState.buildJspControllerClassName()/] { 
-
-	// attributs for controller
-	// [protected (viewState.getUserCodeId('attributs for controller'))]
-
-	// [/protected]
-
-	public [viewState.buildJspControllerClassName()/]() {
-	
-	}
-}
-[/template]
-
-[template public controller( viewState : ViewState, viewContainer : ViewContainer)]
-[licence()/]
-package [viewContainer.namePackageContainerController()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[viewState.writeImports()/]
-
-// [/protected]
-
-/**
- * Sous-contrôleur : correspond dans la modélisation à un composant de type :
- * 'viewState'.
- * <p>
- * Pour l'instant un contrôleur ne peut être en relation qu'avec une seule page
- * de type jsp (MVC1). Un paramètre 'method' permet toutefois d'enclencher
- * plusieurs opérations sur un même sous-contrôleur. Afin d'éviter au maximum
- * l'utilisation de la découverte dynamique, un simple aiguillage permet
- * d'effectuer l'appel de la bonne méthode en fonction de ce paramètre.
- * 
- * @author [getAuthorName()/]
- */
-// [viewState.buildJspControllerClassName()/] annotations
-// [protected (viewState.getUserCodeId(viewState.buildJspControllerClassName() + ' annotations'))]
-
-// [/protected]
-public class [viewState.buildJspControllerClassName()/] extends JspController_Abs { 
-
-	// attributs for controller
-	// [protected (viewState.getUserCodeId('attributs for controller'))]
-
-	// [/protected]
-
-
-	/**
-	 * Constructeur pour le contrôleur.
-	 * 
-	 * Permet de définir la route par défaut en cas d'exception.
-	 */
-	public [viewState.buildJspControllerClassName()/] () {
-
-		// default error dispatch
-		// [protected (viewState.getUserCodeId('default error dispatch'))]
-
-		super([buildJspDispatcherClassName()/].[apply_attributeEnum('systemViewState_error')/]);
-
-		// [/protected]
-	}
-
-	/**
-	 * Aiguillage pour l'ensemble des méthodes du contrôleur.
-	 */
-	@Override
-	public [buildJspDispatcherClassName()/] [apply_methodDefault('execute')/](final HttpServletRequest [apply_parameterMethodClassicIn('request')/], 
-		final JspControllerMessenger_Itf [apply_parameterMethodClassicIn('messenger')/], final String [apply_parameterMethodClassicIn('method')/]) {
-	
-		// methode [apply_methodDefault('execute')/]
-		// [protected (viewState.getUserCodeId('methode ' + apply_methodDefault('execute')))]
-
-		// [/protected]
-
-		[comment : Liste toutes les evenements associes au controlleur./]
-		[for (event : ViewEvent | viewContainer.getEventsForViewContainer())]
-		[if not event.name.oclIsUndefined()]	
-		[comment : Ecriture de l'aiguillage vers la bonne methode. /]	
-		if("[event.getEventName()/]".equals([apply_parameterMethodClassicIn('method')/])) {
-			return [event.getEventName()/]([apply_parameterMethodClassicIn('request')/], [apply_parameterMethodClassicIn('messenger')/]);
-		}
-		[else]
-		// FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements 
-		// des transitions issues de l'état : [viewState.name/]
-		[/if]
-
-		[/for]
-		// Affichage de la page par defaut pour le contrôleur.
-		return [apply_methodDefault('init')/]([apply_parameterMethodClassicIn('request')/], [apply_parameterMethodClassicIn('messenger')/]);
-	} 
-
-	/**
-	 * Initialisation du controleur avec affichage de la page par défaut.
-	 *
-	 * @param [apply_parameterMethodClassicIn('request')/] :
-	 *  		La liste des paramètres passés dans la requête (avec les données de l'en-tête). 
-	 * @return  la route pour l'affichage de la page de retour.
-	 */
-	public [buildJspDispatcherClassName()/] [apply_methodDefault('init')/](final HttpServletRequest [apply_parameterMethodClassicIn('request')/], 
-		final JspControllerMessenger_Itf [apply_parameterMethodClassicIn('messenger')/]) {
-
-		// methode [apply_methodDefault('init')/]
-		// [protected (viewState.getUserCodeId('methode ' + apply_methodDefault('init')))]
-
-		[comment : Liste toutes les evenements de type 'onLoad' associes au controlleur./]
-		['init'.writeActionsIfExist(viewState, false) /]
-
-		// [/protected]
-
-		[comment : Liste toutes les evenements de type 'onLoad' associes au controlleur./]
-		// Recopier cette génération dans la partie "user code" après chaque regénération.
-		// si un changement est effectué au niveau de la couche service et/ou persistence.
-
-		['init'.writeActionsIfExist(viewState, true) /]
-
-		return [buildJspDispatcherClassName()/].[apply_attributeEnum(viewState.getJspControllerForDispatcherClassName() + '_init')/];
-	}
-
-	[comment : On gere ici les evenements mais un evenement n'est pas forcement attache a une transition !!!!/ ]
- 
-	[comment : Liste toutes les evenements associes au controlleur./]
-	[for (event : ViewEvent | viewContainer.getEventsForViewContainer())]
-	[if not event.name.oclIsUndefined()]
-   	/**
-     * Gestion de l'événement : '[event.getEventName()/]'.	
-	 *	
-	 * @param  [apply_parameterMethodClassicIn('request')/] :
-	 *  		La liste des paramètres passés dans la requête (avec les données de l'en-tête). 
-	 * @return la route pour l'affichage de la page de retour.
-     */    
-	public [buildJspDispatcherClassName()/] [event.getEventName()/](final HttpServletRequest [apply_parameterMethodClassicIn('request')/], 
-		final JspControllerMessenger_Itf [apply_parameterMethodClassicIn('messenger')/]) {
-
-		// methode [event.getEventName()/]
-		// [protected (viewState.getUserCodeId('methode ' + event.getEventName()))]
-
-		[event.getEventName().writeActionsIfExist(viewState, false) /]
-	
-		// [/protected]
-
-		// Recopier cette génération dans la partie "user code" après chaque regénération.
-		// si un changement est effectué au niveau de la couche service et/ou persistence.
-
-		[event.getEventName().writeActionsIfExist(viewState, true) /]
-
-		return [buildJspDispatcherClassName()/].[apply_attributeEnum(viewState.getJspControllerForDispatcherClassName() +'_'+ event.getEventName())/];
-	}[lineSeparator()/]
-	[/if][/for]
-
-	[comment : zone libre pour le codage de methodes. /]
-	// [viewState.buildJspControllerClassName()/]
-	// [protected (viewState.getUserCodeId(viewState.buildJspControllerClassName()))]
-	
-	// [/protected]
-
-	/**
-	 * Si activé à 'true', la méthode d'initialisation du contrôleur est alors
-	 * automatiquement lancée par le contrôleur principal de l'application, lors du
-	 * chargement de cette dernière. Cela peut être utilisé notamment pour le
-	 * chargement des référentiels qui doivent être positionnés en scope
-	 * 'application'.
-	 */
-	 public boolean activateOnLoad() {
-		
-		// methode activateOnLoad
-		// [protected (viewState.getUserCodeId('methode activateOnLoad'))]
-	
-		return Boolean.[if viewState.isReferentialController()]TRUE[else]FALSE[/if];	
-	
-		// [/protected]
-	}
-}
-[/template]
+[template public controller(viewState : flow::ViewState, viewContainer : view::ViewContainer)]
+  [viewState.licence()/]
+  package [viewContainer.namePackageContainerController()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [viewState.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Sous-contrôleur : correspond dans la modélisation à un composant de type :
+   * 'viewState'.
+   * <p>
+   * Pour l'instant un contrôleur ne peut être en relation qu'avec une seule page
+   * de type jsp (MVC1). Un paramètre 'method' permet toutefois d'enclencher
+   * plusieurs opérations sur un même sous-contrôleur. Afin d'éviter au maximum
+   * l'utilisation de la découverte dynamique, un simple aiguillage permet
+   * d'effectuer l'appel de la bonne méthode en fonction de ce paramètre.
+   * 
+   * @author [viewState.getAuthorName()/]
+   */
+  // [viewState.buildJspControllerClassName()/] annotations
+  [protected (viewState.getUserCodeId(viewState.buildJspControllerClassName() + ' annotations')) startTagPrefix('// ') endTagPrefix('// ')]
+    
+  [/protected]
+  
+  public class [viewState.buildJspControllerClassName()/] extends JspController_Abs { 
+  
+  	// attributs for controller
+  	[protected (viewState.getUserCodeId('attributs for controller')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+   [/protected]
+  
+  
+  
+  	/**
+  	 * Constructeur pour le contrôleur.
+  	 * 
+  	 * Permet de définir la route par défaut en cas d'exception.
+  	 */
+  	public [viewState.buildJspControllerClassName()/] () {
+  
+  		// default error dispatch
+  		[protected (viewState.getUserCodeId('default error dispatch')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		super([viewState.buildJspDispatcherClassName()/].['systemViewState_error'.apply_attributeEnum()/]);
+      
+    [/protected]
+  
+  	}
+  
+  	/**
+  	 * Aiguillage pour l'ensemble des méthodes du contrôleur.
+  	 */
+  	@Override
+  	public [viewState.buildJspDispatcherClassName()/] ['execute'.apply_methodDefault()/](final HttpServletRequest ['request'.apply_parameterMethodClassicIn()/], 
+  		final JspControllerMessenger_Itf ['messenger'.apply_parameterMethodClassicIn()/], final String ['method'.apply_parameterMethodClassicIn()/]) {
+  	
+  		// methode ['execute'.apply_methodDefault()/]
+  		[protected (viewState.getUserCodeId('methode ' + 'execute'.apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+    [/protected]
+  
+  
+  [for (event : view::ViewEvent | viewContainer.getEventsForViewContainer())]
+    [if (not (event.name = null))]
+      		if("[event.getEventName()/]".equals(['method'.apply_parameterMethodClassicIn()/])) {
+      			return [event.getEventName()/](['request'.apply_parameterMethodClassicIn()/], ['messenger'.apply_parameterMethodClassicIn()/]);
+      		}
+    [else]
+      		// FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements 
+      		// des transitions issues de l'état : [viewState.name/]
+    [/if]
+    
+  [/for]
+  		// Affichage de la page par defaut pour le contrôleur.
+  		return ['init'.apply_methodDefault()/](['request'.apply_parameterMethodClassicIn()/], ['messenger'.apply_parameterMethodClassicIn()/]);
+  	} 
+  
+  	/**
+  	 * Initialisation du controleur avec affichage de la page par défaut.
+  	 *
+  	 * @param ['request'.apply_parameterMethodClassicIn()/] :
+  	 *  		La liste des paramètres passés dans la requête (avec les données de l'en-tête). 
+  	 * @return  la route pour l'affichage de la page de retour.
+  	 */
+  	public [viewState.buildJspDispatcherClassName()/] ['init'.apply_methodDefault()/](final HttpServletRequest ['request'.apply_parameterMethodClassicIn()/], 
+  		final JspControllerMessenger_Itf ['messenger'.apply_parameterMethodClassicIn()/]) {
+  
+  		// methode ['init'.apply_methodDefault()/]
+  		[protected (viewState.getUserCodeId('methode ' + 'init'.apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		['init'.writeActionsIfExist(viewState, false)/]
+      
+    [/protected]
+  
+  
+  		// Recopier cette génération dans la partie "user code" après chaque regénération.
+  		// si un changement est effectué au niveau de la couche service et/ou persistence.
+  
+  		['init'.writeActionsIfExist(viewState, true)/]
+  
+  		return [viewState.buildJspDispatcherClassName()/].[(viewState.getJspControllerForDispatcherClassName() + '_init').apply_attributeEnum()/];
+  	}
+  
+   
+  [for (event : view::ViewEvent | viewContainer.getEventsForViewContainer())]
+    [if (not (event.name = null))]
+         	/**
+           * Gestion de l'événement : '[event.getEventName()/]'.	
+      	 *	
+      	 * @param  ['request'.apply_parameterMethodClassicIn()/] :
+      	 *  		La liste des paramètres passés dans la requête (avec les données de l'en-tête). 
+      	 * @return la route pour l'affichage de la page de retour.
+           */    
+      	public [event.buildJspDispatcherClassName()/] [event.getEventName()/](final HttpServletRequest ['request'.apply_parameterMethodClassicIn()/], 
+      		final JspControllerMessenger_Itf ['messenger'.apply_parameterMethodClassicIn()/]) {
+      
+      		// methode [event.getEventName()/]
+      		[protected (viewState.getUserCodeId('methode ' + event.getEventName())) startTagPrefix('// ') endTagPrefix('// ')]
+          
+          		[event.getEventName().writeActionsIfExist(viewState, false)/]
+          	
+        [/protected]
+      
+      
+      		// Recopier cette génération dans la partie "user code" après chaque regénération.
+      		// si un changement est effectué au niveau de la couche service et/ou persistence.
+      
+      		[event.getEventName().writeActionsIfExist(viewState, true)/]
+      
+      		return [event.buildJspDispatcherClassName()/].[(viewState.getJspControllerForDispatcherClassName() + '_' + event.getEventName()).apply_attributeEnum()/];
+      	}[event.lineSeparator()/]
+    [/if]
+  [/for]
+  
+  	// [viewState.buildJspControllerClassName()/]
+  	[protected (viewState.getUserCodeId(viewState.buildJspControllerClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+     	
+   [/protected]
+  
+  
+  	/**
+  	 * Si activé à 'true', la méthode d'initialisation du contrôleur est alors
+  	 * automatiquement lancée par le contrôleur principal de l'application, lors du
+  	 * chargement de cette dernière. Cela peut être utilisé notamment pour le
+  	 * chargement des référentiels qui doivent être positionnés en scope
+  	 * 'application'.
+  	 */
+  	 public boolean activateOnLoad() {
+  		
+  		// methode activateOnLoad
+  		[protected (viewState.getUserCodeId('methode activateOnLoad')) startTagPrefix('// ') endTagPrefix('// ')]
+      	
+      		return Boolean.[if (viewState.isReferentialController())]TRUE[else]FALSE[/if]
+      ;	
+      	
+    [/protected]
+  
+  	}
+  }[/template]
 
 [comment : Ecriture de la liste des operations concernees par l'evenement. /]
 [comment : Attention pour les actions, le parti pris est de les coder dans les flowEvents uniquement ! /]
 [comment : cela permet d'effectuer des regroupements, il faut donc lier l'evenement du flowEvent a l'evenement initial. /]
-[template private writeActionsIfExist (eventName : String, viewState : ViewState, forComment : Boolean) post(trim())]
-[for (t : Transition | viewState.getTransitionsFromState(false))][if not t.to.oclIsUndefined() and t.to.oclIsTypeOf(ActionState)]
-[for  (evt : Event | t.on)][if evt.oclIsTypeOf(FlowEvent)][for (ve : ViewEvent | evt.oclAsType(FlowEvent).binds)]
-[if ve.getEventName().equalsIgnoreCase(eventName) or (ve.type.name.equalsIgnoreCase('onLoad') 
-and eventName.equalsIgnoreCase('init'))][for (o : Operation | t.to.oclAsType(ActionState).getOperationsForActionState())]
-[o.writeFullAction(t, forComment)/][lineSeparator()/][/for][/if][/for][/if][/for][/if][/for]
+[template private writeActionsIfExist(eventName : String, viewState : flow::ViewState, forComment : Boolean) post(self.trim())]
+  [for (t : flow::Transition | viewState.getTransitionsFromState(false))]
+    [if (not (t.to = null) and t.to.oclIsTypeOf(flow::ActionState))]
+      [for (evt : cinematic::Event | t.on)]
+        [if (evt.oclIsTypeOf(flow::FlowEvent))]
+          [for (ve : view::ViewEvent | evt.oclAsType(flow::FlowEvent).binds)]
+            [if (ve.getEventName().equalsIgnoreCase(eventName) or ve.type.name.equalsIgnoreCase('onLoad') and eventName.equalsIgnoreCase('init'))]
+              [for (o : soa::Operation | t.to.oclAsType(flow::ActionState).getOperationsForActionState())][o.writeFullAction(t, forComment)/][o.lineSeparator()/][/for]
+            [/if]
+          [/for]
+        [/if]
+      [/for]
+    [/if]
+  [/for]
 [/template]
 
 [comment : Ecriture de l'operation et de son positionnement dans la request si besoin. /]
-[template private writeFullAction (o : Operation, t : Transition, forComment : Boolean) post(trim())]
-[if forComment]// [/if][o.writeOutputParamIExists()/][o.writeService()/].[o.writeOperation()/]([o.writeInputParamsIfExists()/]);
-[if o.hasOutputDto()][if forComment]// [/if][apply_parameterMethodClassicIn('request')/][t.writeScope()/].setAttribute([o.writeSetAttribute()/]);[/if]
+[template private writeFullAction(o : soa::Operation, t : flow::Transition, forComment : Boolean) post(self.trim())]
+  [if (forComment)]// [/if]
+  [o.writeOutputParamIExists()/][o.writeService()/].[o.writeOperation()/]([o.writeInputParamsIfExists()/]);
+  [if (o.hasOutputDto())]
+    [if (forComment)]// [/if]
+    ['request'.apply_parameterMethodClassicIn()/][t.writeScope()/].setAttribute([o.writeSetAttribute()/]);[/if]
 [/template]
 
 [comment : Ecriture de la methode pour positionner le DTO dans le bon evironnement (request,session,application). /]
-[template private writeScope(t : Transition) post(trim())]
-[if t.getScope().oclIsUndefined()][elseif t.getScope().equalsIgnoreCase('session')].getSession()[else]getServletContext()[/if]
-[/template] 
+[template private writeScope(t : flow::Transition) post(self.trim())]
+  [if (t.getScope() = null)]
+  [elseif (t.getScope().equalsIgnoreCase('session'))].getSession()[else]getServletContext()[/if]
+[/template]
 
 [comment : Pour positionner le bean dans la requete, on utilise toujours le nom du DTO /]
 [comment : et non pas celui du parametre (ce qui est plus logique) car au niveau de la jsp /]
 [comment : on ne sais pas recuperer le nom du parametre a partir du binding ! /]
-[template private writeSetAttribute(o : Operation) post(trim())]
-"[o.output->first().type.oclAsType(DTO).nameBeanImplementation()/]", [o.output->first().name.apply_variableDefault()/]
+[template private writeSetAttribute(o : soa::Operation) post(self.trim())]
+  "[o.output->first().type.oclAsType(environment::DTO).nameBeanImplementation()/]", [o.output->first().name.apply_variableDefault()/][/template]
+
+[template private writeOutputParamIExists(o : soa::Operation)]
+  [if (not o.output->isEmpty() and not (o.output->first() = null))]
+    [let p : soa::Parameter = o.output->first()]
+      [if (p.isMultiple())]List<[p.writeType()/]>[else][p.writeType()/][/if]
+       [p.name.apply_variableDefault()/][/let]
+     = [/if]
 [/template]
 
-[template private writeOutputParamIExists(o : Operation)]
-[if not o.output->isEmpty() and not o.output->first().oclIsUndefined()]
-[let p : Parameter = o.output->first()][if p.isMultiple()]List<[p.writeType()/]>[else][p.writeType()/][/if] [p.name.apply_variableDefault()/][/let] = [/if]
-[/template]
+[template private writeInputParamsIfExists(o : soa::Operation) post(self.trim())]
+  [o.input->asOrderedSet()->paramsIn()->sep(',')/][/template]
 
-[template private writeInputParamsIfExists(o : Operation) post(trim())]
-[paramsIn(o.input)->sep(',')/]
-[/template]
+[template private writeService(o : soa::Operation) post(self.trim())]
+  [o.buildAppliUserBusinessGenClassName()/].get[o.ancestors(soa::Service)->first().buildSimpleServiceName().toUpperFirst()/]Service()[/template]
 
-[template private writeService(o : Operation) post(trim())]
-[buildAppliUserBusinessGenClassName()/].get[o.ancestors(Service)->first().buildSimpleServiceName().toUpperFirst()/]Service()
-[/template]
+[template private writeOperation(o : soa::Operation) post(self.trim())]
+  [o.name.sanitize().toLowerFirst()/][/template]
 
-[template private writeOperation(o : Operation) post(trim())]
-[o.name.sanitize().toLowerFirst()/]
-[/template]
-
-[template private writeType(p : Parameter) post(trim())]
-[if p.type.oclIsKindOf(PrimitiveType)][p.type.name.sanitize()/][elseif ((p.type.name <> null) and (p.type.name.contains('<')))]
-[p.type.name.substring(1,p.type.name.indexOf('<')-1)/][elseif (p.type.oclIsKindOf(Enumeration))][p.type.name/][else][p.type.name.sanitize() + 'Dto'/][/if]
+[template private writeType(p : soa::Parameter) post(self.trim())]
+  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.indexOf('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name/][else][p.type.name.sanitize() + 'Dto'/][/if]
 [/template]
 
 [comment : Write all imports for the controller./]
-[template private writeImports (viewState : ViewState) post(trim())]
-[comment : reset the duplicate import utility. /]
-[viewState.initImports(false)/]
-
-[viewState.addImport('java.util.Map')/]
-[viewState.addImport('java.util.List')/]
-[viewState.addImport('javax.servlet.http.HttpServletRequest')/]
-[viewState.addImport('fr.spi4j.ui.jsp.JspController_Abs')/]
-[viewState.addImport('fr.spi4j.ui.jsp.JspDispatcherEnum_Itf')/]
-[viewState.addImport(getApplicationPackage() + '.' + buildJspDispatcherClassName())/]
-
-[comment : Flush all imports to the file. /]
-[viewState.flushImports()/]
-[/template]
+[template private writeImports(viewState : flow::ViewState) post(self.trim())]
+  [viewState.initImports(false)/]
+  
+  [viewState.addImport('java.util.Map')/]
+  [viewState.addImport('java.util.List')/]
+  [viewState.addImport('javax.servlet.http.HttpServletRequest')/]
+  [viewState.addImport('fr.spi4j.ui.jsp.JspController_Abs')/]
+  [viewState.addImport('fr.spi4j.ui.jsp.JspDispatcherEnum_Itf')/]
+  [viewState.addImport(viewState.getApplicationPackage() + '.' + viewState.buildJspDispatcherClassName())/]
+  
+  [viewState.flushImports()/][/template]

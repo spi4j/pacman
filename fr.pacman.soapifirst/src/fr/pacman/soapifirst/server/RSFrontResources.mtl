@@ -1,749 +1,707 @@
+[module RSFrontResources('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::types/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::soapifirst::common::classes/]
+[import fr::pacman::soapifirst::common::services/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+
 [comment encoding = UTF-8 /]
-[module RSFrontResources('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                         'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::types /]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::comments /]
-
-[import fr::pacman::soapifirst::common::classes /]
-[import fr::pacman::soapifirst::common::services /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-
 [comment : *******************************************************************/]
 [comment : Create a simple README.txt file to specify the configuration file. /]
 [comment : *******************************************************************/]
-[template public rsReadMe (any : OclAny)]
-Placer le chemin complet du répertoire de stockage pour la configuration de l'application 
-dans la variable système suivante (Par défaut, le préfix est le nom de l'application, 
-modifier selon convenance) : 
-
---------------------------------------------------------------------------------------------------------
-[getApplicationName().toUpper()/]_REST_CONFIG_FILES = Chemin complet du répertoire pour le(s) fichier(s)de configuration.
---------------------------------------------------------------------------------------------------------
-
-Un fichier de configuration par défaut a été créé dans : 
-
---------------------------------------------------------------------------------------------------------
-[getServerResourcesDir()/][getApplicationName()/]Application.properties
---------------------------------------------------------------------------------------------------------
-
-Une fois la librairie packagée (fichier ZIP), le fichier de configuration est directement accessible sous : 
-
---------------------------------------------------------------------------------------------------------
-properties/[getApplicationName()/]Application.properties
---------------------------------------------------------------------------------------------------------
-[/template]
-
-
+[template public rsReadMe(any : ecore::EObject)]
+  Placer le chemin complet du répertoire de stockage pour la configuration de l'application 
+  dans la variable système suivante (Par défaut, le préfix est le nom de l'application, 
+  modifier selon convenance) : 
+  
+  --------------------------------------------------------------------------------------------------------
+  [any.getApplicationName().toUpper()/]_REST_CONFIG_FILES = Chemin complet du répertoire pour le(s) fichier(s)de configuration.
+  --------------------------------------------------------------------------------------------------------
+  
+  Un fichier de configuration par défaut a été créé dans : 
+  
+  --------------------------------------------------------------------------------------------------------
+  [any.getServerResourcesDir()/][any.getApplicationName()/]Application.properties
+  --------------------------------------------------------------------------------------------------------
+  
+  Une fois la librairie packagée (fichier ZIP), le fichier de configuration est directement accessible sous : 
+  
+  --------------------------------------------------------------------------------------------------------
+  properties/[any.getApplicationName()/]Application.properties
+  --------------------------------------------------------------------------------------------------------[/template]
 
 [comment : *****************************************************/]
 [comment : Create a default configuration file for the library. /]
 [comment : *****************************************************/]
-[template public rsConfigurationFile (c : Component)]
-# ********************************************************************
-# Fichier de configuration pour la librairie : [getApplicationName().toUpperFirst()/].
-# Ne pas mettre de caracteres accentues dans ce fichier.
-# ********************************************************************
-[for (s : SecurityScheme | c.securitySchemes)]
-[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT 
-   or s.type = soa::SecuritySchemeType::OAUTH2]
-# -------------------------------------------------------
-# Proprietes pour le jeton de type [s.type/] : [s.getSpi4jId()/].
-# Description : [s.description/]
-# -------------------------------------------------------
-[s.getSpi4jId()/].client.id =
-[s.getSpi4jId()/].client.secret =  
-[s.getSpi4jId()/].endpoint.auth = [s.flows.authorizationURL/]
-[s.getSpi4jId()/].endpoint.token = [s.flows.tokenURL/]
-[s.getSpi4jId()/].endpoint.refresh = [s.flows.refreshURL/]
-[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ][s.getSpi4jId()/].endpoint.userInfo = [s.connectURL/][/if]
-[s.getSpi4jId()/].scopes = [s.flows.scopes.name->flatten()->sep(',')/]
-[/if]
-[/for]
-# ----------------------------------------------------------------------------
-# Liste des cles relatives a la PES.
-# ----------------------------------------------------------------------------
-filter.pes.header.token.key = np
-filter.pes.header.app.key = np
-filter.pes.header.secu.key = np
-filter.pes.header.mention.key = np
-filter.pes.header.constraint.key = np 
-filter.pes.header.dlpp.key = np
-# ----------------------------------------------------------------------------
-# Liste des valeurs pour les cles relatives a la PES.
-# ----------------------------------------------------------------------------
-filter.pes.header.app = [getApplicationName()/]
-filter.pes.header.secu = np
-filter.pes.header.mention = np   
-filter.pes.header.constraint = np
-# ----------------------------------------------------------------------------
-# Mode de routage de l'application.
-# ----------------------------------------------------------------------------
-filter.routing.strategy = [apply_attributeEnum('standalone')/]
-# ----------------------------------------------------------------------------
-# L'URL du serveur pour l'ensemble des resources de la librairie.
-# ----------------------------------------------------------------------------
-filter.server.url = [c.servers->first().URL/]
-# ----------------------------------------------------------------------------
-# L'URL d'un proxy pour l'appel des resources (si besoin).
-# ----------------------------------------------------------------------------
-filter.proxy.url = 
-# ----------------------------------------------------------------------------
-# L'utilisateur pour le proxy (si besoin).
-# ----------------------------------------------------------------------------
-filter.proxy.user = 
-# ----------------------------------------------------------------------------
-# Le mot de passe pour le proxy (si besoin).
-# ----------------------------------------------------------------------------
-filter.proxy.passwd = 
-# ----------------------------------------------------------------------------
-# Le mode operatoire de la librairie.
-# ----------------------------------------------------------------------------
-filter.mode.operating = debug
-# ----------------------------------------------------------------------------
-# Indique si l'URL du serveur est securisee (SSL).
-# ----------------------------------------------------------------------------
-filter.socket.secured = [c.needSecuredSocketLayer()/]
-# ----------------------------------------------------------------------------
-# Nombre de millisecondes pour la lecture des donnees avant erreur.
-# ----------------------------------------------------------------------------
-client.timeout.read = 2000
-# ----------------------------------------------------------------------------
-# Nombre de millisecondes pour la connexion avant erreur.
-# ----------------------------------------------------------------------------
-client.timeout.connect = 500
-# ----------------------------------------------------------------------------
-# Nombre maximum de clients dans le pool de connexions.
-# ----------------------------------------------------------------------------
-client.pool.max = 10
-# ----------------------------------------------------------------------------
-# Affichage en Majuscule des attributs lors du debogage de la librairie.
-# ----------------------------------------------------------------------------
-debug.display.attr.upper = true
-# ----------------------------------------------------------------------------
-# Affichage des en-tetes lors du debogage de la librairie.
-# ----------------------------------------------------------------------------
-debug.display.headers = true
-[/template]
-
+[template public rsConfigurationFile(c : soa::Component)]
+  # ********************************************************************
+  # Fichier de configuration pour la librairie : [c.getApplicationName().toUpperFirst()/].
+  # Ne pas mettre de caracteres accentues dans ce fichier.
+  # ********************************************************************
+  [for (s : soa::SecurityScheme | c.securitySchemes)]
+    [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT or s.type = soa::SecuritySchemeType::OAUTH2)]
+      # -------------------------------------------------------
+      # Proprietes pour le jeton de type [s.type/] : [s.getSpi4jId()/].
+      # Description : [s.description/]
+      # -------------------------------------------------------
+      [s.getSpi4jId()/].client.id =
+      [s.getSpi4jId()/].client.secret =  
+      [s.getSpi4jId()/].endpoint.auth = [s.flows->asSequence()->collect(temp1 | temp1.authorizationURL)/]
+      [s.getSpi4jId()/].endpoint.token = [s.flows->asSequence()->collect(temp2 | temp2.tokenURL)/]
+      [s.getSpi4jId()/].endpoint.refresh = [s.flows->asSequence()->collect(temp3 | temp3.refreshURL)/]
+      [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)][s.getSpi4jId()/].endpoint.userInfo = [s.connectURL/][/if]
+      
+      [s.getSpi4jId()/].scopes = [s.flows->asSequence()->collect(temp4 | temp4.scopes)->collect(temp5 | temp5.name)->flatten()->sep(',')/]
+    [/if]
+  [/for]
+  # ----------------------------------------------------------------------------
+  # Liste des cles relatives a la PES.
+  # ----------------------------------------------------------------------------
+  filter.pes.header.token.key = np
+  filter.pes.header.app.key = np
+  filter.pes.header.secu.key = np
+  filter.pes.header.mention.key = np
+  filter.pes.header.constraint.key = np 
+  filter.pes.header.dlpp.key = np
+  # ----------------------------------------------------------------------------
+  # Liste des valeurs pour les cles relatives a la PES.
+  # ----------------------------------------------------------------------------
+  filter.pes.header.app = [c.getApplicationName()/]
+  filter.pes.header.secu = np
+  filter.pes.header.mention = np   
+  filter.pes.header.constraint = np
+  # ----------------------------------------------------------------------------
+  # Mode de routage de l'application.
+  # ----------------------------------------------------------------------------
+  filter.routing.strategy = ['standalone'.apply_attributeEnum()/]
+  # ----------------------------------------------------------------------------
+  # L'URL du serveur pour l'ensemble des resources de la librairie.
+  # ----------------------------------------------------------------------------
+  filter.server.url = [c.servers->first().URL/]
+  # ----------------------------------------------------------------------------
+  # L'URL d'un proxy pour l'appel des resources (si besoin).
+  # ----------------------------------------------------------------------------
+  filter.proxy.url = 
+  # ----------------------------------------------------------------------------
+  # L'utilisateur pour le proxy (si besoin).
+  # ----------------------------------------------------------------------------
+  filter.proxy.user = 
+  # ----------------------------------------------------------------------------
+  # Le mot de passe pour le proxy (si besoin).
+  # ----------------------------------------------------------------------------
+  filter.proxy.passwd = 
+  # ----------------------------------------------------------------------------
+  # Le mode operatoire de la librairie.
+  # ----------------------------------------------------------------------------
+  filter.mode.operating = debug
+  # ----------------------------------------------------------------------------
+  # Indique si l'URL du serveur est securisee (SSL).
+  # ----------------------------------------------------------------------------
+  filter.socket.secured = [c.needSecuredSocketLayer()/]
+  # ----------------------------------------------------------------------------
+  # Nombre de millisecondes pour la lecture des donnees avant erreur.
+  # ----------------------------------------------------------------------------
+  client.timeout.read = 2000
+  # ----------------------------------------------------------------------------
+  # Nombre de millisecondes pour la connexion avant erreur.
+  # ----------------------------------------------------------------------------
+  client.timeout.connect = 500
+  # ----------------------------------------------------------------------------
+  # Nombre maximum de clients dans le pool de connexions.
+  # ----------------------------------------------------------------------------
+  client.pool.max = 10
+  # ----------------------------------------------------------------------------
+  # Affichage en Majuscule des attributs lors du debogage de la librairie.
+  # ----------------------------------------------------------------------------
+  debug.display.attr.upper = true
+  # ----------------------------------------------------------------------------
+  # Affichage des en-tetes lors du debogage de la librairie.
+  # ----------------------------------------------------------------------------
+  debug.display.headers = true[/template]
 
 [comment : ******************************************/]
 [comment : Create the token(s) configuration object. /]
 [comment : ******************************************/]
-[template public rsFrontTokensConfiguration (c : Component)]
-[licence()/]
-package [buildPackageRsFront()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[c.writeImports()/]
-
-// [/protected]
-
-/**
-* Classe détenant les informations des jetons.
-*
-* @author [getAuthorName()/].
-*/
-public class [buildRSFrontTokensConfigClassName()/] {
-
-[comment : For all schemes.../]
-[for (s : SecurityScheme | c.securitySchemes)]
-[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT 
-   or s.type = soa::SecuritySchemeType::OAUTH2]
-
-	[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ]
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _server _user info _endpoint')/] = "[s.getSpi4jId()/].endpoint.userInfo";
-	[/if]
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _server _auth _endpoint')/] = "[s.getSpi4jId()/].endpoint.auth";
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _server _token _endpoint')/] = "[s.getSpi4jId()/].endpoint.token";
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _server _refresh _endpoint')/] = "[s.getSpi4jId()/].endpoint.refresh";
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _client _id')/] = "[s.getSpi4jId()/].client.id";
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _client _secret')/] = "[s.getSpi4jId()/].client.secret";
-	private static final String [apply_attributeFinalStatic(s.getSpi4jId() + ' _scopes')/] = "[s.getSpi4jId()/].scopes";
-
-	/**
-	* Le point d'accès pour la demande d'authentification.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' server auth endpoint')/];
-
-	/**
-	* Le point d'accès pour la demande de jeton.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' server token endpoint')/];
-
-	[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ]
-	/**
-	* Le point d'accès pour la demande de jeton utilisateur.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' server user info endpoint')/];
-	[/if]
-	/**
-	* Le point d'accès pour la demande de rafraîchissement.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' server refresh endpoint')/];
-
-	/**
-	* L'identifiant de l'application pour le serveur d'authentification.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' client id')/];
-
-	/**
-	* Le secret de l'application pour le serveur d'authentification.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' client secret')/];
-
-	/**
-	* La liste des scopes pour le jeton.
-	*/
-	private static String [apply_attributeFinal(s.getSpi4jId() + ' scopes')/];
-
-	/**
-	* Retourne le point d'accès pour la demande d'authentification.
-	* @return Le point d'accès pour la demande d'authentification.
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' server auth endpoint')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' server auth endpoint')/];
-	}
-
-	/**
-	* Retourne le point d'accès pour la demande de jeton. 
-	* @return Le point d'accès pour la demande de jeton. 
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' server token endpoint')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' server token endpoint')/];
-	}
-
-	[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ]
-	/**
-	* Retourne le point d'accès pour la demande de jeton utilisateur.
-	* @return Le point d'accès pour la demande de jeton utilisateur.
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' server user info endpoint')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' server user info endpoint')/];
-	}
-	[/if]
-	/**
-	* Retourne le point d'accès pour la demande de rafraîchissement.
-	* @return Le point d'accès pour la demande de rafraîchissement.
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' server refresh endpoint')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' server refresh endpoint')/];
-	}
-
-	/**
-	* Retourne l'identifiant de l'application pour le serveur d'authentification.
-	* @return L'identifiant de l'application pour le serveur d'authentification.
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' client id')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' client id')/];
-	}
-
-	/**
-	* Retourne le secret de l'application pour le serveur d'authentification.
-	* @return Le secret de l'application pour le serveur d'authentification.
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' client secret')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' client secret')/];
-	}
-
-	/**
-	* Retourne la liste des scopes pour le jeton.
-	* @return La liste des scopes pour le jeton.
-	*/
-	public static String [apply_methodGet(s.getSpi4jId() + ' scopes')/]()
-	{
-		return [apply_attributeFinal(s.getSpi4jId() + ' scopes')/];
-	}
-
-	/**
-	* Positionne le point d'accès pour la demande d'authentification.
-	* @param Le point d'accès pour la demande d'authentification.
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' server auth endpoint')/](final String [apply_parameterMethodClassicIn(' server auth endpoint')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' server auth endpoint')/] = [apply_parameterMethodClassicIn(' server auth endpoint')/];
-	}
-
-	/**
-	* Positionne le point d'accès pour la demande de rafraîchissement.
-	* @param Le point d'accès pour la demande de rafraîchissement.
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' server refresh endpoint')/](final String [apply_parameterMethodClassicIn(' server refresh endpoint')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' server refresh endpoint')/] = [apply_parameterMethodClassicIn(' server refresh endpoint')/];
-	}
-
-	/**
-	* Positionne le point d'accès pour la demande de jeton. 
-	* @param Le point d'accès pour la demande de jeton. 
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' server token endpoint')/](final String [apply_parameterMethodClassicIn(' server token endpoint')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' server token endpoint')/] = [apply_parameterMethodClassicIn(' server token endpoint')/];
-	}
-
-	[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ]
-	/**
-	* Positionne le point d'accès pour la demande de jeton utilisateur.
-	* @param Le point d'accès pour la demande de jeton utilisateur.
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' server user info endpoint')/](final String [apply_parameterMethodClassicIn(' server user info endpoint')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' server user info endpoint')/] = [apply_parameterMethodClassicIn(' server user info endpoint')/];
-	}
-	[/if]
-	/**
-	* Positionne l'identifiant de l'application pour le serveur d'authentification.
-	* @param L'identifiant de l'application pour le serveur d'authentification.
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' client id')/](final String [apply_parameterMethodClassicIn(' client id')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' client id')/] = [apply_parameterMethodClassicIn(' client id')/];
-	}
-
-	/**
-	* Positionne le secret de l'application pour le serveur d'authentification.
-	* @param Le secret de l'application pour le serveur d'authentification.
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' client secret')/](final String [apply_parameterMethodClassicIn(' client secret')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' client secret')/] = [apply_parameterMethodClassicIn(' client secret')/];
-	}
-
-	/**
-	* Positionne la liste des scopes pour le jeton.
-	* @param La liste des scopes pour le jeton.
-	*/
-	public static void [apply_methodSet(s.getSpi4jId() + ' scopes')/](final String [apply_parameterMethodClassicIn(' scopes')/])
-	{
-		[apply_attributeFinal(s.getSpi4jId() + ' scopes')/] = [apply_parameterMethodClassicIn(' scopes')/];
-	}
-
-[/if]
-[/for]
-
-	[comment : If http basic auth detected, write a small utility method for base64 encoding for basic auth token (like à token...) /]
-	[comment : The 'token' is always under the format : 'username:passord' in base 64. /]
-	[if c.isBasicAuth()]
-	/**
-	 * Construction d'une simple chaine base64 pour l'authorisation de type http basic. 
-     * Cette méthode existe pour être (à ce niveau) indépendant des librairies existantes de Jersey.
-	 * Cette chaine se présente sous la forme : 'username:password'.
-	 * 
-	 * @param [apply_parameterMethodClassicIn('username')/] : 
-	 * 				Le nom utilisateur pour la chaine de connection.
-	 * @param [apply_parameterMethodClassicIn('password')/] : 
-	 * 				Le mot de passe pour la chaine de connection.
-	 * @return La chaine sous format base64.
-	 */
-	public static String [apply_methodDefault('build http basic auth token')/]([writeBasicAuthParams()/]) throws UnsupportedEncodingException{
-			 
-		final byte['[]'/] [apply_variableDefault('password')/] = [apply_parameterMethodClassicIn('password')/].getBytes(Charset.forName("iso-8859-1"));
-		final byte['[]'/] [apply_variableDefault('prefix')/] = (p_userName + ":").getBytes(Charset.forName("iso-8859-1"));
-		final byte['[]'/] [apply_variableDefault('usernamePassword')/] = new byte['['/][apply_variableDefault('prefix')/].length + [apply_variableDefault('password')/].length[']'/];
-
-		System.arraycopy([apply_variableDefault('prefix')/], 0, [apply_variableDefault('usernamePassword')/], 0, [apply_variableDefault('prefix')/].length);
-		System.arraycopy([apply_variableDefault('password')/], 0, [apply_variableDefault('usernamePassword')/], [apply_variableDefault('prefix')/].length, [apply_variableDefault('password')/].length);
-		return new String(Base64.getEncoder().encode([apply_variableDefault('usernamePassword')/]), "ASCII");
-	} 
-	[/if]
-
-	[comment : Always write the method. /]
- 	/**
-   	* Chargement de la configuration des jetons pour l'application.
-   	*
-   	* @param [apply_parameterMethodClassicIn('properties')/] :
-   	* 				Le chargeur pour la configuration des jetons.
-   	*/
-	static void [apply_methodDefault('load configuration')/](final Properties [apply_parameterMethodClassicIn('properties')/]){
-	
-	[comment : For all schemes.../]
-	[for (s : SecurityScheme | c.securitySchemes)]
-		[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT 
-   			or s.type = soa::SecuritySchemeType::OAUTH2]
-
-		[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ]
-		[apply_methodSet(s.getSpi4jId() + ' server user info endpoint')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _server _user info _endpoint')/]));
-		[/if]
-		[apply_methodSet(s.getSpi4jId() + ' server auth endpoint')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _server _auth _endpoint')/]));
-		[apply_methodSet(s.getSpi4jId() + ' server token endpoint')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _server _token _endpoint')/]));
-		[apply_methodSet(s.getSpi4jId() + ' server refresh endpoint')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _server _refresh _endpoint')/]));
-		[apply_methodSet(s.getSpi4jId() + ' client id')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _client _id')/]));
-		[apply_methodSet(s.getSpi4jId() + ' client secret')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _client _secret')/]));
-  		[apply_methodSet(s.getSpi4jId() + ' scopes')/]([apply_parameterMethodClassicIn('properties')/]
-			.getProperty([apply_attributeFinalStatic(s.getSpi4jId() + ' _scopes')/]));
-		[/if]
-	[/for]
-	}
-}
-[/template]
+[template public rsFrontTokensConfiguration(c : soa::Component)]
+  [c.licence()/]
+  package [c.buildPackageRsFront()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [c.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+  * Classe détenant les informations des jetons.
+  *
+  * @author [c.getAuthorName()/].
+  */
+  public class [c.buildRSFrontTokensConfigClassName()/] {
+  
+  [for (s : soa::SecurityScheme | c.securitySchemes)]
+    [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT or s.type = soa::SecuritySchemeType::OAUTH2)]
+      
+      [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)]
+        	private static final String [(s.getSpi4jId() + ' _server _user info _endpoint').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].endpoint.userInfo";
+      [/if]
+      	private static final String [(s.getSpi4jId() + ' _server _auth _endpoint').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].endpoint.auth";
+      	private static final String [(s.getSpi4jId() + ' _server _token _endpoint').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].endpoint.token";
+      	private static final String [(s.getSpi4jId() + ' _server _refresh _endpoint').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].endpoint.refresh";
+      	private static final String [(s.getSpi4jId() + ' _client _id').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].client.id";
+      	private static final String [(s.getSpi4jId() + ' _client _secret').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].client.secret";
+      	private static final String [(s.getSpi4jId() + ' _scopes').apply_attributeFinalStatic()/] = "[s.getSpi4jId()/].scopes";
+      
+      	/**
+      	* Le point d'accès pour la demande d'authentification.
+      	*/
+      	private static String [(s.getSpi4jId() + ' server auth endpoint').apply_attributeFinal()/];
+      
+      	/**
+      	* Le point d'accès pour la demande de jeton.
+      	*/
+      	private static String [(s.getSpi4jId() + ' server token endpoint').apply_attributeFinal()/];
+      
+      [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)]
+        	/**
+        	* Le point d'accès pour la demande de jeton utilisateur.
+        	*/
+        	private static String [(s.getSpi4jId() + ' server user info endpoint').apply_attributeFinal()/];
+      [/if]
+      	/**
+      	* Le point d'accès pour la demande de rafraîchissement.
+      	*/
+      	private static String [(s.getSpi4jId() + ' server refresh endpoint').apply_attributeFinal()/];
+      
+      	/**
+      	* L'identifiant de l'application pour le serveur d'authentification.
+      	*/
+      	private static String [(s.getSpi4jId() + ' client id').apply_attributeFinal()/];
+      
+      	/**
+      	* Le secret de l'application pour le serveur d'authentification.
+      	*/
+      	private static String [(s.getSpi4jId() + ' client secret').apply_attributeFinal()/];
+      
+      	/**
+      	* La liste des scopes pour le jeton.
+      	*/
+      	private static String [(s.getSpi4jId() + ' scopes').apply_attributeFinal()/];
+      
+      	/**
+      	* Retourne le point d'accès pour la demande d'authentification.
+      	* @return Le point d'accès pour la demande d'authentification.
+      	*/
+      	public static String [(s.getSpi4jId() + ' server auth endpoint').apply_methodGet()/]()
+      	{
+      		return [(s.getSpi4jId() + ' server auth endpoint').apply_attributeFinal()/];
+      	}
+      
+      	/**
+      	* Retourne le point d'accès pour la demande de jeton. 
+      	* @return Le point d'accès pour la demande de jeton. 
+      	*/
+      	public static String [(s.getSpi4jId() + ' server token endpoint').apply_methodGet()/]()
+      	{
+      		return [(s.getSpi4jId() + ' server token endpoint').apply_attributeFinal()/];
+      	}
+      
+      [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)]
+        	/**
+        	* Retourne le point d'accès pour la demande de jeton utilisateur.
+        	* @return Le point d'accès pour la demande de jeton utilisateur.
+        	*/
+        	public static String [(s.getSpi4jId() + ' server user info endpoint').apply_methodGet()/]()
+        	{
+        		return [(s.getSpi4jId() + ' server user info endpoint').apply_attributeFinal()/];
+        	}
+      [/if]
+      	/**
+      	* Retourne le point d'accès pour la demande de rafraîchissement.
+      	* @return Le point d'accès pour la demande de rafraîchissement.
+      	*/
+      	public static String [(s.getSpi4jId() + ' server refresh endpoint').apply_methodGet()/]()
+      	{
+      		return [(s.getSpi4jId() + ' server refresh endpoint').apply_attributeFinal()/];
+      	}
+      
+      	/**
+      	* Retourne l'identifiant de l'application pour le serveur d'authentification.
+      	* @return L'identifiant de l'application pour le serveur d'authentification.
+      	*/
+      	public static String [(s.getSpi4jId() + ' client id').apply_methodGet()/]()
+      	{
+      		return [(s.getSpi4jId() + ' client id').apply_attributeFinal()/];
+      	}
+      
+      	/**
+      	* Retourne le secret de l'application pour le serveur d'authentification.
+      	* @return Le secret de l'application pour le serveur d'authentification.
+      	*/
+      	public static String [(s.getSpi4jId() + ' client secret').apply_methodGet()/]()
+      	{
+      		return [(s.getSpi4jId() + ' client secret').apply_attributeFinal()/];
+      	}
+      
+      	/**
+      	* Retourne la liste des scopes pour le jeton.
+      	* @return La liste des scopes pour le jeton.
+      	*/
+      	public static String [(s.getSpi4jId() + ' scopes').apply_methodGet()/]()
+      	{
+      		return [(s.getSpi4jId() + ' scopes').apply_attributeFinal()/];
+      	}
+      
+      	/**
+      	* Positionne le point d'accès pour la demande d'authentification.
+      	* @param Le point d'accès pour la demande d'authentification.
+      	*/
+      	public static void [(s.getSpi4jId() + ' server auth endpoint').apply_methodSet()/](final String [' server auth endpoint'.apply_parameterMethodClassicIn()/])
+      	{
+      		[(s.getSpi4jId() + ' server auth endpoint').apply_attributeFinal()/] = [' server auth endpoint'.apply_parameterMethodClassicIn()/];
+      	}
+      
+      	/**
+      	* Positionne le point d'accès pour la demande de rafraîchissement.
+      	* @param Le point d'accès pour la demande de rafraîchissement.
+      	*/
+      	public static void [(s.getSpi4jId() + ' server refresh endpoint').apply_methodSet()/](final String [' server refresh endpoint'.apply_parameterMethodClassicIn()/])
+      	{
+      		[(s.getSpi4jId() + ' server refresh endpoint').apply_attributeFinal()/] = [' server refresh endpoint'.apply_parameterMethodClassicIn()/];
+      	}
+      
+      	/**
+      	* Positionne le point d'accès pour la demande de jeton. 
+      	* @param Le point d'accès pour la demande de jeton. 
+      	*/
+      	public static void [(s.getSpi4jId() + ' server token endpoint').apply_methodSet()/](final String [' server token endpoint'.apply_parameterMethodClassicIn()/])
+      	{
+      		[(s.getSpi4jId() + ' server token endpoint').apply_attributeFinal()/] = [' server token endpoint'.apply_parameterMethodClassicIn()/];
+      	}
+      
+      [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)]
+        	/**
+        	* Positionne le point d'accès pour la demande de jeton utilisateur.
+        	* @param Le point d'accès pour la demande de jeton utilisateur.
+        	*/
+        	public static void [(s.getSpi4jId() + ' server user info endpoint').apply_methodSet()/](final String [' server user info endpoint'.apply_parameterMethodClassicIn()/])
+        	{
+        		[(s.getSpi4jId() + ' server user info endpoint').apply_attributeFinal()/] = [' server user info endpoint'.apply_parameterMethodClassicIn()/];
+        	}
+      [/if]
+      	/**
+      	* Positionne l'identifiant de l'application pour le serveur d'authentification.
+      	* @param L'identifiant de l'application pour le serveur d'authentification.
+      	*/
+      	public static void [(s.getSpi4jId() + ' client id').apply_methodSet()/](final String [' client id'.apply_parameterMethodClassicIn()/])
+      	{
+      		[(s.getSpi4jId() + ' client id').apply_attributeFinal()/] = [' client id'.apply_parameterMethodClassicIn()/];
+      	}
+      
+      	/**
+      	* Positionne le secret de l'application pour le serveur d'authentification.
+      	* @param Le secret de l'application pour le serveur d'authentification.
+      	*/
+      	public static void [(s.getSpi4jId() + ' client secret').apply_methodSet()/](final String [' client secret'.apply_parameterMethodClassicIn()/])
+      	{
+      		[(s.getSpi4jId() + ' client secret').apply_attributeFinal()/] = [' client secret'.apply_parameterMethodClassicIn()/];
+      	}
+      
+      	/**
+      	* Positionne la liste des scopes pour le jeton.
+      	* @param La liste des scopes pour le jeton.
+      	*/
+      	public static void [(s.getSpi4jId() + ' scopes').apply_methodSet()/](final String [' scopes'.apply_parameterMethodClassicIn()/])
+      	{
+      		[(s.getSpi4jId() + ' scopes').apply_attributeFinal()/] = [' scopes'.apply_parameterMethodClassicIn()/];
+      	}
+      
+    [/if]
+  [/for]
+  
+  [if (c.isBasicAuth())]
+    	/**
+    	 * Construction d'une simple chaine base64 pour l'authorisation de type http basic. 
+         * Cette méthode existe pour être (à ce niveau) indépendant des librairies existantes de Jersey.
+    	 * Cette chaine se présente sous la forme : 'username:password'.
+    	 * 
+    	 * @param ['username'.apply_parameterMethodClassicIn()/] : 
+    	 * 				Le nom utilisateur pour la chaine de connection.
+    	 * @param ['password'.apply_parameterMethodClassicIn()/] : 
+    	 * 				Le mot de passe pour la chaine de connection.
+    	 * @return La chaine sous format base64.
+    	 */
+    	public static String ['build http basic auth token'.apply_methodDefault()/]([c.writeBasicAuthParams()/]) throws UnsupportedEncodingException{
+    			 
+    		final byte['['/]] ['password'.apply_variableDefault()/] = ['password'.apply_parameterMethodClassicIn()/].getBytes(Charset.forName("iso-8859-1"));
+    		final byte['['/]] ['prefix'.apply_variableDefault()/] = (p_userName + ":").getBytes(Charset.forName("iso-8859-1"));
+    		final byte['['/]] ['usernamePassword'.apply_variableDefault()/] = new byte['['/]['prefix'.apply_variableDefault()/].length + ['password'.apply_variableDefault()/].length];
+    
+    		System.arraycopy(['prefix'.apply_variableDefault()/], 0, ['usernamePassword'.apply_variableDefault()/], 0, ['prefix'.apply_variableDefault()/].length);
+    		System.arraycopy(['password'.apply_variableDefault()/], 0, ['usernamePassword'.apply_variableDefault()/], ['prefix'.apply_variableDefault()/].length, ['password'.apply_variableDefault()/].length);
+    		return new String(Base64.getEncoder().encode(['usernamePassword'.apply_variableDefault()/]), "ASCII");
+    	} 
+  [/if]
+  
+   	/**
+     	* Chargement de la configuration des jetons pour l'application.
+     	*
+     	* @param ['properties'.apply_parameterMethodClassicIn()/] :
+     	* 				Le chargeur pour la configuration des jetons.
+     	*/
+  	static void ['load configuration'.apply_methodDefault()/](final Properties ['properties'.apply_parameterMethodClassicIn()/]){
+  	
+  [for (s : soa::SecurityScheme | c.securitySchemes)]
+    [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT or s.type = soa::SecuritySchemeType::OAUTH2)]
+      
+      [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)]
+        		[(s.getSpi4jId() + ' server user info endpoint').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+        			.getProperty([(s.getSpi4jId() + ' _server _user info _endpoint').apply_attributeFinalStatic()/]));
+      [/if]
+      		[(s.getSpi4jId() + ' server auth endpoint').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+      			.getProperty([(s.getSpi4jId() + ' _server _auth _endpoint').apply_attributeFinalStatic()/]));
+      		[(s.getSpi4jId() + ' server token endpoint').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+      			.getProperty([(s.getSpi4jId() + ' _server _token _endpoint').apply_attributeFinalStatic()/]));
+      		[(s.getSpi4jId() + ' server refresh endpoint').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+      			.getProperty([(s.getSpi4jId() + ' _server _refresh _endpoint').apply_attributeFinalStatic()/]));
+      		[(s.getSpi4jId() + ' client id').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+      			.getProperty([(s.getSpi4jId() + ' _client _id').apply_attributeFinalStatic()/]));
+      		[(s.getSpi4jId() + ' client secret').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+      			.getProperty([(s.getSpi4jId() + ' _client _secret').apply_attributeFinalStatic()/]));
+        		[(s.getSpi4jId() + ' scopes').apply_methodSet()/](['properties'.apply_parameterMethodClassicIn()/]
+      			.getProperty([(s.getSpi4jId() + ' _scopes').apply_attributeFinalStatic()/]));
+    [/if]
+  [/for]
+  	}
+  }[/template]
 
 [comment : *****************************************************************************/]
 [comment : Create the front delegate (client) for the service with all REST operations. /]
 [comment : *****************************************************************************/]
-[template public rsFrontDelegate(s : Service)]
-[licence()/]
-package [buildPackageRsFrontDelegates()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[s.writeImports('delegate')/]
-
-// [/protected]
-
-/**
-* Facade pour la ressource : [s.name/].
-*
-* @author [getAuthorName()/].
-*/
-public final class [s.buildRSFrontDelegateClassName()/] {
-
-  [for (o : Operation | s.ownedInterface.ownedOperations)]
-
-  	[comment : strictly respect this indentation. /]
-  	/**
-  	* [o.description/]
-[getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
-  	public static [o.writeParamOutIfexist()/] [apply_methodDefault(o.name)/]([o.addParamsInXtoIfExists()/]) {
-		
-		try {
-			[o.writeReturnParamsIfExists()/] [s.buildRSFrontResourceClassName()/].[apply_methodGet('instance')/]()
-                .[apply_methodDefault(o.name)/]([o.input.parametersXtoRS()->sep(', ')/][o.addAuthTokenIfExists(false)/]);
-
-		} catch(ProcessingException [apply_parameterMethodClassicIn('exception')/]) {
-			
-			throw [buildRSFrontExceptionClassName()/].[apply_methodDefault('cast')/]([apply_parameterMethodClassicIn('exception')/]);
-		}
-	}[/for]
-
-}
-[/template]
-
-
+[template public rsFrontDelegate(s : soa::Service)]
+  [s.licence()/]
+  package [s.buildPackageRsFrontDelegates()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports('delegate')/]
+    
+  [/protected]
+  
+  
+  /**
+  * Facade pour la ressource : [s.name/].
+  *
+  * @author [s.getAuthorName()/].
+  */
+  public final class [s.buildRSFrontDelegateClassName()/] {
+  
+  [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+    
+      	/**
+      	* [o.description/]
+    [o.getComParamsIn()/][o.comParamOut()/][o.comRSFaults()/]    */
+      	public static [o.writeParamOutIfexist()/] [o.name.apply_methodDefault()/]([o.addParamsInXtoIfExists()/]) {
+    		
+    		try {
+    			[o.writeReturnParamsIfExists()/] [s.buildRSFrontResourceClassName()/].['instance'.apply_methodGet()/]()
+                    .[o.name.apply_methodDefault()/]([o.input->asSequence()->collect(temp6 | temp6.parametersXtoRS())->sep(', ')/][o.addAuthTokenIfExists(false)/]);
+    
+    		} catch(ProcessingException ['exception'.apply_parameterMethodClassicIn()/]) {
+    			
+    			throw [o.buildRSFrontExceptionClassName()/].['cast'.apply_methodDefault()/](['exception'.apply_parameterMethodClassicIn()/]);
+    		}
+    	}[/for]
+  
+  }[/template]
 
 [comment : *****************************************************************************/]
 [comment : Create the front resource (client) for the service with all REST operations. /]
 [comment : *****************************************************************************/]
-[template public rsFrontResource(s : Service)]
-[licence()/]
-package [buildPackageRsFrontResources()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[s.writeImports('resource')/]
-
-// [/protected]
-
-/**
- * Ressource frontale (client) pour le service : '[s.name/]'.
- * La ressource est montée en singleton (pas d'injection @Singleton) mais 
- * une utilisation "forcée" par getInstance afin d'être certain que la classe 
- * sera bien utilisée en tant que singleton dans l'application cible.
- *
- * @author [getAuthorName()/].
- */
-public final class [s.buildRSFrontResourceClassName()/] extends [buildRSFrontResourcesAbstractClassName() /]
-{
-
+[template public rsFrontResource(s : soa::Service)]
+  [s.licence()/]
+  package [s.buildPackageRsFrontResources()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports('resource')/]
+    
+  [/protected]
+  
+  
   /**
-   * Pattern holder pour le Singleton (lazy-loading).
-   */
-  private static class Holder {
-
-    public static final [s.buildRSFrontResourceClassName()/] [apply_attributeFinalStatic('instance')/] = new [s.buildRSFrontResourceClassName()/]();
-  }
-
-  /**
-   * Récupération de l'instance pour la classe de ressources.
+   * Ressource frontale (client) pour le service : '[s.name/]'.
+   * La ressource est montée en singleton (pas d'injection @Singleton) mais 
+   * une utilisation "forcée" par getInstance afin d'être certain que la classe 
+   * sera bien utilisée en tant que singleton dans l'application cible.
    *
-   * @return L'instance pour le Singleton.
+   * @author [s.getAuthorName()/].
    */
-  public static [s.buildRSFrontResourceClassName()/] [apply_methodGet('instance')/]() {
-
-    return Holder.[apply_attributeFinalStatic('instance')/] ;
-  }
-
-  /**
-   * Constructeur privé pour la ressource.
-   */
-  private [s.buildRSFrontResourceClassName()/](){
-
-    super("[s.getUri()/]");
-  }
-
-  [for (o : Operation | s.ownedInterface.ownedOperations)]
-
-  [comment : strictly respect this indentation. /]
-  /**
-  * [o.description/]
-[getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
-  public [o.writeParamOutIfexist()/] [apply_methodDefault(o.name)/]([o.addParamsInXtoIfExists()/]) {
-
-    // for [o.userCodeForOperation()/]
-    // [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
-
-    [o.writeReturnParamsIfExists()/] [o.hackHeadClose()/][apply_methodDefault('target')/]()
-      [o.addSuggestedMethodsForTarget()/]
-      [o.addResquestOperationAndCookieParamsIfExists()/]
-      [o.addHeaderParamsIfExists()/][o.addSuggestedOperation()/][o.hackHeadCloseEnd()/]
-      [o.addReturnParamIfExists()/][o.addCloseIfNecessary()/]
-
-    // [/protected]
-  }
-
+  public final class [s.buildRSFrontResourceClassName()/] extends [s.buildRSFrontResourcesAbstractClassName()/]
+  {
+  
+    /**
+     * Pattern holder pour le Singleton (lazy-loading).
+     */
+    private static class Holder {
+  
+      public static final [s.buildRSFrontResourceClassName()/] ['instance'.apply_attributeFinalStatic()/] = new [s.buildRSFrontResourceClassName()/]();
+    }
+  
+    /**
+     * Récupération de l'instance pour la classe de ressources.
+     *
+     * @return L'instance pour le Singleton.
+     */
+    public static [s.buildRSFrontResourceClassName()/] ['instance'.apply_methodGet()/]() {
+  
+      return Holder.['instance'.apply_attributeFinalStatic()/] ;
+    }
+  
+    /**
+     * Constructeur privé pour la ressource.
+     */
+    private [s.buildRSFrontResourceClassName()/](){
+  
+      super("[s.getUri()/]");
+    }
+  
+  [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+    
+      /**
+      * [o.description/]
+    [o.getComParamsIn()/][o.comParamOut()/][o.comRSFaults()/]    */
+      public [o.writeParamOutIfexist()/] [o.name.apply_methodDefault()/]([o.addParamsInXtoIfExists()/]) {
+    
+        // for [o.userCodeForOperation()/]
+        [protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+          
+              [o.writeReturnParamsIfExists()/] [o.hackHeadClose()/]['target'.apply_methodDefault()/]()
+                [o.addSuggestedMethodsForTarget()/]
+                [o.addResquestOperationAndCookieParamsIfExists()/]
+                [o.addHeaderParamsIfExists()/][o.addSuggestedOperation()/][o.hackHeadCloseEnd()/]
+                [o.addReturnParamIfExists()/][o.addCloseIfNecessary()/]
+          
+        [/protected]
+    
+      }
+    
   [/for]
-}
-[/template]
+  }[/template]
 
 [comment : Write the final parameters for the basic auth base 64 encoding method./]
-[template private writeBasicAuthParams(any : OclAny) post(trim())]
-final String [apply_parameterMethodClassicIn('user name')/], final String [apply_parameterMethodClassicIn('password')/]
-[/template]
+[template private writeBasicAuthParams(any : ecore::EObject) post(self.trim())]
+  final String ['user name'.apply_parameterMethodClassicIn()/], final String ['password'.apply_parameterMethodClassicIn()/][/template]
 
 [comment : Add a little hack for closing the response before reading the headers (1/2). /]
-[template private hackHeadClose (o : Operation) post(trim())]
-[if o.isMultiValueMapRequired()]close([/if]
+[template private hackHeadClose(o : soa::Operation) post(self.trim())]
+  [if (o.isMultiValueMapRequired())]close([/if]
 [/template]
 
 [comment : Add a little hack for closing the response before reading the headers (2/2). /]
-[template private hackHeadCloseEnd (o : Operation) post(trim())]
-[if o.isMultiValueMapRequired()])[/if]
+[template private hackHeadCloseEnd(o : soa::Operation) post(self.trim())]
+  [if (o.isMultiValueMapRequired())])[/if]
 [/template]
 
 [comment : Write the out param for the operation - specific code for HEAD / OPTIONS operation - (if exits)/]
-[template private writeParamOutIfexist (o : Operation) post(trim())]
-[if o.isMultiValueMapRequired()][o.addSpecificMultiValuedMap()/][else][o.paramOutXto().hackForBinary()/][/if]
+[template private writeParamOutIfexist(o : soa::Operation) post(self.trim())]
+  [if (o.isMultiValueMapRequired())][o.addSpecificMultiValuedMap()/][else][o.paramOutXto().hackForBinary()/][/if]
 [/template]
 
 [comment : Add the specific output code (Map) for the HEAD / OPTIONS operations (not specified in the model). /]
-[template private addSpecificMultiValuedMap (o : Operation) post(trim())]
-MultivaluedMap<String, Object>
-[/template]
+[template private addSpecificMultiValuedMap(o : soa::Operation) post(self.trim())]
+  MultivaluedMap<String, Object>[/template]
 
 [comment : Add the main call operation string for the client (the verb). /]
-[template private addSuggestedOperation(o : Operation) post (trim())]
-.[o.verb.toString().toLower()/]([addParametersForOperationIfExists(o)/])
-[/template]
+[template private addSuggestedOperation(o : soa::Operation) post(self.trim())]
+  .[o.verb.toString().toLower()/]([o.addParametersForOperationIfExists()/])[/template]
 
 [comment : Add the close method for the response (if needed). /]
-[template private addCloseIfNecessary (o : Operation) post(trim())]
-[if not o.hasParamOutXto() and not o.isMultiValueMapRequired() ][lineSeparator()/].close();[/if]
+[template private addCloseIfNecessary(o : soa::Operation) post(self.trim())]
+  [if (not o.hasParamOutXto() and not o.isMultiValueMapRequired())][o.lineSeparator()/].close();[/if]
 [/template]
 
 [comment : Add the PATH to the web target. /]
-[template private addSuggestedMethodsForTarget (o : Operation) post (trim())]
-[if not o.URI.oclIsUndefined() and o.URI.size() > 0].path("[o.URI/]")[/if][o.addPathParamsIfExists()/][o.addQueryParamsIfExists()/]
-[/template]
+[template private addSuggestedMethodsForTarget(o : soa::Operation) post(self.trim())]
+  [if (not (o.URI = null) and o.URI.size() > 0)].path("[o.URI/]")[/if]
+  [o.addPathParamsIfExists()/][o.addQueryParamsIfExists()/][/template]
 
 [comment : Add all the input parameters for the operation (if exists). /]
-[template private addParamsInXtoIfExists (o : Operation) post(trim())]
-[paramsInXto(o).hackForBinary()/][o.addAuthTokenIfExists(true)/]
-[/template]
+[template private addParamsInXtoIfExists(o : soa::Operation) post(self.trim())]
+  [o.paramsInXto().hackForBinary()/][o.addAuthTokenIfExists(true)/][/template]
 
 [comment : Add some PATH parameters. /]
-[template private addPathParamsIfExists (o : Operation)]
-[for (p : Parameter | o.input)]
-[if p.restData.passingMode = soa::ParameterPassingMode::PATH][lineSeparator()/][p.addPathParam()/][/if][/for]
+[template private addPathParamsIfExists(o : soa::Operation)]
+  [for (p : soa::Parameter | o.input)]
+    [if (p.restData.passingMode = soa::ParameterPassingMode::PATH)][p.lineSeparator()/][p.addPathParam()/][/if]
+  [/for]
 [/template]
 
 [comment : Add the request operation and cookies if exists (this format for carriage return)./]
-[template private addResquestOperationAndCookieParamsIfExists (o : Operation) post(trim())]
-[o.addRequestOperation()/][if o.hasCookieParams()][lineSeparator()/][o.addCookieParamForAuthentication()/][/if]
+[template private addResquestOperationAndCookieParamsIfExists(o : soa::Operation) post(self.trim())]
+  [o.addRequestOperation()/][if (o.hasCookieParams())][o.lineSeparator()/][o.addCookieParamForAuthentication()/][/if]
 [/template]
 
 [comment : Add the operation 'request(....)' with default MediaType (basic for now)./]
-[template private addRequestOperation (o : Operation) post(trim())]
-.request(MediaType.APPLICATION_JSON)
-[/template]
+[template private addRequestOperation(o : soa::Operation) post(self.trim())]
+  .request(MediaType.APPLICATION_JSON)[/template]
 
 [comment : Format the input parameter and add some code in case of Enumeration. /]
-[template private addGenericInputParam (p : Parameter) post(trim())]
-[apply_parameterMethodClassicIn(p.name)/][if p.isTypeOfEnum()].[apply_methodGet('value')/]()[/if]
+[template private addGenericInputParam(p : soa::Parameter) post(self.trim())]
+  [p.name.apply_parameterMethodClassicIn()/][if (p.isTypeOfEnum())].['value'.apply_methodGet()/]()[/if]
 [/template]
 
 [comment : TODO find howto rewire to addGenericInputParam (p : Parameter). /]
-[template private addGenericInputParam (s : String) post(trim())]
-[apply_parameterMethodClassicIn(s)/]
-[/template]
+[template private addGenericInputParam(s : String) post(self.trim())]
+  [s.apply_parameterMethodClassicIn()/][/template]
 
 [comment : Add a PATH parameter. /]
-[template private addPathParam (p : Parameter) post(trim())]
-.resolveTemplate("[p.name/]", [p.addGenericInputParam()/])
-[/template]
+[template private addPathParam(p : soa::Parameter) post(self.trim())]
+  .resolveTemplate("[p.name/]", [p.addGenericInputParam()/])[/template]
 
 [comment : Add some HEADER parameters. /]
-[template private addHeaderParamsIfExists (o : Operation) post (trim())]
-[o.addHeaderForAuthorizationIfExist()/][for (p : Parameter | o.input)]
-[if p.restData.passingMode = soa::ParameterPassingMode::HEADER][lineSeparator()/][p.addHeaderParam()/][/if][/for]
+[template private addHeaderParamsIfExists(o : soa::Operation) post(self.trim())]
+  [o.addHeaderForAuthorizationIfExist()/][for (p : soa::Parameter | o.input)]
+                                           [if (p.restData.passingMode = soa::ParameterPassingMode::HEADER)][p.lineSeparator()/][p.addHeaderParam()/][/if]
+                                         [/for]
 [/template]
 
-[comment : Add a specific header for the authorization token (if needed). / ]
-[template private addHeaderForAuthorizationIfExist (o : Operation) post(trim())]
-[if (o.isApiKey() and o.isAuthTokenImportFromHead() or o.isOauth2() or o.isBasicAuth())][o.addHeaderForAuthorization()/][/if]
+[comment : Add a specific header for the authorization token (if needed). /]
+[template private addHeaderForAuthorizationIfExist(o : soa::Operation) post(self.trim())]
+  [if (o.isApiKey() and o.isAuthTokenImportFromHead() or o.isOauth2() or o.isBasicAuth())][o.addHeaderForAuthorization()/][/if]
 [/template]
 
 [comment : Add a specific header for the authorization token. /]
-[template private addHeaderForAuthorization (o : Operation) post (trim())]
-[if not o.getAuthTokenImportDescription().oclIsUndefined()]// [o.getAuthTokenImportDescription()/].[/if] 
-.header("[o.getAuthTokenImportProperty()/]","[if o.isBasicAuth()]Basic [else]Bearer [/if]" + ['auth token'.addGenericInputParam()/])
-[/template]
+[template private addHeaderForAuthorization(o : soa::Operation) post(self.trim())]
+  [if (not (o.getAuthTokenImportDescription() = null))]// [o.getAuthTokenImportDescription()/].[/if]
+   
+  .header("[o.getAuthTokenImportProperty()/]","[if (o.isBasicAuth())]Basic [else]Bearer [/if]
+  " + ['auth token'.addGenericInputParam()/])[/template]
 
 [comment : Add a HEADER parameter. /]
-[template private addHeaderParam (p : Parameter) post (trim())]
-.header("[p.addParamForPassingModeXtoRs()/]", [p.addGenericInputParam()/])
-[/template]
+[template private addHeaderParam(p : soa::Parameter) post(self.trim())]
+  .header("[p.addParamForPassingModeXtoRs()/]", [p.addGenericInputParam()/])[/template]
 
 [comment : Add some QUERY parameters. /]
-[template private addQueryParamsIfExists (o : Operation) post (trim())]
-[for (p : Parameter | o.input)]
-[if p.restData.passingMode = soa::ParameterPassingMode::QUERY][lineSeparator()/][p.addQueryParam()/][/if][/for]
-[if o.isApiKey() and o.isAuthTokenImportFromQuery()][lineSeparator()/][o.addQueryParamForAuthorization()/][/if]
+[template private addQueryParamsIfExists(o : soa::Operation) post(self.trim())]
+  [for (p : soa::Parameter | o.input)]
+    [if (p.restData.passingMode = soa::ParameterPassingMode::QUERY)][p.lineSeparator()/][p.addQueryParam()/][/if]
+  [/for]
+  [if (o.isApiKey() and o.isAuthTokenImportFromQuery())][o.lineSeparator()/][o.addQueryParamForAuthorization()/][/if]
 [/template]
 
 [comment : Add a specific query param for the authorization token. /]
-[template private addQueryParamForAuthorization (o : Operation) post(trim())]
-.queryParam("[o.getAuthTokenImportProperty()/]", ['auth token'.addGenericInputParam()/])
-[/template]
+[template private addQueryParamForAuthorization(o : soa::Operation) post(self.trim())]
+  .queryParam("[o.getAuthTokenImportProperty()/]", ['auth token'.addGenericInputParam()/])[/template]
 
 [comment : Add a QUERY parameter. /]
-[template private addQueryParam (p : Parameter) post (trim())]
-.queryParam("[p.addParamForPassingModeXtoRs()/]", [p.addGenericInputParam()/])
-[/template]
+[template private addQueryParam(p : soa::Parameter) post(self.trim())]
+  .queryParam("[p.addParamForPassingModeXtoRs()/]", [p.addGenericInputParam()/])[/template]
 
 [comment : Add parameter(s) for the operation (if the operation permits)./]
-[template private addParametersForOperationIfExists (o : Operation) post (trim()) ]
-[if o.isEntityRequired()]Entity.entity([addParameterForOperation(o.getInputDto())/], MediaType.APPLICATION_JSON)[/if]
+[template private addParametersForOperationIfExists(o : soa::Operation) post(self.trim())]
+  [if (o.isEntityRequired())]Entity.entity([o.getInputDto().addParameterForOperation()/], MediaType.APPLICATION_JSON)[/if]
 [/template]
 
 [comment : Add the input parameter for the operation. /]
-[template private addParameterForOperation (p : Parameter) post(trim())]
-[if not p.oclIsUndefined()][p.addGenericInputParam()/][/if]
+[template private addParameterForOperation(p : soa::Parameter) post(self.trim())]
+  [if (not (p = null))][p.addGenericInputParam()/][/if]
 [/template]
 
 [comment : Add a specific parameter for token authentication for cookie. /]
-[template private addCookieParamForAuthentication (o : Operation) post(trim())]
-.cookie("[o.getAuthTokenImportProperty()/]", [apply_parameterMethodClassicIn('auth token')/])
-[/template]
+[template private addCookieParamForAuthentication(o : soa::Operation) post(self.trim())]
+  .cookie("[o.getAuthTokenImportProperty()/]", ['auth token'.apply_parameterMethodClassicIn()/])[/template]
 
 [comment : Write the validation for the response and return params. /]
-[template private writeReturnParamsIfExists (o : Operation) post(trim())]
-[if o.hasParamOutXto() or o.isMultiValueMapRequired()]return [/if]
+[template private writeReturnParamsIfExists(o : soa::Operation) post(self.trim())]
+  [if (o.hasParamOutXto() or o.isMultiValueMapRequired())]return [/if]
 [/template]
 
 [comment : Add the return param if exists (<> 'void'). /]
-[template private addReturnParamIfExists (o : Operation) post(trim())]
-[if o.hasParamOutXto()].readEntity([addReturnParam(o.output->first())/]);[elseif o.isMultiValueMapRequired()].getHeaders();[/if]
+[template private addReturnParamIfExists(o : soa::Operation) post(self.trim())]
+  [if (o.hasParamOutXto())].readEntity([o.output->first().addReturnParam()/]);[elseif (o.isMultiValueMapRequired())].getHeaders();[/if]
 [/template]
 
 [comment : Add the return param (entity or list of entities). /]
-[template private addReturnParam (p : Parameter) post(trim())]
-[if p.isMultiple()][lineSeparator()/]new GenericType<List<[typeXto(p)/]>>() {}[else][typeXto(p)/].class[/if]
+[template private addReturnParam(p : soa::Parameter) post(self.trim())]
+  [if (p.isMultiple())][p.lineSeparator()/]new GenericType<List<[p.typeXto()/]>>() {}[else][p.typeXto()/].class[/if]
 [/template]
 
 [comment : Add a specific parameter for token authorization (if needed). /]
-[template private addAuthTokenIfExists (o : Operation, b : Boolean) post(trim())]
-[if o.isSecuredForImport()][if not o.input->isEmpty()], [/if][o.addAuthToken(b)/][/if]
+[template private addAuthTokenIfExists(o : soa::Operation, b : Boolean) post(self.trim())]
+  [if (o.isSecuredForImport())]
+    [if (not o.input->isEmpty())], [/if]
+    [o.addAuthToken(b)/][/if]
 [/template]
 
 [comment : Add the specific parameter for token authorization. /]
 [comment : b = if true then write the full param with the type ('final String'). /]
-[template private addAuthToken (o : Operation, b : Boolean) post(trim())]
-[if b]final String [/if][apply_parameterMethodClassicIn('auth token')/]
-[/template]
+[template private addAuthToken(o : soa::Operation, b : Boolean) post(self.trim())]
+  [if (b)]final String [/if]
+  ['auth token'.apply_parameterMethodClassicIn()/][/template]
 
 [comment : Add alls imports for input parameters. /]
-[template private addImportForInput (o : Operation, p : Parameter) post(trim())]
-[if p.type.oclIsTypeOf(DTO)][o.addXtoImport(p.type.oclAsType(DTO))/][elseif p.type.oclIsTypeOf(Enumeration)][o.addEnumImport(p)/][/if]
+[template private addImportForInput(o : soa::Operation, p : soa::Parameter) post(self.trim())]
+  [if (p.type.oclIsTypeOf(environment::DTO))][o.addXtoImport(p.type.oclAsType(environment::DTO))/][elseif (p.type.oclIsTypeOf(environment::Enumeration))][o.addEnumImport(p)/][/if]
 [/template]
 
 [comment : Add an import line for an enumeration (input parameter). /]
-[template private addEnumImport (o : Operation , p : Parameter) post(trim())]
-[o.addImport(buildPackageWsApiEnum(p.type.oclAsType(Enumeration)) + '.' + apply_classEnum(p.type.name))/]
-[/template]
+[template private addEnumImport(o : soa::Operation, p : soa::Parameter) post(self.trim())]
+  [o.addImport(p.type.oclAsType(environment::Enumeration).buildPackageWsApiEnum() + '.' + p.type.name.apply_classEnum())/][/template]
 
 [comment : Add the import for each XTO (input and output). /]
-[template private addXtoImport (o : Operation, d : DTO) post(trim())]
-[o.addImport(buildPackageWsApiDto(d) + '.' + buildXtoClassNameFromDto(d))/]
-[/template]
+[template private addXtoImport(o : soa::Operation, d : environment::DTO) post(self.trim())]
+  [o.addImport(d.buildPackageWsApiDto() + '.' + d.buildXtoClassNameFromDto())/][/template]
 
 [comment : Write all imports for the token config class./]
-[template private writeImports (c : Component) post(trim())]
-[comment : reset the duplicate import utility. /]
-[c.initImports(true)/]
-
-[c.addImport('java.util.Properties')/]
-[c.addImport('java.io.UnsupportedEncodingException', c.isBasicAuth())/]
-[c.addImport('java.nio.charset.Charset', c.isBasicAuth())/]
-[c.addImport('java.util.Base64', c.isBasicAuth())/]
-
-[comment : Flush all imports to the file. /]
-[c.flushImports()/]
-[/template]
+[template private writeImports(c : soa::Component) post(self.trim())]
+  [c.initImports(true)/]
+  
+  [c.addImport('java.util.Properties')/]
+  [c.addImport('java.io.UnsupportedEncodingException', c.isBasicAuth())/]
+  [c.addImport('java.nio.charset.Charset', c.isBasicAuth())/]
+  [c.addImport('java.util.Base64', c.isBasicAuth())/]
+  
+  [c.flushImports()/][/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (s : Service, t : String) post(trim())]
-[comment : reset the duplicate import utility. /]
-[s.initImports(true)/]
-[comment : Import specific MultiValuedMap if HEAD / OPTIONS operation. /]
-[s.addImport('jakarta.ws.rs.core.MultivaluedMap', s.isMultiValueMapRequired()) /] 
-
-[comment : Import specific. /]
-[if t.equalsIgnoreCase('resource')]
-	[s.addImport('jakarta.ws.rs.client.Entity', s.isEntityRequired())/]
-	[s.addImport(buildPackageRsFront() + '.' +  buildRSFrontResourcesAbstractClassName())/]
-	[s.addImport('jakarta.ws.rs.core.*')/]
-[elseif t.equalsIgnoreCase('delegate')]
-	[s.addImport(buildPackageRsFrontResources() + '.' + s.buildRSFrontResourceClassName())/]
-	[s.addImport(buildPackageRsFrontExceptions()+ '.' + buildRSFrontExceptionClassName())/]
-	[s.addImport('jakarta.ws.rs.ProcessingException')/]
-[/if]
-
-[comment : Add all imports for input and output parameters of each operation./]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-[if o.hasDtoParamOutXto()][o.addXtoImport(o.output->first().type.oclAsType(DTO)) /][/if]
-[for (p : Parameter | o.input->asSet())][o.addImportForInput(p)/][/for][/for]
-[comment : Flush all imports to the file. /]
-[s.flushImports()/]
-[/template]
+[template private writeImports(s : soa::Service, t : String) post(self.trim())]
+  [s.initImports(true)/]
+  [s.addImport('jakarta.ws.rs.core.MultivaluedMap', s.isMultiValueMapRequired())/] 
+  
+  [if (t.equalsIgnoreCase('resource'))]
+    	[s.addImport('jakarta.ws.rs.client.Entity', s.isEntityRequired())/]
+    	[s.addImport(s.buildPackageRsFront() + '.' + s.buildRSFrontResourcesAbstractClassName())/]
+    	[s.addImport('jakarta.ws.rs.core.*')/]
+  [elseif (t.equalsIgnoreCase('delegate'))]
+    	[s.addImport(s.buildPackageRsFrontResources() + '.' + s.buildRSFrontResourceClassName())/]
+    	[s.addImport(s.buildPackageRsFrontExceptions() + '.' + s.buildRSFrontExceptionClassName())/]
+    	[s.addImport('jakarta.ws.rs.ProcessingException')/]
+  [/if]
+  
+  [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+    [if (o.hasDtoParamOutXto())][o.addXtoImport(o.output->first().type.oclAsType(environment::DTO))/][/if]
+    
+    [for (p : soa::Parameter | o.input->asSet())][o.addImportForInput(p)/][/for]
+  [/for]
+  [s.flushImports()/][/template]
 
 [comment : hack for the type Binary, for swagger import use 'byte' and not 'Binary'. Do not alter paramInXto(). /]
-[query private hackForBinary (s : String) : String =
-  s.replaceAll('Binary', 'byte[]')
-/]
+[query private hackForBinary(s : String) : String = s.replaceAll('Binary', 'byte[]')/]
 
 [comment : Duplicate method (private) - check if IDRest defined if so take IDRest.  /]
-[query private addParamForPassingModeXtoRs(param : Parameter) : String =
-if (not param.restData.restId.oclIsUndefined() and param.restData.restId.size() > 0)
-  then param.restData.restId else param.name endif
-/]
-
+[query private addParamForPassingModeXtoRs(param : soa::Parameter) : String = if not (param.restData.restId = null) and param.restData.restId.size() > 0 then param.restData.restId else param.name endif/]

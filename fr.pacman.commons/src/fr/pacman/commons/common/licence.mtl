@@ -1,10 +1,9 @@
-[comment encoding = UTF-8 /]
 [module licence('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[template public licence(any : OclAny)]
-/**
- * (C) Copyright Ministere des Armees (France)
- *
- * Apache License 2.0
- */
-[/template]
+[comment encoding = UTF-8 /]
+[template public licence(any : ecore::EObject)]
+  /**
+   * (C) Copyright Ministere des Armees (France)
+   *
+   * Apache License 2.0
+   */[/template]

@@ -1,78 +1,45 @@
+[module imports('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::types::names/]
+[import fr::pacman::commons::types::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::services::ImportsUtils/]
+[import fr::pacman::commons::services::StringUtils/]
+
 [comment encoding = UTF-8 /]
-[module imports ('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::types::names /]
-[import fr::pacman::commons::types::packages /]
-[import fr::pacman::commons::common::properties /]
-
-
 [comment : Init the service for duplicate imports with standard imports. /]
-[query public initImports(e : ObeoDSMObject) : String = 
-    invoke('fr.pacman.commons.services.ImportsUtils',
- 		'initImports(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.Boolean, java.lang.String)'
-		, Sequence{e, false, null})
-/]
+[query public initImports(e : environment::ObeoDSMObject) : String = e.initImportsJavaService(false, null)/]
 
 [comment : Init the service for duplicate imports with standard imports. /]
 [comment : b set to true if the imports only concern public operations. /]
-[query public initImports(e : ObeoDSMObject, b : Boolean) : String = 
-    invoke('fr.pacman.commons.services.ImportsUtils',
- 		'initImports(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.Boolean, java.lang.String)'
-		, Sequence{e, b, null})
-/]
+[query public initImports(e : environment::ObeoDSMObject, b : Boolean) : String = e.initImportsJavaService(b, null)/]
 
 [comment : Init the service for duplicate imports with standard imports. /]
 [comment : b set to true if the imports only concern public operations. /]
 [comment : s set the list (',' is separator) of automatic import to not take in acount. /]
-[query public initImports(e : ObeoDSMObject, b : Boolean, s : String) : String = 
-    invoke('fr.pacman.commons.services.ImportsUtils', 
-		'initImports(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.Boolean, java.lang.String)'
-		, Sequence{e, b, s})
-/]
+[query public initImports(e : environment::ObeoDSMObject, b : Boolean, s : String) : String = e.initImportsJavaService(b, s)/]
 
 [comment : Init the service for duplicate imports with standard imports. /]
 [comment : s set the list (',' is separator) of automatic import to not take in acount. /]
-[query public initImports(e : ObeoDSMObject, s : String) : String = 
-    invoke('fr.pacman.commons.services.ImportsUtils', 
-		'initImports(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.Boolean, java.lang.String)'
-		, Sequence{e, false, s})
-/]
+[query public initImports(e : environment::ObeoDSMObject, s : String) : String = e.initImportsJavaService(false, s)/]
 
 [comment : Check if import is not a duplicate and add to the buffer. /]
 [comment : !!!!! e : OclAny is just needed here for OCL Tracability !!!!!! /]
 [comment : !!!!! Do not remove else the loop wont work and crash after first passage !!!!! /]
-[query public addImport(e : ObeoDSMObject, s : String) : String =
-    invoke('fr.pacman.commons.services.ImportsUtils', 
-		'addImport(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, java.lang.Boolean)'
-		, Sequence{e, s, true})
-/]
+[query public addImport(e : environment::ObeoDSMObject, s : String) : String = e.addImportJavaService(s, true)/]
 
 [comment : Check if import has to be writed and is not a duplicate. If not add to the buffer. /]
-[query public addImport(e : ObeoDSMObject, s : String, b : Boolean) : String =
-    invoke('fr.pacman.commons.services.ImportsUtils', 
-		'addImport(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, java.lang.Boolean)'
-		, Sequence{e, s, b})
-/]
+[query public addImport(e : environment::ObeoDSMObject, s : String, b : Boolean) : String = e.addImportJavaService(s, b)/]
 
 [comment : Flush all the imports to the selected file. /]
-[query public flushImports(e : ObeoDSMObject) : String = 
-    invoke('fr.pacman.commons.services.ImportsUtils',
- 		'flushImports(org.obeonetwork.dsl.environment.ObeoDSMObject)', Sequence{e})
-/]
+[query public flushImports(e : environment::ObeoDSMObject) : String = e.flushImportsJavaService()/]
 
 [comment : Create a hash for user code from the id (string parameter). /]
-[query public getUserCodeId (any : OclAny, s : String) : String = 
-	if any.isClearUserCode() then s else any.userCodeWithComment(s) endif
-/]
+[query public getUserCodeId(any : ecore::EObject, s : String) : String = if any.isClearUserCode() then s else any.userCodeWithComment(s) endif/]
 
 [comment : Create a hash for user code from the id (string parameter). /]
-[query private getUserCodeId_invoke (any : OclAny, s : String) : String = 
-	invoke('fr.pacman.commons.services.StringUtils',
-		'createFixedUserCodeId(java.lang.String)', Sequence{s})
-/]
+[query private getUserCodeId_invoke(any : ecore::EObject, s : String) : String = s.createFixedUserCodeId()/]
 
 [comment : Create a hash with comment for the user code. /]
-[template private userCodeWithComment(any : OclAny, s : String ) post(trim())]
-[any.getUserCodeId_invoke(s)/]
-[/template]
+[template private userCodeWithComment(any : ecore::EObject, s : String) post(self.trim())]
+  [any.getUserCodeId_invoke(s)/][/template]

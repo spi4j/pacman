@@ -1,43 +1,37 @@
-[comment encoding = UTF-8 /]
 [module properties('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
 
-[query public hasHttpEmbeddedServer(any : OclAny) : Boolean = 
-	not getHttpEmbeddedServer().oclIsUndefined() and not getHttpEmbeddedServer().oclIsInvalid()	
-	and ('jetty'.equalsIgnoreCase(getHttpEmbeddedServer()) or 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())) 
-/]
+[comment encoding = UTF-8 /]
+[query public hasHttpEmbeddedServer(any : ecore::EObject) : Boolean = not (any.getHttpEmbeddedServer() = null) and not any.getHttpEmbeddedServer().oclIsInvalid() and ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()) or 'tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))/]
 
 [comment : Verifie si le projet doit generer un client qui necessite une webapp. /]
-[query public hasClientWeb(any : OclAny) : Boolean = 
-	hasClient() and	('jsp'.equalsIgnoreCase(getClient()) or 'jsf'.equalsIgnoreCase(getClient()) 
-	or 'gwt'.equalsIgnoreCase(getClient())) 
-/]
+[query public hasClientWeb(any : ecore::EObject) : Boolean = any.hasClient() and ('jsp'.equalsIgnoreCase(any.getClient()) or 'jsf'.equalsIgnoreCase(any.getClient()) or 'gwt'.equalsIgnoreCase(any.getClient()))/]
 
 [comment : Verifie si le projet a un client (quel que soit le type du client). /]
-[query public hasClient(any : OclAny) : Boolean = 
-	not getClient().oclIsUndefined() and getClient().trim().size() > 0
-/]
+[query public hasClient(any : ecore::EObject) : Boolean = not (any.getClient() = null) and any.getClient().trim().size() > 0/]
 
 [comment : Verifie si on doit ecrire une autre webapp dediee api dans le bootstrap du serveur embarque. /]
-[query public hasToWriteOtherWebappForApi(any : OclAny) : Boolean = 
-	useWS() and hasClientWeb()
-/]
+[query public hasToWriteOtherWebappForApi(any : ecore::EObject) : Boolean = any.useWS() and any.hasClientWeb()/]
 
-[query public hasToWriteOnlyWebappForApi(any : OclAny) : Boolean =
-	useWS() and not hasClientWeb()
-/]
+[query public hasToWriteOnlyWebappForApi(any : ecore::EObject) : Boolean = any.useWS() and not any.hasClientWeb()/]
 
 [comment : Recuperation du nom final pour le war avant assemblage dans le zip de livraison. /]
-[template public getFinalWarName (webapp : Boolean) post (trim())]
-[if (not webapp)][if 'jsf'.equalsIgnoreCase(getClient())][getClientJsfProjectName()/][/if]
-[if 'jsp'.equalsIgnoreCase(getClient())][getClientJspProjectName()/][/if][else][getServerProjectName()/][/if]
+[template public getFinalWarName(webapp : Boolean) post(self.trim())]
+  [if (not webapp)]
+    [if ('jsf'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJsfProjectName()/][/if]
+    
+    [if ('jsp'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJspProjectName()/][/if]
+  [else][webapp.getServerProjectName()/][/if]
 [/template]
 
 [comment : Obtention de la chaine pour le contexte de l'application./]
-[template public getDevWebAppContext (webapp : Boolean) post (trim())]
-[if (not webapp)][if 'jsf'.equalsIgnoreCase(getClient())][getClientJsfWebappDir()/][/if]
-[if 'jsp'.equalsIgnoreCase(getClient())][getClientJspWebappDir()/][/if][else][getWebappDir()/][/if]
+[template public getDevWebAppContext(webapp : Boolean) post(self.trim())]
+  [if (not webapp)]
+    [if ('jsf'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJsfWebappDir()/][/if]
+    
+    [if ('jsp'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJspWebappDir()/][/if]
+  [else][webapp.getWebappDir()/][/if]
 [/template]

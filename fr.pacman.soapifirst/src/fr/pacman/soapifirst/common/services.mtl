@@ -1,128 +1,66 @@
+[module services('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::soapifirst::services::DuplicateParamUtils/]
+
 [comment encoding = UTF-8 /]
-[module services('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::common::properties /]
-
 [comment : TOKEN : Check if the token recovery mode is 'QUERY'. /]
-[query public isAuthTokenImportFromQuery (o : Operation) : Boolean =
-	o.isSecuredForImport()
-	and o.getSecuritySchemeForImport().apiKeyLocation = soa::ApiKeyLocation::QUERY
-/]
+[query public isAuthTokenImportFromQuery(o : soa::Operation) : Boolean = o.isSecuredForImport() and o.getSecuritySchemeForImport().apiKeyLocation = soa::ApiKeyLocation::QUERY/]
 
 [comment : TOKEN : Check if the token recovery mode is 'COOKIE'. /]
-[query public isAuthTokenImportFromCookie (o : Operation) : Boolean =
-	o.isSecuredForImport()
-	and o.getSecuritySchemeForImport().apiKeyLocation = soa::ApiKeyLocation::COOKIE
-/]
+[query public isAuthTokenImportFromCookie(o : soa::Operation) : Boolean = o.isSecuredForImport() and o.getSecuritySchemeForImport().apiKeyLocation = soa::ApiKeyLocation::COOKIE/]
 
 [comment : TOKEN : Check if the token recovery mode is 'HEAD'. /]
-[query public isAuthTokenImportFromHead (o : Operation) : Boolean =
-	o.isSecuredForImport()
-	and o.getSecuritySchemeForImport().apiKeyLocation = soa::ApiKeyLocation::HEADER
-/]
+[query public isAuthTokenImportFromHead(o : soa::Operation) : Boolean = o.isSecuredForImport() and o.getSecuritySchemeForImport().apiKeyLocation = soa::ApiKeyLocation::HEADER/]
 
 [comment : Check if the Api has a declared Binary type. /]
-[query public hasBinaryTypeForRsLibrary (m : System) : Boolean = 
-	true
-/]
+[query public hasBinaryTypeForRsLibrary(m : soa::System) : Boolean = true/]
 
 [comment : Check if the operation has to use the secured filter. /]
-[query public isSecuredForImport (o : Operation) : Boolean =
-	isSecured(o)
-	and not o.getSecuritySchemeForImport().oclIsUndefined()
-/]
+[query public isSecuredForImport(o : soa::Operation) : Boolean = o.isSecured() and not (o.getSecuritySchemeForImport() = null)/]
 
 [comment : TOKEN : Get the property ID for passing the token value./]
-[query public getAuthTokenImportProperty (o : Operation) : String = 
-	if o.isOauth2() or o.isBasicAuth() then 'Authorization' else o.getAuthTokenImportProperty_2() endif
-/]
+[query public getAuthTokenImportProperty(o : soa::Operation) : String = if o.isOauth2() or o.isBasicAuth() then 'Authorization' else o.getAuthTokenImportProperty_2() endif/]
 
 [comment : Check if the operation is secured with BASIC. /]
-[query public isBasicAuth (o : Operation) : Boolean = 
-	isSecuredForImport(o)
-	and o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::HTTP
-/]
+[query public isBasicAuth(o : soa::Operation) : Boolean = o.isSecuredForImport() and o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::HTTP/]
 
-[comment : Check if the operation is secured with APIKEY. / ]
-[query public isApiKey (o : Operation) : Boolean = 
-	isSecuredForImport(o)
-	and o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::API_KEY
-/]
+[comment : Check if the operation is secured with APIKEY. /]
+[query public isApiKey(o : soa::Operation) : Boolean = o.isSecuredForImport() and o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::API_KEY/]
 
 [comment : Check if the operation is secured with OAUTH2 or OIDC/]
-[query public isOauth2 (o : Operation) : Boolean = 
-	isSecuredForImport(o)
-	and (o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::OAUTH2 
-    or o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::OPEN_ID_CONNECT)   
-/]
+[query public isOauth2(o : soa::Operation) : Boolean = o.isSecuredForImport() and (o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::OAUTH2 or o.getSecuritySchemeForImport().type = soa::SecuritySchemeType::OPEN_ID_CONNECT)/]
 
 [comment : TOKEN : Get the property ID for passing the token value. /]
-[query public getAuthTokenImportProperty_2 (o : Operation) : String = 
-	o.getSecuritySchemeForImport().key
-/]
+[query public getAuthTokenImportProperty_2(o : soa::Operation) : String = o.getSecuritySchemeForImport().key/]
 
 [comment : TOKEN : Get the description for passing the token value./]
-[query public getAuthTokenImportDescription (o : Operation) : String = 
-	o.getSecuritySchemeForImport().description
-/]
+[query public getAuthTokenImportDescription(o : soa::Operation) : String = o.getSecuritySchemeForImport().description/]
 
 [comment : SSL : Check if the service pass throught a secure socket layer. /]
 [comment : Independant of a service secured or not secured./]
 [comment : Always true for the moment -> from configuration file. /]
-[query public needSecuredSocketLayer (c : Component) : Boolean =
-	not c.oclIsUndefined()
-	and not c.servers->first().oclIsUndefined() 
-	and c.servers->first().URL.indexOf('https://') = 1
-/]
+[query public needSecuredSocketLayer(c : soa::Component) : Boolean = not (c = null) and not (c.servers->first() = null) and c.servers->first().URL.indexOf('https://') = 1/]
 
 [comment : JUNIT : Check if the management of global parameters can be activated for JUnit tests./]
-[query public hasGlobalInitParams (s : Service) : Boolean = 
-	s.eAllContents(Operation)->size() > 1 
-	and s.eAllContents(Parameter)->select(
-	p : Parameter | not p.restData.oclIsUndefined())->size() > 3 
-/]
+[query public hasGlobalInitParams(s : soa::Service) : Boolean = s.eAllContents(soa::Operation)->size() > 1 and s.eAllContents(soa::Parameter)->select(p | not (p.restData = null))->size() > 3/]
 
 [comment : JUNIT : Reset the service params for avoid duplicates. /]
-[query public resetParamNotAlreadyWrited(any : OclAny) : Boolean =
-    invoke('fr.pacman.soapifirst.services.DuplicateParamUtils',
-	'reset()', Sequence{})
-/]
+[query public resetParamNotAlreadyWrited(any : ecore::EObject) : Boolean = any.resetJavaService()/]
 
 [comment : JUNIT : Get the name for the global parameter, send null if param already writed. /]
-[query public getGlobalInputParamName (p : Parameter) : String = 
-    invoke('fr.pacman.soapifirst.services.DuplicateParamUtils',
-	'getGlobalParamName(org.obeonetwork.dsl.soa.Parameter)',
-	Sequence{p})
-/]
+[query public getGlobalInputParamName(p : soa::Parameter) : String = p.getGlobalParamName()/]
 
 [comment : JUNIT : Retreive the good name for the global parameter (with suffix or not ?). /]
-[query public retreiveGlobalInputParamName (p : Parameter, s : Service) : String = 
-    invoke('fr.pacman.soapifirst.services.DuplicateParamUtils',
-	'retreiveGlobalInputParamName(org.obeonetwork.dsl.soa.Parameter, org.obeonetwork.dsl.soa.Service)',
-	Sequence{p, s}) 
-/]
+[query public retreiveGlobalInputParamName(p : soa::Parameter, s : soa::Service) : String = p.retreiveGlobalInputParamNameJavaService(s)/]
 
 [comment : GENERAL : Get the unique component in the NameSpace. /]
-[query public getComponent(n : Namespace) : Component =
-	eAllContents(Component)->first()
-/]
+[query public getComponent(n : environment::Namespace) : soa::Component = n.eAllContents(soa::Component)->first()/]
 
 [comment : GENERAL : Check if the operation has cookie parameters to set. (for now just check for authorization). /]
-[query public hasCookieParams (o : Operation) : Boolean = 
-	isValidOperation(o)
-	and o.isAuthTokenImportFromCookie()
-/]
+[query public hasCookieParams(o : soa::Operation) : Boolean = o.isValidOperation() and o.isAuthTokenImportFromCookie()/]
 
 [comment : TOKEN : Get the security scheme dependending of the configuration for the client (import). /]
 [comment : No specific control for schemes existence. Error if no security scheme !/]
-[query private getSecuritySchemeForImport(o : Operation) : SecurityScheme = 
-	if(o.securitySchemes->size() > 1) then 
-		o.securitySchemes->select(
-		s : SecurityScheme | s.getSpi4jId() = getWsSecuritySchemeId())
-		->asSequence()->including(null)->first() 
-	else
-		o.securitySchemes->first() 
-	endif 
-/]
+[query private getSecuritySchemeForImport(o : soa::Operation) : soa::SecurityScheme = if o.securitySchemes->size() > 1 then o.securitySchemes->select(s | s.getSpi4jId() = o.getWsSecuritySchemeId())->asSequence()->including(null)->first() else o.securitySchemes->first() endif/]

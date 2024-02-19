@@ -1,99 +1,74 @@
-[comment encoding = UTF-8 /]
-[module imports('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0',
-                'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+[module imports('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/requirement/1.0')/]
 
 [import fr::pacman::commons::common::classes/]
 [import fr::pacman::commons::common::packages/]
-[import fr::pacman::commons::common::names /]
-
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::classes /]
-
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::classes/]
 [import fr::pacman::soa::common::classes/]
 [import fr::pacman::soa::common::name/]
 [import fr::pacman::soa::common::packages/]
+[import fr::pacman::commons::convention::rule::classRule/]
 
-[import fr::pacman::commons::convention::rule::classRule /]
+[comment encoding = UTF-8 /]
+[template public buildImportUserBusinessGen(any : ecore::EObject)]
+  [any.buildPackageBusiness()/].[any.buildAppliUserBusinessGenClassName()/][/template]
 
+[template public buildImportDto(d : environment::DTO)]
+  [d.buildPackageBusinessApiDto()/].[d.buildDtoClassName()/][/template]
 
-[template public buildImportUserBusinessGen(any : OclAny)]
-[buildPackageBusiness()/].[buildAppliUserBusinessGenClassName()/]
+[template public buildImportXto(d : environment::DTO)]
+  [d.buildPackageWsApiDto()/].[d.buildXtoClassNameFromDto()/][/template]
+
+[template public buildImportXtoGwt(d : environment::DTO)]
+  [d.buildPackageWsApiDto()/].[d.buildXtoClassNameFromDto()/][/template]
+
+[template public buildImportServiceInterface(s : soa::Service, d : environment::DTO)]
+  [s.buildPackageBusinessApiServiceDto(d)/].[s.buildServiceInterfaceName(d)/][/template]
+
+[template public buildImportServiceRequirements(s : soa::Service, d : environment::DTO)]
+  [s.buildPackageBusinessImplementationServiceDto(d)/].[s.buildServiceRequirementsClassName(d)/][/template]
+
+[template public buildImportRequirement(req : requirement::Requirement)]
+  [if (req.requirementBaseCategoryLevel() = 0)]
+    import [req.buildPackageRequirement()/].['requirement'.apply_classAnnotation()/];
+    import [req.buildPackageRequirement()/].['requirement'.apply_classEnum()/];
+  [else]
+    import [req.getBaseCategoryForRequirement().buildPackageRequirementForCategory()/].['requirement ' + req.getBaseCategoryForRequirement().id.apply_classAnnotation()/];
+    import [req.getBaseCategoryForRequirement().buildPackageRequirementForCategory()/].['requirement ' + req.getBaseCategoryForRequirement().id.apply_classEnum()/];
+  [/if]
 [/template]
 
-[template public buildImportDto(d : DTO)]
-[buildPackageBusinessApiDto(d)/].[d.buildDtoClassName()/]
-[/template]
+[template public buildImportServiceInterface(d : environment::DTO)]
+  [null.buildPackageBusinessApiServiceDto(d)/].[null.buildServiceInterfaceName(d)/][/template]
 
-[template public buildImportXto(d : DTO)]
-[buildPackageWsApiDto(d)/].[d.buildXtoClassNameFromDto()/]
-[/template]
+[template public buildImportAttributesEnum(d : environment::DTO)]
+  [d.buildPackageBusinessApiDto()/].[d.buildAttributesEnumName()/][/template]
 
-[template public buildImportXtoGwt(d : DTO)]
-[buildPackageWsApiDto(d)/].[d.buildXtoClassNameFromDto()/]
-[/template]
+[template public buildImportMatching(d : environment::DTO)]
+  [d.buildPackageMatchingInterfaceDto()/].[d.buildAppliMatchClassName()/][/template]
 
-[template public buildImportServiceInterface(s : Service, d : DTO)]
-[buildPackageBusinessApiServiceDto(s, d)/].[buildServiceInterfaceName(s, d)/]
-[/template]
+[template public buildImportMatchingInterface(d : environment::DTO)]
+  [d.buildPackageMatchingInterfaceDto()/].[d.buildAppliMatchInterfaceName()/][/template]
 
-[template public buildImportServiceRequirements(s : Service, d : DTO)]
-[buildPackageBusinessImplementationServiceDto(s, d)/].[buildServiceRequirementsClassName(s, d)/]
-[/template]
-
-[template public buildImportRequirement(req : Requirement)]
-[if requirementBaseCategoryLevel() = 0]
-import [buildPackageRequirement()/].[apply_classAnnotation('requirement')/];
-import [buildPackageRequirement()/].[apply_classEnum('requirement')/];
-[else]
-import [buildPackageRequirementForCategory(getBaseCategoryForRequirement(req))/].['requirement ' + apply_classAnnotation(getBaseCategoryForRequirement(req).id)/];
-import [buildPackageRequirementForCategory(getBaseCategoryForRequirement(req))/].['requirement ' + apply_classEnum(getBaseCategoryForRequirement(req).id)/];
-[/if]
-[/template]
-
-[template public buildImportServiceInterface(d : DTO)]
-[buildPackageBusinessApiServiceDto(null, d)/].[buildServiceInterfaceName(null, d)/]
-[/template]
-
-[template public buildImportAttributesEnum(d : DTO)]
-[buildPackageBusinessApiDto(d)/].[buildAttributesEnumName(d)/]
-[/template]
-
-[template public buildImportMatching(d : DTO)]
-[buildPackageMatchingInterfaceDto(d)/].[d.buildAppliMatchClassName()/]
-[/template]
-
-[template public buildImportMatchingInterface(d : DTO)]
-[buildPackageMatchingInterfaceDto(d)/].[d.buildAppliMatchInterfaceName()/]
-[/template]
-
-[template public buildImportEnum(d : DTO)]
-[buildPackagePersistenceApiDto(d)/].[d.buildEntityColumnEnumName()/]
-[/template]
+[template public buildImportEnum(d : environment::DTO)]
+  [d.buildPackagePersistenceApiDto()/].[d.buildEntityColumnEnumName()/][/template]
 
 [comment todo: vérifier que ce n'est appelé que quand on a implicitement 1 entity - 1 dto/]
-[template public buildImportDaoInterface(d : DTO)]
-[buildPackagePersistenceApiDto(d)/].[buildDaoInterfaceName(d)/]
-[/template]
+[template public buildImportDaoInterface(d : environment::DTO)]
+  [d.buildPackagePersistenceApiDto()/].[d.buildDaoInterfaceName()/][/template]
 
 [comment todo: vérifier que ce n'est appelé que quand on a implicitement 1 entity - 1 dto/]
-[template public buildImportEntityInterface(d : DTO)]
-[buildPackagePersistenceApiDto(d)/].[buildEntityInterfaceName(d)/]
-[/template]
+[template public buildImportEntityInterface(d : environment::DTO)]
+  [d.buildPackagePersistenceApiDto()/].[d.buildEntityInterfaceName()/][/template]
 
 [comment todo: vérifier que ce n'est appelé que quand on a implicitement 1 entity - 1 dto/]
-[template public buildImportColumnsEnum(d : DTO)]
-[buildPackagePersistenceApiDto(d)/].[buildEntityColumnEnumName(d)/]
-[/template]
+[template public buildImportColumnsEnum(d : environment::DTO)]
+  [d.buildPackagePersistenceApiDto()/].[d.buildEntityColumnEnumName()/][/template]
 
 [comment : GWT /]
+[template public buildImportServiceInterfaceGwt(s : soa::Service, d : environment::DTO)]
+  [s.buildPackageBusinessGwtClientServiceDto(d)/].[s.buildServiceGwtInterfaceName(d)/][/template]
 
-[template public buildImportServiceInterfaceGwt(s : Service, d : DTO)]
-[buildPackageBusinessGwtClientServiceDto(s, d)/].[buildServiceGwtInterfaceName(s, d)/]
-[/template]
-
-[template public buildImportServiceInterfaceGwtAsync(s : Service, d : DTO)]
-[buildPackageBusinessGwtClientServiceDto(s, d)/].[buildServiceGwtAsyncClassName(s, d)/]
-[/template]
-
-
+[template public buildImportServiceInterfaceGwtAsync(s : soa::Service, d : environment::DTO)]
+  [s.buildPackageBusinessGwtClientServiceDto(d)/].[s.buildServiceGwtAsyncClassName(d)/][/template]

@@ -1,23 +1,13 @@
-[comment encoding = UTF-8 /]
-[module enums('http://www.obeonetwork.org/dsl/environment/3.0.0',
-              'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[module enums('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
 
+[import fr::pacman::commons::services::AnnotationUtils/]
+
+[comment encoding = UTF-8 /]
 [comment : Verifie si une enumeration contient des metadonnes sur les parametres. /]
-[query public hasEnumLiteralParamsStructs (e : Enumeration) :  Boolean = 
-	not e.getEnumLiteralParamsStructs().oclIsUndefined()
-	and e.getEnumLiteralParamsStructs()->size() > 0
-/]
+[query public hasEnumLiteralParamsStructs(e : environment::Enumeration) : Boolean = not (e.getEnumLiteralParamsStructs() = null) and OrderedSet{e.getEnumLiteralParamsStructs()}->size() > 0/]
 
 [comment : Retourne les structures (nom:type,nom:type:etc...) pour les parametres d'un literal. /]
-[query public getEnumLiteralParamsStructs (e : Enumeration) :  String =
-    invoke( 'fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-    Sequence{e.metadatas, 'LITERALS_PARAMS_STRUCT'})	
-/]
+[query public getEnumLiteralParamsStructs(e : environment::Enumeration) : String = e.metadatas.getAnnotationBody('LITERALS_PARAMS_STRUCT')/]
 
 [comment : Retourne les valeurs des parametres d'un literal. /]
-[query public getEnumLiteralParamsValues (l : Literal) :  String =
-    invoke( 'fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-    Sequence{l.metadatas, 'LITERAL_PARAMS_VALUE'})	
-/]
+[query public getEnumLiteralParamsValues(l : environment::Literal) : String = l.metadatas.getAnnotationBody('LITERAL_PARAMS_VALUE')/]

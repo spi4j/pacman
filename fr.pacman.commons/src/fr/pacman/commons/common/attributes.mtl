@@ -1,46 +1,22 @@
+[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+
 [comment encoding = UTF-8 /]
-[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0', 
-                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-
 [comment : Check if a DTO has some attributes. /]
-[query public hasAttributes (d : DTO) : Boolean = 
-
-	d.attributes->size() > 0
-	or d.references->size() > 0
-/]
+[query public hasAttributes(d : environment::DTO) : Boolean = d.attributes->size() > 0 or d.references->size() > 0/]
 
 [comment : *********************************************** /]
 [comment : A PASSER DANS TYPES; N'A RIEN A FAIRE ICI...    /]
 [comment : *********************************************** /]
-
-
 [comment les types, les attributs et les paramètres avec leur type /]
-[query public genTypeName(t : environment::Type) : String =
-if (t.oclIsTypeOf(Enumeration)) then 
-	'String'
-else if (isStandardType(t.name)) then
-    t.name.sanitize().toUpperFirst()
-else 'Invalid'
-endif endif 
-/]
+[query public genTypeName(t : environment::Type) : String = if t.oclIsTypeOf(environment::Enumeration) then 'String' else if t.name.isStandardType() then t.name.sanitize().toUpperFirst() else 'Invalid' endif endif/]
 
-[query public isStandardType(s : String) : Boolean =
-'Integer'.equalsIgnoreCase(s) or 'String'.equalsIgnoreCase(s) or 'Boolean'.equalsIgnoreCase(s) or 'Float'.equalsIgnoreCase(s)
-	or 'Binary'.equalsIgnoreCase(s) or 'Long'.equalsIgnoreCase(s) or 'Double'.equalsIgnoreCase(s) or 'Date'.equalsIgnoreCase(s)
-	or 'Timestamp'.equalsIgnoreCase(s) or 'Time'.equalsIgnoreCase(s)
-/]
+[query public isStandardType(s : String) : Boolean = 'Integer'.equalsIgnoreCase(s) or 'String'.equalsIgnoreCase(s) or 'Boolean'.equalsIgnoreCase(s) or 'Float'.equalsIgnoreCase(s) or 'Binary'.equalsIgnoreCase(s) or 'Long'.equalsIgnoreCase(s) or 'Double'.equalsIgnoreCase(s) or 'Date'.equalsIgnoreCase(s) or 'Timestamp'.equalsIgnoreCase(s) or 'Time'.equalsIgnoreCase(s)/]
 
-[comment] le type des identifiants techniques [/comment]
-[query public genPkType(any : OclAny) : String =
-    kType()
-/]
+[comment le type des identifiants techniques /]
+[query public genPkType(any : ecore::EObject) : String = any.kType()/]
 
-[query public genFkType(any : OclAny) : String =
-    kType()
-/]
+[query public genFkType(any : ecore::EObject) : String = any.kType()/]
 
-[query private kType(any : OclAny) : String =
-    'Long'
-/]
+[query private kType(any : ecore::EObject) : String = 'Long'/]

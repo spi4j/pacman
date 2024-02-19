@@ -1,59 +1,53 @@
-[comment encoding = UTF-8 /]
-[module permissionsItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                       'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module permissionsItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
 [import fr::pacman::commons::soa::common::services/]
-
 [import fr::pacman::soa::common::classes/]
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::attributes /]
-
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::services::SecurityUtils /]
-
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::services::SecurityUtils/]
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::common::imports/]
 
-[template public permissionsItf(m : System)]
-[licence()/]
-package [buildPackageBusiness()/]; // NOPMD
-// [protected ('for imports')]
-
-// [/protected]
-
-/**
- * Listing des permissions.
- * @author [getAuthorName()/]
- */
-public interface [buildAppliPermissionsInterfaceName()/]
-{
-[comment : liste des permissions a partir des metadonnees. /]
-[for (permission : String | m.getSetOfPermissions())]
-   /** Permission [permission /]. */
-   String [apply_attributeFinalStatic(permission)/] = "[permission /]";
-
-[/for]
-[comment : liste des permissions a partir de schema de securite rest. /]
-[comment : ici il est de la responsabilite du developpeur de ne modeliser qu'un seul schema. /]
-[for (c : Component | m.ownedComponents)]
-	[if c.isPermissionSchemeSecured()][let p : String = c.getPermissionSchemeSecured().getSpi4jId()]
-   /** Permission [p/]. */
-   String [apply_attributeFinalStatic(p)/] = "[p/]";[/let]
-	[/if]
-[/for]
-
-
-   // [buildAppliPermissionsInterfaceName()/] 
-   // [protected (m.getUserCodeId(buildAppliPermissionsInterfaceName()))]
-
-   // [/protected]
-
-}
-[/template]
+[comment encoding = UTF-8 /]
+[template public permissionsItf(m : soa::System)]
+  [m.licence()/]
+  package [m.buildPackageBusiness()/]; // NOPMD
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+  [/protected]
+  
+  
+  /**
+   * Listing des permissions.
+   * @author [m.getAuthorName()/]
+   */
+  public interface [m.buildAppliPermissionsInterfaceName()/]
+  {
+  [for (permission : String | m.getSetOfPermissions())]
+       /** Permission [permission/]. */
+       String [permission.apply_attributeFinalStatic()/] = "[permission/]";
+    
+  [/for]
+  [for (c : soa::Component | m.ownedComponents)]
+    [if (c.isPermissionSchemeSecured())]
+      [let p : String = c.getPermissionSchemeSecured().getSpi4jId()]
+           /** Permission [p/]. */
+           String [p.apply_attributeFinalStatic()/] = "[p/]";[/let]
+    [/if]
+  [/for]
+  
+  
+     // [m.buildAppliPermissionsInterfaceName()/] 
+     [protected (m.getUserCodeId(m.buildAppliPermissionsInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]

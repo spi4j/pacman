@@ -1,152 +1,40 @@
+[module outils('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::soalight::services::ServiceUtils/]
+[import fr::pacman::soalight::services::WSUtils/]
+
 [comment encoding = UTF-8 /]
-[module outils('http://www.obeonetwork.org/dsl/soa/4.0.0',
-			   'http://www.obeonetwork.org/dsl/entity/3.0.0',
-               'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query public serviceSeul(s : soa::Service) : Boolean = not (s.systemeRacine() = null) and not s.systemeRacine().eAllContents(entity::Entity)->exists(e | e.buildSimpleEntityName() = s.buildSimpleServiceName())/]
 
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::soalight::common::classes /]
-[import fr::pacman::commons::common::properties /]
+[query public systemeRacine(o : environment::ObeoDSMObject) : soa::System = if o = null then null else if o.oclIsKindOf(soa::System) then o.oclAsType(soa::System) else if o.oclIsKindOf(entity::Root) then null else o.eContainer(soa::System).systemeRacine() endif endif endif/]
 
+[query public systemeRoot(o : environment::ObeoDSMObject) : entity::Root = if o = null then null else if o.oclIsKindOf(entity::Root) then o.oclAsType(entity::Root) else if o.oclIsKindOf(soa::System) then null else o.eContainer(entity::Root).systemeRoot() endif endif endif/]
 
-[query public serviceSeul(s : Service) : Boolean =
-    not systemeRacine(s).oclIsUndefined() and not systemeRacine(s).eAllContents(Entity)->exists(e : Entity| e.buildSimpleEntityName() = s.buildSimpleServiceName())
-/]
+[query public namespaceRacine(o : environment::ObeoDSMObject) : environment::Namespace = if o = null then null else if o.oclIsKindOf(environment::Namespace) and o.oclAsType(environment::Namespace).eContainer() = null then o.oclAsType(environment::Namespace) else o.eContainer(environment::Namespace).namespaceRacine() endif endif/]
 
-[query public systemeRacine(o : ObeoDSMObject) : System =
-if (o.oclIsUndefined()) then
-    null
-else
-    if (o.oclIsKindOf(System)) then
-        o.oclAsType(System)
-    else
-        if (o.oclIsKindOf(Root)) then
-           null
-        else
-           systemeRacine(o.eContainer(System))
-        endif
-    endif
-endif
-/]
+[query public hasPublicOperations(s : soa::Service) : Boolean = s <> null and not (s.ownedInterface = null) and s.ownedInterface.ownedOperations->exists(o | o.public)/]
 
-[query public systemeRoot(o : ObeoDSMObject) : Root =
-if (o.oclIsUndefined()) then
-    null
-else
-    if (o.oclIsKindOf(Root)) then
-        o.oclAsType(Root)
-    else
-        if (o.oclIsKindOf(System)) then
-           null
-        else
-           systemeRoot(o.eContainer(Root))
-        endif
-    endif
-endif
-/]
+[query public listeServicesFromSystemSearchable(n : environment::Namespace) : Boolean = if n.eContainer().oclAsType(environment::NamespacesContainer) = null then false else if n.eContainer().oclAsType(environment::NamespacesContainer).oclIsTypeOf(soa::System) then true else if n.eContainer().oclAsType(environment::NamespacesContainer).oclIsTypeOf(entity::Root) then false else true endif endif endif/]
 
+[query public listeServicesFromSystem(n : environment::Namespace) : OrderedSet(soa::Service) = if n = null then null else if n.eContainer() = null then null else if n.eContainer().oclAsType(environment::NamespacesContainer) = null then null else if n.systemeRacine() = null then null else n.systemeRacine().eAllContents(soa::Service).listeServices() endif endif endif endif/]
 
-[query public namespaceRacine(o : ObeoDSMObject) : Namespace =
-if (o.oclIsUndefined()) then
-    null
-else
-    if (o.oclIsKindOf(Namespace) and o.oclAsType(Namespace).eContainer().oclIsUndefined()) then
-        o.oclAsType(Namespace)
-    else
-        namespaceRacine(o.eContainer(Namespace))
-    endif
-endif
-/]
+[query public clientNeedXto(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('GWT'))/]
 
+[query public clientNeedRemotingServlet(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('SWING'))/]
 
-[query public hasPublicOperations(s : Service) : Boolean =
-    s <> null and
-    not s.ownedInterface.oclIsUndefined() and
-    s.ownedInterface.ownedOperations->exists(o : Operation | o.public)
-/]
+[query public userCodeForOperation(operation : soa::Operation) : String = operation.userCodeForOperationCleanDTO().replaceAll('Dto', ' ').replaceAll('DTO', ' ')/]
 
+[query public xtoAGenerer(o : environment::ObeoDSMObject) : OrderedSet(entity::Entity) = o.eAllContents(soa::Operation).xtoAGenererJavaService()/]
 
-[query public listeServicesFromSystemSearchable(n : Namespace) : Boolean =
-   if ( n.eContainer().oclAsType(NamespacesContainer).oclIsUndefined() ) then
-      false
-   else
-      if (n.eContainer().oclAsType(NamespacesContainer).oclIsTypeOf(System)) then
-         true
-      else
-         if (n.eContainer().oclAsType(NamespacesContainer).oclIsTypeOf(Root)) then
-            false
-         else
-            true
-         endif
-      endif
-   endif
-/]
+[query public userCodeForOperationCleanDTO(operation : soa::Operation) : String = if operation.useDeprecatedSOAUserCodeParams() then if operation.input->isEmpty() and operation.output->isEmpty() then operation.name else if operation.input->isEmpty() then operation.name + '_' + operation.output->asSequence()->collect(temp1 | temp1.type)->collect(temp2 | temp2.name)->sep('_') else if operation.output->isEmpty() then operation.name + '_' + operation.input->asSequence()->collect(temp3 | temp3.type)->collect(temp4 | temp4.name)->sep('_') else operation.name + '_' + operation.input->asSequence()->collect(temp5 | temp5.type)->collect(temp6 | temp6.name)->sep('_') + '_' + operation.output->asSequence()->collect(temp7 | temp7.type)->collect(temp8 | temp8.name)->sep('_') endif endif endif else operation.name endif/]
 
-[query public listeServicesFromSystem(n : Namespace) : Set(Service) =
-   if ( n.oclIsUndefined() ) then
-      null
-   else
-      if ( n.eContainer().oclIsUndefined() ) then
-         null
-      else
-         if ( n.eContainer().oclAsType(NamespacesContainer).oclIsUndefined() ) then
-            null
-         else
-            if ( n.systemeRacine().oclIsUndefined() ) then
-               null
-            else
-                  invoke('fr.pacman.soalight.services.WSUtils', 'listeServices(java.util.List)', Sequence{n.systemeRacine().eAllContents(Service)})
-            endif
-         endif
-      endif
-   endif
-/]
+[comment les attributs d'une entité qui ne sont pas des clé primaires /]
+[query public attributes(e : entity::Entity) : OrderedSet(environment::Attribute) = e.attributes->asOrderedSet()/]
 
-[query public clientNeedXto(any : OclAny) : Boolean =
-    getClientTypes()->exists(client : String | client.equalsIgnoreCase('GWT'))
-/]
+[query public isFromEntityService(s : soa::Service) : Boolean = s.isEntityService(s.name)/]
 
-[query public clientNeedRemotingServlet(any : OclAny) : Boolean =
-    getClientTypes()->exists(client : String | client.equalsIgnoreCase('SWING'))
-/]
-
-[query public userCodeForOperation(operation : Operation) : String =
-   userCodeForOperationCleanDTO(operation).replaceAll('Dto',' ').replaceAll('DTO',' ') 
-/]
-
-[query public xtoAGenerer(o : ObeoDSMObject) : Set(Entity) =
-    invoke('fr.pacman.soalight.services.WSUtils', 'xtoAGenerer(java.util.List)', Sequence{o.eAllContents(Operation)})
-/]
-
-[query public userCodeForOperationCleanDTO(operation : Operation) : String =
- if (useDeprecatedSOAUserCodeParams(operation)) then
-        if (operation.input->isEmpty() and operation.output->isEmpty()) then
-            operation.name
-        else
-            if (operation.input->isEmpty()) then
-                operation.name + '_' + operation.output.type.name->sep('_')
-            else
-                if (operation.output->isEmpty()) then
-                    operation.name + '_' + operation.input.type.name->sep('_')
-                else
-                    operation.name + '_' + operation.input.type.name->sep('_') + '_' + operation.output.type.name->sep('_')
-                endif
-            endif
-        endif
-    else
-        operation.name
-    endif
-/]
-
-[comment] les attributs d'une entité qui ne sont pas des clé primaires [/comment]
-[query public attributes(e : Entity) : OrderedSet(Attribute) =
-    e.attributes->asOrderedSet()
-/]
-
-[query public isFromEntityService(s : Service) : Boolean =
-	isEntityService(s,s.name)
-/]
-
-[query private isEntityService(s : Service, serviceName : String ) : Boolean =
-  invoke('fr.pacman.soalight.services.ServiceUtils', 'isEntityService(org.obeonetwork.dsl.soa.Service,java.lang.String)', Sequence{s,serviceName})
-/]
+[query private isEntityService(s : soa::Service, serviceName : String) : Boolean = s.isEntityServiceJavaService(serviceName)/]

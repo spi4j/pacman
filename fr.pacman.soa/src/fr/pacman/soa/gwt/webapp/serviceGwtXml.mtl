@@ -1,44 +1,39 @@
+[module serviceGwtXml('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module serviceGwtXml('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                      'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::commons::soa::common::utils /]
-
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::classes /]
-
-
-[template public serviceGwtXml(n : Namespace)]
-[for (dto : DTO | n.eAllContents(DTO)->select(d : DTO | (not d.isNotPersistent() and not d.isParent()) or serviceFromDto(d) <> null)->sortedBy(name))]
-[service(serviceFromDto(dto), dto)/]
-[/for]
-[for (service : Service | n.eAllContents(Service)->sortedBy(name))]
-[if serviceSeul(service)]
-[service(service, null)/]
-[/if]
-[/for]
+[template public serviceGwtXml(n : environment::Namespace)]
+  [for (dto : environment::DTO | n.eAllContents(environment::DTO)->select(d | not d.isNotPersistent() and not d.isParent() or d.serviceFromDto() <> null)->sortedBy(temp1 | temp1.name))]
+    [dto.serviceFromDto().service(dto)/]
+  [/for]
+  [for (service : soa::Service | n.eAllContents(soa::Service)->sortedBy(temp2 | temp2.name))]
+    [if (service.serviceSeul())]
+      [service.service(null)/]
+    [/if]
+  [/for]
 [/template]
 
-[template private service(s : Service, d : DTO)]
-[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
-    <servlet>
-        <servlet-name>[buildServiceName(s, d)/]</servlet-name>
-        <servlet-class>[buildPackageBusinessGwtServerServiceDto(s, d)/].[buildServiceGwtImplementationName(s, d)/]</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>[buildServiceName(s, d)/]</servlet-name>
-        <url-pattern>/[getApplicationName()/]/[buildServiceName(s, d)/]</url-pattern>
-    </servlet-mapping>[/let]
+[template private service(s : soa::Service, d : environment::DTO)]
+  [let self = if not (s = null) then s else if not (d = null) then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+        <servlet>
+            <servlet-name>[s.buildServiceName(d)/]</servlet-name>
+            <servlet-class>[s.buildPackageBusinessGwtServerServiceDto(d)/].[s.buildServiceGwtImplementationName(d)/]</servlet-class>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>[s.buildServiceName(d)/]</servlet-name>
+            <url-pattern>/[s.getApplicationName()/]/[s.buildServiceName(d)/]</url-pattern>
+        </servlet-mapping>[/let]
 [/template]
-

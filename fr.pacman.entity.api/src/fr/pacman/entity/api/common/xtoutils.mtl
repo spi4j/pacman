@@ -1,104 +1,78 @@
+[module xtoutils('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::services::MandatoryUtils/]
+[import fr::pacman::commons::services::StringUtils/]
+
 [comment encoding = UTF-8 /]
-[module xtoutils('http://www.obeonetwork.org/dsl/environment/3.0.0',
-			 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[query public getNamespaceXto(e : entity::Entity) : String = (e.getApplicationPackage() + e.categoryHierarchy()).reverse('\\.', '.')/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::attributes /]
+[query public clientNeedXto(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('GWT'))/]
 
-[query public getNamespaceXto(e : Entity) : String =
-    invoke(
-        'fr.pacman.commons.services.StringUtils',
-        'reverse(java.lang.String, java.lang.String, java.lang.String)',
-        Sequence{getApplicationPackage() + categoryHierarchy(e), '\\.', '.'})
-/]
+[template public nameClassXto(e : entity::Entity)]
+  [e.nameBaseXto().toUpperFirst()/][/template]
 
-[query public clientNeedXto(any : OclAny) : Boolean =
-    getClientTypes()->exists(client : String | client.equalsIgnoreCase('GWT')) 
-/]
+[template public nameClassXto(r : environment::Reference)]
+  [r.nameBaseXto().toUpperFirst()/][/template]
 
-[template public nameClassXto(e : Entity)]
-[e.nameBaseXto().toUpperFirst()/]
-[/template]
+[template public importUserItf(any : ecore::EObject)]
+  import fr.spi4j.lib.security.User_Itf;[/template]
 
-[template public nameClassXto(r : Reference)]
-[r.nameBaseXto().toUpperFirst()/]
-[/template]
+[template public getXtoReferenceId(r : environment::Reference)]
+  private [r.genPkType()/] [r.name.normalize().apply_attributeDefault()/][r.namePK_ID()/];[/template]
 
-[template public importUserItf(any : OclAny)]
-import fr.spi4j.lib.security.User_Itf;
-[/template]
+[template public getXtoReference(r : environment::Reference)]
+  private [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/] [r.name.normalize().apply_attributeDefault()/];[/template]
 
-[template public getXtoReferenceId(r : Reference)]
-private [genPkType()/] [apply_attributeDefault(r.name.normalize())/][namePK_ID()/];
-[/template]
+[template public getRefListeXto(r : environment::Reference)]
+  private List<[r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]> [r.name.normalize().apply_attributeMultiple()/];[/template]
 
-[template public getXtoReference(r : Reference)]
-private [r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/] [apply_attributeDefault(r.name.normalize())/];
-[/template]
+[template public getXtoReferenceInverseId(r : environment::Reference)]
+  private [r.genPkType()/] [r.nameBaseReferenceInverse().apply_attributeDefault()/][r.namePK_ID()/];[/template]
 
-[template public getRefListeXto(r : Reference)]
-private List<[r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/]> [apply_attributeMultiple(r.name.normalize())/];
-[/template]
+[template public nameBaseXto(e : entity::Entity)]
+  [e.buildXtoClassNameFromEntity().toLowerFirst()/][/template]
 
-[template public getXtoReferenceInverseId(r : Reference)]
-private [genPkType()/] [apply_attributeDefault(nameBaseReferenceInverse(r))/][namePK_ID()/];
-[/template]
+[template public nameBaseXto(r : environment::Reference)]
+  [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity().toLowerFirst()/][/template]
 
-[template public nameBaseXto(e : Entity)]
-[e.buildXtoClassNameFromEntity().toLowerFirst()/]
-[/template]
+[template public nameBaseXtoUP(e : entity::Entity)]
+  [e.buildXtoClassNameFromEntity().toUpperFirst()/][/template]
 
-[template public nameBaseXto(r : Reference)]
-[r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity().toLowerFirst()/]
-[/template]
+[template public getGetterXto(r : environment::Reference)]
+  public [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/] [r.name.normalize().apply_methodGet()/] ()[/template]
 
-[template public nameBaseXtoUP(e : Entity)]
-[e.buildXtoClassNameFromEntity().toUpperFirst()/]
-[/template]
+[template public getGetterListXto(r : environment::Reference)]
+  public List<[r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]> [r.getNameGetterListEntity()/] ()[/template]
 
-[template public getGetterXto(r : Reference)]
-public [r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/] [apply_methodGet(r.name.normalize())/] ()
-[/template]
+[template public getSetterXtoReference(r : environment::Reference)]
+  public void [r.name.normalize().apply_methodSet()/] (final [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/] [r.referencedType.name.normalize().apply_parameterMethodClassicIn()/])[/template]
 
-[template public getGetterListXto(r : Reference)]
-public List<[r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/]> [getNameGetterListEntity(r)/] ()
-[/template]
+[template public getSetterListXto(r : environment::Reference)]
+  public void [r.getNameSetterListEntity()/] (final List<[r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]> [r.referencedType.name.normalize().apply_parameterMethodMultiple()/])[/template]
 
-[template public getSetterXtoReference(r : Reference)]
-public void [apply_methodSet(r.name.normalize())/] (final [r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/] [apply_parameterMethodClassicIn(r.referencedType.name.normalize())/])
-[/template]
+[template public getGetterInverseIdEntity(r : environment::Reference)]
+  public [r.genPkType()/] [r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] ()[/template]
 
-[template public getSetterListXto(r : Reference)]
-public void [getNameSetterListEntity(r)/] (final List<[r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/]> [apply_parameterMethodMultiple(r.referencedType.name.normalize())/])
-[/template]
+[template public getNameSetterListEntity(r : environment::Reference)]
+  [('set ' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault()/][/template]
 
-[template public getGetterInverseIdEntity(r : Reference)]
-public [genPkType()/] [apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/] ()
-[/template]
+[template public getComParamInverseIdIn(r : environment::Reference)]
+      * @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
 
-[template public getNameSetterListEntity(r : Reference)]
-[apply_methodDefault('set '+ apply_attributeMultiple(r.name.normalize()) )/]
-[/template]
+[template public getSetterInverseIdEntity(r : environment::Reference)]
+  public void [r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/] (final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/])[/template]
 
-[template public getComParamInverseIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
-[/template]
-
-[template public getSetterInverseIdEntity(r : Reference)]
-public void [apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.nameBaseReferenceInverse())/][namePK_ID()/])
-[/template]
-
-
-[query public isMandatory(p : environment::Property) : Boolean =
-invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatorySoa(org.obeonetwork.dsl.environment.Property)', Sequence{p})
-/]
+[query public isMandatory(p : environment::Property) : Boolean = p.isMandatorySoa()/]

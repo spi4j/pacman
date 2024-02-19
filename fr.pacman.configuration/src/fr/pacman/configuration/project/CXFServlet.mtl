@@ -1,116 +1,111 @@
-[comment encoding = UTF-8 /]
 [module CXFServlet('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::configuration::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
 
-[import fr::pacman::configuration::common::names /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-
-[template public cxfServletAbs(any : OclAny) post (trim())]
-[licence()/]
-package [buildPackageCXF()/];
-
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.servlet.ServletConfig;
-import jakarta.xml.ws.Endpoint;
-
-import org.apache.cxf.BusFactory;
-import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
-
-/**
- * Servlet d'enregistrement des webservices.
- * @author [getAuthorName()/]
- */
-public class [buildCXFAbstractClassName()/] extends CXFNonSpringServlet
-{
-   private static final long serialVersionUID = 1L;   
-
-   protected transient List<Endpoint> [apply_attributeFinal('end points')/];
-
-   protected static final Logger [apply_attributeFinalStatic('log')/] = LogManager.getLogger([buildCXFAbstractClassName()/].class.getName());
-   
-   @Override
-   protected void loadBus (final ServletConfig [apply_parameterMethodClassicIn('servlet config')/])
-   {
-      super.loadBus([apply_parameterMethodClassicIn('servlet config')/]);     
-      BusFactory.setDefaultBus([getAffectationPrefix()/]getBus());
-
-      [apply_attributeFinal('end points')/] = new ArrayList<>();
-   }
-
-   /**
-    * Deploiement d'un WebService.
-    * @param [apply_parameterMethodClassicIn('implementation')/]
-    *           l'implementation du WebService
-    * @param [apply_parameterMethodClassicIn('adresse')/]
-    *           l'adresse de publication du WebService
-    */
-   protected void [apply_methodDefault('deploy web service')/] (final Object [apply_parameterMethodClassicIn('implementation')/], final String [apply_parameterMethodClassicIn('adresse')/])
-   {
-      final Endpoint [apply_variableFinal('end point')/] = Endpoint.create([apply_parameterMethodClassicIn('implementation')/]);
-      [apply_variableFinal('end point')/].publish([apply_parameterMethodClassicIn('adresse')/]);
-      [getAffectationPrefix()/][apply_attributeFinal('end points')/].add([apply_variableFinal('end point')/]);
-   }
-
-   @Override
-   public void destroy ()
-   {
-      super.destroy();
-      // stop necessaire pour arreter le thread qui n'est d'ailleurs pas un daemon
-      // (sinon fuite memoire et en plus Tomcat ne terminerait jamais un shutdown)
-      [apply_attributeFinalStatic('log')/].info("Arret des WebServices");
-      for (final Endpoint [apply_variableFinal('end point')/] : [apply_attributeFinal('end points')/])
-      {
-         [apply_variableFinal('end point')/].stop();
-      }
-      final boolean [apply_variableFinal('wait')/] = true;
-      getBus().shutdown([apply_variableFinal('wait')/]);
-   }
-}
-[/template]
-
-
-[template public cxfServlet(any : OclAny) post (trim())]
-[licence()/]
-package [buildPackageCXF()/];
-
-import jakarta.servlet.ServletConfig;
-
-/**
- * Servlet d'enregistrement des webservices.
- * @author [getAuthorName()/]
- */
-public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/]
-{
-   private static final long serialVersionUID = 1L;   
-
-   @Override
-   public void loadBus (final ServletConfig [apply_parameterMethodClassicIn('servlet config')/])
-   {
-      super.loadBus([apply_parameterMethodClassicIn('servlet config')/]);
-      [apply_attributeFinalStatic('log')/].info("Deploiement des WebServices");
-
-      // deploiement des WebServices
-	 /**
-	  * Ajouter le deploiement de services selon l'exemple suivant : 		
-      * deployWebService(new MonServiceFacade(), "/MonServiceService");
+[comment encoding = UTF-8 /]
+[template public cxfServletAbs(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildPackageCXF()/];
+  
+  import java.util.ArrayList;
+  import java.util.List;
+  
+  import jakarta.servlet.ServletConfig;
+  import jakarta.xml.ws.Endpoint;
+  
+  import org.apache.cxf.BusFactory;
+  import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
+  import org.apache.logging.log4j.Logger;
+  import org.apache.logging.log4j.LogManager;
+  
+  
+  /**
+   * Servlet d'enregistrement des webservices.
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildCXFAbstractClassName()/] extends CXFNonSpringServlet
+  {
+     private static final long serialVersionUID = 1L;   
+  
+     protected transient List<Endpoint> ['end points'.apply_attributeFinal()/];
+  
+     protected static final Logger ['log'.apply_attributeFinalStatic()/] = LogManager.getLogger([any.buildCXFAbstractClassName()/].class.getName());
+     
+     @Override
+     protected void loadBus (final ServletConfig ['servlet config'.apply_parameterMethodClassicIn()/])
+     {
+        super.loadBus(['servlet config'.apply_parameterMethodClassicIn()/]);     
+        BusFactory.setDefaultBus([any.getAffectationPrefix()/]getBus());
+  
+        ['end points'.apply_attributeFinal()/] = new ArrayList<>();
+     }
+  
+     /**
+      * Deploiement d'un WebService.
+      * @param ['implementation'.apply_parameterMethodClassicIn()/]
+      *           l'implementation du WebService
+      * @param ['adresse'.apply_parameterMethodClassicIn()/]
+      *           l'adresse de publication du WebService
       */
-   }  
-}
+     protected void ['deploy web service'.apply_methodDefault()/] (final Object ['implementation'.apply_parameterMethodClassicIn()/], final String ['adresse'.apply_parameterMethodClassicIn()/])
+     {
+        final Endpoint ['end point'.apply_variableFinal()/] = Endpoint.create(['implementation'.apply_parameterMethodClassicIn()/]);
+        ['end point'.apply_variableFinal()/].publish(['adresse'.apply_parameterMethodClassicIn()/]);
+        [any.getAffectationPrefix()/]['end points'.apply_attributeFinal()/].add(['end point'.apply_variableFinal()/]);
+     }
+  
+     @Override
+     public void destroy ()
+     {
+        super.destroy();
+        // stop necessaire pour arreter le thread qui n'est d'ailleurs pas un daemon
+        // (sinon fuite memoire et en plus Tomcat ne terminerait jamais un shutdown)
+        ['log'.apply_attributeFinalStatic()/].info("Arret des WebServices");
+        for (final Endpoint ['end point'.apply_variableFinal()/] : ['end points'.apply_attributeFinal()/])
+        {
+           ['end point'.apply_variableFinal()/].stop();
+        }
+        final boolean ['wait'.apply_variableFinal()/] = true;
+        getBus().shutdown(['wait'.apply_variableFinal()/]);
+     }
+  }[/template]
 
+[template public cxfServlet(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.buildPackageCXF()/];
+  
+  import jakarta.servlet.ServletConfig;
+  
+  /**
+   * Servlet d'enregistrement des webservices.
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildCXFServletClassName()/] extends [any.buildCXFAbstractClassName()/]
+  {
+     private static final long serialVersionUID = 1L;   
+  
+     @Override
+     public void loadBus (final ServletConfig ['servlet config'.apply_parameterMethodClassicIn()/])
+     {
+        super.loadBus(['servlet config'.apply_parameterMethodClassicIn()/]);
+        ['log'.apply_attributeFinalStatic()/].info("Deploiement des WebServices");
+  
+        // deploiement des WebServices
+  	 /**
+  	  * Ajouter le deploiement de services selon l'exemple suivant : 		
+        * deployWebService(new MonServiceFacade(), "/MonServiceService");
+        */
+     }  
+  }
 [/template]
-

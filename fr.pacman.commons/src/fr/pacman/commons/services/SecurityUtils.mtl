@@ -1,44 +1,19 @@
+[module SecurityUtils('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::services::AnnotationUtils/]
+[import fr::pacman::commons::services::SecurityUtils/]
+
 [comment encoding = UTF-8 /]
-[module SecurityUtils(	'http://www.obeonetwork.org/dsl/environment/3.0.0',
-			 			'http://www.obeonetwork.org/dsl/entity/3.0.0',
-						'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+[query public entityIsUser(e : entity::Entity) : Boolean = e.entityIsUserJavaService()/]
 
-[query public entityIsUser(e : Entity) : Boolean =
-  invoke('fr.pacman.commons.services.SecurityUtils', 'entityIsUser(org.obeonetwork.dsl.environment.ObeoDSMObject)', Sequence{e})
-/]
+[query public dtoIsUser(d : environment::DTO) : Boolean = d.dtoIsUserJavaService()/]
 
-[query public dtoIsUser(d : DTO) : Boolean =
-  invoke('fr.pacman.commons.services.SecurityUtils', 'dtoIsUser(org.obeonetwork.dsl.environment.ObeoDSMObject)', Sequence{d})
-/]
+[query public getListOfPermissions(o : soa::Operation, annotation : String) : Sequence(String) = o.getPermissionsListOfOperation(annotation)/]
 
-[query public getListOfPermissions(o : Operation, annotation : String) : Sequence(String) =
-  invoke('fr.pacman.commons.services.SecurityUtils', 'getPermissionsListOfOperation(org.obeonetwork.dsl.soa.Operation, java.lang.String)', Sequence{o, annotation})
-/]
+[query public getSetOfPermissions(n : environment::Namespace) : OrderedSet(String) = n.systemeRacine().eAllContents(soa::Operation).getSetOfAllKnownPermissions()/]
 
-[query public getSetOfPermissions(n : Namespace) : Set(String) =
-  invoke('fr.pacman.commons.services.SecurityUtils', 'getSetOfAllKnownPermissions(java.util.List)', Sequence{n.systemeRacine().eAllContents(Operation)})
-/]
+[query public getSetOfPermissions(m : soa::System) : OrderedSet(String) = m.eAllContents(soa::Operation).getSetOfAllKnownPermissions()/]
 
-[query public getSetOfPermissions(m : System) : Set(String) =
-  invoke('fr.pacman.commons.services.SecurityUtils', 'getSetOfAllKnownPermissions(java.util.List)', Sequence{m.eAllContents(Operation)})
-/]
+[query public permissionAnnotationExists(o : soa::Operation, annotation : String) : Boolean = o.annotationExists(annotation, false)/]
 
-[query public permissionAnnotationExists(o : Operation, annotation : String) : Boolean =
-   invoke('fr.pacman.commons.services.AnnotationUtils', 'annotationExists(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)', Sequence{o, annotation, false})
-/]
-
-[query private systemeRacine(o : ObeoDSMObject) : System =
-if (o.oclIsUndefined()) then
-    null
-else
-    if (o.oclIsKindOf(System)) then
-        o.oclAsType(System)
-    else
-        if (o.oclIsKindOf(Root)) then
-           null
-        else
-           systemeRacine(o.eContainer(System))
-        endif
-    endif
-endif
-/]
+[query private systemeRacine(o : environment::ObeoDSMObject) : soa::System = if o = null then null else if o.oclIsKindOf(soa::System) then o.oclAsType(soa::System) else if o.oclIsKindOf(entity::Root) then null else o.eContainer(soa::System).systemeRacine() endif endif endif/]

@@ -1,96 +1,87 @@
-[comment encoding = UTF-8 /]
-[module commentaires('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module commentaires('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
 [import fr::pacman::commons::common::names/]
 
-[*******************
+[comment encoding = UTF-8 /]
+[**
+ * ****************
  * Paramétrage début
 */]
+[template public comClass(e : entity::Entity, r : String)]
+  /**
+   * [r/].
+   * @author [e.getAuthorName()/]
+   */[/template]
 
-[template public comClass(e : Entity, r : String)]
-/**
- * [r/].
- * @author [getAuthorName()/]
- */
-[/template]
+[template public comClass(o : ecore::EObject, r : String)]
+  /**
+   * [r/].
+   * @author [o.getAuthorName()/]
+   */[/template]
 
-[template public comClass(o : OclAny, r : String)]
-/**
- * [r/].
- * @author [getAuthorName()/]
- */
-[/template]
+[template public get_comParamIn(p : environment::Property)]
+      * @param [p.nameSimpleProperty().apply_parameterMethodClassicIn()/]
+      *           (In)[if (p.isMandatory())](*)[/if]
+   [p.description(false)/][/template]
 
-[template public get_comParamIn(p : Property)]
-    * @param [apply_parameterMethodClassicIn(nameSimpleProperty(p))/]
-    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/template]
+[template public get_comParamInverseIn(r : environment::Reference)]
+      * @param [r.nameSimplePropertyInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
 
-[template public get_comParamInverseIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameSimplePropertyInverse(r))/][namePK_ID()/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
-[/template]
+[template public getComParamIdIn(r : environment::Reference)]
+      * @param [r.name.normalize().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.description(false)/][/template]
 
+[template public get_comParamOut(p : environment::Property)]
+      * @param [p.nameSimpleProperty().apply_parameterMethodClassicOut()/]
+      *           (Out)[if (p.isMandatory())](*)[/if]
+   [p.description(false)/][/template]
 
-[template public getComParamIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(r.name.normalize())/][namePK_ID()/]
-    *           (In)[if (isMandatory(r))](*)[/if] [description(r, false)/]
-[/template]
+[template public getComParamIn(p : environment::Property)]
+      * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
+      *           (In)[if (p.isMandatory())](*)[/if]
+   [p.description(false)/][/template]
 
-[template public get_comParamOut(p : Property)]
-    * @param [apply_parameterMethodClassicOut(nameSimpleProperty(p))/]
-    *           (Out)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/template]
+[template public getComParamTabIn(r : environment::Reference)]
+      * @param [r.referencedType.name.normalize().apply_parameterMethodMultiple()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.description(false)/][/template]
 
-[template public getComParamIn(p : Property)]
-    * @param [apply_parameterMethodClassicIn(p.name.normalize())/]
-    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/template]
-
-[template public getComParamTabIn(r : Reference)]
-    * @param [apply_parameterMethodMultiple(r.referencedType.name.normalize())/]
-    *           (In)[if (isMandatory(r))](*)[/if] [description(r, false)/]
-[/template]
-
-[*****************
+[**
+ * **************
  * Paramétrage fin
 */]
-
-[comment] r : Rôle succinct (sur une ligne) [/comment]
-
-
+[comment r : Rôle succinct (sur une ligne) /]
 [template public comClass(r : String)]
-/**
- * [r/].
- * @author [getAuthorName()/]
- */
+  /**
+   * [r/].
+   * @author [r.getAuthorName()/]
+   */[/template]
+
+[template public comReturn(p : environment::Property)]
+      * @return [p.description(false)/][/template]
+
+[template public comReturnInverse(r : environment::Reference)]
+      * @return [r.descriptionInverse(false)/][/template]
+
+[template public comPrefix(p : environment::Property, s : String)]
+      * [s/] [p.description(true)/][/template]
+
+[template public comPrefixInverse(r : environment::Reference, s : String)]
+      * [s/] [r.descriptionInverse(true)/][/template]
+
+[template public description(p : environment::Property, lowerFirst : Boolean)]
+  [if (p.description = null or p.description.size() = 0)][p.name/].[else]
+                                                                     [if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if]
+                                                                     .[/if]
 [/template]
 
-[template public comReturn(p : Property)]
-    * @return [description(p, false)/]
+[template public descriptionInverse(r : environment::Reference, lowerFirst : Boolean)]
+  [if (r.oppositeOf = null)][r.containingType.name.toLowerFirst()/].[else][r.oppositeOf.description(false)/][/if]
 [/template]
-
-[template public comReturnInverse(r : Reference)]
-    * @return [descriptionInverse(r, false)/]
-[/template]
-
-[template public comPrefix(p : Property, s : String)]
-    * [s/] [description(p, true)/]
-[/template]
-
-[template public comPrefixInverse(r : Reference, s : String)]
-    * [s/] [descriptionInverse(r, true)/]
-[/template]
-
-[template public description(p : Property, lowerFirst : Boolean)]
-[if (p.description.oclIsUndefined()) or p.description.size() = 0][p.name/].[else][if lowerFirst][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
-[/template]
-
-[template public descriptionInverse(r : Reference, lowerFirst : Boolean)]
-[if r.oppositeOf.oclIsUndefined()][r.containingType.name.toLowerFirst()/].[else][description(r.oppositeOf, false)/][/if]
-[/template]
-

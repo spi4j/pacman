@@ -1,98 +1,100 @@
+[module appliAsyncCallback('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::cinematic::gwt::common::packages/]
+[import fr::pacman::cinematic::gwt::common::name/]
+
 [comment encoding = UTF-8 /]
-[module appliAsyncCallback('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::cinematic::gwt::common::packages /]
-[import fr::pacman::cinematic::gwt::common::name /]
-
-[template public appliAsyncCallback(any : OclAny)]
-[licence()/]
-package [namePackageGwt()/];
-// [protected ('for imports')]
-
-import fr.spi4j.ui.gwt.client.services.DefaultAsyncCallback;
-
-// [/protected]
-
-/**
- * Callback par défaut avec gestion d'erreur en affichant une popup.
- * 
- * @param <T>
- *           Type de données attendues en retour
- * @author [getAuthorName()/]
- */
-public class [nameAppliAsyncCallback()/]<T> extends DefaultAsyncCallback<T>
-{
-
-   /**
-    * Constructeur par défaut.
-    */
-   public [nameAppliAsyncCallback()/] ()
-   {
-      super();
-   }
-
-   /**
-    * Constructeur définissant si une popup de chargement s'affiche ou non.
-    * 
-    * @param p_loadingEnabled
-    *           true si une popup de chargement est affichée, false sinon.
-    */
-   public [nameAppliAsyncCallback()/] (final boolean p_loadingEnabled)
-   {
-      super(p_loadingEnabled);
-   }
-
-   /**
-    * Constructeur définissant le texte du chargement.
-    * 
-    * @param p_loadingMessage
-    *           le message affiché lors du chargement
-    */
-   public [nameAppliAsyncCallback()/] (final String p_loadingMessage)
-   {
-      super(p_loadingMessage);
-   }
-
-   @Override
-   public Throwable buildException (final String p_className, final String p_errorMessageContent)
-   {
-      if (p_className == null)
-      {
-         return null;
-      }
-      // Propagation des erreurs
-      // [protected (any.getUserCodeId('Propagation des erreurs'))]
-      // if (p_className.equals(MonException.class.getName()))
-      // {
-      // return new MonException(p_errorMessageContent);
-      // }
-      // [/protected]
-      return super.buildException(p_className, p_errorMessageContent);
-   }
-
-   @Override
-   protected void doOnError (final Throwable p_caught)
-   {
-      // Gestion des erreurs
-      // [protected (any.getUserCodeId('Gestion des erreurs'))]
-      // if (p_caught instanceof MonException)
-      // {
-      // ... traitement spécifique ...
-      // }
-      // else
-      // {
-      // super.doOnError(p_caught);
-      // }
-      // [/protected]
-   }
-
-   // [nameAppliAsyncCallback()/]
-   // [protected (any.getUserCodeId(nameAppliAsyncCallback()))]
-
-   // [/protected]
-}
-[/template]
+[template public appliAsyncCallback(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.namePackageGwt()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import fr.spi4j.ui.gwt.client.services.DefaultAsyncCallback;
+    
+  [/protected]
+  
+  
+  /**
+   * Callback par défaut avec gestion d'erreur en affichant une popup.
+   * 
+   * @param <T>
+   *           Type de données attendues en retour
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.nameAppliAsyncCallback()/]<T> extends DefaultAsyncCallback<T>
+  {
+  
+     /**
+      * Constructeur par défaut.
+      */
+     public [any.nameAppliAsyncCallback()/] ()
+     {
+        super();
+     }
+  
+     /**
+      * Constructeur définissant si une popup de chargement s'affiche ou non.
+      * 
+      * @param p_loadingEnabled
+      *           true si une popup de chargement est affichée, false sinon.
+      */
+     public [any.nameAppliAsyncCallback()/] (final boolean p_loadingEnabled)
+     {
+        super(p_loadingEnabled);
+     }
+  
+     /**
+      * Constructeur définissant le texte du chargement.
+      * 
+      * @param p_loadingMessage
+      *           le message affiché lors du chargement
+      */
+     public [any.nameAppliAsyncCallback()/] (final String p_loadingMessage)
+     {
+        super(p_loadingMessage);
+     }
+  
+     @Override
+     public Throwable buildException (final String p_className, final String p_errorMessageContent)
+     {
+        if (p_className == null)
+        {
+           return null;
+        }
+        // Propagation des erreurs
+        [protected (any.getUserCodeId('Propagation des erreurs')) startTagPrefix('// ') endTagPrefix('// ')]
+                // if (p_className.equals(MonException.class.getName()))
+                // {
+                // return new MonException(p_errorMessageContent);
+                // }
+        [/protected]
+  
+        return super.buildException(p_className, p_errorMessageContent);
+     }
+  
+     @Override
+     protected void doOnError (final Throwable p_caught)
+     {
+        // Gestion des erreurs
+        [protected (any.getUserCodeId('Gestion des erreurs')) startTagPrefix('// ') endTagPrefix('// ')]
+                // if (p_caught instanceof MonException)
+                // {
+                // ... traitement spécifique ...
+                // }
+                // else
+                // {
+                // super.doOnError(p_caught);
+                // }
+        [/protected]
+  
+     }
+  
+     // [any.nameAppliAsyncCallback()/]
+     [protected (any.getUserCodeId(any.nameAppliAsyncCallback())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  }[/template]

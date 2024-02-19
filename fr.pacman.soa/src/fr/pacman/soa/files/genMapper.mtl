@@ -1,15 +1,14 @@
+[module genMapper('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::server::mapper::category::mapper/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genMapper('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                  'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::server::mapper::category::mapper /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genMapper(d : DTO)]
-[file (filename(getServerSourceDir(), buildPackageMapperDto(d), buildMapperClassName(d) + '.java'), false, 'UTF-8')]
-[mapper(d)/]
-[/file]
+[template public genMapper(d : environment::DTO)]
+  [file (d.getServerSourceDir().filename(d.buildPackageMapperDto(), d.buildMapperClassName() + '.java'), overwrite, 'UTF-8')]
+    [d.mapper()/]
+  [/file]
 [/template]

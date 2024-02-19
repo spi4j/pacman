@@ -1,31 +1,19 @@
+[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::swing::common::swing_commons/]
+
 [comment encoding = UTF-8 /]
-[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+[query public nameViewImplementation(viewContainer : view::ViewContainer) : String = (viewContainer.name + ' View Swing').apply_classDefault()/]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::swing::common::swing-commons /]
+[query public getRootPresenterName(any : ecore::EObject) : String = any.getRootPresenter().namePresenter()/]
 
-[query public nameViewImplementation(viewContainer : ViewContainer) : String =
-    apply_classDefault(viewContainer.name + ' View Swing')
-/]
+[query public nameSwingLanceur(any : ecore::EObject) : String = 'Swing Lanceur'.apply_classDefault()/]
 
-[query public getRootPresenterName(any : OclAny) : String =
-    namePresenter(getRootPresenter(any))
-/]
+[query public nameSwingViews(any : ecore::EObject) : String = 'Swing Views'.apply_classDefault()/]
 
-[query public nameSwingLanceur(any : OclAny) : String =
-    apply_classDefault('Swing Lanceur')
-/]
+[query public nameSwingSecurity(any : ecore::EObject) : String = 'Client Security Manager'.apply_classDefault()/]
 
-[query public nameSwingViews(any : OclAny) : String =
-    apply_classDefault('Swing Views')
-/]
-
-[query public nameSwingSecurity(any : OclAny) : String =
-    apply_classDefault('Client Security Manager')
-/]
-
-[query public nameSwingInitialization(any : OclAny) : String =
-    apply_classDefault('Initialization')
-/]
+[query public nameSwingInitialization(any : ecore::EObject) : String = 'Initialization'.apply_classDefault()/]

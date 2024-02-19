@@ -1,51 +1,43 @@
-[comment encoding = UTF-8 /]
 [module genBDD('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::configuration::project::ClientBDD/]
+[import fr::pacman::configuration::common::names/]
+[import fr::pacman::commons::common::properties/]
 
-[import fr::pacman::commons::common::packages / ]
-[import fr::pacman::commons::common::names / ]
-[import fr::pacman::configuration::project::ClientBDD /]
-[import fr::pacman::configuration::common::names /]
-[import fr::pacman::commons::common::properties / ]
-
+[comment encoding = UTF-8 /]
 [comment : Creation des fichiers pour les tests JBehave /]
 [template public genBDD(project : String, testDir : String)]
-
-[comment : Creation du fichier /client/ui/AppliMockitoViews.java /]
-[file (filename(project, testDir, buildJBehaveUiPackage(), buildMockitoViewsClassName() + '.java'), false, 'UTF-8')]
-[jBehaveMockitoViews() /]
-[/file]
-
-[comment : Creation du fichier /steps/AppliStepsGiven.java /]
-[file (filename(project, testDir, buildJBehaveStepPackage(), buildStepsGivenClassName() + '.java'), false, 'UTF-8')]
-[jBehaveStepsGiven() /]
-[/file]
-
-[comment : Creation du fichier /steps/AppliStepsThen.java /]
-[file (filename(project, testDir, buildJBehaveStepPackage(), buildStepsThenClassName() + '.java'), false, 'UTF-8')]
-[jBehaveStepsThen() /]
-[/file]
-
-[comment : Creation du fichier /stories/AppliStoryAbs.java/]
-[file (filename(project, testDir, buildJBehaveStepPackage(),  buildStoryAbstractClassName() + '.java'), false, 'UTF-8')]
-[jBehaveStory() /]
-[/file]
-
-[comment : Creation du fichier /stories/Applixxx_Story.java /]
-[file (filename(project, testDir, buildJBehaveStoriesPackage(), buildXXXStoryClassName() + '.java'), false, 'UTF-8')]
-[jBehaveStorySample() /]
-[/file]
-
-[comment : Creation du fichier /stories/Applixxx_Story.story /]
-[file (filename(project, testDir, buildJBehaveStoriesPackage(), buildXXXStory() + '.story'), false, 'UTF-8')]
-Scenario: Placer ici le scenario JBehave. 
-[/file]
-
-[comment /]
-[if getClient().equalsIgnoreCase('gwt')]
-[file (filename(project, testDir, buildJBehaveUiPackage(), buildGwtUserBusinessIntegration() + '.java'), false, 'UTF-8')]
-[jBehaveGwtUserBusinessIntegration() /]
-[/file]
-[/if]
-
+  
+  [file (project.filename(testDir, project.buildJBehaveUiPackage(), project.buildMockitoViewsClassName() + '.java'), overwrite, 'UTF-8')]
+    [project.jBehaveMockitoViews()/]
+  [/file]
+  
+  [file (project.filename(testDir, project.buildJBehaveStepPackage(), project.buildStepsGivenClassName() + '.java'), overwrite, 'UTF-8')]
+    [project.jBehaveStepsGiven()/]
+  [/file]
+  
+  [file (project.filename(testDir, project.buildJBehaveStepPackage(), project.buildStepsThenClassName() + '.java'), overwrite, 'UTF-8')]
+    [project.jBehaveStepsThen()/]
+  [/file]
+  
+  [file (project.filename(testDir, project.buildJBehaveStepPackage(), project.buildStoryAbstractClassName() + '.java'), overwrite, 'UTF-8')]
+    [project.jBehaveStory()/]
+  [/file]
+  
+  [file (project.filename(testDir, project.buildJBehaveStoriesPackage(), project.buildXXXStoryClassName() + '.java'), overwrite, 'UTF-8')]
+    [project.jBehaveStorySample()/]
+  [/file]
+  
+  [file (project.filename(testDir, project.buildJBehaveStoriesPackage(), project.buildXXXStory() + '.story'), overwrite, 'UTF-8')]
+    Scenario: Placer ici le scenario JBehave. 
+  [/file]
+  
+  [if (project.getClient().equalsIgnoreCase('gwt'))]
+    [file (project.filename(testDir, project.buildJBehaveUiPackage(), project.buildGwtUserBusinessIntegration() + '.java'), overwrite, 'UTF-8')]
+      [project.jBehaveGwtUserBusinessIntegration()/]
+    [/file]
+  [/if]
+  
 [/template]

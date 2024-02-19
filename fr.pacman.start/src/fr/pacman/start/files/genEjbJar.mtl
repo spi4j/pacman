@@ -1,14 +1,12 @@
-[comment encoding = UTF-8 /]
 [module genEjbJar('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::start::project::EjbJar /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
+[import fr::pacman::start::project::EjbJar/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
 
-[template public genEjbJar(any : OclAny)]
-[comment : Creation du ej-jar.xml /]
-[file (filename(getClientJsfProjectName(), getClientJsfWebDir(), 'ejb-jar.xml'), false, 'UTF-8')]
-[EjbJar() /]
-[/file]
+[comment encoding = UTF-8 /]
+[template public genEjbJar(any : ecore::EObject)]
+  [file (any.getClientJsfProjectName().filename(any.getClientJsfWebDir(), 'ejb-jar.xml'), overwrite, 'UTF-8')]
+    [any.EjbJar()/]
+  [/file]
 [/template]
-

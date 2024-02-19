@@ -1,17 +1,16 @@
+[module genServiceTest('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::soalight::common::name/]
+[import fr::pacman::soalight::common::packages/]
+[import fr::pacman::soalight::server::business::api::category::serviceTest/]
+[import fr::pacman::soalight::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genServiceTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                       'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::soalight::common::name /]
-[import fr::pacman::soalight::common::packages /]
-[import fr::pacman::soalight::server::business::api::category::serviceTest /]
-[import fr::pacman::soalight::common::classes /]
-
-[comment] le Serviceseul [/comment]
-[template public genServiceTest(s : Service)]
-[file (filename(getServerTestDir(), buildPackageBusinessApiService(s), buildServiceTestClassName(s) + '.java'), false, 'UTF-8')]
-[serviceTest(s)/]
-[/file]
+[comment le Serviceseul /]
+[template public genServiceTest(s : soa::Service)]
+  [file (s.getServerTestDir().filename(s.buildPackageBusinessApiService(), s.buildServiceTestClassName() + '.java'), overwrite, 'UTF-8')]
+    [s.serviceTest()/]
+  [/file]
 [/template]

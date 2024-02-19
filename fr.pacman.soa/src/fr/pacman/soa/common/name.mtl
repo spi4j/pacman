@@ -1,412 +1,293 @@
+[module name('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+
 [comment encoding = UTF-8 /]
-[module name('http://www.obeonetwork.org/dsl/soa/4.0.0',
-             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::commons::soa::common::names /]
-
-[import fr::pacman::soa::common::classes /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-
-[*******************
+[**
+ * ****************
  * Paramétrage début
 */]
+[template public getNameResetDto(d : environment::DTO)]
+  [''.apply_methodReset()/][d.buildDtoClassName()/][/template]
 
-[template public getNameResetDto(d : DTO)]
-[apply_methodReset('')/][buildDtoClassName(d)/]
-[/template]
+[template public getNameSetter(p : environment::Property)]
+  [p.name.normalize().apply_methodSet()/][/template]
 
-[template public getNameSetter(p : Property)]
-[apply_methodSet(p.name.normalize())/]
-[/template]
+[template public getNameGetter(p : environment::Property)]
+  [p.name.normalize().apply_methodGet()/][/template]
 
-[template public getNameGetter(p : Property)]
-[apply_methodGet(p.name.normalize())/]
-[/template]
+[template public getNameSetterDtoId(r : environment::Reference)]
+  [r.name.normalize().apply_methodSet()/][r.namePK_ID()/][/template]
 
-[template public getNameSetterDtoId(r : Reference)]
-[comment][apply_methodSet(r.referencedType.oclAsType(DTO).name.normalize())/][namePK_ID()/][/comment]
-[apply_methodSet(r.name.normalize())/][namePK_ID()/]
-[/template]
+[template public getNameGetterDtoId(r : environment::Reference)]
+  [r.name.normalize().apply_methodGet()/][r.namePK_ID()/][/template]
 
-[template public getNameGetterDtoId(r : Reference)]
-[comment][apply_methodGet(r.referencedType.oclAsType(DTO).name.normalize())/][namePK_ID()/][/comment]
-[apply_methodGet(r.name.normalize())/][namePK_ID()/]
-[/template]
+[template public getNameSetterInverseDtoId(r : environment::Reference)]
+  [r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/][/template]
 
-[template public getNameSetterInverseDtoId(r : Reference)]
-[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/]
-[/template]
+[template public getNameGetterInverseDtoId(r : environment::Reference)]
+  [r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/][/template]
 
-[template public getNameGetterInverseDtoId(r : Reference)]
-[apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/]
-[/template]
-
-[*******************
+[**
+ * ****************
  * Paramétrage fin
 */]
+[template public nameClassFetchingStrategy(d : environment::DTO)]
+  [d.nameClassDto()/]FetchingStrategy[/template]
 
-[template public nameClassFetchingStrategy(d : DTO)]
-[d.nameClassDto()/]FetchingStrategy
+[template public nameClassFetchingStrategyTest(d : environment::DTO)]
+  [d.nameClassFetchingStrategy()/]_Test[/template]
+
+[template public nameEnumDto(d : environment::DTO)]
+  [d.nameBaseDto().toUpperFirst()/]Columns_Enum[/template]
+
+[template public nameEnumDto(r : environment::Reference)]
+  [r.nameBaseDto().toUpperFirst()/]Columns_Enum[/template]
+
+[comment le nom de la clé primaire dans les énumérations/]
+[template public nameSimplePropertyIDInEnum(d : environment::DTO)]
+  [d.nameBaseDto().toLower()/][d.namePK_ID()/][/template]
+
+[template public nameSimplePropertyIDInEnum(r : environment::Reference)]
+  [r.nameBaseDto().toLower()/][r.namePK_ID()/][/template]
+
+[template private nameBaseService(s : soa::Service)]
+  [s.buildSimpleServiceName().toLowerFirst()/][/template]
+
+[template private nameClassService(s : soa::Service)]
+  [s.buildSimpleServiceName().toUpperFirst()/][/template]
+
+[comment Les Classes /]
+[comment ------------/]
+[template public nameDto(d : environment::DTO)]
+  [d.nameClassDto()/]Dto[/template]
+
+[template public nameDtoTest(d : environment::DTO)]
+  [d.nameClassDto()/]Dto_Test[/template]
+
+[template public nameAttributesEnum(d : environment::DTO)]
+  [d.nameClassDto()/]Attributes_Enum[/template]
+
+[template public nameDto(r : environment::Reference)]
+  [r.nameClassDto()/]Dto[/template]
+
+[template public nameXto(r : environment::Reference)]
+  [r.nameClassDto()/]Xto[/template]
+
+[template public nameXto(d : environment::DTO)]
+  [d.nameClassDto()/]Xto[/template]
+
+[template public nameXtoTest(d : environment::DTO)]
+  [d.nameClassDto()/]Xto_Test[/template]
+
+[template public nameMapper(d : environment::DTO)]
+  [d.nameClassDto()/]Mapper[/template]
+
+[template public nameMapper(r : environment::Reference)]
+  [r.nameClassDto()/]Mapper[/template]
+
+[template public nameMapperInterface(d : environment::DTO)]
+  [d.nameMapper()/]_Itf[/template]
+
+[template public nameMatch(d : environment::DTO)]
+  [d.nameClassDto()/]Match[/template]
+
+[template public nameMatchInterface(d : environment::DTO)]
+  [d.nameMatch()/]_Itf[/template]
+
+[template public nameFetchingStrategy(d : environment::DTO)]
+  [d.nameClassDto()/]FetchingStrategy[/template]
+
+[template public nameFetchingStrategyTest(d : environment::DTO)]
+  [d.nameClassDto()/]FetchingStrategy_Test[/template]
+
+[template public nameService(s : soa::Service, d : environment::DTO)]
+  [if (not (s = null))][s.nameService()/][else]
+                                           [if (not (d = null))][d.nameClassDto()/]Service[else]NAME NOT FOUND FOR SERVICE AND DTO NULL[/if]
+                                         [/if]
 [/template]
 
-[template public nameClassFetchingStrategyTest(d : DTO)]
-[d.nameClassFetchingStrategy()/]_Test
-[/template]
+[template public nameService(s : soa::Service)]
+  [s.nameClassService()/]Service[/template]
 
-[template public nameEnumDto(d : DTO)]
-[d.nameBaseDto().toUpperFirst()/]Columns_Enum
-[/template]
+[template public nameServiceRequirements(s : soa::Service, d : environment::DTO)]
+  [s.nameService(d)/]Requirements[/template]
 
-[template public nameEnumDto(r : Reference)]
-[r.nameBaseDto().toUpperFirst()/]Columns_Enum
-[/template]
+[template public nameServiceTest(s : soa::Service, d : environment::DTO)]
+  [s.nameService(d)/]_Test[/template]
 
-[comment] le nom de la clé primaire dans les énumérations[/comment]
-[template public nameSimplePropertyIDInEnum(d : DTO)]
-[d.nameBaseDto().toLower()/][namePK_ID()/]
-[/template]
+[template public nameServiceInterface(s : soa::Service, d : environment::DTO)]
+  [s.nameService(d)/]_Itf[/template]
 
-[template public nameSimplePropertyIDInEnum(r : Reference)]
-[r.nameBaseDto().toLower()/][namePK_ID()/]
-[/template]
+[template public nameServiceInterfaceGwt(s : soa::Service, d : environment::DTO)]
+  [s.nameService(d)/][/template]
 
-[template private nameBaseService(s : Service)]
-[s.buildSimpleServiceName().toLowerFirst()/]
-[/template]
+[template public nameServiceInterfaceGwtAsync(s : soa::Service, d : environment::DTO)]
+  [s.nameService(d)/]Async[/template]
 
-[template private nameClassService(s : Service)]
-[s.buildSimpleServiceName().toUpperFirst()/]
-[/template]
+[template public nameServiceImplementationGwt(s : soa::Service, d : environment::DTO)]
+  [s.nameService(d)/]Impl[/template]
 
-[comment] Les Classes [/comment]
-[comment]-------------[/comment]
+[template public nameService(d : environment::DTO)]
+  [d.buildSimpleDtoName().toUpperFirst()/]Service[/template]
 
-[template public nameDto(d : DTO)]
-[d.nameClassDto()/]Dto
-[/template]
+[template public nameServiceInterface(d : environment::DTO)]
+  [d.nameService()/]_Itf[/template]
 
-[template public nameDtoTest(d : DTO)]
-[d.nameClassDto()/]Dto_Test
-[/template]
+[template public nameServiceInterfaceGwt(d : environment::DTO)]
+  [d.nameService()/][/template]
 
-[template public nameAttributesEnum(d : DTO)]
-[d.nameClassDto()/]Attributes_Enum
-[/template]
+[template public nameServiceInterfaceGwtAsync(d : environment::DTO)]
+  [d.nameService()/]Async[/template]
 
-[template public nameDto(r : Reference)]
-[r.nameClassDto()/]Dto
-[/template]
+[template public nameServiceFacade(s : soa::Service)]
+  [s.nameClassService()/]ServiceFacade[/template]
 
-[template public nameXto(r : Reference)]
-[r.nameClassDto()/]Xto
-[/template]
+[template public nameServiceFacadeInterface(s : soa::Service)]
+  [s.nameServiceFacade()/]_Itf[/template]
 
-[template public nameXto(d : DTO)]
-[d.nameClassDto()/]Xto
-[/template]
+[template public nameEnum(d : environment::DTO)]
+  [d.nameClassDto()/]Columns_Enum[/template]
 
-[template public nameXtoTest(d : DTO)]
-[d.nameClassDto()/]Xto_Test
-[/template]
+[template public nameDao(d : environment::DTO)]
+  [d.nameClassDto()/]Dao[/template]
 
-[template public nameMapper(d : DTO)]
-[d.nameClassDto()/]Mapper
-[/template]
+[template public nameEntityInterface(d : environment::DTO)]
+  [d.nameClassDto()/]Entity_Itf[/template]
 
-[template public nameMapper(r : Reference)]
-[r.nameClassDto()/]Mapper
-[/template]
+[template public nameEntity(d : environment::DTO)]
+  [d.nameClassDto()/]Entity[/template]
 
-[template public nameMapperInterface(d : DTO)]
-[nameMapper(d)/]_Itf
-[/template]
-
-[template public nameMatch(d : DTO)]
-[d.nameClassDto()/]Match
-[/template]
-
-[template public nameMatchInterface(d : DTO)]
-[nameMatch(d)/]_Itf
-[/template]
-
-[template public nameFetchingStrategy(d : DTO)]
-[d.nameClassDto()/]FetchingStrategy
-[/template]
-
-[template public nameFetchingStrategyTest(d : DTO)]
-[d.nameClassDto()/]FetchingStrategy_Test
-[/template]
-
-[template public nameService(s : Service, d : DTO)]
-[if not s.oclIsUndefined()]
-[s.nameService()/][else]
-[if not d.oclIsUndefined()]
-[d.nameClassDto()/]Service[else]
-NAME NOT FOUND FOR SERVICE AND DTO NULL[/if]
-[/if]
-[/template]
-
-[template public nameService(s : Service)]
-[s.nameClassService()/]Service
-[/template]
-
-[template public nameServiceRequirements(s : Service, d : DTO)]
-[nameService(s, d) /]Requirements
-[/template]
-
-[template public nameServiceTest(s : Service, d : DTO)]
-[nameService(s, d) /]_Test
-[/template]
-
-[template public nameServiceInterface(s : Service, d : DTO)]
-[nameService(s, d)/]_Itf
-[/template]
-
-[template public nameServiceInterfaceGwt(s : Service, d : DTO)]
-[nameService(s, d)/]
-[/template]
-
-[template public nameServiceInterfaceGwtAsync(s : Service, d : DTO)]
-[nameService(s, d)/]Async
-[/template]
-
-[template public nameServiceImplementationGwt(s : Service, d : DTO)]
-[nameService(s, d)/]Impl
-[/template]
-
-[template public nameService(d : DTO)]
-[d.buildSimpleDtoName().toUpperFirst()/]Service
-[/template]
-
-[template public nameServiceInterface(d : DTO)]
-[nameService(d)/]_Itf
-[/template]
-
-[template public nameServiceInterfaceGwt(d : DTO)]
-[nameService(d)/]
-[/template]
-
-[template public nameServiceInterfaceGwtAsync(d : DTO)]
-[nameService(d)/]Async
-[/template]
-
-[template public nameServiceFacade(s : Service)]
-[s.nameClassService()/]ServiceFacade
-[/template]
-
-[template public nameServiceFacadeInterface(s : Service)]
-[nameServiceFacade(s)/]_Itf
-[/template]
-
-[template public nameEnum(d : DTO)]
-[d.nameClassDto()/]Columns_Enum
-[/template]
-
-[template public nameDao(d : DTO)]
-[d.nameClassDto()/]Dao
-[/template]
-
-[template public nameEntityInterface(d : DTO)]
-[d.nameClassDto()/]Entity_Itf
-[/template]
-
-[template public nameEntity(d : DTO)]
-[d.nameClassDto()/]Entity
-[/template]
-
-[comment] Les Paramètres [/comment]
-[comment]----------------[/comment]
-
+[comment Les Paramètres /]
+[comment ---------------/]
 [template public nameParam(s : String)]
-[s/]
+  [s/][/template]
+
+[template public nameParam(a : environment::Attribute)]
+  [a.nameBaseAttribute()/][/template]
+
+[template public nameParam(r : environment::Reference)]
+  [r.nameBaseReference()/][/template]
+
+[template public nameParam(d : environment::DTO)]
+  [d.nameBaseDto()/][/template]
+
+[template public nameParamId(d : environment::DTO)]
+  [d.nameBaseDto()/] id[/template]
+
+[template public nameXtoParam(a : environment::Attribute)]
+  [a.nameBaseAttribute()/][/template]
+
+[template public nameXtoParam(r : environment::Reference)]
+  [r.nameBaseReference()/][/template]
+
+[template public nameXtoParam(d : environment::DTO)]
+  [d.nameBaseDto()/][/template]
+
+[template public nameXtoParamId(r : environment::Reference)]
+  [r.nameBaseReference()/]Id[/template]
+
+[template public nameXtoParamTab(r : environment::Reference)]
+  tab_[r.nameBaseReference()/][/template]
+
+[comment Les Attributs  /]
+[comment ---------------/]
+[template public nameProperty(a : environment::Attribute)]
+  _[a.nameBaseAttribute()/][/template]
+
+[template public nameProperty(r : environment::Reference)]
+  _[r.nameBaseReference()/][/template]
+
+[template public namePropertyId(r : environment::Reference)]
+  _[r.nameBaseReference()/][r.namePK_ID()/][/template]
+
+[template public namePropertyInverseId(r : environment::Reference)]
+  _[r.nameBaseReferenceInverse()/][r.namePK_ID()/][/template]
+
+[template public getpkAttributeId(any : ecore::EObject)]
+  getId ()[/template]
+
+[template public namePropertyTab(r : environment::Reference)]
+  _[r.nameBaseReferenceTab()/][/template]
+
+[template public nameVariablePropertyTab(r : environment::Reference)]
+  v[r.namePropertyTab()/][/template]
+
+[template public nameMatchVariable(d : environment::DTO)]
+  v_[d.nameClassDto()/]Match[/template]
+
+[template public nameTUFAttribute(a : environment::Attribute)]
+  [a.nameBaseAttribute().toUpperFirst()/][/template]
+
+[template public nameTUFReference(r : environment::Reference)]
+  [r.nameBaseReference().toUpperFirst()/][/template]
+
+[query public nameSimpleProperty_(p : environment::Property) : String = if p.oclIsKindOf(environment::Reference) then if p.name = null or p.name.size() = 0 then if p.oclAsType(environment::Reference).containingType = null then 'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)' else 'ref' + p.oclAsType(environment::Reference).containingType.name.sanitize().toUpperFirst() + p.namePK_ID() endif else p.name.sanitize() + p.namePK_ID() endif else if p.name = null or p.name.size() = 0 then 'XXXattribut sans nomXXX' else p.oclAsType(environment::Reference).nameBaseReference() endif endif/]
+
+[template public nameProperty(p : environment::Property)]
+  _[p.nameSimpleProperty()/][/template]
+
+[comment Les Categories /]
+[comment ---------------/]
+[template public nameBaseDto(c : environment::Namespace)]
+  [c.name.sanitize().toLowerFirst()/][/template]
+
+[comment Les References /]
+[comment ---------------/]
+[comment le nom d'attribut représentant la clé primaire d'une reference
+dans les attributs d'un dto/]
+[template public nameSimplePropertyID(s : environment::DTO)]
+  [s.nameBaseDto()/][s.namePK_ID()/][/template]
+
+[template public mandatory(p : environment::Property)]
+  [if (p.isMandatory())]true[else]false[/if]
 [/template]
 
-[template public nameParam(a : Attribute)]
-[nameBaseAttribute(a)/]
-[/template]
+[query public isMandatory(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE or p.multiplicity = environment::MultiplicityKind::ONE_STAR/]
 
-[template public nameParam(r : Reference)]
-[nameBaseReference(r)/]
-[/template]
+[template public nameComponent(s : soa::Service)]
+  [s.eContainer(soa::Component).name.sanitize().toLower()/][/template]
 
-[template public nameParam(d : DTO)]
-[nameBaseDto(d)/]
-[/template]
+[comment Les Setters /]
+[comment ------------/]
+[template public nameSetterListDto(r : environment::Reference)]
+  set[r.namePropertyTab()/][/template]
 
-[template public nameParamId(d : DTO)]
-[nameBaseDto(d)/] id
-[/template]
+[template public nameSetter(p : environment::Property)]
+  set[p.nameProperty()/][/template]
 
-[template public nameXtoParam(a : Attribute)]
-[nameBaseAttribute(a)/]
-[/template]
+[template public nameSetterDtoId(r : environment::Reference)]
+  set[r.namePropertyId()/][/template]
 
-[template public nameXtoParam(r : Reference)]
-[nameBaseReference(r)/]
-[/template]
+[template public nameSetterInverseDtoId(r : environment::Reference)]
+  set[r.namePropertyInverseId()/][/template]
 
-[template public nameXtoParam(d : DTO)]
-[nameBaseDto(d)/]
-[/template]
+[comment Les Getters /]
+[comment ------------/]
+[template public nameGetterListDto(r : environment::Reference)]
+  get[r.namePropertyTab()/][/template]
 
-[template public nameXtoParamId(r : Reference)]
-[nameBaseReference(r)/]Id
-[/template]
+[template public nameGetter(p : environment::Property)]
+  get[p.nameProperty()/][/template]
 
-[template public nameXtoParamTab(r : Reference)]
-tab_[nameBaseReference(r)/]
-[/template]
+[template public nameGetterDtoId(r : environment::Reference)]
+  get[r.namePropertyId()/][/template]
 
-[comment] Les Attributs  [/comment]
-[comment]----------------[/comment]
+[template public nameGetterInverseDtoId(r : environment::Reference)]
+  get[r.namePropertyInverseId()/][/template]
 
+[comment Les Operations /]
+[comment ---------------/]
+[template public nameOperation(o : soa::Operation)]
+  [o.name.sanitize().toLowerFirst()/][/template]
 
-[template public nameProperty(a : Attribute)]
-_[nameBaseAttribute(a)/]
-[/template]
-
-[template public nameProperty(r : Reference)]
-_[nameBaseReference(r)/]
-[/template]
-
-[template public namePropertyId(r : Reference)]
-_[nameBaseReference(r)/][namePK_ID()/]
-[/template]
-
-[template public namePropertyInverseId(r : Reference)]
-_[nameBaseReferenceInverse(r)/][namePK_ID()/]
-[/template]
-
-[template public getpkAttributeId(any : OclAny)]
-getId ()
-[/template]
-
-[template public namePropertyTab(r : Reference)]
-_[nameBaseReferenceTab(r)/]
-[/template]
-
-[template public nameVariablePropertyTab(r : Reference)]
-v[namePropertyTab(r)/]
-[/template]
-
-[template public nameMatchVariable(d : DTO)]
-v_[nameClassDto(d)/]Match
-[/template]
-
-[template public nameTUFAttribute(a : Attribute)]
-[a.nameBaseAttribute().toUpperFirst()/]
-[/template]
-
-[template public nameTUFReference(r : Reference)]
-[r.nameBaseReference().toUpperFirst()/]
-[/template]
-
-[query public nameSimpleProperty_(p : Property) : String =
-    if (p.oclIsKindOf(Reference)) then
-        if (p.name.oclIsUndefined() or p.name.size() = 0) then
-            if (p.oclAsType(Reference).containingType.oclIsUndefined()) then
-                'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)'
-            else
-                'ref' + p.oclAsType(Reference).containingType.name.sanitize().toUpperFirst() + namePK_ID()
-            endif
-        else
-            p.name.sanitize() + namePK_ID()
-        endif
-    else if (p.name.oclIsUndefined() or p.name.size() = 0) then
-        'XXXattribut sans nomXXX'
-    else
-        p.oclAsType(Reference).nameBaseReference()
-    endif endif
-/]
-
-[template public nameProperty(p : Property)]
-_[nameSimpleProperty(p)/]
-[/template]
-
-[comment] Les Categories [/comment]
-[comment]----------------[/comment]
-
-[template public nameBaseDto(c : Namespace)]
-[c.name.sanitize().toLowerFirst()/]
-[/template]
-
-[comment] Les References [/comment]
-[comment]----------------[/comment]
-
-[comment] le nom d'attribut représentant la clé primaire d'une reference
-dans les attributs d'un dto[/comment]
-[template public nameSimplePropertyID(s : DTO)]
-[nameBaseDto(s)/][namePK_ID()/]
-[/template]
-
-[template public mandatory(p : Property)]
-[if isMandatory(p)]true[else]false[/if]
-[/template]
-
-[query public isMandatory(p : Parameter) : Boolean =
-p.multiplicity=MultiplicityKind::ONE or p.multiplicity=MultiplicityKind::ONE_STAR     
-/]
-
-[template public nameComponent(s : Service)]
-[s.eContainer(Component).name.sanitize().toLower()/]
-[/template]
-
-[comment] Les Setters [/comment]
-[comment]-------------[/comment]
-
-[template public nameSetterListDto(r : Reference)]
-set[r.namePropertyTab()/]
-[/template]
-
-[template public nameSetter(p : Property)]
-set[nameProperty(p)/]
-[/template]
-
-[template public nameSetterDtoId(r : Reference)]
-set[r.namePropertyId()/]
-[/template]
-
-[template public nameSetterInverseDtoId(r : Reference)]
-set[r.namePropertyInverseId()/]
-[/template]
-
-[comment] Les Getters [/comment]
-[comment]-------------[/comment]
-
-[template public nameGetterListDto(r : Reference)]
-get[r.namePropertyTab()/]
-[/template]
-
-[template public nameGetter(p : Property)]
-get[nameProperty(p)/]
-[/template]
-
-[template public nameGetterDtoId(r : Reference)]
-get[namePropertyId(r)/]
-[/template]
-
-[template public nameGetterInverseDtoId(r : Reference)]
-get[namePropertyInverseId(r)/]
-[/template]
-
-[comment] Les Operations [/comment]
-[comment]----------------[/comment]
-
-[template public nameOperation(o : Operation)]
-[o.name.sanitize().toLowerFirst()/]
-[/template]
-
-[template public nameOperationResponse(o : Operation)]
-[o.name.sanitize().toLowerFirst()/]Response
-[/template]
-
-
-
+[template public nameOperationResponse(o : soa::Operation)]
+  [o.name.sanitize().toLowerFirst()/]Response[/template]

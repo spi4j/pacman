@@ -1,210 +1,205 @@
+[module log4j('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+
 [comment encoding = ISO-8859-1 /]
-[module log4j('http://www.obeonetwork.org/dsl/entity/3.0.0',
-              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-
-[template public log4j(void : OclAny, project : String)]
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!-- [protected ('for log4j')] 
--->
-
-<!-- Laisser le retour a la ligne pour la zone 'user code' ! -->
-
-<!-- ********************************************************** -->
-<!-- L'enregistreur d'etat (status) est utilise en interne      -->
-<!-- par les composants log4j2. Il imprime des informations     --> 
-<!-- de debogage sur les composants du plugin log4j2.           -->
-<!-- Laisser a 'WARN' par defaut et mettre a 'TRACE' ou 'DEBUG' -->
-<!-- si il y a des problemes de chargement des loggeurs.        -->
-<!-- ********************************************************** -->
-<Configuration strict="true" status="warn" name="XMLLog4j[getApplicationName()/]">
-
-	<!-- ********************************************* -->
-	<!-- Definition des proprietes.                    -->
-	<!-- Chemin pour le stockage des fichiers de log.  -->
-	<!-- ********************************************* -->
-	<Properties>
-    	<Property name="LOG_DIR">/applications/[getApplicationName()/]/logs</Property>
-    	<Property name="LOG_PATTERN">%d{dd/MM/yy HH:mm:ss,SSS} ['['/]%-5level[']'/] %c{3} - %msg%n</Property>
-	</Properties>
-
-	<!-- ******************************************************** -->
-	<!-- Definition de l'ensemble des sorties possibles pour les  -->
-	<!-- differents loggeurs qui vont etre definis par la suite.  -->
-	<!-- Il peut s'agir de sorties de type console, fichiers,     -->
-	<!-- mails, etc...                                            -->
-	<!-- ******************************************************** -->
-	<Appenders>
-		<!-- ********************************************************* -->
-		<!-- Definition de(s) mode(s) de sortie (appenders) direct(s). -->
-		<!-- ********************************************************* -->
-		<Console name="[getApplicationName()/]StdOut" target="SYSTEM_OUT">
-			<PatternLayout>
-				<Pattern>${LOG_PATTERN}</Pattern>
-			</PatternLayout> 
-		</Console>
-
-		<!-- ******************************************************************** -->
-		<!-- Definition de(s) mode(s) de sortie (appenders) fichier(s).           -->
-		<!-- Par defaut a la racine du disque sous le repertoire '/applications'. -->
-		<!-- Roulement base sur un fichier par jour avec suppression des fichiers -->
-		<!-- les plus anciens au dela de 20 fichiers.                             -->
-		<!-- ******************************************************************** -->
-		<RollingFile name="[getApplicationName()/]File" append="true">
-			<ImmediateFlush>true</ImmediateFlush>
-			<FileName>${LOG_DIR}/[getApplicationName()/].log</FileName>
-			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
-			<PatternLayout>
-				<Pattern>${LOG_PATTERN}</Pattern>
-			</PatternLayout>
-			<Policies>
-        		<TimeBasedTriggeringPolicy interval="1"/>
-    		</Policies>
-    		<DefaultRolloverStrategy max="20" />
-		</RollingFile>
-		
-		[comment : Ici on n'a pas acces au projet configuration, on fait donc sans hasHttpEmbeddedServer(). /]
-		[if(not 'server'.equalsIgnoreCase(project) and  not getHttpEmbeddedServer().oclIsUndefined() 
-			and 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer()))]
-		<!-- ********************************************************* -->
-		<!-- Definition d'un fichier dedie aux logs Tomcat si besoin.  -->
-		<!-- ********************************************************* -->
-		<RollingFile name="[getApplicationName()/]HttpFile" append="true">
-			<ImmediateFlush>true</ImmediateFlush>
-			<FileName>${LOG_DIR}/[getApplicationName()/]-http.log</FileName>
-			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
-			<PatternLayout>
-				<Pattern>${LOG_PATTERN}</Pattern>
-			</PatternLayout>
-			<Policies>
-        		<SizeBasedTriggeringPolicy size="50MB" />
-    		</Policies>
-    		<DefaultRolloverStrategy max="10" />
-		</RollingFile>
-		[/if]
-
-		[if useBDD()]
-		<!-- ********************************************************* -->
-		<!-- Definition d'un fichier dedie aux requetes SQL si besoin. -->
-		<!-- Attention tres gourmand en ressources si le loggeur est   -->
-		<!-- actif. Roulement base sur une taille max de 50 MB.        -->
-		<!-- ********************************************************* -->
-		<RollingFile name="[getApplicationName()/]SqlFile" append="false">
-			<ImmediateFlush>false</ImmediateFlush>
-			<FileName>${LOG_DIR}/[getApplicationName()/]-sql.log</FileName>
-			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
-			<PatternLayout>
-				<Pattern>${LOG_PATTERN}</Pattern>
-			</PatternLayout>
-			<Policies>
-        		<SizeBasedTriggeringPolicy size="50MB" />
-    		</Policies>
-    		<DefaultRolloverStrategy max="10" />
-		</RollingFile>[/if]
-	</Appenders>
-
-	<!-- ************************************************* -->
-	<!-- Referencement de l'ensemble des modes de sortie,  -->
-	<!-- definition et association des loggeurs aux modes. -->
-	<!-- ************************************************* -->
-	<Loggers>
-		<!-- ********************************************************* -->
-		<!-- Le niveau MINIMAL PAR DEFAUT pour l'ENSEMBLE des sorties  -->
-		<!-- et pour l'ENSEMBLE des loggeurs (application + toutes les --> 
-		<!-- autres librairies externes qui utilisent log4j2 si aucune --> 
-		<!-- configuration n'est trouve (definie) pour un logger.      --> 
-		<!-- Laisser de preference a 'info' pour les autres librairies -->
-		<!-- et surcharger au besoin pour chaque mode de sortie.       -->
-		<!-- ********************************************************* -->
-		<Root level="info">
-			<!-- *************************************************** -->
-			<!-- Enregistrement et surcharge (si besoin) des niveaux -->
-			<!-- pour chaque loggeur par rapport au 'rootLevel' **** -->
-			<!-- *************************************************** -->
-			<AppenderRef ref="[getApplicationName()/]StdOut" level="info" />
-			<AppenderRef ref="[getApplicationName()/]File" level="info" />
-			[if useBDD()]
-			<AppenderRef ref="[getApplicationName()/]SqlFile" level="info" />
-			[/if]
-			[if(not 'server'.equalsIgnoreCase(project) and not getHttpEmbeddedServer().oclIsUndefined() 
-			and 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer()))]
-			<AppenderRef ref="[getApplicationName()/]HttpFile" level="info" />
-			[/if]
-		</Root>
-
-		<!-- ***************************************************** -->
-		<!-- Enregistrement de(s) loggeur(s) pour l'application.   -->
-		<!-- Les surcharges de niveau PRIMENT sur ceux des sorties -->
-		<!-- En premier, le loggeur principal de l'application.    -->
-		<!-- ***************************************************** -->
-		<Logger name="[getApplicationPackage()/]" level="debug" additivity="true">
-			<!-- <AppenderRef ref="[getApplicationName()/]StdOut" /> -->
-			<AppenderRef ref="[getApplicationName()/]File" />
-		</Logger>
-
-		<!-- ********************************* -->
-		<!-- Le monitoring du framework Spi4j. -->
-		<!-- ********************************* -->
-		<Logger name="fr.spi4j" level="warn" additivity="true">
-			<!-- <AppenderRef ref="[getApplicationName()/]StdOut" /> -->
-			<AppenderRef ref="[getApplicationName()/]File" />
-		</Logger>
-
-		<!-- ************************************ -->
-		<!-- Le monitoring sur les requetes http. -->
-		<!-- ************************************ -->
-		<Logger name="logger.monitoring" level="warn" additivity="true">
-			<!-- <AppenderRef ref="[getApplicationName()/]StdOut" /> -->
-			<AppenderRef ref="[getApplicationName()/]File" />
-		</Logger>
-		
-		[if (project = 'server')]
-		<!-- ************************************************** -->
-		<!-- Le monitoring pour les metriques de l'application. -->
-		<!-- ************************************************** -->
-		<Logger name="javamelody" level="warn" additivity="true">
-			<!-- <AppenderRef ref="[getApplicationName()/]StdOut" /> -->
-			<AppenderRef ref="[getApplicationName()/]File" />
-		</Logger>
-		
-		[if useBDD()]
-
-		<!-- ********************************************** -->
-		<!-- Le monitoring specifique sur les requetes sql. -->
-		<!-- Loggeur asynchrone pour tenter d'optimiser les -->
-		<!--  perfs mais non actif par defaut.              -->
-		<!-- Pour activer, positionner le niveau a 'DEBUG'  -->
-		<!-- ********************************************** -->
-		<AsyncLogger name="fr.spi4j.persistence.dao.jdbc.DaoJdbc_Abs" 
-				level="warn" additivity="false" includeLocation="true">
-			<AppenderRef ref="[getApplicationName()/]SqlFile" />
-		</AsyncLogger>[/if]
-		[/if]
-
-		[if(not 'server'.equalsIgnoreCase(project) and not getHttpEmbeddedServer().oclIsUndefined() 
-		and 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer()))]
-		<!-- ********************************************** -->
-		<!-- Le monitoring pour le serveur embarque Tomcat. -->
-		<!-- ********************************************** -->
-  		<Logger name="org.apache.tomcat" level="info" additivity="false">
-        	<!-- <AppenderRef ref="[getApplicationName()/]StdOut" /> -->
-        	<AppenderRef ref="[getApplicationName()/]HttpFile" />
-		</Logger>
-
-		<!-- ******************************************* -->
-		<!-- Le monitoring specifique pour le bootstrap. -->
-		<!-- ******************************************* -->		
-		<Logger name="fr.[getApplicationName()/].[getHttpEmbeddedServer().toUpperFirst()/]Boostrap" level="info" additivity="false">
-        	<AppenderRef ref="[getApplicationName()/]HttpFile" />
-        	<AppenderRef ref="[getApplicationName()/]StdOut" />
-		</Logger>
-		[/if]
-	</Loggers>
-</Configuration>
-
-<!-- [/protected] -->
-[/template]
+[template public log4j(void : ecore::EObject, project : String)]
+  <?xml version="1.0" encoding="UTF-8"?>
+  
+  [protected ('for log4j') startTagPrefix('<!-- ') endTagPrefix('<!-- ')]
+    -->
+    
+    <!-- Laisser le retour a la ligne pour la zone 'user code' ! -->
+    
+    <!-- ********************************************************** -->
+    <!-- L'enregistreur d'etat (status) est utilise en interne      -->
+    <!-- par les composants log4j2. Il imprime des informations     --> 
+    <!-- de debogage sur les composants du plugin log4j2.           -->
+    <!-- Laisser a 'WARN' par defaut et mettre a 'TRACE' ou 'DEBUG' -->
+    <!-- si il y a des problemes de chargement des loggeurs.        -->
+    <!-- ********************************************************** -->
+    <Configuration strict="true" status="warn" name="XMLLog4j[void.getApplicationName()/]">
+    
+    	<!-- ********************************************* -->
+    	<!-- Definition des proprietes.                    -->
+    	<!-- Chemin pour le stockage des fichiers de log.  -->
+    	<!-- ********************************************* -->
+    	<Properties>
+        	<Property name="LOG_DIR">/applications/[void.getApplicationName()/]/logs</Property>
+        	<Property name="LOG_PATTERN">%d{dd/MM/yy HH:mm:ss,SSS} ['['/]%-5level] %c{3} - %msg%n</Property>
+    	</Properties>
+    
+    	<!-- ******************************************************** -->
+    	<!-- Definition de l'ensemble des sorties possibles pour les  -->
+    	<!-- differents loggeurs qui vont etre definis par la suite.  -->
+    	<!-- Il peut s'agir de sorties de type console, fichiers,     -->
+    	<!-- mails, etc...                                            -->
+    	<!-- ******************************************************** -->
+    	<Appenders>
+    		<!-- ********************************************************* -->
+    		<!-- Definition de(s) mode(s) de sortie (appenders) direct(s). -->
+    		<!-- ********************************************************* -->
+    		<Console name="[void.getApplicationName()/]StdOut" target="SYSTEM_OUT">
+    			<PatternLayout>
+    				<Pattern>${LOG_PATTERN}</Pattern>
+    			</PatternLayout> 
+    		</Console>
+    
+    		<!-- ******************************************************************** -->
+    		<!-- Definition de(s) mode(s) de sortie (appenders) fichier(s).           -->
+    		<!-- Par defaut a la racine du disque sous le repertoire '/applications'. -->
+    		<!-- Roulement base sur un fichier par jour avec suppression des fichiers -->
+    		<!-- les plus anciens au dela de 20 fichiers.                             -->
+    		<!-- ******************************************************************** -->
+    		<RollingFile name="[void.getApplicationName()/]File" append="true">
+    			<ImmediateFlush>true</ImmediateFlush>
+    			<FileName>${LOG_DIR}/[void.getApplicationName()/].log</FileName>
+    			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
+    			<PatternLayout>
+    				<Pattern>${LOG_PATTERN}</Pattern>
+    			</PatternLayout>
+    			<Policies>
+            		<TimeBasedTriggeringPolicy interval="1"/>
+        		</Policies>
+        		<DefaultRolloverStrategy max="20" />
+    		</RollingFile>
+    		
+    [if (not 'server'.equalsIgnoreCase(project) and not (void.getHttpEmbeddedServer() = null) and 'tomcat'.equalsIgnoreCase(void.getHttpEmbeddedServer()))]
+      		<!-- ********************************************************* -->
+      		<!-- Definition d'un fichier dedie aux logs Tomcat si besoin.  -->
+      		<!-- ********************************************************* -->
+      		<RollingFile name="[void.getApplicationName()/]HttpFile" append="true">
+      			<ImmediateFlush>true</ImmediateFlush>
+      			<FileName>${LOG_DIR}/[void.getApplicationName()/]-http.log</FileName>
+      			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
+      			<PatternLayout>
+      				<Pattern>${LOG_PATTERN}</Pattern>
+      			</PatternLayout>
+      			<Policies>
+              		<SizeBasedTriggeringPolicy size="50MB" />
+          		</Policies>
+          		<DefaultRolloverStrategy max="10" />
+      		</RollingFile>
+    [/if]
+    
+    [if (void.useBDD())]
+      		<!-- ********************************************************* -->
+      		<!-- Definition d'un fichier dedie aux requetes SQL si besoin. -->
+      		<!-- Attention tres gourmand en ressources si le loggeur est   -->
+      		<!-- actif. Roulement base sur une taille max de 50 MB.        -->
+      		<!-- ********************************************************* -->
+      		<RollingFile name="[void.getApplicationName()/]SqlFile" append="false">
+      			<ImmediateFlush>false</ImmediateFlush>
+      			<FileName>${LOG_DIR}/[void.getApplicationName()/]-sql.log</FileName>
+      			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
+      			<PatternLayout>
+      				<Pattern>${LOG_PATTERN}</Pattern>
+      			</PatternLayout>
+      			<Policies>
+              		<SizeBasedTriggeringPolicy size="50MB" />
+          		</Policies>
+          		<DefaultRolloverStrategy max="10" />
+      		</RollingFile>[/if]
+    	</Appenders>
+    
+    	<!-- ************************************************* -->
+    	<!-- Referencement de l'ensemble des modes de sortie,  -->
+    	<!-- definition et association des loggeurs aux modes. -->
+    	<!-- ************************************************* -->
+    	<Loggers>
+    		<!-- ********************************************************* -->
+    		<!-- Le niveau MINIMAL PAR DEFAUT pour l'ENSEMBLE des sorties  -->
+    		<!-- et pour l'ENSEMBLE des loggeurs (application + toutes les --> 
+    		<!-- autres librairies externes qui utilisent log4j2 si aucune --> 
+    		<!-- configuration n'est trouve (definie) pour un logger.      --> 
+    		<!-- Laisser de preference a 'info' pour les autres librairies -->
+    		<!-- et surcharger au besoin pour chaque mode de sortie.       -->
+    		<!-- ********************************************************* -->
+    		<Root level="info">
+    			<!-- *************************************************** -->
+    			<!-- Enregistrement et surcharge (si besoin) des niveaux -->
+    			<!-- pour chaque loggeur par rapport au 'rootLevel' **** -->
+    			<!-- *************************************************** -->
+    			<AppenderRef ref="[void.getApplicationName()/]StdOut" level="info" />
+    			<AppenderRef ref="[void.getApplicationName()/]File" level="info" />
+    [if (void.useBDD())]
+      			<AppenderRef ref="[void.getApplicationName()/]SqlFile" level="info" />
+    [/if]
+    [if (not 'server'.equalsIgnoreCase(project) and not (void.getHttpEmbeddedServer() = null) and 'tomcat'.equalsIgnoreCase(void.getHttpEmbeddedServer()))]
+      			<AppenderRef ref="[void.getApplicationName()/]HttpFile" level="info" />
+    [/if]
+    		</Root>
+    
+    		<!-- ***************************************************** -->
+    		<!-- Enregistrement de(s) loggeur(s) pour l'application.   -->
+    		<!-- Les surcharges de niveau PRIMENT sur ceux des sorties -->
+    		<!-- En premier, le loggeur principal de l'application.    -->
+    		<!-- ***************************************************** -->
+    		<Logger name="[void.getApplicationPackage()/]" level="debug" additivity="true">
+    			<!-- <AppenderRef ref="[void.getApplicationName()/]StdOut" /> -->
+    			<AppenderRef ref="[void.getApplicationName()/]File" />
+    		</Logger>
+    
+    		<!-- ********************************* -->
+    		<!-- Le monitoring du framework Spi4j. -->
+    		<!-- ********************************* -->
+    		<Logger name="fr.spi4j" level="warn" additivity="true">
+    			<!-- <AppenderRef ref="[void.getApplicationName()/]StdOut" /> -->
+    			<AppenderRef ref="[void.getApplicationName()/]File" />
+    		</Logger>
+    
+    		<!-- ************************************ -->
+    		<!-- Le monitoring sur les requetes http. -->
+    		<!-- ************************************ -->
+    		<Logger name="logger.monitoring" level="warn" additivity="true">
+    			<!-- <AppenderRef ref="[void.getApplicationName()/]StdOut" /> -->
+    			<AppenderRef ref="[void.getApplicationName()/]File" />
+    		</Logger>
+    		
+    [if (project = 'server')]
+      		<!-- ************************************************** -->
+      		<!-- Le monitoring pour les metriques de l'application. -->
+      		<!-- ************************************************** -->
+      		<Logger name="javamelody" level="warn" additivity="true">
+      			<!-- <AppenderRef ref="[void.getApplicationName()/]StdOut" /> -->
+      			<AppenderRef ref="[void.getApplicationName()/]File" />
+      		</Logger>
+      		
+      [if (void.useBDD())]
+        
+        		<!-- ********************************************** -->
+        		<!-- Le monitoring specifique sur les requetes sql. -->
+        		<!-- Loggeur asynchrone pour tenter d'optimiser les -->
+        		<!--  perfs mais non actif par defaut.              -->
+        		<!-- Pour activer, positionner le niveau a 'DEBUG'  -->
+        		<!-- ********************************************** -->
+        		<AsyncLogger name="fr.spi4j.persistence.dao.jdbc.DaoJdbc_Abs" 
+        				level="warn" additivity="false" includeLocation="true">
+        			<AppenderRef ref="[void.getApplicationName()/]SqlFile" />
+        		</AsyncLogger>[/if]
+    [/if]
+    
+    [if (not 'server'.equalsIgnoreCase(project) and not (void.getHttpEmbeddedServer() = null) and 'tomcat'.equalsIgnoreCase(void.getHttpEmbeddedServer()))]
+      		<!-- ********************************************** -->
+      		<!-- Le monitoring pour le serveur embarque Tomcat. -->
+      		<!-- ********************************************** -->
+        		<Logger name="org.apache.tomcat" level="info" additivity="false">
+              	<!-- <AppenderRef ref="[void.getApplicationName()/]StdOut" /> -->
+              	<AppenderRef ref="[void.getApplicationName()/]HttpFile" />
+      		</Logger>
+      
+      		<!-- ******************************************* -->
+      		<!-- Le monitoring specifique pour le bootstrap. -->
+      		<!-- ******************************************* -->		
+      		<Logger name="fr.[void.getApplicationName()/].[void.getHttpEmbeddedServer().toUpperFirst()/]Boostrap" level="info" additivity="false">
+              	<AppenderRef ref="[void.getApplicationName()/]HttpFile" />
+              	<AppenderRef ref="[void.getApplicationName()/]StdOut" />
+      		</Logger>
+    [/if]
+    	</Loggers>
+    </Configuration>
+    
+  [/protected]
+   -->[/template]

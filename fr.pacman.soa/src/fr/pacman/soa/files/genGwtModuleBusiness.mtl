@@ -1,21 +1,18 @@
+[module genGwtModuleBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::gwt::resources::gwtModuleBusiness/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genGwtModuleBusiness('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                             'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::gwt::resources::gwtModuleBusiness /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genGwtModuleBusiness(n : Namespace)]
-[file (filename(getClientGwtResourcesDir(), getApplicationPackage(), filename()), false, 'UTF-8')]
-[gwtModuleBusiness(n)/]
-[/file]
+[template public genGwtModuleBusiness(n : environment::Namespace)]
+  [file (n.getClientGwtResourcesDir().filename(n.getApplicationPackage(), n.filename()), overwrite, 'UTF-8')]
+    [n.gwtModuleBusiness()/]
+  [/file]
 [/template]
 
-[query private filename(any : OclAny) : String =
-getApplicationNameUpperFirst() + '_business.gwt.xml'
-/]
+[query private filename(any : ecore::EObject) : String = any.getApplicationNameUpperFirst() + '_business.gwt.xml'/]

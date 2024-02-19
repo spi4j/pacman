@@ -86,6 +86,8 @@ public final class StringUtils
       return v_sb.toString();
    }
 
+public static String normalizeJavaService(final String p_s){return normalize(p_s);}
+
    /**
     * Retourne la notation CamelCase d'une chaine de caractères.
     * 
@@ -115,6 +117,8 @@ public final class StringUtils
       return v_sb.toString();
    }
 
+public static String sanitizeJavaService(final String p_s){return sanitize(p_s);}
+
    /**
     * Ecrit une ligne au format /* ABCDEF \*\/
     * 
@@ -139,6 +143,8 @@ public final class StringUtils
       return v_sb.toString();
    }
 
+public static String genSlashedLineJavaService(final String p_str,final Integer p_size){return genSlashedLine(p_str,p_size);}
+
    /**
     * Retourne la date du jour au format p_format.
     * 
@@ -151,6 +157,8 @@ public final class StringUtils
       final SimpleDateFormat v_formatter = new SimpleDateFormat(p_format);
       return v_formatter.format(new Date());
    }
+
+public static String dateJavaService(final String p_format){return date(p_format);}
 
    /**
     * Echappe les caractères spéciaux d'une chaine, tels que les guillemets et les retours chariots.
@@ -168,6 +176,8 @@ public final class StringUtils
       return p_str.replaceAll("\"", "\\\\\"").replaceAll("\r\n", "\\\\n").replaceAll("\n", "\\\\n").replaceAll("\t",
                "   ");
    }
+
+public static String escapeJavaService(final String p_str){return escape(p_str);}
 
    /**
     * Inverse une chaine de caractères, selon un séparateur : reverse("abc.def.ghi", "\\.") --> "ghi.def.abc"

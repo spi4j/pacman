@@ -1,33 +1,31 @@
-[comment encoding = UTF-8 /]
-[module dropSequence('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module dropSequence('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
 [import fr::pacman::commons::common::utils/]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::sql::common /]
-[import fr::pacman::commons::common::properties /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::commons::common::properties/]
 
-[template public dropSequence(r : Root)]
-/****************************************************************/
-[genSlashedLine('Sequences', sizeHeader())/]
-/****************************************************************/
-[for (n : environment::Namespace | r.ownedNamespaces)]
-[dropSequence(n)/]
-[/for]
+[comment encoding = UTF-8 /]
+[template public dropSequence(r : entity::Root)]
+  /****************************************************************/
+  ['Sequences'.genSlashedLine(r.sizeHeader())/]
+  /****************************************************************/
+  [for (n : environment::Namespace | r.ownedNamespaces)]
+    [n.dropSequence()/]
+  [/for]
 [/template]
 
 [template private dropSequence(n : environment::Namespace)]
-[for (sn : environment::Namespace | n.ownedNamespaces)]
-[dropSequence(sn)/]
-[/for]
-[for (e : Entity | n.types->select(e| e.oclIsKindOf(entity::Entity)))]
-[if not e.isNotPersistent() or useMatching()]
-[dropSequence(e)/]
-[/if]
-[/for]
+  [for (sn : environment::Namespace | n.ownedNamespaces)]
+    [sn.dropSequence()/]
+  [/for]
+  [for (e : entity::Entity | n.types->select(e | e.oclIsKindOf(entity::Entity)))]
+    [if (not e.isNotPersistent() or e.useMatching())]
+      [e.dropSequence()/]
+    [/if]
+  [/for]
 [/template]
 
-[template private dropSequence(e : Entity)]
-drop sequence [nameSequence(e)/];
-[/template]
-
+[template private dropSequence(e : entity::Entity)]
+  drop sequence [e.nameSequence()/];[/template]

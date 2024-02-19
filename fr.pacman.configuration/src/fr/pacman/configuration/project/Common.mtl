@@ -1,747 +1,739 @@
-[comment encoding = UTF-8 /]
 [module Common('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::configuration::common::names/]
+[import fr::pacman::configuration::common::properties/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
 
-[import fr::pacman::configuration::common::names /]
-[import fr::pacman::configuration::common::properties /]
+[comment encoding = UTF-8 /]
+[template public commonPom(any : ecore::EObject) post(self.trim())]
+  <project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <parent>
+          <groupId>[any.getApplicationPackage()/]</groupId>
+          <artifactId>[any.getApplicationName()/]</artifactId>
+          <version>[any.getVersion()/]</version>
+      </parent>
+      <artifactId>[any.getCommonProjectName()/]</artifactId>
+      <packaging>jar</packaging>
+      <name>[any.getApplicationName()/] - Partie commune</name>
+  
+  	<!--
+  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+     	-->
+     		
+     	<!--
+   [/protected]
+  
+  	-->
+  
+      <dependencies>
+  [if (not any.isLibraryRS())]
+    [if (any.useSpi4jSecurity())]
+              <dependency>		
+                  <groupId>fr.spi4j</groupId>
+      			<artifactId>spi4j-lib-security-commons</artifactId>
+                  <version>${spi4j.version}</version>
+              </dependency>
+    [/if]
+            <dependency>
+    			<groupId>net.sf.ehcache</groupId>
+    			<artifactId>ehcache-core</artifactId>
+                <version>${ehcache-core.version}</version>
+            </dependency>
+    		<!--
+    		<dependency>
+    			<groupId>jakarta.servlet</groupId>
+    			<artifactId>jakarta.servlet-api</artifactId>
+    			<version>${jakarta-servlet-api.version}</version>
+    			<scope>provided</scope>
+    		</dependency>
+    		-->
+    [if (any.useEjb())]
+              <!--
+      		<dependency>
+                  <groupId>javax.ejb</groupId>
+                  <artifactId>ejb-api</artifactId>
+                  <version>${ejb-api.version}</version>
+              </dependency>
+      		-->
+    [/if]
+  [/if]
+          <dependency>
+              <groupId>org.junit.jupiter</groupId>
+              <artifactId>junit-jupiter</artifactId>
+              <version>${junit.version}</version>
+              <scope>test</scope>
+          </dependency>
+  		<dependency>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-api</artifactId>
+      		<version>${slf4j.version}</version>
+  		</dependency>
+  		<dependency>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-simple</artifactId>
+      		<version>${slf4j.version}</version>
+  		</dependency>
+          <dependency>
+  			<groupId>org.apache.logging.log4j</groupId>
+      		<artifactId>log4j-core</artifactId>
+              <version>${log4j.version}</version>
+          </dependency>
+          <dependency>
+  			<groupId>org.apache.logging.log4j</groupId>
+      		<artifactId>log4j-api</artifactId>
+              <version>${log4j.version}</version>
+          </dependency>
+  		<dependency>
+      		<groupId>com.lmax</groupId>
+      		<artifactId>disruptor</artifactId>
+      		<version>${log4j-disruptor.version}</version>
+  		</dependency>
+  [if (any.hasAdditionnalLibraries())]
+    [for (prop : String | any.getAdditionnalLibraries())]
+      		<!-- Librairie additionnelle utilisateur. -->
+      		<dependency>
+      			<groupId>[prop.getLibraryPackage(prop)/]</groupId>
+      			<artifactId>[prop.getLibraryName(prop)/]-commons</artifactId>
+      			<version>${user-library-[prop.getLibraryName(prop)/].version}</version>
+      		</dependency>
+    [/for]
+  [/if]
+  [if (any.useWS() or any.isLibraryRS())]
+    		<dependency>
+        		<groupId>com.fasterxml.jackson.core</groupId>
+        		<artifactId>jackson-annotations</artifactId>
+        		<version>${jackson.annotation.version}</version>
+    		</dependency>
+     		<dependency>
+        		<groupId>jakarta.xml.bind</groupId>
+        		<artifactId>jakarta.xml.bind-api</artifactId>
+        		<version>${jakarta.xml.bind.version}</version>
+    		</dependency>
+  [/if]
+  [if (any.hasHttpEmbeddedServer() and 'jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+    		<dependency>
+        		<groupId>org.apache.logging.log4j</groupId>
+        		<artifactId>log4j-slf4j2-impl</artifactId>
+    			<version>${log4j-slf4j.version}</version>
+    		</dependency>
+  [/if]
+  
+  		<!--
+  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+      		-->
+      	
+      [if (any.useConfigFileSpi4jFrwk())]
+        		<!-- A décommenter en fonction de l'utilisation des diverses options
+        		pour l'utilisation du framework spi4j dans le cas de la gestion des
+        		fichiers de configuration pour l'application cible.	-->
+        		<!--
+        		<dependency>
+        			<groupId>org.quartz-scheduler</groupId>
+        			<artifactId>quartz</artifactId>
+        			<version>${quartz.version}</version>
+        		</dependency>
+        		-->
+        		<!--			
+        		<dependency>
+        			<groupId>org.yaml</groupId>
+        			<artifactId>snakeyaml</artifactId>
+            		<version>${snakeyaml.version}</version>
+        		</dependency>
+        		-->
+      [/if]
+      
+      		<!--
+    [/protected]
+  
+  		-->
+      </dependencies>
+  
+      <build>
+          <plugins>
+              <!--Ajout d'un fichier [any.getApplicationName()/]-build-info.properties contenant les proprietes definies 
+  			ci-dessous avec des infos sur le build, en particulier pour les builds faits dans la PIC
+              (cles : build.number, build.id, build.svnRevision, build.svnUrl ...) -->
+              <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>properties-maven-plugin</artifactId>
+                  <version>${properties-maven-plugin.version}</version>
+                  <executions>
+                      <execution>
+                          <phase>generate-resources</phase>
+                          <goals>
+                              <goal>write-project-properties</goal>
+                          </goals>
+                          <configuration>
+                              <outputFile>${project.build.outputDirectory}/[any.getApplicationName()/]-build-info.properties</outputFile>
+                          </configuration>
+                      </execution>
+                  </executions>
+              </plugin>
+              <!--Rapport pmd sans CPD sur Attributes_Enum, DTO et XTO -->
+              <plugin>
+                  <artifactId>maven-pmd-plugin</artifactId>
+                  <version>${maven-pmd-plugin.version}</version>
+                  <configuration>
+                      <excludes>
+                          <exclude>**/*Attributes*.java</exclude>
+                          <exclude>**/*Dto.java</exclude>
+                          <exclude>**/*Xto.java</exclude>
+                          <exclude>**/Requirement*.java</exclude>
+                      </excludes>
+                  </configuration>
+              </plugin>
+  			<!--
+  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+       			-->
+       		
+       			<!--
+     [/protected]
+  
+  			-->
+          </plugins>
+          <pluginManagement>
+                <plugins>
+                      <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                      <plugin>
+                           <groupId>org.eclipse.m2e</groupId>
+                           <artifactId>lifecycle-mapping</artifactId>
+                           <version>${lifecycle-mapping.version}</version>
+                           <configuration>
+                                 <lifecycleMappingMetadata>
+                                       <pluginExecutions>
+                                             <pluginExecution>
+                                                   <pluginExecutionFilter>
+                                                         <groupId>
+                                                               org.codehaus.mojo
+                                                         </groupId>
+                                                         <artifactId>
+                                                               properties-maven-plugin
+                                                         </artifactId>
+                                                         <versionRange>
+                                                               ['['/]${properties-maven-plugin.version},)
+                                                         </versionRange>
+                                                         <goals>
+                                                               <goal>
+                                                                     write-project-properties
+                                                               </goal>
+                                                         </goals>
+                                                   </pluginExecutionFilter>
+                                                   <action>
+                                                         <ignore></ignore>
+                                                   </action>
+                                             </pluginExecution>
+                                       </pluginExecutions>
+                                 </lifecycleMappingMetadata>
+                           </configuration>
+                      </plugin>
+                </plugins>
+          </pluginManagement>
+      </build>
+  
+      <properties>
+          <!--Les proprietes suivantes seront mises dans le fichier [any.getApplicationName()/]-build-info.properties dans le jar (avec le plugin de build ci-dessus). -->
+          <!--Ces proprietes sont connues quand le build est fait par la PIC (Jenkins). -->
+          <build.number>${env.BUILD_NUMBER}</build.number>
+          <build.id>${env.BUILD_ID}</build.id>
+          <build.url>${env.BUILD_URL}</build.url>
+          <build.jobName>${env.JOB_NAME}</build.jobName>
+          <build.tag>${env.BUILD_TAG}</build.tag>
+          <build.svnRevision>${env.SVN_REVISION}</build.svnRevision>
+          <build.svnUrl>${env.SVN_URL}</build.svnUrl>
+  
+          <!--Pour les proprietes suivantes, ce qui importe c'est les propriétés du module parent qui contient les infos globales sur le build. -->
+          <build.projectGroupId>${project.parent.groupId}</build.projectGroupId>
+          <build.projectArtifactId>${project.parent.artifactId}</build.projectArtifactId>
+          <build.projectVersion>${project.parent.version}</build.projectVersion>
+  		<!--
+  		[protected ('for properties') startTagPrefix('// ') endTagPrefix('// ')]
+      		-->
+      		
+      		<!--
+    [/protected]
+  
+  		-->
+      </properties>
+  </project>[/template]
 
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-
-[template public commonPom(any : OclAny) post (trim())]
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>[getApplicationPackage()/]</groupId>
-        <artifactId>[getApplicationName()/]</artifactId>
-        <version>[getVersion() /]</version>
-    </parent>
-    <artifactId>[getCommonProjectName()/]</artifactId>
-    <packaging>jar</packaging>
-    <name>[getApplicationName()/] - Partie commune</name>
-
-	<!--
-	// [protected ('for custom code')]
-	-->
-		
-	<!--
-	// [/protected]
-	-->
-
-    <dependencies>
-		[if not isLibraryRS()]
-		[if useSpi4jSecurity()]
-        <dependency>		
-            <groupId>fr.spi4j</groupId>
-			<artifactId>spi4j-lib-security-commons</artifactId>
-            <version>${spi4j.version}</version>
-        </dependency>
-		[/if]
-        <dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-            <version>${ehcache-core.version}</version>
-        </dependency>
-		<!--
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>${jakarta-servlet-api.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
-		[if useEjb()]
-        <!--
-		<dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>ejb-api</artifactId>
-            <version>${ejb-api.version}</version>
-        </dependency>
-		-->
-		[/if]
-		[/if]
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-    		<groupId>org.slf4j</groupId>
-    		<artifactId>slf4j-api</artifactId>
-    		<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-    		<groupId>org.slf4j</groupId>
-    		<artifactId>slf4j-simple</artifactId>
-    		<version>${slf4j.version}</version>
-		</dependency>
-        <dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-		<dependency>
-    		<groupId>com.lmax</groupId>
-    		<artifactId>disruptor</artifactId>
-    		<version>${log4j-disruptor.version}</version>
-		</dependency>
-		[if hasAdditionnalLibraries()]
-		[for (prop : String | getAdditionnalLibraries())]
-		<!-- Librairie additionnelle utilisateur. -->
-		<dependency>
-			<groupId>[getLibraryPackage(prop)/]</groupId>
-			<artifactId>[getLibraryName(prop)/]-commons</artifactId>
-			<version>${user-library-[getLibraryName(prop)/].version}</version>
-		</dependency>
-		[/for][/if]
-		[if useWS() or isLibraryRS()]
-		<dependency>
-    		<groupId>com.fasterxml.jackson.core</groupId>
-    		<artifactId>jackson-annotations</artifactId>
-    		<version>${jackson.annotation.version}</version>
-		</dependency>
- 		<dependency>
-    		<groupId>jakarta.xml.bind</groupId>
-    		<artifactId>jakarta.xml.bind-api</artifactId>
-    		<version>${jakarta.xml.bind.version}</version>
-		</dependency>
-		[/if]
-		[if hasHttpEmbeddedServer() and 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
-		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>${log4j-slf4j.version}</version>
-		</dependency>
-		[/if]
-
-		<!--
-		// [protected ('for dependencies')]
-		-->
-	
-		[if useConfigFileSpi4jFrwk()]
-		<!-- A décommenter en fonction de l'utilisation des diverses options
-		pour l'utilisation du framework spi4j dans le cas de la gestion des
-		fichiers de configuration pour l'application cible.	-->
-		<!--
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>${quartz.version}</version>
-		</dependency>
-		-->
-		<!--			
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-    		<version>${snakeyaml.version}</version>
-		</dependency>
-		-->
-		[/if]
-
-		<!--
-		// [/protected]
-		-->
-    </dependencies>
-
-    <build>
-        <plugins>
-            <!--Ajout d'un fichier [getApplicationName()/]-build-info.properties contenant les proprietes definies 
-			ci-dessous avec des infos sur le build, en particulier pour les builds faits dans la PIC
-            (cles : build.number, build.id, build.svnRevision, build.svnUrl ...) -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>${properties-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>write-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <outputFile>${project.build.outputDirectory}/[getApplicationName()/]-build-info.properties</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--Rapport pmd sans CPD sur Attributes_Enum, DTO et XTO -->
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${maven-pmd-plugin.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*Attributes*.java</exclude>
-                        <exclude>**/*Dto.java</exclude>
-                        <exclude>**/*Xto.java</exclude>
-                        <exclude>**/Requirement*.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-			<!--
-			// [protected ('for plugins')]
-			-->
-		
-			<!--
-			// [/protected]
-			-->
-        </plugins>
-        <pluginManagement>
-              <plugins>
-                    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                    <plugin>
-                         <groupId>org.eclipse.m2e</groupId>
-                         <artifactId>lifecycle-mapping</artifactId>
-                         <version>${lifecycle-mapping.version}</version>
-                         <configuration>
-                               <lifecycleMappingMetadata>
-                                     <pluginExecutions>
-                                           <pluginExecution>
-                                                 <pluginExecutionFilter>
-                                                       <groupId>
-                                                             org.codehaus.mojo
-                                                       </groupId>
-                                                       <artifactId>
-                                                             properties-maven-plugin
-                                                       </artifactId>
-                                                       <versionRange>
-                                                             ['['/]${properties-maven-plugin.version},)
-                                                       </versionRange>
-                                                       <goals>
-                                                             <goal>
-                                                                   write-project-properties
-                                                             </goal>
-                                                       </goals>
-                                                 </pluginExecutionFilter>
-                                                 <action>
-                                                       <ignore></ignore>
-                                                 </action>
-                                           </pluginExecution>
-                                     </pluginExecutions>
-                               </lifecycleMappingMetadata>
-                         </configuration>
-                    </plugin>
-              </plugins>
-        </pluginManagement>
-    </build>
-
-    <properties>
-        <!--Les proprietes suivantes seront mises dans le fichier [getApplicationName()/]-build-info.properties dans le jar (avec le plugin de build ci-dessus). -->
-        <!--Ces proprietes sont connues quand le build est fait par la PIC (Jenkins). -->
-        <build.number>${env.BUILD_NUMBER}</build.number>
-        <build.id>${env.BUILD_ID}</build.id>
-        <build.url>${env.BUILD_URL}</build.url>
-        <build.jobName>${env.JOB_NAME}</build.jobName>
-        <build.tag>${env.BUILD_TAG}</build.tag>
-        <build.svnRevision>${env.SVN_REVISION}</build.svnRevision>
-        <build.svnUrl>${env.SVN_URL}</build.svnUrl>
-
-        <!--Pour les proprietes suivantes, ce qui importe c'est les propriétés du module parent qui contient les infos globales sur le build. -->
-        <build.projectGroupId>${project.parent.groupId}</build.projectGroupId>
-        <build.projectArtifactId>${project.parent.artifactId}</build.projectArtifactId>
-        <build.projectVersion>${project.parent.version}</build.projectVersion>
-		<!--
-		// [protected ('for properties')]
-		-->
-		
-		<!--
-		// [/protected]
-		-->
-    </properties>
-</project>
-[/template]
-
-[template public commonCheck_Spi4j(any : OclAny) post (trim())]
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-    This configuration file was written by the eclipse-cs plugin configuration editor
--->
-<!--
-    Checkstyle-Configuration: MINARM Checks
-    Description:
-Configuration Checkstyle vérifiant les conventions de développement du MINARM.
--->
-<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
-<module name="Checker">
-  <metadata name="net.sf.eclipsecs.core.comment" value="Verification Exigences Code Java EMAT"/>
-  <property name="severity" value="warning"/>
-  <property name="localeCountry" value="fr"/>
-  <property name="localeLanguage" value="fr"/>
-  <module name="TreeWalker">
-    <module name="FileContentsHolder"/>
-    <module name="JavadocMethod">
-      <property name="suppressLoadErrors" value="true"/>
-    </module>
-    <module name="JavadocType">
-      <!--non supporté par plugin checkstyle dans maven: <property name="allowUnknownTags" value="true"/> -->
-    </module>
-    <module name="JavadocVariable">
-      <property name="excludeScope" value="private"/>
-    </module>
-    <!--
-    <module name="JavadocStyle"/>
-    -->
-
-[if 'sun'.equalsIgnoreCase(getNaming())]
-    <!-- Configuration checkstyle pour un nommage "SUN" -->
-    <module name="ConstantName"/>
-    <module name="LocalFinalVariableName"/>
-    <module name="LocalVariableName"/>
-    <module name="MemberName"/>
-    <module name="MethodName"/>
-    <module name="PackageName"/>
-    <module name="ParameterName"/>
-    <module name="StaticVariableName"/>
-    <module name="TypeName"/>
-[else]
-    <!-- Configuration checkstyle pour un nommage "SAFRAN" -->
-    <module name="ConstantName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Une constante doit commençée par &quot;c_&quot; (ex : &quot;c_maCte&quot;)"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^c_['['/]a-zA-Z0-9_]*$"/>
-    </module>
-    <module name="LocalFinalVariableName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Une constante doit commençée par &quot;c_&quot; (ex : &quot;c_maCte&quot;)"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^v_['['/]a-zA-Z0-9_]*$"/>
-    </module>
-    <module name="LocalVariableName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Une variable locale doit commençée par &quot;v_&quot; (ex : &quot;v_maVar&quot;)"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^v_['['/]a-zA-Z0-9_]*$"/>
-    </module>
-    <module name="MemberName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Un attribut doit commençée par &quot;_&quot; (ex : &quot;_monAtt&quot;)"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^_['['/]a-zA-Z0-9_]*$"/>
-    </module>
-    <module name="MethodName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Le nom de la méthode est incorrect"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^['['/]a-z]['['/]a-zA-Z0-9_]*$"/>
-    </module>
-    <module name="PackageName"/>
-    <module name="ParameterName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Un parametre de méthode doit commençée par &quot;p_&quot; (ex : &quot;p_monParam&quot;)"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^p_['['/]a-zA-Z0-9_]*$"/>
-    </module>
-    <module name="StaticVariableName">
-      <property name="format" value="^(map_)?(tab_)?['['/]a-z]['['/]a-zA-Z0-9]*$"/>
-    </module>
-    <module name="TypeName">
-      <metadata name="net.sf.eclipsecs.core.comment" value="Le nom de la classe est incorrect"/>
-      <property name="severity" value="error"/>
-      <property name="format" value="^['['/]A-Z]['['/]a-zA-Z0-9_]*$"/>
-    </module>
-[/if]
-
-    <module name="AvoidStarImport"/>
-    <module name="IllegalImport"/>
-    <module name="RedundantImport"/>
-    <module name="UnusedImports"/>
-    <module name="MethodLength"/>
-    <!--
-    <module name="ParameterNumber"/>
-    -->
-    <module name="EmptyForIteratorPad"/>
-    <module name="MethodParamPad">
-      <property name="option" value="space"/>
-      <property name="tokens" value="CTOR_DEF,METHOD_DEF,LITERAL_NEW,METHOD_CALL,SUPER_CTOR_CALL"/>
-    </module>
-    <module name="NoWhitespaceAfter"/>
-    <module name="NoWhitespaceBefore"/>
-    <module name="OperatorWrap"/>
-    <module name="ParenPad"/>
-    <module name="TypecastParenPad"/>
-    <module name="WhitespaceAfter"/>
-    <module name="WhitespaceAround"/>
-    <module name="AvoidNestedBlocks"/>
-    <!--
-    <module name="EmptyBlock"/>
-    -->
-    <module name="AvoidInlineConditionals"/>
-    <module name="EmptyStatement"/>
-    <module name="EqualsHashCode"/>
-    <module name="HiddenField"/>
-    <module name="IllegalInstantiation"/>
-    <module name="InnerAssignment"/>
-    <module name="MagicNumber">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="MissingSwitchDefault"/>
-    <module name="SimplifyBooleanReturn"/>
-    <module name="FinalClass"/>
-    <!--
-    <module name="HideUtilityClassConstructor"/> (HideUtilityClassConstructor ne marche pas bien dans Maven pour les classes statiques internes)
-    <module name="InterfaceIsType"/>
-    -->
-    <module name="VisibilityModifier">
-      <property name="protectedAllowed" value="true"/>
-    </module>
-    <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters"/>
-    <module name="TodoComment"/>
-    <module name="UpperEll"/>
-    <!-- module name="MethodParamPad">
-      <property name="tokens" value="LITERAL_NEW,METHOD_CALL,SUPER_CTOR_CALL"/>
-    </module -->
-    <module name="MutableException"/>
-    <!--
-    <module name="ExplicitInitialization"/>
-    -->
-    <module name="DeclarationOrder"/>
-    <module name="ModifiedControlVariable"/>
-    <module name="MultipleVariableDeclarations"/>
-    <module name="ParameterAssignment"/>
-  </module>
-  <module name="SuppressionCommentFilter"/>
-  <module name="RegexpSingleline">
-    <property name="format" value="['['/]^*]\s+$"/>
-    <property name="message" value="Line has trailing spaces."/>
-  </module>
-  <module name="FileTabCharacter">
-    <metadata name="net.sf.eclipsecs.core.comment" value="Pas de tabulation."/>
-    <property name="severity" value="warning"/>
-    <property name="id" value="PRES_CODE"/>
-  </module>
-  <module name="FileLength"/>
+[template public commonCheck_Spi4j(any : ecore::EObject) post(self.trim())]
+  <?xml version="1.0" encoding="UTF-8"?>
+  
   <!--
-  <module name="JavadocPackage">
-    <property name="allowLegacy" value="true"/>
+      This configuration file was written by the eclipse-cs plugin configuration editor
+  -->
+  <!--
+      Checkstyle-Configuration: MINARM Checks
+      Description:
+  Configuration Checkstyle vérifiant les conventions de développement du MINARM.
+  -->
+  <!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+  <module name="Checker">
+    <metadata name="net.sf.eclipsecs.core.comment" value="Verification Exigences Code Java EMAT"/>
+    <property name="severity" value="warning"/>
+    <property name="localeCountry" value="fr"/>
+    <property name="localeLanguage" value="fr"/>
+    <module name="TreeWalker">
+      <module name="FileContentsHolder"/>
+      <module name="JavadocMethod">
+        <property name="suppressLoadErrors" value="true"/>
+      </module>
+      <module name="JavadocType">
+        <!--non supporté par plugin checkstyle dans maven: <property name="allowUnknownTags" value="true"/> -->
+      </module>
+      <module name="JavadocVariable">
+        <property name="excludeScope" value="private"/>
+      </module>
+      <!--
+      <module name="JavadocStyle"/>
+      -->
+  
+  [if ('sun'.equalsIgnoreCase(any.getNaming()))]
+        <!-- Configuration checkstyle pour un nommage "SUN" -->
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+  [else]
+        <!-- Configuration checkstyle pour un nommage "SAFRAN" -->
+        <module name="ConstantName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Une constante doit commençée par &quot;c_&quot; (ex : &quot;c_maCte&quot;)"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^c_['['/]a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="LocalFinalVariableName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Une constante doit commençée par &quot;c_&quot; (ex : &quot;c_maCte&quot;)"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^v_['['/]a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="LocalVariableName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Une variable locale doit commençée par &quot;v_&quot; (ex : &quot;v_maVar&quot;)"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^v_['['/]a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="MemberName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Un attribut doit commençée par &quot;_&quot; (ex : &quot;_monAtt&quot;)"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^_['['/]a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="MethodName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Le nom de la méthode est incorrect"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^['['/]a-z]['['/]a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="PackageName"/>
+        <module name="ParameterName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Un parametre de méthode doit commençée par &quot;p_&quot; (ex : &quot;p_monParam&quot;)"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^p_['['/]a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="StaticVariableName">
+          <property name="format" value="^(map_)?(tab_)?['['/]a-z]['['/]a-zA-Z0-9]*$"/>
+        </module>
+        <module name="TypeName">
+          <metadata name="net.sf.eclipsecs.core.comment" value="Le nom de la classe est incorrect"/>
+          <property name="severity" value="error"/>
+          <property name="format" value="^['['/]A-Z]['['/]a-zA-Z0-9_]*$"/>
+        </module>
+  [/if]
+  
+      <module name="AvoidStarImport"/>
+      <module name="IllegalImport"/>
+      <module name="RedundantImport"/>
+      <module name="UnusedImports"/>
+      <module name="MethodLength"/>
+      <!--
+      <module name="ParameterNumber"/>
+      -->
+      <module name="EmptyForIteratorPad"/>
+      <module name="MethodParamPad">
+        <property name="option" value="space"/>
+        <property name="tokens" value="CTOR_DEF,METHOD_DEF,LITERAL_NEW,METHOD_CALL,SUPER_CTOR_CALL"/>
+      </module>
+      <module name="NoWhitespaceAfter"/>
+      <module name="NoWhitespaceBefore"/>
+      <module name="OperatorWrap"/>
+      <module name="ParenPad"/>
+      <module name="TypecastParenPad"/>
+      <module name="WhitespaceAfter"/>
+      <module name="WhitespaceAround"/>
+      <module name="AvoidNestedBlocks"/>
+      <!--
+      <module name="EmptyBlock"/>
+      -->
+      <module name="AvoidInlineConditionals"/>
+      <module name="EmptyStatement"/>
+      <module name="EqualsHashCode"/>
+      <module name="HiddenField"/>
+      <module name="IllegalInstantiation"/>
+      <module name="InnerAssignment"/>
+      <module name="MagicNumber">
+        <property name="severity" value="ignore"/>
+        <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+      </module>
+      <module name="MissingSwitchDefault"/>
+      <module name="SimplifyBooleanReturn"/>
+      <module name="FinalClass"/>
+      <!--
+      <module name="HideUtilityClassConstructor"/> (HideUtilityClassConstructor ne marche pas bien dans Maven pour les classes statiques internes)
+      <module name="InterfaceIsType"/>
+      -->
+      <module name="VisibilityModifier">
+        <property name="protectedAllowed" value="true"/>
+      </module>
+      <module name="ArrayTypeStyle"/>
+      <module name="FinalParameters"/>
+      <module name="TodoComment"/>
+      <module name="UpperEll"/>
+      <!-- module name="MethodParamPad">
+        <property name="tokens" value="LITERAL_NEW,METHOD_CALL,SUPER_CTOR_CALL"/>
+      </module -->
+      <module name="MutableException"/>
+      <!--
+      <module name="ExplicitInitialization"/>
+      -->
+      <module name="DeclarationOrder"/>
+      <module name="ModifiedControlVariable"/>
+      <module name="MultipleVariableDeclarations"/>
+      <module name="ParameterAssignment"/>
+    </module>
+    <module name="SuppressionCommentFilter"/>
+    <module name="RegexpSingleline">
+      <property name="format" value="['['/]^*]\s+$"/>
+      <property name="message" value="Line has trailing spaces."/>
+    </module>
+    <module name="FileTabCharacter">
+      <metadata name="net.sf.eclipsecs.core.comment" value="Pas de tabulation."/>
+      <property name="severity" value="warning"/>
+      <property name="id" value="PRES_CODE"/>
+    </module>
+    <module name="FileLength"/>
+    <!--
+    <module name="JavadocPackage">
+      <property name="allowLegacy" value="true"/>
+    </module>
+    -->
+    <module name="Translation"/>
+    <!--TODO
+    <module name="NewlineAtEndOfFile"/>
+    <module name="LineLength"/>
+    <module name="ModifierOrder"/>
+    <module name="RedundantModifier"/>
+    <module name="LeftCurly"/>
+    <module name="NeedBraces"/>
+    <module name="RightCurly"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+    <module name="DesignForExtension"/>
+    -->
   </module>
-  -->
-  <module name="Translation"/>
-  <!--TODO
-  <module name="NewlineAtEndOfFile"/>
-  <module name="LineLength"/>
-  <module name="ModifierOrder"/>
-  <module name="RedundantModifier"/>
-  <module name="LeftCurly"/>
-  <module name="NeedBraces"/>
-  <module name="RightCurly"/>
-  <module name="SimplifyBooleanExpression"/>
-  <module name="SimplifyBooleanReturn"/>
-  <module name="DesignForExtension"/>
-  -->
-</module>
-
 [/template]
 
-[template public buildInfos(any : OclAny)  post (trim())]
-[licence()/]
-package [getApplicationPackage()/];
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import fr.spi4j.admin.BuildInfo_Abs;
-
-/**
- * Recuperation ou affichage des informations sur le build.<br>
- * (cles : build.number, build.id, build.svnRevision, build.svnUrl,
- * build.projectVersion,
- * etc telles que definies dans le pom.xml)
- */
-
-public class [buildInfoClassName()/] extends BuildInfo_Abs
-{
-
-   private static final [buildInfoClassName()/] [apply_attributeFinalStatic('instance')/] = new [buildInfoClassName()/] ();
-
-   private final Map<String, String> [apply_attributeFinal('infos')/];
-
-   /**
-    * Constructeur.
+[template public buildInfos(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.getApplicationPackage()/];
+  
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.util.Collections;
+  import java.util.LinkedHashMap;
+  import java.util.Map;
+  import java.util.Map.Entry;
+  import java.util.Properties;
+  import org.apache.logging.log4j.Logger;
+  import org.apache.logging.log4j.LogManager;
+  import fr.spi4j.admin.BuildInfo_Abs;
+  
+  /**
+   * Recuperation ou affichage des informations sur le build.<br>
+   * (cles : build.number, build.id, build.svnRevision, build.svnUrl,
+   * build.projectVersion,
+   * etc telles que definies dans le pom.xml)
    */
-    private [buildInfoClassName()/] ()
-    {
-      super();
-      [getAffectationPrefix()/][apply_attributeFinal('infos')/] = loadInfos();
-    }
-
-	/**
-    * @return les infos chargees depuis le fichier properties construit par la pic
-    */
-   private Map<String, String> loadInfos ()
-   {
-      final InputStream [apply_variableFinal('input')/] = getClass().getResourceAsStream("/[getApplicationNameUpperFirst()/]-build-info.properties");
-
-	  if ([apply_variableFinal('input')/] == null)
+  
+  public class [any.buildInfoClassName()/] extends BuildInfo_Abs
+  {
+  
+     private static final [any.buildInfoClassName()/] ['instance'.apply_attributeFinalStatic()/] = new [any.buildInfoClassName()/] ();
+  
+     private final Map<String, String> ['infos'.apply_attributeFinal()/];
+  
+     /**
+      * Constructeur.
+     */
+      private [any.buildInfoClassName()/] ()
       {
-         return Collections.emptyMap();
+        super();
+        [any.getAffectationPrefix()/]['infos'.apply_attributeFinal()/] = loadInfos();
       }
+  
+  	/**
+      * @return les infos chargees depuis le fichier properties construit par la pic
+      */
+     private Map<String, String> loadInfos ()
+     {
+        final InputStream ['input'.apply_variableFinal()/] = getClass().getResourceAsStream("/[any.getApplicationNameUpperFirst()/]-build-info.properties");
+  
+  	  if (['input'.apply_variableFinal()/] == null)
+        {
+           return Collections.emptyMap();
+        }
+  
+        final Properties ['properties'.apply_variableFinal()/] = new Properties();
+        try
+        {
+           try
+           {
+              ['properties'.apply_variableFinal()/].load(['input'.apply_variableFinal()/]);
+           }
+           finally
+           {
+  			if(null != ['input'.apply_variableFinal()/]){
+              	['input'.apply_variableFinal()/].close();
+  			}
+           }
+        }
+        catch (final IOException ['e'.apply_variableDefault()/])
+        {
+           // n'est pas cense arrive puisque le stream et donc le fichier
+           // existe a cet endroit
+           throw new IllegalStateException(['e'.apply_variableDefault()/]);
+        }
+  
+        final Map<String, String> ['map'.apply_variableFinal()/] = new LinkedHashMap<String, String>();
+        ['map'.apply_variableFinal()/].put("java.version", System.getProperty("java.version"));
+        for (final Entry<Object, Object> ['entry'.apply_variableDefault()/] : ['properties'.apply_variableFinal()/].entrySet())
+        {
+           final String ['key'.apply_variableFinal()/] = (String) ['entry'.apply_variableDefault()/].getKey();
+           // on ne garde que les proprietes correspondant au pattern souhaite
+           // et pas les autres proprietes
+           if (['key'.apply_variableFinal()/].startsWith("build."))
+           {
+              ['map'.apply_variableDefault()/].put(['key'.apply_variableFinal()/], (String) ['entry'.apply_variableDefault()/].getValue());
+           }
+        }
+        return Collections.unmodifiableMap(['map'.apply_variableFinal()/]);
+     }
+  
+  
+  	/**
+      * @return l'instance du BuildInfo
+      */
+     public static [any.buildInfoClassName()/] ['instance'.apply_methodGet()/] ()
+     {
+        return ['instance'.apply_attributeFinalStatic()/];
+     }
+  
+  	/**
+      * Affiche les informations de build dans le log au niveau info
+      * (si le build provient de Maven ou de la PIC).
+      */
+     public static void [' log build info'.apply_methodDefault()/]()
+     {
+        final Logger ['logger'.apply_variableFinal()/] = LogManager.getLogger([any.buildInfoClassName()/].class);
+        for (final Map.Entry<String, String> ['entry'.apply_variableDefault()/] : ['instance'.apply_methodGet()/]().['infos'.apply_attributeFinal()/].entrySet())
+        {
+           ['logger'.apply_variableFinal()/].info(['entry'.apply_variableDefault()/].getKey() + " = " + ['entry'.apply_variableDefault()/].getValue());
+        }
+     }
+  
+     /**
+      * @return l'identifiant du build
+      */
+     public String getBuildId ()
+     {
+        return ['infos'.apply_attributeFinal()/].get("build.id");
+     }
+  
+     /**
+      * @return Retourne l'identifiant unique de cette application
+      */
+     public String getUniqueId ()
+     {
+        return ['infos'.apply_attributeFinal()/].get("build.tag");
+     }
+  
+     @Override
+     public String getNomApplication ()
+     {
+        return ['infos'.apply_attributeFinal()/].get("build.projectArtifactId");
+     }
+  
+     @Override
+     public String getVersion ()
+     {
+        return ['infos'.apply_attributeFinal()/].get("build.projectVersion");
+     }
+  
+     @Override
+     public String getRevision ()
+     {
+        return ['infos'.apply_attributeFinal()/].get("build.svnRevision");
+     }
+  
+     @Override
+     public String getUrl ()
+     {
+        return ['infos'.apply_attributeFinal()/].get("build.svnUrl");
+     }
+  }[/template]
 
-      final Properties [apply_variableFinal('properties')/] = new Properties();
-      try
-      {
-         try
-         {
-            [apply_variableFinal('properties')/].load([apply_variableFinal('input')/]);
-         }
-         finally
-         {
-			if(null != [apply_variableFinal('input')/]){
-            	[apply_variableFinal('input')/].close();
-			}
-         }
-      }
-      catch (final IOException [apply_variableDefault('e')/])
-      {
-         // n'est pas cense arrive puisque le stream et donc le fichier
-         // existe a cet endroit
-         throw new IllegalStateException([apply_variableDefault('e')/]);
-      }
+[template public commonJsfContext(any : ecore::EObject) post(self.trim())]
+  <?xml version="1.0" encoding="UTF-8" ?>
+  <Context docBase="/path/to/[any.getApplicationName().toLower()/]-jsf.war" path="/[any.getApplicationName().toLower()/]-jsf" reloadable="true">
+  <!--  Veuillez renseigner la connexion a la BdD ci-dessous dans le cas où la datasource n'est pas geree par le serveur d'application -->
+      <Parameter name="[any.getApplicationName().toLower()/].datasource" value="java:comp/env/jdbc/[any.getApplicationNameUpperFirst()/]DB" />
+  
+  <!-- DataSource [any.getDataBasesNames()/] -->
+  <!-- -->
+      [any.getDataBasesNames().typeDataBase()/]
+  </Context>[/template]
 
-      final Map<String, String> [apply_variableFinal('map')/] = new LinkedHashMap<String, String>();
-      [apply_variableFinal('map')/].put("java.version", System.getProperty("java.version"));
-      for (final Entry<Object, Object> [apply_variableDefault('entry')/] : [apply_variableFinal('properties')/].entrySet())
-      {
-         final String [apply_variableFinal('key')/] = (String) [apply_variableDefault('entry')/].getKey();
-         // on ne garde que les proprietes correspondant au pattern souhaite
-         // et pas les autres proprietes
-         if ([apply_variableFinal('key')/].startsWith("build."))
-         {
-            [apply_variableDefault('map')/].put([apply_variableFinal('key')/], (String) [apply_variableDefault('entry')/].getValue());
-         }
-      }
-      return Collections.unmodifiableMap([apply_variableFinal('map')/]);
-   }
+[template private typeDataBase(databaseType : String) post(self.trim())]
+  [databaseType.driverOracle()/]
+  [databaseType.driverMysql()/]
+  [databaseType.driverMariaDB()/]
+  [databaseType.driverPostgres()/]
+  [databaseType.driverH2()/][/template]
 
+[template private driverOracle(any : ecore::EObject) post(self.trim())]
+  <!-- Connexion a une base des donnees Oracle -->
+  <!--
+  <Resource name="jdbc/[any.getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
+          driverClassName="oracle.jdbc.OracleDriver"
+          defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
+          username="" password=""
+          url="jdbc:oracle:thin://X.X.X.X:PORT/DbName"
+          connectionProperties="charSet=ISO8859_15"/>
+  -->[/template]
 
-	/**
-    * @return l'instance du BuildInfo
-    */
-   public static [buildInfoClassName()/] [apply_methodGet('instance')/] ()
-   {
-      return [apply_attributeFinalStatic('instance')/];
-   }
+[template private driverMysql(any : ecore::EObject) post(self.trim())]
+  <!-- Connexion a une base des donnees MySQL -->
+  <!--
+  <Resource name="jdbc/[any.getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
+          driverClassName="com.mysql.jdbc.Driver"
+          defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
+          username="" password=""
+          url="jdbc:mysql://X.X.X.X:PORT/DBNAME"
+          connectionProperties="charSet=ISO8859_15"/>
+  -->[/template]
 
-	/**
-    * Affiche les informations de build dans le log au niveau info
-    * (si le build provient de Maven ou de la PIC).
-    */
-   public static void [apply_methodDefault(' log build info')/]()
-   {
-      final Logger [apply_variableFinal('logger')/] = LogManager.getLogger([buildInfoClassName()/].class);
-      for (final Map.Entry<String, String> [apply_variableDefault('entry')/] : [apply_methodGet('instance')/]().[apply_attributeFinal('infos')/].entrySet())
-      {
-         [apply_variableFinal('logger')/].info([apply_variableDefault('entry')/].getKey() + " = " + [apply_variableDefault('entry')/].getValue());
-      }
-   }
+[template private driverMariaDB(any : ecore::EObject) post(self.trim())]
+  <!-- Connexion a une base des donnees MariaDB -->
+  <!--
+  <Resource name="jdbc/[any.getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
+          driverClassName="com.mysql.jdbc.Driver"
+          defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
+          username="" password=""
+          url="jdbc:mysql://X.X.X.X:PORT/DBNAME"
+          connectionProperties="charSet=ISO8859_15"/>
+  -->[/template]
 
-   /**
-    * @return l'identifiant du build
-    */
-   public String getBuildId ()
-   {
-      return [apply_attributeFinal('infos')/].get("build.id");
-   }
+[template private driverH2(any : ecore::EObject) post(self.trim())]
+  <!-- Connexion a une base des donnees H2 -->
+  <!--
+  <Resource name="jdbc/[any.getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
+          driverClassName="org.h2.Driver"
+          defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
+          username="" password=""
+          url="jdbc:h2:mem:DBNAME"
+          connectionProperties="charSet=ISO8859_15"/>
+  -->[/template]
 
-   /**
-    * @return Retourne l'identifiant unique de cette application
-    */
-   public String getUniqueId ()
-   {
-      return [apply_attributeFinal('infos')/].get("build.tag");
-   }
+[template public driverPostgres(any : ecore::EObject) post(self.trim())]
+  <!-- Connexion a une base des donnees PostgreSQL -->
+  <!--
+  <Resource name="jdbc/[any.getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
+          driverClassName="org.postgresql.Driver"
+          defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
+          username="" password=""
+          url="jdbc:postgresql://X.X.X.X:PORT/DbName"
+          connectionProperties="charSet=ISO8859_15"/>
+  -->[/template]
 
-   @Override
-   public String getNomApplication ()
-   {
-      return [apply_attributeFinal('infos')/].get("build.projectArtifactId");
-   }
-
-   @Override
-   public String getVersion ()
-   {
-      return [apply_attributeFinal('infos')/].get("build.projectVersion");
-   }
-
-   @Override
-   public String getRevision ()
-   {
-      return [apply_attributeFinal('infos')/].get("build.svnRevision");
-   }
-
-   @Override
-   public String getUrl ()
-   {
-      return [apply_attributeFinal('infos')/].get("build.svnUrl");
-   }
-}
-[/template]
-
-[template public commonJsfContext(any : OclAny) post (trim())]
-<?xml version="1.0" encoding="UTF-8" ?>
-<Context docBase="/path/to/[getApplicationName().toLower()/]-jsf.war" path="/[getApplicationName().toLower()/]-jsf" reloadable="true">
-<!--  Veuillez renseigner la connexion a la BdD ci-dessous dans le cas où la datasource n'est pas geree par le serveur d'application -->
-    <Parameter name="[getApplicationName().toLower()/].datasource" value="java:comp/env/jdbc/[getApplicationNameUpperFirst()/]DB" />
-
-<!-- DataSource [getDataBasesNames()/] -->
-<!-- -->
-    [typeDataBase(getDataBasesNames())/]
-</Context>
-[/template]
-
-[template private typeDataBase(databaseType : String) post (trim())]
-[driverOracle()/]
-[driverMysql()/]
-[driverMariaDB()/]
-[driverPostgres()/]
-[driverH2()/]
-[/template]
-
-[template private driverOracle(any : OclAny) post (trim())]
-<!-- Connexion a une base des donnees Oracle -->
-<!--
-<Resource name="jdbc/[getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
-        driverClassName="oracle.jdbc.OracleDriver"
-        defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
-        username="" password=""
-        url="jdbc:oracle:thin://X.X.X.X:PORT/DbName"
-        connectionProperties="charSet=ISO8859_15"/>
--->
-[/template]
-
-[template private driverMysql(any : OclAny) post (trim())]
-<!-- Connexion a une base des donnees MySQL -->
-<!--
-<Resource name="jdbc/[getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
-        driverClassName="com.mysql.jdbc.Driver"
-        defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
-        username="" password=""
-        url="jdbc:mysql://X.X.X.X:PORT/DBNAME"
-        connectionProperties="charSet=ISO8859_15"/>
--->
-[/template]
-
-[template private driverMariaDB(any : OclAny) post (trim())]
-<!-- Connexion a une base des donnees MariaDB -->
-<!--
-<Resource name="jdbc/[getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
-        driverClassName="com.mysql.jdbc.Driver"
-        defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
-        username="" password=""
-        url="jdbc:mysql://X.X.X.X:PORT/DBNAME"
-        connectionProperties="charSet=ISO8859_15"/>
--->
-[/template]
-
-[template private driverH2(any : OclAny) post (trim())]
-<!-- Connexion a une base des donnees H2 -->
-<!--
-<Resource name="jdbc/[getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
-        driverClassName="org.h2.Driver"
-        defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
-        username="" password=""
-        url="jdbc:h2:mem:DBNAME"
-        connectionProperties="charSet=ISO8859_15"/>
--->
-[/template]
-
-[template public driverPostgres(any : OclAny) post (trim())]
-<!-- Connexion a une base des donnees PostgreSQL -->
-<!--
-<Resource name="jdbc/[getApplicationNameUpperFirst()/]DB" auth="Container" type="javax.sql.DataSource"
-        driverClassName="org.postgresql.Driver"
-        defaultAutoCommit="false" maxActive="100" maxIdle="3" maxWait="10000"
-        username="" password=""
-        url="jdbc:postgresql://X.X.X.X:PORT/DbName"
-        connectionProperties="charSet=ISO8859_15"/>
--->
-[/template]
-
-[template public configProvider(any : OclAny) post(trim())]
-[licence()/]
-package [getApplicationPackage()/];
-// [protected ('Imports')]
-
-import java.nio.charset.StandardCharsets;
-
-import fr.spi4j.exception.Spi4jConfigException;
-import fr.spi4j.utils.ConfigCronReloader;
-import fr.spi4j.utils.ConfigPropertiesReader;
-import fr.spi4j.utils.ConfigProvider;
-import fr.spi4j.utils.ConfigCronTimeUnit;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
-// [/protected]
-
-/**
-/**
- * Cette classe est un simple 'capsule' pour la création du gestionnaire de
- * configuration Spi4j. La méthode "init()" est automatiquement appelée par le
- * listener d'initialisation présent dans le projet client et/ou dans la webapp
- * (si la génération de services web a été demandée).
- * <p>
- * Décommenter et modifier selon le besoin les différentes lignes concernant la
- * création du fournisseur de configuration.
- *
- * @author [getAuthorName()/]
- */
-public abstract class [buildConfigProviderClassName()/] {
-
-	public static void init() {
-
-		final Logger [apply_variableDefault('logger')/] = LogManager.getLogger([buildConfigProviderClassName()/].class);
-
-  	 	// init [buildConfigProviderClassName()/]
-   		// [protected ('init' + buildConfigProviderClassName())]
-
-		try {
-
-			//ConfigProvider.getBuilder()
-			//      .withReader(new ConfigPropertiesReader())
-			//		.withResourcesBaseKey("xxxxxxxx")
-			//		.withResourcesEncoding(StandardCharsets.ISO_8859_1)
-			//		.withResource("xxxx.properties")
-			//		.withResource("yyyy.properties")
-			//		.withResource("zzzz.properties")
-			//		.withResourcesReloader(new ConfigCronReloader(1, ConfigCronTimeUnit.MINUTES))
-			//		.withReader(new ConfigYamlReader())
-			//		.withResourcesEncoding(StandardCharsets.UTF_8)
-			// 		.withResource("C:/xxx/xxxxx/yyyy.yml")
-			// 		.withResource("C:/xxx/xxxxx/zzzz.yaml")
-			//		.withReader(new ConfigSystemReader())
-			//		.withResource("xxxxxxxx")
-			//		.withReader(new ConfigXmlReader())
-			//		.withResource("C:/xxx/xxxxx/zzzz.xml")
-			//		.withResourcesReloader(new ConfigAgentFileReloader())
-			//		.build();
-
-		} catch (Spi4jConfigException [apply_parameterMethodClassicIn('e')/]) {
-			[apply_variableDefault('logger')/].fatal([apply_parameterMethodClassicIn('e')/]  
-				+ " - " + [apply_parameterMethodClassicIn('e')/].getCause() );
-			System.exit(-1);
-		}
-   		// [/protected]
-	}
-}
-[/template]
-
-
+[template public configProvider(any : ecore::EObject) post(self.trim())]
+  [any.licence()/]
+  package [any.getApplicationPackage()/];
+  [protected ('Imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import java.nio.charset.StandardCharsets;
+    
+    import fr.spi4j.exception.Spi4jConfigException;
+    import fr.spi4j.utils.ConfigCronReloader;
+    import fr.spi4j.utils.ConfigPropertiesReader;
+    import fr.spi4j.utils.ConfigProvider;
+    import fr.spi4j.utils.ConfigCronTimeUnit;
+    
+    import org.apache.logging.log4j.Logger;
+    import org.apache.logging.log4j.LogManager;
+    
+  [/protected]
+  
+  
+  /**
+  /**
+   * Cette classe est un simple 'capsule' pour la création du gestionnaire de
+   * configuration Spi4j. La méthode "init()" est automatiquement appelée par le
+   * listener d'initialisation présent dans le projet client et/ou dans la webapp
+   * (si la génération de services web a été demandée).
+   * <p>
+   * Décommenter et modifier selon le besoin les différentes lignes concernant la
+   * création du fournisseur de configuration.
+   *
+   * @author [any.getAuthorName()/]
+   */
+  public abstract class [any.buildConfigProviderClassName()/] {
+  
+  	public static void init() {
+  
+  		final Logger ['logger'.apply_variableDefault()/] = LogManager.getLogger([any.buildConfigProviderClassName()/].class);
+  
+    	 	// init [any.buildConfigProviderClassName()/]
+     		[protected ('init' + any.buildConfigProviderClassName()) startTagPrefix('// ') endTagPrefix('// ')]
+         
+         		try {
+         
+         			//ConfigProvider.getBuilder()
+         			//      .withReader(new ConfigPropertiesReader())
+         			//		.withResourcesBaseKey("xxxxxxxx")
+         			//		.withResourcesEncoding(StandardCharsets.ISO_8859_1)
+         			//		.withResource("xxxx.properties")
+         			//		.withResource("yyyy.properties")
+         			//		.withResource("zzzz.properties")
+         			//		.withResourcesReloader(new ConfigCronReloader(1, ConfigCronTimeUnit.MINUTES))
+         			//		.withReader(new ConfigYamlReader())
+         			//		.withResourcesEncoding(StandardCharsets.UTF_8)
+         			// 		.withResource("C:/xxx/xxxxx/yyyy.yml")
+         			// 		.withResource("C:/xxx/xxxxx/zzzz.yaml")
+         			//		.withReader(new ConfigSystemReader())
+         			//		.withResource("xxxxxxxx")
+         			//		.withReader(new ConfigXmlReader())
+         			//		.withResource("C:/xxx/xxxxx/zzzz.xml")
+         			//		.withResourcesReloader(new ConfigAgentFileReloader())
+         			//		.build();
+         
+         		} catch (Spi4jConfigException ['e'.apply_parameterMethodClassicIn()/]) {
+         			['logger'.apply_variableDefault()/].fatal(['e'.apply_parameterMethodClassicIn()/]  
+         				+ " - " + ['e'.apply_parameterMethodClassicIn()/].getCause() );
+         			System.exit(-1);
+         		}
+       [/protected]
+  
+  	}
+  }[/template]

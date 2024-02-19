@@ -1,36 +1,32 @@
+[module serviceGwtXml('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::soalight::common::outils/]
+[import fr::pacman::soalight::common::imports/]
+[import fr::pacman::soalight::common::packages/]
+[import fr::pacman::soalight::common::name/]
+[import fr::pacman::soalight::common::commentaires/]
+[import fr::pacman::soalight::common::attributes/]
+[import fr::pacman::soalight::common::methodes/]
+[import fr::pacman::soalight::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module serviceGwtXml('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                      'http://www.obeonetwork.org/dsl/environment/3.0.0',
-					  'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::soalight::common::outils /]
-[import fr::pacman::soalight::common::imports /]
-[import fr::pacman::soalight::common::packages /]
-[import fr::pacman::soalight::common::name /]
-[import fr::pacman::soalight::common::commentaires /]
-[import fr::pacman::soalight::common::attributes /]
-[import fr::pacman::soalight::common::methodes /]
-[import fr::pacman::soalight::common::classes /]
-
-
-[template public serviceGwtXml(n : Namespace)]
-[for (service : Service | n.eAllContents(Service)->sortedBy(name))]
-[service(service)/]
-[/for]
+[template public serviceGwtXml(n : environment::Namespace)]
+  [for (service : soa::Service | n.eAllContents(soa::Service)->sortedBy(temp1 | temp1.name))]
+    [service.service()/]
+  [/for]
 [/template]
 
-[template private service(s : Service)]
-[let self : OclAny = if not s.oclIsUndefined() then s else 'PACKAGE NOT FOUND FOR SERVICE' endif]
-    <servlet>
-        <servlet-name>[buildServiceName(s)/]</servlet-name>
-        <servlet-class>[buildPackageBusinessGwtServerService(s)/].[buildServiceGwtImplementationName(s)/]</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>[buildServiceName(s)/]</servlet-name>
-        <url-pattern>/[getApplicationName()/]/[buildServiceName(s)/]</url-pattern>
-    </servlet-mapping>[/let]
+[template private service(s : soa::Service)]
+  [let self = if not (s = null) then s else 'PACKAGE NOT FOUND FOR SERVICE' endif]
+        <servlet>
+            <servlet-name>[s.buildServiceName()/]</servlet-name>
+            <servlet-class>[s.buildPackageBusinessGwtServerService()/].[s.buildServiceGwtImplementationName()/]</servlet-class>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>[s.buildServiceName()/]</servlet-name>
+            <url-pattern>/[s.getApplicationName()/]/[s.buildServiceName()/]</url-pattern>
+        </servlet-mapping>[/let]
 [/template]
-

@@ -1,26 +1,14 @@
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::gwt::common::gwt_widgets/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+[query public namePackageGwt(any : ecore::EObject) : String = any.namePackageClient() + '.gwt'/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::gwt::common::gwt-widgets /]
+[query public namePackageViewContainerImplementation(viewContainer : view::ViewContainer) : String = viewContainer.namePackageGwt() + viewContainer.packageHierarchy()/]
 
-[query public namePackageGwt(any : OclAny) : String =
-    namePackageClient() + '.gwt'
-/]
+[query private orderWidgets(widgets : OrderedSet(toolkits::Widget)) : OrderedSet(toolkits::Widget) = widgets->sortedBy(w | w.widgetComparator())/]
 
-[query public namePackageViewContainerImplementation(viewContainer : ViewContainer) : String =
-    namePackageGwt() + packageHierarchy(viewContainer)
-/]
-
-[query private orderWidgets(widgets : Set(Widget)) : OrderedSet(Widget) =
-widgets->sortedBy(w : Widget | widgetComparator(w))
-/]
-
-[query private widgetComparator(widget : Widget) : String =
-    if widget.oclIsUndefined() or widget.name.oclIsUndefined() then
-        ''
-    else
-        widget.name
-    endif
-/]
+[query private widgetComparator(widget : toolkits::Widget) : String = if widget = null or widget.name = null then '' else widget.name endif/]

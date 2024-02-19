@@ -1,0 +1,10 @@
+[module jsf_widgets('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::jsf::services::JsfWidgetUtils/]
+
+[comment encoding = UTF-8 /]
+[query public getImplementationClass(widget : toolkits::Widget) : String = widget.getImplementationClass()/]
+
+[query public getImplementationPackage(widget : toolkits::Widget) : String = widget.getImplementationPackage()/]
+
+[query public getImplementationClassNameForImport(widget : toolkits::Widget) : String = widget.getImplementationClassNameForImport()/]

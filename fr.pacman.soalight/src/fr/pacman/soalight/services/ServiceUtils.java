@@ -49,6 +49,8 @@ public final class ServiceUtils
       return EcoreUtil.getRootContainer(p_dto);
    }
 
+public static EObject getRootJavaService(final EObject p_dto){return getRoot(p_dto);}
+
    /**
     * Retourne vrai s'il existe  un service de même nom  lié à une entité
     * 
@@ -72,6 +74,8 @@ public final class ServiceUtils
 
        return false;
    }
+
+public Boolean isEntityServiceJavaService(final Service p_service,final String p_name){return isEntityService(p_service,p_name);}
 
 
  /**

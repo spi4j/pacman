@@ -1,14 +1,14 @@
+[module genUserBusinessEntity('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::service::userBusiness/]
+[import fr::pacman::entity::api::service::userBusinessEntity/]
+
 [comment encoding = UTF-8 /]
-[module genUserBusinessEntity('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::service::userBusiness /]
-[import fr::pacman::entity::api::service::userBusinessEntity /]
-
-[template public genUserBusinessEntity(r : Root)]
-[file (filename(getCommonsSourceDir(), buildPackageBusiness(), buildAppliUserBusinessEntityGenClassName() + '.java'), false, 'UTF-8')]
-[userBusinessEntity()/]
-[/file]
+[template public genUserBusinessEntity(r : entity::Root)]
+  [file (r.getCommonsSourceDir().filename(r.buildPackageBusiness(), r.buildAppliUserBusinessEntityGenClassName() + '.java'), overwrite, 'UTF-8')]
+    [r.userBusinessEntity()/]
+  [/file]
 [/template]

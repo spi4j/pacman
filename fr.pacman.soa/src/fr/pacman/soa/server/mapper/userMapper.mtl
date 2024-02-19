@@ -1,63 +1,59 @@
+[module userMapper('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+
 [comment encoding = UTF-8 /]
-[module userMapper('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
-
-[import fr::pacman::commons::soa::common::utils /]
-
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::classes /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-
-[template public userMapper(xtoAGenerer : Set(DTO), n : Namespace)]
-[licence()/]
-package [n.buildPackageMapper()/]; // NOPMD
-
-// [protected ('for imports')]
-
-[for (d : DTO | xtoAGenerer)]
-import [buildPackageMapperDto(d)/].[buildMapperInterfaceName(d)/];
-import [buildPackageMapperDto(d)/].[buildMapperClassName(d)/];
-[/for]
-
-// [/protected]
-
-/**
- * Factory permettant de récupérer les instances de classes de mapper.
- * @author [getAuthorName()/]
- */
-public final class [n.buildAppliUserMapperGenClassName()/]
-{
-
-   /**
-    * Constructeur privé.
-    */
-   private [n.buildAppliUserMapperGenClassName()/] ()
-   {
-      super();
-   }
-
-[for (d : DTO | xtoAGenerer)]
-[if not d.isParent()]
-   /**
-    * Obtenir la façade de services '[buildMapperInterfaceName(d)/]'.
-    * @return L'instance désirée.
-    */
-   public static [buildMapperInterfaceName(d)/] [apply_methodDefault('get ' + buildMapperClassName(d))/] ()
-   {
-      return new [buildMapperClassName(d)/]();
-   }
-
-[/if]
-[/for]
-}
-[/template]
+[template public userMapper(xtoAGenerer : OrderedSet(environment::DTO), n : environment::Namespace)]
+  [xtoAGenerer.licence()/]
+  package [n.buildPackageMapper()/]; // NOPMD
+  
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [for (d : environment::DTO | xtoAGenerer)]
+      import [d.buildPackageMapperDto()/].[d.buildMapperInterfaceName()/];
+      import [d.buildPackageMapperDto()/].[d.buildMapperClassName()/];
+    [/for]
+    
+  [/protected]
+  
+  
+  /**
+   * Factory permettant de récupérer les instances de classes de mapper.
+   * @author [xtoAGenerer.getAuthorName()/]
+   */
+  public final class [n.buildAppliUserMapperGenClassName()/]
+  {
+  
+     /**
+      * Constructeur privé.
+      */
+     private [n.buildAppliUserMapperGenClassName()/] ()
+     {
+        super();
+     }
+  
+  [for (d : environment::DTO | xtoAGenerer)]
+    [if (not d.isParent())]
+         /**
+          * Obtenir la façade de services '[d.buildMapperInterfaceName()/]'.
+          * @return L'instance désirée.
+          */
+         public static [d.buildMapperInterfaceName()/] [('get ' + d.buildMapperClassName()).apply_methodDefault()/] ()
+         {
+            return new [d.buildMapperClassName()/]();
+         }
+      
+    [/if]
+  [/for]
+  }[/template]

@@ -38,6 +38,8 @@ public class CinematicServices {
 		return counter++;
 	}
 
+	synchronized static public int getIdJavaService(Object object){return getId();}
+
 	/**
 	 * Return a collection of {@link ActionState} and/or {@link ViewState}
 	 * associated with the given {@link FlowState}.
@@ -98,6 +100,8 @@ public class CinematicServices {
 		}
 		return nexts;
 	}
+
+	public Set<FlowState> getNextStatesJavaService(FlowState flowState,Event event){return getNextStates(flowState,event);}
 
 	/**
 	 * 
@@ -192,6 +196,8 @@ public class CinematicServices {
 		return events;
 		
 	}
+
+	public Set<ViewEvent> getUnBindedViewEventJavaService(ViewContainer viewContainer){return getUnBindedViewEvent(viewContainer);}
 	
 	/**
 	 * Return le nombre de bouton à ajouter dans la page jsf * 2 qui correspond au nombre de colonnes
@@ -215,6 +221,8 @@ public class CinematicServices {
 		return (nbBt*2);
 		
 	}
+
+	public Integer getNbButtonsJavaService(ViewContainer viewContainer){return getNbButtons(viewContainer);}
 	
 	
 	   /**

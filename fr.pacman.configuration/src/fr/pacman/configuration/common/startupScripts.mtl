@@ -1,105 +1,105 @@
-[comment encoding = UTF-8 /]
 [module startupScripts('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::common::properties / ]
-[import fr::pacman::commons::common::names / ]
-[import fr::pacman::commons::common::scripts / ]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::scripts/]
+[import fr::pacman::configuration::common::properties/]
 
-[import fr::pacman::configuration::common::properties / ]
-
+[comment encoding = UTF-8 /]
 [comment : Creation du script interne de lancement pour le serveur embarque./]
-[template public clientEmbeddedHttpServerBat(any : OclAny) post (trim())]
-@echo off
-
-rem ---------------------------------------------------------------------------
-rem Script de demarrage pour l'application [getApplicationNameUpperFirst()/].
-rem ---------------------------------------------------------------------------
-rem on se repositionne au niveau du répertoire racine pour l'application.
-rem ce qui signifie que l'on sort du répertoire /bin.
-cd ../
-
-setlocal ENABLEDELAYEDEXPANSION
-set "COMMAND=%*" 
-set "[getApplicationName().toUpper()/]_HOME=%cd%"
-echo Initialisation de l'application [getApplicationNameUpperFirst()/]...
-echo Utilisation du chemin racine suivant : %OBEOTSCLIENT_HOME%
-if "%~1" == "-jdk" set "JAVA_HOME=%2" & goto deleteJdkParam
-if not ['['/]%1[']'/]==['['/][']'/] goto displayParams
-echo Aucun parametre a ajouter pour le lancement de l'application ....  
-goto okStart
-endlocal
-
-:deleteJdkParam
-set "COMMAND=!COMMAND:*%1 =!"
-set "COMMAND=!COMMAND:*%2 =!"
-goto displayParams
-
-:displayParams
-echo Utilisation des parametres suivants pour le lancement de l'application : %COMMAND%
-goto okStart
-
-:okStart
-rem Positionnement local de la variable d'environnement log4j2 dans le cadre de l'application.
-set "log4j.configurationFile=%[getApplicationName().toUpper()/]_HOME%\conf\log4j2.xml"
-[if 'tomcat'.equalsIgnoreCase(getHttpEmbeddedServer())]
-rem Positionnement local de la variable d'environnement log4j2 dans le cadre de Tomcat.
-set "java.util.logging.config.file=%[getApplicationName().toUpper()/]_HOME%\conf\log4j2.xml
-rem Positionnement des options du JDK pour eviter des warnings au shutdown du serveur et du a bug tomcat.
-set "JDK_JAVA_OPTIONS=--illegal-access=deny --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
-[/if]
-echo Utilisation du jdk suivant pour le lancement de l'application : "%JAVA_HOME%"
-%JAVA_HOME%/bin/java -jar [getApplicationName()/]-[if hasClientWeb()]client-[getClient()/][else]webapp[/if].war %COMMAND%
-[/template]
+[template public clientEmbeddedHttpServerBat(any : ecore::EObject) post(self.trim())]
+  @echo off
+  
+  rem ---------------------------------------------------------------------------
+  rem Script de demarrage pour l'application [any.getApplicationNameUpperFirst()/].
+  rem ---------------------------------------------------------------------------
+  rem on se repositionne au niveau du répertoire racine pour l'application.
+  rem ce qui signifie que l'on sort du répertoire /bin.
+  cd ../
+  
+  setlocal ENABLEDELAYEDEXPANSION
+  set "COMMAND=%*" 
+  set "[any.getApplicationName().toUpper()/]_HOME=%cd%"
+  echo Initialisation de l'application [any.getApplicationNameUpperFirst()/]...
+  echo Utilisation du chemin racine suivant : %OBEOTSCLIENT_HOME%
+  if "%~1" == "-jdk" set "JAVA_HOME=%2" & goto deleteJdkParam
+  if not ['['/]%1]==['['/]] goto displayParams
+  echo Aucun parametre a ajouter pour le lancement de l'application ....  
+  goto okStart
+  endlocal
+  
+  :deleteJdkParam
+  set "COMMAND=!COMMAND:*%1 =!"
+  set "COMMAND=!COMMAND:*%2 =!"
+  goto displayParams
+  
+  :displayParams
+  echo Utilisation des parametres suivants pour le lancement de l'application : %COMMAND%
+  goto okStart
+  
+  :okStart
+  rem Positionnement local de la variable d'environnement log4j2 dans le cadre de l'application.
+  set "log4j.configurationFile=%[any.getApplicationName().toUpper()/]_HOME%\conf\log4j2.xml"
+  [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+    rem Positionnement local de la variable d'environnement log4j2 dans le cadre de Tomcat.
+    set "java.util.logging.config.file=%[any.getApplicationName().toUpper()/]_HOME%\conf\log4j2.xml
+    rem Positionnement des options du JDK pour eviter des warnings au shutdown du serveur et du a bug tomcat.
+    set "JDK_JAVA_OPTIONS=--illegal-access=deny --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
+  [/if]
+  echo Utilisation du jdk suivant pour le lancement de l'application : "%JAVA_HOME%"
+  %JAVA_HOME%/bin/java -jar [any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
+  .war %COMMAND%[/template]
 
 [comment : Creation du script externe de lancement pour l'application./]
-[template public clientEmbeddedHttpStartupBat(any : OclAny) post (trim())]
-@echo off
-
-rem ---------------------------------------------------------------------------
-rem Script de démarrage pour l'application [getApplicationNameUpperFirst()/].
-rem Si un jdk doit être passé en paramètre il doit obligatoirement être passé 
-rem en premier argument avec la commande -jdk. Suivent ensuite les autres éventuels 
-rem arguments.
-rem ---------------------------------------------------------------------------
-
-cls
-setlocal
-title Script de lancement pour l'application : [getApplicationNameUpperFirst()/].
-set "[getApplicationName().toUpper()/]_BIN_HOME=%cd%"
-echo Lancement du script pour l'application [getApplicationNameUpperFirst()/]...
-if exist "%[getApplicationName().toUpper()/]_BIN_HOME%\[buildEmbeddedHttpScriptName()/]" goto okScripts
-echo Le fichier auxiliaire "EmbeddedTomcat.bat" n'existe pas dans le répertoire.
-goto end
-
-:okScripts
-if exist "%[getApplicationName().toUpper()/]_BIN_HOME%/../conf/log4j2.xml" goto okLog4j
-echo Le fichier de configuration des logs n'existe pas dans le répertoire : "/conf".
-goto end
-
-:okLog4j
-if "%~1" == "-jdk" goto checkJdkParam
-if exist "%JAVA_HOME%/bin/java.exe" echo utilisation du jdk "%JAVA_HOME%" & goto okJdk
-echo La variable "JAVA_HOME" n'existe pas ou n'a pas un chemin valide et aucun chemin saisi pour le jdk (-jdk).
-goto end
-
-:checkJdkParam
-echo Pas de test sur la variable "JAVA_HOME", tentative d'utilisation avec le chemin suivant : "%2"
-if exist "%2/bin/java.exe" echo Chemin correct, utilisation du jdk "%2" & goto okJdk
-echo Impossible de trouver un jdk valide avec ce chemin.
-goto end
-
-:okJdk
-if exist "../[getApplicationName()/]-[if hasClientWeb()]client-[getClient()/][else]webapp[/if].war" goto okExecutable
-echo L'executable "[getApplicationName()/]-[if hasClientWeb()]client-[getClient()/][else]webapp[/if].war" n'existe pas dans le répertoire racine.
-goto end
-
-:okExecutable
-echo Lancement du script d'activation pour le serveurTomcat...
-echo Ouvrir la fenetre de commande de la barre des taches pour visualiser si besoin l'initialisation du serveur.
-echo Cette fenetre de commande va se fermer automatiquement dans 10 secondes....
-start "" /min [buildEmbeddedHttpScriptName()/] %*
-timeout 10 >nul
-exit
-
-:end
-[/template]
+[template public clientEmbeddedHttpStartupBat(any : ecore::EObject) post(self.trim())]
+  @echo off
+  
+  rem ---------------------------------------------------------------------------
+  rem Script de démarrage pour l'application [any.getApplicationNameUpperFirst()/].
+  rem Si un jdk doit être passé en paramètre il doit obligatoirement être passé 
+  rem en premier argument avec la commande -jdk. Suivent ensuite les autres éventuels 
+  rem arguments.
+  rem ---------------------------------------------------------------------------
+  
+  cls
+  setlocal
+  title Script de lancement pour l'application : [any.getApplicationNameUpperFirst()/].
+  set "[any.getApplicationName().toUpper()/]_BIN_HOME=%cd%"
+  echo Lancement du script pour l'application [any.getApplicationNameUpperFirst()/]...
+  if exist "%[any.getApplicationName().toUpper()/]_BIN_HOME%\[any.buildEmbeddedHttpScriptName()/]" goto okScripts
+  echo Le fichier auxiliaire "EmbeddedTomcat.bat" n'existe pas dans le répertoire.
+  goto end
+  
+  :okScripts
+  if exist "%[any.getApplicationName().toUpper()/]_BIN_HOME%/../conf/log4j2.xml" goto okLog4j
+  echo Le fichier de configuration des logs n'existe pas dans le répertoire : "/conf".
+  goto end
+  
+  :okLog4j
+  if "%~1" == "-jdk" goto checkJdkParam
+  if exist "%JAVA_HOME%/bin/java.exe" echo utilisation du jdk "%JAVA_HOME%" & goto okJdk
+  echo La variable "JAVA_HOME" n'existe pas ou n'a pas un chemin valide et aucun chemin saisi pour le jdk (-jdk).
+  goto end
+  
+  :checkJdkParam
+  echo Pas de test sur la variable "JAVA_HOME", tentative d'utilisation avec le chemin suivant : "%2"
+  if exist "%2/bin/java.exe" echo Chemin correct, utilisation du jdk "%2" & goto okJdk
+  echo Impossible de trouver un jdk valide avec ce chemin.
+  goto end
+  
+  :okJdk
+  if exist "../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
+  .war" goto okExecutable
+  echo L'executable "[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
+  .war" n'existe pas dans le répertoire racine.
+  goto end
+  
+  :okExecutable
+  echo Lancement du script d'activation pour le serveurTomcat...
+  echo Ouvrir la fenetre de commande de la barre des taches pour visualiser si besoin l'initialisation du serveur.
+  echo Cette fenetre de commande va se fermer automatiquement dans 10 secondes....
+  start "" /min [any.buildEmbeddedHttpScriptName()/] %*
+  timeout 10 >nul
+  exit
+  
+  :end[/template]

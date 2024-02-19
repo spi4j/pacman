@@ -1,14 +1,8 @@
+[module genFileFacade('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::soa::files::genRSResources/]
+
 [comment encoding = UTF-8 /]
-[module genFileFacade('http://www.obeonetwork.org/dsl/environment/3.0.0',
-					  'http://www.obeonetwork.org/dsl/soa/4.0.0')]
-
-[import  fr::pacman::commons::soa::files::genRSResources /]
-
-[template public genApplicationAppConfig_facade(m : System)]
 [comment @main/]
-[genRSApplicationConfig(m)/]
-[/template]
-
-
-
-
+[template public genApplicationAppConfig_facade(m : soa::System)]
+  [m.genRSApplicationConfig()/][/template]

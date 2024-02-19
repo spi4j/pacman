@@ -200,6 +200,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Service_Abs);
    }
 
+public static String getImportForService_AbsJavaService(Object object){return getImportForService_Abs();}
+
    /**
     * Retourne l'import pour Service_Abs
     * @param p_modelFile
@@ -210,6 +212,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_Entity_Service_Abs);
    }
+
+public static String getImportForEntityService_AbsJavaService(Object object){return getImportForEntityService_Abs();}
 
    /**
     * Retourne le nom de la classe pour Service_Abs
@@ -222,6 +226,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Service_Abs));
    }
 
+public static String getClassNameForService_AbsJavaService(Object object){return getClassNameForService_Abs();}
+
    /**
     * Retourne le nom de la classe pour Service_Abs (Sans la couche Matching)
     * @param p_modelFile
@@ -232,6 +238,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Entity_Service_Abs));
    }
+
+public static String getClassNameForEntityService_AbsJavaService(Object object){return getClassNameForEntityService_Abs();}
 
    /**
     * Retourne l'import pour ApplicationService_Itf
@@ -244,6 +252,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_ApplicationService_Itf);
    }
 
+public static String getImportForApplicationService_ItfJavaService(Object object){return getImportForApplicationService_Itf();}
+
    /**
     * Retourne le nom de la classe pour ApplicationService_Itf
     * @param p_modelFile
@@ -254,6 +264,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_ApplicationService_Itf));
    }
+
+public static String getClassNameForApplicationService_ItfJavaService(Object object){return getClassNameForApplicationService_Itf();}
 
    /**
     * Retourne l'import pour UserBusiness_Abs
@@ -266,6 +278,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_UserBusiness_Abs);
    }
 
+public static String getImportForUserBusiness_AbsJavaService(Object object){return getImportForUserBusiness_Abs();}
+
    /**
     * Retourne le nom de la classe pour UserBusiness_Abs
     * @param p_modelFile
@@ -276,6 +290,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_UserBusiness_Abs));
    }
+
+public static String getClassNameForUserBusiness_AbsJavaService(Object object){return getClassNameForUserBusiness_Abs();}
 
    /**
     * Retourne l'import pour Service_Itf
@@ -288,6 +304,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Service_Itf);
    }
 
+public static String getImportForService_ItfJavaService(Object object){return getImportForService_Itf();}
+
    /**
     * Retourne l'import pour Service_Itf
     * @param p_modelFile
@@ -298,6 +316,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_Entity_Service_Itf);
    }
+
+public static String getImportForEntityService_ItfJavaService(Object object){return getImportForEntityService_Itf();}
 
    /**
     * Retourne le nom de la classe pour Service_Itf
@@ -310,6 +330,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Service_Itf));
    }
 
+public static String getClassNameForService_ItfJavaService(Object object){return getClassNameForService_Itf();}
+
    /**
     * Retourne le nom de la classe pour Service_Itf (Sans la couche Matching)
     * @param p_modelFile
@@ -320,6 +342,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Entity_Service_Itf));
    }
+
+public static String getClassNameForEntityService_ItfJavaService(Object object){return getClassNameForEntityService_Itf();}
 
    /**
     * Retourne l'import pour ServiceReferentiel_Itf
@@ -332,6 +356,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_ServiceReferentiel_Itf);
    }
 
+public static String getImportForServiceReferentiel_ItfJavaService(Object object){return getImportForServiceReferentiel_Itf();}
+
    /**
     * Retourne le nom de la classe pour ServiceReferentiel_Itf
     * @param p_modelFile
@@ -342,6 +368,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_ServiceReferentiel_Itf));
    }
+
+public static String getClassNameForServiceReferentiel_ItfJavaService(Object object){return getClassNameForServiceReferentiel_Itf();}
 
    /**
     * Retourne l'import pour AttributeNames_Itf
@@ -354,6 +382,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_AttributesNames_Itf);
    }
 
+public static String getImportForAttributesNames_ItfJavaService(Object object){return getImportForAttributesNames_Itf();}
+
    /**
     * Retourne le nom de la classe pour AttributeNames_Itf
     * @param p_modelFile
@@ -364,6 +394,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_AttributesNames_Itf));
    }
+
+public static String getClassNameForAttributesNames_ItfJavaService(Object object){return getClassNameForAttributesNames_Itf();}
 
    /**
     * Retourne l'import pour Dto_Itf
@@ -376,6 +408,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Dto_Itf);
    }
 
+public static String getImportForDto_ItfJavaService(Object object){return getImportForDto_Itf();}
+
    /**
     * Retourne le nom de la classe pour Dto_Itf
     * @param p_modelFile
@@ -387,6 +421,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Dto_Itf));
    }
 
+public static String getClassNameForDto_ItfJavaService(Object object){return getClassNameForDto_Itf();}
+
    /**
     * Retourne l'import pour Mapper_Abs
     * @param p_modelFile
@@ -397,6 +433,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_Mapper_Abs);
    }
+
+public static String getImportForMapper_AbsJavaService(Object object){return getImportForMapper_Abs();}
 
    /**
     * Retourne l'import pour EntityMapper_Abs
@@ -420,6 +458,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Mapper_Abs));
    }
 
+public static String getClassNameForMapper_AbsJavaService(Object object){return getClassNameForMapper_Abs();}
+
    /**
     * Retourne le nom de la classe pour EntityMapper_Abs
     * @param p_modelFile
@@ -430,6 +470,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_EntityMapper_Abs));
    }
+
+public static String getClassNameForEntityMapper_AbsJavaService(Object object){return getClassNameForEntityMapper_Abs();}
 
    /**
     * Retourne l'import pour Mapper_Itf
@@ -442,6 +484,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Mapper_Itf);
    }
 
+public static String getImportForMapper_ItfJavaService(Object object){return getImportForMapper_Itf();}
+
    /**
     * Retourne l'import pour EntityMapper_Itf
     * @param p_modelFile
@@ -452,6 +496,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_EntityMapper_Itf);
    }
+
+public static String getImportForEntityMapper_ItfJavaService(Object object){return getImportForEntityMapper_Itf();}
 
    /**
     * Retourne le nom de la classe pour Mapper_Itf
@@ -464,6 +510,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Mapper_Itf));
    }
 
+public static String getClassNameForMapper_ItfJavaService(Object object){return getClassNameForMapper_Itf();}
+
    /**
     * Retourne le nom de la classe pour EntityMapper_Itf
     * @param p_modelFile
@@ -474,6 +522,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_EntityMapper_Itf));
    }
+
+public static String getClassNameForEntityMapper_ItfJavaService(Object object){return getClassNameForEntityMapper_Itf();}
 
    /**
     * Retourne l'import pour Match_Abs
@@ -486,6 +536,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Match_Abs);
    }
 
+public static String getImportForMatch_AbsJavaService(Object object){return getImportForMatch_Abs();}
+
    /**
     * Retourne le nom de la classe pour Match_Abs
     * @param p_modelFile
@@ -496,6 +548,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Match_Abs));
    }
+
+public static String getClassNameForMatch_AbsJavaService(Object object){return getClassNameForMatch_Abs();}
 
    /**
     * Retourne l'import pour Match_Itf
@@ -508,6 +562,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Match_Itf);
    }
 
+public static String getImportForMatch_ItfJavaService(Object object){return getImportForMatch_Itf();}
+
    /**
     * Retourne le nom de la classe pour Match_Itf
     * @param p_modelFile
@@ -518,6 +574,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Match_Itf));
    }
+
+public static String getClassNameForMatch_ItfJavaService(Object object){return getClassNameForMatch_Itf();}
 
    /**
     * Retourne l'import pour UserPersistence_Abs
@@ -530,6 +588,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_UserPersistence_Abs);
    }
 
+public static String getImportForUserPersistence_AbsJavaService(Object object){return getImportForUserPersistence_Abs();}
+
    /**
     * Retourne le nom de la classe pour UserPersistence_Abs
     * @param p_modelFile
@@ -540,6 +600,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_UserPersistence_Abs));
    }
+
+public static String getClassNameForUserPersistence_AbsJavaService(Object object){return getClassNameForUserPersistence_Abs();}
 
    /**
     * Retourne l'import pour Dao_Itf
@@ -552,6 +614,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Dao_Itf);
    }
 
+public static String getImportForDao_ItfJavaService(Object object){return getImportForDao_Itf();}
+
    /**
     * Retourne le nom de la classe pour Dao_Itf
     * @param p_modelFile
@@ -562,6 +626,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Dao_Itf));
    }
+
+public static String getClassNameForDao_ItfJavaService(Object object){return getClassNameForDao_Itf();}
 
    /**
     * Retourne l'import pour DaoJdbc_Abs
@@ -574,6 +640,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_DaoJdbc_Abs);
    }
 
+public static String getImportForDaoJdbc_AbsJavaService(Object object){return getImportForDaoJdbc_Abs();}
+
    /**
     * Retourne le nom de la classe pour DaoJdbc_Abs
     * @param p_modelFile
@@ -584,6 +652,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_DaoJdbc_Abs));
    }
+
+public static String getClassNameForDaoJdbc_AbsJavaService(Object object){return getClassNameForDaoJdbc_Abs();}
 
    /**
     * Retourne l'import pour ColumnsNames_Itf
@@ -596,6 +666,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_ColumnsNames_Itf);
    }
 
+public static String getImportForColumnsNames_ItfJavaService(Object object){return getImportForColumnsNames_Itf();}
+
    /**
     * Retourne le nom de la classe pour ColumnsNames_Itf
     * @param p_modelFile
@@ -606,6 +678,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_ColumnsNames_Itf));
    }
+
+public static String getClassNameForColumnsNames_ItfJavaService(Object object){return getClassNameForColumnsNames_Itf();}
 
    /**
     * Retourne l'import pour Entity_Itf
@@ -618,6 +692,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Entity_Itf);
    }
 
+public static String getImportForEntity_ItfJavaService(Object object){return getImportForEntity_Itf();}
+
    /**
     * Retourne le nom de la classe pour Entity_Itf
     * @param p_modelFile
@@ -628,6 +704,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Entity_Itf));
    }
+
+public static String getClassNameForEntity_ItfJavaService(Object object){return getClassNameForEntity_Itf();}
 
    /**
     * Retourne l'import pour BeanTester_Abs
@@ -640,6 +718,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_BeanTester_Abs);
    }
 
+public static String getImportForBeanTester_AbsJavaService(Object object){return getImportForBeanTester_Abs();}
+
    /**
     * Retourne le nom de la classe pour BeanTester_Abs
     * @param p_modelFile
@@ -650,6 +730,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_BeanTester_Abs));
    }
+
+public static String getClassNameForBeanTester_AbsJavaService(Object object){return getClassNameForBeanTester_Abs();}
 
    /**
     * Retourne l'import pour FetchingStrategyTester_Abs
@@ -662,6 +744,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_FetchingStrategyTester_Abs);
    }
 
+public static String getImportForFetchingStrategyTester_AbsJavaService(Object object){return getImportForFetchingStrategyTester_Abs();}
+
    /**
     * Retourne l'import pour FetchingStrategyTester_Abs
     * @param p_modelFile
@@ -673,6 +757,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_FetchingStrategyEntityTester_Abs);
    }
 
+public static String getImportForFetchingStrategyEntityTester_AbsJavaService(Object object){return getImportForFetchingStrategyEntityTester_Abs();}
+
    /**
     * Retourne le nom de la classe pour FetchingStrategyTester_Abs
     * @param p_modelFile
@@ -683,6 +769,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_FetchingStrategyTester_Abs));
    }
+
+public static String getClassNameForFetchingStrategyTester_AbsJavaService(Object object){return getClassNameForFetchingStrategyTester_Abs();}
 
    /*
     * Retourne le nom de la classe pour FetchingStrategyEntityTester_Abs
@@ -697,6 +785,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
                PacmanPropertiesManager.get_property(c_idParam_FetchingStrategyEntityTester_Abs));
    }
 
+public static String getClassNameForFetchingStrategyEntityTester_AbsJavaService(Object object){return getClassNameForFetchingStrategyEntityTester_Abs();}
+
    /**
     * Retourne l'import pour Xto_Itf
     * @param p_modelFile
@@ -707,6 +797,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_Xto_Itf);
    }
+
+public static String getImportForXto_ItfJavaService(Object object){return getImportForXto_Itf();}
    
    /**
     * Retourne l'import pour Xto_Itf pour RS.
@@ -719,6 +811,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Xto_Rs_Itf);
    }
 
+public static String getImportForRsXto_ItfJavaService(Object object){return getImportForRsXto_Itf();}
+
    /**
     * Retourne le nom de la classe pour Xto_Itf
     * @param p_modelFile
@@ -729,6 +823,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Xto_Itf));
    }
+
+public static String getClassNameForXto_ItfJavaService(Object object){return getClassNameForXto_Itf();}
 
    /**
     * Retourne l'import pour Binary
@@ -741,6 +837,8 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_Binary);
    }
 
+public static String getImportForBinaryJavaService(Object object){return getImportForBinary();}
+
    /**
     * Retourne le nom de la classe pour Binary
     * @param p_modelFile
@@ -751,4 +849,6 @@ public class Spi4jProperties extends PacmanPropertiesCategory_Abs
    {
       return getClassName(PacmanPropertiesManager.get_property(c_idParam_Binary));
    }
+
+public static String getClassNameForBinaryJavaService(Object object){return getClassNameForBinary();}
 }

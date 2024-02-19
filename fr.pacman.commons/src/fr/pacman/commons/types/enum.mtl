@@ -1,163 +1,174 @@
-[comment encoding = UTF-8 /]
 [module enum('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::enums /]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::enums/]
+[import fr::pacman::commons::types::packages/]
+[import fr::pacman::commons::types::names/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
 
-[import fr::pacman::commons::types::packages /]
-[import fr::pacman::commons::types::names /]
-
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-
-[template public enum(e : Enumeration)]
-package [buildPackageEnum(e)/];
-// [protected ('for imports')]
+[comment encoding = UTF-8 /]
+[template public enum(e : environment::Enumeration)]
+  package [e.buildPackageEnum()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [e.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * [e.roleEnum()/]
+   * @author [e.getAuthorName()/]
+   */
+  public enum [e.buildEnumName()/]
+  {
+  
+  [if (not e.literals->isEmpty())]
+    [if (e.hasEnumLiteralParamsStructs())]
+      [e.literals->asSequence()->collect(temp1 | temp1.enumStruct(e.getEnumLiteralParamsStructs()))->sep(',\r\n')/];
+    [else]
+      [e.literals->asSequence()->collect(temp2 | temp2.enumStruct())->sep(',\r\n')/];
+    [/if]
+  [/if]
+  
+  
+      /** La map de recuperation des enum par leur valeur */
+      private static final Map <String, [e.buildEnumName()/]> ['by value map'.apply_attributeFinalStatic()/] = new LinkedHashMap<>();
+  
+  	/** La valeur courante de l'enum sous forme de String. */
+  	private final String ['value'.apply_attributeFinal()/];
+  
+  	[e.writeLiteralParams(0)/]
+  
+      /**
+      *   Initialisation de ['by value map'.apply_attributeFinalStatic()/]
+      */
+      static {
+      	for ( [e.buildEnumName()/]  ['enum value'.apply_variableDefault()/] :  [e.buildEnumName()/].values()  ) {
+      		['by value map'.apply_attributeFinalStatic()/].put(['enum value'.apply_variableDefault()/].['value'.apply_attributeFinal()/], ['enum value'.apply_variableDefault()/] );
+      	}
+      }
+  
+      /**
+      * Contructeur par défaut
+      */
+  	private [e.buildEnumName()/] (final String ['literal'.apply_parameterMethodClassicIn()/][e.writeLiteralParams(1)/]) {
+  
+          ['value'.apply_attributeFinal()/] = ['literal'.apply_parameterMethodClassicIn()/];
+  		[e.writeLiteralParams(2)/]
+  
+      // constructeur
+      [protected (e.getUserCodeId('constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
+        	
+      [/protected]
+  
+      }
+  
+     /**
+      * Récupération de la valeur courante d'enum
+      */
+      public String ['get value'.apply_methodDefault()/]() {
+  		return [e.getAffectationPrefix()/]['value'.apply_attributeFinal()/];
+  	}
+  
+     /**
+      * Récupération d'une enum par sa valeur
+      */
+      public static [e.buildEnumName()/] ['get enum by value'.apply_methodDefault()/] (String ['value'.apply_parameterMethodClassicIn()/]) {
+  		return ['by value map'.apply_attributeFinalStatic()/].get(['value'.apply_parameterMethodClassicIn()/]);
+  	}
+  
+  [if (e.hasEnumLiteralParamsStructs())]
+    [for (p : String | e.getEnumLiteralParamsStructs().tokenize(','))]
+      	/**
+      	* Récupération d'un paramètre.
+      	*/
+      	public [p.substring(p.indexOf(':') + 1)/] [p.substring(1, p.indexOf(':') - 1).apply_methodGet()/]() {
+      
+      		// get [p.substring(1, p.indexOf(':') - 1)/]
+      		[protected (e.getUserCodeId('get' + p.substring(1, p.indexOf(':') - 1))) startTagPrefix('// ') endTagPrefix('// ')]
+          	
+        [/protected]
+      
+      	
+      		return [p.getAffectationPrefix()/][p.substring(1, p.indexOf(':') - 1).apply_attributeFinal()/];
+      	}
+      
+    [/for]
+  [/if]
+  
+  
+      // specifique
+      [protected (e.getUserCodeId('specifique')) startTagPrefix('// ') endTagPrefix('// ')]
+        	
+      [/protected]
+  
+  }[/template]
 
 [comment : Write all required imports. /]
-[e.writeImports()/]
-
-// [/protected]
-
-/**
- * [roleEnum(e)/]
- * @author [getAuthorName()/]
- */
-public enum [e.buildEnumName()/]
-{
-
-    [if not e.literals->isEmpty()]
-	[if e.hasEnumLiteralParamsStructs()]
-[e.literals.enumStruct(e.getEnumLiteralParamsStructs())->sep(',\r\n')/];
-	[else]
-[e.literals.enumStruct()->sep(',\r\n')/];
-	[/if][/if]
-
-
-    /** La map de recuperation des enum par leur valeur */
-    private static final Map <String, [e.buildEnumName()/]> [apply_attributeFinalStatic('by value map')/] = new LinkedHashMap<>();
-
-	/** La valeur courante de l'enum sous forme de String. */
-	private final String [apply_attributeFinal('value')/];
-
-	[comment : si parametres utilisateur, on les place ici/]
-	[e.writeLiteralParams(0)/]
-
-    /**
-    *   Initialisation de [apply_attributeFinalStatic('by value map')/]
-    */
-    static {
-    	for ( [e.buildEnumName()/]  [apply_variableDefault('enum value')/] :  [e.buildEnumName()/].values()  ) {
-    		[apply_attributeFinalStatic('by value map')/].put([apply_variableDefault('enum value')/].[apply_attributeFinal('value')/], [apply_variableDefault('enum value')/] );
-    	}
-    }
-
-    /**
-    * Contructeur par défaut
-    */
-	private [e.buildEnumName()/] (final String [apply_parameterMethodClassicIn('literal')/][e.writeLiteralParams(1)/]) {
-
-        [apply_attributeFinal('value')/] = [apply_parameterMethodClassicIn('literal')/];
-		[e.writeLiteralParams(2)/]
-
-    // constructeur
-    // [protected (e.getUserCodeId('constructeur'))]
-	
-    // [/protected]
-    }
-
-   /**
-    * Récupération de la valeur courante d'enum
-    */
-    public String [apply_methodDefault('get value')/]() {
-		return [getAffectationPrefix()/][apply_attributeFinal('value')/];
-	}
-
-   /**
-    * Récupération d'une enum par sa valeur
-    */
-    public static [e.buildEnumName()/] [apply_methodDefault('get enum by value')/] (String [apply_parameterMethodClassicIn('value')/]) {
-		return [apply_attributeFinalStatic('by value map')/].get([apply_parameterMethodClassicIn('value')/]);
-	}
-
-	[comment : ecriture des assesseurs. /]
-	[if e.hasEnumLiteralParamsStructs()]
-	[for (p : String | e.getEnumLiteralParamsStructs().tokenize(','))]
-	/**
-	* Récupération d'un paramètre.
-	*/
-	public [p.substring(p.indexOf(':') + 1)/] [p.substring(1, p.indexOf(':')-1).apply_methodGet()/]() {
-
-		// get [p.substring(1, p.indexOf(':')-1)/]
-		// [protected (e.getUserCodeId('get' + p.substring(1, p.indexOf(':')-1)))]
-	
-		// [/protected]
-	
-		return [getAffectationPrefix()/][p.substring(1, p.indexOf(':')-1).apply_attributeFinal()/];
-	}
-
-	[/for]
-	[/if]
-
-
-    // specifique
-    // [protected (e.getUserCodeId('specifique'))]
-	
-    // [/protected]
-}
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (e : Enumeration) post(trim())]
-[e.initImports()/]
-[e.addImport('java.util.LinkedHashMap')/]
-[e.addImport('java.util.Map')/]
-[e.flushImports()/]
-[/template]
+[template private writeImports(e : environment::Enumeration) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('java.util.LinkedHashMap')/]
+  [e.addImport('java.util.Map')/]
+  [e.flushImports()/][/template]
 
 [comment : construction sans parametre particulier. /]
-[template private enumStruct (l : Literal)]
-   /** [if not l.name.oclIsUndefined() and l.name.trim().size() > 0][l.name/][else]BLANK[/if] : [l.description/]. */
-   [if not l.name.oclIsUndefined() and l.name.trim().size() > 0][l.name.toUpper()/][else]BLANK[/if]("[l.name/]")
-[/template]
+[template private enumStruct(l : environment::Literal)]
+     /** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
+   : [l.description/]. */
+     [if (not (l.name = null) and l.name.trim().size() > 0)][l.name.toUpper()/][else]BLANK[/if]
+  ("[l.name/]")[/template]
 
 [comment : construction avec des parametres donnes par le developpeur. /]
-[template private enumStruct (l : Literal, s : String)]
-	/** [if not l.name.oclIsUndefined() and l.name.trim().size() > 0][l.name/][else]BLANK[/if] : [l.description/]. */
-	[let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]
-    [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(i, nbParams)/][/for])[/let]
+[template private enumStruct(l : environment::Literal, s : String)]
+  	/** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
+   : [l.description/]. */
+  [let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]
+        [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(i, nbParams)/][/for]
+    )[/let]
 [/template]
 
 [comment : prepare pour si decide de positionner les guillemets automatiquement a partir de la structure. /]
-[template private writeParamStruct (s : String, i : Integer, nbParams : Integer)]
-[s.replaceAll('\'', '"')/][if i < nbParams], [/if]
+[template private writeParamStruct(s : String, i : Integer, nbParams : Integer)]
+  [s.replaceAll('\'', '"')/][if (i < nbParams)], [/if]
 [/template]
 
 [comment : ecriture d'un parametre utilisateur pour le literal. /]
 [comment : ATTENTION cette methode est utilisee pour la declaration, la signature du constructeur et l'intialisation dans le constructeur ! /]
 [comment : m (mode) = 0 definition des parametres, 1 signature constructeur, 2 initialisation constructeur. /]
-[template private writeLiteralParams (e : Enumeration, m : Integer)]
-[if e.hasEnumLiteralParamsStructs()]
-[for (p : String | e.getEnumLiteralParamsStructs().tokenize(','))][if m = 0]/** Paramètre supplémentaire utilisateur. */[lineSeparator()/][/if][p.writeLiteralParamLine(m)/][/for][/if]
+[template private writeLiteralParams(e : environment::Enumeration, m : Integer)]
+  [if (e.hasEnumLiteralParamsStructs())]
+    [for (p : String | e.getEnumLiteralParamsStructs().tokenize(','))]
+      [if (m = 0)]/** Paramètre supplémentaire utilisateur. */[p.lineSeparator()/][/if]
+      [p.writeLiteralParamLine(m)/][/for]
+  [/if]
 [/template]
 
 [comment : /]
-[template private writeLiteralParamLine (p : String, m : Integer)]
-[if m = 1], [/if][if m = 0]private [/if][if m < 2]final [p.substring(p.indexOf(':') + 1)/] [/if][p.substring(1, p.indexOf(':')-1).writeLiteralParamLine_2(m)/]
-[/template]
+[template private writeLiteralParamLine(p : String, m : Integer)]
+  [if (m = 1)], [/if]
+  [if (m = 0)]private [/if]
+  [if (m < 2)]final [p.substring(p.indexOf(':') + 1)/] [/if]
+  [p.substring(1, p.indexOf(':') - 1).writeLiteralParamLine_2(m)/][/template]
 
 [comment : /]
-[template private writeLiteralParamLine_2 (p : String, m : Integer)]
-[if m = 1][p.apply_parameterMethodClassicIn()/][else][if m > 0][getAffectationPrefix()/][/if][p.apply_attributeFinal()/][/if][p.writeLiteralParamLine_3(m)/]
+[template private writeLiteralParamLine_2(p : String, m : Integer)]
+  [if (m = 1)][p.apply_parameterMethodClassicIn()/][else]
+                                                     [if (m > 0)][p.getAffectationPrefix()/][/if]
+                                                     [p.apply_attributeFinal()/][/if]
+  [p.writeLiteralParamLine_3(m)/][/template]
+
+[template private writeLiteralParamLine_3(p : String, m : Integer)]
+  [if (m = 2)] = [p.apply_parameterMethodClassicIn()/][/if]
+  [if (m = 0 or m = 2)]
+    ;[p.lineSeparator()/][if (m = 0)][p.lineSeparator()/][/if]
+  [/if]
 [/template]
 
-[template private writeLiteralParamLine_3 (p : String, m : Integer)]
-[if m = 2] = [p.apply_parameterMethodClassicIn()/][/if][if m = 0 or m = 2];[lineSeparator()/][if m = 0][lineSeparator()/][/if][/if]
-[/template]
-
-[query public roleEnum(e : Enumeration) : String = 'Enumeration ' + e.buildEnumName() /]
+[query public roleEnum(e : environment::Enumeration) : String = 'Enumeration ' + e.buildEnumName()/]

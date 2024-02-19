@@ -1,277 +1,113 @@
+[module buildClassesEntityApi('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::commons::services::AnnotationUtils/]
+[import fr::pacman::commons::services::MandatoryUtils/]
+
 [comment encoding = UTF-8 /]
-[module buildClassesEntityApi('http://www.obeonetwork.org/dsl/entity/3.0.0',
-                              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::entity::api::common::names /]
-
 [**
  * Paramétrage début
 */]
+[query public buildEntityColumnEnumName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' columns').apply_classEnum()/]
 
-[query public buildEntityColumnEnumName(e : Entity) : String =
-apply_classEnum(nameSimpleEntity(e) + ' columns')
- /]
+[query public buildReferenceColumnEnumName(r : environment::Reference) : String = (r.nameSimpleReference() + ' columns').apply_classEnum()/]
 
-[query public buildReferenceColumnEnumName(r : Reference) : String =
-apply_classEnum(nameSimpleReference(r) + ' columns')
- /]
+[query public buildDaoInterfaceName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' dao').apply_classInterface()/]
 
-[query public buildDaoInterfaceName(e : Entity) : String =
-apply_classInterface(nameSimpleEntity(e) + ' dao')
- /]
+[query public buildReferenceDaoInterfaceName(r : environment::Reference) : String = (r.nameSimpleReference() + ' dao').apply_classInterface()/]
 
-[query public buildReferenceDaoInterfaceName(r : Reference) : String =
-apply_classInterface(nameSimpleReference(r) + ' dao')
- /]
+[query public buildDaoName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' dao').apply_classDefault()/]
 
-[query public buildDaoName(e : Entity) : String =
-apply_classDefault(nameSimpleEntity(e) + ' dao')
- /]
+[query public buildDaoImplClassName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' dao').apply_classImplem()/]
 
-[query public buildDaoImplClassName(e : Entity) : String =
-apply_classImplem(nameSimpleEntity(e) + ' dao')
- /]
+[query public buildReferenceImplDaoClassName(r : environment::Reference) : String = (r.nameSimpleReference() + ' dao').apply_classImplem()/]
 
-[query public buildReferenceImplDaoClassName(r : Reference) : String =
-apply_classImplem(nameSimpleReference(r) + ' dao')
- /]
+[query public buildDaoTestClassName(e : entity::Entity) : String = e.buildDaoName().apply_classTest()/]
 
-[query public buildDaoTestClassName(e : Entity) : String =
-apply_classTest(e.buildDaoName())
- /]
+[query public buildH2DatabaseHelperClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' h2 database helper').apply_classDefault()/]
 
-[query public buildH2DatabaseHelperClassName(any : OclAny) : String =
-apply_classDefault(getApplicationName() + ' h2 database helper')
- /]
+[query public buildEntityInterfaceName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' entity').apply_classInterface()/]
 
-[query public buildEntityInterfaceName(e : Entity) : String =
-apply_classInterface(nameSimpleEntity(e) + ' entity')
- /]
+[query public buildReferenceEntityInterfaceName(r : environment::Reference) : String = (r.nameSimpleReference() + ' entity').apply_classInterface()/]
 
-[query public buildReferenceEntityInterfaceName(r : Reference) : String =
-apply_classInterface(nameSimpleReference(r)  + ' entity')
- /]
+[query public buildEntityName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' entity').apply_classDefault()/]
 
-[query public buildEntityName(e : Entity) : String =
-apply_classDefault(nameSimpleEntity(e) + ' entity')
- /]
+[query public buildReferentielEntityClassName(e : entity::Entity) : String = ('referentiel entity' + e.nameSimpleEntity()).apply_classDefault()/]
 
-[query public buildReferentielEntityClassName(e : Entity) : String =
-apply_classDefault('referentiel entity' + nameSimpleEntity(e) )
- /]
+[query public buildReferentielReferenceClassName(r : environment::Reference) : String = ('referentiel reference' + r.containingType.name + ' to ' + r.referencedType.name).apply_classDefault()/]
 
-[query public buildReferentielReferenceClassName(r : Reference) : String =
-apply_classDefault('referentiel reference' +   r.containingType.name + ' to ' + r.referencedType.name )
- /]
-
-[query public buildReferentielClassName(b : environment::Namespace) : String =
-apply_classDefault(b.name + ' referentiel ' )
- /]
-
+[query public buildReferentielClassName(b : environment::Namespace) : String = (b.name + ' referentiel ').apply_classDefault()/]
 
 [**
  * Paramétrage fin
 */]
+[query private hasPhysicalName(p : environment::Property) : Boolean = p.getAnnotationBody('PHYSICAL_NAME', false) <> null/]
 
-[query private hasPhysicalName(p : Property) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{p, 'PHYSICAL_NAME', false}) <> null
-/]
+[query private hasPhysicalName(r : environment::Reference) : Boolean = r.getAnnotationBody('PHYSICAL_NAME', false) <> null/]
 
-[query private hasPhysicalName(r : Reference) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{r, 'PHYSICAL_NAME', false}) <> null
-/]
+[query private hasPhysicalName(e : entity::Entity) : Boolean = e.getAnnotationBody('PHYSICAL_NAME', false) <> null/]
 
-[query private hasPhysicalName(e : Entity) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{e, 'PHYSICAL_NAME', false}) <> null
-/]
+[query public hasPhysicalShortName(any : ecore::EObject) : Boolean = any.getAnnotation_PHYSICAL_SHORT_NAME() <> null/]
 
-[query public hasPhysicalShortName(any : OclAny) : Boolean =
-    getAnnotation_PHYSICAL_SHORT_NAME(any) <> null
-/]
-
-[query public physicalShortName(any : OclAny) : String =
-    getAnnotation_PHYSICAL_SHORT_NAME(any)
-/]
+[query public physicalShortName(any : ecore::EObject) : String = any.getAnnotation_PHYSICAL_SHORT_NAME()/]
 
 [comment Query pour savoir s'il y a une annotation 'PHYSICAL_SHORT_NAME' de manière non récursive /]
-[query private getAnnotation_PHYSICAL_SHORT_NAME(p_entityOuReference : OclAny) : String =
-    invoke('fr.pacman.commons.services.AnnotationUtils', 'getAnnotation_PHYSICAL_SHORT_NAME(org.obeonetwork.dsl.environment.ObeoDSMObject, boolean)', Sequence{p_entityOuReference, false})
-/]
+[query private getAnnotation_PHYSICAL_SHORT_NAME(p_entityOuReference : ecore::EObject) : String = p_entityOuReference.getAnnotation_PHYSICAL_SHORT_NAME(false)/]
 
-[query public physicalName(e : Entity) : String =
-if hasPhysicalName(e) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{e, 'PHYSICAL_NAME', false})
-else
-    e.name.sanitize().toUpper()
-endif
-/]
+[query public physicalName(e : entity::Entity) : String = if e.hasPhysicalName() then e.getAnnotationBody('PHYSICAL_NAME', false) else e.name.sanitize().toUpper() endif/]
 
-[query public physicalName(r : Reference) : String =
-if hasPhysicalName(r) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{r, 'PHYSICAL_NAME', false})
-else
-     physicalName(r.referencedType.oclAsType(entity::Entity)).first(maxHalfColumnReferenceSize())
-endif
-/]
+[query public physicalName(r : environment::Reference) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.referencedType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) endif/]
 
-[query public physicalName(p : Property) : String =
-if hasPhysicalName(p) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{p, 'PHYSICAL_NAME', false})
-else
-    p.name.sanitize().toUpper()
-endif
-/]
+[query public physicalName(p : environment::Property) : String = if p.hasPhysicalName() then p.getAnnotationBody('PHYSICAL_NAME', false) else p.name.sanitize().toUpper() endif/]
 
-[query public physicalName(r : Reference, compteur : Integer) : String =
-if hasPhysicalName(r) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{r, 'PHYSICAL_NAME', false})
-else
-     physicalName(r.referencedType.oclAsType(entity::Entity)).first(maxHalfColumnReferenceSize()) + '_' + compteur
-endif
-/]
+[query public physicalName(r : environment::Reference, compteur : Integer) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.referencedType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) + '_' + compteur endif/]
 
-[query public physicalNameId(r : Reference) : String =
-     physicalName(r) + r.nameSQL_REF_ID()
-/]
+[query public physicalNameId(r : environment::Reference) : String = r.physicalName() + r.nameSQL_REF_ID()/]
 
-[query public physicalNameId(r : Reference, compteur : Integer) : String =
-     physicalName(r,compteur) + r.nameSQL_REF_ID()
-/]
+[query public physicalNameId(r : environment::Reference, compteur : Integer) : String = r.physicalName(compteur) + r.nameSQL_REF_ID()/]
 
-[query public physicalNameReferencing(r : Reference) : String =
-if hasPhysicalName(r) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{r, 'PHYSICAL_NAME', false})
-else
-     physicalName(r.containingType.oclAsType(entity::Entity)).first(maxHalfColumnReferenceSize())
-endif
-/]
+[query public physicalNameReferencing(r : environment::Reference) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.containingType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) endif/]
 
-[query public physicalNameReferencing(r : Reference, compteur : Integer) : String =
-if hasPhysicalName(r) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{r, 'PHYSICAL_NAME', false})
-else
-     physicalName(r.containingType.oclAsType(entity::Entity)).first(maxHalfColumnReferenceSize()) + '_' + compteur
-endif
-/]
+[query public physicalNameReferencing(r : environment::Reference, compteur : Integer) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.containingType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) + '_' + compteur endif/]
 
-[query public physicalNameReferencingId(r : Reference) : String =
-     physicalNameReferencing(r) + r.nameSQL_REF_ID()
-/]
+[query public physicalNameReferencingId(r : environment::Reference) : String = r.physicalNameReferencing() + r.nameSQL_REF_ID()/]
 
-[query public physicalNameReferencingId(r : Reference, compteur : Integer) : String =
-     physicalNameReferencing(r,compteur) + r.nameSQL_REF_ID()
-/]
+[query public physicalNameReferencingId(r : environment::Reference, compteur : Integer) : String = r.physicalNameReferencing(compteur) + r.nameSQL_REF_ID()/]
 
-[query public physicalNameJointure(r : Reference) : String =
-if hasPhysicalName(r) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{r, 'PHYSICAL_NAME', false})
-else
-    physicalName(r.containingType.oclAsType(entity::Entity)) +  r.name.toUpper()
-endif
-/]
+[query public physicalNameJointure(r : environment::Reference) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.containingType.oclAsType(entity::Entity).physicalName() + r.name.toUpper() endif/]
 
-[query public checkConstraint(a : Attribute) : String =
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{a, 'PHYSICAL_CHECK', false})
-/]
+[query public checkConstraint(a : environment::Attribute) : String = a.getAnnotationBody('PHYSICAL_CHECK', false)/]
 
-[query public hasCheckConstraint(a : Attribute) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{a, 'PHYSICAL_CHECK', false}) <> null
-/]
+[query public hasCheckConstraint(a : environment::Attribute) : Boolean = a.getAnnotationBody('PHYSICAL_CHECK', false) <> null/]
 
-[query public uniqueIndex(e : Entity) : String =
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{e, 'PHYSICAL_UNIQUE', false})
-/]
+[query public uniqueIndex(e : entity::Entity) : String = e.getAnnotationBody('PHYSICAL_UNIQUE', false)/]
 
-[query public hasUniqueIndex(e : Entity) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{e, 'PHYSICAL_UNIQUE', false}) <> null
-/]
+[query public hasUniqueIndex(e : entity::Entity) : Boolean = e.getAnnotationBody('PHYSICAL_UNIQUE', false) <> null/]
 
-[query public uniqueIndex(a : Attribute) : String =
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{a, 'PHYSICAL_UNIQUE', false})
-/]
+[query public uniqueIndex(a : environment::Attribute) : String = a.getAnnotationBody('PHYSICAL_UNIQUE', false)/]
 
-[query public isUniqueIndex(a : Attribute) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{a, 'PHYSICAL_UNIQUE', false}) <> null
-/]
+[query public isUniqueIndex(a : environment::Attribute) : Boolean = a.getAnnotationBody('PHYSICAL_UNIQUE', false) <> null/]
 
-[query public defaultValue(a : Attribute) : String =
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{a, 'PHYSICAL_DEFAULT', false})
-/]
+[query public defaultValue(a : environment::Attribute) : String = a.getAnnotationBody('PHYSICAL_DEFAULT', false)/]
 
-[query public hasDefaultValue(a : Attribute) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{a, 'PHYSICAL_DEFAULT', false}) <> null
-/]
+[query public hasDefaultValue(a : environment::Attribute) : Boolean = a.getAnnotationBody('PHYSICAL_DEFAULT', false) <> null/]
 
-[comment]ENTITY : Teste si une propriete (attribut ou référence) est obligatoire[/comment]
-[query public isMandatory(p : Property) : Boolean =
-invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatoryEntity(org.obeonetwork.dsl.environment.Property)', Sequence{p})
-/]
+[comment NTITY : Teste si une propriete (attribut ou référence) est obligatoire/]
+[query public isMandatory(p : environment::Property) : Boolean = p.isMandatoryEntity()/]
 
-[comment]STRING : Teste si une liste de proprietes dans une annotation est obligatoire[/comment]
-[query public isMandatory(e : Entity, s : String) : Boolean = 
-invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatoryAnnotationProperties(org.obeonetwork.dsl.entity.Entity, java.lang.String)', Sequence{e, s})
-/]
+[comment TRING : Teste si une liste de proprietes dans une annotation est obligatoire/]
+[query public isMandatory(e : entity::Entity, s : String) : Boolean = e.isMandatoryAnnotationProperties(s)/]
 
-[query public buildServiceTestClassName(e : Entity) : String =
- e.apply_classTest(nameSimpleEntity(e) + ' service')
- /]
- 
- [query private hasFkCritere(r : Reference) : Boolean =
-invoke('fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-    Sequence{r, 'FK_CRITERE', false}) <> null
-/]
+[query public buildServiceTestClassName(e : entity::Entity) : String = (e.nameSimpleEntity() + ' service').apply_classTest()/]
 
-[query public fkCritere(r : Reference) : String =
-if hasFkCritere(r) then
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-        'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
-        Sequence{r, 'FK_CRITERE', false})
-else
-''
-endif
-/]
+[query private hasFkCritere(r : environment::Reference) : Boolean = r.getAnnotationBody('FK_CRITERE', false) <> null/]
 
-[query private maxHalfRelationNameSize(any : OclAny) : Integer = 14 /]
-[query private maxHalfColumnReferenceSize(any : OclAny) : Integer = 14 /]
+[query public fkCritere(r : environment::Reference) : String = if r.hasFkCritere() then r.getAnnotationBody('FK_CRITERE', false) else '' endif/]
+
+[query private maxHalfRelationNameSize(any : ecore::EObject) : Integer = 14/]
+
+[query private maxHalfColumnReferenceSize(any : ecore::EObject) : Integer = 14/]

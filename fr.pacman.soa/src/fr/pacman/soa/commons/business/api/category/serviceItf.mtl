@@ -1,282 +1,274 @@
-[comment encoding = UTF-8 /]
-[module serviceItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module serviceItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::services::SecurityUtils /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::services::SecurityUtils/]
 [import fr::pacman::commons::soa::common::classes/]
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::names /]
-[import fr::pacman::commons::soa::common::utils /]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::classes /]
+[comment encoding = UTF-8 /]
+[comment le Service existe sans DTO /]
+[template public serviceItf(s : soa::Service)]
+  [s.serviceItf(s.dtoFromService())/][/template]
 
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
+[template public serviceItf(d : environment::DTO)]
+  [d.serviceFromDto().serviceItf(d)/][/template]
 
-
-[comment] le Service existe sans DTO [/comment]
-[template public serviceItf(s : Service)]
-[serviceItf(s, dtoFromService(s))/]
+[comment le Service et le DTO existent /]
+[template public serviceItf(s : soa::Service, d : environment::DTO)]
+  [s.licence()/]
+  [let self = if not (s = null) then s else if not (d = null) then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+    package [s.buildPackageBusinessApiServiceDto(d)/];
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [s.writeImports(d)/]
+      
+    [/protected]
+    
+    
+    /**
+     * Définit le contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if]
+    .
+     * @author [s.getAuthorName()/]
+     */
+    // Annotations Service
+    [protected (d.getUserCodeId('Annotations Service')) startTagPrefix('// ') endTagPrefix('// ')]
+      [if (s.useEjb())]
+        @Local
+      [/if]
+    [/protected]
+    
+    public interface [s.buildServiceInterfaceName(d)/][if (d.hasCrud())]
+                                                         extends [s.getClassNameForService_Itf()/]<[s.genPkType()/], [d.buildDtoClassName()/]>[if (d.isReferentiel())], [s.getClassNameForServiceReferentiel_Itf()/][/if]
+                                                      [else] extends [s.getClassNameForApplicationService_Itf()/][/if]
+    
+    {
+    
+    [if (d.hasCrud() and s.isCrudApplication() and false)]
+         /**
+      	* Lecture d'une instance de type : '[d.buildDtoClassName()/]', à partir de son identifiant.
+          *
+          * @param ['id'.apply_parameterMethodClassicIn()/] : Identifiant unique pour l'instance à obtenir.
+          * @return [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+      	*/
+      	// Annotations [d.name.sanitize() + '_Read'/]
+      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+      
+      	public [d.buildDtoClassName()/] read(final Long ['id'.apply_parameterMethodClassicIn()/]);
+      
+         /**
+      	* Création d'une nouvelle instance de type : '[d.buildDtoClassName()/]'.
+          *
+          * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+      	* @return [d.buildDtoClassName()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
+          * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
+      	*/
+      	// Annotations [d.name.sanitize() + '_Create'/]
+      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+      
+      	public [d.buildDtoClassName()/] create(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
+      
+         /**
+      	* Mise à jour d'une instance de type : '[d.buildDtoClassName()/]'.
+          *
+          * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+          * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
+      	*/
+      	// Annotations [d.name.sanitize() + '_Update'/]
+      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+      
+      	public void update(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
+      
+         /**
+      	* Suppression physique d'une instance de type : '[d.buildDtoClassName()/]'.
+          *
+          * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
+          * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
+      	*/
+      	// Annotations [d.name.sanitize() + '_Delete'/]
+      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+      
+      	public void remove(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
+    [/if]
+    
+    [if (d.hasCrud())]
+      [for (r : environment::Reference | d.referencingStar())]
+           /**
+            * Obtenir la liste d'objets de type '[d.nameClassDto()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameClassDto()/]'.
+        [r.comParamInverseIdIn()/]
+            * @return une liste de [d.buildDtoClassName()/] ayant [r.nameParamInverseId().apply_parameterMethodClassicIn()/] = [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+            */
+        	// Annotations [r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+        	[protected (r.getUserCodeId('Annotations ' + r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn())) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+        
+           List<[d.buildDtoClassName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.nameParamInverseId().apply_parameterMethodClassicIn()/]);
+        
+      [/for]
+      [for (r : environment::Reference | d.referencesStarStar())]
+        	/**
+            * Sauvegarde les relations entre '[d.nameClassDto()/]' et '[r.nameClassDto()/]' pour ce dto.
+            * @param ['dto'.apply_parameterMethodClassicIn()/]
+            *           le dto
+            * @param [r.name.normalize().apply_parameterMethodMultiple()/]
+            *           les relations à ajouter
+            */
+            void [('save ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/], final List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [r.name.normalize().apply_parameterMethodMultiple()/]);
+        
+           /**
+            * Obtenir la liste d'objets de type '[r.referencedType.oclAsType(environment::DTO).nameBaseDtoUP()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/]'.
+            * @param [r.containingType.oclAsType(environment::DTO).buildSimpleDtoName().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            *           (In)(*) [r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/].
+            * @return une liste de [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]
+            */
+           List<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.oclAsType(environment::DTO).buildSimpleDtoName().apply_parameterMethodClassicIn()/][r.namePK_ID()/]);
+        
+        	/**
+            * Supprime les relations [r.name/] entre '[d.nameClassDto()/]' et '[r.nameClassDto()/]' pour ce dto.
+            * @param ['dto'.apply_parameterMethodClassicIn()/]
+            *           le dto
+            */
+            void [('delete ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/]) ;
+        
+      [/for]
+    [/if]
+    [if (s <> null and not (s.ownedInterface = null))]
+      [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+           /**
+            * [o.description/]
+        [o.getComParamsIn()/][o.comParamOut()/]
+        	*/
+        	// Annotations [o.userCodeForOperation()/]
+        	[protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+           
+         [/protected]
+        
+        	[o.generateAnnotationPermission()/]
+            [o.paramOutDto()/] [o.name.sanitize().apply_methodDefault()/] ([o.paramsInDto()/][o.paramsInForPagingIfNeeded(true)/]); 
+        
+        	[o.addInterfaceTotalCountForPagingIfNeeded()/]
+        
+      [/for]
+    [/if]
+        // Méthodes [s.buildServiceInterfaceName(d)/]
+        [protected (d.getUserCodeId('Méthodes ' + s.buildServiceInterfaceName(d))) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+    
+    }[/let]
 [/template]
 
-[template public serviceItf(d : DTO)]
-[serviceItf(serviceFromDto(d), d)/]
+[template private generateAnnotationPermission(o : soa::Operation)]
+  [if (o.permissionAnnotationExists('PERMISSIONS'))]
+    [let permissions : Sequence(String) = o.getListOfPermissions('PERMISSIONS')]
+      [if (not permissions->isEmpty())]
+        [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
+                                                                                                                                                    @Permissions(value =
+                                                                                                                                                    {[for (s : String | permissions)]
+                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
+                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
+                                                                                                                                                     [/for]
+                                                                                                                                                    })[/if]
+      [/if]
+    [/let]
+  [/if]
+  [if (o.permissionAnnotationExists('PERMISSIONS_OR'))]
+    [let permissions : Sequence(String) = o.getListOfPermissions('PERMISSIONS_OR')]
+      [if (not permissions->isEmpty())]
+        [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
+                                                                                                                                                    @Permissions(value =
+                                                                                                                                                    {[for (s : String | permissions)]
+                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
+                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
+                                                                                                                                                     [/for]
+                                                                                                                                                    }, operator = PermissionsOperator_Enum.OR)[/if]
+      [/if]
+    [/let]
+  [/if]
+  [if (o.permissionAnnotationExists('PERMISSIONS_AND'))]
+    [let permissions : Sequence(String) = o.getListOfPermissions('PERMISSIONS_AND')]
+      [if (not permissions->isEmpty())]
+        [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
+                                                                                                                                                    @Permissions(value =
+                                                                                                                                                    {[for (s : String | permissions)]
+                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
+                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
+                                                                                                                                                     [/for]
+                                                                                                                                                    }, operator = PermissionsOperator_Enum.AND)[/if]
+      [/if]
+    [/let]
+  [/if]
+  [if (o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED'))]@AcceptUnauthentified[/if]
+  [if (o.isPermissionSchemeSecured())]@Permissions([o.buildAppliPermissionsInterfaceName()/].[o.getPermissionSchemeSecured().getSpi4jId().apply_attributeFinalStatic()/])[/if]
 [/template]
-
-[comment] le Service et le DTO existent [/comment]
-[template public serviceItf(s : Service, d : DTO)]
-[licence()/]
-[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
-package [buildPackageBusinessApiServiceDto(s, d)/];
-// [protected ('for imports')]
 
 [comment : Write all required imports. /]
-[s.writeImports(d)/]
-
-// [/protected]
-
-/**
- * Définit le contrat de services spécifiques[if hasCrud(d)] pour un type '[nameClassDto(d)/]'[/if].
- * @author [getAuthorName()/]
- */
-// Annotations Service
-// [protected (d.getUserCodeId('Annotations Service'))]
-[if useEjb()]
-@Local
-[/if]
-// [/protected]
-public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getClassNameForService_Itf()/]<[genPkType()/], [buildDtoClassName(d)/]>[if isReferentiel(d)], [getClassNameForServiceReferentiel_Itf()/][/if][else] extends [getClassNameForApplicationService_Itf()/][/if]
-{
-
-[comment : create crud operations. NO USE FOR NOW - STANDBY! suppress 'and false'. /]
-[if d.hasCrud() and s.isCrudApplication() and false]
-   /**
-	* Lecture d'une instance de type : '[buildDtoClassName(d)/]', à partir de son identifiant.
-    *
-    * @param [apply_parameterMethodClassicIn('id')/] : Identifiant unique pour l'instance à obtenir.
-    * @return [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Read'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read'))]
-
-	// [/protected]
-	public [buildDtoClassName(d)/] read(final Long [apply_parameterMethodClassicIn('id')/]);
-
-   /**
-	* Création d'une nouvelle instance de type : '[buildDtoClassName(d)/]'.
-    *
-    * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-	* @return [buildDtoClassName(d)/] : la nouvelle instance de type '[buildDtoClassName(d)/]'.
-    * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Create'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create'))]
-
-	// [/protected]
-	public [buildDtoClassName(d)/] create(final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn(d.name)/]) throws Spi4jValidationException;
-
-   /**
-	* Mise à jour d'une instance de type : '[buildDtoClassName(d)/]'.
-    *
-    * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-    * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Update'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update'))]
-
-	// [/protected]
-	public void update(final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn(d.name)/]) throws Spi4jValidationException;
-
-   /**
-	* Suppression physique d'une instance de type : '[buildDtoClassName(d)/]'.
-    *
-    * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
-    * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
-	*/
-	// Annotations [d.name.sanitize() + '_Delete'/]
-	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete'))]
-
-	// [/protected]
-	public void remove(final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn(d.name)/]) throws Spi4jValidationException;
-[/if]
-
-[if hasCrud(d)]
-[for (r : Reference | d.referencingStar())]
-   /**
-    * Obtenir la liste d'objets de type '[nameClassDto(d)/]' associés à l'instance de type '[nameClassDto(r.containingType.oclAsType(DTO))/]'.
-[comParamInverseIdIn(r)/]
-    * @return une liste de [buildDtoClassName(d)/] ayant [apply_parameterMethodClassicIn(nameParamInverseId(r))/] = [apply_parameterMethodClassicIn(nameParamInverseId(r))/]
-    */
-	// Annotations [r.name.sanitize() + apply_parameterMethodClassicIn(nameParamInverseId(r))/]
-	// [protected (r.getUserCodeId('Annotations ' + r.name.sanitize() + apply_parameterMethodClassicIn(nameParamInverseId(r))))]
-
-	// [/protected]
-   List<[buildDtoClassName(d)/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(nameParamInverseId(r))/]);
-
-[/for]
-[for (r : Reference | d.referencesStarStar())]
-	/**
-    * Sauvegarde les relations entre '[nameClassDto(d)/]' et '[nameClassDto(r)/]' pour ce dto.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le dto
-    * @param [apply_parameterMethodMultiple(r.name.normalize())/]
-    *           les relations à ajouter
-    */
-    void [apply_methodDefault('save ' +  r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/], final List<[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_parameterMethodMultiple(r.name.normalize())/]);
-
-   /**
-    * Obtenir la liste d'objets de type '[nameBaseDtoUP(r.referencedType.oclAsType(DTO))/]' associés à l'instance de type '[nameBaseDtoUP(r.containingType.oclAsType(DTO))/]'.
-    * @param [apply_parameterMethodClassicIn(r.containingType.oclAsType(DTO).buildSimpleDtoName())/][namePK_ID()/]
-    *           (In)(*) [nameBaseDtoUP(r.containingType.oclAsType(DTO))/].
-    * @return une liste de [buildDtoClassName(r.referencedType.oclAsType(DTO))/]
-    */
-   List<[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.oclAsType(DTO).buildSimpleDtoName())/][namePK_ID()/]);
-
-	/**
-    * Supprime les relations [r.name/] entre '[nameClassDto(d)/]' et '[nameClassDto(r)/]' pour ce dto.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le dto
-    */
-    void [apply_methodDefault('delete ' + r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/]) ;
-
-[/for]
-[/if]
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-   /**
-    * [o.description/]
-[getComParamsIn(o)/][comParamOut(o)/]
-	*/
-	// Annotations [userCodeForOperation(o)/]
-	// [protected (o.getUserCodeId('Annotations ' + userCodeForOperation(o)))]
-
-	// [/protected]
-	[generateAnnotationPermission(o) /]
-    [paramOutDto(o)/] [apply_methodDefault(o.name.sanitize())/] ([paramsInDto(o)/][paramsInForPagingIfNeeded(o, true)/]); 
-
-	[comment : If paged list add a new interface method to get the total count of paged request. /]
-	[o.addInterfaceTotalCountForPagingIfNeeded()/]
-
-[/for]
-[/if]
-    // Méthodes [buildServiceInterfaceName(s, d)/]
-    // [protected (d.getUserCodeId('Méthodes ' + buildServiceInterfaceName(s, d)))]
-
-    // [/protected]
-}[/let]
-[/template]
-
-[template private generateAnnotationPermission(o : Operation)]
-[comment
-Métadonnées possibles :
-- PERMISSIONS
-- PERMISSIONS_OR
-- PERMISSIONS_AND
-- ACCEPT_UNAUTHENTIFIED
-/]
-[if permissionAnnotationExists(o, 'PERMISSIONS')]
-   [let permissions : Sequence(String) = getListOfPermissions(o, 'PERMISSIONS')]
-      [if not permissions->isEmpty()]
-         [if permissions->size() = 1]
-@Permissions([buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(permissions->first())/])[else]
-@Permissions(value =
-{[for (s : String | permissions)][if not permissions->first().equalsIgnoreCase(s)], [/if][o.buildAppliPermissionsInterfaceName()/].[o.apply_attributeFinalStatic(s)/][if permissions->last().equalsIgnoreCase(s)] [/if][/for]})[/if]
+[template private writeImports(s : soa::Service, d : environment::DTO) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport('java.util.Date')/]
+  [s.addImport('java.util.List')/]
+  [s.addImport('jakarta.ejb.Local', s.useEjb())/]
+  [s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+  [s.addImport(s.getImportForApplicationService_Itf(), not d.hasCrud())/]
+  
+  [if (not (d = null))]
+    	[s.addImport(d.buildImportDto(), s.buildPackageBusinessApiServiceDto(d) <> d.buildPackageBusinessApiDto())/]
+    	[s.addImport(s.getImportForService_Itf(), d.hasCrud())/]
+    	[s.addImport(s.getImportForServiceReferentiel_Itf(), d.isReferentiel())/]
+    	
+    [for (r : environment::Reference | d.referencesStarStar())]
+      [if (d.buildPackageBusinessApiDto() <> r.referencedType.oclAsType(environment::DTO).buildPackageBusinessApiDto())]
+        			[s.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
       [/if]
-   [/let]
-[/if]
-[if permissionAnnotationExists(o, 'PERMISSIONS_OR')]
-   [let permissions : Sequence(String) = getListOfPermissions(o, 'PERMISSIONS_OR')]
-      [if not permissions->isEmpty()]
-         [if permissions->size() = 1]
-@Permissions([buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(permissions->first())/])[else]
-@Permissions(value =
-{[for (s : String | permissions)][if not permissions->first().equalsIgnoreCase(s)], [/if][o.buildAppliPermissionsInterfaceName()/].[o.apply_attributeFinalStatic(s)/][if permissions->last().equalsIgnoreCase(s)] [/if][/for]}, operator = PermissionsOperator_Enum.OR)[/if]
-      [/if]
-   [/let]
-[/if]
-[if permissionAnnotationExists(o, 'PERMISSIONS_AND')]
-   [let permissions : Sequence(String) = getListOfPermissions(o, 'PERMISSIONS_AND')]
-      [if not permissions->isEmpty()]
-         [if permissions->size() = 1]
-@Permissions([buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(permissions->first())/])[else]
-@Permissions(value =
-{[for (s : String | permissions)][if not permissions->first().equalsIgnoreCase(s)], [/if][o.buildAppliPermissionsInterfaceName()/].[o.apply_attributeFinalStatic(s)/][if permissions->last().equalsIgnoreCase(s)] [/if][/for]}, operator = PermissionsOperator_Enum.AND)[/if]
-      [/if]
-   [/let]
-[/if]
-[if permissionAnnotationExists(o, 'ACCEPT_UNAUTHENTIFIED')]
-@AcceptUnauthentified[/if]
-[comment : on peut aussi se raccrocher sur certains schemas de securite, prevus a la base pour les services rest. /]
-[if o.isPermissionSchemeSecured()]
-@Permissions([o.buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(o.getPermissionSchemeSecured().getSpi4jId())/])[/if]
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (s : Service, d : DTO) post(trim())]
-[comment : s is null tested in the method. /]
-[s.initImports()/]
-[s.addImport('java.util.Date')/]
-[s.addImport('java.util.List')/]
-[s.addImport('jakarta.ejb.Local', useEjb())/]
-[s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
-[s.addImport(getImportForApplicationService_Itf(), not d.hasCrud())/]
-
-[if not d.oclIsUndefined()]
-	[s.addImport(d.buildImportDto(), buildPackageBusinessApiServiceDto(s, d) <> buildPackageBusinessApiDto(d))/]
-	[s.addImport(getImportForService_Itf(), d.hasCrud())/]
-	[s.addImport(getImportForServiceReferentiel_Itf(), d.isReferentiel())/]
-	
-	[comment : List all references for relational DTOs. (not complete !)/]
-	[for (r : Reference | d.referencesStarStar())]
-		[if buildPackageBusinessApiDto(d) <> buildPackageBusinessApiDto(r.referencedType.oclAsType(DTO))]
-			[s.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-		[/if]
-	[/for]
-[/if]
-
-[if not s.oclIsUndefined() and not s.ownedInterface.oclIsUndefined()]
-	[if s.ownedInterface.ownedOperations->
-    	exists(o : Operation | permissionAnnotationExists(o, 'PERMISSIONS') 
-				or permissionAnnotationExists(o, 'PERMISSIONS_OR') 
-				or permissionAnnotationExists(o, 'PERMISSIONS_AND'))]
-			
-			[s.addImport('fr.spi4j.lib.security.annotations.Permissions')/]
-			[s.addImport('fr.spi4j.lib.security.annotations.PermissionsOperator_Enum')/]
-			[s.addImport(buildPackageBusiness() + '.' + buildAppliPermissionsInterfaceName())/]
-	[/if]
-
-	[if s.ownedInterface.ownedOperations->
-    	exists(o : Operation | permissionAnnotationExists(o, 'ACCEPT_UNAUTHENTIFIED'))]
-			[s.addImport('fr.spi4j.lib.security.annotations.AcceptUnauthentified') /]
-	[/if]
-[/if]
-
-[comment : no impact if s is null. /]
-[s.flushImports()/]
-[/template]
+    [/for]
+  [/if]
+  
+  [if (not (s = null) and not (s.ownedInterface = null))]
+    [if (s.ownedInterface.ownedOperations->exists(o | o.permissionAnnotationExists('PERMISSIONS') or o.permissionAnnotationExists('PERMISSIONS_OR') or o.permissionAnnotationExists('PERMISSIONS_AND')))]
+      			
+      			[s.addImport('fr.spi4j.lib.security.annotations.Permissions')/]
+      			[s.addImport('fr.spi4j.lib.security.annotations.PermissionsOperator_Enum')/]
+      			[s.addImport(s.buildPackageBusiness() + '.' + s.buildAppliPermissionsInterfaceName())/]
+    [/if]
+    
+    [if (s.ownedInterface.ownedOperations->exists(o | o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED')))]
+      			[s.addImport('fr.spi4j.lib.security.annotations.AcceptUnauthentified')/]
+    [/if]
+  [/if]
+  
+  [s.flushImports()/][/template]
 
 [comment : do not confuse "hasCrud" and "isApplicationCrud" /]
-[query private hasCrud(d : DTO) : Boolean =
-   d <> null and not d.isNotPersistent()
-/]
+[query private hasCrud(d : environment::DTO) : Boolean = d <> null and not d.isNotPersistent()/]

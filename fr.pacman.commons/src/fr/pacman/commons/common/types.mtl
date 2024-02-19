@@ -1,16 +1,7 @@
-[module types('http://www.obeonetwork.org/dsl/soa/4.0.0',
-              'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module types('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
 [comment : Check if the type for the parameter is Binary. /]
-[query public isTypeOfBinary(p : Parameter) : Boolean = 
-	not p.oclIsUndefined() 
-	and not p.type.oclIsUndefined()
-	and p.type.name.equalsIgnoreCase('Binary')
-/]
+[query public isTypeOfBinary(p : soa::Parameter) : Boolean = not (p = null) and not (p.type = null) and p.type.name.equalsIgnoreCase('Binary')/]
 
 [comment : Check if the type for the parameter is Enumeration. /]
-[query public isTypeOfEnum(p : Parameter) : Boolean = 
-	not p.oclIsUndefined()
-	and not p.type.oclIsUndefined()
-	and p.type.oclIsTypeOf(Enumeration)
-/]
+[query public isTypeOfEnum(p : soa::Parameter) : Boolean = not (p = null) and not (p.type = null) and p.type.oclIsTypeOf(environment::Enumeration)/]

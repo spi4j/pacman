@@ -1,635 +1,336 @@
+[module properties('http://www.eclipse.org/ocl/1.1.0/Ecore', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::convention::project::ProjectProperties/]
+[import fr::pacman::commons::properties::PacmanPropertiesManager/]
+[import fr::pacman::commons::services::StringUtils/]
+
 [comment encoding = UTF-8 /]
-[module properties( 'http://www.eclipse.org/ocl/1.1.0/Ecore', 
-					'http://www.obeonetwork.org/dsl/environment/3.0.0',
-					'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[query public getClient(any : ecore::EObject) : String = any.getClient_invoke().trim().toLower()/]
 
+[query private getClient_invoke(any : ecore::EObject) : String = any.getClientJavaService()/]
 
-[query public getClient(any : OclAny) : String = 
-	getClient_invoke().trim().toLower()
-/]
+[query public getNaming(any : ecore::EObject) : String = any.getNaming_invoke().trim().toLower()/]
 
-[query private getClient_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClient()', Sequence{})
-/]
+[query private getNaming_invoke(any : ecore::EObject) : String = any.getNamingJavaService()/]
 
-[query public getNaming(any : OclAny) : String =
-    getNaming_invoke().trim().toLower()
-/]
+[query public getJavaStringVersion(any : ecore::EObject) : String = if any.getJavaVersion() > 8 then any.getJavaVersion().toString() else '1.' + any.getJavaVersion().toString() endif/]
 
-[query private getNaming_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getNaming()', Sequence{})
-/]
+[query private getJavaVersion(any : ecore::EObject) : Integer = any.getJavaVersion_invoke().toInteger()/]
 
-[query public getJavaStringVersion(any : OclAny) : String = 
-	if getJavaVersion() > 8 then getJavaVersion().toString() else  '1.' + getJavaVersion().toString() endif
-/]
+[query private getJavaVersion_invoke(any : ecore::EObject) : String = any.getJavaVersionJavaService()/]
 
-[query private getJavaVersion(any : OclAny) : Integer =
-    getJavaVersion_invoke().toInteger()
-/]
+[query public getSpi4JVersion(any : ecore::EObject) : String = any.getSpi4JVersion_invoke().trim()/]
 
-[query private getJavaVersion_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getJavaVersion()', Sequence{})
-/]
+[query private getSpi4JVersion_invoke(any : ecore::EObject) : String = any.getSpi4JVersionJavaService()/]
 
-[query public getSpi4JVersion(any : OclAny) : String =
-    getSpi4JVersion_invoke().trim()
-/]
+[query public getDataBasesNames(any : ecore::EObject) : String = any.getDataBasesNames_invoke().trim().toUpper()/]
 
-[query private getSpi4JVersion_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getSpi4JVersion()', Sequence{})
-/]
+[query private getDataBasesNames_invoke(any : ecore::EObject) : String = any.getDataBasesNamesJavaService()/]
 
-[query public getDataBasesNames(any : OclAny) : String =
-	getDataBasesNames_invoke().trim().toUpper()
-/]
+[query public getDelimiter(any : ecore::EObject) : String = any.getDelimiter_invoke().toLower()/]
 
-[query private getDataBasesNames_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getDataBasesNames()', Sequence{})
-/]
+[query private getDelimiter_invoke(any : ecore::EObject) : String = any.getDelimiterJavaService()/]
 
-[query public getDelimiter(any : OclAny) : String =
-    getDelimiter_invoke().toLower()
-/]
+[query public useServiceRequirements(any : ecore::EObject) : Boolean = any.useServiceRequirements_invoke().toBoolean()/]
 
-[query private getDelimiter_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getDelimiter()', Sequence{})
-/]
+[query private useServiceRequirements_invoke(any : ecore::EObject) : String = any.getUseServiceRequirementsJavaService()/]
 
-[query public useServiceRequirements(any : OclAny) : Boolean =
-    useServiceRequirements_invoke().toBoolean()
-/]
+[query public useBDD(any : ecore::EObject) : Boolean = not (any.getDataBasesNames() = null) and any.getDataBasesNames().trim().size() > 0/]
 
-[query private useServiceRequirements_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseServiceRequirements()', Sequence{})
-/]
+[query public isCrudApplication(any : ecore::EObject) : Boolean = any.isCrudApplication_invoke().toBoolean()/]
 
-[query public useBDD(any : OclAny) : Boolean =
-	not getDataBasesNames().oclIsUndefined() and getDataBasesNames().trim().size() > 0
-/]
+[query private isCrudApplication_invoke(any : ecore::EObject) : String = any.getIsApplicationCrudJavaService()/]
 
-[query public isCrudApplication(any : OclAny) : Boolean =
-    isCrudApplication_invoke().toBoolean()
-/]
+[query public useEjb(any : ecore::EObject) : Boolean = any.useEjb_invoke().toBoolean()/]
 
-[query private isCrudApplication_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getIsApplicationCrud()', Sequence{})
-/] 
+[query private useEjb_invoke(any : ecore::EObject) : String = any.getUseEjbJavaService()/]
 
-[query public useEjb(any : OclAny) : Boolean =
-    useEjb_invoke().toBoolean()
-/]
+[query public useTestsCRUD(any : ecore::EObject) : Boolean = any.useTestsCRUD_invoke().toBoolean()/]
 
-[query private useEjb_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseEjb()', Sequence{})
-/]
+[query private useTestsCRUD_invoke(any : ecore::EObject) : String = any.getUseTestsCRUDJavaService()/]
 
-[query public useTestsCRUD(any : OclAny) : Boolean =
-    useTestsCRUD_invoke().toBoolean()
-/]
+[query public useFetchingStrategy(any : ecore::EObject) : Boolean = any.useFetchingStrategy_invoke().toBoolean()/]
 
-[query private useTestsCRUD_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseTestsCRUD()', Sequence{})
-/]
-
-[query public useFetchingStrategy(any : OclAny) : Boolean =
-    useFetchingStrategy_invoke().toBoolean()
-/]
-
-[query private useFetchingStrategy_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseFetchingStrategy()', Sequence{})
-/]
+[query private useFetchingStrategy_invoke(any : ecore::EObject) : String = any.getUseFetchingStrategyJavaService()/]
 
 [comment : non utilisé pour l'instant/]
-[query public getAppCRUD(any : OclAny) : String =
-    getAppCRUD_invoke()
-/]
+[query public getAppCRUD(any : ecore::EObject) : String = any.getAppCRUD_invoke()/]
 
-[query private getAppCRUD_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getAppCRUD()', Sequence{})
-/]
+[query private getAppCRUD_invoke(any : ecore::EObject) : String = any.getAppCRUDJavaService()/]
 
-[query public useConfigFileSpi4jFrwk(any : OclAny) : Boolean =
-    useConfigFileSpi4jFrwk_invoke().toBoolean()
-/]
+[query public useConfigFileSpi4jFrwk(any : ecore::EObject) : Boolean = any.useConfigFileSpi4jFrwk_invoke().toBoolean()/]
 
-[query private useConfigFileSpi4jFrwk_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseConfigFilesSpi4jFrwk()', Sequence{})
-/]
+[query private useConfigFileSpi4jFrwk_invoke(any : ecore::EObject) : String = any.getUseConfigFilesSpi4jFrwkJavaService()/]
 
-[query public useMatching(any : OclAny) : Boolean =
-    useMatching_invoke().toBoolean()
-/]
+[query public useMatching(any : ecore::EObject) : Boolean = any.useMatching_invoke().toBoolean()/]
 
-[query private useMatching_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseMatching()', Sequence{})
-/]
+[query private useMatching_invoke(any : ecore::EObject) : String = any.getUseMatchingJavaService()/]
 
-[query public getHttpEmbeddedServer(any : OclAny) : String = 
-	getHttpEmbeddedServer_invoke().trim()
-/]
+[query public getHttpEmbeddedServer(any : ecore::EObject) : String = any.getHttpEmbeddedServer_invoke().trim()/]
 
-[query private getHttpEmbeddedServer_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getHttpEmbeddedServer()', Sequence{})
-/]
+[query private getHttpEmbeddedServer_invoke(any : ecore::EObject) : String = any.getHttpEmbeddedServerJavaService()/]
 
-[query public useH2EmbeddedDatabase(any : OclAny) : Boolean = 
-	useH2EmbeddedDatabase_invoke().toBoolean()
-/]
+[query public useH2EmbeddedDatabase(any : ecore::EObject) : Boolean = any.useH2EmbeddedDatabase_invoke().toBoolean()/]
 
-[query private useH2EmbeddedDatabase_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getH2EmbeddedDatabase()', Sequence{})
-/]
+[query private useH2EmbeddedDatabase_invoke(any : ecore::EObject) : String = any.getH2EmbeddedDatabaseJavaService()/]
 
-[query public useSpi4jSecurity(any : OclAny) : Boolean =
-    useSpi4jSecurity_invoke().toBoolean()
-/]
+[query public useSpi4jSecurity(any : ecore::EObject) : Boolean = any.useSpi4jSecurity_invoke().toBoolean()/]
 
-[query private useSpi4jSecurity_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseSpi4jSecurity()', Sequence{})
-/]
+[query private useSpi4jSecurity_invoke(any : ecore::EObject) : String = any.getUseSpi4jSecurityJavaService()/]
 
-[query public getWsSecuritySchemeId (any : OclAny) : String = 
-	getWsSecuritySchemeId_invoke()
-/]
+[query public getWsSecuritySchemeId(any : ecore::EObject) : String = any.getWsSecuritySchemeId_invoke()/]
 
-[query private getWsSecuritySchemeId_invoke (any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties', 'getWsSecuritySchemeId()', Sequence{})
-/]
+[query private getWsSecuritySchemeId_invoke(any : ecore::EObject) : String = any.getWsSecuritySchemeIdJavaService()/]
 
-[query public useTestBDD(any : OclAny) : Boolean =
-    useTestBDD_invoke().toBoolean()
-/]
+[query public useTestBDD(any : ecore::EObject) : Boolean = any.useTestBDD_invoke().toBoolean()/]
 
-[query private useTestBDD_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseTestBDD()', Sequence{})
-/]
+[query private useTestBDD_invoke(any : ecore::EObject) : String = any.getUseTestBDDJavaService()/]
 
-[query public isClearUserCode(any : OclAny) : Boolean =
-   	isClearUserCode_invoke().toBoolean()
-/]
+[query public isClearUserCode(any : ecore::EObject) : Boolean = any.isClearUserCode_invoke().toBoolean()/]
 
-[query public isClearUserCode_invoke(any : OclAny) : String =
-   	invoke('fr.pacman.commons.convention.project.ProjectProperties','getIsClearUserCode()', Sequence{})
-/]
+[query public isClearUserCode_invoke(any : ecore::EObject) : String = any.getIsClearUserCodeJavaService()/]
 
-[query public forceJspTopBottom(any : OclAny) : Boolean = 
-	forceJspTopBottom_invoke().toBoolean()
-/]
+[query public forceJspTopBottom(any : ecore::EObject) : Boolean = any.forceJspTopBottom_invoke().toBoolean()/]
 
-[query public forceJspTopBottom_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getClientJspForceTopBottom()', Sequence{})
-/]
+[query public forceJspTopBottom_invoke(any : ecore::EObject) : String = any.getClientJspForceTopBottomJavaService()/]
 
-[query public isLibrary(any : OclAny) : Boolean =
-   	isLibrary_invoke().toBoolean()
-/]
+[query public isLibrary(any : ecore::EObject) : Boolean = any.isLibrary_invoke().toBoolean()/]
 
-[query public isServlets (any : OclAny) : Boolean =
-	'jsp'.equalsIgnoreCase(getClient()) or 'jsf'.equalsIgnoreCase(getClient())
-/]
+[query public isServlets(any : ecore::EObject) : Boolean = 'jsp'.equalsIgnoreCase(any.getClient()) or 'jsf'.equalsIgnoreCase(any.getClient())/]
 
-[query private isLibrary_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getIsLibrary()', Sequence{})
-/]
+[query private isLibrary_invoke(any : ecore::EObject) : String = any.getIsLibraryJavaService()/]
 
-[query public isLibraryRS(any : OclAny) : Boolean =
-   	isLibraryRs_invoke().toBoolean()
-/]
+[query public isLibraryRS(any : ecore::EObject) : Boolean = any.isLibraryRs_invoke().toBoolean()/]
 
-[query private isLibraryRs_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getIsLibraryRs()', Sequence{})
-/]
+[query private isLibraryRs_invoke(any : ecore::EObject) : String = any.getIsLibraryRsJavaService()/]
 
-[query public getLibraryVersion(any : OclAny) : String =
-	getLibraryVersion_invoke().trim()
-/]
+[query public getLibraryVersion(any : ecore::EObject) : String = any.getLibraryVersion_invoke().trim()/]
 
-[query private getLibraryVersion_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getLibraryVersion()', Sequence{})
-/]
+[query private getLibraryVersion_invoke(any : ecore::EObject) : String = any.getLibraryVersionJavaService()/]
 
-[query public useLibrary(any : OclAny) : Boolean =
-    useLibrary_invoke().toBoolean()
-/]
+[query public useLibrary(any : ecore::EObject) : Boolean = any.useLibrary_invoke().toBoolean()/]
 
-[query private useLibrary_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseLibrary()', Sequence{})
-/]
+[query private useLibrary_invoke(any : ecore::EObject) : String = any.getUseLibraryJavaService()/]
 
-[query public getLibraryPackage(any : OclAny) : String =
-	getLibraryPackage_invoke().trim().toLower()
-/]
+[query public getLibraryPackage(any : ecore::EObject) : String = any.getLibraryPackage_invoke().trim().toLower()/]
 
-[query private getLibraryPackage_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getLibraryPackage()', Sequence{})
-/]
+[query private getLibraryPackage_invoke(any : ecore::EObject) : String = any.getLibraryPackageJavaService()/]
 
-[query public useWS(any : OclAny) : Boolean =
-    useWS_invoke().toBoolean()
-/]
+[query public useWS(any : ecore::EObject) : Boolean = any.useWS_invoke().toBoolean()/]
 
-[query private useWS_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseWS()', Sequence{})
-/]
+[query private useWS_invoke(any : ecore::EObject) : String = any.getUseWSJavaService()/]
 
-[query public getXtopSuppKey(any : OclAny) : String = 
-	getXtopSuppKey_invoke()
-/]
+[query public getXtopSuppKey(any : ecore::EObject) : String = any.getXtopSuppKey_invoke()/]
 
-[query private getXtopSuppKey_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getXtoSupKey', Sequence{})
-/]
+[query private getXtopSuppKey_invoke(any : ecore::EObject) : String = any.getXtoSupKeyJavaService()/]
 
-[query public getXdmajKey(any : OclAny) : String = 
-	getXdmajKey_invoke()
-/]
+[query public getXdmajKey(any : ecore::EObject) : String = any.getXdmajKey_invoke()/]
 
-[query private getXdmajKey_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getXdMajKey', Sequence{})
-/]
+[query private getXdmajKey_invoke(any : ecore::EObject) : String = any.getXdMajKeyJavaService()/]
 
-[query public useWMS(any : OclAny) : Boolean =
-    useWMS_invoke().toBoolean()
-/]
+[query public useWMS(any : ecore::EObject) : Boolean = any.useWMS_invoke().toBoolean()/]
 
-[query private useWMS_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseWMS()', Sequence{})
-/]
+[query private useWMS_invoke(any : ecore::EObject) : String = any.getUseWMSJavaService()/]
 
-[query public hasToGenerateRootFiles(any : OclAny) : Boolean =
-    hasToGenerateRootFiles_invoke().toBoolean()
-/]
+[query public hasToGenerateRootFiles(any : ecore::EObject) : Boolean = any.hasToGenerateRootFiles_invoke().toBoolean()/]
 
-[query private hasToGenerateRootFiles_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getHasToGenerateRootFiles()', Sequence{})
-/]
+[query private hasToGenerateRootFiles_invoke(any : ecore::EObject) : String = any.getHasToGenerateRootFilesJavaService()/]
 
-[query public getVersion(any : OclAny) : String = 
-	getVersion_invoke().trim()
-/]
+[query public getVersion(any : ecore::EObject) : String = any.getVersion_invoke().trim()/]
 
-[query private getVersion_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getVersion()', Sequence{})
-/]
+[query private getVersion_invoke(any : ecore::EObject) : String = any.getVersionJavaService()/]
 
-[query public getRequirementCategoryBaseLevel(any : OclAny) : String = 
-	getRequirementCategoryBaseLevel_invoke().trim()
-/]
+[query public getRequirementCategoryBaseLevel(any : ecore::EObject) : String = any.getRequirementCategoryBaseLevel_invoke().trim()/]
 
-[query private getRequirementCategoryBaseLevel_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getRequirementCategoryBaseLevel()', Sequence{})
-/]
+[query private getRequirementCategoryBaseLevel_invoke(any : ecore::EObject) : String = any.getRequirementCategoryBaseLevelJavaService()/]
 
-[query public getXtopSupName(any : OclAny) : String = 
-	getXtopSupName_invoke().trim().toLower()
-/]
+[query public getXtopSupName(any : ecore::EObject) : String = any.getXtopSupName_invoke().trim().toLower()/]
 
-[query private getXtopSupName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getXtoSupName()', Sequence{})
-/]
+[query private getXtopSupName_invoke(any : ecore::EObject) : String = any.getXtoSupNameJavaService()/]
 
-[query public getXdMajName(any : OclAny) : String = 
-	getXdMajName_invoke().trim().toLower()
-/]
+[query public getXdMajName(any : ecore::EObject) : String = any.getXdMajName_invoke().trim().toLower()/]
 
-[query private getXdMajName_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getXdMajName()', Sequence{})
-/]
+[query private getXdMajName_invoke(any : ecore::EObject) : String = any.getXdMajNameJavaService()/]
 
-[query public getServiceRequirementsPrefix(any : OclAny) : String =
-	getServiceRequirementsPrefix_invoke().trim()
-/]
+[query public getServiceRequirementsPrefix(any : ecore::EObject) : String = any.getServiceRequirementsPrefix_invoke().trim()/]
 
-[query public getServiceRequirementsPrefix_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getRequirementPrefix()', Sequence{})
-/]
+[query public getServiceRequirementsPrefix_invoke(any : ecore::EObject) : String = any.getRequirementPrefixJavaService()/]
 
-[query public hasAutomaticColumns(any : OclAny) : Boolean =
-	getSQLTableAdditionalFields().trim().size() > 0
-/]
+[query public hasAutomaticColumns(any : ecore::EObject) : Boolean = any.getSQLTableAdditionalFields().trim().size() > 0/]
 
-[query public getSQLTableAdditionalFields(any : OclAny) : String = 
-	getSQLTableAdditionalFields_invoke()
-/]
+[query public getSQLTableAdditionalFields(any : ecore::EObject) : String = any.getSQLTableAdditionalFields_invoke()/]
 
-[query private getSQLTableAdditionalFields_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getSqlTableAdditionalFields()', Sequence{})
-/]
+[query private getSQLTableAdditionalFields_invoke(any : ecore::EObject) : String = any.getSqlTableAdditionalFieldsJavaService()/]
 
 [comment : Attention, on a visiblement des doublons avec cette méthode. Effectuer une analyse et faire le ménage. /]
 [comment : Voir avec 'getSQLTableAdditionalFields' 'hasAutomaticColumns', etc.. /]
-[query public get_automaticColumnsProperties(any : OclAny) : Sequence(String) =
-	invoke('fr.pacman.commons.services.StringUtils', 'getPropertyAsList(java.lang.Object, java.lang.String)', Sequence{getSQLTableAdditionalFields(), ','})
-/]
+[query public get_automaticColumnsProperties(any : ecore::EObject) : Sequence(String) = any.getSQLTableAdditionalFields().getPropertyAsList(',')/]
 
-[query public hasAdditionnalLibraries(any : OclAny) : Boolean =  
-	getLibrariesAdditionnalJars().trim().size() > 0
-/]
+[query public hasAdditionnalLibraries(any : ecore::EObject) : Boolean = any.getLibrariesAdditionnalJars().trim().size() > 0/]
 
-[query private getLibrariesAdditionnalJars(any : OclAny) : String = 
-	getLibrariesAdditionnaljars_invoke()
-/]
+[query private getLibrariesAdditionnalJars(any : ecore::EObject) : String = any.getLibrariesAdditionnaljars_invoke()/]
 
-[query private getLibrariesAdditionnaljars_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getLibrariesAdditionalJars()', Sequence{})
-/]
+[query private getLibrariesAdditionnaljars_invoke(any : ecore::EObject) : String = any.getLibrariesAdditionalJarsJavaService()/]
 
-[query public getAdditionnalLibraries(any : OclAny) : Sequence(String) =
-	invoke('fr.pacman.commons.services.StringUtils', 'getPropertyAsList(java.lang.Object, java.lang.String)', Sequence{getLibrariesAdditionnalJars(), ','}) 
-/]
+[query public getAdditionnalLibraries(any : ecore::EObject) : Sequence(String) = any.getLibrariesAdditionnalJars().getPropertyAsList(',')/]
 
-[query public getSQLTablePrefix(any : OclAny) : String = 
-	getSQLTablePrefix_invoke().trim()
-/]
+[query public getSQLTablePrefix(any : ecore::EObject) : String = any.getSQLTablePrefix_invoke().trim()/]
 
-[query private getSQLTablePrefix_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getSQLTablePrefix()', Sequence{})
-/]
+[query private getSQLTablePrefix_invoke(any : ecore::EObject) : String = any.getSQLTablePrefixJavaService()/]
 
-[query public hasSQLTableSchema(any : OclAny) : Boolean = 
-	getSQLTableSchema().size() > 0
-/]
+[query public hasSQLTableSchema(any : ecore::EObject) : Boolean = any.getSQLTableSchema().size() > 0/]
 
-[query public getSQLTableSchema(any : OclAny) : String = 
-	getSQLTableSchema_invoke().trim()
-/]
+[query public getSQLTableSchema(any : ecore::EObject) : String = any.getSQLTableSchema_invoke().trim()/]
 
-[query private getSQLTableSchema_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getSQLTableSchema()', Sequence{})
-/]
+[query private getSQLTableSchema_invoke(any : ecore::EObject) : String = any.getSQLTableSchemaJavaService()/]
 
-[query public getSQLOracleIndexTableSpace(any : OclAny) : String  = 
-	getSQLOracleIndexTableSpace_invoke().trim()
-/]
+[query public getSQLOracleIndexTableSpace(any : ecore::EObject) : String = any.getSQLOracleIndexTableSpace_invoke().trim()/]
 
-[query private getSQLOracleIndexTableSpace_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getSQLOracleIndexTableSpace()', Sequence{})
-/]
+[query private getSQLOracleIndexTableSpace_invoke(any : ecore::EObject) : String = any.getSQLOracleIndexTableSpaceJavaService()/]
 
-[query public useDeprecatedSOAUserCodeParams(any : OclAny) : Boolean = 
-	useDeprecatedSOAUserCodeParams_invoke().toBoolean()
-/]
+[query public useDeprecatedSOAUserCodeParams(any : ecore::EObject) : Boolean = any.useDeprecatedSOAUserCodeParams_invoke().toBoolean()/]
 
-[query private useDeprecatedSOAUserCodeParams_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseDeprecatedSOAUserCodeParams()', Sequence{})
-/]
+[query private useDeprecatedSOAUserCodeParams_invoke(any : ecore::EObject) : String = any.getUseDeprecatedSOAUserCodeParamsJavaService()/]
 
-[query public useLog4J(any : OclAny) : Boolean = 
-	useLog4J_invoke().toBoolean()
-/]
+[query public useLog4J(any : ecore::EObject) : Boolean = any.useLog4J_invoke().toBoolean()/]
 
-[query private useLog4J_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseLog4J()', Sequence{})
-/]
+[query private useLog4J_invoke(any : ecore::EObject) : String = any.getUseLog4JJavaService()/]
 
-[query public useWsServiceInjection(any : OclAny) : Boolean =
-    useWsServiceInjection_invoke().toBoolean()
-/]
+[query public useWsServiceInjection(any : ecore::EObject) : Boolean = any.useWsServiceInjection_invoke().toBoolean()/]
 
-[query private useWsServiceInjection_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseWsServiceInjection()', Sequence{})
-/]
+[query private useWsServiceInjection_invoke(any : ecore::EObject) : String = any.getUseWsServiceInjectionJavaService()/]
 
 [comment : Check if the selected database is an Oracle (32 Char old version) database. /]
-[query public isDbOracle32(any : OclAny) : Boolean = 
-	getDataBasesNames().contains('ORACLE_32')
-/]
+[query public isDbOracle32(any : ecore::EObject) : Boolean = any.getDataBasesNames().contains('ORACLE_32')/]
 
 [comment : Check if the selected database is an Oracle database. /]
-[query public isDbOracle(any : OclAny) : Boolean = 
-	getDataBasesNames().contains('ORACLE') and not isDbOracle32() 
-/]
+[query public isDbOracle(any : ecore::EObject) : Boolean = any.getDataBasesNames().contains('ORACLE') and not any.isDbOracle32()/]
 
 [comment : Check if the selected database is an MySql database. /]
-[query public isDbMySql(any : OclAny) : Boolean = 
-	getDataBasesNames().contains('MYSQL')
-/]
+[query public isDbMySql(any : ecore::EObject) : Boolean = any.getDataBasesNames().contains('MYSQL')/]
 
 [comment : Check if the selected database is an MariaDB database. /]
-[query public isDbMariaDB(any : OclAny) : Boolean = 
-	getDataBasesNames().contains('MARIADB')
-/]
+[query public isDbMariaDB(any : ecore::EObject) : Boolean = any.getDataBasesNames().contains('MARIADB')/]
 
 [comment : Check if the selected database is an POSTGRESQL database. /]
-[query public isDbPostgresql(any : OclAny) : Boolean = 
-	getDataBasesNames().contains('POSTGRESQL')
-/]
+[query public isDbPostgresql(any : ecore::EObject) : Boolean = any.getDataBasesNames().contains('POSTGRESQL')/]
 
 [comment : Check if the selected database is an SQL Server database. /]
-[query public isDbSqlServer(any : OclAny) : Boolean = 
-	getDataBasesNames().contains('SQLSERVER')
-/]
+[query public isDbSqlServer(any : ecore::EObject) : Boolean = any.getDataBasesNames().contains('SQLSERVER')/]
 
 [comment : Check if the selected database is an Msql otr MariaDb (Mysql Fork) database. /]
-[query public isDbMsqlType(databaseType : String) : Boolean = 
-	databaseType.equalsIgnoreCase('Mysql') or databaseType.equalsIgnoreCase('MariaDB')
-/]
+[query public isDbMsqlType(databaseType : String) : Boolean = databaseType.equalsIgnoreCase('Mysql') or databaseType.equalsIgnoreCase('MariaDB')/]
 
 [comment : Check if the selected database is an Oracle database. /]
-[query public isDbOracleType(databaseType : String) : Boolean = 
-	databaseType.equalsIgnoreCase('Oracle')
-/]
+[query public isDbOracleType(databaseType : String) : Boolean = databaseType.equalsIgnoreCase('Oracle')/]
 
 [comment : Check if the selected database is an Oracle 32 database. /]
-[query public isDbOracle32Type(databaseType : String) : Boolean = 
-	databaseType.equalsIgnoreCase('Oracle_32')
-/]
+[query public isDbOracle32Type(databaseType : String) : Boolean = databaseType.equalsIgnoreCase('Oracle_32')/]
 
 [comment : Check if the selected database is a postgresql database./]
-[query public isDbPostgresqlType(databaseType : String) : Boolean = 
-	databaseType.equalsIgnoreCase('Postgresql') 
-/]
+[query public isDbPostgresqlType(databaseType : String) : Boolean = databaseType.equalsIgnoreCase('Postgresql')/]
 
 [comment : Check if the selected database is an h2 database./]
-[query public isDbH2Type(databaseType : String) : Boolean = 
-	databaseType.equalsIgnoreCase('H2') 
-/]	
+[query public isDbH2Type(databaseType : String) : Boolean = databaseType.equalsIgnoreCase('H2')/]
 
 [comment : Get the paging mode (auto or user). /]
-[query public getPagingMode(any : OclAny) : String = 
-	getPagingMode_invoke()
-/]
+[query public getPagingMode(any : ecore::EObject) : String = any.getPagingMode_invoke()/]
 
-[query public getPagingMode_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getPagingMode()', Sequence{})
-/]
+[query public getPagingMode_invoke(any : ecore::EObject) : String = any.getPagingModeJavaService()/]
 
 [comment : Get the header key for total count property. /]
-[query public getPagingTotalCountKey(any : OclAny) : String = 
-	getPagingTotalCountKey_invoke()
-/]
+[query public getPagingTotalCountKey(any : ecore::EObject) : String = any.getPagingTotalCountKey_invoke()/]
 
-[query public getPagingTotalCountKey_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getPagingTotalCountKey()', Sequence{})
-/]
+[query public getPagingTotalCountKey_invoke(any : ecore::EObject) : String = any.getPagingTotalCountKeyJavaService()/]
 
 [comment : Get the header key for page count property. /]
-[query public getPagingPageCountKey(any : OclAny) : String = 
-	getPagingPageCountKey_invoke()
-/]
+[query public getPagingPageCountKey(any : ecore::EObject) : String = any.getPagingPageCountKey_invoke()/]
 
-[query public getPagingPageCountKey_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getJavaPagingCount()', Sequence{})
-/]
+[query public getPagingPageCountKey_invoke(any : ecore::EObject) : String = any.getJavaPagingCountJavaService()/]
 
 [comment : Get the header key for current page index property. /]
-[query public getPagingCurrentPageIdxKey(any : OclAny) : String = 
-	getPagingCurrentPageIdxKey_invoke()
-/]
+[query public getPagingCurrentPageIdxKey(any : ecore::EObject) : String = any.getPagingCurrentPageIdxKey_invoke()/]
 
-[query public getPagingCurrentPageIdxKey_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getPagingCurrentPageIdxKey()', Sequence{})
-/]
+[query public getPagingCurrentPageIdxKey_invoke(any : ecore::EObject) : String = any.getPagingCurrentPageIdxKeyJavaService()/]
 
 [comment : Get the header key for current page size property. /]
-[query public getPagingCurrentPageSizeKey(any : OclAny) : String = 
-	getPagingCurrentPageSizeKey_invoke()
-/]
+[query public getPagingCurrentPageSizeKey(any : ecore::EObject) : String = any.getPagingCurrentPageSizeKey_invoke()/]
 
-[query public getPagingCurrentPageSizeKey_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','getPagingCurrentPageSizeKey()', Sequence{})
-/]
+[query public getPagingCurrentPageSizeKey_invoke(any : ecore::EObject) : String = any.getPagingCurrentPageSizeKeyJavaService()/]
 
-[query public getLibraryName(any : OclAny, prop : String ) : String = 
-	getConfigValue(prop + '.name')
-/]
+[query public getLibraryName(any : ecore::EObject, prop : String) : String = (prop + '.name').getConfigValue()/]
 
-[query public getLibraryPackage(any : OclAny, prop : String ) : String = 
-	getConfigValue(prop + '.package')
-/]
+[query public getLibraryPackage(any : ecore::EObject, prop : String) : String = (prop + '.package').getConfigValue()/]
 
-[query public getLibraryVersion(any : OclAny, prop : String ) : String = 
-	getConfigValue(prop + '.version')
-/]
+[query public getLibraryVersion(any : ecore::EObject, prop : String) : String = (prop + '.version').getConfigValue()/]
 
-[query public getLibraryTablePrefix(any : OclAny, prop : String ) : String = 
-	getConfigValue(prop + '.table.prefix')
-/]
+[query public getLibraryTablePrefix(any : ecore::EObject, prop : String) : String = (prop + '.table.prefix').getConfigValue()/]
 
-[query public getLibraryDataBaseSchema(any : OclAny, prop : String ) : String = 
-	getConfigValue(prop + '.database.schema')
-/]
+[query public getLibraryDataBaseSchema(any : ecore::EObject, prop : String) : String = (prop + '.database.schema').getConfigValue()/]
 
-[query public isLibraryDatabaseConnected(any : OclAny, prop : String ) : Boolean = 
-	getConfigValue(prop + '.database').toString().toBoolean()
-/]
+[query public isLibraryDatabaseConnected(any : ecore::EObject, prop : String) : Boolean = (prop + '.database').getConfigValue().toString().toBoolean()/]
 
 [comment : Indique si le projet est une application utilisant un serveur. /]
-[query public isWebApplication (any : OclAny) : Boolean = 
-  	'JSP'.equalsIgnoreCase(getClient()) or 'JSF'.equalsIgnoreCase(getClient()) 
-	or 'GWT'.equalsIgnoreCase(getClient()) or useWS()
-/]
+[query public isWebApplication(any : ecore::EObject) : Boolean = 'JSP'.equalsIgnoreCase(any.getClient()) or 'JSF'.equalsIgnoreCase(any.getClient()) or 'GWT'.equalsIgnoreCase(any.getClient()) or any.useWS()/]
 
 [comment : Possibilite (starter) de creer des projets sans utilisation de base de donnees. /]
-[query public usePersistence(any : OclAny) : Boolean = 
-	getDataBasesNames().size() > 0
-/]
+[query public usePersistence(any : ecore::EObject) : Boolean = any.getDataBasesNames().size() > 0/]
 
 [comment : Set the default user, password, role, url for administration servlet. /]
-[query public getDefaultAdminParameter(any : OclAny) : String = 
-	'admin'
-/]
+[query public getDefaultAdminParameter(any : ecore::EObject) : String = 'admin'/]
 
 [comment : Set the default user, password, role, url for monitoring. /]
-[query public getDefaultMonitoringParameter(any : OclAny) : String = 
-	'monitoring'
-/]
+[query public getDefaultMonitoringParameter(any : ecore::EObject) : String = 'monitoring'/]
 
 [comment : Set the default realm name for server basic http security. /]
-[query public getDefaultRealmParameter(any : OclAny) : String = 
-	'file'
-/]
+[query public getDefaultRealmParameter(any : ecore::EObject) : String = 'file'/]
 
 [**
- * Obtenir une propriete depuis le parametrage. 
- * Attention ne surtout jamais renommer cette methode 
- * en getProperty() car elle rentrerait en conflit 
- * avec une méthode native d'acceleo qui va aussi 
- * rechercher des proprietes de configuration mais  
+ * Obtenir une propriete depuis le parametrage.
+ * Attention ne surtout jamais renommer cette methode
+ * en getProperty() car elle rentrerait en conflit
+ * avec une méthode native d'acceleo qui va aussi
+ * rechercher des proprietes de configuration mais
  * dans un autre endroit !
 */]
-[query public getConfigValue(propertyName : String) : String =
-	propertyName.getConfigValue_invoke()
-/]
+[query public getConfigValue(propertyName : String) : String = propertyName.getConfigValue_invoke()/]
 
-[query private getConfigValue_invoke(propertyName : String) : String =
-	invoke('fr.pacman.commons.properties.PacmanPropertiesManager','get_property(java.lang.String)', Sequence{propertyName})
-/]
+[query private getConfigValue_invoke(propertyName : String) : String = propertyName.get_property()/]
 
-[query public isMultiplicityMany(p : Property) : Boolean =
-	((p.multiplicity = MultiplicityKind::ZERO_STAR) or (p.multiplicity = MultiplicityKind::ONE_STAR))
-/]
+[query public isMultiplicityMany(p : environment::Property) : Boolean = p.multiplicity = environment::MultiplicityKind::ZERO_STAR or p.multiplicity = environment::MultiplicityKind::ONE_STAR/]
 
 [comment : Obtention du fragment d'uri pour le passage des servlets jsp. /]
-[query public getJspCtrlUriFragment (any : OclAny) : String =
-'/ctrl'
-/]
+[query public getJspCtrlUriFragment(any : ecore::EObject) : String = '/ctrl'/]
 
 [comment : Recuperation de la clé pour le nom de la propriete additionnelle (champ auto). /]
-[query public nameColumnProperty(columnProp : String) : String = 
-	columnProp + '.name'
-/]
+[query public nameColumnProperty(columnProp : String) : String = columnProp + '.name'/]
 
 [comment : Recuperation de la clé pour le type de la propriete additionnelle (champ auto). /]
-[query public typeColumnProperty(columnProp : String) : String = 
-	columnProp + '.type' 
-/]
+[query public typeColumnProperty(columnProp : String) : String = columnProp + '.type'/]
 
 [comment : Recuperation de la clé pour la taille de la propriete additionnelle (champ auto). /]
-[query public sizeColumnProperty(columnProp : String) : String = 
-	columnProp + '.size' 
-/]
+[query public sizeColumnProperty(columnProp : String) : String = columnProp + '.size'/]
 
 [comment : Recuperation de la clé pour la valeur de defaut de la propriete additionnelle (champ auto). /]
-[query public defaultColumnProperty(columnProp : String) : String = 
-	columnProp + '.default' 
-/]
+[query public defaultColumnProperty(columnProp : String) : String = columnProp + '.default'/]
 
 [comment : Recuperation de la clé pour la nullite de la propriete additionnelle (champ auto). /]
-[query public notnullColumnProperty(columnProp : String) : String = 
-	columnProp + '.notnull' 
-/]
+[query public notnullColumnProperty(columnProp : String) : String = columnProp + '.notnull'/]
 
 [comment : Verifie si il est possible d'ecrire le champ additionnel. /]
-[query public hasToWriteColumn (columnProp : String) : Boolean =
-	columnHasName(columnProp) and columnHasType(columnProp)
-/]
+[query public hasToWriteColumn(columnProp : String) : Boolean = columnProp.columnHasName(columnProp) and columnProp.columnHasType(columnProp)/]
 
-[query public columnHasName(any : OclAny, columnProp : String) : Boolean =
-	getConfigValue(nameColumnProperty(columnProp)) <> null
-	and getConfigValue(nameColumnProperty(columnProp)).trim().size() > 0
-/]
+[query public columnHasName(any : ecore::EObject, columnProp : String) : Boolean = columnProp.nameColumnProperty().getConfigValue() <> null and columnProp.nameColumnProperty().getConfigValue().trim().size() > 0/]
 
-[query public columnHasType(void : OclAny, columnProp : String) : Boolean =
-	getConfigValue(typeColumnProperty(columnProp)) <> null
-	and getConfigValue(typeColumnProperty(columnProp)).trim().size() > 0
-/]
+[query public columnHasType(void : ecore::EObject, columnProp : String) : Boolean = columnProp.typeColumnProperty().getConfigValue() <> null and columnProp.typeColumnProperty().getConfigValue().trim().size() > 0/]
 
-[query public columnHasDefault(void : OclAny, columnProp : String) : Boolean =
-	getConfigValue(defaultColumnProperty(columnProp)) <> null
-	and getConfigValue(defaultColumnProperty(columnProp)).trim().size() > 0
-/]
+[query public columnHasDefault(void : ecore::EObject, columnProp : String) : Boolean = columnProp.defaultColumnProperty().getConfigValue() <> null and columnProp.defaultColumnProperty().getConfigValue().trim().size() > 0/]
 
-[query public columnHasSize(void : OclAny, columnProp : String) : Boolean =
-	getConfigValue(sizeColumnProperty(columnProp)) <> null
-	and getConfigValue(sizeColumnProperty(columnProp)).trim().size() > 0
-/]
+[query public columnHasSize(void : ecore::EObject, columnProp : String) : Boolean = columnProp.sizeColumnProperty().getConfigValue() <> null and columnProp.sizeColumnProperty().getConfigValue().trim().size() > 0/]
 
-[query public columnNotNull(void : OclAny, columnProp : String) : Boolean =
-    get_notNullColumn(columnProp) <> null
-    and (get_notNullColumn(columnProp).equalsIgnoreCase('1') or get_notNullColumn(columnProp).equalsIgnoreCase('true'))
-/]
+[query public columnNotNull(void : ecore::EObject, columnProp : String) : Boolean = void.get_notNullColumn(columnProp) <> null and (void.get_notNullColumn(columnProp).equalsIgnoreCase('1') or void.get_notNullColumn(columnProp).equalsIgnoreCase('true'))/]
 
-[query private get_notNullColumn(any : OclAny, columnProp : String) : String =
-    getConfigValue(notnullColumnProperty(columnProp))
-/]
+[query private get_notNullColumn(any : ecore::EObject, columnProp : String) : String = columnProp.notnullColumnProperty().getConfigValue()/]
 
 [comment : Check if the application has a web client. /]
-[query public hasWebClient(any : OclAny) : Boolean = 
-	getClient().oclIsUndefined() 
-	and getClient().trim().size() > 0 
-	and ('jsp'.equalsIgnoreCase(getClient()) 
-	or 'jsf'.equalsIgnoreCase(getClient()) 
-	or 'gwt'.equalsIgnoreCase(getClient())) 
-/]
+[query public hasWebClient(any : ecore::EObject) : Boolean = any.getClient() = null and any.getClient().trim().size() > 0 and ('jsp'.equalsIgnoreCase(any.getClient()) or 'jsf'.equalsIgnoreCase(any.getClient()) or 'gwt'.equalsIgnoreCase(any.getClient()))/]

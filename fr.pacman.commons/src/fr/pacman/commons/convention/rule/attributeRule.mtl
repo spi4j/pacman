@@ -1,64 +1,44 @@
+[module attributeRule('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::ApplyNorme/]
+
 [comment encoding = UTF-8 /]
-[module attributeRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
-
-[import fr::pacman::commons::common::utils]
-
 [template public apply_attributeDefault(value : String)]
-[norme_attributeDefault(value)/]
-[/template]
+  [value.norme_attributeDefault()/][/template]
 
-[query private norme_attributeDefault(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeDefault(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeDefault(value : String) : String = value.norme_attributeDefaultJavaService()/]
 
 [template public apply_attributeEnum(value : String)]
-[norme_attributeEnum(value)/]
-[/template]
+  [value.norme_attributeEnum()/][/template]
 
-[query private norme_attributeEnum(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeEnum(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeEnum(value : String) : String = value.norme_attributeEnumJavaService()/]
 
 [template public apply_attributeMultiple(value : String)]
-[norme_attributeMultiple(value)/]
-[/template]
+  [value.norme_attributeMultiple()/][/template]
 
-[query private norme_attributeMultiple(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeMultiple(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeMultiple(value : String) : String = value.norme_attributeMultipleJavaService()/]
 
 [**
  * Permet d'appliquer la norme sur l'affectation d'un attribut (ex "this._nomPersonne")
  * @param element L'élément sur lequel appliqué la norme (ex : "nom personne").
- */]
+*/]
 [template public apply_attributeAffectation(value : String)]
-[norme_attributeAffectation(value)/]
-[/template]
+  [value.norme_attributeAffectation()/][/template]
 
-[query private norme_attributeAffectation(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeAffectation(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeAffectation(value : String) : String = value.norme_attributeAffectationJavaService()/]
 
 [template public apply_attributeFinal(value : String)]
-[norme_attributeFinal(value)/]
-[/template]
+  [value.norme_attributeFinal()/][/template]
 
-[query private norme_attributeFinal(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeFinal(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeFinal(value : String) : String = value.norme_attributeFinalJavaService()/]
 
 [template public apply_attributeFinalStatic(value : String)]
-[norme_attributeFinalStatic(value)/]
-[/template]
+  [value.norme_attributeFinalStatic()/][/template]
 
-[query private norme_attributeFinalStatic(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeFinalStatic(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeFinalStatic(value : String) : String = value.norme_attributeFinalStaticJavaService()/]
 
 [template public apply_attributeStatic(value : String)]
-[norme_attributeStatic(value)/]
-[/template]
+  [value.norme_attributeStatic()/][/template]
 
-[query private norme_attributeStatic(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_attributeStatic(java.lang.String)', Sequence{value})
- /]
+[query private norme_attributeStatic(value : String) : String = value.norme_attributeStaticJavaService()/]

@@ -1,62 +1,55 @@
+[module manageEvent('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::gwt::common::name/]
+[import fr::pacman::cinematic::gwt::common::packages/]
+[import fr::pacman::cinematic::api::common::model/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils/]
+
 [comment encoding = UTF-8 /]
-[module manageEvent('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
-
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::gwt::common::name /]
-[import fr::pacman::cinematic::gwt::common::packages /]
-[import fr::pacman::cinematic::api::common::model /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::utils /]
-
-[template public gestionTransition (etat : FlowState, evenement : String, fromMainPanel : Boolean) ]
-[for (state : FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
-  [if state.oclIsKindOf(ViewState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(ViewState).name))]
-    [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
-      // affichage de l'écran [nextView.name/]
-      [namePresenter(nextView)/] [apply_variableDefault(nextView.name.normalize())/];
-      try {
-         // on tente d'instancier un nouvel écran
-[if fromMainPanel]
-         [apply_variableDefault(nextView.name.normalize())/] = new [namePresenter(nextView)/]();
-[else]
-         [apply_variableDefault(nextView.name.normalize())/] = new [namePresenter(nextView)/]([apply_variableDefault('rootPresenter')/]);
-         [apply_variableDefault('rootPresenter')/].getView().addView([apply_variableDefault(nextView.name.normalize())/].getView());
-[/if]
-      } catch (ViewAlreadyRegisteredException v_e) {
-         // si l'écran existe déjà on le récupère dans le gestionnaire de vues
-         [apply_variableDefault(nextView.name.normalize())/] = getViewManager().getPresenter([namePresenter(nextView)/].class);
-[if not fromMainPanel]
-         [apply_variableDefault('rootPresenter')/].getView().restoreView([apply_variableDefault(nextView.name.normalize())/].getView());
-[/if]
-      }
-    [/for]
-
-      // [/protected]
-[elseif state.oclIsKindOf(SubflowState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(SubflowState).name))]
-      final [nameFlow(state.oclAsType(SubflowState).subflow)/] [apply_variableDefault(nameFlow(state.oclAsType(SubflowState).subflow).normalize())/] = new [nameFlow(state.oclAsType(SubflowState).subflow)/](this);
-      [apply_variableDefault(nameFlow(state.oclAsType(SubflowState).subflow).normalize())/].start();
-      // [/protected]
-[elseif state.oclIsKindOf(ActionState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(ActionState).name))]
-      // TODO [state.oclAsType(ActionState).name/]
-      // [/protected]
-
-[/if]
-[/for]
+[template public gestionTransition(etat : flow::FlowState, evenement : String, fromMainPanel : Boolean)]
+  [for (state : flow::FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
+    [if (state.oclIsKindOf(flow::ViewState))]
+            [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(flow::ViewState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+              [for (nextView : view::ViewContainer | state.oclAsType(flow::ViewState).viewContainers)]
+                      // affichage de l'écran [nextView.name/]
+                      [nextView.namePresenter()/] [nextView.name.normalize().apply_variableDefault()/];
+                      try {
+                         // on tente d'instancier un nouvel écran
+                [if (fromMainPanel)]
+                           [nextView.name.normalize().apply_variableDefault()/] = new [nextView.namePresenter()/]();
+                [else]
+                           [nextView.name.normalize().apply_variableDefault()/] = new [nextView.namePresenter()/](['rootPresenter'.apply_variableDefault()/]);
+                           ['rootPresenter'.apply_variableDefault()/].getView().addView([nextView.name.normalize().apply_variableDefault()/].getView());
+                [/if]
+                      } catch (ViewAlreadyRegisteredException v_e) {
+                         // si l'écran existe déjà on le récupère dans le gestionnaire de vues
+                         [nextView.name.normalize().apply_variableDefault()/] = getViewManager().getPresenter([nextView.namePresenter()/].class);
+                [if (not fromMainPanel)]
+                           ['rootPresenter'.apply_variableDefault()/].getView().restoreView([nextView.name.normalize().apply_variableDefault()/].getView());
+                [/if]
+                      }
+              [/for]
+              
+            [/protected]
+      
+    [elseif (state.oclIsKindOf(flow::SubflowState))]
+            [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(flow::SubflowState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+                    final [state.oclAsType(flow::SubflowState).subflow.nameFlow()/] [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/] = new [state.oclAsType(flow::SubflowState).subflow.nameFlow()/](this);
+                    [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/].start();
+            [/protected]
+      
+    [elseif (state.oclIsKindOf(flow::ActionState))]
+            [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(flow::ActionState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+                    // TODO [state.oclAsType(flow::ActionState).name/]
+            [/protected]
+      
+      
+    [/if]
+  [/for]
 [/template]
 
-[query public getViewEvents(event : Event) : Set(ViewEvent) =
-    if (event.oclIsTypeOf(ViewEvent)) then
-        Set{event}
-    else
-        if (event.oclIsTypeOf(FlowEvent)) then
-            event.oclAsType(FlowEvent).binds.getViewEvents()
-        else
-            Set{}
-        endif
-    endif
-/]
+[query public getViewEvents(event : cinematic::Event) : OrderedSet(view::ViewEvent) = if event.oclIsTypeOf(view::ViewEvent) then OrderedSet{event} else if event.oclIsTypeOf(flow::FlowEvent) then event.oclAsType(flow::FlowEvent).binds->asSequence()->collect(temp1 | temp1.getViewEvents()) else OrderedSet{} endif endif/]

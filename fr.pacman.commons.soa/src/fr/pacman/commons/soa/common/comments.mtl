@@ -1,199 +1,189 @@
+[module comments('http://www.eclipse.org/ocl/1.1.0/Ecore', 'http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+
 [comment encoding = UTF-8 /]
-[module comments( 'http://www.eclipse.org/ocl/1.1.0/Ecore', 
- 				  'http://www.obeonetwork.org/dsl/soa/4.0.0', 
-				  'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::commons::soa::common::utils /]
-[import fr::pacman::commons::soa::common::names /]
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::references /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-
-
 [comment :/]
-[template public getComParamsIn(o : Operation)]
-[for (p : Parameter | o.input)]
-    * @param [apply_parameterMethodClassicIn(p.name.normalize())/]
-    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/for]
-[comment : If REST import and secured, Pacman add an input parameter for the token. /]
-[if o.isSecured() and o.isRSOperation() and isLibraryRS()]
-	* @param [apply_parameterMethodClassicIn('token')/]
-	*			(In)(*) Ajout par Pacman du jeton d'authentification.
-[/if]
+[template public getComParamsIn(o : soa::Operation)]
+  [for (p : soa::Parameter | o.input)]
+        * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
+        *           (In)[if (p.isMandatory())](*)[/if]
+     [p.description(false)/]
+  [/for]
+  [if (o.isSecured() and o.isRSOperation() and o.isLibraryRS())]
+    	* @param ['token'.apply_parameterMethodClassicIn()/]
+    	*			(In)(*) Ajout par Pacman du jeton d'authentification.
+  [/if]
 [/template]
 
 [comment : / Add specific paging parameters for the endPoint. /]
-[template public getEndPointPagingParameters (o : Operation)]
-[comment : If REST and paged, Pacman add specific parameters. /]
-[if o.isPagingToken()]
-	* @param [apply_parameterMethodClassicIn('page token')/] : 
-	*			(In)(*) Jeton de pagination.
-[/if]
+[template public getEndPointPagingParameters(o : soa::Operation)]
+  [if (o.isPagingToken())]
+    	* @param ['page token'.apply_parameterMethodClassicIn()/] : 
+    	*			(In)(*) Jeton de pagination.
+  [/if]
 [/template]
 
 [comment : / Add specific paging parameters for the facade. /]
-[template public getServicePagingParameters (o : Operation)]
-[if o.paged]
-	* @param [apply_parameterMethodClassicIn('offset')/] :
-	*			(In)(*) Numéro de ligne pour débuter la requête dans le cadre de la pagination.
-	* @param [apply_parameterMethodClassicIn('limit')/] :
-	*			(In)(*) Nombre d'éléments demandés par page dans le cadre de la pagination.
-[/if]
+[template public getServicePagingParameters(o : soa::Operation)]
+  [if (o.paged)]
+    	* @param ['offset'.apply_parameterMethodClassicIn()/] :
+    	*			(In)(*) Numéro de ligne pour débuter la requête dans le cadre de la pagination.
+    	* @param ['limit'.apply_parameterMethodClassicIn()/] :
+    	*			(In)(*) Nombre d'éléments demandés par page dans le cadre de la pagination.
+  [/if]
 [/template]
 
 [comment : /]
-[template public getComParamIn(p : Property)]
-    * @param [apply_parameterMethodClassicIn(p.name.normalize())/]
-    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/template]
+[template public getComParamIn(p : environment::Property)]
+      * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
+      *           (In)[if (p.isMandatory())](*)[/if]
+   [p.description(false)/][/template]
 
 [comment : /]
-[template public getComParamIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(r.name.normalize())/][namePK_ID()/]
-    *           (In)[if (isMandatory(r))](*)[/if] [description(r, false)/]
-[/template]
+[template public getComParamIdIn(r : environment::Reference)]
+      * @param [r.name.normalize().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.description(false)/][/template]
 
 [comment : /]
-[template public getComParamInverseIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/][namePK_ID()/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
-[/template]
+[template public getComParamInverseIdIn(r : environment::Reference)]
+      * @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
 
 [comment : /]
-[template public getComParamInverseIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameBaseReferenceInverse(r))/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
-[/template]
+[template public getComParamInverseIn(r : environment::Reference)]
+      * @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
 
 [comment : /]
-[template public getComParamTabIn(r : Reference)]
-    *           (In)[if (isMandatory(r))](*)[/if] [description(r, false)/]
-[/template]
+[template public getComParamTabIn(r : environment::Reference)]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.description(false)/][/template]
 
 [comment : /]
-[template public comClass(r : String, d : DTO)]
-/**
- * [r/].
- * @author [getAuthorName()/]
- */
-[/template]
+[template public comClass(r : String, d : environment::DTO)]
+  /**
+   * [r/].
+   * @author [r.getAuthorName()/]
+   */[/template]
 
 [comment : /]
 [template public comClass(r : String)]
-/**
- * [r/].
- * @author [getAuthorName()/]
- */
-[/template]
+  /**
+   * [r/].
+   * @author [r.getAuthorName()/]
+   */[/template]
 
 [comment : /]
-[template public comParamIn(p : Property)]
-    * @param [apply_parameterMethodClassicIn(nameParam(p))/]
-    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/template]
+[template public comParamIn(p : environment::Property)]
+      * @param [p.nameParam().apply_parameterMethodClassicIn()/]
+      *           (In)[if (p.isMandatory())](*)[/if]
+   [p.description(false)/][/template]
 
 [comment : /]
-[template public comParamInverseIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameParamInverse(r))/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
-[/template]
+[template public comParamInverseIn(r : environment::Reference)]
+      * @param [r.nameParamInverse().apply_parameterMethodClassicIn()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
 
 [comment : /]
-[template public comParamIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameParamId(r))/]
-    *           (In)[if (isMandatory(r))](*)[/if] [description(r, false)/]
-[/template]
+[template public comParamIdIn(r : environment::Reference)]
+      * @param [r.nameParamId().apply_parameterMethodClassicIn()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.description(false)/][/template]
 
 [comment :  /]
-[template public comParamInverseIdIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameParamInverseId(r))/]
-    *           (In)[if (isMandatory(r))](*)[/if] [descriptionInverse(r, false)/]
+[template public comParamInverseIdIn(r : environment::Reference)]
+      * @param [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.descriptionInverse(false)/][/template]
+
+[comment : /]
+[template public comParamTabIn(r : environment::Reference)]
+      * @param [r.nameParamTab().apply_parameterMethodClassicIn()/]
+      *           (In)[if (r.isMandatory())](*)[/if]
+   [r.description(false)/][/template]
+
+[comment : /]
+[template public comParamOut(p : environment::Property)]
+      * @param [p.nameParam().apply_parameterMethodClassicIn()/]
+      *           (Out)[if (p.isMandatory())](*)[/if]
+   [p.description(false)/][/template]
+
+[comment : /]
+[template public comReturn(p : environment::Property)]
+      * @return [p.description(false)/][/template]
+
+[comment : /]
+[template public comReturnInverse(r : environment::Reference)]
+      * @return [r.descriptionInverse(false)/][/template]
+
+[comment : /]
+[template public comPrefix(p : environment::Property, s : String)]
+      * [s/] [p.description(true)/][/template]
+
+[comment : /]
+[template private description(p : environment::Property, lowerFirst : Boolean)]
+  [if (p.description = null)][p.name/].[else]
+                                         [if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if]
+                                         .[/if]
 [/template]
 
 [comment : /]
-[template public comParamTabIn(r : Reference)]
-    * @param [apply_parameterMethodClassicIn(nameParamTab(r))/]
-    *           (In)[if (isMandatory(r))](*)[/if] [description(r, false)/]
+[template private descriptionInverse(r : environment::Reference, lowerFirst : Boolean)]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDto()/][else][r.oppositeOf.description(false)/][/if]
 [/template]
 
 [comment : /]
-[template public comParamOut(p : Property)]
-    * @param [apply_parameterMethodClassicIn(nameParam(p))/]
-    *           (Out)[if (isMandatory(p))](*)[/if] [description(p, false)/]
+[template private description(p : soa::Parameter, lowerFirst : Boolean)]
+  [if (p.description = null)][p.name/].[else]
+                                         [if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if]
+                                         .[/if]
 [/template]
 
 [comment : /]
-[template public comReturn(p : Property)]
-    * @return [description(p, false)/]
+[template public comParamsIn(o : soa::Operation)]
+  [for (p : soa::Parameter | o.input)]
+        * @param [p.nameParam().apply_parameterMethodClassicIn()/]
+        *           (In)[if (p.isMandatory())](*)[/if]
+     [p.description(false)/]
+  [/for]
 [/template]
 
 [comment : /]
-[template public comReturnInverse(r : Reference)]
-    * @return [descriptionInverse(r, false)/]
-[/template]
-
-[comment : /]
-[template public comPrefix(p : Property, s : String)]
-    * [s/] [description(p, true)/]
-[/template]
-
-[comment : /]
-[template private description(p : Property, lowerFirst : Boolean)]
-[if (p.description.oclIsUndefined())][p.name/].[else][if lowerFirst][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
-[/template]
-
-[comment : /]
-[template private descriptionInverse(r : Reference, lowerFirst : Boolean)]
-[if r.oppositeOf.oclIsUndefined()][r.containingType.oclAsType(DTO).nameBaseDto()/][else][description(r.oppositeOf, false)/][/if]
-[/template]
-
-[comment : /]
-[template private description(p : Parameter, lowerFirst : Boolean)]
-[if (p.description.oclIsUndefined())][p.name/].[else][if lowerFirst][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
-[/template]
-
-[comment : /]
-[template public comParamsIn(o : Operation)]
-[for (p : Parameter | o.input)]
-    * @param [apply_parameterMethodClassicIn(nameParam(p))/]
-    *           (In)[if (isMandatory(p))](*)[/if] [description(p, false)/]
-[/for]
-[/template]
-
-[comment : /]
-[template public comParamOut(o : Operation)]
-[for (p : Parameter | o.output)]
-    * @return [description(p, false)/][/for]
+[template public comParamOut(o : soa::Operation)]
+  [for (p : soa::Parameter | o.output)]    * @return [p.description(false)/][/for]
 [/template]
 
 [comment : Specific for REST operations. /]
-[template public comRSFaults(o : Operation)]
-[for (p : Parameter | o.fault)]
-    * @throws [p.statusCode/] : [description(p, false)/]
-[/for]
+[template public comRSFaults(o : soa::Operation)]
+  [for (p : soa::Parameter | o.fault)]
+        * @throws [p.statusCode/] : [p.description(false)/]
+  [/for]
 [/template]
 
 [comment : /]
-[template public comParamOutCallback(o : Operation)]
-[if o.output->isEmpty()]
-    * @param callback
-    *           (Out) le callback
-[else]
-[for (p : Parameter | o.output)]
-    * @param callback
-    *           (Out) le callback pour retourner [description(p, false)/]
-[/for]
-[/if]
+[template public comParamOutCallback(o : soa::Operation)]
+  [if (o.output->isEmpty())]
+        * @param callback
+        *           (Out) le callback
+  [else]
+    [for (p : soa::Parameter | o.output)]
+          * @param callback
+          *           (Out) le callback pour retourner [p.description(false)/]
+    [/for]
+  [/if]
 [/template]
 
 [comment : Check if a parameter is mandatory (specific for comments). /]
-[query private isMandatory(p : Parameter) : Boolean =
-	p.multiplicity=MultiplicityKind::ONE or p.multiplicity=MultiplicityKind::ONE_STAR     
-/]
+[query private isMandatory(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE or p.multiplicity = environment::MultiplicityKind::ONE_STAR/]

@@ -1,169 +1,171 @@
+[module xtoTest('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::entity::api::common::xtoutils/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+
 [comment encoding = UTF-8 /]
-[module xtoTest('http://www.obeonetwork.org/dsl/environment/3.0.0',
-				'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::services::SecurityUtils /]
-
-[import fr::pacman::entity::api::common::xtoutils /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[template public xtoTest(e : Entity)]
-[licence()/]
-package [buildPackageWsApiEntity(e)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[e.writeImports()/]
-
-// [/protected]
-
-/**
- * Classe de test pour le XTO '[e.nameClassXto()/]'.
- * @author [getAuthorName()/]
- */
-// Annotation for class
-// [protected (e.getUserCodeId('Annotation for class'))]
-// [/protected]
-public class [e.buildXtoTestClassName()/] extends [getClassNameForBeanTester_Abs()/]
-{
-
-   /**
-    * Test des attributs.
-    */
-[if not e.referencesStar()->isEmpty()]
-   @SuppressWarnings("unchecked")
-[/if]
-   @Test
-   public void [apply_methodDefault('test xto')/] ()
-   {
-      // instanciation du xto
-      final [e.buildXtoClassNameFromEntity()/] [apply_variableDefault('xto')/] = new [e.buildXtoClassNameFromEntity()/]();
-
-      // génération des champs
-      final [genPkType()/] [apply_variableDefault(nameENUM_PK_ID())/] = getRandom[genPkType()/]();
-[for (a : Attribute | e.attributes())]
-      final [if a.type.oclIsTypeOf(Enumeration)] String[else][a.genPropertyType()/][/if] [apply_variableDefault(a.name.normalize())/] = [if a.type.oclIsTypeOf(Enumeration)] "[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]" [else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.hasSize()][size(a.metadatas)/][/if])[/if];
-[/for]
-[for (r : Reference | e.referencesNoStar())]
-
-      final [genPkType()/] [apply_variableDefault(r.name.toLowerFirst())/] = getRandom[genPkType()/]();
-
-//      final [r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/] [apply_variableDefault(r.name.toLowerFirst())/] = new [r.referencedType.oclAsType(Entity).buildXtoClassNameFromEntity()/]();
-
-[/for]
-[for (r : Reference | e.referencingStar())]
-      final [genPkType()/] [apply_variableDefault(r.nameBaseReferenceInverse())/] = getRandom[genPkType()/]();
-[/for]
-
-      // remplissage du Xto
-      [apply_variableDefault('xto')/].setId([apply_variableDefault(nameENUM_PK_ID())/]);
-[for (a : Attribute | e.attributes())]
-[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
-      [apply_variableDefault('xto')/].setIdentifiant([apply_variableDefault(a.name.normalize())/]);
-[else]
-      [apply_variableDefault('xto')/].[apply_methodSet(a.name.normalize())/]([apply_variableDefault(a.name.normalize())/]);
-[/if]
-[/for]
-[for (r : Reference | e.referencesNoStar())]
-      [apply_variableDefault('xto')/].[apply_methodSet(r.name.toLowerFirst())/][namePK_ID()/]([apply_variableDefault(r.name.toLowerFirst())/]);
-      //[apply_variableDefault('xto')/].[apply_methodSet(r.name.toLowerFirst())/]([apply_variableDefault(r.name.toLowerFirst())/]);
-[/for]
-[for (r : Reference | e.referencingStar())]
-      [apply_variableDefault('xto')/].[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/]([apply_variableDefault(r.nameBaseReferenceInverse())/]);
-[/for]
-
-      // test des valeurs
-      assertEquals([apply_variableDefault(nameENUM_PK_ID())/], [apply_variableDefault('xto')/].getId(), "Champ id incorrect");
-[for (a : Attribute | e.attributes())]
-[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
-      assertEquals([apply_variableDefault(a.name.normalize())/], [apply_variableDefault('xto')/].getIdentifiant(), "Champ [nameBaseAttribute(a)/] incorrect");
-[else]
-      assertEquals([apply_variableDefault(a.name.normalize())/], [apply_variableDefault('xto')/].[apply_methodGet(a.name.normalize())/](), "Champ [nameBaseAttribute(a)/] incorrect");
-[/if]
-[/for]
-[for (r : Reference | e.referencesNoStar())]
-
-      assertEquals([apply_variableDefault(r.name.toLowerFirst())/], [apply_variableDefault('xto')/].[apply_methodGet(r.name.toLowerFirst())/][namePK_ID()/](), "Champ [nameSimpleProperty(r)/] incorrect");
-  	//assertEquals([apply_variableDefault(r.name.toLowerFirst())/], [apply_variableDefault('xto')/].[apply_methodGet(r.name.toLowerFirst())/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[/for]
-[for (r : Reference | e.referencingStar())]
-[if not (r.referencedType.oclIsUndefined())]
-      assertEquals([apply_variableDefault(r.nameBaseReferenceInverse())/], [apply_variableDefault('xto')/].[apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[/if]
-[/for]
-
-      // appel du toString
-      assertNotNull([apply_variableDefault('xto')/].toString(), "toString incorrect");
-
-      // déréférencement
-[for (r : Reference | e.referencesStarNoStar())]
-[if not (r.referencedType.oclIsUndefined())]
-      [apply_variableDefault('xto')/].[getNameSetterListEntity(r)/] (Collections.EMPTY_LIST);
-      assertNotNull([apply_variableDefault('xto')/].[getNameGetterListEntity(r)/] (), "Champ [apply_attributeMultiple(r.name.normalize())/] incorrect");
-[/if]
-[/for]
-[for (r : Reference | e.referencesStarStar())]
-[if not (r.referencedType.oclIsUndefined())]
-      [apply_variableDefault('xto')/]. [getNameSetterListEntity(r)/](Collections.EMPTY_LIST);
-      assertNotNull([apply_variableDefault('xto')/].[getNameGetterListEntity(r)/] (), "Champ [apply_attributeMultiple(r.name.normalize())/] incorrect");
-[/if]
-[/for]
-[for (r : Reference | e.referencesNoStar())]
-      [apply_variableDefault('xto')/].[apply_methodSet(r.name.normalize())/][namePK_ID()/] (null);
-      assertNull([apply_variableDefault('xto')/].[apply_methodGet(r.name.normalize())/][namePK_ID()/] (), "Champ [r.name.normalize()/][namePK_ID()/] incorrect");
-[/for]
-
-[for (r : Reference | e.referencingStar())]
-[if not (r.referencedType.oclIsUndefined())]
-	[apply_variableDefault('xto')/].[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/] (null);
-    assertNull([apply_variableDefault('xto')/].[apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/] (), "Champ [r.nameBaseReferenceInverse()/][namePK_ID()/] incorrect");
-[/if]
-[/for]
-   }
-
-[for (a : Attribute | e.attributes())]
-	[if ((not isStandardType(a.type.name)) and (not a.type.oclIsKindOf(Enumeration)))]
-	/**
-    * getRandom[genPropertyTypeNoGenerics(a)/]
-    */
-   private [a.type.name.toUpperFirst()/] getRandom[genPropertyTypeNoGenerics(a)/] ()
-   {
-	  // getRandom_[a.type.name.toUpperFirst()/]
-	  // [protected (a.getUserCodeId('getRandom_'+a.type.name.toUpperFirst()))]
-
-		return [if ((a.type.name <> null) and (a.type.name.contains('<')))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
-
-      // [/protected]
-
-   }
-	[/if]
-[/for]
-}
-[/template]
+[template public xtoTest(e : entity::Entity)]
+  [e.licence()/]
+  package [e.buildPackageWsApiEntity()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [e.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Classe de test pour le XTO '[e.nameClassXto()/]'.
+   * @author [e.getAuthorName()/]
+   */
+  // Annotation for class
+  [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
+  [/protected]
+  
+  public class [e.buildXtoTestClassName()/] extends [e.getClassNameForBeanTester_Abs()/]
+  {
+  
+     /**
+      * Test des attributs.
+      */
+  [if (not e.referencesStar()->isEmpty())]
+       @SuppressWarnings("unchecked")
+  [/if]
+     @Test
+     public void ['test xto'.apply_methodDefault()/] ()
+     {
+        // instanciation du xto
+        final [e.buildXtoClassNameFromEntity()/] ['xto'.apply_variableDefault()/] = new [e.buildXtoClassNameFromEntity()/]();
+  
+        // génération des champs
+        final [e.genPkType()/] [e.nameENUM_PK_ID().apply_variableDefault()/] = getRandom[e.genPkType()/]();
+  [for (a : environment::Attribute | e.attributes())]
+          final [if (a.type.oclIsTypeOf(environment::Enumeration))] String[else][a.genPropertyType()/][/if]
+     [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] "[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]" [else]
+                                                                                                                                                                                            getRandom[a.genPropertyTypeNoGenerics()/]([if (a.hasSize())][a.metadatas.size()/][/if]
+                                                                                                                                                                                            )[/if]
+    ;
+  [/for]
+  [for (r : environment::Reference | e.referencesNoStar())]
+    
+          final [r.genPkType()/] [r.name.toLowerFirst().apply_variableDefault()/] = getRandom[r.genPkType()/]();
+    
+    //      final [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/] [r.name.toLowerFirst().apply_variableDefault()/] = new [r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]();
+    
+  [/for]
+  [for (r : environment::Reference | e.referencingStar())]
+          final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_variableDefault()/] = getRandom[r.genPkType()/]();
+  [/for]
+  
+        // remplissage du Xto
+        ['xto'.apply_variableDefault()/].setId([e.nameENUM_PK_ID().apply_variableDefault()/]);
+  [for (a : environment::Attribute | e.attributes())]
+    [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
+            ['xto'.apply_variableDefault()/].setIdentifiant([a.name.normalize().apply_variableDefault()/]);
+    [else]
+            ['xto'.apply_variableDefault()/].[a.name.normalize().apply_methodSet()/]([a.name.normalize().apply_variableDefault()/]);
+    [/if]
+  [/for]
+  [for (r : environment::Reference | e.referencesNoStar())]
+          ['xto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodSet()/][r.namePK_ID()/]([r.name.toLowerFirst().apply_variableDefault()/]);
+          //['xto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodSet()/]([r.name.toLowerFirst().apply_variableDefault()/]);
+  [/for]
+  [for (r : environment::Reference | e.referencingStar())]
+          ['xto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/]([r.nameBaseReferenceInverse().apply_variableDefault()/]);
+  [/for]
+  
+        // test des valeurs
+        assertEquals([e.nameENUM_PK_ID().apply_variableDefault()/], ['xto'.apply_variableDefault()/].getId(), "Champ id incorrect");
+  [for (a : environment::Attribute | e.attributes())]
+    [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
+            assertEquals([a.name.normalize().apply_variableDefault()/], ['xto'.apply_variableDefault()/].getIdentifiant(), "Champ [a.nameBaseAttribute()/] incorrect");
+    [else]
+            assertEquals([a.name.normalize().apply_variableDefault()/], ['xto'.apply_variableDefault()/].[a.name.normalize().apply_methodGet()/](), "Champ [a.nameBaseAttribute()/] incorrect");
+    [/if]
+  [/for]
+  [for (r : environment::Reference | e.referencesNoStar())]
+    
+          assertEquals([r.name.toLowerFirst().apply_variableDefault()/], ['xto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+      	//assertEquals([r.name.toLowerFirst().apply_variableDefault()/], ['xto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodGet()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+  [/for]
+  [for (r : environment::Reference | e.referencingStar())]
+    [if (not (r.referencedType = null))]
+            assertEquals([r.nameBaseReferenceInverse().apply_variableDefault()/], ['xto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+    [/if]
+  [/for]
+  
+        // appel du toString
+        assertNotNull(['xto'.apply_variableDefault()/].toString(), "toString incorrect");
+  
+        // déréférencement
+  [for (r : environment::Reference | e.referencesStarNoStar())]
+    [if (not (r.referencedType = null))]
+            ['xto'.apply_variableDefault()/].[r.getNameSetterListEntity()/] (Collections.EMPTY_LIST);
+            assertNotNull(['xto'.apply_variableDefault()/].[r.getNameGetterListEntity()/] (), "Champ [r.name.normalize().apply_attributeMultiple()/] incorrect");
+    [/if]
+  [/for]
+  [for (r : environment::Reference | e.referencesStarStar())]
+    [if (not (r.referencedType = null))]
+            ['xto'.apply_variableDefault()/]. [r.getNameSetterListEntity()/](Collections.EMPTY_LIST);
+            assertNotNull(['xto'.apply_variableDefault()/].[r.getNameGetterListEntity()/] (), "Champ [r.name.normalize().apply_attributeMultiple()/] incorrect");
+    [/if]
+  [/for]
+  [for (r : environment::Reference | e.referencesNoStar())]
+          ['xto'.apply_variableDefault()/].[r.name.normalize().apply_methodSet()/][r.namePK_ID()/] (null);
+          assertNull(['xto'.apply_variableDefault()/].[r.name.normalize().apply_methodGet()/][r.namePK_ID()/] (), "Champ [r.name.normalize()/][r.namePK_ID()/] incorrect");
+  [/for]
+  
+  [for (r : environment::Reference | e.referencingStar())]
+    [if (not (r.referencedType = null))]
+      	['xto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/] (null);
+          assertNull(['xto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] (), "Champ [r.nameBaseReferenceInverse()/][r.namePK_ID()/] incorrect");
+    [/if]
+  [/for]
+     }
+  
+  [for (a : environment::Attribute | e.attributes())]
+    [if (not a.type.name.isStandardType() and not a.type.oclIsKindOf(environment::Enumeration))]
+      	/**
+          * getRandom[a.genPropertyTypeNoGenerics()/]
+          */
+         private [a.type.name.toUpperFirst()/] getRandom[a.genPropertyTypeNoGenerics()/] ()
+         {
+      	  // getRandom_[a.type.name.toUpperFirst()/]
+      	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
+           
+           		return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
+           ;
+           
+         [/protected]
+      
+      
+         }
+    [/if]
+  [/for]
+  }[/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport('java.util.Collections')/]
-[e.addImport('org.junit.jupiter.api.Test')/]
-[e.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
-[e.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
-[e.addImport('static org.junit.jupiter.api.Assertions.assertEquals')/]
-[e.addImport(getImportForBeanTester_Abs())/]
-[e.flushImports()/]
-[/template]
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('java.util.Collections')/]
+  [e.addImport('org.junit.jupiter.api.Test')/]
+  [e.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+  [e.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
+  [e.addImport('static org.junit.jupiter.api.Assertions.assertEquals')/]
+  [e.addImport(e.getImportForBeanTester_Abs())/]
+  [e.flushImports()/][/template]

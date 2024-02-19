@@ -1,178 +1,178 @@
-[comment encoding = UTF-8 /]
-[module entityItf('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module entityItf('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::types::packages /]
-[import fr::pacman::commons::types::names /]
-[import fr::pacman::commons::services::SecurityUtils /] 
-
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::attributes /]
-[import fr::pacman::entity::api::common::methodes /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::types::packages/]
+[import fr::pacman::commons::types::names/]
+[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::entity::api::common::methodes/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::entity::api::common::serviceutils/]
 [import fr::pacman::entity::api::sql::common/]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::commons::convention::project::surcouche/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
 
-[import fr::pacman::commons::convention::project::surcouche /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-
-
-[template public entityItf(e : Entity)]
-[licence()/]
-package [buildPackagePersistenceApiEntity(e)/];
-// [protected ('for imports')]
+[comment encoding = UTF-8 /]
+[template public entityItf(e : entity::Entity)]
+  [e.licence()/]
+  package [e.buildPackagePersistenceApiEntity()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [e.writeImports()/]
+    
+  [/protected]
+  
+  
+  [e.comClass(e.roleEntityItf())/]
+  public interface [e.buildEntityInterfaceName()/] extends [if (e.hasAutomaticColumns())]
+                                                             [e.buildAppliEntityInterfaceName()/]<[e.genPkType()/]>[if (e.useSpi4jSecurity() and not e.useMatching() and e.entityIsUser())], User_Itf[/if]
+                                                           [else]
+                                                             [e.getClassNameForEntity_Itf()/]<[e.genPkType()/]>[if (e.useSpi4jSecurity() and not e.useMatching() and e.entityIsUser())], User_Itf[/if]
+                                                           [/if]
+  
+  {
+     // CONSTANTES
+  
+     // Constantes [e.buildEntityInterfaceName()/]
+     [protected (e.getUserCodeId('Constantes ' + e.buildEntityInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+     // METHODES ABSTRAITES
+  
+  [for (a : environment::Attribute | e.attributesIncludingComputedNoPk())]
+       /**
+    [a.comPrefix('Obtenir')/]
+    [a.comReturn()/]
+        */
+    [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
+         String getIdentifiant ();
+    [else]
+         [a.gen_getterInterface()/]
+    [/if]
+    
+    [if (not a.isComputed() or a.useMatching())]
+         /**
+      [a.comPrefix('Affecter')/]
+      [a.get_comParamIn()/]
+          */
+      [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
+           void setIdentifiant (final String ['identifiant'.apply_parameterMethodClassicIn()/]);
+      [else]
+           [a.gen_setterInterface()/]
+      [/if]
+    [/if]
+    
+  [/for]
+  [for (a : environment::Attribute | e.getInheritDtoAttributes())]
+       /**
+    [a.comPrefix('Obtenir')/]
+    [a.comReturn()/]
+        */
+    [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
+         String getIdentifiant ();
+    [else]
+         [a.gen_getterInterface()/]
+    [/if]
+    
+    [if (not a.isComputed() or a.useMatching())]
+         /**
+      [a.comPrefix('Affecter')/]
+      [a.get_comParamIn()/]
+          */
+      [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
+           void setIdentifiant (final String ['identifiant'.apply_parameterMethodClassicIn()/]);
+      [else]
+           [a.gen_setterInterface()/]
+      [/if]
+    [/if]
+    
+  [/for]
+  [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp1 | temp1.name.toLower()))]
+    [if (r.containingType.oclAsType(entity::Entity) = e)]
+         /**
+      [r.comPrefix('Obtenir')/]
+      [r.comReturn()/]
+          */
+         [r.gen_getterInterface()/]
+      
+      [if (not r.isComputed() or r.useMatching())]
+           /**
+        [r.comPrefix('Affecter')/]
+        [r.get_comParamIn()/]
+            */
+           [r.gen_setterInterface()/]
+      [/if]
+    [/if]
+    
+  [/for]
+  [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp2 | temp2.name.toLower()))]
+    [if (r.oppositeOf = null)]
+         /**
+      [r.comPrefixInverse('Obtenir')/]
+      [r.comReturnInverse()/]
+          */
+         [r.gen_getterInverseInterface(i)/]
+      
+      [if (not r.isComputed() or r.useMatching())]
+           /**
+        [r.comPrefixInverse('Affecter')/]
+        [r.get_comParamInverseIn()/]
+            */
+           [r.gen_setterInverseInterface()/]
+        
+      [/if]
+    [/if]
+    
+  [/for]
+  [if (not e.useMatching())]
+    [for (r : environment::Reference | e.referencesStarStar())]
+         /**
+          * Obtenir la liste de [r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/] pour la relation [r.name.normalize()/]
+          * @return [r.name.normalize()/]
+          */
+         [r.getGetterListEntity()/];
+      
+         /**
+          * Affecter la liste de [r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/] pour la relation [r.name.normalize()/]
+          * @param [r.referencedType.oclAsType(entity::Entity).name.normalize().apply_parameterMethodMultiple()/]
+          */
+         [r.getSetterListEntity()/];
+      
+    [/for]
+  [/if]
+  
+     // Methodes [e.buildEntityInterfaceName()/]
+     [protected (e.getUserCodeId('Methodes ' + e.buildEntityInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+  }[/template]
 
 [comment : Write all required imports. /]
-[e.writeImports()/]
+[template private writeImports(e : entity::Entity) post(self.trim())]
+  [e.initImports()/]
+  [e.addImport('java.util.List', not e.useMatching())/]
+  [e.addImport(e.buildPackagePersistenceApi() + '.' + e.buildAppliEntityInterfaceName(), e.hasAutomaticColumns())/]
+  [e.addImport('fr.spi4j.lib.security.User_Itf', e.useSpi4jSecurity() and e.entityIsUser() and not e.useMatching())/]
+  [e.addImport(e.getImportForEntity_Itf(), not e.hasAutomaticColumns())/]
+  
+  [for (enum : environment::Enumeration | e.getRoot().eAllContents(environment::Enumeration))]
+    	[e.addImport(enum.buildPackageEnum() + '.' + enum.buildEnumName())/]
+  [/for]
+  
+  [e.flushImports()/][/template]
 
-// [/protected]
-
-[comClass(roleEntityItf())/]
-public interface [buildEntityInterfaceName(e)/] extends [if hasAutomaticColumns()][buildAppliEntityInterfaceName()/]<[genPkType()/]>[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e))], User_Itf[/if][else][getClassNameForEntity_Itf()/]<[genPkType()/]>[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e))], User_Itf[/if][/if]
-{
-   // CONSTANTES
-
-   // Constantes [buildEntityInterfaceName(e)/]
-   // [protected (e.getUserCodeId('Constantes ' + buildEntityInterfaceName(e)))]
-
-   // [/protected]
-
-   // METHODES ABSTRAITES
-
-[for (a : Attribute | e.attributesIncludingComputedNoPk())]
-   /**
-[comPrefix(a, 'Obtenir')/]
-[comReturn(a)/]
-    */
-  [if (useSpi4jSecurity() and not useMatching() and (entityIsUser(e) and a.name = 'identifiant'))]
-   String getIdentifiant ();
-[else]
-   [gen_getterInterface(a)/]
-[/if]
-
-[if (not a.isComputed() or useMatching())]
-   /**
-[comPrefix(a, 'Affecter')/]
-[get_comParamIn(a)/]
-    */
-[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
-   void setIdentifiant (final String [apply_parameterMethodClassicIn('identifiant')/]);
-[else]
-   [gen_setterInterface(a)/]
-[/if]
-[/if]
-
-[/for]
-[for (a : Attribute | e.getInheritDtoAttributes())]
-   /**
-[comPrefix(a, 'Obtenir')/]
-[comReturn(a)/]
-    */
-  [if (useSpi4jSecurity() and not useMatching() and (entityIsUser(e) and a.name = 'identifiant'))]
-   String getIdentifiant ();
-[else]
-   [gen_getterInterface(a)/]
-[/if]
-
-[if (not a.isComputed() or useMatching())]
-   /**
-[comPrefix(a, 'Affecter')/]
-[get_comParamIn(a)/]
-    */
-[if (useSpi4jSecurity() and not useMatching() and entityIsUser(e) and a.name = 'identifiant')]
-   void setIdentifiant (final String [apply_parameterMethodClassicIn('identifiant')/]);
-[else]
-   [gen_setterInterface(a)/]
-[/if]
-[/if]
-
-[/for]
-[for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.containingType.oclAsType(entity::Entity) = e]
-   /**
-[comPrefix(r, 'Obtenir')/]
-[comReturn(r)/]
-    */
-   [gen_getterInterface(r)/]
-
-[if (not r.isComputed() or useMatching())]
-   /**
-[comPrefix(r, 'Affecter')/]
-[get_comParamIn(r)/]
-    */
-   [gen_setterInterface(r)/]
-[/if]
-[/if]
-
-[/for]
-[for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
-   /**
-[comPrefixInverse(r, 'Obtenir')/]
-[comReturnInverse(r)/]
-    */
-   [gen_getterInverseInterface(r,i)/]
-
-[if (not r.isComputed() or useMatching())]
-   /**
-[comPrefixInverse(r, 'Affecter')/]
-[get_comParamInverseIn(r)/]
-    */
-   [gen_setterInverseInterface(r)/]
-
-[/if]
-[/if]
-
-[/for]
-[if (not useMatching())]
-[for (r : Reference | e.referencesStarStar())]
-   /**
-    * Obtenir la liste de [r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/] pour la relation [r.name.normalize()/]
-    * @return [r.name.normalize()/]
-    */
-   [r.getGetterListEntity()/];
-
-   /**
-    * Affecter la liste de [r.referencedType.oclAsType(Entity).buildEntityInterfaceName()/] pour la relation [r.name.normalize()/]
-    * @param [apply_parameterMethodMultiple(r.referencedType.oclAsType(Entity).name.normalize())/]
-    */
-   [r.getSetterListEntity()/];
-
-[/for]
-[/if]
-
-   // Methodes [buildEntityInterfaceName(e)/]
-   // [protected (e.getUserCodeId('Methodes ' + buildEntityInterfaceName(e)))]
-
-   // [/protected]
-
-}
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (e : Entity) post(trim())]
-[e.initImports()/]
-[e.addImport('java.util.List', not useMatching())/]
-[e.addImport(buildPackagePersistenceApi() + '.' + buildAppliEntityInterfaceName(), e.hasAutomaticColumns())/]
-[e.addImport('fr.spi4j.lib.security.User_Itf', useSpi4jSecurity() and entityIsUser(e) and not useMatching())/]
-[e.addImport(getImportForEntity_Itf(), not e.hasAutomaticColumns())/]
-
-[comment : List enumerations. /]
-[for (enum: Enumeration | e.getRoot().eAllContents(Enumeration))]
-	[e.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
-[/for]
-
-[e.flushImports()/]
-[/template]
-
-[query public roleEntityItf(e : Entity) : String = 'L\'interface définissant le contrat de persistance pour le type ' + nameSimpleEntity(e) /]
+[query public roleEntityItf(e : entity::Entity) : String = 'L\'interface définissant le contrat de persistance pour le type ' + e.nameSimpleEntity()/]

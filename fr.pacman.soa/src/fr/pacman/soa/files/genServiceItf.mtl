@@ -1,21 +1,20 @@
+[module genServiceItf('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::commons::business::api::category::serviceItf/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genServiceItf('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                      'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::commons::business::api::category::serviceItf /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genServiceItf(s : Service)]
-[file (filename(getCommonsSourceDir(), buildPackageBusinessApiServiceDto(s, null), buildServiceInterfaceName(s, null) + '.java'), false, 'UTF-8')]
-[serviceItf(s)/]
-[/file]
+[template public genServiceItf(s : soa::Service)]
+  [file (s.getCommonsSourceDir().filename(s.buildPackageBusinessApiServiceDto(null), s.buildServiceInterfaceName(null) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceItf()/]
+  [/file]
 [/template]
 
-[template public genServiceItf(s : Service, d : DTO)]
-[file (filename(getCommonsSourceDir(d), buildPackageBusinessApiServiceDto(s, d), buildServiceInterfaceName(s, d) + '.java'), false, 'UTF-8')]
-[serviceItf(s, d)/]
-[/file]
+[template public genServiceItf(s : soa::Service, d : environment::DTO)]
+  [file (d.getCommonsSourceDir().filename(s.buildPackageBusinessApiServiceDto(d), s.buildServiceInterfaceName(d) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceItf(d)/]
+  [/file]
 [/template]

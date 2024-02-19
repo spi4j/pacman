@@ -1,14 +1,14 @@
+[module genLog4j('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::log4j/]
+
 [comment encoding = UTF-8 /]
-[module genLog4j('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::log4j /]
-
-[template public genLog4j(r : Root, project : String)]
-[if (project = 'server')]
-[file (filename(getServerResourcesDir(), '', 'log4j2.xml'), false, 'ISO-8859-1')]
-[log4j(r,'server')/]
-[/file]
-[/if]
+[template public genLog4j(r : entity::Root, project : String)]
+  [if (project = 'server')]
+    [file (r.getServerResourcesDir().filename('', 'log4j2.xml'), overwrite, 'ISO-8859-1')]
+      [r.log4j('server')/]
+    [/file]
+  [/if]
 [/template]

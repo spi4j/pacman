@@ -1,89 +1,87 @@
-[comment encoding = UTF-8 /]
-[module serviceFacade('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                      'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module serviceFacade('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::names/]
-[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::soalight::common::outils/]
+[import fr::pacman::soalight::common::imports/]
+[import fr::pacman::soalight::common::packages/]
+[import fr::pacman::soalight::common::name/]
+[import fr::pacman::soalight::common::commentaires/]
+[import fr::pacman::soalight::common::attributes/]
+[import fr::pacman::soalight::common::methodes/]
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::services::StringUtils/]
 
-[import fr::pacman::soalight::common::outils /]
-[import fr::pacman::soalight::common::imports /]
-[import fr::pacman::soalight::common::packages /]
-[import fr::pacman::soalight::common::name /]
-[import fr::pacman::soalight::common::commentaires /]
-[import fr::pacman::soalight::common::attributes /]
-[import fr::pacman::soalight::common::methodes /]
-[import fr::pacman::soalight::common::classes /]
+[comment encoding = UTF-8 /]
+[comment le Service existe sans DTO /]
+[template public serviceFacade(s : soa::Service)]
+  [s.licence()/]
+  package [s.buildPackageImplWs()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import java.util.List;
+    
+    import jakarta.jws.WebMethod;
+    import jakarta.jws.WebService;
+    
+    import [s.buildPackageWsApi()/].[s.buildServiceFacadeInterfaceName()/];
+    import [s.buildPackageBusiness()/].[s.buildAppliUserBusinessGenClassName()/];
+    import [s.buildPackageMapper()/].[s.buildAppliUserMapperGenClassName()/];
+    
+  [/protected]
+  
+  
+  /**
+   * Implémentation de la façade du web service.
+   * @author [s.getAuthorName()/]
+   */
+  @WebService(serviceName = "[s.buildServiceName()/]", portName = "[s.buildServiceName()/]Port", targetNamespace = "http://[s.namespace()/]/")
+  public class [s.buildServiceFacadeClassName()/] implements [s.buildServiceFacadeInterfaceName()/]
+  {
+  
+  [if (s <> null and not (s.ownedInterface = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.public)]
+        	/**
+        	* [o.description/]
+        [o.getComParamsIn()/][o.comParamOut()/]
+        	 */
+           @WebMethod
+           @Override
+           public [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/])
+           {
+        	 // [o.userCodeForOperation()/]
+        	 [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+            [if (o.paramOutXto() <> 'void')]
+                    return [if (not o.output->first().type.oclIsKindOf(environment::PrimitiveType))]
+                             [o.buildAppliUserMapperGenClassName()/].[('get ' + o.output->first().buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]
+                             EntityTo[if (o.output->first().isMultiple())]List[/if]
+                             Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService()/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parameterWs())->sep(', ')/]));	  
+                           [else]
+                             [o.buildAppliUserBusinessGenClassName()/].get[s.nameService()/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp2 | temp2.parameterWs())->sep(', ')/]);
+                           [/if]
+            [else]
+                   [o.buildAppliUserBusinessGenClassName()/].get[s.nameService()/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp3 | temp3.parameterWs())->sep(', ')/]);
+            [/if]
+            
+          [/protected]
+        
+           }
+        
+      [/if]
+    [/for]
+  [/if]
+     // [s.buildServiceFacadeClassName()/]
+     [protected (s.getUserCodeId(s.buildServiceFacadeClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  }[/template]
 
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-
-[comment] le Service existe sans DTO [/comment]
-[template public serviceFacade(s : Service)]
-[licence()/]
-package [buildPackageImplWs(s)/];
-// [protected ('for imports')]
-
-import java.util.List;
-
-import jakarta.jws.WebMethod;
-import jakarta.jws.WebService;
-
-import [buildPackageWsApi(s)/].[buildServiceFacadeInterfaceName(s)/];
-import [buildPackageBusiness()/].[buildAppliUserBusinessGenClassName()/];
-import [buildPackageMapper()/].[buildAppliUserMapperGenClassName()/];
-
-// [/protected]
-
-/**
- * Implémentation de la façade du web service.
- * @author [getAuthorName()/]
- */
-@WebService(serviceName = "[buildServiceName(s) /]", portName = "[buildServiceName(s) /]Port", targetNamespace = "http://[namespace(s)/]/")
-public class [buildServiceFacadeClassName(s)/] implements [buildServiceFacadeInterfaceName(s)/]
-{
-
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-[if o.public]
-	/**
-	* [o.description/]
-[getComParamsIn(o)/][comParamOut(o)/]
-	 */
-   @WebMethod
-   @Override
-   public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/])
-   {
-	 // [userCodeForOperation(o)/]
-	 // [protected (o.getUserCodeId(userCodeForOperation(o)))]
-[if o.paramOutXto() <> 'void']
-      return [if not o.output->first().type.oclIsKindOf(PrimitiveType)]
-[buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + o.output->first().buildMapperClassName())/] ().convert[if isMultiple(o.output->first())]List[/if]EntityTo[if isMultiple(o.output->first())]List[/if]Xto( [buildAppliUserBusinessGenClassName()/].get[nameService(s)/] ().[o.nameOperation()/] ([o.input.parameterWs()->sep(', ') /]));	  
-[else]
-[buildAppliUserBusinessGenClassName()/].get[nameService(s)/] ().[o.nameOperation()/] ([o.input.parameterWs()->sep(', ')/]);
-[/if]
-[else]
-     [buildAppliUserBusinessGenClassName()/].get[nameService(s)/] ().[o.nameOperation()/] ([o.input.parameterWs()->sep(', ') /]);
-[/if]
-
-	// [/protected]
-   }
-
-[/if]
-[/for]
-[/if]
-   // [buildServiceFacadeClassName(s)/]
-   // [protected (s.getUserCodeId(buildServiceFacadeClassName(s)))]
-
-   // [/protected]
-}
-[/template]
-
-[query private namespace(s : Service) : String =
-    invoke('fr.pacman.commons.services.StringUtils', 'reverse(java.lang.String, java.lang.String, java.lang.String)', Sequence{buildPackageWsApi(s), '\\.', '.'})
-/]
-
-
+[query private namespace(s : soa::Service) : String = s.buildPackageWsApi().reverse('\\.', '.')/]

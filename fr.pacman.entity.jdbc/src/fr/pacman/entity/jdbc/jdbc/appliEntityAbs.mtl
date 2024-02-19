@@ -1,142 +1,136 @@
-[comment encoding = UTF-8 /]
-[module appliEntityAbs('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
+[module appliEntityAbs('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::commons::requests::counterQueries /]
-
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::commentaires /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::requests::counterQueries/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::commentaires/]
 [import fr::pacman::entity::api::sql::common/]
-[import fr::pacman::entity::jdbc::common::packages /]
+[import fr::pacman::entity::jdbc::common::packages/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::services::PropertyCounter/]
 
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
+[comment encoding = UTF-8 /]
+[template public appliEntityAbs(r : entity::Root)]
+  [r.licence()/]
+  package [r.buildPackagePersistenceImplJdbc()/];
+  
+  [r.writeImports()/]
+  
+  /**
+   * Classe abstraite contenant les attributs additionnels qui sont communs à toutes les entités.
+   * @author [r.getAuthorName()/]
+   * @param <TypeId>
+   *           Le type générique de la clé primaire.
+   */
+  public abstract class [r.buildAppliEntityAbstractClassName()/]<TypeId> implements [r.buildAppliEntityInterfaceName()/]<TypeId>
+  {
+     // CONSTANTES
+  
+     /**
+      * SerialUid.
+      */
+     private static final long serialVersionUID = -1;
+  
+     // Constantes
+     [protected (r.getUserCodeId('Constantes')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+     // ATTRIBUTS
+  
+  [for (columnProp : String | r.get_automaticColumnsProperties())]
+    [r.getAutomaticAttribut(columnProp)/]
+    
+  [/for]
+     // Attributs
+     [protected (r.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  
+     // METHODES
+  
+  [for (columnProp : String | r.get_automaticColumnsProperties())]
+    [r.getAutomaticGetter(columnProp)/]
+    
+    [r.getAutomaticSetter(columnProp)/]
+    
+  [/for]
+     /**
+      * Vérifie la validité des champs additionnels.
+      * @return La liste des champs invalides (null si aucun champ n'est invalide)
+      */
+     protected List<String> ['prepare validate'.apply_methodDefault()/] ()
+     {
+        // valide les attributs
+        List<String> ['champs invalides'.apply_variableDefault()/] = null;['prepareValidateAppliEntity'.initCounter()/]
+  [for (columnProp : String | r.get_automaticColumnsProperties())]
+    [r.getAutomaticColumnValidate(columnProp)/]
+  [/for]
+        return ['champs invalides'.apply_variableDefault()/];
+     }
+  }[/template]
 
-
-[template public appliEntityAbs(r : Root)]
-[licence()/]
-package [buildPackagePersistenceImplJdbc()/];
-
-[comment : Add all required imports. /]
-[r.writeImports()/]
-
-/**
- * Classe abstraite contenant les attributs additionnels qui sont communs à toutes les entités.
- * @author [getAuthorName()/]
- * @param <TypeId>
- *           Le type générique de la clé primaire.
- */
-public abstract class [buildAppliEntityAbstractClassName()/]<TypeId> implements [buildAppliEntityInterfaceName()/]<TypeId>
-{
-   // CONSTANTES
-
-   /**
-    * SerialUid.
-    */
-   private static final long serialVersionUID = -1;
-
-   // Constantes
-   // [protected (r.getUserCodeId('Constantes'))]
-
-   // [/protected]
-
-   // ATTRIBUTS
-
-[for (columnProp : String | get_automaticColumnsProperties())]
-[r.getAutomaticAttribut(columnProp) /]
-
-[/for]
-   // Attributs
-   // [protected (r.getUserCodeId('Attributs'))]
-
-   // [/protected]
-
-   // METHODES
-
-[for (columnProp : String | get_automaticColumnsProperties())]
-[r.getAutomaticGetter(columnProp) /]
-
-[r.getAutomaticSetter(columnProp) /]
-
-[/for]
-   /**
-    * Vérifie la validité des champs additionnels.
-    * @return La liste des champs invalides (null si aucun champ n'est invalide)
-    */
-   protected List<String> [apply_methodDefault('prepare validate')/] ()
-   {
-      // valide les attributs
-      List<String> [apply_variableDefault('champs invalides')/] = null;[initCounter('prepareValidateAppliEntity')/]
-[for (columnProp : String | get_automaticColumnsProperties())]
-[r.getAutomaticColumnValidate(columnProp) /]
-[/for]
-      return [apply_variableDefault('champs invalides')/];
-   }
-}
-[/template]
-
-
-[********************
+[**
+ * *****************
  * Paramétrage PacMan
 */]
-
-[template private getAutomaticAttribut(void : OclAny, columnProp : String)]
-[if (columnProp.hasToWriteColumn())]
-   /** [get_nameColumn(columnProp).toString().toLower().toUpperFirst()/] */
-   private [get_typeColumn(columnProp)/] [apply_attributeDefault(get_nameColumn(columnProp).toLower())/];[/if]
+[template private getAutomaticAttribut(void : ecore::EObject, columnProp : String)]
+  [if (columnProp.hasToWriteColumn())]
+       /** [void.get_nameColumn(columnProp).toString().toLower().toUpperFirst()/] */
+       private [void.get_typeColumn(columnProp)/] [void.get_nameColumn(columnProp).toLower().apply_attributeDefault()/];[/if]
 [/template]
 
-[template private getAutomaticColumnValidate(void : OclAny, columnProp : String)]
-[if (columnProp.hasToWriteColumn() and columnNotNull(columnProp))]
-      if ([apply_attributeDefault(get_nameColumn(columnProp).toLower())/] == null)
-      {
-[if invoke('fr.pacman.commons.services.PropertyCounter', 'incrementPropertyCount(java.lang.String)', Sequence{'prepareValidateAppliEntity'}) = 1]
-         [apply_variableDefault('champs invalides')/] = new ArrayList<>();
-[else]
-         if ([apply_variableDefault('champs invalides')/] == null)
-         {
-            [apply_variableDefault('champs invalides')/] = new ArrayList<>();
-         }
-[/if]
-         [apply_variableDefault('champs invalides')/].add("[get_nameColumn(columnProp)/]");
-      }[/if]
+[template private getAutomaticColumnValidate(void : ecore::EObject, columnProp : String)]
+  [if (columnProp.hasToWriteColumn() and void.columnNotNull(columnProp))]
+          if ([void.get_nameColumn(columnProp).toLower().apply_attributeDefault()/] == null)
+          {
+    [if ('prepareValidateAppliEntity'.incrementPropertyCount() = 1)]
+               ['champs invalides'.apply_variableDefault()/] = new ArrayList<>();
+    [else]
+               if (['champs invalides'.apply_variableDefault()/] == null)
+               {
+                  ['champs invalides'.apply_variableDefault()/] = new ArrayList<>();
+               }
+    [/if]
+             ['champs invalides'.apply_variableDefault()/].add("[void.get_nameColumn(columnProp)/]");
+          }[/if]
 [/template]
 
-[template private getAutomaticGetter(void : OclAny, columnProp : String)]
-[if (columnProp.hasToWriteColumn())]
-   @Override
-   public [get_typeColumn(columnProp)/] [apply_methodGet(get_nameColumn(columnProp).toLower())/] ()
-   {
-      return [apply_attributeDefault(get_nameColumn(columnProp).toLower())/];
-   }[/if]
+[template private getAutomaticGetter(void : ecore::EObject, columnProp : String)]
+  [if (columnProp.hasToWriteColumn())]
+       @Override
+       public [void.get_typeColumn(columnProp)/] [void.get_nameColumn(columnProp).toLower().apply_methodGet()/] ()
+       {
+          return [void.get_nameColumn(columnProp).toLower().apply_attributeDefault()/];
+       }[/if]
 [/template]
 
-[template private getAutomaticSetter(void : OclAny, columnProp : String)]
-[if (columnProp.hasToWriteColumn())]
-   @Override
-   public void [apply_methodSet(get_nameColumn(columnProp).toLower())/] (final [get_typeColumn(columnProp)/] [apply_parameterMethodClassicIn(get_nameColumn(columnProp).toLower())/])
-   {
-      [getAffectationPrefix()/][apply_attributeDefault(get_nameColumn(columnProp).toLower())/] = [apply_parameterMethodClassicIn(get_nameColumn(columnProp).toLower())/];
-   }[/if]
+[template private getAutomaticSetter(void : ecore::EObject, columnProp : String)]
+  [if (columnProp.hasToWriteColumn())]
+       @Override
+       public void [void.get_nameColumn(columnProp).toLower().apply_methodSet()/] (final [void.get_typeColumn(columnProp)/] [void.get_nameColumn(columnProp).toLower().apply_parameterMethodClassicIn()/])
+       {
+          [void.getAffectationPrefix()/][void.get_nameColumn(columnProp).toLower().apply_attributeDefault()/] = [void.get_nameColumn(columnProp).toLower().apply_parameterMethodClassicIn()/];
+       }[/if]
 [/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (r : Root) post(trim())]
-[r.initImports()/]
-[r.addImport('java.util.List')/]
-[r.addImport('java.util.ArrayList')/]
-[r.addImport('fr.spi4j.type.XtopSup')/]
-[r.addImport(buildPackagePersistenceApi() + '.' + buildAppliEntityInterfaceName())/]
-[r.flushImports()/]
-[/template]
-
+[template private writeImports(r : entity::Root) post(self.trim())]
+  [r.initImports()/]
+  [r.addImport('java.util.List')/]
+  [r.addImport('java.util.ArrayList')/]
+  [r.addImport('fr.spi4j.type.XtopSup')/]
+  [r.addImport(r.buildPackagePersistenceApi() + '.' + r.buildAppliEntityInterfaceName())/]
+  [r.flushImports()/][/template]

@@ -1,19 +1,16 @@
+[module genRSFrontCommon('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::ws::category::xtenum/]
+
 [comment encoding = UTF-8 /]
-[module genRSFrontCommon('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                         'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::ws::category::xtenum /]
-
-
 [comment : ******************************************************/]
 [comment : Create an enumeration, if founded in the DTO diagram. /]
 [comment : ******************************************************/]
-[template public genXtEnums(e : Enumeration)]
-[file (filename(getCommonsSourceDir(),  e.buildPackageWsApiEnum() , e.buildClassNameFromEnumForXto() + '.java'), false, 'UTF-8')]
-[e.xtEnum()/]
-[/file]
+[template public genXtEnums(e : environment::Enumeration)]
+  [file (e.getCommonsSourceDir().filename(e.buildPackageWsApiEnum(), e.buildClassNameFromEnumForXto() + '.java'), overwrite, 'UTF-8')]
+    [e.xtEnum()/]
+  [/file]
 [/template]

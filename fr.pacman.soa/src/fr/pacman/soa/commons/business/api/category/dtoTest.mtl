@@ -1,314 +1,331 @@
-[comment encoding = UTF-8 /]
-[module dtoTest('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module dtoTest('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::types::packages /]
-[import fr::pacman::commons::types::names /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::types::packages/]
+[import fr::pacman::commons::types::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::attributes/]
-
 [import fr::pacman::commons::soa::common::classes/]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::attributes /]
-[import fr::pacman::commons::soa::common::utils /]
-[import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::attributes/]
+[import fr::pacman::commons::soa::common::utils/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::classes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::outils /]
-
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::commons::services::SecurityUtils /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-
-[import fr::pacman::commons::convention::project::surcouche /]
-
-
-[template public dtoTest(d : DTO)]
-[licence()/]
-package [buildPackageBusinessApiDto(d)/];
-// [protected ('for imports')]
+[comment encoding = UTF-8 /]
+[template public dtoTest(d : environment::DTO)]
+  [d.licence()/]
+  package [d.buildPackageBusinessApiDto()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [d.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Classe de test pour le DTO '[d.nameClassDto()/]'.
+   * @author [d.getAuthorName()/]
+   */
+  // Annotation for class
+  [protected (d.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
+  [/protected]
+  
+  public class [d.buildDtoTestClassName()/] extends [d.getClassNameForBeanTester_Abs()/]
+  {
+  
+     /**
+      * Test des attributs.
+      */
+     @Test
+     public void ['test dto'.apply_methodDefault()/] ()
+     {
+        // génération des champs
+        final [d.genPkType()/] [d.nameENUM_PK_ID().apply_variableDefault()/] = getRandom[d.genPkType()/]();
+  [for (a : environment::Attribute | d.attributesNotComputed())]
+          final [a.genPropertyType()/] [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else]
+                                                                                                                                                                                                                                                               getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/]([if (a.hasSize())][d.buildAttributesEnumName()/].[a.nameBaseAttribute()/].getSize()[/if]
+                                                                                                                                                                                                                                                              )[/if]
+    ;
+  [/for]
+  [for (r : environment::Reference | d.referencesNoStar())]
+    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+            final [r.genPkType()/] [r.name.toLowerFirst().apply_variableDefault()/] = getRandom[r.genPkType()/]();
+    [else]
+            final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [r.name.toLowerFirst().apply_variableDefault()/] = new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]();
+    [/if]
+  [/for]
+  [for (r : environment::Reference | d.referencingStar())]
+          final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_variableDefault()/] = getRandom[r.genPkType()/]();
+  [/for]
+        // instanciation et remplissage du dto
+        [d.buildDtoClassName()/] ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]();
+        // validation du DTO à plusieurs étapes
+        ['validate'.apply_methodDefault()/](['dto'.apply_variableDefault()/]);
+  [for (a : environment::Attribute | d.attributesNotComputed())]
+    [if (d.dtoIsUser() and a.name = 'identifiant')]
+            ['dto'.apply_variableDefault()/].setIdentifiant([a.name.normalize().apply_variableDefault()/]);
+    [else]
+            ['dto'.apply_variableDefault()/].[a.name.normalize().apply_methodSet()/]([a.name.normalize().apply_variableDefault()/]);
+    [/if]
+          ['validate'.apply_methodDefault()/](['dto'.apply_variableDefault()/]);
+  [/for]
+  [for (r : environment::Reference | d.referencesNoStar())]
+    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+            ['dto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodSet()/][r.namePK_ID()/]([r.name.toLowerFirst().apply_variableDefault()/]);
+    [else]
+            ['dto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodSet()/]([r.name.toLowerFirst().apply_variableDefault()/]);
+    [/if]
+          ['validate'.apply_methodDefault()/](['dto'.apply_variableDefault()/]);
+  [/for]
+  [for (r : environment::Reference | d.referencingStar())]
+          ['dto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/]([r.nameBaseReferenceInverse().apply_variableDefault()/]);
+          ['validate'.apply_methodDefault()/](['dto'.apply_variableDefault()/]);
+  [/for]
+  
+  [if (d.hasReferencingStar())]
+    [if (not d.hasReferencingOneStar())]
+            // Appel du constructeur de [d.buildDtoClassName()/], avec les dtos référençants valant null, pour valider le constructeur  	
+            ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
+      [for (r : environment::Reference | d.referencesNoStar())]
+        [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], ([r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/if]
+      [/for]
+      [for (r : environment::Reference | d.referencingStar())], ([r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/for]
+      );
+    [/if]
+          // Appel du constructeur de [d.buildDtoClassName()/], avec des dtos référençants, pour valider le constructeur  	
+          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
+    [for (r : environment::Reference | d.referencesNoStar())]
+      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], ([r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/if]
+    [/for]
+    [for (r : environment::Reference | d.referencingStar())], new [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]()[/for]
+    );
+          // Appel du constructeur de [d.buildDtoClassName()/], avec identifiants pour les dtos référençants; ce dto va être validé	
+          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
+    [for (r : environment::Reference | d.referencesNoStar())]
+      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.name.toLowerFirst().apply_variableDefault()/][/if]
+    [/for]
+    [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_variableDefault()/][/for]
+    );
+  [else]
+          // Appel du constructeur de [d.buildDtoClassName()/]; ce dto va être validé	
+          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
+    [for (r : environment::Reference | d.referencesNoStar())]
+      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.name.toLowerFirst().apply_variableDefault()/][/if]
+    [/for]
+    [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_variableDefault()/][/for]
+    );
+  [/if]
+  
+  [for (r : environment::Reference | d.referencesNoStar())]
+    [if (r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+            ['dto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodSet()/]([r.name.toLowerFirst().apply_variableDefault()/]);
+      
+    [/if]
+  [/for]
+        // test des valeurs
+  [if (d.isNotPersistent())]
+          // getId
+          [protected (d.getUserCodeId('getId')) startTagPrefix('// ') endTagPrefix('// ')]
+                  assertEquals([d.nameENUM_PK_ID().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getId(), "Champ id incorrect");
+          [/protected]
+    
+  [else]
+          assertEquals([d.nameENUM_PK_ID().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getId(), "Champ id incorrect");
+  [/if]
+  [for (a : environment::Attribute | d.attributesNotComputed())]
+    [if (d.dtoIsUser() and a.name = 'identifiant')]
+            assertEquals([a.name.normalize().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getIdentifiant(), "Champ [a.nameBaseAttribute()/] incorrect");
+    [else]
+            assertEquals([a.name.normalize().apply_variableDefault()/], ['dto'.apply_variableDefault()/].[a.name.normalize().apply_methodGet()/](), "Champ [a.nameBaseAttribute()/] incorrect");
+    [/if]
+  [/for]
+  [for (r : environment::Reference | d.referencesNoStar())]
+    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+            assertEquals([r.name.toLowerFirst().apply_variableDefault()/], ['dto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+    [else]
+            assertEquals([r.name.toLowerFirst().apply_variableDefault()/], ['dto'.apply_variableDefault()/].[r.name.toLowerFirst().apply_methodGet()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+    [/if]
+  [/for]
+  [for (r : environment::Reference | d.referencingStar())]
+          assertEquals([r.nameBaseReferenceInverse().apply_variableDefault()/], ['dto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+  [/for]
+  
+        // Remplissage références du dto
+        [protected (d.getUserCodeId('Remplissage références du dto')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+  
+        // appel des champs calculés
+  [for (a : environment::Attribute | d.attributesComputed())]
+    [if (d.dtoIsUser() and a.name = 'identifiant')]
+            ['dto'.apply_variableDefault()/].getIdentifiant();
+    [else]
+            ['dto'.apply_variableDefault()/].[a.name.normalize().apply_methodGet()/]();
+    [/if]
+  [/for]
+  
+        // appel du toString
+        assertNotNull(['dto'.apply_variableDefault()/].toString(), "toString incorrect");
+  
+        // dernière validation avec DTO valide
+        try
+        {
+           ['dto'.apply_variableDefault()/].validate();
+        }
+        catch (final Spi4jValidationException ['e'.apply_variableDefault()/])
+        {
+           fail(['e'.apply_variableDefault()/].toString());
+        }
+  
+  [if (not d.referencesNoStar()->isEmpty() or not d.referencesStar()->isEmpty())]
+          // déréferencement
+          unreference(['dto'.apply_variableDefault()/]);
+  [/if]
+     }
+  
+  [for (a : environment::Attribute | d.attributesNotComputed())]
+    [if (a.type.name <> null and not a.type.name.isStandardType() and not a.type.oclIsKindOf(environment::Enumeration))]
+      	/**
+          * getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/]
+          */   
+         private [a.type.name.toUpperFirst()/] getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/] ()
+         {
+      	  // getRandom_[a.type.name.toUpperFirst()/]
+      	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
+           
+           		return [if (a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
+           ;
+           
+         [/protected]
+      
+      
+         }
+    [/if]
+  [/for]
+  [if (not d.referencesNoStar()->isEmpty() or not d.referencesStar()->isEmpty())]
+    
+       /**
+        * Déréférencement des relations du DTO.
+        * @param ['dto'.apply_parameterMethodClassicIn()/]
+        *           le DTO
+        */
+    [if (not d.referencesStar()->isEmpty())]
+         @SuppressWarnings("unchecked")
+    [/if]
+       private void unreference (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/])
+       {
+    [for (r : environment::Reference | d.referencesNoStar())]
+            ['dto'.apply_parameterMethodClassicIn()/].[r.name.toLowerFirst().apply_methodSet()/](null);
+            assertNull(['dto'.apply_parameterMethodClassicIn()/].[r.name.toLowerFirst().apply_methodGet()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+    [/for]
+    [for (r : environment::Reference | d.referencesStar())]
+            ['dto'.apply_parameterMethodClassicIn()/].[r.getNameSetterListDto()/](Collections.EMPTY_LIST);
+            assertNotNull(['dto'.apply_parameterMethodClassicIn()/].[r.getNameGetterListDto()/](), "Champ [r.nameSimpleProperty()/] incorrect");
+    [/for]
+       }
+  [/if]
+  
+     /**
+      * Validation du DTO.
+      * @param ['dto'.apply_parameterMethodClassicIn()/]
+      *           le DTO à  valider
+      */
+     private void ['validate'.apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/])
+     {
+        try
+        {
+           ['dto'.apply_parameterMethodClassicIn()/].validate();
+        }
+        catch (final Spi4jValidationException ['e'.apply_variableDefault()/])
+        {
+           assertTrue(['e'.apply_variableDefault()/].getMessage().startsWith("Champ(s)"), "Message incorrect");
+        }
+     }
+  
+     /**
+      * Test de l'énumération des attributs du DTO.
+      */
+     @Test
+     public void ['test attributes'.apply_methodDefault()/] ()
+     {
+        for (final [d.buildAttributesEnumName()/] ['attribute'.apply_variableDefault()/] : [d.buildAttributesEnumName()/].values())
+        {
+           assertNotNull(['attribute'.apply_variableDefault()/].toString(), "name");
+           assertNotNull(['attribute'.apply_variableDefault()/].getName(), "name");
+           assertNotNull(['attribute'.apply_variableDefault()/].getDescription(), "description");
+           assertNotNull(['attribute'.apply_variableDefault()/].getSize(), "size");
+           assertNotNull(['attribute'.apply_variableDefault()/].getType(), "type");
+           assertNotNull(['attribute'.apply_variableDefault()/].isMandatory(), "mandatory");
+           // mise en cache
+           assertNotNull(['attribute'.apply_variableDefault()/].getGetterMethod(), "getter");
+           // lecture du cache
+           assertNotNull(['attribute'.apply_variableDefault()/].getGetterMethod(), "getter");
+           // mise en cache (si existant : champ non calculé)
+           final java.lang.reflect.Method ['setterMethod1'.apply_variableDefault()/] = ['attribute'.apply_variableDefault()/].getSetterMethod();
+           // lecture du cache (si existant : champ non calculé)
+           final java.lang.reflect.Method ['setterMethod2'.apply_variableDefault()/] = ['attribute'.apply_variableDefault()/].getSetterMethod();
+           // vérification que les 2 valeurs sont identiques
+           assertEquals(['setterMethod1'.apply_variableDefault()/], ['setterMethod2'.apply_variableDefault()/], "setter");
+        }
+     }
+  }[/template]
 
 [comment : Write all required imports. /]
-[d.writeImports()/]
-
-// [/protected]
-
-/**
- * Classe de test pour le DTO '[d.nameClassDto()/]'.
- * @author [getAuthorName()/]
- */
-// Annotation for class
-// [protected (d.getUserCodeId('Annotation for class'))]
-// [/protected]
-public class [d.buildDtoTestClassName()/] extends [getClassNameForBeanTester_Abs()/]
-{
-
-   /**
-    * Test des attributs.
-    */
-   @Test
-   public void [apply_methodDefault('test dto')/] ()
-   {
-      // génération des champs
-      final [genPkType()/] [apply_variableDefault(nameENUM_PK_ID())/] = getRandom[genPkType()/]();
-[for (a : Attribute | d.attributesNotComputed())]
-      final [a.genPropertyType()/] [apply_variableDefault(a.name.normalize())/] = [if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else] getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/]([if a.hasSize()][d.buildAttributesEnumName()/].[a.nameBaseAttribute()/].getSize()[/if])[/if];
-[/for]
-[for (r : Reference | d.referencesNoStar())]
-[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
-      final [genPkType()/] [apply_variableDefault(r.name.toLowerFirst())/] = getRandom[genPkType()/]();
-[else]
-      final [r.referencedType.oclAsType(DTO).buildDtoClassName()/] [apply_variableDefault(r.name.toLowerFirst())/] = new [r.referencedType.oclAsType(DTO).buildDtoClassName()/]();
-[/if]
-[/for]
-[for (r : Reference | d.referencingStar())]
-      final [genPkType()/] [apply_variableDefault(r.nameBaseReferenceInverse())/] = getRandom[genPkType()/]();
-[/for]
-      // instanciation et remplissage du dto
-      [d.buildDtoClassName()/] [apply_variableDefault('dto')/] = new [d.buildDtoClassName()/]();
-      // validation du DTO à plusieurs étapes
-      [apply_methodDefault('validate')/]([apply_variableDefault('dto')/]);
-[for (a : Attribute | d.attributesNotComputed())]
-[if (dtoIsUser(d) and a.name = 'identifiant')]
-      [apply_variableDefault('dto')/].setIdentifiant([apply_variableDefault(a.name.normalize())/]);
-[else]
-      [apply_variableDefault('dto')/].[apply_methodSet(a.name.normalize())/]([apply_variableDefault(a.name.normalize())/]);
-[/if]
-      [apply_methodDefault('validate')/]([apply_variableDefault('dto')/]);
-[/for]
-[for (r : Reference | d.referencesNoStar())]
-[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
-      [apply_variableDefault('dto')/].[apply_methodSet(r.name.toLowerFirst())/][namePK_ID()/]([apply_variableDefault(r.name.toLowerFirst())/]);
-[else]
-      [apply_variableDefault('dto')/].[apply_methodSet(r.name.toLowerFirst())/]([apply_variableDefault(r.name.toLowerFirst())/]);
-[/if]
-      [apply_methodDefault('validate')/]([apply_variableDefault('dto')/]);
-[/for]
-[for (r : Reference | d.referencingStar())]
-      [apply_variableDefault('dto')/].[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/]([apply_variableDefault(nameBaseReferenceInverse(r))/]);
-      [apply_methodDefault('validate')/]([apply_variableDefault('dto')/]);
-[/for]
-
-      [if d.hasReferencingStar()]
-         [if not d.hasReferencingOneStar()]
-      // Appel du constructeur de [d.buildDtoClassName()/], avec les dtos référençants valant null, pour valider le constructeur  	
-      [apply_variableDefault('dto')/] = new [d.buildDtoClassName()/]([apply_variableDefault(nameENUM_PK_ID())/][for (a : Attribute | d.attributesNotComputed())], [apply_variableDefault(a.name.normalize())/][/for][for (r : Reference | d.referencesNoStar())][if not r.referencedType.oclAsType(DTO).isNotPersistent()], ([r.referencedType.oclAsType(DTO).buildDtoClassName()/]) null[/if][/for][for (r : Reference | d.referencingStar())], ([r.containingType.oclAsType(DTO).buildDtoClassName()/]) null[/for]);
-         [/if]
-      // Appel du constructeur de [d.buildDtoClassName()/], avec des dtos référençants, pour valider le constructeur  	
-      [apply_variableDefault('dto')/] = new [d.buildDtoClassName()/]([apply_variableDefault(nameENUM_PK_ID())/][for (a : Attribute | d.attributesNotComputed())], [apply_variableDefault(a.name.normalize())/][/for][for (r : Reference | d.referencesNoStar())][if not r.referencedType.oclAsType(DTO).isNotPersistent()], ([r.referencedType.oclAsType(DTO).buildDtoClassName()/]) null[/if][/for][for (r : Reference | d.referencingStar())], new [r.containingType.oclAsType(DTO).buildDtoClassName()/]()[/for]);
-      // Appel du constructeur de [d.buildDtoClassName()/], avec identifiants pour les dtos référençants; ce dto va être validé	
-      [apply_variableDefault('dto')/] = new [d.buildDtoClassName()/]([apply_variableDefault(nameENUM_PK_ID())/][for (a : Attribute | d.attributesNotComputed())], [apply_variableDefault(a.name.normalize())/][/for][for (r : Reference | d.referencesNoStar())][if not r.referencedType.oclAsType(DTO).isNotPersistent()], [apply_variableDefault(r.name.toLowerFirst())/][/if][/for][for (r : Reference | d.referencingStar())], [apply_variableDefault(r.nameBaseReferenceInverse())/][/for]);
-      [else]
-      // Appel du constructeur de [d.buildDtoClassName()/]; ce dto va être validé	
-      [apply_variableDefault('dto')/] = new [d.buildDtoClassName()/]([apply_variableDefault(nameENUM_PK_ID())/][for (a : Attribute | d.attributesNotComputed())], [apply_variableDefault(a.name.normalize())/][/for][for (r : Reference | d.referencesNoStar())][if not r.referencedType.oclAsType(DTO).isNotPersistent()], [apply_variableDefault(r.name.toLowerFirst())/][/if][/for][for (r : Reference | d.referencingStar())], [apply_variableDefault(r.nameBaseReferenceInverse())/][/for]);
-      [/if]
-
-[for (r : Reference | d.referencesNoStar())]
-[if r.referencedType.oclAsType(DTO).isNotPersistent()]
-      [apply_variableDefault('dto')/].[apply_methodSet(r.name.toLowerFirst())/]([apply_variableDefault(r.name.toLowerFirst())/]);
-
-[/if]
-[/for]
-      // test des valeurs
-      [if d.isNotPersistent()]
-      // getId
-      // [protected (d.getUserCodeId('getId'))]
-      assertEquals([apply_variableDefault(nameENUM_PK_ID())/], [apply_variableDefault('dto')/].getId(), "Champ id incorrect");
-      // [/protected]
-      [else]
-      assertEquals([apply_variableDefault(nameENUM_PK_ID())/], [apply_variableDefault('dto')/].getId(), "Champ id incorrect");
-      [/if]
-[for (a : Attribute | d.attributesNotComputed())]
-[if (dtoIsUser(d) and a.name = 'identifiant')]
-      assertEquals([apply_variableDefault(a.name.normalize())/], [apply_variableDefault('dto')/].getIdentifiant(), "Champ [nameBaseAttribute(a)/] incorrect");
-[else]
-      assertEquals([apply_variableDefault(a.name.normalize())/], [apply_variableDefault('dto')/].[apply_methodGet(a.name.normalize())/](), "Champ [nameBaseAttribute(a)/] incorrect");
-[/if]
-[/for]
-[for (r : Reference | d.referencesNoStar())]
-[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
-      assertEquals([apply_variableDefault(r.name.toLowerFirst())/], [apply_variableDefault('dto')/].[apply_methodGet(r.name.toLowerFirst())/][namePK_ID()/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[else]
-      assertEquals([apply_variableDefault(r.name.toLowerFirst())/], [apply_variableDefault('dto')/].[apply_methodGet(r.name.toLowerFirst())/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[/if]
-[/for]
-[for (r : Reference | d.referencingStar())]
-      assertEquals([apply_variableDefault(r.nameBaseReferenceInverse())/], [apply_variableDefault('dto')/].[apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[/for]
-
-      // Remplissage références du dto
-      // [protected (d.getUserCodeId('Remplissage références du dto'))]
-
-      // [/protected]
-
-      // appel des champs calculés
-[for (a : Attribute | d.attributesComputed())]
-[if (dtoIsUser(d) and a.name = 'identifiant')]
-      [apply_variableDefault('dto')/].getIdentifiant();
-[else]
-      [apply_variableDefault('dto')/].[apply_methodGet(a.name.normalize())/]();
-[/if]
-[/for]
-
-      // appel du toString
-      assertNotNull([apply_variableDefault('dto')/].toString(), "toString incorrect");
-
-      // dernière validation avec DTO valide
-      try
-      {
-         [apply_variableDefault('dto')/].validate();
-      }
-      catch (final Spi4jValidationException [apply_variableDefault('e')/])
-      {
-         fail([apply_variableDefault('e')/].toString());
-      }
-
-[if not d.referencesNoStar()->isEmpty() or not d.referencesStar()->isEmpty()]
-      // déréferencement
-      unreference([apply_variableDefault('dto')/]);
-[/if]
-   }
-
-[for (a : Attribute | d.attributesNotComputed())]
-	[if ( (a.type.name <> null) and (not isStandardType(a.type.name)) and (not a.type.oclIsKindOf(Enumeration)))]
-	/**
-    * getRandom[genPropertyTypeNoGenerics(a).mapTypeFilter()/]
-    */   
-   private [a.type.name.toUpperFirst()/] getRandom[genPropertyTypeNoGenerics(a).mapTypeFilter()/] ()
-   {
-	  // getRandom_[a.type.name.toUpperFirst()/]
-	  // [protected (a.getUserCodeId('getRandom_'+a.type.name.toUpperFirst()))]
-
-		return [if ((a.type.name.contains('<')))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
-
-      // [/protected]
-
-   }
-	[/if]
-[/for]
-[if not d.referencesNoStar()->isEmpty() or not d.referencesStar()->isEmpty()]
-
-   /**
-    * Déréférencement des relations du DTO.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le DTO
-    */
-[if not d.referencesStar()->isEmpty()]
-   @SuppressWarnings("unchecked")
-[/if]
-   private void unreference (final [d.buildDtoClassName()/] [apply_parameterMethodClassicIn('dto')/])
-   {
-[for (r : Reference | d.referencesNoStar())]
-      [apply_parameterMethodClassicIn('dto')/].[apply_methodSet(r.name.toLowerFirst())/](null);
-      assertNull([apply_parameterMethodClassicIn('dto')/].[apply_methodGet(r.name.toLowerFirst())/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[/for]
-[for (r : Reference | d.referencesStar())]
-      [apply_parameterMethodClassicIn('dto')/].[getNameSetterListDto(r)/](Collections.EMPTY_LIST);
-      assertNotNull([apply_parameterMethodClassicIn('dto')/].[getNameGetterListDto(r)/](), "Champ [nameSimpleProperty(r)/] incorrect");
-[/for]
-   }
-[/if]
-
-   /**
-    * Validation du DTO.
-    * @param [apply_parameterMethodClassicIn('dto')/]
-    *           le DTO à  valider
-    */
-   private void [apply_methodDefault('validate')/] (final [d.buildDtoClassName()/] [apply_parameterMethodClassicIn('dto')/])
-   {
-      try
-      {
-         [apply_parameterMethodClassicIn('dto')/].validate();
-      }
-      catch (final Spi4jValidationException [apply_variableDefault('e')/])
-      {
-         assertTrue([apply_variableDefault('e')/].getMessage().startsWith("Champ(s)"), "Message incorrect");
-      }
-   }
-
-   /**
-    * Test de l'énumération des attributs du DTO.
-    */
-   @Test
-   public void [apply_methodDefault('test attributes')/] ()
-   {
-      for (final [d.buildAttributesEnumName()/] [apply_variableDefault('attribute')/] : [d.buildAttributesEnumName()/].values())
-      {
-         assertNotNull([apply_variableDefault('attribute')/].toString(), "name");
-         assertNotNull([apply_variableDefault('attribute')/].getName(), "name");
-         assertNotNull([apply_variableDefault('attribute')/].getDescription(), "description");
-         assertNotNull([apply_variableDefault('attribute')/].getSize(), "size");
-         assertNotNull([apply_variableDefault('attribute')/].getType(), "type");
-         assertNotNull([apply_variableDefault('attribute')/].isMandatory(), "mandatory");
-         // mise en cache
-         assertNotNull([apply_variableDefault('attribute')/].getGetterMethod(), "getter");
-         // lecture du cache
-         assertNotNull([apply_variableDefault('attribute')/].getGetterMethod(), "getter");
-         // mise en cache (si existant : champ non calculé)
-         final java.lang.reflect.Method [apply_variableDefault('setterMethod1')/] = [apply_variableDefault('attribute')/].getSetterMethod();
-         // lecture du cache (si existant : champ non calculé)
-         final java.lang.reflect.Method [apply_variableDefault('setterMethod2')/] = [apply_variableDefault('attribute')/].getSetterMethod();
-         // vérification que les 2 valeurs sont identiques
-         assertEquals([apply_variableDefault('setterMethod1')/], [apply_variableDefault('setterMethod2')/], "setter");
-      }
-   }
-}
-[/template]
-
-[comment : Write all required imports. /]
-[template private writeImports (d : DTO) post(trim())]
-[d.initImports()/]
-[d.addImport('org.junit.jupiter.api.Test')/]
-[d.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
-[d.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
-[d.addImport('static org.junit.jupiter.api.Assertions.assertEquals')/]
-[d.addImport('static org.junit.jupiter.api.Assertions.assertTrue')/]
-[d.addImport('static org.junit.jupiter.api.Assertions.fail')/]
-[d.addImport('fr.spi4j.exception.Spi4jValidationException')/]
-[d.addImport(getImportForBeanTester_Abs())/]
-
-[comment : List references for relational DTOs./]
-[for (r : Reference | d.references)]
-	[d.addImport(buildImportDto(r.referencedType.oclAsType(DTO)))/]
-	[d.addImport(buildPackageBusinessApiDto(d) + '.' + d.buildAttributesEnumName())/]
-[/for]
-
-[comment : List references for relational DTOs./]
-[for (r : Reference | d.referencingStar())]
-	[if (buildPackageBusinessApiDto(r.containingType.oclAsType(DTO)) <> buildPackageBusinessApiDto(d))]
-		[d.addImport(buildImportDto(r.containingType.oclAsType(DTO)))/]
-	[/if]
-[/for]
-
-[comment : List references for nul assertion. /]
-[for (r : Reference | d.referencesNoStar())]
-	[d.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
-[/for]
-
-[comment : List all attributes. /]
-[for (a : Attribute | d.attributes)][if a.type.oclIsKindOf(Enumeration) ]
-	[d.addImport(buildPackageEnum(a.type.oclAsType(Enumeration)) + '.' + a.type.oclAsType(Enumeration).buildEnumName())/]
-[/if][/for]
-
-[comment : Legacy, to be suppressed... /]
-[for (enum : Enumeration | d.getRoot().eAllContents(Enumeration))]
-	[d.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
-[/for]
-
-[d.flushImports()/]
-
+[template private writeImports(d : environment::DTO) post(self.trim())]
+  [d.initImports()/]
+  [d.addImport('org.junit.jupiter.api.Test')/]
+  [d.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
+  [d.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+  [d.addImport('static org.junit.jupiter.api.Assertions.assertEquals')/]
+  [d.addImport('static org.junit.jupiter.api.Assertions.assertTrue')/]
+  [d.addImport('static org.junit.jupiter.api.Assertions.fail')/]
+  [d.addImport('fr.spi4j.exception.Spi4jValidationException')/]
+  [d.addImport(d.getImportForBeanTester_Abs())/]
+  
+  [for (r : environment::Reference | d.references)]
+    	[d.addImport(r.referencedType.oclAsType(environment::DTO).buildImportDto())/]
+    	[d.addImport(d.buildPackageBusinessApiDto() + '.' + d.buildAttributesEnumName())/]
+  [/for]
+  
+  [for (r : environment::Reference | d.referencingStar())]
+    [if (r.containingType.oclAsType(environment::DTO).buildPackageBusinessApiDto() <> d.buildPackageBusinessApiDto())]
+      		[d.addImport(r.containingType.oclAsType(environment::DTO).buildImportDto())/]
+    [/if]
+  [/for]
+  
+  [for (r : environment::Reference | d.referencesNoStar())]
+    	[d.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
+  [/for]
+  
+  [for (a : environment::Attribute | d.attributes)]
+    [if (a.type.oclIsKindOf(environment::Enumeration))]
+      	[d.addImport(a.type.oclAsType(environment::Enumeration).buildPackageEnum() + '.' + a.type.oclAsType(environment::Enumeration).buildEnumName())/]
+    [/if]
+  [/for]
+  
+  [for (enum : environment::Enumeration | d.getRoot().eAllContents(environment::Enumeration))]
+    	[d.addImport(enum.buildPackageEnum() + '.' + enum.buildEnumName())/]
+  [/for]
+  
+  [d.flushImports()/]
 [/template]

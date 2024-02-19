@@ -67,6 +67,8 @@ public final class CinematicModelServices {
 		throw new IllegalStateException("Aucun état initial trouvé pour le flow " + p_flow.getName());
 	}
 
+	public static InitialState getInitialStateJavaService(final Flow p_flow){return getInitialState(p_flow);}
+
 	/**
 	 * Retourne les ViewStates débutant un Flow, sans passer par une transition avec
 	 * garde ou liée à un événement.
@@ -94,6 +96,8 @@ public final class CinematicModelServices {
 			return Collections.emptyList();
 		}
 	}
+
+	public static List<ViewState> getFirstViewStatesJavaService(final Flow p_flow){return getFirstViewStates(p_flow);}
 
 	/**
 	 * Cherche les états suivants un état source
@@ -176,6 +180,8 @@ public final class CinematicModelServices {
 		}
 		return v_states;
 	}
+
+	public static List<FlowState> getAllFollowingStatesWithoutGardOrEventJavaService(final FlowState p_state,final boolean p_followSubFlows){return getAllFollowingStatesWithoutGardOrEvent(p_state,p_followSubFlows);}
 
 	/**
 	 * Cherche les états suivants un état source RECURSIVEMENT, de type ViewState,
@@ -270,6 +276,8 @@ public final class CinematicModelServices {
 		return v_transitions;
 	}
 
+	public static Set<Transition> getTransitionsFromStateJavaService(final FlowState p_state,final boolean p_followSubFlows){return getTransitionsFromState(p_state,p_followSubFlows);}
+
 	/**
 	 * Recupere parmi l'ensemble des transitions attachees au controleur initial le
 	 * controleur cible pour la transition concernees par l'evenement. Par contre on
@@ -299,6 +307,8 @@ public final class CinematicModelServices {
 		}
 		return null;
 	}
+
+	public static ViewState getNextViewStateFromEventJavaService(final ViewState p_state,final ViewEvent p_event){return getNextViewStateFromEvent(p_state,p_event);}
 
 	/**
 	 * Recuperation d'un seul viewState a partir d'un point d'entree, de la
@@ -360,6 +370,8 @@ public final class CinematicModelServices {
 		return v_events;
 	}
 
+	public static List<ViewEvent> getEventsForViewContainerJavaService(final ViewContainer p_viewContainer){return getEventsForViewContainer(p_viewContainer);}
+
 	/**
 	 * 
 	 * @param p_viewContainer
@@ -376,6 +388,8 @@ public final class CinematicModelServices {
 		}
 		return v_elements;
 	}
+
+	public static List<AbstractViewElement> getViewElementsForViewContainerJavaService(final ViewContainer p_viewContainer){return getViewElementsForViewContainer(p_viewContainer);}
 
 	/**
 	 * Obtenir la liste des opérations associée à l'ActionState.
@@ -399,6 +413,8 @@ public final class CinematicModelServices {
 		}
 		return v_return;
 	}
+
+	public static List<Operation> getOperationsForActionStateJavaService(ActionState p_actionState){return getOperationsForActionState(p_actionState);}
 
 //	public static List<AbstractViewElement> getViewElementsForViewContainer(final ViewContainer p_viewContainer,
 //			List<AbstractViewElement> p_elements) {
@@ -522,6 +538,8 @@ public final class CinematicModelServices {
 		return new LinkedHashSet<ViewState>(v_statesList);
 	}
 
+	public static Set<ViewState> getViewStatesForViewContainerJavaService(final ViewContainer p_viewContainer){return getViewStatesForViewContainer(p_viewContainer);}
+
 	/**
 	 * Cherche les FlowEvents lancés par un ViewEvent
 	 * 
@@ -547,6 +565,8 @@ public final class CinematicModelServices {
 		Collections.sort(v_flowEventsList, new NameComparator());
 		return new LinkedHashSet<FlowEvent>(v_flowEventsList);
 	}
+
+	public static Set<FlowEvent> getFlowEventsForViewEventJavaService(final ViewEvent p_viewEvent){return getFlowEventsForViewEvent(p_viewEvent);}
 
 	/**
 	 * Cherche les FlowEvents lancés par un ViewEvent
@@ -611,6 +631,8 @@ public final class CinematicModelServices {
 		return null;
 	}
 
+	public static BoundableElement searchBindingForJavaService(final BoundableElement p_object){return searchBindingFor(p_object);}
+
 	/**
 	 * Recherche le binding pour un élément
 	 * 
@@ -643,6 +665,8 @@ public final class CinematicModelServices {
 		}
 		return null;
 	}
+
+	public static Entity searchBindingForEntityJavaService(final BoundableElement p_object){return searchBindingForEntity(p_object);}
 
 	/**
 	 * Comparateur d'objets Obeo suivant leur nom.

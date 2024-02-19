@@ -1,14 +1,13 @@
+[module genInitializeListener('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::jsf::common::packages/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::cinematic::jsf::common::name/]
+[import fr::pacman::cinematic::jsf::client::ui::pkg::initializelistener/]
+
 [comment encoding = UTF-8 /]
-[module genInitializeListener('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::cinematic::jsf::common::packages /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::cinematic::jsf::common::name /]
-[import fr::pacman::cinematic::jsf::client::ui::pkg::initializelistener /]
-
-[template public genInitializeListener(root : CinematicRoot)]
-[file (filename(getClientJsfSourceDir(),  getApplicationPackage() ,  'InitializationListener.java'), false, 'UTF-8')]
-[initializelistener(root)/]
-[/file]
+[template public genInitializeListener(root : cinematic::CinematicRoot)]
+  [file (root.getClientJsfSourceDir().filename(root.getApplicationPackage(), 'InitializationListener.java'), overwrite, 'UTF-8')]
+    [root.initializelistener()/]
+  [/file]
 [/template]
-

@@ -1,12 +1,9 @@
+[module names('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::convention::rule::classRule/]
+
 [comment encoding = UTF-8 /]
-[module names('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[template public nameSimpleEnum(e : environment::Enumeration) post(self.trim())]
+  [e.name.toUpperFirst()/][/template]
 
-[import fr::pacman::commons::convention::rule::classRule /]
-
-[template public nameSimpleEnum(e : Enumeration) post (trim())]
-[e.name.toUpperFirst()/]
-[/template]
-
-[query public buildEnumName(e : Enumeration) : String =
-apply_classEnum(e.name)
- /]
+[query public buildEnumName(e : environment::Enumeration) : String = e.name.apply_classEnum()/]

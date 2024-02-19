@@ -1,484 +1,250 @@
+[module services('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::services::AnnotationUtils/]
+
 [comment encoding = UTF-8 /]
-[module services('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-
 [comment : Get the spi4j ID for the security scheme. /]
 [comment : This method exist because of the inversion in swagger between 'key' and 'name' notions. /]
-[comment : Furthermore, the key is only for ApiKey else (Oauth2, OIDC) take the name .... / ]
-[query public getSpi4jId (s: SecurityScheme) : String = 
- 	if (s.type = soa::SecuritySchemeType::API_KEY and isLibraryRS()) then s.key else s.name endif
-/]
+[comment : Furthermore, the key is only for ApiKey else (Oauth2, OIDC) take the name .... /]
+[query public getSpi4jId(s : soa::SecurityScheme) : String = if s.type = soa::SecuritySchemeType::API_KEY and s.isLibraryRS() then s.key else s.name endif/]
 
 [comment : Get the key (in header, query, etc...) for the security scheme. /]
 [comment : This method exist because of the inversion in swagger between 'key' and 'name' notions. /]
-[query public getKey (s : SecurityScheme) : String = 
- 	s.name
-/]
+[query public getKey(s : soa::SecurityScheme) : String = s.name/]
 
-[comment: Check if the service has public operations (REST/SOAP/NONE). /]
-[query public hasPublicOperations(s : Service) : Boolean =
-    isValidService(s)
-	and s.ownedInterface.ownedOperations->exists(o : Operation | o.public)
-/]
+[comment  Check if the service has public operations (REST/SOAP/NONE). /]
+[query public hasPublicOperations(s : soa::Service) : Boolean = s.isValidService() and s.ownedInterface.ownedOperations->exists(o | o.public)/]
 
 [comment : Check if the component has public operations (REST/SOAP/NONE) ./]
-[query public hasPublicOperations (c : Component) : Boolean = 
-	isValidComponent(c)
-	and c.eAllContents(Operation)->exists(o : Operation | o.public)
-/]
+[query public hasPublicOperations(c : soa::Component) : Boolean = c.isValidComponent() and c.eAllContents(soa::Operation)->exists(o | o.public)/]
 
 [comment : Check if the service as REST operations. /]
-[query public hasRSOperations(s : Service) : Boolean =
-    useWS()
-	and hasPublicOperations(s)
-    and s.ownedInterface.ownedOperations->exists(
-    o : Operation | (o.public and o.exposition = soa::ExpositionKind::REST))
-/]
+[query public hasRSOperations(s : soa::Service) : Boolean = s.useWS() and s.hasPublicOperations() and s.ownedInterface.ownedOperations->exists(o | o.public and o.exposition = soa::ExpositionKind::REST)/]
 
 [comment : Check if the service has SOAP operations (CXF used only for SOAP). /]
-[query public hasCXFOperations(s : Service) : Boolean =
-    useWS()
-	and hasPublicOperations(s)
-    and s.ownedInterface.ownedOperations->exists(
-    o : Operation | (o.public and o.exposition = soa::ExpositionKind::SOAP))
-/]
+[query public hasCXFOperations(s : soa::Service) : Boolean = s.useWS() and s.hasPublicOperations() and s.ownedInterface.ownedOperations->exists(o | o.public and o.exposition = soa::ExpositionKind::SOAP)/]
 
 [comment : Check if the component has SOAP operations (CXF used only for SOAP). /]
-[query public hasCXFOperations (c : Component) : Boolean = 
-	useWS()
-	and hasPublicOperations(c)
-	and c.eAllContents(Operation)->exists(o : Operation | o.exposition = soa::ExpositionKind::SOAP)
-/]
+[query public hasCXFOperations(c : soa::Component) : Boolean = c.useWS() and c.hasPublicOperations() and c.eAllContents(soa::Operation)->exists(o | o.exposition = soa::ExpositionKind::SOAP)/]
 
 [comment : Check if the operation is of REST type. /]
-[query public isRSOperation(o : Operation) : Boolean =
-	isValidOperation(o)
-    and o.public
-    and o.exposition = soa::ExpositionKind::REST
-/]
+[query public isRSOperation(o : soa::Operation) : Boolean = o.isValidOperation() and o.public and o.exposition = soa::ExpositionKind::REST/]
 
 [comment : Check if the operation is of SOAP type. /]
-[query public isCXFOperation(o : Operation) : Boolean =
-    isValidOperation(o)
-    and o.public
-    and o.exposition = soa::ExpositionKind::SOAP
-/]
+[query public isCXFOperation(o : soa::Operation) : Boolean = o.isValidOperation() and o.public and o.exposition = soa::ExpositionKind::SOAP/]
 
 [comment : Check if the specific operation has x datas to put in the headers. /]
-[query public hasXDatas(o :Operation) : Boolean = 
-	false
-/]
+[query public hasXDatas(o : soa::Operation) : Boolean = false/]
 
 [comment : /]
-[query public addXDatas(o : Operation) : String = 
-	''
-/] 
+[query public addXDatas(o : soa::Operation) : String = ''/]
 
 [comment : Get the name of the first apiKey scheme founded in the list of securitySchemes. /]
-[query public getNameApiKeyScheme(s : Service) : String = 
-	s.ancestors(Component).securitySchemes->select(
-	s : SecurityScheme | s.type = soa::SecuritySchemeType::API_KEY)
-	->first().name
-/]
+[query public getNameApiKeyScheme(s : soa::Service) : String = s.ancestors(soa::Component)->collect(temp1 | temp1.securitySchemes)->select(s | s.type = soa::SecuritySchemeType::API_KEY)->first().name/]
 
 [comment : GENERAL : Check if the Component has secured operations. /]
-[query public isSecured (c : Component) : Boolean =
-	isValidComponent(c)
-	and not c.securitySchemes->isEmpty()
-/]
+[query public isSecured(c : soa::Component) : Boolean = c.isValidComponent() and not c.securitySchemes->isEmpty()/]
 
 [comment : Check if the component has an apiKey security defined. /]
-[query public isApiKey (c : Component) : Boolean = 
-	isSecured(c)
-	and c.securitySchemes->exists(s : SecurityScheme 
-    | s.type = soa::SecuritySchemeType::API_KEY)  
-/]
+[query public isApiKey(c : soa::Component) : Boolean = c.isSecured() and c.securitySchemes->exists(s | s.type = soa::SecuritySchemeType::API_KEY)/]
 
 [comment : Check if the component has an oauth2 security defined. /]
-[query public isOauth2 (c : Component) : Boolean = 
-	isSecured(c)
-	and c.securitySchemes->exists(s : SecurityScheme | 
-    (s.type = soa::SecuritySchemeType::OAUTH2 
-    or s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT))   
-/]
+[query public isOauth2(c : soa::Component) : Boolean = c.isSecured() and c.securitySchemes->exists(s | s.type = soa::SecuritySchemeType::OAUTH2 or s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)/]
 
 [comment : Check if the compopent has a basic auth security defined. /]
-[query public isBasicAuth (c : Component) : Boolean = 
-	isSecured(c)
-	and c.securitySchemes->exists(s : SecurityScheme | 
-    (s.type = soa::SecuritySchemeType::HTTP)) 
-/]
+[query public isBasicAuth(c : soa::Component) : Boolean = c.isSecured() and c.securitySchemes->exists(s | s.type = soa::SecuritySchemeType::HTTP)/]
 
 [comment : Check if the Service has secured operations. /]
-[query public isSecured (s : Service) : Boolean =
-	isValidService(s)
-	and (not s.securityApplications->isEmpty()
-	or not s.eAllContents(Operation)->select(o : Operation | o.isSecured())->isEmpty())
-/]
+[query public isSecured(s : soa::Service) : Boolean = s.isValidService() and (not s.securityApplications->isEmpty() or not s.eAllContents(soa::Operation)->select(o | o.isSecured())->isEmpty())/]
 
 [comment : Check if the operation has to use the secured filter. /]
-[query public isSecured (o : Operation) : Boolean = 
-	isValidOperation(o)
-	and not o.getAllSecurityApplications()->isEmpty()
-/]
+[query public isSecured(o : soa::Operation) : Boolean = o.isValidOperation() and not o.getAllSecurityApplications()->isEmpty()/]
 
 [comment : Check if the operation has security scheme and is not a rest op (spi4j security) /]
-[query public isPermissionSchemeSecured (o : Operation) : Boolean = 
-	o.isSecured()
-	and o.exposition = soa::ExpositionKind::NONE 
-/]
+[query public isPermissionSchemeSecured(o : soa::Operation) : Boolean = o.isSecured() and o.exposition = soa::ExpositionKind::NONE/]
 
 [comment : Check if the component has security scheme and is not a rest op (spi4j security) /]
-[query public isPermissionSchemeSecured (c : Component) : Boolean = 
-	c.isSecured()
-/]
+[query public isPermissionSchemeSecured(c : soa::Component) : Boolean = c.isSecured()/]
 
 [comment : Return the security scheme concerned by non rest op (spi4j security) (only first one). /]
-[query public getPermissionSchemeSecured (o : Operation) : SecurityScheme = 
-	o.getAllSecurityApplications().securityScheme->first()
-/]
+[query public getPermissionSchemeSecured(o : soa::Operation) : soa::SecurityScheme = o.getAllSecurityApplications()->asSequence()->collect(temp2 | temp2.securityScheme)->first()/]
 
 [comment : Return the security scheme concerned by non rest component (spi4j security) (only first one). /]
-[query public getPermissionSchemeSecured (c : Component) : SecurityScheme = 
-	c.securitySchemes->first()
-/]
+[query public getPermissionSchemeSecured(c : soa::Component) : soa::SecurityScheme = c.securitySchemes->first()/]
 
 [comment : Return all the associated tokens for the authentication mechanism. /]
-[query public getAuthenticationTokens (o : Operation) : String = 
-	if o.isValidOperation() and o.isSecured() then
-		o.getAllSecurityApplications().securityScheme.getSpi4jId()->asSet()->flatten()->sep(', ') 
-	else 
-		'no token found !'
-	endif
-/]
-
+[query public getAuthenticationTokens(o : soa::Operation) : String = if o.isValidOperation() and o.isSecured() then o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.securityScheme)->collect(temp4 | temp4.getSpi4jId())->asSet()->flatten()->sep(', ') else 'no token found !' endif/]
 
 [comment : Check if the operation is specific for auth token delivery. /]
-[query public isDefinedForAuthentication (o : Operation) :  Boolean =
-	isValidOperation(o)
-	and not o.getTokenType().oclIsUndefined()
-	and 'auth'.equalsIgnoreCase(o.getTokenType())
-/]
+[query public isDefinedForAuthentication(o : soa::Operation) : Boolean = o.isValidOperation() and not (o.getTokenType() = null) and 'auth'.equalsIgnoreCase(o.getTokenType())/]
 
 [comment : Check if the service contains a specific operation for auth token delivery. /]
-[query public isDefinedForAuthentication (s : Service) :  Boolean =
-	isValidService(s)
-	and s.eAllContents(Operation)->exists(
-	o : Operation | o.isDefinedForAuthentication())
-/]
+[query public isDefinedForAuthentication(s : soa::Service) : Boolean = s.isValidService() and s.eAllContents(soa::Operation)->exists(o | o.isDefinedForAuthentication())/]
 
 [comment : Return the value of the metadata 'AUTH_TOKEN'. /]
-[query private getTokenType (o : Operation) :  String =
-    invoke( 'fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-    Sequence{o.metadatas, 'AUTH_TOKEN'})	
-/]
+[query private getTokenType(o : soa::Operation) : String = o.metadatas.getAnnotationBody('AUTH_TOKEN')/]
 
 [comment : Get the specific internal operation in a dedicated authentication service. /]
-[query public getInternalAuthTokenOperation (s :Service) : Operation = 
-	if(isValidService(s)) then
-		s.ownedInterface.ownedOperations->select(
-		o : Operation | not o.public)->first()
-	else
-		null
-	endif
-/]
+[query public getInternalAuthTokenOperation(s : soa::Service) : soa::Operation = if s.isValidService() then s.ownedInterface.ownedOperations->select(o | not o.public)->first() else null endif/]
 
 [comment : GENERAL : Get the service with the operation defined for authentication./]
-[query public getServiceDefinedForAuthentication (c : Component) : Service = 
-	if isValidComponent(c) then 
-		c.eAllContents(Service)->select(s : Service | 
-		s.ownedInterface.ownedOperations->exists(o : Operation 
-		| o.isDefinedForAuthentication()))->including(null)->first()
-	else 
-		null
-	endif
-/]
+[query public getServiceDefinedForAuthentication(c : soa::Component) : soa::Service = if c.isValidComponent() then c.eAllContents(soa::Service)->select(s | s.ownedInterface.ownedOperations->exists(o | o.isDefinedForAuthentication()))->including(null)->first() else null endif/]
 
 [comment : GENERAL : Get the operation defined for authentication in the service (to be optimized let )./]
-[query public getOperationDefinedForAuthentication (s : Service) : Operation = 
-	if (isValidService(s) and not 
-		s.ownedInterface.ownedOperations->select(o : Operation 
-		| o.isDefinedForAuthentication())->isEmpty()) then 
-		s.ownedInterface.ownedOperations->select(o : Operation 
-		| o.isDefinedForAuthentication())->first()
-	else 
-		null
-	endif
-/]
+[query public getOperationDefinedForAuthentication(s : soa::Service) : soa::Operation = if s.isValidService() and not s.ownedInterface.ownedOperations->select(o | o.isDefinedForAuthentication())->isEmpty() then s.ownedInterface.ownedOperations->select(o | o.isDefinedForAuthentication())->first() else null endif/]
 
 [comment : Check if the facade must be injected with jersey hk2. /]
-[query public isFacadeHk2Injection (any : OclAny) : Boolean = 
-	 useWS()
-	 and useWsServiceInjection()
-/]
+[query public isFacadeHk2Injection(any : ecore::EObject) : Boolean = any.useWS() and any.useWsServiceInjection()/]
 
 [comment : Check if the facade muste be injected by a factory. /]
-[query public isFacadeFactory (any : OclAny) : Boolean = 
-	useWS()
-	and not useWsServiceInjection()
-/]
+[query public isFacadeFactory(any : ecore::EObject) : Boolean = any.useWS() and not any.useWsServiceInjection()/]
 
-[comment : Check if the service is dedicated for asynchronous operations. / ]
-[query public isAsynchronous (s : Service) : Boolean =
-	isValidService(s)
-	and s.synchronization = soa::SynchronizationKind::asynchronous
-/]
+[comment : Check if the service is dedicated for asynchronous operations. /]
+[query public isAsynchronous(s : soa::Service) : Boolean = s.isValidService() and s.synchronization = soa::SynchronizationKind::asynchronous/]
 
 [comment : Check if the operation has a return status defined. /]
-[query public hasResponseStatusCode(o : Operation) : Boolean =
-    isValidOperation(o)
-    and not o.output->first().statusCode.oclIsUndefined()
-    and o.output->first().statusCode.size() > 0
-/]
+[query public hasResponseStatusCode(o : soa::Operation) : Boolean = o.isValidOperation() and not (o.output->first().statusCode = null) and o.output->first().statusCode.size() > 0/]
 
 [comment : Check if the operation has a message status defined. /]
-[query public hasResponseStatusMsg(o : Operation) : Boolean =
-    isValidOperation(o)
-    and not o.output->first().statusMessage.oclIsUndefined()
-	and o.output->first().statusMessage.size() > 0
-/]
+[query public hasResponseStatusMsg(o : soa::Operation) : Boolean = o.isValidOperation() and not (o.output->first().statusMessage = null) and o.output->first().statusMessage.size() > 0/]
 
 [comment : Check (depends of the verb) if the operation needs to consume JSON. /]
-[query public hasToConsumeJson(o : Operation) : Boolean =
-    isValidOperation(o)
-    and  o.public
-    and (soa::Verb::PUT = o.verb or
-	     soa::Verb::PATCH = o.verb or
-	     soa::Verb::POST = o.verb)
-/]
+[query public hasToConsumeJson(o : soa::Operation) : Boolean = o.isValidOperation() and o.public and (soa::Verb::PUT = o.verb or soa::Verb::PATCH = o.verb or soa::Verb::POST = o.verb)/]
 
 [comment : Check if the operation needs a specific 'responseForCreate'. /]
-[query public isEligibleForCreateResponse(o : Operation) : Boolean =
-	isValidOperation(o)
-	and soa::Verb::POST = o.verb
-	and o.output->size() > 0
-	and not o.output->first().type.oclIsKindOf(DTO)
-/]
+[query public isEligibleForCreateResponse(o : soa::Operation) : Boolean = o.isValidOperation() and soa::Verb::POST = o.verb and o.output->size() > 0 and not o.output->first().type.oclIsKindOf(environment::DTO)/]
 
-[comment : Check if the operation has to be separated with facade first and then response. / ]
-[query public hasToExternalizeFacadeMethod (o : Operation) : Boolean =
-  	isValidOperation(o)
-  	and soa::Verb::GET <> o.verb 
-	and soa::Verb::HEAD <> o.verb
-  	and (o.output->size() = 0
-  	or not o.output->first().type.oclIsKindOf(DTO))
-/]
+[comment : Check if the operation has to be separated with facade first and then response. /]
+[query public hasToExternalizeFacadeMethod(o : soa::Operation) : Boolean = o.isValidOperation() and soa::Verb::GET <> o.verb and soa::Verb::HEAD <> o.verb and (o.output->size() = 0 or not o.output->first().type.oclIsKindOf(environment::DTO))/]
 
 [comment : Return the main URI for the service. /]
-[query public getUri (s : Service) : String =
-   if (s.eContainer(Component).URI.oclIsUndefined() 
-		or s.eContainer(Component).URI.size() = 0) then 
-		normalizePath('/' + s.eContainer(Component).buildUriComponentVersion() + s.URI).trim()
-   else 
-		normalizePath('/' + s.eContainer(Component).URI + '/' + s.URI).trim()
-   endif
-/]
+[query public getUri(s : soa::Service) : String = if s.eContainer(soa::Component).URI = null or s.eContainer(soa::Component).URI.size() = 0 then ('/' + s.eContainer(soa::Component).buildUriComponentVersion() + s.URI).normalizePath().trim() else ('/' + s.eContainer(soa::Component).URI + '/' + s.URI).normalizePath().trim() endif/]
 
 [comment : Return the crud URI for the service. /]
-[query public getCrudUri (d : DTO) : String = 
-	'/administration/' + d.name.toLower()
-/]
+[query public getCrudUri(d : environment::DTO) : String = '/administration/' + d.name.toLower()/]
 
 [comment : Check if a web app use security based on security schemes. /]
 [comment : For now do not check if the application is a web application (...but should)./]
-[query public useWebAppSecuritySchemes(m : System) : Boolean = 
-	m.useSpi4jSecurity() and not m.ownedComponents.securitySchemes->isEmpty()
-/]
+[query public useWebAppSecuritySchemes(m : soa::System) : Boolean = m.useSpi4jSecurity() and not m.ownedComponents->asSequence()->collect(temp5 | temp5.securitySchemes)->isEmpty()/]
 
 [comment : Return the Uri fragment from the component. (to be added with service Uri.)/]
-[query private buildUriComponentVersion (c : Component) : String = 
-	if (c.hasUriToUseVersion()) then c.apiVersion + '/' else '' endif
-/]
+[query private buildUriComponentVersion(c : soa::Component) : String = if c.hasUriToUseVersion() then c.apiVersion + '/' else '' endif/]
 
 [comment : Return the full (with Rest UTL pattern) main URI for the service. /]
-[query public getUriWithRSUrlPattern (s : Service) : String =
-  	normalizePath('/' + s.eContainer(Component).servers.URL->first() + s.getUri()).trim()
-/]
+[query public getUriWithRSUrlPattern(s : soa::Service) : String = ('/' + s.eContainer(soa::Component).servers->asSequence()->collect(temp6 | temp6.URL)->first() + s.getUri()).normalizePath().trim()/]
 
 [comment : Check if the paged operation has a specific metadata 'PAGE_SIZE'. /]
-[query public hasDefinedListPageSize(o : Operation) : Boolean =
-	isValidOperation(o)
- 	and not o.getDefinedListPageSize().oclIsUndefined()
-/]
+[query public hasDefinedListPageSize(o : soa::Operation) : Boolean = o.isValidOperation() and not (o.getDefinedListPageSize() = null)/]
 
 [comment : Return the value of the metadata 'PAGE_SIZE'. /]
-[query public getDefinedListPageSize(o : Operation) : Integer =
-    invoke('fr.pacman.commons.services.AnnotationUtils',
-	'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-	Sequence{o.metadatas, 'PAGE_SIZE'})
-/]
+[query public getDefinedListPageSize(o : soa::Operation) : Integer = o.metadatas.getAnnotationBody('PAGE_SIZE')/]
 
 [comment : Return the value of the metadata 'CALLBACK'. /]
-[query public getCallbackType (o : Operation) :  String =
-    invoke( 'fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-    Sequence{o.metadatas, 'CALLBACK'})	
-/]
+[query public getCallbackType(o : soa::Operation) : String = o.metadatas.getAnnotationBody('CALLBACK')/]
 
 [comment : Check if the user credentials must be passed by GET in Header./]
-[query public isCredentialsFromHead (o : Operation) : Boolean = 
-	isValidOperation(o)
-	and o.isDefinedForAuthentication() 
-	and soa::Verb::GET = o.verb
-/]
+[query public isCredentialsFromHead(o : soa::Operation) : Boolean = o.isValidOperation() and o.isDefinedForAuthentication() and soa::Verb::GET = o.verb/]
 
 [comment : Check if the user credentials must be passed by POST in body. /]
-[query public isCredentialsFromBody(o : Operation) : Boolean = 
-	isValidOperation(o)
-	and o.isDefinedForAuthentication()
-	and soa::Verb::POST = o.verb
-/]
+[query public isCredentialsFromBody(o : soa::Operation) : Boolean = o.isValidOperation() and o.isDefinedForAuthentication() and soa::Verb::POST = o.verb/]
 
 [comment : Check if the URI for the component must include the version. /]
-[query public hasUriToUseVersion (c : Component) :  Boolean =
-	isValidComponent(c)
-	and c.getHasUriToUseVersion().oclIsUndefined()
-	or not 'noUse'.equalsIgnoreCase(c.getHasUriToUseVersion())
-/]
+[query public hasUriToUseVersion(c : soa::Component) : Boolean = c.isValidComponent() and c.getHasUriToUseVersion() = null or not 'noUse'.equalsIgnoreCase(c.getHasUriToUseVersion())/]
 
 [comment : Return the value of the metadata 'API_VERSION'. /]
-[query private getHasUriToUseVersion (c : Component) :  String =
-    invoke( 'fr.pacman.commons.services.AnnotationUtils',
-    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
-    Sequence{c.metadatas, 'API_VERSION'})
-/]
+[query private getHasUriToUseVersion(c : soa::Component) : String = c.metadatas.getAnnotationBody('API_VERSION')/]
 
 [comment : Check if the service is not null. /]
-[query public isValidService(s : Service) : Boolean =
-	not s.oclIsUndefined()
-    and not s.ownedInterface.oclIsUndefined()
-/]
+[query public isValidService(s : soa::Service) : Boolean = not (s = null) and not (s.ownedInterface = null)/]
 
 [comment : Check if the operation is not null. /]
-[query public isValidOperation(o : Operation) : Boolean =
-   	not o.oclIsUndefined()
-/]
+[query public isValidOperation(o : soa::Operation) : Boolean = not (o = null)/]
 
 [comment : Check if the component is not null. /]
-[query public isValidComponent(c : Component) : Boolean = 
-	not c.oclIsUndefined()
-/]
+[query public isValidComponent(c : soa::Component) : Boolean = not (c = null)/]
 
 [comment : Check if the service contains a HEAD / OPTION operation (for specific import). /]
-[query public isMultiValueMapRequired (s : Service) : Boolean =
-	isValidService(s)
-	and s.ownedInterface.ownedOperations->exists(
-    o : Operation | (o.verb = soa::Verb::HEAD
-	or o.verb = soa::Verb::OPTIONS))
-/]
+[query public isMultiValueMapRequired(s : soa::Service) : Boolean = s.isValidService() and s.ownedInterface.ownedOperations->exists(o | o.verb = soa::Verb::HEAD or o.verb = soa::Verb::OPTIONS)/]
 
 [comment : Check if the operation contains a HEAD / OPTION operation (for specific import). /]
-[query public isMultiValueMapRequired (o : Operation) : Boolean =
-	isValidOperation(o)
-	and (o.verb = soa::Verb::HEAD
-    or o.verb = soa::Verb::OPTIONS)
-/]
+[query public isMultiValueMapRequired(o : soa::Operation) : Boolean = o.isValidOperation() and (o.verb = soa::Verb::HEAD or o.verb = soa::Verb::OPTIONS)/]
 
 [comment : Check if the operation needs the use of 'javax.ws.rs.client.Entity'. /]
-[query public isEntityRequired(o : Operation) : Boolean =
-  	o.isValidOperation() 
-	and not (soa::Verb::GET = o.verb
-    or soa::Verb::DELETE = o.verb
-    or soa::Verb::HEAD = o.verb)
-/]
+[query public isEntityRequired(o : soa::Operation) : Boolean = o.isValidOperation() and not (soa::Verb::GET = o.verb or soa::Verb::DELETE = o.verb or soa::Verb::HEAD = o.verb)/]
 
 [comment : Check if the service needs the import of 'javax.ws.rs.client.Entity'. /]
-[query public isEntityRequired(s : Service) : Boolean =
-   	s.isValidService()
-	and (s.ownedInterface.ownedOperations->exists(
-	o : Operation | not (o.verb = soa::Verb::GET
-	or o.verb = soa::Verb::DELETE 
-	or o.verb = soa::Verb::HEAD)))
-/]
+[query public isEntityRequired(s : soa::Service) : Boolean = s.isValidService() and s.ownedInterface.ownedOperations->exists(o | not (o.verb = soa::Verb::GET or o.verb = soa::Verb::DELETE or o.verb = soa::Verb::HEAD))/]
 
 [comment : Check if the paging mode is token. /]
-[query public isPagingToken (o : Operation) : Boolean = 
-	o.isValidOperation()
-	and o.paged
-	and 'auto'.equalsIgnoreCase(getPagingMode())
-/]
+[query public isPagingToken(o : soa::Operation) : Boolean = o.isValidOperation() and o.paged and 'auto'.equalsIgnoreCase(o.getPagingMode())/]
 
 [comment :  Check if the paging mode is user. /]
-[query public isPagingUser(o : Operation) : Boolean = 
-	o.isValidOperation()
-	and o.paged
-	and 'user'.equalsIgnoreCase(getPagingMode()) 
-/]
+[query public isPagingUser(o : soa::Operation) : Boolean = o.isValidOperation() and o.paged and 'user'.equalsIgnoreCase(o.getPagingMode())/]
 
 [comment : Check if the location of the api key is header. /]
-[query public isApiKeyHeader( s: SecurityScheme) : Boolean = 
-	s.apiKeyLocation = soa::ApiKeyLocation::HEADER
-/]
+[query public isApiKeyHeader(s : soa::SecurityScheme) : Boolean = s.apiKeyLocation = soa::ApiKeyLocation::HEADER/]
 
 [comment : Check if the location of the api key is cookie. /]
-[query public isApiKeyCookie( s: SecurityScheme) : Boolean = 
-	s.apiKeyLocation = soa::ApiKeyLocation::COOKIE
-/]
+[query public isApiKeyCookie(s : soa::SecurityScheme) : Boolean = s.apiKeyLocation = soa::ApiKeyLocation::COOKIE/]
 
 [comment : Check if the location of the api key is query. /]
-[query public isApiKeyQuery( s: SecurityScheme) : Boolean = 
-	s.apiKeyLocation = soa::ApiKeyLocation::QUERY
-/]
+[query public isApiKeyQuery(s : soa::SecurityScheme) : Boolean = s.apiKeyLocation = soa::ApiKeyLocation::QUERY/]
 
 [comment : Get the DTO between input parameters. /]
-[query public getInputDto (o : Operation) : Parameter = 
-	o.input->first()
-/]
+[query public getInputDto(o : soa::Operation) : soa::Parameter = o.input->first()/]
 
 [comment : add parameters for paging in methods'signatures. /]
-[template public paramsInForPagingIfNeeded (o : Operation, type : Boolean)]
-[if o.paged][if o.input->size() > 0], [/if][if type]final int [/if][apply_parameterMethodClassicIn('offset')/], [if type]final int [/if][apply_parameterMethodClassicIn('limit')/][/if]
+[template public paramsInForPagingIfNeeded(o : soa::Operation, type : Boolean)]
+  [if (o.paged)]
+    [if (o.input->size() > 0)], [/if]
+    [if (type)]final int [/if]
+    ['offset'.apply_parameterMethodClassicIn()/], [if (type)]final int [/if]
+    ['limit'.apply_parameterMethodClassicIn()/][/if]
 [/template]
 
 [comment : If paged list add a new method to get the total count of paged request. true if RS facade/]
-[template public addMethodTotalCountForPagingIfNeeded (o : Operation, s : String, b : Boolean)]
-[if o.paged]
-/**
-* Méthode automatiquement générée pour la pagination de l'opération : [o.name /]
-* @return Le nombre total d'éléments pour l'opération.
-*/
-@Override
-public int [apply_methodDefault(o.name + ' total count')/]()
-{
-	// [protected (o.getUserCodeId(o.name))]
-
-	[comment : write method for RsFacade. /]
-	[if b]
-	return [buildAppliUserBusinessGenClassName()/].get[s/] ().[apply_methodDefault(o.name + ' total count')/]();
-	[comment : write methode for Facade. /]
-	[else]
-	// TODO Méthode à implémenter
-	throw new UnsupportedOperationException ();
-	[/if]
-
-	// [/protected]
-}
-[/if]
+[template public addMethodTotalCountForPagingIfNeeded(o : soa::Operation, s : String, b : Boolean)]
+  [if (o.paged)]
+    /**
+    * Méthode automatiquement générée pour la pagination de l'opération : [o.name/]
+    * @return Le nombre total d'éléments pour l'opération.
+    */
+    @Override
+    public int [(o.name + ' total count').apply_methodDefault()/]()
+    {
+    	[protected (o.getUserCodeId(o.name)) startTagPrefix('// ') endTagPrefix('// ')]
+       
+       [if (b)]
+         	return [o.buildAppliUserBusinessGenClassName()/].get[s/] ().[(o.name + ' total count').apply_methodDefault()/]();
+       [else]
+         	// TODO Méthode à implémenter
+         	throw new UnsupportedOperationException ();
+       [/if]
+       
+     [/protected]
+    
+    }
+  [/if]
 [/template]
 
 [comment : If paged list add a new interface method to get the total count of paged request. /]
-[template public addInterfaceTotalCountForPagingIfNeeded (o : Operation)]
-[if o.paged]
-/**
-* Méthode spécifique pour la pagination de l'opération : [o.name /]
-* @return le nombre total d'éléments pour l'opération.
-*/
-// Annotations Methode' + o.name + 'total count
-// [protected (o.getUserCodeId('Annotations Methode' + o.name + 'total count'))]
-
-// [/protected]
-int [apply_methodDefault(o.name + ' total count')/]();
-[/if]
+[template public addInterfaceTotalCountForPagingIfNeeded(o : soa::Operation)]
+  [if (o.paged)]
+    /**
+    * Méthode spécifique pour la pagination de l'opération : [o.name/]
+    * @return le nombre total d'éléments pour l'opération.
+    */
+    // Annotations Methode' + o.name + 'total count
+    [protected (o.getUserCodeId('Annotations Methode' + o.name + 'total count')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+    [/protected]
+    
+    int [(o.name + ' total count').apply_methodDefault()/]();
+  [/if]
 [/template]
-
-
-

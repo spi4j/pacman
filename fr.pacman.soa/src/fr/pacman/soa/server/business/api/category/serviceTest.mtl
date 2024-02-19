@@ -1,439 +1,431 @@
-[comment encoding = UTF-8 /]
-[module serviceTest('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                    'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module serviceTest('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::comments /]
-
-[import fr::pacman::commons::types::packages /]
-[import fr::pacman::commons::types::names /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::services::SecurityUtils /]
-[import fr::pacman::commons::common::imports /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::types::packages/]
+[import fr::pacman::commons::types::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::commons::soa::common::classes/]
-[import fr::pacman::commons::soa::common::references /]
-[import fr::pacman::commons::soa::common::attributes /]
-[import fr::pacman::commons::soa::common::packages /]
-[import fr::pacman::commons::soa::common::names /]
-[import fr::pacman::commons::soa::common::utils /]
-
+[import fr::pacman::commons::soa::common::references/]
+[import fr::pacman::commons::soa::common::attributes/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::soa::common::utils/]
 [import fr::pacman::soa::common::classes/]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
 
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
+[comment encoding = UTF-8 /]
+[comment le Service existe sans DTO /]
+[template public serviceTest(s : soa::Service)]
+  [s.serviceTest(s.dtoFromService(), false)/][/template]
 
+[template public serviceTest(d : environment::DTO, referentiel : Boolean)]
+  [d.serviceFromDto().serviceTest(d, referentiel)/][/template]
 
-
-[comment] le Service existe sans DTO [/comment]
-[template public serviceTest(s : Service)]
-[serviceTest(s, dtoFromService(s), false)/]
-[/template]
-
-[template public serviceTest(d : DTO, referentiel : Boolean)]
-[serviceTest(serviceFromDto(d), d, referentiel)/]
-[/template]
-
-[comment] le Service et le DTO existent [/comment]
-[template public serviceTest(s : Service, d : DTO, referentiel : Boolean)]
-[licence()/]
-[let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
-package [buildPackageBusinessApiServiceDto(s, d)/];
-// [protected ('for imports')]
-
-[comment : Add all required imports. /]
-[d.writeImports(s, referentiel)/]
-
-// [/protected]
-
-/**
- * Classe de test du service '[buildServiceInterfaceName(s, d)/]'.
- * @author [getAuthorName()/]
- */
-// Annotation for class
-// [protected (s.getUserCodeId('Annotation for class'))]
-// [/protected]
-public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTester_Abs()/]
-{ 
-   [if not d.isNotPersistent()]
-   /** Le 'UserPersistence' de l'application. */
-   private static [buildUserPersistenceAppClassName()/] [apply_attributeStatic('user persistence')/];
-   [/if]
-
-   /** Le '[buildServiceInterfaceName(s, d)/]' testé. */
-   [if not useTestsCRUD()]
-   @SuppressWarnings("all")
-   [/if]
-   private static [buildServiceInterfaceName(s, d)/] [apply_attributeStatic('service')/];
-
-[if hasCrud(d) and useTestsCRUD()]
-   /** L'id du '[buildDtoClassName(d)/]' stocké en base. */
-   private static [genPkType()/] [apply_attributeStatic('crud id')/];
-
-   /**
-    * Définition du [apply_attributeStatic('crud id')/].
-    * @param [apply_parameterMethodClassicIn('crud id')/]
-    *           le [apply_attributeStatic('crud id')/]
-    */
-   public static void [apply_methodDefault('set crud id')/] (final Long [apply_parameterMethodClassicIn('crud id')/])
-   {
-      [buildServiceTestClassName(s, d)/].[apply_attributeStatic('crud id')/] = [apply_parameterMethodClassicIn('crud id')/];
-   }
-
-[/if]
-   /**
-    * Méthode d'initialisation de la classe de tests.
-    */
-   @BeforeAll
-   public static void [apply_methodDefault('set up before class')/] ()
-   {  
-	  [if not d.isNotPersistent()]
-      Parameters.setH2Database();
-      [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/] ();
+[comment le Service et le DTO existent /]
+[template public serviceTest(s : soa::Service, d : environment::DTO, referentiel : Boolean)]
+  [s.licence()/]
+  [let self = if not (s = null) then s else if not (d = null) then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
+    package [s.buildPackageBusinessApiServiceDto(d)/];
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [d.writeImports(s, referentiel)/]
+      
+    [/protected]
+    
+    
+    /**
+     * Classe de test du service '[s.buildServiceInterfaceName(d)/]'.
+     * @author [s.getAuthorName()/]
+     */
+    // Annotation for class
+    [protected (s.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
+    [/protected]
+    
+    public class [s.buildServiceTestClassName(d)/]  extends [s.getClassNameForBeanTester_Abs()/]
+    { 
+    [if (not d.isNotPersistent())]
+         /** Le 'UserPersistence' de l'application. */
+         private static [s.buildUserPersistenceAppClassName()/] ['user persistence'.apply_attributeStatic()/];
+    [/if]
+    
+       /** Le '[s.buildServiceInterfaceName(d)/]' testé. */
+    [if (not s.useTestsCRUD())]
+         @SuppressWarnings("all")
+    [/if]
+       private static [s.buildServiceInterfaceName(d)/] ['service'.apply_attributeStatic()/];
+    
+    [if (d.hasCrud() and s.useTestsCRUD())]
+         /** L'id du '[d.buildDtoClassName()/]' stocké en base. */
+         private static [s.genPkType()/] ['crud id'.apply_attributeStatic()/];
+      
+         /**
+          * Définition du ['crud id'.apply_attributeStatic()/].
+          * @param ['crud id'.apply_parameterMethodClassicIn()/]
+          *           le ['crud id'.apply_attributeStatic()/]
+          */
+         public static void ['set crud id'.apply_methodDefault()/] (final Long ['crud id'.apply_parameterMethodClassicIn()/])
+         {
+            [s.buildServiceTestClassName(d)/].['crud id'.apply_attributeStatic()/] = ['crud id'.apply_parameterMethodClassicIn()/];
+         }
+      
+    [/if]
+       /**
+        * Méthode d'initialisation de la classe de tests.
+        */
+       @BeforeAll
+       public static void ['set up before class'.apply_methodDefault()/] ()
+       {  
+    [if (not d.isNotPersistent())]
+            Parameters.setH2Database();
+            ['user persistence'.apply_attributeStatic()/] = [s.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/] ();
+    [/if]
+          ['service'.apply_attributeStatic()/] = [s.buildAppliUserBusinessGenClassName()/].[('get ' + s.buildServiceName(d)).apply_methodDefault()/] ();
+    
+          // set up before class
+          [protected (s.getUserCodeId('set up before class')) startTagPrefix('// ') endTagPrefix('// ')]
+          [/protected]
+    
+       }
+    
+       /**
+        * Méthode d'initialisation de tests.
+        */
+       @BeforeEach
+       public void ['set up'.apply_methodDefault()/] ()
+       {
+    [if (not d.isNotPersistent())]
+      	  ['user persistence'.apply_attributeStatic()/].begin ();
+    [/if]
+    
+          // set up
+          [protected (s.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
+          [/protected]
+    
+       }
+    
+    [if (d.hasCrud())]
+      [if (s.useTestsCRUD())]
+           /**
+            * Test de recherche de toutes les entitys.
+            * @throws Throwable
+            *            exception
+            */
+           @Test
+           public void ['test find all'.apply_methodDefault()/] () throws Throwable
+           {
+        [if (referentiel)]
+                final List<[d.buildDtoClassName()/]> ['all'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findAll ();
+          
+                assertTrue(!['all'.apply_variableFinal()/].isEmpty (), "Aucun dto n'a été trouvé dans le référentiel");
+          
+                final [d.buildDtoClassName()/] ['first'.apply_variableFinal()/] = ['all'.apply_variableFinal()/].get (0);
+                ['set crud id'.apply_methodDefault()/] (['first'.apply_variableFinal()/].getId ());
+          
+                assertNotNull(['crud id'.apply_attributeStatic()/], "Le premier dto trouvé dans le référentiel n'a pas de clé primaire");
+        [else]
+                ['test create'.apply_methodDefault()/] ();
+          
+                final List<[d.buildDtoClassName()/]> ['all'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findAll ();
+                assertNotNull(DtoUtil.findInCollectionById (['all'.apply_variableFinal()/], ['crud id'.apply_attributeStatic()/]), 
+          			"Le dto n'a pas été trouvé dans la liste de tous les dto");
+        [/if]
+        
+              // findAll assertions
+              [protected (s.getUserCodeId('findAll assertions')) startTagPrefix('// ') endTagPrefix('// ')]
+                
+              [/protected]
+        
+           }
+        
+        [if (not referentiel)]
+             /**
+              * Test de création de l'entity.
+              * @throws Throwable
+              *            exception
+              */
+             @Test
+             public void ['test create'.apply_methodDefault()/] () throws Throwable
+             {
+                final [d.buildDtoClassName()/] [d.buildDtoClassName().apply_variableFinal()/] = new [d.buildDtoClassName()/] ();
+          
+                // create
+                [protected (s.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
+                        // TODO renseigner données de test
+                  [for (a : environment::Attribute | d.attributesNotComputed())]
+                    [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
+                            [d.buildDtoClassName().apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
+                    [else]
+                            [d.buildDtoClassName().apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]
+                      );
+                    [/if]
+                  [/for]
+                  [for (r : environment::Reference | d.referencesNoStar())]
+                    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+                            [d.buildDtoClassName().apply_variableFinal()/].[r.name.normalize().toLowerFirst().apply_methodSet()/][r.namePK_ID()/] (1L);
+                    [else]
+                            [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetter()/]new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ());
+                    [/if]
+                  [/for]
+                  [for (r : environment::Reference | d.referencingStar())]
+                          [d.buildDtoClassName().apply_variableFinal()/].[r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/] (1L);
+                  [/for]
+                  [for (r : environment::Reference | d.referencesStarStar())]
+                    
+                          /* ajout d un dto pour la référence [r.name/] */
+                          final [s.buildServiceInterfaceName(r.referencedType.oclAsType(environment::DTO))/]  [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/];
+                          [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/] = [r.buildAppliUserBusinessGenClassName()/].[('get ' + r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service').apply_methodDefault()/] ();
+                          final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ();
+                    [for (a : environment::Attribute | r.referencedType.oclAsType(environment::DTO).attributesNotComputed())]
+                      [if (a.useSpi4jSecurity() and r.referencedType.oclAsType(environment::DTO).dtoIsUser() and a.name = 'identifiant')]
+                              [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
+                      [else]
+                              [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]
+                        );
+                      [/if]
+                    [/for]
+                          final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/].save ([(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
+                          final List <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = new ArrayList <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> ();
+                          [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].add([('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
+                          [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetterListDto()/]([('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
+                  [/for]
+                  
+                [/protected]
+          
+          
+                final [d.buildDtoClassName()/] [('created' + d.buildDtoClassName()).apply_variableFinal()/] = ['service'.apply_attributeStatic()/].save ([d.buildDtoClassName().apply_variableFinal()/]);
+          
+                ['set crud id'.apply_methodDefault()/] ([('created' + d.buildDtoClassName()).apply_variableFinal()/].getId ());
+          
+                assertNotNull ([('created' + d.buildDtoClassName()).apply_variableFinal()/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
+          
+                // create assertions
+                [protected (s.getUserCodeId('create assertions')) startTagPrefix('// ') endTagPrefix('// ')]
+                  
+                  [for (r : environment::Reference | d.referencesStarStar())]
+                    
+                          /* test de la bonne insertion de la référence [r.name/] */
+                          final List <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name + ' read').apply_variableFinal()/] = ['service'.apply_attributeStatic()/].[('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (['crud id'.apply_attributeStatic()/]);
+                          assertTrue(![('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name + ' read').apply_variableFinal()/].isEmpty(), "La relation [r.name/] a bien été créée");
+                  [/for]
+                  
+                [/protected]
+          
+             }
+          
+        [/if]
+           /**
+            * Test de recherche par identifiant de l'entity.
+            * @throws Throwable
+            *            exception
+            */
+           @Test
+           public void ['test find by id'.apply_methodDefault()/] () throws Throwable
+           {
+        [if (referentiel)]
+                ['test find all'.apply_methodDefault()/] ();
+        [else]
+                ['test create'.apply_methodDefault()/] ();
+        [/if]
+        
+              final [d.buildDtoClassName()/] ['dto'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findById (['crud id'.apply_attributeStatic()/]);
+              assertNotNull (['dto'.apply_variableFinal()/], "Le dto devrait exister dans le référentiel");
+              assertNotNull (['dto'.apply_variableFinal()/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
+              assertNotNull (['dto'.apply_variableFinal()/].toString (), "Le dto créé devrait avoir un toString");
+        
+              // findById assertions
+              [protected (s.getUserCodeId('findById assertions')) startTagPrefix('// ') endTagPrefix('// ')]
+                
+              [/protected]
+        
+           }
+        
+        [if (not referentiel)]
+             /**
+              * Test de mise à jour de l'entity.
+              * @throws Throwable
+              *            exception
+              */
+             @Test
+             public void ['test update'.apply_methodDefault()/] () throws Throwable
+             {
+                ['test create'.apply_methodDefault()/] ();
+          
+                final [d.buildDtoClassName()/] ['dto'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findById (['crud id'.apply_attributeStatic()/]);
+          
+                // update
+                [protected (s.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
+                  
+                  [for (r : environment::Reference | d.referencesNoStar())]
+                    [if (r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+                            ['dto'.apply_variableFinal()/].[r.getNameSetter()/] (new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ());
+                      
+                    [/if]
+                  [/for]
+                [/protected]
+          
+          
+                final [d.buildDtoClassName()/] ['updated dto'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].save (['dto'.apply_variableFinal()/]);
+          
+                assertNotNull (['updated dto'.apply_variableFinal()/].getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
+          
+                // update assertions
+                [protected (s.getUserCodeId('update assertions')) startTagPrefix('// ') endTagPrefix('// ')]
+                  
+                [/protected]
+          
+             }
+          
+             /**
+              * Test de suppression de l'entity.
+              * @throws Throwable
+              *            exception
+              */
+             @Test
+             public void ['test delete'.apply_methodDefault()/] () throws Throwable
+             {
+                ['test create'.apply_methodDefault()/] ();
+          
+                final [d.buildDtoClassName()/] ['dto'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findById (['crud id'.apply_attributeStatic()/]);
+          
+                ['service'.apply_attributeStatic()/].delete(['dto'.apply_variableFinal()/]);
+                final List<[d.buildDtoClassName()/]> ['all'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findAll ();
+                assertNull (DtoUtil.findInCollectionById (['all'.apply_variableFinal()/], crudId), 
+          			"Le dto ne devrait plus exister dans la liste de tous les dto");
+          
+                // delete assertions
+                [protected (s.getUserCodeId('delete assertions')) startTagPrefix('// ') endTagPrefix('// ')]
+                  
+                [/protected]
+          
+             }
+          
+        [/if]
       [/if]
-      [apply_attributeStatic('service')/] = [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s, d))/] ();
-
-      // set up before class
-      // [protected (s.getUserCodeId('set up before class'))]
-      // [/protected]
-   }
-
-   /**
-    * Méthode d'initialisation de tests.
-    */
-   @BeforeEach
-   public void [apply_methodDefault('set up')/] ()
-   {
-	  [if not d.isNotPersistent()]
-	  [apply_attributeStatic('user persistence')/].begin ();
-	  [/if]
-
-      // set up
-      // [protected (s.getUserCodeId('set up'))]
-      // [/protected]
-   }
-
-[if hasCrud(d)]
-[if useTestsCRUD()]
-   /**
-    * Test de recherche de toutes les entitys.
-    * @throws Throwable
-    *            exception
-    */
-   @Test
-   public void [apply_methodDefault('test find all')/] () throws Throwable
-   {
-[if referentiel]
-      final List<[buildDtoClassName(d)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('service')/].findAll ();
-
-      assertTrue(![apply_variableFinal('all')/].isEmpty (), "Aucun dto n'a été trouvé dans le référentiel");
-
-      final [buildDtoClassName(d)/] [apply_variableFinal('first')/] = [apply_variableFinal('all')/].get (0);
-      [apply_methodDefault('set crud id')/] ([apply_variableFinal('first')/].getId ());
-
-      assertNotNull([apply_attributeStatic('crud id')/], "Le premier dto trouvé dans le référentiel n'a pas de clé primaire");
-[else]
-      [apply_methodDefault('test create')/] ();
-
-      final List<[buildDtoClassName(d)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('service')/].findAll ();
-      assertNotNull(DtoUtil.findInCollectionById ([apply_variableFinal('all')/], [apply_attributeStatic('crud id')/]), 
-			"Le dto n'a pas été trouvé dans la liste de tous les dto");
-[/if]
-
-      // findAll assertions
-      // [protected (s.getUserCodeId('findAll assertions'))]
-
-      // [/protected]
-   }
-
-[if not referentiel]
-   /**
-    * Test de création de l'entity.
-    * @throws Throwable
-    *            exception
-    */
-   @Test
-   public void [apply_methodDefault('test create')/] () throws Throwable
-   {
-      final [buildDtoClassName(d)/] [apply_variableFinal(buildDtoClassName(d))/] = new [buildDtoClassName(d)/] ();
-
-      // create
-      // [protected (s.getUserCodeId('create'))]
-      // TODO renseigner données de test
-  [for (a : Attribute | d.attributesNotComputed())]
-[if (useSpi4jSecurity() and dtoIsUser(d) and a.name = 'identifiant')]
-      [apply_variableFinal(buildDtoClassName(d))/].setIdentifiant ([defaultValueForColumnType(a.genPropertyType())/]);
-[else]
-      [apply_variableFinal(buildDtoClassName(d))/].[a.getNameSetter()/] ([if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][defaultValueForColumnType(a.genPropertyType())/][/if]);
-[/if]
-  [/for]
-  [for (r : Reference | d.referencesNoStar())]
-[if not r.referencedType.oclAsType(DTO).isNotPersistent()]
-      [apply_variableFinal(buildDtoClassName(d))/].[apply_methodSet(r.name.normalize().toLowerFirst())/][namePK_ID()/] (1L);
-[else]
-      [apply_variableFinal(buildDtoClassName(d))/].[r.getNameSetter()/]new [r.referencedType.oclAsType(DTO).buildDtoClassName()/] ());
-[/if]
-  [/for]
-  [for (r : Reference | d.referencingStar())]
-      [apply_variableFinal(buildDtoClassName(d))/].[apply_methodSet(r.nameBaseReferenceInverse())/][namePK_ID()/] (1L);
-  [/for]
-[for (r : Reference | d.referencesStarStar())]
-
-      /* ajout d un dto pour la référence [r.name/] */
-      final [buildServiceInterfaceName(s , r.referencedType.oclAsType(DTO))/]  [apply_variableFinal(r.referencedType.oclAsType(DTO).buildSimpleDtoName() + ' service' + r.name )/];
-      [apply_variableFinal(r.referencedType.oclAsType(DTO).buildSimpleDtoName() + ' service' + r.name )/] = [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + r.referencedType.oclAsType(DTO).buildSimpleDtoName() + ' service' )/] ();
-      final [buildDtoClassName(r.referencedType.oclAsType(DTO))/] [apply_variableFinal(buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name ) /] = new [buildDtoClassName(r.referencedType.oclAsType(DTO))/] ();
-  [for (a : Attribute | r.referencedType.oclAsType(DTO).attributesNotComputed())]
-[if (useSpi4jSecurity() and dtoIsUser(r.referencedType.oclAsType(DTO)) and a.name = 'identifiant')]
-      [apply_variableFinal(buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name )/].setIdentifiant ([defaultValueForColumnType(a.genPropertyType())/]);
-[else]
-      [apply_variableFinal(buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name )/].[a.getNameSetter()/] ([if a.type.oclIsTypeOf(Enumeration)] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]") [else][defaultValueForColumnType(a.genPropertyType())/][/if]);
-[/if]
-  [/for]
-      final [buildDtoClassName(r.referencedType.oclAsType(DTO))/] [apply_variableFinal('created ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name ) /] = [apply_variableFinal(r.referencedType.oclAsType(DTO).buildSimpleDtoName() + ' service' + r.name )/].save ([apply_variableFinal(buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name )/]);
-      final List <[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_variableFinal('list ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name) /] = new ArrayList <[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> ();
-      [apply_variableFinal('list ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name )/].add([apply_variableFinal('created ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name )/]);
-      [apply_variableFinal(buildDtoClassName(d))/].[r.getNameSetterListDto()/]([apply_variableFinal('list ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name )/]);
-[/for]
-
-      // [/protected]
-
-      final [buildDtoClassName(d)/] [apply_variableFinal('created' + buildDtoClassName(d))/] = [apply_attributeStatic('service')/].save ([apply_variableFinal(buildDtoClassName(d))/]);
-
-      [apply_methodDefault('set crud id')/] ([apply_variableFinal('created' + buildDtoClassName(d))/].getId ());
-
-      assertNotNull ([apply_variableFinal('created' + buildDtoClassName(d))/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
-
-      // create assertions
-      // [protected (s.getUserCodeId('create assertions'))]
-
-[for (r : Reference | d.referencesStarStar())]
-
-      /* test de la bonne insertion de la référence [r.name/] */
-      final List <[buildDtoClassName(r.referencedType.oclAsType(DTO))/]> [apply_variableFinal('list ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name + ' read')/] = [apply_attributeStatic('service')/].[apply_methodDefault('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(DTO).buildSimpleDtoName())/] ([apply_attributeStatic('crud id')/]);
-      assertTrue(![apply_variableFinal('list ' + buildDtoClassName(r.referencedType.oclAsType(DTO)) + r.name + ' read')/].isEmpty(), "La relation [r.name/] a bien été créée");
-[/for]
-
-      // [/protected]
-   }
-
-[/if]
-   /**
-    * Test de recherche par identifiant de l'entity.
-    * @throws Throwable
-    *            exception
-    */
-   @Test
-   public void [apply_methodDefault('test find by id')/] () throws Throwable
-   {
-[if referentiel]
-      [apply_methodDefault('test find all')/] ();
-[else]
-      [apply_methodDefault('test create')/] ();
-[/if]
-
-      final [buildDtoClassName(d)/] [apply_variableFinal('dto')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
-      assertNotNull ([apply_variableFinal('dto')/], "Le dto devrait exister dans le référentiel");
-      assertNotNull ([apply_variableFinal('dto')/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
-      assertNotNull ([apply_variableFinal('dto')/].toString (), "Le dto créé devrait avoir un toString");
-
-      // findById assertions
-      // [protected (s.getUserCodeId('findById assertions'))]
-
-      // [/protected]
-   }
-
-[if not referentiel]
-   /**
-    * Test de mise à jour de l'entity.
-    * @throws Throwable
-    *            exception
-    */
-   @Test
-   public void [apply_methodDefault('test update')/] () throws Throwable
-   {
-      [apply_methodDefault('test create')/] ();
-
-      final [buildDtoClassName(d)/] [apply_variableFinal('dto')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
-
-      // update
-      // [protected (s.getUserCodeId('update'))]
-
-  [for (r : Reference | d.referencesNoStar())]
-[if r.referencedType.oclAsType(DTO).isNotPersistent()]
-      [apply_variableFinal('dto')/].[r.getNameSetter()/] (new [r.referencedType.oclAsType(DTO).buildDtoClassName()/] ());
-
-[/if]
-  [/for]
-      // [/protected]
-
-      final [buildDtoClassName(d)/] [apply_variableFinal('updated dto')/] = [apply_attributeStatic('service')/].save ([apply_variableFinal('dto')/]);
-
-      assertNotNull ([apply_variableFinal('updated dto')/].getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
-
-      // update assertions
-      // [protected (s.getUserCodeId('update assertions'))]
-
-      // [/protected]
-   }
-
-   /**
-    * Test de suppression de l'entity.
-    * @throws Throwable
-    *            exception
-    */
-   @Test
-   public void [apply_methodDefault('test delete')/] () throws Throwable
-   {
-      [apply_methodDefault('test create')/] ();
-
-      final [buildDtoClassName(d)/] [apply_variableFinal('dto')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
-
-      [apply_attributeStatic('service')/].delete([apply_variableFinal('dto')/]);
-      final List<[buildDtoClassName(d)/]> [apply_variableFinal('all')/] = [apply_attributeStatic('service')/].findAll ();
-      assertNull (DtoUtil.findInCollectionById ([apply_variableFinal('all')/], crudId), 
-			"Le dto ne devrait plus exister dans la liste de tous les dto");
-
-      // delete assertions
-      // [protected (s.getUserCodeId('delete assertions'))]
-
-      // [/protected]
-   }
-
-[/if]
-[/if]
-   /**
-    * Test de la méthode 'getColumn'.
-    */
-   @Test
-   public void [apply_methodDefault('test get column')/] ()
-   {
-      [buildUserMatchingGenClassName()/].[apply_methodDefault('get ' + buildAppliMatchName(d))/] ().getColumn ([d.buildAttributesEnumName()/].id);
-      // getColumn
-      // [protected (s.getUserCodeId('getColumn'))]
-      [if d.attributesNotComputed()->size() > 0]
-      [buildUserMatchingGenClassName()/].[apply_methodDefault('get ' + buildAppliMatchName(d))/] ().getColumn ([d.buildAttributesEnumName()/].[apply_attributeEnum(d.attributesNotComputed()->first().name)/]);
-      [/if]
-      // [/protected]
-   }
-
-[/if]
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-   /**
-    * Test de l'opération '[o.name/]'.
-    * @throws Throwable
-    *            exception
-    */
-   @Test
-   public void [apply_methodDefault('test ' + o.userCodeForJavaOperation())/] () throws Throwable
-   {
-      // [userCodeForOperation(o)/]
-      // [protected (o.getUserCodeId(userCodeForOperation(o)))]
-      // TODO : A Implémenter
-      fail ("Test non implémenté");
-      // [/protected]
-   }
-
-[/for]
-[/if]
-   /**
-    * Méthode de fin de test : rollback.
-    */
-   @AfterEach
-   public void [apply_methodDefault('tear down')/] ()
-   {
-      [if not d.isNotPersistent()]
-      [apply_attributeStatic('user persistence')/].rollback ();
- 	  [/if]
-
-      // tear down
-      // [protected (s.getUserCodeId('tear down'))]
-      // [/protected]
-   }
-
-   // specific service test
-   // [protected (s.getUserCodeId('specific service test'))]
-
-   // [/protected]
-
-}[/let]
+         /**
+          * Test de la méthode 'getColumn'.
+          */
+         @Test
+         public void ['test get column'.apply_methodDefault()/] ()
+         {
+            [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ().getColumn ([d.buildAttributesEnumName()/].id);
+            // getColumn
+            [protected (s.getUserCodeId('getColumn')) startTagPrefix('// ') endTagPrefix('// ')]
+              [if (d.attributesNotComputed()->size() > 0)]
+                      [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ().getColumn ([d.buildAttributesEnumName()/].[d.attributesNotComputed()->first().name.apply_attributeEnum()/]);
+              [/if]
+            [/protected]
+      
+         }
+      
+    [/if]
+    [if (s <> null and not (s.ownedInterface = null))]
+      [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+           /**
+            * Test de l'opération '[o.name/]'.
+            * @throws Throwable
+            *            exception
+            */
+           @Test
+           public void [('test ' + o.userCodeForJavaOperation()).apply_methodDefault()/] () throws Throwable
+           {
+              // [o.userCodeForOperation()/]
+              [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+                      // TODO : A Implémenter
+                      fail ("Test non implémenté");
+              [/protected]
+        
+           }
+        
+      [/for]
+    [/if]
+       /**
+        * Méthode de fin de test : rollback.
+        */
+       @AfterEach
+       public void ['tear down'.apply_methodDefault()/] ()
+       {
+    [if (not d.isNotPersistent())]
+            ['user persistence'.apply_attributeStatic()/].rollback ();
+    [/if]
+    
+          // tear down
+          [protected (s.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
+          [/protected]
+    
+       }
+    
+       // specific service test
+       [protected (s.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+       [/protected]
+    
+    
+    }[/let]
 [/template]
 
 [template private defaultValueForColumnType(type : String)]
-[if type.equalsIgnoreCase('String')]
-"Str"[elseif type.equalsIgnoreCase('Boolean')]
-false[elseif type.equalsIgnoreCase('Integer')]
-2[elseif type.equalsIgnoreCase('Long')]
-2L[elseif type.equalsIgnoreCase('Float')]
-2F[elseif type.equalsIgnoreCase('Double')]
-2D[elseif type.equalsIgnoreCase('Date')]
-new Date()[elseif type.equalsIgnoreCase('Timestamp')]
-new Timestamp(new Date().getTime())[elseif type.equalsIgnoreCase('Time')]
-new Time(new Date().getTime())[elseif type.equalsIgnoreCase('Binary')]
-getRandomBinary()[elseif type.equalsIgnoreCase('Char')]
-'X'[else]null[/if]
+  [if (type.equalsIgnoreCase('String'))]"Str"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]2[elseif (type.equalsIgnoreCase('Long'))]2L[elseif (type.equalsIgnoreCase('Float'))]2F[elseif (type.equalsIgnoreCase('Double'))]2D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp(new Date().getTime())[elseif (type.equalsIgnoreCase('Time'))]new Time(new Date().getTime())[elseif (type.equalsIgnoreCase('Binary'))]getRandomBinary()[elseif (type.equalsIgnoreCase('Char'))]'X'[else]null[/if]
 [/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (d: DTO, s : Service, referentiel : Boolean) post(trim())]
-[s.initImports()/]
-[s.addImport('java.util.List')/]
-[s.addImport('java.util.Date')/]
-[s.addImport('fr.spi4j.Parameters')/]
-[s.addImport('org.junit.jupiter.api.AfterEach')/]
-[s.addImport('org.junit.jupiter.api.BeforeEach')/]
-[s.addImport('org.junit.jupiter.api.BeforeAll')/]
-[s.addImport('org.junit.jupiter.api.Test')/]
-[s.addImport('static org.junit.jupiter.api.Assertions.assertTrue')/]
-[s.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
-[s.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
-[s.addImport('static org.junit.jupiter.api.Assertions.fail')/]
-[s.addImport(buildImportUserBusinessGen())/]
-[s.addImport(buildPackageMatching() + '.' + buildUserMatchingGenClassName(), d.hasCrud())/]
-[s.addImport(buildPackagePersistence() + '.' + buildParamPersistenceClassName(), not d.isNotPersistent())/]
-[s.addImport(buildPackagePersistence() + '.' + buildUserPersistenceAppClassName())/]
-[s.addImport('fr.spi4j.business.dto.DtoUtil', not referentiel)/]
-[s.addImport(getImportForBeanTester_Abs())/]
+[template private writeImports(d : environment::DTO, s : soa::Service, referentiel : Boolean) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport('java.util.List')/]
+  [s.addImport('java.util.Date')/]
+  [s.addImport('fr.spi4j.Parameters')/]
+  [s.addImport('org.junit.jupiter.api.AfterEach')/]
+  [s.addImport('org.junit.jupiter.api.BeforeEach')/]
+  [s.addImport('org.junit.jupiter.api.BeforeAll')/]
+  [s.addImport('org.junit.jupiter.api.Test')/]
+  [s.addImport('static org.junit.jupiter.api.Assertions.assertTrue')/]
+  [s.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+  [s.addImport('static org.junit.jupiter.api.Assertions.assertNull')/]
+  [s.addImport('static org.junit.jupiter.api.Assertions.fail')/]
+  [s.addImport(d.buildImportUserBusinessGen())/]
+  [s.addImport(d.buildPackageMatching() + '.' + d.buildUserMatchingGenClassName(), d.hasCrud())/]
+  [s.addImport(d.buildPackagePersistence() + '.' + d.buildParamPersistenceClassName(), not d.isNotPersistent())/]
+  [s.addImport(d.buildPackagePersistence() + '.' + d.buildUserPersistenceAppClassName())/]
+  [s.addImport('fr.spi4j.business.dto.DtoUtil', not referentiel)/]
+  [s.addImport(d.getImportForBeanTester_Abs())/]
+  
+  [if (not (d = null) and s.buildPackageBusinessApiServiceDto(d) <> d.buildPackageBusinessApiDto())]
+    	[s.addImport(d.buildImportDto())/]
+    	[s.addImport(d.buildImportAttributesEnum())/]
+  [/if]
+  
+  [if (not (d = null))]
+    [for (a : environment::Attribute | d.attributes)]
+      [if (a.type.oclIsKindOf(environment::Enumeration))]
+        		[s.addImport(a.type.oclAsType(environment::Enumeration).buildPackageEnum() + '.' + a.type.oclAsType(environment::Enumeration).buildEnumName())/]
+      [/if]
+    [/for]
+  [/if]
+  
+  [if (not (d.getRoot() = null))]
+    [for (enum : environment::Enumeration | d.getRoot().eAllContents(environment::Enumeration))]
+      		[s.addImport(enum.buildPackageEnum() + '.' + enum.buildEnumName())/]
+    [/for]
+  [/if]
+  
+  [s.flushImports()/][/template]
 
-[if (not d.oclIsUndefined()) and (buildPackageBusinessApiServiceDto(s, d) <> buildPackageBusinessApiDto(d))]
-	[s.addImport(d.buildImportDto())/]
-	[s.addImport(d.buildImportAttributesEnum())/]
-[/if]
-
-[comment : !!!!!!!!!!  All SOA to be revisited - objects null !!!!!!! /]
-[if (not d.oclIsUndefined())]
-	[for (a : Attribute | d.attributes)][if a.type.oclIsKindOf(Enumeration) ]
-		[s.addImport(buildPackageEnum(a.type.oclAsType(Enumeration)) + '.' + a.type.oclAsType(Enumeration).buildEnumName())/]
-		[/if]
-	[/for]
-[/if]
-
-[comment : Legacy, to be suppressed... /]
-[if not d.getRoot().oclIsUndefined()]
-	[for (enum: Enumeration | d.getRoot().eAllContents(Enumeration))]
-		[s.addImport(buildPackageEnum(enum) + '.' + enum.buildEnumName())/]
-	[/for]
-[/if]
-
-[s.flushImports()/]
-[/template] 
-
-[query private hasCrud(d : DTO) : Boolean =
-   d <> null and not d.isNotPersistent()
-/]
+[query private hasCrud(d : environment::DTO) : Boolean = d <> null and not d.isNotPersistent()/]

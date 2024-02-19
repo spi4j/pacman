@@ -1,0 +1,10 @@
+[module swing_widgets('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::cinematic::swing::services::SwingWidgetUtils/]
+
+[comment encoding = UTF-8 /]
+[query public getImplementationClass(widget : toolkits::Widget) : String = widget.getImplementationClassJavaService()/]
+
+[query public getImplementationPackage(widget : toolkits::Widget) : String = widget.getImplementationPackageJavaService()/]
+
+[query public getImplementationClassNameForImport(widget : toolkits::Widget) : String = widget.getImplementationClassNameForImportJavaService()/]

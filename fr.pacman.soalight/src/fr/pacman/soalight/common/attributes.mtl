@@ -1,98 +1,78 @@
+[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::soalight::common::name/]
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::soalight::common::outils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+
 [comment encoding = UTF-8 /]
-[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0',
-					'http://www.obeonetwork.org/dsl/entity/3.0.0',
-                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::soalight::common::name /]
-[import fr::pacman::soalight::common::classes /]
-[import fr::pacman::soalight::common::outils /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-
-[*******************
+[**
+ * ****************
  * Paramétrage début
 */]
+[template public getProperty(a : environment::Attribute) post(self.trim())]
+  private [a.getTypeAndName()/][/template]
 
-[template public getProperty(a : Attribute) post (trim())]
-private [a.getTypeAndName()/]
-[/template]
+[template public getTypeAndName(a : environment::Attribute) post(self.trim())]
+  [a.genPropertyType()/] [a.name.normalize().apply_attributeDefault()/][/template]
 
-[template public getTypeAndName(a : Attribute) post (trim())]
-[a.genPropertyType()/] [a.apply_attributeDefault(a.name.normalize())/]
-[/template]
+[template public getTypeAndNameParam(a : environment::Attribute) post(self.trim())]
+  [a.genPropertyType()/] [a.name.normalize().apply_parameterMethodClassicIn()/][/template]
 
-[template public getTypeAndNameParam(a : Attribute) post (trim())]
-[a.genPropertyType()/] [a.apply_parameterMethodClassicIn(a.name.normalize())/]
-[/template]
-
-[*******************
+[**
+ * ****************
  * Paramétrage fin
 */]
-
-[template public genTypeName(t : Type)]
-[if t.oclIsKindOf(Enumeration)]
-[apply_classEnum(t.name)/][t.name.sanitize()/][/if]
+[template public genTypeName(t : environment::Type)]
+  [if (t.oclIsKindOf(environment::Enumeration))][t.name.apply_classEnum()/][t.name.sanitize()/][/if]
 [/template]
 
-[template public genTypeAndName(a : Attribute) post (trim())]
-[a.genPropertyType()/] [a.nameProperty()/]
+[template public genTypeAndName(a : environment::Attribute) post(self.trim())]
+  [a.genPropertyType()/] [a.nameProperty()/][/template]
+
+[template public gentTypeAndNameParam(a : environment::Attribute) post(self.trim())]
+  [a.genPropertyType()/] [a.nameParam()/][/template]
+
+[template public genProperty(a : environment::Attribute) post(self.trim())]
+  private [a.genTypeAndName()/][/template]
+
+[template public genPropertyTypeValid(a : environment::Attribute)]
+  [if (a.type = null or a.type.oclIsInvalid() or a.type = null)]
+    String
+  [else]
+    [a.type.genTypeName()/]
+  [/if]
 [/template]
 
-[template public gentTypeAndNameParam(a : Attribute) post (trim())]
-[a.genPropertyType()/] [a.nameParam()/]
+[template public genPropertyType(a : environment::Attribute) post(self.trim())]
+  [if (a.isMultiple())]
+    List<[a.genPropertyTypeValid()/]>
+  [else]
+    [a.genPropertyTypeValid()/]
+  [/if]
 [/template]
 
-[template public genProperty(a : Attribute) post (trim())]
-private [a.genTypeAndName()/]
-[/template]
-
-[template public genPropertyTypeValid(a : Attribute)]
-[if (a.type = null or a.type.oclIsInvalid() or a.type.oclIsUndefined())]
-String
-[else][a.type.genTypeName()/]
-[/if]
-[/template]
-
-[template public genPropertyType(a : Attribute) post (trim())]
-[if (isMultiple(a))]
-List<[genPropertyTypeValid(a)/]>
-[else]
-[genPropertyTypeValid(a)/]
-[/if]
-[/template]
-
-[template public genPropertyTypeNoGenerics(a : Attribute) post (trim())]
-[if (isMultiple(a))]
-List
-[else][genPropertyTypeValid(a)/]
-[/if]
+[template public genPropertyTypeNoGenerics(a : environment::Attribute) post(self.trim())]
+  [if (a.isMultiple())]
+    List
+  [else]
+    [a.genPropertyTypeValid()/]
+  [/if]
 [/template]
 
 [comment constructon générique avec des noms de propriétés /]
-[template public genProperty(l : Sequence(Property), prefix : String, suffix : String, se : String)]
-[l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)/]
-[/template]
+[template public genProperty(l : Sequence(environment::Property), prefix : String, suffix : String, se : String)]
+  [l->collect(temp1 | temp1.nameProperty())->collect(s | prefix + s + suffix)->sep(se)/][/template]
 
-[template public genAttribute(l : OrderedSet(Attribute), prefix : String, suffix : String, se : String)]
-[l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)/]
-[/template]
+[template public genAttribute(l : OrderedSet(environment::Attribute), prefix : String, suffix : String, se : String)]
+  [l->asSequence()->collect(temp2 | temp2.nameProperty())->collect(s | prefix + s + suffix)->sep(se)/][/template]
 
-[query public isMultiple(p : Property) : Boolean =
-    (p.multiplicity = environment::MultiplicityKind::ONE_STAR)
-    or (p.multiplicity = environment::MultiplicityKind::ZERO_STAR)
-/]
+[query public isMultiple(p : environment::Property) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE_STAR or p.multiplicity = environment::MultiplicityKind::ZERO_STAR/]
 
-[comment] les références avec multiplicité vers une entité [/comment]
-[query public referencingStar(e : Entity) : OrderedSet(Reference) =
-if (e.eContainer(Root).oclIsUndefined()) then
-    Sequence{}->asOrderedSet()
-else
-    e.eContainer(Root).eAllContents(Reference)
-            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and r.navigable and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()))
-    ->asOrderedSet()->sortedBy(name.toLower())
-endif
-/]
+[comment les références avec multiplicité vers une entité /]
+[query public referencingStar(e : entity::Entity) : OrderedSet(environment::Reference) = if e.eContainer(entity::Root) = null then Sequence{}->asOrderedSet() else e.eContainer(entity::Root).eAllContents(environment::Reference)->select(r | r.isMultiple() and r.referencedType = e and r.navigable and (r.oppositeOf = null or not r.oppositeOf.isMultiple()))->asOrderedSet()->sortedBy(temp3 | temp3.name.toLower()) endif/]

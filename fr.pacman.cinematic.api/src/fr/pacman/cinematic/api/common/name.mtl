@@ -1,85 +1,39 @@
+[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+
 [comment encoding = UTF-8 /]
-[module name('http://www.obeonetwork.org/dsl/cinematic/3.0.0',
-			 'http://www.obeonetwork.org/dsl/entity/3.0.0', 	
-             'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query public buildEntityClassName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' entity').apply_classDefault()/]
 
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::properties /]
+[query public buildAppliEventGlobalAttributesItf(any : ecore::EObject) : String = (any.getApplicationName() + ' Event Global Attributes').apply_classInterface()/]
 
-[query public buildEntityClassName(e : Entity) : String =
-	apply_classDefault(buildSimpleEntityName(e) + ' entity')
- /]
+[query public buildAppliEventTypeEnum(any : ecore::EObject) : String = (any.getApplicationName() + ' Event Type').apply_classEnum()/]
 
-[query public buildAppliEventGlobalAttributesItf(any : OclAny) : String =
-    apply_classInterface(getApplicationName() + ' Event Global Attributes')
- /]
+[query public nameViewInterface(viewContainer : view::ViewContainer) : String = (viewContainer.name + ' View').apply_classInterface()/]
 
-[query public buildAppliEventTypeEnum(any : OclAny) : String =
-    apply_classEnum(getApplicationName() + ' Event Type')
- /]
+[query public namePresenter(viewContainer : view::ViewContainer) : String = (viewContainer.name + ' Presenter').apply_classDefault()/]
 
-[query public nameViewInterface(viewContainer : ViewContainer) : String =
-    apply_classInterface(viewContainer.name + ' View')
-/]
+[query public nameBean(viewContainer : view::ViewContainer) : String = (viewContainer.name + ' Bean').apply_classDefault()/]
 
-[query public namePresenter(viewContainer : ViewContainer) : String =
-    apply_classDefault(viewContainer.name + ' Presenter')
-/]
+[query public nameBeanFirstLower(viewContainer : view::ViewContainer) : String = (viewContainer.name + ' Bean').apply_classDefault().toLowerFirst()/]
 
-[query public nameBean(viewContainer : ViewContainer) : String =
-    apply_classDefault(viewContainer.name + ' Bean')
-/]
+[query public nameFieldFirstLower(viewContainer : view::ViewContainer) : String = viewContainer.name.apply_classDefault().toLowerFirst()/]
 
-[query public nameBeanFirstLower(viewContainer : ViewContainer) : String =
-    apply_classDefault(viewContainer.name + ' Bean').toLowerFirst()
-/]
+[query public nameFieldFirstLower(element : view::ViewElement) : String = element.name.apply_classDefault().toLowerFirst()/]
 
-[query public nameFieldFirstLower(viewContainer : ViewContainer) : String =
-    apply_classDefault(viewContainer.name).toLowerFirst()
-/]
+[query public nameGetterBeanElement(element : view::ViewElement) : String = 'get' + element.name.sanitize().toUpperFirst()/]
 
-[query public nameFieldFirstLower(element : ViewElement) : String =
-    apply_classDefault(element.name).toLowerFirst()
-/]
+[query public nameSetterBeanElement(element : view::ViewElement) : String = 'set' + element.name.sanitize().toUpperFirst()/]
 
-[query public nameGetterBeanElement(element : ViewElement) : String =
-   'get' + element.name.sanitize().toUpperFirst()
-/]
+[query public nameGetterViewElement(element : view::ViewElement) : String = 'get_' + element.name.sanitize().toLowerFirst()/]
 
-[query public nameSetterBeanElement(element : ViewElement) : String =
-   'set' + element.name.sanitize().toUpperFirst()
-/]
+[query public nameImplementation(viewContainer : view::ViewContainer) : String = if not (viewContainer.widget = null) then if not (viewContainer.widget.implementation = null) and viewContainer.widget.implementation.trim().size() > 0 then if viewContainer.widget.implementation.contains('.') then viewContainer.genericType(viewContainer.widget.implementation.substring(viewContainer.widget.implementation.lastIndex('.') + 1)) else viewContainer.genericType(viewContainer.widget.implementation) endif else 'ERROR : [L\'implémentation du widget' + viewContainer.widget.name + 'n\'a pas été définie]' endif else 'ERROR : [Cette vue n\'a pas défini de type]' endif/]
 
-[query public nameGetterViewElement(element : ViewElement) : String =
-   'get_' + element.name.sanitize().toLowerFirst()
-/]
-
-[query public nameImplementation(viewContainer : ViewContainer) : String =
-    if (not viewContainer.widget.oclIsUndefined()) then
-        if (not viewContainer.widget.implementation.oclIsUndefined() and viewContainer.widget.implementation.trim().size() > 0) then
-            if (widget.implementation.contains('.')) then
-                genericType(viewContainer, widget.implementation.substring(widget.implementation.lastIndex('.') + 1))
-            else
-                genericType(viewContainer, widget.implementation)
-            endif
-        else
-            'ERROR : [L\'implémentation du widget' + viewContainer.widget.name + 'n\'a pas été définie]'
-        endif
-    else
-        'ERROR : [Cette vue n\'a pas défini de type]'
-    endif
-/]
-
-[query public genericType(viewContainer : ViewContainer, implementation : String) : String =
-    if (implementation.endsWith('<T>')) then
-        implementation.replace('<T>', '<' + namePresenter(viewContainer) + '>')
-    else
-        implementation
-    endif
-/]
+[query public genericType(viewContainer : view::ViewContainer, implementation : String) : String = if implementation.endsWith('<T>') then implementation.replace('<T>', '<' + viewContainer.namePresenter() + '>') else implementation endif/]
 
 [comment][query public nameImplementation(viewElement : ViewElement) : String =
     if (not viewElement.widget.oclIsUndefined()) then
@@ -96,68 +50,16 @@
         'ERROR : [Cet élément n\'a pas défini de type]'
     endif
 /][/comment]
+[query public genericType(viewElement : view::ViewElement, implementation : String, IsDto : Boolean) : String = if implementation.endsWith('<T>') then if viewElement.type = null then 'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]' else if viewElement.type.oclIsKindOf(environment::DTO) then if IsDto then implementation.replace('<T>', '<' + viewElement.type.oclAsType(environment::DTO).buildDtoClassName() + '>') else implementation.replace('<T>', '<' + viewElement.type.oclAsType(environment::DTO).buildXtoClassNameFromDto() + '>') endif else if viewElement.type.oclIsKindOf(environment::PrimitiveType) then implementation.replace('<T>', '<' + viewElement.type.oclAsType(environment::PrimitiveType).name + '>') else implementation.replace('<T>', '<TODO>') endif endif endif else implementation endif/]
 
-[query public genericType(viewElement : ViewElement, implementation : String, IsDto : Boolean) : String =
-    if (implementation.endsWith('<T>')) then
-        if (viewElement.type.oclIsUndefined()) then
-            'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]'
-        else
-            if viewElement.type.oclIsKindOf(DTO) then
-                if (IsDto) then
-                    implementation.replace('<T>', '<' + buildDtoClassName(viewElement.type.oclAsType(DTO)) + '>')
-                else
-                    implementation.replace('<T>', '<' + buildXtoClassNameFromDto(viewElement.type.oclAsType(DTO)) + '>')
-                endif
-            else
-                if viewElement.type.oclIsKindOf(PrimitiveType) then
-                    implementation.replace('<T>', '<' + viewElement.type.oclAsType(PrimitiveType).name + '>')
-                else
-                    implementation.replace('<T>', '<TODO>')
-                endif
-            endif
-        endif
-    else
-        implementation
-    endif
-/]
+[query public genericTypeEntity(viewElement : view::ViewElement, implementation : String) : String = if implementation.endsWith('<T>') then if viewElement.type = null then 'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]' else if viewElement.type.oclIsKindOf(environment::DTO) then implementation.replace('<T>', '<' + viewElement.type.oclAsType(environment::DTO).buildDtoClassName() + '>') else if viewElement.type.oclIsKindOf(environment::PrimitiveType) then implementation.replace('<T>', '<' + viewElement.type.oclAsType(environment::PrimitiveType).name + '>') else if viewElement.type.oclIsKindOf(entity::Entity) then implementation.replace('<T>', '<' + viewElement.type.oclAsType(entity::Entity).buildEntityClassName() + '>') else implementation.replace('<T>', '<TODO>') endif endif endif endif else implementation endif/]
 
-[query public genericTypeEntity(viewElement : ViewElement, implementation : String) : String =
-    if (implementation.endsWith('<T>')) then
-        if (viewElement.type.oclIsUndefined()) then
-            'ERROR : [Cet élément n\'a pas défini de DTO ou String en tant que type]'
-        else if (viewElement.type.oclIsKindOf(DTO)) then
-                    implementation.replace('<T>', '<' + buildDtoClassName(viewElement.type.oclAsType(DTO)) + '>')                
-            else
-                if viewElement.type.oclIsKindOf(PrimitiveType) then
-                    implementation.replace('<T>', '<' + viewElement.type.oclAsType(PrimitiveType).name + '>')
-                else if viewElement.type.oclIsKindOf(Entity) then
-						implementation.replace('<T>', '<' + buildEntityClassName(viewElement.type.oclAsType(Entity)) + '>')
-                    else implementation.replace('<T>', '<TODO>')
-					endif
-                endif
-        	endif    
-        endif
-    else
-        implementation
-    endif
-/]
+[query public nameActionPresenteur(event : cinematic::Event) : String = event.name.sanitize().toLowerFirst()/]
 
-[query public nameActionPresenteur(event : Event) : String =
-    event.name.sanitize().toLowerFirst()
-/]
+[query public nameActionBean(event : cinematic::Event) : String = event.name.sanitize().toLowerFirst()/]
 
-[query public nameActionBean(event : Event) : String =
-    event.name.sanitize().toLowerFirst()
-/]
+[query public nameFlow(flow : flow::Flow) : String = (flow.name + ' Flow Manager').apply_classDefault()/]
 
-[query public nameFlow(flow : Flow) : String =
-    apply_classDefault(flow.name + ' Flow Manager')
-/]
+[query public projectName(any : ecore::EObject) : String = any.getApplicationName()/]
 
-[query public projectName(any : OclAny) : String =
-    getApplicationName()
- /]
-
-[query public clientType(any : OclAny) : String = 
-    getClient()
- /]
+[query public clientType(any : ecore::EObject) : String = any.getClient()/]

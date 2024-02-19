@@ -1,253 +1,75 @@
+[module typeSQL('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::entity::api::sql::common/]
+[import fr::pacman::entity::api::common::attributes/]
+
 [comment encoding = UTF-8 /]
-[module typeSQL('http://www.obeonetwork.org/dsl/entity/3.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query private typeOracle(s : String, size : String) : String = if s.equalsIgnoreCase('Id') then 'NUMBER(19) not null' else if s.equalsIgnoreCase('IdJointure') then 'NUMBER(19) not null' else if s.equalsIgnoreCase('Reference') then 'NUMBER(19)' else if s.equalsIgnoreCase('Integer') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '10' else size endif + ')' else if s.equalsIgnoreCase('Long') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '19' else size endif + ')' else if s.equalsIgnoreCase('Float') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('Double') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('String') then 'VARCHAR(' + if size.size() = 0 or size = 'invalide' then '100' else size endif + ')' else if s.equalsIgnoreCase('Boolean') then 'NUMBER(1)' else if s.equalsIgnoreCase('Date') then 'DATE' else if s.equalsIgnoreCase('Timestamp') then 'TIMESTAMP' else if s.equalsIgnoreCase('Time') then 'TIMESTAMP' else if s.equalsIgnoreCase('Binary') then 'BLOB' else if s.equalsIgnoreCase('XtopSup') then 'VARCHAR(1)' else 'VARCHAR(200)' endif endif endif endif endif endif endif endif endif endif endif endif endif endif/]
 
-[import fr::pacman::commons::common::properties /]
+[query private typeMysql(s : String, size : String) : String = if s.equalsIgnoreCase('Id') then 'BIGINT(19) unsigned not null auto_increment' else if s.equalsIgnoreCase('IdJointure') then 'BIGINT(19) unsigned not null' else if s.equalsIgnoreCase('Reference') then 'BIGINT(19) unsigned' else if s.equalsIgnoreCase('Integer') then 'INT(' + if size.size() = 0 or size = 'invalide' then '10' else size endif + ')' else if s.equalsIgnoreCase('Long') then 'BIGINT(' + if size.size() = 0 or size = 'invalide' then '19' else size endif + ')' else if s.equalsIgnoreCase('Float') then 'FLOAT(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('Double') then 'DOUBLE(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('String') then 'VARCHAR(' + if size.size() = 0 or size = 'invalide' then '100' else size endif + ')' else if s.equalsIgnoreCase('Boolean') then 'BOOLEAN' else if s.equalsIgnoreCase('Date') then 'DATETIME' else if s.equalsIgnoreCase('Timestamp') then 'TIMESTAMP' else if s.equalsIgnoreCase('Time') then 'TIMESTAMP' else if s.equalsIgnoreCase('Binary') then 'LONGBLOB' else if s.equalsIgnoreCase('XtopSup') then 'VARCHAR(1)' else 'VARCHAR(200)' endif endif endif endif endif endif endif endif endif endif endif endif endif endif/]
 
-[import fr::pacman::entity::api::sql::common /]
-[import fr::pacman::entity::api::common::attributes /]
+[query private typeH2(s : String, size : String) : String = if s.equalsIgnoreCase('Id') then 'NUMBER(19) not null' else if s.equalsIgnoreCase('IdJointure') then 'NUMBER(19) not null' else if s.equalsIgnoreCase('Reference') then 'NUMBER(19)' else if s.equalsIgnoreCase('Integer') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '10' else size endif + ')' else if s.equalsIgnoreCase('Long') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '19' else size endif + ')' else if s.equalsIgnoreCase('Float') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('Double') then 'NUMBER(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('String') then 'VARCHAR(' + if size.size() = 0 or size = 'invalide' then '100' else size endif + ')' else if s.equalsIgnoreCase('Boolean') then 'NUMBER(1)' else if s.equalsIgnoreCase('Date') then 'TIMESTAMP' else if s.equalsIgnoreCase('Timestamp') then 'TIMESTAMP' else if s.equalsIgnoreCase('Time') then 'TIMESTAMP' else if s.equalsIgnoreCase('Binary') then 'BLOB' else if s.equalsIgnoreCase('XtopSup') then 'VARCHAR(1)' else 'VARCHAR(200)' endif endif endif endif endif endif endif endif endif endif endif endif endif endif/]
 
-[query private typeOracle(s : String, size : String) : String =
-if (s.equalsIgnoreCase('Id')) then
-    'NUMBER(19) not null'
-else if (s.equalsIgnoreCase('IdJointure')) then
-    'NUMBER(19) not null'
-else if (s.equalsIgnoreCase('Reference')) then
-    'NUMBER(19)'
-else if (s.equalsIgnoreCase('Integer')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '10' else size endif + ')'
-else if (s.equalsIgnoreCase('Long')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '19' else size endif + ')'
-else if (s.equalsIgnoreCase('Float')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('Double')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('String')) then
-    'VARCHAR(' + if (size.size() = 0 or size = 'invalide') then '100' else size endif + ')'
-else if (s.equalsIgnoreCase('Boolean')) then
-    'NUMBER(1)'
-else if (s.equalsIgnoreCase('Date')) then
-    'DATE'
-else if (s.equalsIgnoreCase('Timestamp')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Time')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Binary')) then
-    'BLOB'
-else if (s.equalsIgnoreCase('XtopSup')) then
-	'VARCHAR(1)'
-else
-    'VARCHAR(200)'
-endif endif endif endif endif endif endif endif endif endif endif endif endif endif
-/]
-
-[query private typeMysql(s : String, size : String) : String =
-if (s.equalsIgnoreCase('Id')) then
-    'BIGINT(19) unsigned not null auto_increment'
-else if (s.equalsIgnoreCase('IdJointure')) then
-    'BIGINT(19) unsigned not null'
-else if (s.equalsIgnoreCase('Reference')) then
-    'BIGINT(19) unsigned'
-else if (s.equalsIgnoreCase('Integer')) then
-    'INT(' + if (size.size() = 0 or size = 'invalide') then '10' else size endif + ')'
-else if (s.equalsIgnoreCase('Long')) then
-    'BIGINT(' + if (size.size() = 0 or size = 'invalide') then '19' else size endif + ')'
-else if (s.equalsIgnoreCase('Float')) then
-    'FLOAT(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('Double')) then
-    'DOUBLE(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('String')) then
-    'VARCHAR(' + if (size.size() = 0 or size = 'invalide') then '100' else size endif + ')'
-else if (s.equalsIgnoreCase('Boolean')) then
-    'BOOLEAN'
-else if (s.equalsIgnoreCase('Date')) then
-    'DATETIME'
-else if (s.equalsIgnoreCase('Timestamp')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Time')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Binary')) then
-    'LONGBLOB'
-else if (s.equalsIgnoreCase('XtopSup')) then
-	'VARCHAR(1)'
-else
-    'VARCHAR(200)'
-endif endif endif endif endif endif endif endif endif endif endif endif endif endif
-/]
-
-[query private typeH2(s : String, size : String) : String =
-if (s.equalsIgnoreCase('Id')) then
-    'NUMBER(19) not null'
-else if (s.equalsIgnoreCase('IdJointure')) then
-    'NUMBER(19) not null'
-else if (s.equalsIgnoreCase('Reference')) then
-    'NUMBER(19)'
-else if (s.equalsIgnoreCase('Integer')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '10' else size endif + ')'
-else if (s.equalsIgnoreCase('Long')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '19' else size endif + ')'
-else if (s.equalsIgnoreCase('Float')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('Double')) then
-    'NUMBER(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('String')) then
-    'VARCHAR(' + if (size.size() = 0 or size = 'invalide') then '100' else size endif + ')'
-else if (s.equalsIgnoreCase('Boolean')) then
-    'NUMBER(1)'
-else if (s.equalsIgnoreCase('Date')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Timestamp')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Time')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Binary')) then
-    'BLOB'
-else if (s.equalsIgnoreCase('XtopSup')) then
-	'VARCHAR(1)'
-else
-    'VARCHAR(200)'
-endif endif endif endif endif endif endif endif endif endif endif endif endif endif
-/]
-
-[query private typePostgres(s : String, size : String) : String =
-if (s.equalsIgnoreCase('Id')) then
-    'BIGINT not null'
-else if (s.equalsIgnoreCase('IdJointure')) then
-    'BIGINT not null'
-else if (s.equalsIgnoreCase('Reference')) then
-    'BIGINT'
-else if (s.equalsIgnoreCase('Integer')) then
-    if (size.size() = 0 or size = 'invalide') then 'INTEGER' else 'NUMERIC(' + size + ')' endif
-else if (s.equalsIgnoreCase('Long')) then
-    if (size.size() = 0 or size = 'invalide') then 'BIGINT' else 'NUMERIC(' + size + ')' endif
-else if (s.equalsIgnoreCase('Float')) then
-    'NUMERIC(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('Double')) then
-    'NUMERIC(' + if (size.size() = 0 or size = 'invalide') then '14,2' else size endif + ')'
-else if (s.equalsIgnoreCase('String')) then
-    'VARCHAR(' + if (size.size() = 0 or size = 'invalide') then '100' else size endif + ')'
-else if (s.equalsIgnoreCase('Boolean')) then
-    'BOOLEAN'
-else if (s.equalsIgnoreCase('Date')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Timestamp')) then
-    'TIMESTAMP'
-else if (s.equalsIgnoreCase('Time')) then
-    'TIME'
-else if (s.equalsIgnoreCase('Binary')) then
-    'BYTEA'
-else if (s.equalsIgnoreCase('XtopSup')) then
-	'VARCHAR(1)'
-else
-    'VARCHAR(200)'
-endif endif endif endif endif endif endif endif endif endif endif endif endif endif
-/]
+[query private typePostgres(s : String, size : String) : String = if s.equalsIgnoreCase('Id') then 'BIGINT not null' else if s.equalsIgnoreCase('IdJointure') then 'BIGINT not null' else if s.equalsIgnoreCase('Reference') then 'BIGINT' else if s.equalsIgnoreCase('Integer') then if size.size() = 0 or size = 'invalide' then 'INTEGER' else 'NUMERIC(' + size + ')' endif else if s.equalsIgnoreCase('Long') then if size.size() = 0 or size = 'invalide' then 'BIGINT' else 'NUMERIC(' + size + ')' endif else if s.equalsIgnoreCase('Float') then 'NUMERIC(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('Double') then 'NUMERIC(' + if size.size() = 0 or size = 'invalide' then '14,2' else size endif + ')' else if s.equalsIgnoreCase('String') then 'VARCHAR(' + if size.size() = 0 or size = 'invalide' then '100' else size endif + ')' else if s.equalsIgnoreCase('Boolean') then 'BOOLEAN' else if s.equalsIgnoreCase('Date') then 'TIMESTAMP' else if s.equalsIgnoreCase('Timestamp') then 'TIMESTAMP' else if s.equalsIgnoreCase('Time') then 'TIME' else if s.equalsIgnoreCase('Binary') then 'BYTEA' else if s.equalsIgnoreCase('XtopSup') then 'VARCHAR(1)' else 'VARCHAR(200)' endif endif endif endif endif endif endif endif endif endif endif endif endif endif/]
 
 [comment : Pour l'instant (05/07/2022), on route MySql et MariaDB sur la meme methode. /]
-[template public typeDataBase(databaseType : String, n : String, size : String)] 
-[if databaseType.oclIsUndefined() or databaseType.size() = 0]
-[typeOracle(n, size)/][elseif databaseType.isDbOracleType()]
-[typeOracle(n, size)/][elseif databaseType.isDbOracle32Type()]
-[typeOracle(n, size)/][elseif databaseType.isDbMsqlType()]
-[typeMysql(n, size)/][elseif databaseType.isDbPostgresqlType()]
-[typePostgres(n, size)/][elseif databaseType.isDbH2Type()]
-[typeH2(n, size)/][/if]
+[template public typeDataBase(databaseType : String, n : String, size : String)]
+  [if (databaseType = null or databaseType.size() = 0)][n.typeOracle(size)/][elseif (databaseType.isDbOracleType())][n.typeOracle(size)/][elseif (databaseType.isDbOracle32Type())][n.typeOracle(size)/][elseif (databaseType.isDbMsqlType())][n.typeMysql(size)/][elseif (databaseType.isDbPostgresqlType())][n.typePostgres(size)/][elseif (databaseType.isDbH2Type())][n.typeH2(size)/][/if]
 [/template]
 
-[template public typeDataBase(databaseType : String, a : Attribute, size : String)]
-[if not a.oclIsUndefined() and not a.type.oclIsUndefined()]
-[if (isTypeOfEnumeration(a))][typeDataBase(databaseType, 'String', size)/][else]
-[typeDataBase(databaseType, a.type.name, size)/][/if]
-[else][typeDataBase(databaseType, '', size)/][/if]
+[template public typeDataBase(databaseType : String, a : environment::Attribute, size : String)]
+  [if (not (a = null) and not (a.type = null))]
+    [if (a.isTypeOfEnumeration())][databaseType.typeDataBase('String', size)/][else][databaseType.typeDataBase(a.type.name, size)/][/if]
+  [else][databaseType.typeDataBase('', size)/][/if]
 [/template]
 
-[template public typeDataBase(databaseType : String, r : Reference)]
-[typeDataBase(databaseType, 'Reference', '')/]
-[/template]
+[template public typeDataBase(databaseType : String, r : environment::Reference)]
+  [databaseType.typeDataBase('Reference', '')/][/template]
 
 [template public typeDataBaseID(databaseType : String)]
-[typeDataBase(databaseType, 'Id', '')/]
-[/template]
+  [databaseType.typeDataBase('Id', '')/][/template]
 
 [template public typeDataBaseIDJointure(databaseType : String)]
-[typeDataBase(databaseType, 'IdJointure', '')/]
+  [databaseType.typeDataBase('IdJointure', '')/][/template]
+
+[template public genConstraintPK(databaseType : String, e : entity::Entity)]
+  [if (databaseType = null or databaseType.size() = 0)][e.genConstraintPKDefault()/][elseif (databaseType.isDbOracleType())][e.genConstraintPKDefault()/][elseif (databaseType.isDbOracle32Type())][e.genConstraintPKDefault()/][elseif (databaseType.isDbMsqlType())][e.genConstraintPKMysql()/][elseif (databaseType.isDbPostgresqlType())][e.genConstraintPKDefault()/][elseif (databaseType.isDbH2Type())][e.genConstraintPKDefault()/][/if]
 [/template]
 
-[template public genConstraintPK(databaseType : String, e : Entity)]
-[if databaseType.oclIsUndefined() or databaseType.size() = 0]
-[genConstraintPKDefault(e)/][elseif databaseType.isDbOracleType()]
-[genConstraintPKDefault(e)/][elseif databaseType.isDbOracle32Type()]
-[genConstraintPKDefault(e)/][elseif databaseType.isDbMsqlType()]
-[genConstraintPKMysql(e)/][elseif databaseType.isDbPostgresqlType()]
-[genConstraintPKDefault(e)/][elseif databaseType.isDbH2Type()]
-[genConstraintPKDefault(e)/][/if]
+[template public genConstraintPKJointure(databaseType : String, r : environment::Reference, compteur : Integer)]
+  [if (databaseType = null or databaseType.size() = 0)][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbOracleType())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbOracle32Type())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbMsqlType())][r.genConstraintPKJointureMysql(compteur)/][elseif (databaseType.isDbPostgresqlType())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbH2Type())][r.genConstraintPKJointureDefault(compteur)/][/if]
 [/template]
 
-[template public genConstraintPKJointure(databaseType : String, r : Reference, compteur : Integer)]
-[if databaseType.oclIsUndefined() or databaseType.size() = 0]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbOracleType()]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbOracle32Type()]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbMsqlType()]
-[genConstraintPKJointureMysql(r, compteur)/][elseif databaseType.isDbPostgresqlType()]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbH2Type()]
-[genConstraintPKJointureDefault(r, compteur)/][/if]
-[/template]
+[query private genConstraintPKDefault(e : entity::Entity) : String = 'constraint ' + e.nameConstraintPK() + ' primary key (' + e.namePK() + ')'/]
 
-[query private genConstraintPKDefault(e : Entity) : String =
-    'constraint ' + nameConstraintPK(e) + ' primary key (' + namePK(e) + ')'
-/]
+[query private genConstraintPKMysql(e : entity::Entity) : String = 'primary key (' + e.namePK() + ')'/]
 
-[query private genConstraintPKMysql(e : Entity) : String =
-    'primary key (' + namePK(e) + ')'
-/]
+[query private nameConstraintPK(e : entity::Entity) : String = e.nameTable().first(e.maxConstraintPkSize()) + '_PK1_1'/]
 
-[query private nameConstraintPK(e : Entity) : String =
-    nameTable(e).first(maxConstraintPkSize()) + '_PK1_1'
-/]
+[query private genConstraintPKJointureDefault(r : environment::Reference, compteur : Integer) : String = 'constraint ' + r.nameConstraintPKJointure(compteur) + ' primary key (' + r.containingType.oclAsType(entity::Entity).namePK() + ', ' + r.referencedType.oclAsType(entity::Entity).namePK() + ')'/]
 
-[query private genConstraintPKJointureDefault(r : Reference, compteur : Integer) : String =
-    'constraint ' + nameConstraintPKJointure(r, compteur) + ' primary key (' + namePK(r.containingType.oclAsType(Entity)) + ', ' + namePK(r.referencedType.oclAsType(Entity)) + ')'
-/]
+[query private genConstraintPKJointureMysql(r : environment::Reference, compteur : Integer) : String = 'primary key (' + r.containingType.oclAsType(entity::Entity).namePK() + ', ' + r.referencedType.oclAsType(entity::Entity).namePK() + ')'/]
 
-[query private genConstraintPKJointureMysql(r : Reference, compteur : Integer) : String =
-    'primary key (' + namePK(r.containingType.oclAsType(Entity)) + ', ' + namePK(r.referencedType.oclAsType(Entity)) + ')'
-/]
-
-[query private nameConstraintPKJointure(r : Reference, compteur : Integer) : String =
-    nameTableJointure(r,compteur).first(maxConstraintPkSize()) + '_PK2_1'
-/]
+[query private nameConstraintPKJointure(r : environment::Reference, compteur : Integer) : String = r.nameTableJointure(compteur).first(r.maxConstraintPkSize()) + '_PK2_1'/]
 
 [comment Génération de séquences dans tous les cas SAUF Mysql et MariaDB/]
-[query public typeDatabaseHasSequence (databaseType : String) : Boolean =
-    not databaseType.isDbMsqlType()
-/]
+[query public typeDatabaseHasSequence(databaseType : String) : Boolean = not databaseType.isDbMsqlType()/]
 
 [template public dropConstraint(databaseType : String, tableName : String, constraintName : String)]
-[if databaseType.oclIsUndefined() or databaseType.size() = 0]
-[dropConstraintDefault(tableName, constraintName)/][elseif databaseType.isDbOracleType()]
-[dropConstraintDefault(tableName, constraintName)/][elseif databaseType.isDbOracle32Type()]
-[dropConstraintDefault(tableName, constraintName)/][elseif databaseType.isDbMsqlType()]
-[dropConstraintMysql(tableName, constraintName)/][elseif databaseType.isDbPostgresqlType()]
-[dropConstraintDefault(tableName, constraintName)/][elseif databaseType.isDbH2Type()]
-[dropConstraintDefault(tableName, constraintName)/][/if]
+  [if (databaseType = null or databaseType.size() = 0)][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbOracleType())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbOracle32Type())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbMsqlType())][tableName.dropConstraintMysql(constraintName)/][elseif (databaseType.isDbPostgresqlType())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbH2Type())][tableName.dropConstraintDefault(constraintName)/][/if]
 [/template]
 
-[query private dropConstraintDefault(tableName : String, constraintName : String) : String =
-    'alter table ' + tableName + ' drop constraint ' + constraintName + ';'
-/]
+[query private dropConstraintDefault(tableName : String, constraintName : String) : String = 'alter table ' + tableName + ' drop constraint ' + constraintName + ';'/]
 
-[template public genCommentMysql(a : Attribute)]
-[if (not a.description.oclIsUndefined() and a.description.size() <> 0)]
- comment '[a.description.toString().replaceAll('\'', '\'\'')/]'[/if]
+[template public genCommentMysql(a : environment::Attribute)]
+  [if (not (a.description = null) and a.description.size() <> 0)] comment '[a.description.toString().replaceAll('\'', '\'\'')/]'[/if]
 [/template]
 
-[template public genCommentMysql(r : Reference)]
-[if (not r.description.oclIsUndefined() and r.description.size() <> 0)]
- comment '[r.description.toString().replaceAll('\'', '\'\'')/]'[/if]
+[template public genCommentMysql(r : environment::Reference)]
+  [if (not (r.description = null) and r.description.size() <> 0)] comment '[r.description.toString().replaceAll('\'', '\'\'')/]'[/if]
 [/template]
 
-[query private dropConstraintMysql(tableName : String, constraintName : String) : String =
-    'alter table ' + tableName + ' drop foreign key ' + constraintName + ';'
-/]
+[query private dropConstraintMysql(tableName : String, constraintName : String) : String = 'alter table ' + tableName + ' drop foreign key ' + constraintName + ';'/]
 
-[query private maxConstraintPkSize(any : OclAny) : Integer = 27 /]
+[query private maxConstraintPkSize(any : ecore::EObject) : Integer = 27/]

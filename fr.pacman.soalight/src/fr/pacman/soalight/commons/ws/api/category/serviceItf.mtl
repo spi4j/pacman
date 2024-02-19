@@ -1,144 +1,145 @@
+[module serviceItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::soalight::common::outils/]
+[import fr::pacman::soalight::common::imports/]
+[import fr::pacman::soalight::common::packages/]
+[import fr::pacman::soalight::common::name/]
+[import fr::pacman::soalight::common::commentaires/]
+[import fr::pacman::soalight::common::attributes/]
+[import fr::pacman::soalight::common::methodes/]
+[import fr::pacman::soalight::common::classes/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+
 [comment encoding = UTF-8 /]
-[module serviceItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::soalight::common::outils /]
-[import fr::pacman::soalight::common::imports /]
-[import fr::pacman::soalight::common::packages /]
-[import fr::pacman::soalight::common::name /]
-[import fr::pacman::soalight::common::commentaires /]
-[import fr::pacman::soalight::common::attributes /]
-[import fr::pacman::soalight::common::methodes /]
-[import fr::pacman::soalight::common::classes /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-[import fr::pacman::commons::services::SecurityUtils /]
-
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
-
-[comment] le Service existe [/comment]
-[template public serviceItf(s : Service)]
-[licence()/]
-[let self : OclAny = if not s.oclIsUndefined() then s else 'PACKAGE NOT FOUND FOR SERVICE NULL' endif ]
-package [buildPackageBusinessApiService(s)/];
-
-// [protected ('for imports')]
-
-[if isFromEntityService(s)]
-import [getImportForEntityService_Itf()/];
-[else]
-import fr.spi4j.business.ApplicationService_Itf;
-[/if]
-import java.util.List;
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[if s.ownedInterface.ownedOperations->
-    exists(o : Operation | permissionAnnotationExists(o, 'PERMISSIONS') or permissionAnnotationExists(o, 'PERMISSIONS_OR') or permissionAnnotationExists(o, 'PERMISSIONS_AND'))]
-import fr.spi4j.lib.security.annotations.Permissions;
-import fr.spi4j.lib.security.annotations.PermissionsOperator_Enum;
-import [buildPackageBusiness()/].[buildAppliPermissionsInterfaceName()/];
-[/if]
-[if s.ownedInterface.ownedOperations->
-    exists(o : Operation | permissionAnnotationExists(o, 'ACCEPT_UNAUTHENTIFIED'))]
-import fr.spi4j.lib.security.annotations.AcceptUnauthentified;
-[/if]
-[/if]
-[if useEjb()]
-import jakarta.ejb.Local;
-[/if]
-
-// [/protected]
-
-/**
- * Définit le contrat de services spécifiques.
- * @author [getAuthorName()/]
- */
-// Annotations Service
-// [protected (s.getUserCodeId('Annotations Service'))]
-[if useEjb()]
-@Local
-[/if]
-// [/protected]
-public interface [buildServiceInterfaceName(s)/] extends [if isFromEntityService(s)][getClassNameForEntityService_Itf()/]<[genPkType()/], [buildEntityInterfaceNameFromService(s)/]> [else]ApplicationService_Itf[/if]
-{
-
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-   /**
-    * [o.description/]
-[getComParamsIn(o)/][comParamOut(o)/]
-	*/
-	[if permissionAnnotationExists(o, 'PERMISSIONS') or permissionAnnotationExists(o, 'PERMISSIONS_OR') or permissionAnnotationExists(o, 'PERMISSIONS_AND') or permissionAnnotationExists(o, 'ACCEPT_UNAUTHENTIFIED')]
-	// Annotations [userCodeForOperation(o)/]
-	// [protected (o.getUserCodeId('Annotations ' +  userCodeForOperation(o)))]
-	
-	// [/protected]
-	[generateAnnotationPermission(o) /]
-	[else]
-	// Annotations [userCodeForOperation(o)/]
-	// [protected (o.getUserCodeId('Annotations ' +  userCodeForOperation(o)))]
-	
-	// [/protected]
-	[/if]
-    [paramOut(o)/] [apply_methodDefault(o.name.sanitize())/] ([paramsIn(o)/]);
-
-[/for]
-[/if]
-    // Methodes [buildServiceInterfaceName(s)/]
-    // [protected (s.getUserCodeId('Methodes ' + buildServiceInterfaceName(s)))]
-
-    // [/protected]
-}[/let]
+[comment le Service existe /]
+[template public serviceItf(s : soa::Service)]
+  [s.licence()/]
+  [let self = if not (s = null) then s else 'PACKAGE NOT FOUND FOR SERVICE NULL' endif]
+    package [s.buildPackageBusinessApiService()/];
+    
+    [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+      
+      [if (s.isFromEntityService())]
+        import [s.getImportForEntityService_Itf()/];
+      [else]
+        import fr.spi4j.business.ApplicationService_Itf;
+      [/if]
+      import java.util.List;
+      [if (s <> null and not (s.ownedInterface = null))]
+        [if (s.ownedInterface.ownedOperations->exists(o | o.permissionAnnotationExists('PERMISSIONS') or o.permissionAnnotationExists('PERMISSIONS_OR') or o.permissionAnnotationExists('PERMISSIONS_AND')))]
+          import fr.spi4j.lib.security.annotations.Permissions;
+          import fr.spi4j.lib.security.annotations.PermissionsOperator_Enum;
+          import [s.buildPackageBusiness()/].[s.buildAppliPermissionsInterfaceName()/];
+        [/if]
+        [if (s.ownedInterface.ownedOperations->exists(o | o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED')))]
+          import fr.spi4j.lib.security.annotations.AcceptUnauthentified;
+        [/if]
+      [/if]
+      [if (s.useEjb())]
+        import jakarta.ejb.Local;
+      [/if]
+      
+    [/protected]
+    
+    
+    /**
+     * Définit le contrat de services spécifiques.
+     * @author [s.getAuthorName()/]
+     */
+    // Annotations Service
+    [protected (s.getUserCodeId('Annotations Service')) startTagPrefix('// ') endTagPrefix('// ')]
+      [if (s.useEjb())]
+        @Local
+      [/if]
+    [/protected]
+    
+    public interface [s.buildServiceInterfaceName()/] extends [if (s.isFromEntityService())][s.getClassNameForEntityService_Itf()/]<[s.genPkType()/], [s.buildEntityInterfaceNameFromService()/]> [else]ApplicationService_Itf[/if]
+    
+    {
+    
+    [if (s <> null and not (s.ownedInterface = null))]
+      [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+           /**
+            * [o.description/]
+        [o.getComParamsIn()/][o.comParamOut()/]
+        	*/
+        [if (o.permissionAnnotationExists('PERMISSIONS') or o.permissionAnnotationExists('PERMISSIONS_OR') or o.permissionAnnotationExists('PERMISSIONS_AND') or o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED'))]
+          	// Annotations [o.userCodeForOperation()/]
+          	[protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+             	
+           [/protected]
+          
+          	[o.generateAnnotationPermission()/]
+        [else]
+          	// Annotations [o.userCodeForOperation()/]
+          	[protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+             	
+           [/protected]
+          
+        [/if]
+            [o.paramOut()/] [o.name.sanitize().apply_methodDefault()/] ([o.paramsIn()/]);
+        
+      [/for]
+    [/if]
+        // Methodes [s.buildServiceInterfaceName()/]
+        [protected (s.getUserCodeId('Methodes ' + s.buildServiceInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+    
+    }[/let]
 [/template]
 
-[template private generateAnnotationPermission(o : Operation)]
-[comment
-Métadonnées possibles :
-- PERMISSIONS
-- PERMISSIONS_OR
-- PERMISSIONS_AND
-- ACCEPT_UNAUTHENTIFIED
-/]
-[if permissionAnnotationExists(o, 'PERMISSIONS')]
-   [let permissions : Sequence(String) = getListOfPermissions(o, 'PERMISSIONS')]
-      [if not permissions->isEmpty()]
-         [if permissions->size() = 1]
-@Permissions([buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(permissions->first())/])[else]
-@Permissions(value =
-{[for (s : String | permissions)][if not permissions->first().equalsIgnoreCase(s)], [/if][o.buildAppliPermissionsInterfaceName()/].[o.apply_attributeFinalStatic(s)/][if permissions->last().equalsIgnoreCase(s)] [/if][/for]})[/if]
+[template private generateAnnotationPermission(o : soa::Operation)]
+  [if (o.permissionAnnotationExists('PERMISSIONS'))]
+    [let permissions : Sequence(String) = o.getListOfPermissions('PERMISSIONS')]
+      [if (not permissions->isEmpty())]
+        [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
+                                                                                                                                                    @Permissions(value =
+                                                                                                                                                    {[for (s : String | permissions)]
+                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
+                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
+                                                                                                                                                     [/for]
+                                                                                                                                                    })[/if]
       [/if]
-   [/let]
-[/if]
-[if permissionAnnotationExists(o, 'PERMISSIONS_OR')]
-   [let permissions : Sequence(String) = getListOfPermissions(o, 'PERMISSIONS_OR')]
-      [if not permissions->isEmpty()]
-         [if permissions->size() = 1]
-@Permissions([buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(permissions->first())/])[else]
-@Permissions(value =
-{[for (s : String | permissions)][if not permissions->first().equalsIgnoreCase(s)], [/if][o.buildAppliPermissionsInterfaceName()/].[o.apply_attributeFinalStatic(s)/][if permissions->last().equalsIgnoreCase(s)] [/if][/for]}, operator = PermissionsOperator_Enum.OR)[/if]
+    [/let]
+  [/if]
+  [if (o.permissionAnnotationExists('PERMISSIONS_OR'))]
+    [let permissions : Sequence(String) = o.getListOfPermissions('PERMISSIONS_OR')]
+      [if (not permissions->isEmpty())]
+        [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
+                                                                                                                                                    @Permissions(value =
+                                                                                                                                                    {[for (s : String | permissions)]
+                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
+                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
+                                                                                                                                                     [/for]
+                                                                                                                                                    }, operator = PermissionsOperator_Enum.OR)[/if]
       [/if]
-   [/let]
-[/if]
-[if permissionAnnotationExists(o, 'PERMISSIONS_AND')]
-   [let permissions : Sequence(String) = getListOfPermissions(o, 'PERMISSIONS_AND')]
-      [if not permissions->isEmpty()]
-         [if permissions->size() = 1]
-@Permissions([buildAppliPermissionsInterfaceName()/].[apply_attributeFinalStatic(permissions->first())/])[else]
-@Permissions(value =
-{[for (s : String | permissions)][if not permissions->first().equalsIgnoreCase(s)], [/if][o.buildAppliPermissionsInterfaceName()/].[o.apply_attributeFinalStatic(s)/][if permissions->last().equalsIgnoreCase(s)] [/if][/for]}, operator = PermissionsOperator_Enum.AND)[/if]
+    [/let]
+  [/if]
+  [if (o.permissionAnnotationExists('PERMISSIONS_AND'))]
+    [let permissions : Sequence(String) = o.getListOfPermissions('PERMISSIONS_AND')]
+      [if (not permissions->isEmpty())]
+        [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
+                                                                                                                                                    @Permissions(value =
+                                                                                                                                                    {[for (s : String | permissions)]
+                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
+                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
+                                                                                                                                                     [/for]
+                                                                                                                                                    }, operator = PermissionsOperator_Enum.AND)[/if]
       [/if]
-   [/let]
-[/if]
-[if permissionAnnotationExists(o, 'ACCEPT_UNAUTHENTIFIED')]
-@AcceptUnauthentified[/if]
+    [/let]
+  [/if]
+  [if (o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED'))]@AcceptUnauthentified[/if]
 [/template]

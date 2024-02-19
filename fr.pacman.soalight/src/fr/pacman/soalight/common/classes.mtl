@@ -1,89 +1,54 @@
+[module classes('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::services::MandatoryUtils/]
+[import fr::pacman::soalight::services::ServiceUtils/]
+
 [comment encoding = UTF-8 /]
-[module classes('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::convention::rule::classRule /]
-
-[*******************
+[**
+ * ****************
  * Paramétrage début
 */]
+[query public buildServiceTestClassName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service').apply_classTest()/]
 
-[query public buildServiceTestClassName(s : Service) : String =
- 	s.apply_classTest(buildSimpleServiceName(s) + ' service')
- /]
+[query public buildServiceName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service').apply_classDefault()/]
 
-[query public buildServiceName(s : Service) : String =
-	s.apply_classDefault(buildSimpleServiceName(s) + ' service') 
- /]
+[query public buildServiceName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.buildSimpleServiceName() + ' service').apply_classDefault() else (d.buildSimpleDtoName() + ' service').apply_classDefault() endif/]
 
-[query public buildServiceName(s : Service, d : DTO) : String =
- if (not s.oclIsUndefined()) then s.apply_classDefault(buildSimpleServiceName(s) + ' service')
- else d.apply_classDefault(buildSimpleDtoName(d) + ' service')
- endif
- /]
+[query public buildServiceClassName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service').apply_classImplem()/]
 
-[query public buildServiceClassName(s : Service) : String =
- 	s.apply_classImplem(buildSimpleServiceName(s) + ' service')
- /]
+[query public buildServiceFacadeClassName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service facade').apply_classImplem()/]
 
-[query public buildServiceFacadeClassName(s : Service) : String =
-	apply_classImplem(buildSimpleServiceName(s) + ' service facade')
- /]
+[query public buildServiceFacadeInterfaceName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service facade').apply_classInterface()/]
 
-[query public buildServiceFacadeInterfaceName(s : Service) : String =
-	apply_classInterface(buildSimpleServiceName(s) + ' service facade')
- /]
+[query public buildServiceInterfaceName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service').apply_classInterface()/]
 
-[query public buildServiceInterfaceName(s : Service) : String =
-	s.apply_classInterface(buildSimpleServiceName(s) + ' service')
-/]
+[query public buildServiceRequirementsClassName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' service requirements').apply_classDefault()/]
 
-[query public buildServiceRequirementsClassName(s : Service) : String =
- 	s.apply_classDefault(buildSimpleServiceName(s) + ' service requirements')
- /]
+[query public buildServiceGwtInterfaceName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' gwt service').apply_classDefault()/]
 
-[query public buildServiceGwtInterfaceName(s : Service) : String =
- 	s.apply_classDefault(buildSimpleServiceName(s) + ' gwt service')
- /]
+[query public buildServiceGwtImplementationName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' gwt service impl').apply_classDefault()/]
 
-[query public buildServiceGwtImplementationName(s : Service) : String =
- 	s.apply_classDefault(buildSimpleServiceName(s) + ' gwt service impl')
- /]
+[query public buildServiceGwtAsyncClassName(s : soa::Service) : String = (s.buildSimpleServiceName() + ' gwt service async').apply_classDefault()/]
 
-[query public buildServiceGwtAsyncClassName(s : Service) : String =
- 	s.apply_classDefault(buildSimpleServiceName(s) + ' gwt service async') 
- /]
-
-[template public buildService(s : Service)]
-[if not s.oclIsUndefined()]
-	[buildSimpleServiceName(s)/]
-[else]
-	NAME NOT FOUND FOR SERVICE AND DTO NULL
-[/if]
+[template public buildService(s : soa::Service)]
+  [if (not (s = null))]
+    	[s.buildSimpleServiceName()/]
+  [else]
+    	NAME NOT FOUND FOR SERVICE AND DTO NULL
+  [/if]
 [/template]
 
-[query public buildGwtUserBusinessClassName(any : OclAny) : String =
-apply_classDefault(getApplicationName() + ' gwt user business')
- /]
+[query public buildGwtUserBusinessClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' gwt user business').apply_classDefault()/]
 
-
-[*******************
+[**
+ * ****************
  * Paramétrage fin
 */]
+[comment etourne le système racine d'un Service/]
+[query public getRoot(s : soa::Service) : environment::ObeoDSMObject = s.getRootJavaService()/]
 
-[comment]Retourne le système racine d'un Service[/comment]
-[query public getRoot(s : Service) : ObeoDSMObject =
-    invoke(
-        'fr.pacman.soalight.services.ServiceUtils',
-        'getRoot(org.eclipse.emf.ecore.EObject)',
-        Sequence{s})
-/]
-
-[comment]SOA : Teste si une propriété (attribut ou référence) est obligatoire[/comment]
-[query public isMandatory(p : environment::Property) : Boolean =
-invoke('fr.pacman.commons.services.MandatoryUtils', 'isMandatorySoa(org.obeonetwork.dsl.environment.Property)', Sequence{p})
-/]
-
+[comment OA : Teste si une propriété (attribut ou référence) est obligatoire/]
+[query public isMandatory(p : environment::Property) : Boolean = p.isMandatorySoa()/]

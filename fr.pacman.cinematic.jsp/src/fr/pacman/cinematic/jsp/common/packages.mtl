@@ -1,37 +1,20 @@
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::common::model/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 
-				 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[query public namePackageContainerController(viewContainer : view::ViewContainer) : String = viewContainer.namePackageController() + viewContainer.packageHierarchy()/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::classes /]
+[query public namePackageContainerController(viewState : flow::ViewState) : String = viewState.namePackageController() + viewState.packageHierarchy()/]
 
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::common::model /]
+[query public namePackageController(any : ecore::EObject) : String = any.getApplicationPackage() + '.controller'/]
 
-[query public namePackageContainerController(viewContainer : ViewContainer) : String =
-    namePackageController() + packageHierarchy(viewContainer)
-/]
+[query public namePackageViewContainer(viewContainer : view::ViewContainer) : String = (viewContainer.getJspPageUriFragment() + '/' + viewContainer.packageHierarchy().toPath()).normalizePath()/]
 
-[query public namePackageContainerController(viewState : ViewState) : String =
-    namePackageController() + packageHierarchy(viewState)
-/]
+[query public namePackageJspUseBeanType(d : environment::DTO) : String = d.buildPackageBusinessApi() + d.categoryHierarchy() + '.' + d.buildDtoClassName()/]
 
-[query public namePackageController(any : OclAny) : String =
-    getApplicationPackage() + '.controller'
-/]
-
-[query public namePackageViewContainer(viewContainer : ViewContainer) : String =
-  	(getJspPageUriFragment() + '/' + packageHierarchy(viewContainer).toPath()).normalizePath()
-/]
-
-[query public namePackageJspUseBeanType(d : DTO) : String = 
-	d.buildPackageBusinessApi() + d.categoryHierarchy() +'.'+ d.buildDtoClassName()
-/]
-
-[query public categoryHierarchy(d : DTO) : String =
-    if (d.ancestors(Namespace)->size() < 1) then '' else        
-		'.' + d.ancestors(Namespace)->select(oclIsTypeOf(Namespace) 
-         and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')
-    endif
-/]
+[query public categoryHierarchy(d : environment::DTO) : String = if d.ancestors(environment::Namespace)->size() < 1 then '' else '.' + d.ancestors(environment::Namespace)->select(temp1 | temp1.oclIsTypeOf(environment::Namespace) and not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.') endif/]

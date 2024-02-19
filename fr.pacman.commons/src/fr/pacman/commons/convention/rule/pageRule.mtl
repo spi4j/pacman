@@ -1,12 +1,10 @@
+[module pageRule('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::convention::ApplyNorme/]
+
 [comment encoding = UTF-8 /]
-[module pageRule('http://www.obeonetwork.org/dsl/environment/3.0.0')]
-
-[import fr::pacman::commons::common::utils /]
-
 [template public apply_pageDefault(value : String)]
-[norme_pageDefault(value.normalize())/]
-[/template]
+  [value.normalize().norme_pageDefault()/][/template]
 
-[query private norme_pageDefault(value : String) : String =
-	invoke('fr.pacman.commons.convention.ApplyNorme', 'norme_pageDefault(java.lang.String)', Sequence{value})
- /]
+[query private norme_pageDefault(value : String) : String = value.norme_pageDefaultJavaService()/]

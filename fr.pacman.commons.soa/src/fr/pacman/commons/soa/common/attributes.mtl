@@ -1,64 +1,57 @@
+[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::services::DtoFromEntityUtils/]
+
 [comment encoding = UTF-8 /]
-[module attributes('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::properties /]
-
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
+[comment : /]
+[query public getAttributes(d : environment::DTO) : OrderedSet(environment::Attribute) = d.getAttributes()/]
 
 [comment : /]
-[query public getAttributes(d : DTO) : OrderedSet(Attribute) =
-    invoke('fr.pacman.commons.services.DtoFromEntityUtils', 'getAttributes(org.obeonetwork.dsl.environment.DTO)', Sequence{d})
-/]
-
-[comment : /]
-[template public genPropertyType(a : Attribute) post (trim())]
-[if (isMultiple(a))]
-List<[genPropertyTypeValid(a)/]>
-[else]
-[genPropertyTypeValid(a)/]
-[/if]
+[template public genPropertyType(a : environment::Attribute) post(self.trim())]
+  [if (a.isMultiple())]
+    List<[a.genPropertyTypeValid()/]>
+  [else]
+    [a.genPropertyTypeValid()/]
+  [/if]
 [/template]
 
 [comment : /]
-[template public genPropertyTypeValid(a : Attribute) post(trim())]
-[if (a.type = null or a.type.oclIsInvalid() or a.type.oclIsUndefined())]
-String[else][a.type.genTypeName()/][/if]
+[template public genPropertyTypeValid(a : environment::Attribute) post(self.trim())]
+  [if (a.type = null or a.type.oclIsInvalid() or a.type = null)]String[else][a.type.genTypeName()/][/if]
 [/template]
 
 [comment  : /]
-[template public genTypeName(t : Type)]
-[if t.oclIsKindOf(Enumeration)]
-[apply_classEnum(t.name)/][else][t.name.sanitize()/][/if]
+[template public genTypeName(t : environment::Type)]
+  [if (t.oclIsKindOf(environment::Enumeration))][t.name.apply_classEnum()/][else][t.name.sanitize()/][/if]
 [/template]
 
 [comment : /]
-[template public getProperty(a : Attribute) post (trim())]
-private [a.getTypeAndName()/]
-[/template]
+[template public getProperty(a : environment::Attribute) post(self.trim())]
+  private [a.getTypeAndName()/][/template]
 
 [comment : /]
-[template public getTypeAndName(a : Attribute) post (trim())]
-[a.genPropertyType()/] [a.apply_attributeDefault(a.name.normalize())/]
-[/template]
+[template public getTypeAndName(a : environment::Attribute) post(self.trim())]
+  [a.genPropertyType()/] [a.name.normalize().apply_attributeDefault()/][/template]
 
 [comment : /]
-[template public genPropertyTypeNoGenerics(a : Attribute) post (trim())]
-[if (isMultiple(a))]
-List
-[else][genPropertyTypeValid(a)/]
-[/if]
+[template public genPropertyTypeNoGenerics(a : environment::Attribute) post(self.trim())]
+  [if (a.isMultiple())]
+    List
+  [else]
+    [a.genPropertyTypeValid()/]
+  [/if]
 [/template]
 
-[comment: bricolage pour supprimer le typage dans le cas d'une Map. /]
-[comment: pour l'instant utilisé dans le cas des méthodes de test. /]
-[template public mapTypeFilter (s : String) post (trim())]
-[if (s.indexOf('Map') > 0)]Map[else][s/][/if]
+[comment  bricolage pour supprimer le typage dans le cas d'une Map. /]
+[comment  pour l'instant utilisé dans le cas des méthodes de test. /]
+[template public mapTypeFilter(s : String) post(self.trim())]
+  [if (s.indexOf('Map') > 0)]Map[else][s/][/if]
 [/template]
 
 [comment : Recuperation du type pour un champ additionnel./]
 [template public getTypeColumn(columnProp : String)]
-[getConfigValue(typeColumnProperty(columnProp))/]
-[/template]
+  [columnProp.typeColumnProperty().getConfigValue()/][/template]

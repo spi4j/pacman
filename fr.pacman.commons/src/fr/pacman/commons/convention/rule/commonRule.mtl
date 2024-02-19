@@ -1,26 +1,16 @@
+[module commonRule('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::convention::rule::CommonRule/]
+
 [comment encoding = UTF-8 /]
-[module commonRule('http://www.eclipse.org/ocl/1.1.0/Ecore')]
+[query public getListPrefix(any : ecore::EObject) : String = any.getListPrefix_invoke().trim()/]
 
-[query public getListPrefix(any : OclAny) : String =
-    getListPrefix_invoke().trim()
-/]
+[query private getListPrefix_invoke(any : ecore::EObject) : String = any.getListPrefixJavaService()/]
 
-[query private getListPrefix_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.rule.CommonRule','getListPrefix()', Sequence{})
-/]
+[query public getMapPrefix(any : ecore::EObject) : String = any.getMapPrefix_invoke().trim()/]
 
-[query public getMapPrefix(any : OclAny) : String =
-    getMapPrefix_invoke().trim()
-/]
+[query private getMapPrefix_invoke(any : ecore::EObject) : String = any.getMapPrefixJavaService()/]
 
-[query private getMapPrefix_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.rule.CommonRule','getMapPrefix()', Sequence{})
-/]
+[query public getAffectationPrefix(any : ecore::EObject) : String = any.getAffectationPrefix_invoke().trim()/]
 
-[query public getAffectationPrefix(any : OclAny) : String =
-    getAffectationPrefix_invoke().trim()
-/]
-
-[query private getAffectationPrefix_invoke(any : OclAny) : String = 
-	invoke('fr.pacman.commons.convention.rule.CommonRule','getAffectationPrefix()', Sequence{})
-/]
+[query private getAffectationPrefix_invoke(any : ecore::EObject) : String = any.getAffectationPrefixJavaService()/]

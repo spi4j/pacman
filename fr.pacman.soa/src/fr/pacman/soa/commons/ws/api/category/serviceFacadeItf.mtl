@@ -1,71 +1,65 @@
+[module serviceFacadeItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::attributes/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::soa::common::attributes/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::common::packages/]
+
 [comment encoding = UTF-8 /]
-[module serviceFacadeItf('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                         'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::attributes /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::packages /]
-
-[import fr::pacman::soa::common::outils /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::soa::common::attributes /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::classes /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::common::packages /]
-
-
-[comment] le Service existe sans DTO [/comment]
-[template public serviceFacadeItf(s : Service)]
-[licence()/]
-package [buildPackageWsApi(s)/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[s.writeImports()/]
-
-// [/protected]
-
-/**
- * Definit le contrat de services spécifiques.
- * @author [getAuthorName()/]
- */
-public interface [buildServiceFacadeCXFInterfaceName(s)/]
-{
-
-[if s <> null and not s.ownedInterface.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-[if o.isCXFOperation()]
-
-   /**
-    * [o.description/].
-[getComParamsIn(o)/][comParamOut(o)/]
-	*/
-    // Annotations Méthode
-    // [protected (s.getUserCodeId('Annotations Méthode'))]
-
-    // [/protected]
-   [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/]);
-[/if]
-[/for]
-[/if]
-
-}
-[/template]
+[comment le Service existe sans DTO /]
+[template public serviceFacadeItf(s : soa::Service)]
+  [s.licence()/]
+  package [s.buildPackageWsApi()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Definit le contrat de services spécifiques.
+   * @author [s.getAuthorName()/]
+   */
+  public interface [s.buildServiceFacadeCXFInterfaceName()/]
+  {
+  
+  [if (s <> null and not (s.ownedInterface = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.isCXFOperation())]
+        
+           /**
+            * [o.description/].
+        [o.getComParamsIn()/][o.comParamOut()/]
+        	*/
+            // Annotations Méthode
+            [protected (s.getUserCodeId('Annotations Méthode')) startTagPrefix('// ') endTagPrefix('// ')]
+              
+            [/protected]
+        
+           [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/]);
+      [/if]
+    [/for]
+  [/if]
+  
+  }[/template]
 
 [comment : Write all required imports. n/]
-[template private writeImports(s : Service) post(trim())]
-[s.initImports()/]
-[s.addImport('java.util.List')/]
-[s.flushImports()/]
-[/template]
+[template private writeImports(s : soa::Service) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport('java.util.List')/]
+  [s.flushImports()/][/template]

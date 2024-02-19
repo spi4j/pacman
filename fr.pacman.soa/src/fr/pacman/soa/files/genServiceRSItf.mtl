@@ -1,16 +1,15 @@
+[module genServiceRSItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::soa::commons::ws::rs::api::category::serviceFacadeItf/]
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::common::packages/]
+
 [comment encoding = UTF-8 /]
-[module genServiceRSItf('http://www.obeonetwork.org/dsl/soa/4.0.0', 
-						'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::soa::commons::ws::rs::api::category::serviceFacadeItf /]
-[import fr::pacman::commons::soa::common::classes /]
-[import fr::pacman::commons::common::packages /]
-
 [comment : *******************************************************/]
 [comment : Generation of the facade interface for a REST service. /]
 [comment : *******************************************************/]
-[template public genServiceRSItf(s : Service, d : DTO)]
-[file (filename(getCommonsSourceDir(), s.buildPackageWsApi(), s.buildServiceFacadeRSInterfaceName(d) + '.java'), false, 'UTF-8')]
-[s.serviceFacadeItf(d)/]
-[/file]
+[template public genServiceRSItf(s : soa::Service, d : environment::DTO)]
+  [file (s.getCommonsSourceDir().filename(s.buildPackageWsApi(), s.buildServiceFacadeRSInterfaceName(d) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceFacadeItf(d)/]
+  [/file]
 [/template]

@@ -1,76 +1,76 @@
+[module userPersistenceApp('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::common::packages/]
+[import fr::pacman::entity::api::common::names/]
+[import fr::pacman::entity::api::common::commentaires/]
+[import fr::pacman::entity::api::common::buildClassesEntityApi/]
+[import fr::pacman::entity::api::common::attributes/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::project::surcouche/]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils/]
+
 [comment encoding = UTF-8 /]
-[module userPersistenceApp('http://www.obeonetwork.org/dsl/entity/3.0.0')/]
-
-[import fr::pacman::entity::api::common::packages /]
-[import fr::pacman::entity::api::common::names /]
-[import fr::pacman::entity::api::common::commentaires /]
-[import fr::pacman::entity::api::common::buildClassesEntityApi /]
-[import fr::pacman::entity::api::common::attributes /]
-
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::project::surcouche /]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::utils /]
-
-[template public userPersistenceApp(r : Root)]
-[licence()/]
-// CHECKSTYLE:OFF
-package [buildPackagePersistence()/]; // NOPMD
-// CHECKSTYLE:ON
-// [protected ('for imports')]
-
-import fr.spi4j.persistence.ParamPersistence_Abs;
-import [getImportForUserPersistence_Abs()/];
-
-// [/protected]
-
-[comClass('Implémentation permettant de centraliser les traitements de persistance de l\'application')/]
-public final class [buildUserPersistenceAppClassName()/] extends [getClassNameForUserPersistence_Abs()/]
-{
-
-   /**
-    * Constructeur.
-    * @param [apply_parameterMethodObjectIn('param persistence')/]
-    *           (In)(*) le paramétrage de la persistance
-    */
-   protected [buildUserPersistenceAppClassName()/] (final ParamPersistence_Abs [apply_parameterMethodObjectIn('param persistence')/])
-   {
-      super ([apply_parameterMethodObjectIn('param persistence')/]);
-   }
-
-[for (e : Entity | r.eAllContents(Entity))]
-
-   // [apply_methodDefault('get '+ buildEntityName(e))/]
-   // [protected (e.getUserCodeId(apply_methodDefault('get '+ buildEntityName(e))))]
-   /**
-    * Obtenir l'entité '[buildEntityInterfaceName(e)/]'.
-    * @return L'instance désirée.
-    */
-   public [buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/] [apply_methodDefault('get '+ buildEntityName(e))/] ()
-   {
-      return getEntity ([buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/].class);
-   }
-   // [/protected]
-
-[if not e.isNotPersistent() or useMatching()]
-   // [apply_methodDefault('get '+ buildDaoName(e))/]
-   // [protected (e.getUserCodeId(apply_methodDefault('get '+ buildDaoName(e))))]
-   /**
-    * Obtenir le DAO '[buildDaoInterfaceName(e)/]'.
-    * @return L'instance désirée.
-    */
-   public [buildPackagePersistenceApiEntity(e)/].[buildDaoInterfaceName(e)/] [apply_methodDefault('get '+ buildDaoName(e))/] ()
-   {
-      return getDao ([buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/].class);
-   }
-   // [/protected]
-[/if]
-[/for]
-}
-[/template]
+[template public userPersistenceApp(r : entity::Root)]
+  [r.licence()/]
+  // CHECKSTYLE:OFF
+  package [r.buildPackagePersistence()/]; // NOPMD
+  // CHECKSTYLE:ON
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import fr.spi4j.persistence.ParamPersistence_Abs;
+    import [r.getImportForUserPersistence_Abs()/];
+    
+  [/protected]
+  
+  
+  [r.comClass('Implémentation permettant de centraliser les traitements de persistance de l\'application')/]
+  public final class [r.buildUserPersistenceAppClassName()/] extends [r.getClassNameForUserPersistence_Abs()/]
+  {
+  
+     /**
+      * Constructeur.
+      * @param ['param persistence'.apply_parameterMethodObjectIn()/]
+      *           (In)(*) le paramétrage de la persistance
+      */
+     protected [r.buildUserPersistenceAppClassName()/] (final ParamPersistence_Abs ['param persistence'.apply_parameterMethodObjectIn()/])
+     {
+        super (['param persistence'.apply_parameterMethodObjectIn()/]);
+     }
+  
+  [for (e : entity::Entity | r.eAllContents(entity::Entity))]
+    
+       // [('get ' + e.buildEntityName()).apply_methodDefault()/]
+       [protected (e.getUserCodeId(('get ' + e.buildEntityName()).apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+            /**
+             * Obtenir l'entité '[e.buildEntityInterfaceName()/]'.
+             * @return L'instance désirée.
+             */
+            public [e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/] [('get ' + e.buildEntityName()).apply_methodDefault()/] ()
+            {
+               return getEntity ([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class);
+            }
+       [/protected]
+    
+    
+    [if (not e.isNotPersistent() or e.useMatching())]
+         // [('get ' + e.buildDaoName()).apply_methodDefault()/]
+         [protected (e.getUserCodeId(('get ' + e.buildDaoName()).apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
+              /**
+               * Obtenir le DAO '[e.buildDaoInterfaceName()/]'.
+               * @return L'instance désirée.
+               */
+              public [e.buildPackagePersistenceApiEntity()/].[e.buildDaoInterfaceName()/] [('get ' + e.buildDaoName()).apply_methodDefault()/] ()
+              {
+                 return getDao ([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class);
+              }
+         [/protected]
+      
+    [/if]
+  [/for]
+  }[/template]

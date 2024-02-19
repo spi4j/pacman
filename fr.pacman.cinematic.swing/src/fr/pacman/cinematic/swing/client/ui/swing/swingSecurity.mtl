@@ -1,88 +1,89 @@
+[module swingSecurity('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::cinematic::swing::common::packages/]
+
 [comment encoding = UTF-8 /]
-[module swingSecurity('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+[template public Initialization(root : cinematic::CinematicRoot)]
+  [root.licence()/]
+  package [root.namePackageMain()/];
+  
+  import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+  import fr.spi4j.lib.security.client.Spi4jClientSecurity;
+  
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+  [/protected]
+  
+  
+  /**
+   * Initialisation de l'application cliente.
+   * @author [root.getAuthorName()/]
+   */
+  public final class Initialization
+  {
+  	/**
+  	* Constructeur privé : pas d'instance.
+  	*/
+  	private Initialization ()
+  	{
+  		super();
+  	}
+  
+  	/**
+  	* Initialisation.
+      */
+  	public static void initialize ()
+  	{
+  
+  		// Initialization
+  		[protected (root.getUserCodeId('Initialization')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+    [/protected]
+  
+  
+  		Spi4jSecurity_Abs.setInstance(new Spi4jClientSecurity());
+  		Spi4jSecurity_Abs.getInstance().setAuthorizationService(new ClientSecurityManager());
+  	}
+  }[/template]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::cinematic::swing::common::packages /]
-
-[template public Initialization(root : CinematicRoot)]
-[licence()/]
-package [namePackageMain()/];
-
-import fr.spi4j.lib.security.Spi4jSecurity_Abs;
-import fr.spi4j.lib.security.client.Spi4jClientSecurity;
-
-// [protected ('for imports')]
-
-// [/protected]
-
-/**
- * Initialisation de l'application cliente.
- * @author [getAuthorName()/]
- */
-public final class Initialization
-{
-	/**
-	* Constructeur privé : pas d'instance.
-	*/
-	private Initialization ()
-	{
-		super();
-	}
-
-	/**
-	* Initialisation.
-    */
-	public static void initialize ()
-	{
-
-		// Initialization
-		// [protected (root.getUserCodeId('Initialization'))]
-
-		// [/protected]
-
-		Spi4jSecurity_Abs.setInstance(new Spi4jClientSecurity());
-		Spi4jSecurity_Abs.getInstance().setAuthorizationService(new ClientSecurityManager());
-	}
-}
-[/template]
-
-[template public SecurityManager(root : CinematicRoot)]
-package [namePackageMain()/];
-
-import java.util.HashSet;
-import java.util.Set;
-
-import fr.spi4j.lib.security.AuthorizationService_Itf;
-import fr.spi4j.lib.security.PermissionContainer;
-import fr.spi4j.lib.security.Spi4jSecurity_Abs;
-import fr.spi4j.lib.security.User_Itf;
-
-// [protected ('for imports')]
-
-// [/protected]
-
-/**
- * Gestion des permissions côté client.
- * @author [getAuthorName()/]
- */
-public class ClientSecurityManager implements AuthorizationService_Itf
-{
-	@Override
-	public PermissionContainer getPermissionsOfCurrentUser() {
-		
-		final Set<String> v_listPerm = new HashSet<>();
-		boolean v_isSuperAdmin = false;
-		
-		// Security
-		// [protected (root.getUserCodeId('Security'))]
-
-		// [/protected]
-
-		final User_Itf v_user = Spi4jSecurity_Abs.getInstance().getCurrentUser();
-		return new PermissionContainer(v_listPerm, v_isSuperAdmin);
-	}
-}
-[/template]
+[template public SecurityManager(root : cinematic::CinematicRoot)]
+  package [root.namePackageMain()/];
+  
+  import java.util.HashSet;
+  import java.util.Set;
+  
+  import fr.spi4j.lib.security.AuthorizationService_Itf;
+  import fr.spi4j.lib.security.PermissionContainer;
+  import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+  import fr.spi4j.lib.security.User_Itf;
+  
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+  [/protected]
+  
+  
+  /**
+   * Gestion des permissions côté client.
+   * @author [root.getAuthorName()/]
+   */
+  public class ClientSecurityManager implements AuthorizationService_Itf
+  {
+  	@Override
+  	public PermissionContainer getPermissionsOfCurrentUser() {
+  		
+  		final Set<String> v_listPerm = new HashSet<>();
+  		boolean v_isSuperAdmin = false;
+  		
+  		// Security
+  		[protected (root.getUserCodeId('Security')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+    [/protected]
+  
+  
+  		final User_Itf v_user = Spi4jSecurity_Abs.getInstance().getCurrentUser();
+  		return new PermissionContainer(v_listPerm, v_isSuperAdmin);
+  	}
+  }[/template]

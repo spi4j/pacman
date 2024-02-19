@@ -632,6 +632,8 @@ public final class PacmanPropertiesManager
       return c_dirProperties;
    }
 
+public static String getDirPropertiesJavaService(Object object){return getDirProperties();}
+
    /**
     * Obtenir la liste complete des proprietes au format Pacman.
     * 

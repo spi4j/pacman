@@ -1,6 +1,5 @@
-[comment encoding = UTF-8 /]
-[module names('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module names('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[template public nameSimpleEnum(e : Enumeration) post (trim())]
-[e.name.toUpperFirst()/]
-[/template]
+[comment encoding = UTF-8 /]
+[template public nameSimpleEnum(e : environment::Enumeration) post(self.trim())]
+  [e.name.toUpperFirst()/][/template]

@@ -1,163 +1,165 @@
+[module gwtLanceur('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::cinematic::gwt::common::packages/]
+[import fr::pacman::cinematic::gwt::common::name/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::api::common::model/]
+[import fr::pacman::cinematic::gwt::common::gwt_commons/]
+
 [comment encoding = UTF-8 /]
-[module gwtLanceur('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::imports /]
-
-[import fr::pacman::cinematic::gwt::common::packages /]
-[import fr::pacman::cinematic::gwt::common::name /]
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::api::common::model /]
-[import fr::pacman::cinematic::gwt::common::gwt-commons /]
-
-
-[template public gwtLanceur(root : CinematicRoot)]
-[licence()/]
-package [namePackageGwt()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[root.writeImports()/]
-
-// [/protected]
-
-/**
- * Point d'entrée de l'application GWT.
- * @author [getAuthorName()/]
- */
-public class [nameGwtLanceur()/] implements EntryPoint
-{
-
-   /**
-    * Chargement du module.
-    */
-   @Override
-   public void onModuleLoad ()
-   {
-      GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
-      {
-         @Override
-         public void onUncaughtException (final Throwable p_caught)
-         {
-            // Exceptions non interceptées
-            // [protected (root.getUserCodeId('Exceptions non interceptées'))]
-            GWT.log(p_caught.toString(), p_caught);
-            // Create the popup dialog box
-            final DialogBox v_dialogBox = new DialogBox();
-            v_dialogBox.setText("Erreur inconnue");
-            v_dialogBox.setAnimationEnabled(true);
-            final Button v_closeButton = new Button("Fermer");
-            final VerticalPanel v_dialogVPanel = new VerticalPanel();
-            v_dialogVPanel.add(new HTML(p_caught.toString()));
-            v_dialogVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-            v_dialogVPanel.add(v_closeButton);
-            v_dialogBox.setWidget(v_dialogVPanel);
-            v_dialogBox.center();
-
-            // Add a handler to close the DialogBox
-            v_closeButton.addClickHandler(new ClickHandler()
-            {
-               @Override
-               public void onClick (final ClickEvent p_event)
-               {
-                  v_dialogBox.hide();
-               }
-            });
-            // [/protected]
-         }
-      });
-
-      Window.addWindowClosingHandler(new ClosingHandler()
-      {
-         @Override
-         public void onWindowClosing (final ClosingEvent p_event)
-         {
-            // Fermeture de l\'application
-            // [protected (root.getUserCodeId('Fermeture de l\'application'))]
-            p_event.setMessage("Vous allez quitter l'application blanche. Continuer ?");
-            // [/protected]
-         }
-      });
-
-      // Pre initialisation
-      // [protected (root.getUserCodeId('Pre initialisation'))]
-
-      // [/protected]
-
-      // Instanciation d'un Registre de vues dédié à GWT
-      MVPUtils.setViewManager(new GWTViewManager());
-      // Association des vues de l'application avec les présenteurs
-      MVPUtils.getInstance().getViewManager().setViewsAssociation(new GwtViews());
-
-      // initialisation de l'application
-      initApplication();
-
-      // Post initialisation
-      // [protected (root.getUserCodeId('Post initialisation'))]
-      // masquer le div de chargement de la page.
-      final RootPanel v_loadingPanel = RootPanel.get("loading");
-      v_loadingPanel.setVisible(false);
-      // [/protected]
-   }
-
-   /**
-    * Initialisation de l'application GWT.
-    */
-   public static void initApplication ()
-   {
-      // Pre Initialisation de l\'application
-      // [protected (root.getUserCodeId('Pre Initialisation de l\'application'))]
-
-      // [/protected]
-
-[for (flow : Flow | root.eAllContents(ViewState)
-        ->select(viewState : ViewState | viewState.viewContainers
-                ->exists(view : ViewContainer | not view.widget.oclIsUndefined() and view.widget.name = 'MainPanel')).eContainer(Flow))]
-      // [protected (flow.getUserCodeId('Initialisation du flow ' + flow.name))]
-      final [nameFlow(flow)/] v_[nameFlow(flow).toLowerFirst()/] = new [nameFlow(flow)/]();
-      v_[nameFlow(flow).toLowerFirst()/].start();
-      // [/protected]
-
-[/for]
-
-      // Post Initialisation de l\'application
-      // [protected (root.getUserCodeId('Post Initialisation de l\'application'))]
-
-      // [/protected]
-   }
-
-   // GwtLanceur
-   // [protected (root.getUserCodeId('GwtLanceur'))]
-
-   // [/protected]
-}
-[/template]
+[template public gwtLanceur(root : cinematic::CinematicRoot)]
+  [root.licence()/]
+  package [root.namePackageGwt()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [root.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Point d'entrée de l'application GWT.
+   * @author [root.getAuthorName()/]
+   */
+  public class [root.nameGwtLanceur()/] implements EntryPoint
+  {
+  
+     /**
+      * Chargement du module.
+      */
+     @Override
+     public void onModuleLoad ()
+     {
+        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+        {
+           @Override
+           public void onUncaughtException (final Throwable p_caught)
+           {
+              // Exceptions non interceptées
+              [protected (root.getUserCodeId('Exceptions non interceptées')) startTagPrefix('// ') endTagPrefix('// ')]
+                            GWT.log(p_caught.toString(), p_caught);
+                            // Create the popup dialog box
+                            final DialogBox v_dialogBox = new DialogBox();
+                            v_dialogBox.setText("Erreur inconnue");
+                            v_dialogBox.setAnimationEnabled(true);
+                            final Button v_closeButton = new Button("Fermer");
+                            final VerticalPanel v_dialogVPanel = new VerticalPanel();
+                            v_dialogVPanel.add(new HTML(p_caught.toString()));
+                            v_dialogVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+                            v_dialogVPanel.add(v_closeButton);
+                            v_dialogBox.setWidget(v_dialogVPanel);
+                            v_dialogBox.center();
+                
+                            // Add a handler to close the DialogBox
+                            v_closeButton.addClickHandler(new ClickHandler()
+                            {
+                               @Override
+                               public void onClick (final ClickEvent p_event)
+                               {
+                                  v_dialogBox.hide();
+                               }
+                            });
+              [/protected]
+  
+           }
+        });
+  
+        Window.addWindowClosingHandler(new ClosingHandler()
+        {
+           @Override
+           public void onWindowClosing (final ClosingEvent p_event)
+           {
+              // Fermeture de l\'application
+              [protected (root.getUserCodeId('Fermeture de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
+                            p_event.setMessage("Vous allez quitter l'application blanche. Continuer ?");
+              [/protected]
+  
+           }
+        });
+  
+        // Pre initialisation
+        [protected (root.getUserCodeId('Pre initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+  
+        // Instanciation d'un Registre de vues dédié à GWT
+        MVPUtils.setViewManager(new GWTViewManager());
+        // Association des vues de l'application avec les présenteurs
+        MVPUtils.getInstance().getViewManager().setViewsAssociation(new GwtViews());
+  
+        // initialisation de l'application
+        initApplication();
+  
+        // Post initialisation
+        [protected (root.getUserCodeId('Post initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
+                // masquer le div de chargement de la page.
+                final RootPanel v_loadingPanel = RootPanel.get("loading");
+                v_loadingPanel.setVisible(false);
+        [/protected]
+  
+     }
+  
+     /**
+      * Initialisation de l'application GWT.
+      */
+     public static void initApplication ()
+     {
+        // Pre Initialisation de l\'application
+        [protected (root.getUserCodeId('Pre Initialisation de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+  
+  [for (flow : flow::Flow | root.eAllContents(flow::ViewState)->select(viewState | viewState.viewContainers->exists(view | not (view.widget = null) and view.widget.name = 'MainPanel'))->collect(temp1 | temp1.eContainer(flow::Flow)))]
+          [protected (flow.getUserCodeId('Initialisation du flow ' + flow.name)) startTagPrefix('// ') endTagPrefix('// ')]
+                  final [flow.nameFlow()/] v_[flow.nameFlow().toLowerFirst()/] = new [flow.nameFlow()/]();
+                  v_[flow.nameFlow().toLowerFirst()/].start();
+          [/protected]
+    
+    
+  [/for]
+  
+        // Post Initialisation de l\'application
+        [protected (root.getUserCodeId('Post Initialisation de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
+          
+        [/protected]
+  
+     }
+  
+     // GwtLanceur
+     [protected (root.getUserCodeId('GwtLanceur')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+     [/protected]
+  
+  }[/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (r : CinematicRoot) post(trim())]
-[r.initImports()/]
-[r.addImport('com.google.gwt.core.client.EntryPoint')/]
-[r.addImport('com.google.gwt.core.client.GWT')/]
-[r.addImport('com.google.gwt.core.client.GWT.UncaughtExceptionHandler')/]
-[r.addImport('com.google.gwt.event.dom.client.ClickEvent')/]
-[r.addImport('com.google.gwt.event.dom.client.ClickHandler')/]
-[r.addImport('com.google.gwt.user.client.Window')/]
-[r.addImport('com.google.gwt.user.client.Window.ClosingEvent')/]
-[r.addImport('com.google.gwt.user.client.Window.ClosingHandler')/]
-[r.addImport('com.google.gwt.user.client.ui.Button')/]
-[r.addImport('com.google.gwt.user.client.ui.DialogBox')/]
-[r.addImport('com.google.gwt.user.client.ui.HTML')/]
-[r.addImport('com.google.gwt.user.client.ui.HasHorizontalAlignment')/]
-[r.addImport('com.google.gwt.user.client.ui.RootPanel')/]
-[r.addImport('com.google.gwt.user.client.ui.VerticalPanel')/]
-[r.addImport('fr.spi4j.ui.gwt.client.mvp.GWTViewManager')/]
-[r.addImport('fr.spi4j.ui.mvp.MVPUtils')/]
-
-[for (flow : Flow | r.eAllContents(Flow)->select(f : Flow | flowHasMainPanel(f)))]
-	[r.addImport(namePackageFlowManager(flow) + '.' + nameFlow(flow))/]
-[/for]
-
-[r.flushImports()/]
-[/template]
+[template private writeImports(r : cinematic::CinematicRoot) post(self.trim())]
+  [r.initImports()/]
+  [r.addImport('com.google.gwt.core.client.EntryPoint')/]
+  [r.addImport('com.google.gwt.core.client.GWT')/]
+  [r.addImport('com.google.gwt.core.client.GWT.UncaughtExceptionHandler')/]
+  [r.addImport('com.google.gwt.event.dom.client.ClickEvent')/]
+  [r.addImport('com.google.gwt.event.dom.client.ClickHandler')/]
+  [r.addImport('com.google.gwt.user.client.Window')/]
+  [r.addImport('com.google.gwt.user.client.Window.ClosingEvent')/]
+  [r.addImport('com.google.gwt.user.client.Window.ClosingHandler')/]
+  [r.addImport('com.google.gwt.user.client.ui.Button')/]
+  [r.addImport('com.google.gwt.user.client.ui.DialogBox')/]
+  [r.addImport('com.google.gwt.user.client.ui.HTML')/]
+  [r.addImport('com.google.gwt.user.client.ui.HasHorizontalAlignment')/]
+  [r.addImport('com.google.gwt.user.client.ui.RootPanel')/]
+  [r.addImport('com.google.gwt.user.client.ui.VerticalPanel')/]
+  [r.addImport('fr.spi4j.ui.gwt.client.mvp.GWTViewManager')/]
+  [r.addImport('fr.spi4j.ui.mvp.MVPUtils')/]
+  
+  [for (flow : flow::Flow | r.eAllContents(flow::Flow)->select(f | f.flowHasMainPanel()))]
+    	[r.addImport(flow.namePackageFlowManager() + '.' + flow.nameFlow())/]
+  [/for]
+  
+  [r.flushImports()/][/template]

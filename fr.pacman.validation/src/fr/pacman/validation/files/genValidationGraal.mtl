@@ -1,51 +1,45 @@
+[module genValidationGraal('http://www.obeonetwork.org/dsl/graal/2.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::validation::common::tools/]
+[import fr::pacman::validation::services::ValidationService/]
+
 [comment encoding = UTF-8 /]
-[module genValidationGraal('http://www.obeonetwork.org/dsl/graal/2.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::validation::common::tools /]
-
-[template public genValidationGraal(m : System)]
-
-[file ('GraalCheckResult.txt', false, 'UTF-8')]
-Log du model check de : [m.name /]
-
-[comment **** Vérifications relatives aux tâches Graal **** /]
-[for (v_taskCour : Task | m.ownedTasks) ]
-Traitement tache : [self.name /]
-    [if actors->size() = 0 ]
-        [updview(1, 'Aucun acteur ne contribue à cette tâche')/]
-    [/if]
-    [if actors->size() > 1 ]
-        [updview(2, 'Au moins 2 acteurs contribuent à cette tâche')/]
-    [/if]
-[comment][isCycleOn(self)/][/comment]
-    [if isCycleOn(v_taskCour, v_taskCour) ]
-        [updview(1, 'Cette tâche fait partie d\'un cycle de dépendances')/]
-    [/if]
-Fin Cycle
-    [if eInverse()->select(oclIsTypeOf(Task))->size() = 0 ]
-        [updview(3, 'Cette tâche n\'est utilisée par aucune autre tâche, seule la tâche racine devrait être dans ce cas')/]
-    [/if]
-    [comment][if eContainer(filter)-> select (oclIsTypeOf(Task)) ->size() = 0] // TRAVAIL PERSO !!
-    [updview(1 , ' Un nom de tâche doit être unique dans un use case')/]  //TRAVAIL PERSO !!
-    [/if][/comment]
-[/for]
-
-[comment **** Vérifications relatives aux acteurs Graal **** /]
-[for (m.actors) ]
-    [if description->isEmpty() ]
-        [updview(2, 'Acteur sans description')/]
-    [/if]
-    [if not m.ownedTasks.actors->includes(self) ]
-        [updview(1, 'Cet acteur n\'intervient dans aucune tâche')/]
-    [/if]
-[/for]
-
-[/file]
+[template public genValidationGraal(m : graal::System)]
+  
+  [file ('GraalCheckResult.txt', overwrite, 'UTF-8')]
+    Log du model check de : [m.name/]
+    
+    [for (v_taskCour : graal::Task | m.ownedTasks)]
+      Traitement tache : [v_taskCour.name/]
+      [if (v_taskCour.actors->size() = 0)]
+                [v_taskCour.updview(1, 'Aucun acteur ne contribue à cette tâche')/]
+      [/if]
+      [if (v_taskCour.actors->size() > 1)]
+                [v_taskCour.updview(2, 'Au moins 2 acteurs contribuent à cette tâche')/]
+      [/if]
+      [if (v_taskCour.isCycleOn(v_taskCour))]
+                [v_taskCour.updview(1, 'Cette tâche fait partie d\'un cycle de dépendances')/]
+      [/if]
+      Fin Cycle
+      [if (v_taskCour.eInverse()->select(temp1 | temp1.oclIsTypeOf(graal::Task))->size() = 0)]
+                [v_taskCour.updview(3, 'Cette tâche n\'est utilisée par aucune autre tâche, seule la tâche racine devrait être dans ce cas')/]
+      [/if]
+    [/for]
+    
+    [for (iterator0 | m.actors)]
+      [if (OrderedSet{iterator0.description}->isEmpty())]
+                [iterator0.updview(2, 'Acteur sans description')/]
+      [/if]
+      [if (not m.ownedTasks->asSequence()->collect(temp2 | temp2.actors)->includes(iterator0))]
+                [iterator0.updview(1, 'Cet acteur n\'intervient dans aucune tâche')/]
+      [/if]
+    [/for]
+    
+  [/file]
 [/template]
 
 [comment **** Queries pour les tâches Graal ****/]
-
 [**
  * Permet de détecter les cycles dans les tâches GRAAL.
 */]
@@ -53,6 +47,4 @@ Fin Cycle
 [query public isCycleOn(p_recurse : Task, p_fixe : Task) : Boolean
     = p_recurse.uses->size() > 0  and (p_recurse.uses->includes(p_fixe) or p_recurse.uses.isCycleOn(p_fixe)->includes(true)) /]
 [/comment]
-[query public isCycleOn(p_recurse : Task, p_fixe : Task) : Boolean
-    = invoke('fr.pacman.validation.services.ValidationService', 'isCycleOn_sce(org.obeonetwork.graal.Task, org.obeonetwork.graal.Task)', Sequence{p_recurse, p_fixe}) /]
-
+[query public isCycleOn(p_recurse : graal::Task, p_fixe : graal::Task) : Boolean = p_recurse.isCycleOn_sce(p_fixe)/]

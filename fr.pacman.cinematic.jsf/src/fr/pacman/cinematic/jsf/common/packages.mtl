@@ -1,92 +1,50 @@
+[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::jsf::common::jsf_commons/]
+[import fr::pacman::cinematic::jsf::common::jsf_widgets/]
+[import fr::pacman::cinematic::jsf::common::name/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
+[query public namePackageJsf(any : ecore::EObject) : String = any.namePackageClient() + '.jsf'/]
 
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::utils /]
+[query public namePackageViewContainerImplementation(viewContainer : view::ViewContainer) : String = viewContainer.namePackageJsf() + viewContainer.packageHierarchy()/]
 
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::jsf::common::jsf-commons /]
-[import fr::pacman::cinematic::jsf::common::jsf-widgets /]
-[import fr::pacman::cinematic::jsf::common::name /]
+[query public namePackagePagesContainer(viewContainer : view::ViewContainer) : String = viewContainer.packageHierarchy()/]
 
-
-[query public namePackageJsf(any : OclAny) : String =
-    namePackageClient() + '.jsf'
-/]
-
-[query public namePackageViewContainerImplementation(viewContainer : ViewContainer) : String =
-    namePackageJsf() + packageHierarchy(viewContainer)
-/]
-
-[query public namePackagePagesContainer(viewContainer : ViewContainer) : String =
-    packageHierarchy(viewContainer)
-/]
-
-[query public namePackagePagesContainerWithoutDot(any : OclAny) : String =
-     if (any.oclIsUndefined() or any.ancestors(Package)->isEmpty()) then
-        ''
-    else
-        any.ancestors(Package).name.sanitize().toLower()->reverse()->sep('.')
-    endif
-/]
-
+[query public namePackagePagesContainerWithoutDot(any : ecore::EObject) : String = if any = null or any.ancestors(cinematic::Package)->isEmpty() then '' else any.ancestors(cinematic::Package)->collect(temp1 | temp1.name)->collect(temp2 | temp2.sanitize())->collect(temp3 | temp3.toLower())->reverse()->sep('.') endif/]
 
 [**
  * The documentation of the template genFullQualifiedFileName.
  * @param aViewState
- */]
+*/]
+[template public genFullQualifiedFileName(viewContainer : view::ViewContainer)]
+  /src/main/webapp/pages/[viewContainer.namePackagePagesContainer()/][if (viewContainer.ancestors(cinematic::Package)->notEmpty())]/[/if]
+  [viewContainer.nameViewImplementation()/].xhtml[/template]
 
-[template public genFullQualifiedFileName(viewContainer : ViewContainer)]
-/src/main/webapp/pages/[viewContainer.namePackagePagesContainer()/][if (viewContainer.ancestors(Package)->notEmpty())]/[/if][viewContainer.nameViewImplementation()/].xhtml
-[/template]
+[template public genFullQualifiedFileNameWithoutDot(viewContainer : view::ViewContainer)]
+  [viewContainer.genPackage().replace('//', '/')/][/template]
 
-[template public genFullQualifiedFileNameWithoutDot(viewContainer : ViewContainer)]
-[genPackage(viewContainer).replace('//','/')/]
-[/template]
+[query private genPackage(viewContainer : view::ViewContainer) : String = '/pages' + viewContainer.namePackagePagesContainer().replace('.', '/') + '/' + viewContainer.nameViewImplementation() + '.xhtml'/]
 
-[query private genPackage(viewContainer : ViewContainer) : String =
-'/pages' + viewContainer.namePackagePagesContainer().replace('.','/') + '/' + viewContainer.nameViewImplementation() + '.xhtml'
-/]
+[query private orderWidgets(widgets : OrderedSet(toolkits::Widget)) : OrderedSet(toolkits::Widget) = widgets->sortedBy(w | w.widgetComparator())/]
 
-[query private orderWidgets(widgets : Set(Widget)) : OrderedSet(Widget) =
-widgets->sortedBy(w : Widget | widgetComparator(w))
-/]
+[query private widgetComparator(widget : toolkits::Widget) : String = if widget = null or widget.name = null then '' else widget.name endif/]
 
-[query private widgetComparator(widget : Widget) : String =
-    if widget.oclIsUndefined() or widget.name.oclIsUndefined() then
-        ''
-    else
-        widget.name
-    endif
-/]
+[query public namePackageContainerBean(viewContainer : view::ViewContainer) : String = viewContainer.namePackageBean() + viewContainer.packageHierarchy()/]
 
-[query public namePackageContainerBean(viewContainer : ViewContainer) : String =
-    namePackageBean() + packageHierarchy(viewContainer)
-/]
+[query public nameCommonPackage(any : ecore::EObject) : String = any.namePackageBean() + '.common'/]
 
-[query public nameCommonPackage(any : OclAny) : String =
-    namePackageBean() + '.common'
-/]
+[query public importAbstractBean(any : ecore::EObject) : String = any.namePackageBean() + '.' + any.buildJsfBeanAbstractName()/]
 
-[query public importAbstractBean(any : OclAny) : String =
-    namePackageBean() + '.' + buildJsfBeanAbstractName()
-/]
+[query public importViewMode(any : ecore::EObject) : String = any.getApplicationPackage() + '.ViewMode'/]
 
-[query public importViewMode(any : OclAny) : String =
-    getApplicationPackage() + '.ViewMode'
-/]
+[query public namePackageBean(any : ecore::EObject) : String = any.getApplicationPackage() + '.beans'/]
 
-[query public namePackageBean(any : OclAny) : String =
-    getApplicationPackage() + '.beans'
-/]
+[query public namePackageCommon(any : ecore::EObject) : String = any.getApplicationPackage() + '.common'/]
 
-[query public namePackageCommon(any : OclAny) : String =
-    getApplicationPackage() + '.common'
-/]
-
-[query public GetClient(any : OclAny) : String = 
-    getClient()
-/]
-
+[query public GetClient(any : ecore::EObject) : String = any.getClient()/]

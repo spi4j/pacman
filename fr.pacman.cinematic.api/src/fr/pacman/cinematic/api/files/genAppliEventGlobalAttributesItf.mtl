@@ -1,14 +1,14 @@
+[module genAppliEventGlobalAttributesItf('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::cinematic::api::common::name/]
+[import fr::pacman::cinematic::api::common::packages/]
+[import fr::pacman::cinematic::api::client::ui::appliEventGlobalAttributesItf/]
+
 [comment encoding = UTF-8 /]
-[module genAppliEventGlobalAttributesItf('http://www.obeonetwork.org/dsl/cinematic/3.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::cinematic::api::common::name /]
-[import fr::pacman::cinematic::api::common::packages /]
-[import fr::pacman::cinematic::api::client::ui::appliEventGlobalAttributesItf /]
-
-[template public genAppliEventGlobalAttributesItf(e : OclAny, clientPropertiesPrefix : String)]
-[file (filename(getConfigValue(clientPropertiesPrefix.toLower() + '.source.dir'), namePackageClient(), buildAppliEventGlobalAttributesItf() + '.java'), false, 'UTF-8')]
-[appliEventGlobalAttributesItf()/]
-[/file]
+[template public genAppliEventGlobalAttributesItf(e : ecore::EObject, clientPropertiesPrefix : String)]
+  [file ((clientPropertiesPrefix.toLower() + '.source.dir').getConfigValue().filename(e.namePackageClient(), e.buildAppliEventGlobalAttributesItf() + '.java'), overwrite, 'UTF-8')]
+    [e.appliEventGlobalAttributesItf()/]
+  [/file]
 [/template]

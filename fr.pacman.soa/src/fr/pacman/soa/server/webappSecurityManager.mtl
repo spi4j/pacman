@@ -1,58 +1,56 @@
-[comment encoding = UTF-8 /]
-[module webappSecurityManager('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                            'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module webappSecurityManager('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::classes /]
-
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::classes/]
 [import fr::pacman::soa::common::classes/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
 
-[import fr::pacman::commons::convention::rule::parameterRule /]
-
-[template public webappSecurityHelper(any : OclAny)]
-[licence()/]
-package [getApplicationPackage()/];
-// [protected ('for imports')]
-
-import fr.spi4j.lib.security.Spi4jSecurity_Abs;
-import fr.spi4j.lib.security.User_Itf;
-
-// [/protected]
-
-/**
- * 
- */
-public class [buildSecurityWebAppHelperName()/]
-{
-
-	/**
-	* Constructeur privé pour empécher toute instanciation.
-	*/
-	private  [buildSecurityWebAppHelperName()/](){
-		//RAS.
-	}
-
-	/**
-	 * Enregistre l'utilisateur avec l'ensemble de ses permissions auprès le la
-	 * sécurité interne Spi4j.
-	 * 
-	 * @param [apply_parameterMethodClassicIn('authenticated user')/] : L'utilisateur authentifié.
-	 */
-	public static void registerAuthenticatedUser(final User_Itf [apply_parameterMethodClassicIn('authenticated user')/])	{
-
-		// register authenticated user
-		// [protected (any.getUserCodeId('register authenticated user'))]
-
-		// Positionner ici l'ensemble du code nécessaire pour la gestion des permissions de l'utilisateur
-		// en fonction de la modélisation qui aura été effectuée dans le cadre de l'application.
-		// Ces permissions seront par la suite récupérées par la classe : [buildSecurityManagerClassName()/].
-
-		Spi4jSecurity_Abs.getInstance().setCurrentUser([apply_parameterMethodClassicIn('authenticated user')/]);
-
-		// [/protected]
-	}
-}
-
+[comment encoding = UTF-8 /]
+[template public webappSecurityHelper(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.getApplicationPackage()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import fr.spi4j.lib.security.Spi4jSecurity_Abs;
+    import fr.spi4j.lib.security.User_Itf;
+    
+  [/protected]
+  
+  
+  /**
+   * 
+   */
+  public class [any.buildSecurityWebAppHelperName()/]
+  {
+  
+  	/**
+  	* Constructeur privé pour empécher toute instanciation.
+  	*/
+  	private  [any.buildSecurityWebAppHelperName()/](){
+  		//RAS.
+  	}
+  
+  	/**
+  	 * Enregistre l'utilisateur avec l'ensemble de ses permissions auprès le la
+  	 * sécurité interne Spi4j.
+  	 * 
+  	 * @param ['authenticated user'.apply_parameterMethodClassicIn()/] : L'utilisateur authentifié.
+  	 */
+  	public static void registerAuthenticatedUser(final User_Itf ['authenticated user'.apply_parameterMethodClassicIn()/])	{
+  
+  		// register authenticated user
+  		[protected (any.getUserCodeId('register authenticated user')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		// Positionner ici l'ensemble du code nécessaire pour la gestion des permissions de l'utilisateur
+      		// en fonction de la modélisation qui aura été effectuée dans le cadre de l'application.
+      		// Ces permissions seront par la suite récupérées par la classe : [any.buildSecurityManagerClassName()/].
+      
+      		Spi4jSecurity_Abs.getInstance().setCurrentUser(['authenticated user'.apply_parameterMethodClassicIn()/]);
+      
+    [/protected]
+  
+  	}
+  }
 [/template]

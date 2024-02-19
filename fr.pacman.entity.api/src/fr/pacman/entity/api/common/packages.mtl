@@ -1,74 +1,46 @@
+[module packages('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::entity::api::common::names/]
+
 [comment encoding = UTF-8 /]
-[module packages('http://www.obeonetwork.org/dsl/entity/3.0.0','http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[import fr::pacman::commons::common::utils /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::entity::api::common::names /]
-
 [**
  * Paramétrage début
 */]
+[query public buildPackagePersistenceApiEntity(e : entity::Entity) : String = e.buildPackagePersistenceApi() + e.blockHierarchy()/]
 
-[query public buildPackagePersistenceApiEntity(e : Entity) : String =
-    buildPackagePersistenceApi() + blockHierarchy(e)
- /]
+[query public buildPackagePersistenceImplementationJdbcEntity(e : entity::Entity) : String = e.buildPackagePersistence() + '.' + e.getPackageImplJdbc() + e.blockHierarchy()/]
 
-[query public buildPackagePersistenceImplementationJdbcEntity(e : Entity) : String =
-    buildPackagePersistence()+ '.' + getPackageImplJdbc() + blockHierarchy(e)
- /]
+[query public buildPackageEntityMapper(e : entity::Entity) : String = e.buildPackageMapper() + e.blockHierarchy()/]
 
-[query public buildPackageEntityMapper(e : Entity) : String =
-    buildPackageMapper() + blockHierarchy(e)
-/]
+[query public buildPackageWsApiEntity(e : entity::Entity) : String = e.buildPackageWs() + '.' + e.getPackageApi() + e.blockHierarchy()/]
 
-[query public buildPackageWsApiEntity(e : Entity) : String =
-    buildPackageWs() + '.' + getPackageApi() + blockHierarchy(e)
-/]
+[query public buildPackagePersistenceReferentielEntity(e : entity::Entity) : String = e.buildPackagePersistenceReferentiel() + e.blockHierarchy()/]
 
-[query public buildPackagePersistenceReferentielEntity(e : Entity) : String =
-    buildPackagePersistenceReferentiel() + blockHierarchy(e)
- /]
+[query public buildPackagePersistenceReferentielReference(r : environment::Reference) : String = r.buildPackagePersistenceReferentiel() + r.blockHierarchy()/]
 
-[query public buildPackagePersistenceReferentielReference(r : Reference) : String =
-    buildPackagePersistenceReferentiel() + blockHierarchy(r)
- /]
+[query public buildPackageBusinessImplementationServiceEntity(e : entity::Entity) : String = if not (e = null) then e.buildPackageImplBusiness() + e.categoryHierarchy() else 'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL' endif/]
 
-[query public buildPackageBusinessImplementationServiceEntity(e : Entity) : String =
-    if not e.oclIsUndefined() then
-        buildPackageImplBusiness(e) + categoryHierarchy(e)
-    else
-        'PACKAGE NOT FOUND FOR SERVICE AND ENTITY NULL'
-    endif 
-/]
+[query public buildPackageBusinessApiService(e : entity::Entity) : String = if not (e = null) then e.buildPackageBusinessApiEntity() else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif/]
 
-[query public buildPackageBusinessApiService(e : Entity) : String =        
-	if not e.oclIsUndefined() then buildPackageBusinessApiEntity(e)
-    else
-        'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL'
-    endif
-/]
-
-[query public buildPackageBusinessApiEntity(e : Entity) : String =
-    buildPackageBusinessApi(e) + categoryHierarchy(e)
-/]
-
+[query public buildPackageBusinessApiEntity(e : entity::Entity) : String = e.buildPackageBusinessApi() + e.categoryHierarchy()/]
 
 [**
  * Paramétrage Fin
 */]
-
-[template public blockHierarchy(e : Entity) post (trim())]
-[if (e.ancestors(Namespace)->size() < 1)]
-[else]
-.[e.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')/]
-[/if]
+[template public blockHierarchy(e : entity::Entity) post(self.trim())]
+  [if (e.ancestors(environment::Namespace)->size() < 1)]
+  [else]
+    .[e.ancestors(environment::Namespace)->select(temp1 | temp1.oclIsTypeOf(environment::Namespace) and not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.')/]
+  [/if]
 [/template]
 
-[template public blockHierarchy(r : Reference) post (trim())]
-[if (r.ancestors(Namespace)->size() < 1)]
-[else]
-.[r.ancestors(Namespace)->select(oclIsTypeOf(Namespace) and not name.oclIsUndefined())->reverse().oclAsType(Namespace).name.sanitize().toLower()->sep('.')/]
-[/if]
+[template public blockHierarchy(r : environment::Reference) post(self.trim())]
+  [if (r.ancestors(environment::Namespace)->size() < 1)]
+  [else]
+    .[r.ancestors(environment::Namespace)->select(temp6 | temp6.oclIsTypeOf(environment::Namespace) and not (temp6.name = null))->reverse()->collect(temp7 | temp7.oclAsType(environment::Namespace))->collect(temp8 | temp8.name)->collect(temp9 | temp9.sanitize())->collect(temp10 | temp10.toLower())->sep('.')/]
+  [/if]
 [/template]

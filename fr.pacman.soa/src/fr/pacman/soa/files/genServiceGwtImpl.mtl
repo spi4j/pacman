@@ -1,21 +1,20 @@
+[module genServiceGwtImpl('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::gwt::server::business::category::serviceGwtImpl/]
+[import fr::pacman::soa::common::classes/]
+
 [comment encoding = UTF-8 /]
-[module genServiceGwtImpl('http://www.obeonetwork.org/dsl/environment/3.0.0',
-                          'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
-
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::gwt::server::business::category::serviceGwtImpl /]
-[import fr::pacman::soa::common::classes /]
-
-[template public genServiceGwtImpl(s : Service)]
-[file (filename(getClientGwtSourceDir(), buildPackageBusinessGwtServerServiceDto(s, null), buildServiceGwtImplementationName(s, null) + '.java'), false, 'UTF-8')]
-[serviceGwtImpl(s)/]
-[/file]
+[template public genServiceGwtImpl(s : soa::Service)]
+  [file (s.getClientGwtSourceDir().filename(s.buildPackageBusinessGwtServerServiceDto(null), s.buildServiceGwtImplementationName(null) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceGwtImpl()/]
+  [/file]
 [/template]
 
-[template public genServiceGwtImpl(s : Service, d : DTO)]
-[file (filename(d.getClientGwtSourceDir(), buildPackageBusinessGwtServerServiceDto(s, d), buildServiceGwtImplementationName(s, d) + '.java'), false, 'UTF-8')]
-[serviceGwtImpl(s, d)/]
-[/file]
+[template public genServiceGwtImpl(s : soa::Service, d : environment::DTO)]
+  [file (d.getClientGwtSourceDir().filename(s.buildPackageBusinessGwtServerServiceDto(d), s.buildServiceGwtImplementationName(d) + '.java'), overwrite, 'UTF-8')]
+    [s.serviceGwtImpl(d)/]
+  [/file]
 [/template]

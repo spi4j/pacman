@@ -1,1155 +1,1136 @@
+[module RSResources('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::soa::common::classes/]
+[import fr::pacman::soa::common::name/]
+[import fr::pacman::soa::common::imports/]
+[import fr::pacman::soa::common::packages/]
+[import fr::pacman::soa::common::methodes/]
+[import fr::pacman::soa::common::outils/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+
 [comment encoding = UTF-8 /]
-[module RSResources('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                    'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::properties /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::classes /]
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::packages /]
-
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::soa::common::classes /]
-[import fr::pacman::soa::common::name /]
-[import fr::pacman::soa::common::imports /]
-[import fr::pacman::soa::common::packages /]
-[import fr::pacman::soa::common::methodes /]
-[import fr::pacman::soa::common::outils /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-
 [comment : *************************************************************/]
 [comment : Generate the file config for all required tokens properties. /]
 [comment : *************************************************************/]
-
-[template public rsTokensConfigFile (m : System)]
-# ********************************************************************
-# Fichier de configuration des jetons pour l'application : [getApplicationName().toUpperFirst()/].
-# Ne pas mettre de caracteres accentues dans ce fichier (non UTF8).
-# ********************************************************************
-[for (c : Component | m.eAllContents(Component))]
-[for (s : SecurityScheme | c.securitySchemes)]
-# -------------------------------------------------------
-# Proprietes pour le jeton de type [s.type/] : [s.getSpi4jId()/].
-# Description : [s.description/]
-# -------------------------------------------------------
-[if s.isAuthApiKey()]
-[s.getSpi4jId()/].key = [s.key/]
-[s.getSpi4jId()/].key.location = [s.apiKeyLocation/]
-[s.getSpi4jId()/].refresh.key = [s.getSpi4jId()/]_refresh
-[/if]
-[if s.type = soa::SecuritySchemeType::HTTP]
-[/if]
-[if s.isAuthOidc()  or s.isAuthOauth2()]
-[s.getSpi4jId()/].key.location = HEADER
-[s.getSpi4jId()/].read.timeout = 10000
-[s.getSpi4jId()/].connect.timeout = 15000
-[s.getSpi4jId()/].client.id = ['['/]Placer ici l'identifiant pour le serveur d'authentification[']'/]
-[s.getSpi4jId()/].client.secret = ['['/]Placer ici le secret pour le serveur d'authentification[']'/] 
-[s.getSpi4jId()/].endpoint.certs =  ['['/]Placer ici l'uri pour l'obtention des certificats[']'/]
-[for (f : Flow | s.flows)][comment : avoid return carriage/ ]
-[s.getSpi4jId()/].[f.writeFlowName()/].key = authorization
-[s.getSpi4jId()/].[f.writeFlowName()/].flow = [f.flowType/]
-[s.getSpi4jId()/].[f.writeFlowName().toLower()/].scopes = [f.scopes.name->flatten()->sep(' ')/]
-[s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.token = [f.tokenURL/]
-[s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.refresh = [f.refreshURL/]
-[if f.isAuthCode() and s.isAuthOidc()]
-[s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
-[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur[']'/][s.writeCallback()/]
-[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo = [s.connectURL/]
-[/if]
-[if f.isAuthCode() and s.isAuthOauth2()]
-[s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
-[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur[']'/][s.writeCallback()/]
-[/if]
-[if f.isAuthCredential()]
-[s.getSpi4jId()/].[f.writeFlowName()/].application.secret = ['['/]Placer ici le secret interne pour l'appleication[']'/]
-[/if]
-[/for][/if]
-[/for][/for]
+[template public rsTokensConfigFile(m : soa::System)]
+  # ********************************************************************
+  # Fichier de configuration des jetons pour l'application : [m.getApplicationName().toUpperFirst()/].
+  # Ne pas mettre de caracteres accentues dans ce fichier (non UTF8).
+  # ********************************************************************
+  [for (c : soa::Component | m.eAllContents(soa::Component))]
+    [for (s : soa::SecurityScheme | c.securitySchemes)]
+      # -------------------------------------------------------
+      # Proprietes pour le jeton de type [s.type/] : [s.getSpi4jId()/].
+      # Description : [s.description/]
+      # -------------------------------------------------------
+      [if (s.isAuthApiKey())]
+        [s.getSpi4jId()/].key = [s.key/]
+        [s.getSpi4jId()/].key.location = [s.apiKeyLocation/]
+        [s.getSpi4jId()/].refresh.key = [s.getSpi4jId()/]_refresh
+      [/if]
+      [if (s.type = soa::SecuritySchemeType::HTTP)]
+      [/if]
+      [if (s.isAuthOidc() or s.isAuthOauth2())]
+        [s.getSpi4jId()/].key.location = HEADER
+        [s.getSpi4jId()/].read.timeout = 10000
+        [s.getSpi4jId()/].connect.timeout = 15000
+        [s.getSpi4jId()/].client.id = ['['/]Placer ici l'identifiant pour le serveur d'authentification]
+        [s.getSpi4jId()/].client.secret = ['['/]Placer ici le secret pour le serveur d'authentification] 
+        [s.getSpi4jId()/].endpoint.certs =  ['['/]Placer ici l'uri pour l'obtention des certificats]
+        [for (f : soa::Flow | s.flows)]
+          [s.getSpi4jId()/].[f.writeFlowName()/].key = authorization
+          [s.getSpi4jId()/].[f.writeFlowName()/].flow = [f.flowType/]
+          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].scopes = [f.scopes->asSequence()->collect(temp1 | temp1.name)->flatten()->sep(' ')/]
+          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.token = [f.tokenURL/]
+          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.refresh = [f.refreshURL/]
+          [if (f.isAuthCode() and s.isAuthOidc())]
+            [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
+            [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur][s.writeCallback()/]
+            [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo = [s.connectURL/]
+          [/if]
+          [if (f.isAuthCode() and s.isAuthOauth2())]
+            [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
+            [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur][s.writeCallback()/]
+          [/if]
+          [if (f.isAuthCredential())]
+            [s.getSpi4jId()/].[f.writeFlowName()/].application.secret = ['['/]Placer ici le secret interne pour l'appleication]
+          [/if]
+        [/for]
+      [/if]
+    [/for]
+  [/for]
 [/template]
 
 [comment : **********************************************************/]
 [comment : Generate th web.xml portion for base URI servlet mapping. /]
 [comment : **********************************************************/]
-[template public rsWebFragment(m : System) post(trim())]
-<web-fragment metadata-complete="true" version="6.0"
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-    http://java.sun.com/xml/ns/javaee/web-fragment_6_0.xsd">
-
-	<name>rest-mapping-fragment</name>
-
-  	<servlet-mapping>
-    	<servlet-name>RSServlet</servlet-name>
-    	<url-pattern>/api/*</url-pattern>
-  	</servlet-mapping>
-	[for (c : Component | m.eAllContents(Component))]
-	[if not c.URI.oclIsUndefined() and c.URI.size() > 0]
-  	<servlet-mapping>
-    	<servlet-name>RSServlet</servlet-name>
-    	<url-pattern>[normalizePath('/' + c.URI + '/*')/]</url-pattern>
-  	</servlet-mapping>
-	[/if]
-	[/for]
-
-</web-fragment>
-[/template]
+[template public rsWebFragment(m : soa::System) post(self.trim())]
+  <web-fragment metadata-complete="true" version="6.0"
+      xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+      http://java.sun.com/xml/ns/javaee/web-fragment_6_0.xsd">
+  
+  	<name>rest-mapping-fragment</name>
+  
+    	<servlet-mapping>
+      	<servlet-name>RSServlet</servlet-name>
+      	<url-pattern>/api/*</url-pattern>
+    	</servlet-mapping>
+  [for (c : soa::Component | m.eAllContents(soa::Component))]
+    [if (not (c.URI = null) and c.URI.size() > 0)]
+        	<servlet-mapping>
+          	<servlet-name>RSServlet</servlet-name>
+          	<url-pattern>[('/' + c.URI + '/*').normalizePath()/]</url-pattern>
+        	</servlet-mapping>
+    [/if]
+  [/for]
+  
+  </web-fragment>[/template]
 
 [comment : ******************************************************* /]
 [comment : Forward to the right template for writing the resource. /]
 [comment : Nothing to do for implicit flow .                       /]
 [comment : ********************************************************/]
-[template public rsAuthenticationResource (s : SecurityScheme, f : Flow) post(trim())]
-[if s.isAuthOauth2() or s.isAuthOidc()]
-[if f.isAuthCode()][s.rsAuthenticationResourceAuthCode(f)/][/if]
-[if f.isAuthCredential()][s.rsAuthenticationResourceCredential(f)/][/if]
-[if f.isAuthPassord()][s.rsAuthenticationResourcePassword(f)/][/if][/if]
+[template public rsAuthenticationResource(s : soa::SecurityScheme, f : soa::Flow) post(self.trim())]
+  [if (s.isAuthOauth2() or s.isAuthOidc())]
+    [if (f.isAuthCode())][s.rsAuthenticationResourceAuthCode(f)/][/if]
+    
+    [if (f.isAuthCredential())][s.rsAuthenticationResourceCredential(f)/][/if]
+    
+    [if (f.isAuthPassord())][s.rsAuthenticationResourcePassword(f)/][/if]
+  [/if]
 [/template]
 
 [comment : ************************************* /]
 [comment : For OAUTH2/OIDC - AUTHORIZATION_CODE. /]
 [comment : **************************************/]
-[template public rsAuthenticationResourceAuthCode (s : SecurityScheme, f : Flow) post(trim())]
-package [s.buildPackageRsResources(false)/];
-// [protected ('for imports')]
-
-[s.writeImportsAuth()/]
-
-// [/protected]
-/**
- * Récupération de jetons dans le cadre du flux authorization code grant.
- * 
- * @author [getAuthorName()/]
- */
-@Path("/auth")
-public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
-
-	/**
-	 * Le flux de code d'autorisation est la méthode recommandée pour contrôler
-	 * l'accès aux applications Web capables de stocker des secrets en toute
-	 * sécurité.
-	 *
-	 * Récupération de(s) jeton(s) dans le cas d'un protocole d'authentification de
-	 * type OAUT2 / AUTHORIZATION CODE GRANT. La requête initiale est à effectuer au
-	 * niveau du FRONT afin de récupérer le code temporaire et d'appeler ce service.
-	 * 
-	 * Ne pas oublier que, comme mesure de sécurité supplémentaire, le serveur
-	 * d'authentification doit vérifier que l'URL de redirection dans cette demande
-	 * correspond exactement à l'URL de redirection incluse dans la demande
-	 * d'autorisation initiale pour ce même code d'autorisation. Si l'URL de
-	 * redirection ne correspond pas, le serveur rejettera la demande avec une
-	 * erreur.
-	 * 
-	 * @param [apply_parameterMethodClassicIn('uri info')/] Ensemble de paramètres fournis par l'appelant.
-	 * @return Un ensemble de jetons fournis par le serveur d'authentification.
-	 */
-	@GET
-	@Path("/[s.name/]/[f.writeFlowName()/]")
-	@Consumes(MediaType.TEXT_PLAIN)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response auth(@Context UriInfo [apply_parameterMethodClassicIn('uri info')/]) {
-
-		// [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId(s.name + '_'+ f.writeFlowName()))]
-		
-		return RsResponseHelper.responseForTokens(RsTokenHelper
-				.get_tokens(new RsTokenDefaultConnector([buildRSGenericFilterClassName()/]
-				.get_config().get_tokensContainer()
-				.get_token("[s.name/]_[f.writeFlowName()/]"), 
-				[apply_parameterMethodClassicIn('uri info')/])));
-
-		// [/protected]
-	}
-}
-[/template]
+[template public rsAuthenticationResourceAuthCode(s : soa::SecurityScheme, f : soa::Flow) post(self.trim())]
+  package [s.buildPackageRsResources(false)/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImportsAuth()/]
+    
+  [/protected]
+  
+  /**
+   * Récupération de jetons dans le cadre du flux authorization code grant.
+   * 
+   * @author [s.getAuthorName()/]
+   */
+  @Path("/auth")
+  public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
+  
+  	/**
+  	 * Le flux de code d'autorisation est la méthode recommandée pour contrôler
+  	 * l'accès aux applications Web capables de stocker des secrets en toute
+  	 * sécurité.
+  	 *
+  	 * Récupération de(s) jeton(s) dans le cas d'un protocole d'authentification de
+  	 * type OAUT2 / AUTHORIZATION CODE GRANT. La requête initiale est à effectuer au
+  	 * niveau du FRONT afin de récupérer le code temporaire et d'appeler ce service.
+  	 * 
+  	 * Ne pas oublier que, comme mesure de sécurité supplémentaire, le serveur
+  	 * d'authentification doit vérifier que l'URL de redirection dans cette demande
+  	 * correspond exactement à l'URL de redirection incluse dans la demande
+  	 * d'autorisation initiale pour ce même code d'autorisation. Si l'URL de
+  	 * redirection ne correspond pas, le serveur rejettera la demande avec une
+  	 * erreur.
+  	 * 
+  	 * @param ['uri info'.apply_parameterMethodClassicIn()/] Ensemble de paramètres fournis par l'appelant.
+  	 * @return Un ensemble de jetons fournis par le serveur d'authentification.
+  	 */
+  	@GET
+  	@Path("/[s.name/]/[f.writeFlowName()/]")
+  	@Consumes(MediaType.TEXT_PLAIN)
+  	@Produces(MediaType.APPLICATION_JSON)
+  	public Response auth(@Context UriInfo ['uri info'.apply_parameterMethodClassicIn()/]) {
+  
+  		// [s.name/]_[f.writeFlowName()/]
+  		[protected (f.getUserCodeId(s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+      		
+      		return RsResponseHelper.responseForTokens(RsTokenHelper
+      				.get_tokens(new RsTokenDefaultConnector([s.buildRSGenericFilterClassName()/]
+      				.get_config().get_tokensContainer()
+      				.get_token("[s.name/]_[f.writeFlowName()/]"), 
+      				['uri info'.apply_parameterMethodClassicIn()/])));
+      
+    [/protected]
+  
+  	}
+  }[/template]
 
 [comment : ****************************** /]
 [comment : Nothing to do infact, not used./]
 [comment : For OAUTH2/OIDC - IMPLICIT.    /]
 [comment : *******************************/]
-[template public rsAuthenticationResourceImplicit (s : SecurityScheme, f : Flow) post(trim())]
-package [s.buildPackageRsResources(false)/];
-// [protected ('for imports')]
-
-[s.writeImports()/]
-
-// [/protected]
-/**
- * Le flux Implicite est destiné aux applications où la confidentialité du
- * secret client ne peut être garantie. Dans ce flux, le client ne fait pas de
- * requête au point de terminaison /token. Au lieu de cela, il reçoit le jeton
- * d’accès directement du point de terminaison /authorize.
- * 
- * Le client doit être capable d'interagir avec l'agent utilisateur du
- * propriétaire de la ressource et de recevoir des demandes entrantes (par
- * redirection) du serveur d'autorisation.
- * 
- * @author [getAuthorName()/]
- */
-@Path("/callback")
-public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
-}
-[/template]
+[template public rsAuthenticationResourceImplicit(s : soa::SecurityScheme, f : soa::Flow) post(self.trim())]
+  package [s.buildPackageRsResources(false)/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports()/]
+    
+  [/protected]
+  
+  /**
+   * Le flux Implicite est destiné aux applications où la confidentialité du
+   * secret client ne peut être garantie. Dans ce flux, le client ne fait pas de
+   * requête au point de terminaison /token. Au lieu de cela, il reçoit le jeton
+   * d’accès directement du point de terminaison /authorize.
+   * 
+   * Le client doit être capable d'interagir avec l'agent utilisateur du
+   * propriétaire de la ressource et de recevoir des demandes entrantes (par
+   * redirection) du serveur d'autorisation.
+   * 
+   * @author [s.getAuthorName()/]
+   */
+  @Path("/callback")
+  public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
+  }[/template]
 
 [comment : *************************** /]
 [comment : For OAUTH2/OIDC - PASSWORD. /]
 [comment : ****************************/]
-[template public rsAuthenticationResourcePassword (s : SecurityScheme, f : Flow) post(trim())]
-package [s.buildPackageRsResources(false)/];
-// [protected ('for imports')]
-
-[s.writeImportsPass()/]
-
-// [/protected]
-
-/**
- * Récupération de jetons dans le cadre du flux owner password grant.
- * 
- * @author [getAuthorName()/]
- */
-@Path("/auth")
-public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
-
-	/**
- 	* Il est à noter que ce type de flux n’est pas une approche recommandée. Il est
- 	* destiné aux applications pour lesquelles aucun autre flux ne fonctionne, et
- 	* il nécessite que le code de votre application soit entièrement protégé contre
- 	* les attaques de vol d'informations d'identification.
- 	* 
- 	* Il est mis à disposition principalement pour fournir un modèle d'intégration
- 	* cohérent et prévisible pour les applications héritées qui ne peuvent être
- 	* mises à jour vers un flux plus sécurisé tel que le flux de code
- 	* d'autorisation.
- 	*
-	* @param [apply_parameterMethodClassicIn('credentials')/] login et mot de passe pour l'appelant.
-    * @param [apply_parameterMethodClassicIn('uri info')/] 
-	* @return Un ensemble de jetons fournis par le serveur d'authentification.
- 	*/
-	@GET
-	@Path("/[s.name/]/[f.writeFlowName()/]")
-	@Consumes(MediaType.TEXT_PLAIN)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response auth(@HeaderParam(RsConstants.c_auth_header_authorization) 
-		final String [apply_parameterMethodClassicIn('credentials')/], 
-		@Context UriInfo [apply_parameterMethodClassicIn('uri info')/]) {
-
-		// [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId(s.name + '_'+ f.writeFlowName()))]
-
-		return RsResponseHelper.responseForTokens(RsTokenHelper
-				.get_tokens(new RsTokenDefaultConnector([buildRSGenericFilterClassName()/]
-				.get_config().get_tokensContainer()
-				.get_token("[s.name/]_[f.writeFlowName()/]"), 
-				[apply_parameterMethodClassicIn('credentials')/], [apply_parameterMethodClassicIn('uri info')/])));
-
-		// [/protected]
-	}
-}
-[/template]
+[template public rsAuthenticationResourcePassword(s : soa::SecurityScheme, f : soa::Flow) post(self.trim())]
+  package [s.buildPackageRsResources(false)/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImportsPass()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Récupération de jetons dans le cadre du flux owner password grant.
+   * 
+   * @author [s.getAuthorName()/]
+   */
+  @Path("/auth")
+  public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
+  
+  	/**
+   	* Il est à noter que ce type de flux n’est pas une approche recommandée. Il est
+   	* destiné aux applications pour lesquelles aucun autre flux ne fonctionne, et
+   	* il nécessite que le code de votre application soit entièrement protégé contre
+   	* les attaques de vol d'informations d'identification.
+   	* 
+   	* Il est mis à disposition principalement pour fournir un modèle d'intégration
+   	* cohérent et prévisible pour les applications héritées qui ne peuvent être
+   	* mises à jour vers un flux plus sécurisé tel que le flux de code
+   	* d'autorisation.
+   	*
+  	* @param ['credentials'.apply_parameterMethodClassicIn()/] login et mot de passe pour l'appelant.
+      * @param ['uri info'.apply_parameterMethodClassicIn()/] 
+  	* @return Un ensemble de jetons fournis par le serveur d'authentification.
+   	*/
+  	@GET
+  	@Path("/[s.name/]/[f.writeFlowName()/]")
+  	@Consumes(MediaType.TEXT_PLAIN)
+  	@Produces(MediaType.APPLICATION_JSON)
+  	public Response auth(@HeaderParam(RsConstants.c_auth_header_authorization) 
+  		final String ['credentials'.apply_parameterMethodClassicIn()/], 
+  		@Context UriInfo ['uri info'.apply_parameterMethodClassicIn()/]) {
+  
+  		// [s.name/]_[f.writeFlowName()/]
+  		[protected (f.getUserCodeId(s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		return RsResponseHelper.responseForTokens(RsTokenHelper
+      				.get_tokens(new RsTokenDefaultConnector([s.buildRSGenericFilterClassName()/]
+      				.get_config().get_tokensContainer()
+      				.get_token("[s.name/]_[f.writeFlowName()/]"), 
+      				['credentials'.apply_parameterMethodClassicIn()/], ['uri info'.apply_parameterMethodClassicIn()/])));
+      
+    [/protected]
+  
+  	}
+  }[/template]
 
 [comment : ***************************** /]
 [comment : For OAUTH2/OIDC - CREDENTIAL. /]
 [comment : ******************************/]
-[template public rsAuthenticationResourceCredential (s : SecurityScheme, f : Flow) post(trim())]
-package [s.buildPackageRsResources(false)/];
-// [protected ('for imports')]
-
-[s.writeImportsCred()/]
-
-// [/protected]
-/**
- * Récupération de jetons dans le cadre du flux credentials grant.
- * 
- * @author [getAuthorName()/]
- */
-@Path("/auth")
-public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
-
-	/**
-	* Utilisez le flux d'informations d'identification client pour les applications
-	* client côté serveur (« confidentielles ») sans utilisateur final.
-	*
-	* Généralement, il s'agit d'un flux communication de machine à machine. Dans ce
-	* scénario, votre application doit stocker son ID client et son secret en toute
-	* sécurité et les échanger avec le serveur d'authentification contre un jeton
-	* d'accès.
-    *
-	* Comme ce flux est uniquement un flux interne à l'application, il doit être
-	* protégé des éventuels accès extérieurs. Pour cela, toute demande doit
-	* automatiquement être accompagnée d'un secret interne à l'application
-	* (paramètre [apply_parameterMethodClassicIn('application secret')/]). 
-	* 
-	* Toute différence constatée entre le paramètre fourni lors de la demande et
-	* celui enregistré dans la configuration du jeton va engendrer une reponse de
-	* type 401. Non Authorized.
-	*
-	* @param [apply_parameterMethodClassicIn('application secret')/] login et mot de passe pour l'appelant.
-	* @return Un ensemble de jetons fournis par le serveur d'authentification.
-	*/
-	@GET
-	@Path("/[s.name/]/[f.writeFlowName()/]")
-	@Consumes(MediaType.TEXT_PLAIN)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response auth(@HeaderParam(RsConstants.c_auth_header_authorization)
-		final String [apply_parameterMethodClassicIn('application secret')/]) {
-
-		// [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId(s.name + '_'+ f.writeFlowName()))]
-
-		return RsResponseHelper.responseForTokens(RsTokenHelper
-				.get_tokens(new RsTokenDefaultConnector([buildRSGenericFilterClassName()/]
-				.get_config().get_tokensContainer()
-				.get_token("[s.name/]_[f.writeFlowName()/]"), 
-				[apply_parameterMethodClassicIn('application secret')/])));
-
-		// [/protected]
-	}
-}
-[/template]
+[template public rsAuthenticationResourceCredential(s : soa::SecurityScheme, f : soa::Flow) post(self.trim())]
+  package [s.buildPackageRsResources(false)/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImportsCred()/]
+    
+  [/protected]
+  
+  /**
+   * Récupération de jetons dans le cadre du flux credentials grant.
+   * 
+   * @author [s.getAuthorName()/]
+   */
+  @Path("/auth")
+  public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
+  
+  	/**
+  	* Utilisez le flux d'informations d'identification client pour les applications
+  	* client côté serveur (« confidentielles ») sans utilisateur final.
+  	*
+  	* Généralement, il s'agit d'un flux communication de machine à machine. Dans ce
+  	* scénario, votre application doit stocker son ID client et son secret en toute
+  	* sécurité et les échanger avec le serveur d'authentification contre un jeton
+  	* d'accès.
+      *
+  	* Comme ce flux est uniquement un flux interne à l'application, il doit être
+  	* protégé des éventuels accès extérieurs. Pour cela, toute demande doit
+  	* automatiquement être accompagnée d'un secret interne à l'application
+  	* (paramètre ['application secret'.apply_parameterMethodClassicIn()/]). 
+  	* 
+  	* Toute différence constatée entre le paramètre fourni lors de la demande et
+  	* celui enregistré dans la configuration du jeton va engendrer une reponse de
+  	* type 401. Non Authorized.
+  	*
+  	* @param ['application secret'.apply_parameterMethodClassicIn()/] login et mot de passe pour l'appelant.
+  	* @return Un ensemble de jetons fournis par le serveur d'authentification.
+  	*/
+  	@GET
+  	@Path("/[s.name/]/[f.writeFlowName()/]")
+  	@Consumes(MediaType.TEXT_PLAIN)
+  	@Produces(MediaType.APPLICATION_JSON)
+  	public Response auth(@HeaderParam(RsConstants.c_auth_header_authorization)
+  		final String ['application secret'.apply_parameterMethodClassicIn()/]) {
+  
+  		// [s.name/]_[f.writeFlowName()/]
+  		[protected (f.getUserCodeId(s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		return RsResponseHelper.responseForTokens(RsTokenHelper
+      				.get_tokens(new RsTokenDefaultConnector([s.buildRSGenericFilterClassName()/]
+      				.get_config().get_tokensContainer()
+      				.get_token("[s.name/]_[f.writeFlowName()/]"), 
+      				['application secret'.apply_parameterMethodClassicIn()/])));
+      
+    [/protected]
+  
+  	}
+  }[/template]
 
 [comment : ***************************************************************/]
 [comment : Generate the technical resources for refresh API KEY token.    /]
 [comment : ***************************************************************/]
-[template public rsTechnicalTokensResources (m : System)]
-[licence()/]
-package [m.buildPackageRsResources(false)/];
-// [protected ('for imports')]
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-
-import fr.spi4j.ws.rs.RsRefreshToken;
-
-// [/protected]
-
-// for path
-// [protected (m.getUserCodeId('for path'))]
-@Path("/tokens")
-// [/protected]
-public class [buildRSTechnichalResourcesClassName()/]
-{
-	@GET
-	@Path("/refresh")
-	@RsRefreshToken(protocol = "apiKey")
-	public void refresh() {
-		// Ne rien ecrire dans cette méthode technique.
-		// Généré par Pacman...
-	}
-}
-[/template]
-
+[template public rsTechnicalTokensResources(m : soa::System)]
+  [m.licence()/]
+  package [m.buildPackageRsResources(false)/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import jakarta.ws.rs.GET;
+    import jakarta.ws.rs.Path;
+    
+    import fr.spi4j.ws.rs.RsRefreshToken;
+    
+  [/protected]
+  
+  
+  // for path
+  [protected (m.getUserCodeId('for path')) startTagPrefix('// ') endTagPrefix('// ')]
+    @Path("/tokens")
+  [/protected]
+  
+  public class [m.buildRSTechnichalResourcesClassName()/]
+  {
+  	@GET
+  	@Path("/refresh")
+  	@RsRefreshToken(protocol = "apiKey")
+  	public void refresh() {
+  		// Ne rien ecrire dans cette méthode technique.
+  		// Généré par Pacman...
+  	}
+  }[/template]
 
 [comment : **********************************************************/]
 [comment : Generate the configurator to define all required tokens  ./]
 [comment : **********************************************************/]
-[template public rsTokensConfigurator(m : System)]
-[licence()/]
-package [buildPackageRS()/];
-// [protected ('for imports')]
-
-import fr.spi4j.ws.rs.RsAuthProtocol_Enum;
-import fr.spi4j.ws.rs.RsSigningAlgo_Enum;
-import fr.spi4j.ws.rs.RsSigningKeysLoad_Enum;
-import fr.spi4j.ws.rs.RsToken;
-import fr.spi4j.ws.rs.RsTokensConfigurator_Itf;
-import fr.spi4j.ws.rs.RsTokensContainer;
-
-// [/protected]
-/**
- * Paramétrage des différents jetons utilisés par l'application.
- * @author [getAuthorName()/].
- */
-public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigurator_Itf {
-
-	/**
-	 * Insérer dans le conteneur de jetons la liste des différents jetons à faire
-	 * automatiquement contrôler par le filtre.
-	 * 
-	 * Toute erreur de validation sur un des paramètres définis dans cette méthode
-	 * entrainera la non validation du jeton et, selon le protocole utilisé un
-	 * routage vers le serveur d'authentification.
-	 * 
-	 * De nombreuses propriétés sont stockées dans le fichier de configuration
-	 * "safranTokens.properties" mais le filtre ne va pas de lui-même remplir
-	 * automatiquement les différentes propriétés pour le(s) jeton(s) à partir de ce
-	 * fichier. Par défaut c'est donc le builder du jeton qui s'occupe de ce
-	 * chargement avec les différentes clés présentes dans le fichier.
-	 * 
-	 * L'intérêt de cette indirection supplémentaire est de pouvoir se passer
-	 * complétement du fichier de configuration ou uniquement de certaines clés du
-	 * fichier selon la volontée du développeur, et de rentrer directement les
-	 * valeurs finales par l'intermédiaire du builder.
-	 * 
-	 * Pour simplement contrôler la présence du paramètre (et non son contenu),
-	 * utiliser le joker "*" en valeur de paramètre.
-	 */
-	@Override
-	public void defineRequiredTokens(final RsTokensContainer p_tokensContainer) 
-	{
-		// define required tokens
-		// [protected (m.getUserCodeId('define required tokens'))]
-
-		// [/protected]
-
-	[comment : List all components. /]
-	[for (c : Component | m.eAllContents(Component))]
-	[for (s : SecurityScheme | c.securitySchemes) ]
-		[comment : API KEY create an access token. /]
-		[if  s.isAuthApiKey() ]
-		// Modifier et compléter le token d'accès si besoin.
-		// Description : [s.description/]
-
-		// token config [s.name/]
-		// [protected (s.getUserCodeId('token config ' + s.name))]
-
-		p_tokensContainer.addAccessToken(
-				new RsToken.Builder()
-					.withSpi4jId("[s.getSpi4jId()/]")
-					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withCustomKey("[s.getSpi4jId()/].key")
-					.withAuthProtocol(RsAuthProtocol_Enum.apiKey)
-					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.symmetric)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.auto)
-					.withExpirationTimeInMinutes("15")
-					.withPrefixedBy("Bearer"));
-
-		// [/protected]
-		[/if]
-		[comment : OAUTH2 / OIDC create an access token. /]
-		[if  s.isAuthOidc() or isAuthOauth2(s)]
-		[for (f : Flow | s.flows)]
-		// Modifier et compléter le token d'accès si besoin.
-		// Description : [s.description/]
-		[if f.isAuthCode() and s.isAuthOidc()]
-
-		// token config [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
-
-		p_tokensContainer.addAccessToken(
-				new RsToken.Builder()
-					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
-					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
-					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
-					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-					.withUserInfoEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo")
-					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
-					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
-					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
-					.withClientSecret("[s.getSpi4jId()/].client.secret")
-					.withClientId("[s.getSpi4jId()/].client.id")
-					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
-					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
-					.withPrefixedBy("Bearer"));
-
-		// [/protected]
-		[/if]
-		[if f.isAuthCode() and s.isAuthOauth2()]
-
-		// token config [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
-
-		p_tokensContainer.addAccessToken(
-				new RsToken.Builder()
-					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
-					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
-					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
-					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
-					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
-					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
-					.withClientSecret("[s.getSpi4jId()/].client.secret")
-					.withClientId("[s.getSpi4jId()/].client.id")
-					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
-					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
-					.withPrefixedBy("Bearer"));
-
-		// [/protected]
-		[/if]
-		[if f.isAuthPassord() or f.isAuthImplicit()]
-
-		// token config [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
-
-		p_tokensContainer.addAccessToken(
-				new RsToken.Builder()
-					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
-					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
-					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
-					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
-					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
-					.withClientSecret("[s.getSpi4jId()/].client.secret")
-					.withClientId("[s.getSpi4jId()/].client.id")
-					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
-					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
-					.withPrefixedBy("Bearer"));
-
-		// [/protected]
-		[/if]
-		[if f.isAuthCredential()]
-
-		// token config [s.name/]_[f.writeFlowName()/]
-		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
-
-		p_tokensContainer.addAccessToken(
-				new RsToken.Builder()
-					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
-					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
-					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
-					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
-					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
-					.withClientSecret("[s.getSpi4jId()/].client.secret")
-					.withClientId("[s.getSpi4jId()/].client.id")
-					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
-					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
-					.withApplicationSecret("[s.getSpi4jId()/].[f.writeFlowName()/].application.secret")
-					.withPrefixedBy("Bearer"));
-
-		// [/protected]
-		[/if]
-
-		[/for]
-		[/if]
-		[comment : /]
-		[if  s.type = soa::SecuritySchemeType::HTTP ]
-					
-		[/if]
-		[comment : Add a default refresh token. /]
-		[if s.isAuthApiKey()]
-		// Modifier et compléter le token de rafraîchissement si besoin.
-
-		// [s.getUserCodeId('token config refresh [s.name/]')/]
-		// [protected (s.getUserCodeId('token config refresh ' + s.name))]
-
-		p_tokensContainer.addRefreshToken(
-				new RsToken.Builder()
-					.withSpi4jId("[s.getSpi4jId()/]_refresh")
-					.withLinkedSpi4jId("[s.getSpi4jId()/]")
-					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withCustomKey("[s.getSpi4jId()/].refresh.key")
-					.withAuthProtocol(RsAuthProtocol_Enum.apiKey)
-					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.symmetricHighSecure)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.auto)
-					.withExpirationTimeInHours("10")
-					.withRandomStringLength("30"));
-
-		// [/protected]
-		[/if]
-
-	[/for]	
-	[/for]	
-	}
-}
-[/template]
-
+[template public rsTokensConfigurator(m : soa::System)]
+  [m.licence()/]
+  package [m.buildPackageRS()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import fr.spi4j.ws.rs.RsAuthProtocol_Enum;
+    import fr.spi4j.ws.rs.RsSigningAlgo_Enum;
+    import fr.spi4j.ws.rs.RsSigningKeysLoad_Enum;
+    import fr.spi4j.ws.rs.RsToken;
+    import fr.spi4j.ws.rs.RsTokensConfigurator_Itf;
+    import fr.spi4j.ws.rs.RsTokensContainer;
+    
+  [/protected]
+  
+  /**
+   * Paramétrage des différents jetons utilisés par l'application.
+   * @author [m.getAuthorName()/].
+   */
+  public class [m.buildRSTokensConfiguratorClassName()/] implements RsTokensConfigurator_Itf {
+  
+  	/**
+  	 * Insérer dans le conteneur de jetons la liste des différents jetons à faire
+  	 * automatiquement contrôler par le filtre.
+  	 * 
+  	 * Toute erreur de validation sur un des paramètres définis dans cette méthode
+  	 * entrainera la non validation du jeton et, selon le protocole utilisé un
+  	 * routage vers le serveur d'authentification.
+  	 * 
+  	 * De nombreuses propriétés sont stockées dans le fichier de configuration
+  	 * "safranTokens.properties" mais le filtre ne va pas de lui-même remplir
+  	 * automatiquement les différentes propriétés pour le(s) jeton(s) à partir de ce
+  	 * fichier. Par défaut c'est donc le builder du jeton qui s'occupe de ce
+  	 * chargement avec les différentes clés présentes dans le fichier.
+  	 * 
+  	 * L'intérêt de cette indirection supplémentaire est de pouvoir se passer
+  	 * complétement du fichier de configuration ou uniquement de certaines clés du
+  	 * fichier selon la volontée du développeur, et de rentrer directement les
+  	 * valeurs finales par l'intermédiaire du builder.
+  	 * 
+  	 * Pour simplement contrôler la présence du paramètre (et non son contenu),
+  	 * utiliser le joker "*" en valeur de paramètre.
+  	 */
+  	@Override
+  	public void defineRequiredTokens(final RsTokensContainer p_tokensContainer) 
+  	{
+  		// define required tokens
+  		[protected (m.getUserCodeId('define required tokens')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+    [/protected]
+  
+  
+  [for (c : soa::Component | m.eAllContents(soa::Component))]
+    [for (s : soa::SecurityScheme | c.securitySchemes)]
+      [if (s.isAuthApiKey())]
+        		// Modifier et compléter le token d'accès si besoin.
+        		// Description : [s.description/]
+        
+        		// token config [s.name/]
+        		[protected (s.getUserCodeId('token config ' + s.name)) startTagPrefix('// ') endTagPrefix('// ')]
+            
+            		p_tokensContainer.addAccessToken(
+            				new RsToken.Builder()
+            					.withSpi4jId("[s.getSpi4jId()/]")
+            					.withPassingMode("[s.getSpi4jId()/].key.location")
+            					.withCustomKey("[s.getSpi4jId()/].key")
+            					.withAuthProtocol(RsAuthProtocol_Enum.apiKey)
+            					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.symmetric)
+            					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.auto)
+            					.withExpirationTimeInMinutes("15")
+            					.withPrefixedBy("Bearer"));
+            
+          [/protected]
+        
+      [/if]
+      [if (s.isAuthOidc() or s.isAuthOauth2())]
+        [for (f : soa::Flow | s.flows)]
+          		// Modifier et compléter le token d'accès si besoin.
+          		// Description : [s.description/]
+          [if (f.isAuthCode() and s.isAuthOidc())]
+            
+            		// token config [s.name/]_[f.writeFlowName()/]
+            		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+                
+                		p_tokensContainer.addAccessToken(
+                				new RsToken.Builder()
+                					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
+                					.withPassingMode("[s.getSpi4jId()/].key.location")
+                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
+                					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
+                					.withUserInfoEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo")
+                					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+                					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
+                					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
+                					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
+                					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+                					.withClientSecret("[s.getSpi4jId()/].client.secret")
+                					.withClientId("[s.getSpi4jId()/].client.id")
+                					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
+                					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
+                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
+                					.withPrefixedBy("Bearer"));
+                
+              [/protected]
+            
+          [/if]
+          [if (f.isAuthCode() and s.isAuthOauth2())]
+            
+            		// token config [s.name/]_[f.writeFlowName()/]
+            		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+                
+                		p_tokensContainer.addAccessToken(
+                				new RsToken.Builder()
+                					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
+                					.withPassingMode("[s.getSpi4jId()/].key.location")
+                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
+                					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
+                					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+                					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
+                					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
+                					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
+                					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+                					.withClientSecret("[s.getSpi4jId()/].client.secret")
+                					.withClientId("[s.getSpi4jId()/].client.id")
+                					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
+                					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
+                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
+                					.withPrefixedBy("Bearer"));
+                
+              [/protected]
+            
+          [/if]
+          [if (f.isAuthPassord() or f.isAuthImplicit())]
+            
+            		// token config [s.name/]_[f.writeFlowName()/]
+            		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+                
+                		p_tokensContainer.addAccessToken(
+                				new RsToken.Builder()
+                					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
+                					.withPassingMode("[s.getSpi4jId()/].key.location")
+                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
+                					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
+                					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+                					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
+                					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
+                					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+                					.withClientSecret("[s.getSpi4jId()/].client.secret")
+                					.withClientId("[s.getSpi4jId()/].client.id")
+                					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
+                					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
+                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
+                					.withPrefixedBy("Bearer"));
+                
+              [/protected]
+            
+          [/if]
+          [if (f.isAuthCredential())]
+            
+            		// token config [s.name/]_[f.writeFlowName()/]
+            		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
+                
+                		p_tokensContainer.addAccessToken(
+                				new RsToken.Builder()
+                					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
+                					.withPassingMode("[s.getSpi4jId()/].key.location")
+                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
+                					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
+                					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+                					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
+                					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
+                					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+                					.withClientSecret("[s.getSpi4jId()/].client.secret")
+                					.withClientId("[s.getSpi4jId()/].client.id")
+                					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
+                					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
+                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
+                					.withApplicationSecret("[s.getSpi4jId()/].[f.writeFlowName()/].application.secret")
+                					.withPrefixedBy("Bearer"));
+                
+              [/protected]
+            
+          [/if]
+          
+        [/for]
+      [/if]
+      [if (s.type = soa::SecuritySchemeType::HTTP)]
+        					
+      [/if]
+      [if (s.isAuthApiKey())]
+        		// Modifier et compléter le token de rafraîchissement si besoin.
+        
+        		// [s.getUserCodeId('token config refresh [s.name/]')/]
+        		[protected (s.getUserCodeId('token config refresh ' + s.name)) startTagPrefix('// ') endTagPrefix('// ')]
+            
+            		p_tokensContainer.addRefreshToken(
+            				new RsToken.Builder()
+            					.withSpi4jId("[s.getSpi4jId()/]_refresh")
+            					.withLinkedSpi4jId("[s.getSpi4jId()/]")
+            					.withPassingMode("[s.getSpi4jId()/].key.location")
+            					.withCustomKey("[s.getSpi4jId()/].refresh.key")
+            					.withAuthProtocol(RsAuthProtocol_Enum.apiKey)
+            					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.symmetricHighSecure)
+            					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.auto)
+            					.withExpirationTimeInHours("10")
+            					.withRandomStringLength("30"));
+            
+          [/protected]
+        
+      [/if]
+      
+    [/for]
+  [/for]
+  	}
+  }[/template]
 
 [comment : *************************************************************/]
 [comment : Generate the service (resource) with all the REST operations./]
 [comment : *************************************************************/]
-[template public rsResource(s : Service, d : DTO)]
-[licence()/]
-package [s.buildPackageRsResources(s.oclIsUndefined())/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[s.writeImports(d)/]
-
-// [/protected]
-
-[if not s.oclIsUndefined()]
-/**
- * Ressource pour le service : [s.name/].
- * [s.description/]
- * @author [getAuthorName()/].
- */
-[comment : if service exists take the uri from modelisation/]
-@Path("[s.getUri()/]")
-[else]
-/**
- * Ressource pour le service : [d.name/].
- * Service uniquement dedié aux opérations de type CRUD pour le DTO.
- *
- * @author [getAuthorName()/].
- */
-@Path("[d.getCrudUri()/]")
-[/if]
-public class [s.buildRSResourceClassName(d) /]
-{
-   @Context
-   UriInfo [apply_attributeDefault('uri info')/];
-
-   /**
-    * Récupération du singleton pour la facade du service.
-    */
-   [s.writeSingletonServiceFacade(d)/]
-
-   [if d.isCrudApplication() and not d.oclIsUndefined()]
-   	[d.writeReadOperation()/]
-	[d.writeCreateOperation()/]
-	[d.writeUpdateOperation()/]
-	[d.writeDeleteOperation()/]
-   [/if]
-
-   [if not s.oclIsUndefined()]
-   [for (o : Operation | s.ownedInterface.ownedOperations)]
-   [if o.isRSOperation()]
+[template public rsResource(s : soa::Service, d : environment::DTO)]
+  [s.licence()/]
+  package [s.buildPackageRsResources(s = null)/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports(d)/]
+    
+  [/protected]
+  
+  
+  [if (not (s = null))]
     /**
-    * [o.description/]
-[o.getComParamsIn()/][o.getEndPointPagingParameters()/][o.comParamOut()/]
-	*/
-   [comment : write all neededs annotations (avoid unwanted carriage return)./]
-   [o.writeAnnotations()/]
-   [comment : avoid calling 'o.isDefinedForAuthentication()' to often. /]
-   [let auth : Boolean = o.isDefinedForAuthentication()]
-   public Response [apply_methodDefault(o.name)/]([o.paramsInXtoRS()/][o.paramsInPaginatorIfNeeded()/]){
-
-		// [o.userCodeForOperation()/]
-		// [protected (o.getUserCodeId(o.getUserCodeId(o.userCodeForOperation())))]
-
-		[comment : very particular format to avoid unwanted carriage return. /]
-		[o.writeFullOperation(s.isAsynchronous(), auth)/]
-
-		// [/protected]
-   }
-   [/let][/if]
-   [/for][/if]
-}
-[/template]
+     * Ressource pour le service : [s.name/].
+     * [s.description/]
+     * @author [s.getAuthorName()/].
+     */
+    @Path("[s.getUri()/]")
+  [else]
+    /**
+     * Ressource pour le service : [d.name/].
+     * Service uniquement dedié aux opérations de type CRUD pour le DTO.
+     *
+     * @author [s.getAuthorName()/].
+     */
+    @Path("[d.getCrudUri()/]")
+  [/if]
+  public class [s.buildRSResourceClassName(d)/]
+  {
+     @Context
+     UriInfo ['uri info'.apply_attributeDefault()/];
+  
+     /**
+      * Récupération du singleton pour la facade du service.
+      */
+     [s.writeSingletonServiceFacade(d)/]
+  
+  [if (d.isCrudApplication() and not (d = null))]
+       	[d.writeReadOperation()/]
+    	[d.writeCreateOperation()/]
+    	[d.writeUpdateOperation()/]
+    	[d.writeDeleteOperation()/]
+  [/if]
+  
+  [if (not (s = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.isRSOperation())]
+            /**
+            * [o.description/]
+        [o.getComParamsIn()/][o.getEndPointPagingParameters()/][o.comParamOut()/]
+        	*/
+           [o.writeAnnotations()/]
+        [let auth : Boolean = o.isDefinedForAuthentication()]
+             public Response [o.name.apply_methodDefault()/]([o.paramsInXtoRS()/][o.paramsInPaginatorIfNeeded()/]){
+          
+          		// [o.userCodeForOperation()/]
+          		[protected (o.getUserCodeId(o.getUserCodeId(o.userCodeForOperation()))) startTagPrefix('// ') endTagPrefix('// ')]
+              
+              		[o.writeFullOperation(s.isAsynchronous(), auth)/]
+              
+            [/protected]
+          
+             }
+        [/let]
+      [/if]
+    [/for]
+  [/if]
+  }[/template]
 
 [comment : write line to get parameter from query params. /]
-[template private writeFromQueryParams(key : String) post(trim())]
-RsConstants.[key/],[apply_methodGet('param')/](RsConstants.[key/], [apply_variableDefault('query params')/])
-[/template]
+[template private writeFromQueryParams(key : String) post(self.trim())]
+  RsConstants.[key/],['param'.apply_methodGet()/](RsConstants.[key/], ['query params'.apply_variableDefault()/])[/template]
 
 [comment : write all the required REST annotations for the operation./]
-[template private writeAnnotations (o : Operation) post (trim())]
-@[o.verb.toString().toUpper()/][if o.hasURI()][c(1)/][o.addPath()/][/if][if o.isSecured()][c(1)/][o.addSecured()/][/if]
-[o.addProduce()/][if o.hasToConsumeJson()][c(1)/][o.addConsume()/][/if]
-[/template] 
+[template private writeAnnotations(o : soa::Operation) post(self.trim())]
+  @[o.verb.toString().toUpper()/][if (o.hasURI())][1.c()/][o.addPath()/][/if]
+  [if (o.isSecured())][1.c()/][o.addSecured()/][/if]
+  
+  [o.addProduce()/][if (o.hasToConsumeJson())][1.c()/][o.addConsume()/][/if]
+[/template]
 
 [comment : Write produce annotation. /]
-[template private addProduce (o : Operation) post(trim())]
-@Produces(RsMediaType.c_application_json_utf8)
-[/template]
+[template private addProduce(o : soa::Operation) post(self.trim())]
+  @Produces(RsMediaType.c_application_json_utf8)[/template]
 
 [comment : Write callback annotation if needed. /]
-[template private addCallback (o : Operation) post(trim())]
-@RsCallback(type = "[o.getCallbackType()/]")
-[/template]
+[template private addCallback(o : soa::Operation) post(self.trim())]
+  @RsCallback(type = "[o.getCallbackType()/]")[/template]
 
 [comment : Write secured annotation if needed (only with access tokens..). /]
-[template private addSecured (o : Operation) post(trim())]
-@RsSecured(tokens = "[o.writeAuthenticationTokens()/]")
-[/template]
+[template private addSecured(o : soa::Operation) post(self.trim())]
+  @RsSecured(tokens = "[o.writeAuthenticationTokens()/]")[/template]
 
 [comment : Write path annotation if needed. /]
-[template private addPath (o : Operation) post(trim())]
-[if not o.URI.oclIsUndefined() and o.URI.size() > 0][c(1)/]@Path("[o.URI/]")[/if]
+[template private addPath(o : soa::Operation) post(self.trim())]
+  [if (not (o.URI = null) and o.URI.size() > 0)][1.c()/]@Path("[o.URI/]")[/if]
 [/template]
 
 [comment : Write consume annotation if needed. /]
-[template private addConsume (o : Operation) post(trim())]
-@Consumes(RsMediaType.c_application_json_utf8)
-[/template]
+[template private addConsume(o : soa::Operation) post(self.trim())]
+  @Consumes(RsMediaType.c_application_json_utf8)[/template]
 
 [comment : Add paginator's parameters for token mode if needed. /]
-[template private paramsInPaginatorIfNeeded (o : Operation) post (trim())]
-[if o.isPagingToken()][if not o.input->isEmpty()], [/if][pageTokenParamInPaginator()/][/if]
+[template private paramsInPaginatorIfNeeded(o : soa::Operation) post(self.trim())]
+  [if (o.isPagingToken())]
+    [if (not o.input->isEmpty())], [/if]
+    [o.pageTokenParamInPaginator()/][/if]
 [/template]
 
 [comment : Add paginator's pageToken parameter in QueryParam mode for the endPoint. /]
-[template private pageTokenParamInPaginator (o : Operation) post (trim())]
-[c(1)/]@QueryParam("pageToken") final String [apply_parameterMethodClassicIn('page token')/]	
-[/template]
+[template private pageTokenParamInPaginator(o : soa::Operation) post(self.trim())]
+  [1.c()/]@QueryParam("pageToken") final String ['page token'.apply_parameterMethodClassicIn()/]	[/template]
 
 [comment : Write the service facade injection for the resource (1/3). /]
-[template private writeSingletonServiceFacade (s : Service, d : DTO) post(trim())]
-[if useWsServiceInjection()]@Inject[c(1)/][else]final [/if][s.buildServiceFacadeRSInterfaceName(d)/] [s.writeSingletonServiceFacade_2(d)/]
-[/template]
+[template private writeSingletonServiceFacade(s : soa::Service, d : environment::DTO) post(self.trim())]
+  [if (s.useWsServiceInjection())]@Inject[1.c()/][else]final [/if]
+  [s.buildServiceFacadeRSInterfaceName(d)/] [s.writeSingletonServiceFacade_2(d)/][/template]
 
 [comment : Write the service facade injection for the resource (2/3). /]
-[template private writeSingletonServiceFacade_2 (s : Service, d : DTO) post(trim())]
-[apply_attributeFinal('service facade')/][if useWsServiceInjection()];[else] [s.writeSingletonServiceFacade_3(d)/][/if]
+[template private writeSingletonServiceFacade_2(s : soa::Service, d : environment::DTO) post(self.trim())]
+  ['service facade'.apply_attributeFinal()/][if (s.useWsServiceInjection())];[else] [s.writeSingletonServiceFacade_3(d)/][/if]
 [/template]
 
 [comment : Write the service facade injection for the resource (3/3). /]
-[template private writeSingletonServiceFacade_3 (s : Service, d : DTO) post(trim())]
-= [s.buildRSServicesFacadeFactoryClassName()/].[apply_methodGet(s.buildServiceFacadeRSInterfaceName(d))/]();
-[/template]
+[template private writeSingletonServiceFacade_3(s : soa::Service, d : environment::DTO) post(self.trim())]
+  = [s.buildRSServicesFacadeFactoryClassName()/].[s.buildServiceFacadeRSInterfaceName(d).apply_methodGet()/]();[/template]
 
 [comment : *************************************************************************************/]
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (1/4). /]
 [comment : *************************************************************************************/]
-[template private writeFullOperation (o : Operation, async : Boolean, auth : Boolean) post(trim())]
-[if auth][o.addCommentForSecurityToken()/][c(2)/][/if][o.writeFullOperation_2(async)/]
-[/template]
+[template private writeFullOperation(o : soa::Operation, async : Boolean, auth : Boolean) post(self.trim())]
+  [if (auth)][o.addCommentForSecurityToken()/][2.c()/][/if]
+  [o.writeFullOperation_2(async)/][/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (2/4). /]
-[template private writeFullOperation_2 (o : Operation, async : Boolean) post (trim())]
-[if o.paged][o.addNewPaginator()/][c(2)/][/if][o.writeFullOperation_3(async)/]
-[/template]
+[template private writeFullOperation_2(o : soa::Operation, async : Boolean) post(self.trim())]
+  [if (o.paged)][o.addNewPaginator()/][2.c()/][/if]
+  [o.writeFullOperation_3(async)/][/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (3/4). /]
-[template private writeFullOperation_3 (o : Operation, async : Boolean) post (trim())]
-[if o.hasToExternalizeFacade()][o.writeFullOperation_4(async)/];[c(2)/][/if][o.writeResponse(async)/]
-[/template]
+[template private writeFullOperation_3(o : soa::Operation, async : Boolean) post(self.trim())]
+  [if (o.hasToExternalizeFacade())][o.writeFullOperation_4(async)/];[2.c()/][/if]
+  [o.writeResponse(async)/][/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (4/4). /]
-[template private writeFullOperation_4 (o : Operation, async : Boolean) post (trim())]
-[if o.hasParamOutXto()][o.paramOutXto()/] [apply_variableDefault(o.output->first().name)/] = [/if][o.writeFacadeMethod()/]
-[/template]
+[template private writeFullOperation_4(o : soa::Operation, async : Boolean) post(self.trim())]
+  [if (o.hasParamOutXto())][o.paramOutXto()/] [o.output->first().name.apply_variableDefault()/] = [/if]
+  [o.writeFacadeMethod()/][/template]
 
 [comment : /]
-[template private writeCallbackOperation (o : Operation) post(trim())]
+[template private writeCallbackOperation(o : soa::Operation) post(self.trim())]
 [/template]
 
 [comment : Add a new paginator for the Response object (if needed) (1/3). /]
-[template private addNewPaginator (o : Operation) post (trim())]
-final RsPaginatorHelper [apply_variableFinal('paginator')/] = new RsPaginatorHelper[o.addNewPaginator_2()/]
-[/template]
+[template private addNewPaginator(o : soa::Operation) post(self.trim())]
+  final RsPaginatorHelper ['paginator'.apply_variableFinal()/] = new RsPaginatorHelper[o.addNewPaginator_2()/][/template]
 
 [comment : Add a new paginator for the Response object  (2/3). /]
-[template private addNewPaginator_2 (o : Operation) post (trim())]
-([o.addNewPaginatorParams()/])[c(1)/][o.addNewPaginatorParamTotalCount()/][if o.isPagingUser()][c(1)/][o.addNewPaginatorPageParamNames()/][/if];
-[/template]
+[template private addNewPaginator_2(o : soa::Operation) post(self.trim())]
+  ([o.addNewPaginatorParams()/])[1.c()/][o.addNewPaginatorParamTotalCount()/][if (o.isPagingUser())][1.c()/][o.addNewPaginatorPageParamNames()/][/if]
+  ;[/template]
 
 [comment : Add the parameters for the new paginator (1/3). /]
-[template private addNewPaginatorParams (o : Operation) post(trim())]
-[apply_attributeDefault('uri info')/], [o.addNewPaginatorParams_2()/], [o.addNewPaginatorParams_3()/]
-[/template]
+[template private addNewPaginatorParams(o : soa::Operation) post(self.trim())]
+  ['uri info'.apply_attributeDefault()/], [o.addNewPaginatorParams_2()/], [o.addNewPaginatorParams_3()/][/template]
 
 [comment : Add the parameters for the new paginator (2/3). /]
-[template private addNewPaginatorParams_2 (o : Operation) post(trim())]
-[if o.hasDefinedListPageSize()][o.getDefinedListPageSize()/][else]RsConstants.c_list_default_page_count[/if]
+[template private addNewPaginatorParams_2(o : soa::Operation) post(self.trim())]
+  [if (o.hasDefinedListPageSize())][o.getDefinedListPageSize()/][else]RsConstants.c_list_default_page_count[/if]
 [/template]
 
 [comment : Add the parameters for the new paginator (3/3). /]
-[template private addNewPaginatorParams_3 (o : Operation) post(trim())]
-[o.addNewPaginatorParamsUserModeIfNeeded()/][addNewPaginatorParamsTokenModeIfNeeded()/]
-[/template]
+[template private addNewPaginatorParams_3(o : soa::Operation) post(self.trim())]
+  [o.addNewPaginatorParamsUserModeIfNeeded()/][o.addNewPaginatorParamsTokenModeIfNeeded()/][/template]
 
 [comment : Add the parameters for the new paginator if mode is 'user'. /]
-[template private addNewPaginatorParamsUserModeIfNeeded (o : Operation) post(trim())]
-[if o.isPagingUser()][apply_parameterMethodClassicIn(o.page.name)/], [apply_parameterMethodClassicIn(o.size.name)/][/if]
+[template private addNewPaginatorParamsUserModeIfNeeded(o : soa::Operation) post(self.trim())]
+  [if (o.isPagingUser())][o.page.name.apply_parameterMethodClassicIn()/], [o.size.name.apply_parameterMethodClassicIn()/][/if]
 [/template]
 
 [comment : Add the parameters for the new paginator if mode is 'token'. /]
-[template private addNewPaginatorParamsTokenModeIfNeeded (o : Operation) post(trim())]
-[if o.isPagingToken()][apply_parameterMethodClassicIn('page token')/][/if]
+[template private addNewPaginatorParamsTokenModeIfNeeded(o : soa::Operation) post(self.trim())]
+  [if (o.isPagingToken())]['page token'.apply_parameterMethodClassicIn()/][/if]
 [/template]
 
 [comment : Add a parameter total count for the new paginator (1/2). /]
-[template private addNewPaginatorParamTotalCount (o : Operation) post (trim())]
-.completeWithTotalCount([apply_attributeFinal('service facade')/][o.addNewPaginatorParamTotalCount_2()/]
-[/template]
+[template private addNewPaginatorParamTotalCount(o : soa::Operation) post(self.trim())]
+  .completeWithTotalCount(['service facade'.apply_attributeFinal()/][o.addNewPaginatorParamTotalCount_2()/][/template]
 
 [comment : Add a parameter total count for the new paginator (2/2). /]
-[template private addNewPaginatorParamTotalCount_2 (o : Operation) post (trim())]
-.[apply_methodDefault(o.nameOperation() + ' total count')/]())
-[/template]
+[template private addNewPaginatorParamTotalCount_2(o : soa::Operation) post(self.trim())]
+  .[(o.nameOperation() + ' total count').apply_methodDefault()/]())[/template]
 
 [comment : Add a parameter pageParamNames for the new paginator. /]
-[template private addNewPaginatorPageParamNames (o : Operation) post (trim())]
-.completeWithParamNames("[o.page.name/]:[o.size.name/]")
-[/template]
+[template private addNewPaginatorPageParamNames(o : soa::Operation) post(self.trim())]
+  .completeWithParamNames("[o.page.name/]:[o.size.name/]")[/template]
 
 [comment : Main method for Response signature. /]
-[template private writeResponse (o : Operation, async : Boolean) post (trim())]
-return RsResponseHelper.response[o.writeResponseOperation(async)/]
-[/template]
+[template private writeResponse(o : soa::Operation, async : Boolean) post(self.trim())]
+  return RsResponseHelper.response[o.writeResponseOperation(async)/][/template]
 
 [comment : Check first if the operation must be synchronous or asynchronous (depends of service). /]
-[template private writeResponseOperation (o : Operation, async : Boolean) post (trim())]
-[if async][o.writeASynchronousOperation()/][else][o.writeSynchronousOperation()/][/if];
-[/template]
+[template private writeResponseOperation(o : soa::Operation, async : Boolean) post(self.trim())]
+  [if (async)][o.writeASynchronousOperation()/][else][o.writeSynchronousOperation()/][/if]
+  ;[/template]
 
 [comment : Set the name and signature for the response builder asynchronous operation. /]
-[template private  writeASynchronousOperation (o : Operation) post (trim())]
-ForAsynchronous([o.addLocationURIIfAsyncOperation()/][c(1)/][o.addCustomStatus()/])
-[/template]
+[template private writeASynchronousOperation(o : soa::Operation) post(self.trim())]
+  ForAsynchronous([o.addLocationURIIfAsyncOperation()/][1.c()/][o.addCustomStatus()/])[/template]
 
 [comment : Set the name and signature for the response builder synchronous operation. /]
-[template private writeSynchronousOperation (o : Operation) post (trim())]
-[o.writeSuggestedSynchronousOperation()/]([o.addOperationParameters()/])
-[/template]
+[template private writeSynchronousOperation(o : soa::Operation) post(self.trim())]
+  [o.writeSuggestedSynchronousOperation()/]([o.addOperationParameters()/])[/template]
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (1/5) /]
-[template private writeSuggestedSynchronousOperation (o : Operation) post (trim())]
-[if o.isDefinedForAuthentication()]ForToken[else][o.writeSuggestedSynchronousOperation_2()/][/if]
+[template private writeSuggestedSynchronousOperation(o : soa::Operation) post(self.trim())]
+  [if (o.isDefinedForAuthentication())]ForToken[else][o.writeSuggestedSynchronousOperation_2()/][/if]
 [/template]
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (2/5) /]
-[template private writeSuggestedSynchronousOperation_2 (o : Operation) post (trim())]
-[if soa::Verb::GET = o.verb][o.writeSuggestedOperationGET()/][else][o.writeSuggestedOperation()/][/if]
+[template private writeSuggestedSynchronousOperation_2(o : soa::Operation) post(self.trim())]
+  [if (soa::Verb::GET = o.verb)][o.writeSuggestedOperationGET()/][else][o.writeSuggestedOperation()/][/if]
 [/template]
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (3/5) /]
-[template private writeSuggestedOperationGET (o : Operation) post (trim())]
-[if not o.output->first().oclIsUndefined() and o.output->first().type.oclIsKindOf(DTO)]ForEntity[/if][comment : else write nothing /]
+[template private writeSuggestedOperationGET(o : soa::Operation) post(self.trim())]
+  [if (not (o.output->first() = null) and o.output->first().type.oclIsKindOf(environment::DTO))]ForEntity[/if]
 [/template]
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (4/5) /]
-[template private writeSuggestedOperation (o : Operation) post (trim())]
-[if soa::Verb::POST = o.verb]ForCreate[elseif soa::Verb::PUT = o.verb or soa::Verb::PATCH = o.verb]ForUpdate[/if][o.writeSuggestedOperation_2()/]
-[/template]
+[template private writeSuggestedOperation(o : soa::Operation) post(self.trim())]
+  [if (soa::Verb::POST = o.verb)]ForCreate[elseif (soa::Verb::PUT = o.verb or soa::Verb::PATCH = o.verb)]ForUpdate[/if]
+  [o.writeSuggestedOperation_2()/][/template]
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (5/5) /]
-[template private writeSuggestedOperation_2 (o : Operation) post (trim())]
-[if soa::Verb::DELETE = o.verb]ForDelete[elseif soa::Verb::HEAD = o.verb]ForHeaders[/if]
+[template private writeSuggestedOperation_2(o : soa::Operation) post(self.trim())]
+  [if (soa::Verb::DELETE = o.verb)]ForDelete[elseif (soa::Verb::HEAD = o.verb)]ForHeaders[/if]
 [/template]
 
 [comment : Add the parameters in the response operation signature (for paged and not paged operations). /]
-[template private addOperationParameters(o : Operation) post (trim())]
-[if o.paged][o.writePagedOperation()/][else][o.writeNonPagedOperation()/][/if][c(1)/][o.addCustomStatus()/][o.addHeaderXdatasIfNeeded()/]
-[/template]
+[template private addOperationParameters(o : soa::Operation) post(self.trim())]
+  [if (o.paged)][o.writePagedOperation()/][else][o.writeNonPagedOperation()/][/if]
+  [1.c()/][o.addCustomStatus()/][o.addHeaderXdatasIfNeeded()/][/template]
 
 [comment : Write an operation with return paged list. /]
-[template private writePagedOperation (o : Operation) post (trim())]
-[apply_variableFinal('paginator')/].completeWithPagedList([c(1)/][o.writeFacadeMethod()/])
-[/template]
+[template private writePagedOperation(o : soa::Operation) post(self.trim())]
+  ['paginator'.apply_variableFinal()/].completeWithPagedList([1.c()/][o.writeFacadeMethod()/])[/template]
 
 [comment : Write an operation with a non paged return list or anything else. /]
-[template private writeNonPagedOperation (o : Operation) post (trim())]
-[if not o.hasToExternalizeFacadeMethod()][o.writeFacadeMethod()/][/if][o.addLocationURIIfCreateOperation()/]
-[/template]
+[template private writeNonPagedOperation(o : soa::Operation) post(self.trim())]
+  [if (not o.hasToExternalizeFacadeMethod())][o.writeFacadeMethod()/][/if]
+  [o.addLocationURIIfCreateOperation()/][/template]
 
 [comment : Add headers datas if needed. /]
-[template private addHeaderXdatasIfNeeded (o : Operation) post(trim())]
-[if o.hasXDatas()][if o.hasDtoParamOutXto()],xx [/if][o.addXDatas()/][/if]
+[template private addHeaderXdatasIfNeeded(o : soa::Operation) post(self.trim())]
+  [if (o.hasXDatas())]
+    [if (o.hasDtoParamOutXto())],xx [/if]
+    [o.addXDatas()/][/if]
 [/template]
 
 [comment : Main method for writing the internal facade method signature . /]
-[template private writeFacadeMethod (o : Operation) post (trim())]
-[apply_attributeFinal('service facade')/].[o.nameOperation()/]([o.addFacadeParameters()/])
-[/template]
+[template private writeFacadeMethod(o : soa::Operation) post(self.trim())]
+  ['service facade'.apply_attributeFinal()/].[o.nameOperation()/]([o.addFacadeParameters()/])[/template]
 
 [comment : Add input parameters for the internal facade method signature. /]
-[template private addFacadeParameters(o : Operation) post (trim())]
-[o.input.parametersXtoRS()->sep(', ')/][o.addFacadePagingParameters()/]
-[/template]
+[template private addFacadeParameters(o : soa::Operation) post(self.trim())]
+  [o.input->asSequence()->collect(temp2 | temp2.parametersXtoRS())->sep(', ')/][o.addFacadePagingParameters()/][/template]
 
 [comment : Add technical input paging parameters for the internal facade method signature (1/3). /]
-[template private addFacadePagingParameters(o : Operation) post (trim())]
-[if o.paged][if not o.input->isEmpty()], [/if][o.addFacadePagingParameters_2()/][/if]
+[template private addFacadePagingParameters(o : soa::Operation) post(self.trim())]
+  [if (o.paged)]
+    [if (not o.input->isEmpty())], [/if]
+    [o.addFacadePagingParameters_2()/][/if]
 [/template]
 
 [comment : Add technical input paging parameters for the internal facade method signature (2/3). /]
-[template private addFacadePagingParameters_2(o : Operation) post (trim())]
-[apply_variableFinal('paginator')/].get_pageOffset(), [o.addFacadePagingParameters_3()/]
-[/template]
+[template private addFacadePagingParameters_2(o : soa::Operation) post(self.trim())]
+  ['paginator'.apply_variableFinal()/].get_pageOffset(), [o.addFacadePagingParameters_3()/][/template]
 
 [comment : Add technical input paging parameters for the internal facade method signature (3/3). /]
-[template private addFacadePagingParameters_3(o : Operation) post (trim())]
-[apply_variableFinal('paginator')/].get_pageSize()
-[/template]
+[template private addFacadePagingParameters_3(o : soa::Operation) post(self.trim())]
+  ['paginator'.apply_variableFinal()/].get_pageSize()[/template]
 
 [comment : Add the specific return status if specified, else a default status (depends of verb). /]
-[template private addCustomStatus(o : Operation) post (trim())]
-[if o.hasResponseStatusCode()][c(1)/], RsStatusType.create([o.output->first().statusCode/][addCustomMessage(o)/])[/if]
+[template private addCustomStatus(o : soa::Operation) post(self.trim())]
+  [if (o.hasResponseStatusCode())][1.c()/], RsStatusType.create([o.output->first().statusCode/][o.addCustomMessage()/])[/if]
 [/template]
 
 [comment : Add the specific message (reason) for the status if specified. /]
-[template private addCustomMessage(o : Operation) post (trim())]
-[if o.hasResponseStatusMsg()], "[o.output->first().statusMessage/]"[/if]
+[template private addCustomMessage(o : soa::Operation) post(self.trim())]
+  [if (o.hasResponseStatusMsg())], "[o.output->first().statusMessage/]"[/if]
 [/template]
 
 [comment : Add a default URI for the GET operation after a create (POST) operation (Location). /]
-[template private addLocationURIIfCreateOperation (o : Operation) post (trim())]
-[if o.isEligibleForCreateResponse()]UriBuilder.fromPath([o.addURI()/] + "/{id}")[c(1)/].build([o.writeFacadeMethod()/])[/if]
+[template private addLocationURIIfCreateOperation(o : soa::Operation) post(self.trim())]
+  [if (o.isEligibleForCreateResponse())]UriBuilder.fromPath([o.addURI()/] + "/{id}")[1.c()/].build([o.writeFacadeMethod()/])[/if]
 [/template]
 
 [comment : Add a default URI for GET operation after an asynchronous operation. /]
-[template private addLocationURIIfAsyncOperation (o : Operation) post (trim())]
-UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[c(1)/].build([o.writeFacadeMethod()/])
-[/template]
+[template private addLocationURIIfAsyncOperation(o : soa::Operation) post(self.trim())]
+  UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[1.c()/].build([o.writeFacadeMethod()/])[/template]
 
 [comment : Add the base fragment for the URI for the GET next operation after a create or asynchronous. /]
-[template private addURI(o : Operation) post (trim())]
-[apply_attributeDefault('uri info')/].getAbsolutePath()
-[/template]
+[template private addURI(o : soa::Operation) post(self.trim())]
+  ['uri info'.apply_attributeDefault()/].getAbsolutePath()[/template]
 
 [comment : Add a carriage return (doubled if n = 2) Make a loop .... /]
-[template private c (n : Integer)]
-[lineSeparator()/][if n = 2][lineSeparator()/][/if]
+[template private c(n : Integer)]
+  [n.lineSeparator()/][if (n = 2)][n.lineSeparator()/][/if]
 [/template]
 
 [comment : Write the protocol (oidc / oauth2)/]
-[template private writeOidcOauth2Protocol (s : SecurityScheme) post(trim())]
-[if s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT]RsAuthProtocol_Enum.openIdConnect[else]RsAuthProtocol_Enum.oauth2[/if]
+[template private writeOidcOauth2Protocol(s : soa::SecurityScheme) post(self.trim())]
+  [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)]RsAuthProtocol_Enum.openIdConnect[else]RsAuthProtocol_Enum.oauth2[/if]
 [/template]
 
 [comment : Write a fragment of the callback url for identification server. /]
-[template private writeCallback(s : SecurityScheme) post(trim())]
-[if s.hasWebClient()]/[s.getApplicationName()/]-[s.getClient()/][else]/[s.getWebappProjectName()/][/if]/api/callback/[s.name/]
-[/template]
+[template private writeCallback(s : soa::SecurityScheme) post(self.trim())]
+  [if (s.hasWebClient())]/[s.getApplicationName()/]-[s.getClient()/][else]/[s.getWebappProjectName()/][/if]
+  /api/callback/[s.name/][/template]
 
 [comment : /]
-[template private writeFlowName (f : Flow ) post(trim())]
-[f.flowType.toString().substring(1,2).toLower() /]
-[/template]
+[template private writeFlowName(f : soa::Flow) post(self.trim())]
+  [f.flowType.toString().substring(1, 2).toLower()/][/template]
 
 [comment : Write all tokens spi4j ids (part 1) /]
-[template private writeAuthenticationTokens (o : Operation) post(trim())]
-[for (s : SecurityScheme | o.getAllSecurityApplications().securityScheme)][s.writeAuthenticationTokens(i)/][/for]
+[template private writeAuthenticationTokens(o : soa::Operation) post(self.trim())]
+  [for (s : soa::SecurityScheme | o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.securityScheme))][s.writeAuthenticationTokens(i)/][/for]
 [/template]
 
 [comment : Write all tokens spi4j ids (part 2)/]
-[template private writeAuthenticationTokens (s : SecurityScheme, i : Integer) post(trim())]
-[if (i>1)], [/if][if s.isAuthOidc() or s.isAuthOauth2()][s.writeAuthenticationTokens()/][else][s.getSpi4jId()/][/if]
+[template private writeAuthenticationTokens(s : soa::SecurityScheme, i : Integer) post(self.trim())]
+  [if (i > 1)], [/if]
+  [if (s.isAuthOidc() or s.isAuthOauth2())][s.writeAuthenticationTokens()/][else][s.getSpi4jId()/][/if]
 [/template]
 
 [comment : Write all tokens spi4j ids (part 3)/]
-[template private writeAuthenticationTokens (s : SecurityScheme) post(trim())]
-[for (f : Flow | s.flows)][if (i>1)], [/if][s.getSpi4jId()/]_[f.writeFlowName()/][/for]
+[template private writeAuthenticationTokens(s : soa::SecurityScheme) post(self.trim())]
+  [for (f : soa::Flow | s.flows)]
+    [if (i > 1)], [/if]
+    [s.getSpi4jId()/]_[f.writeFlowName()/][/for]
 [/template]
 
 [comment : write crud operation for reading a DTO by id. /]
-[template private writeReadOperation(d : DTO) post(trim())]
-/**
- * Récupération d'un enregistrement à partir de son identifiant unique (crud).
- *
- * @param id : l'identifiant unique de l'enregistrement.
- * @return un objet de type Response.
- */
- @GET
- @Path("/{id}")
- @Consumes(RsMediaType.c_text_plain_utf8)
- @Produces(RsMediaType.c_application_json_utf8)
- // [d.name/] read annotations crud operation
- // [protected (d.getUserCodeId(d.name + ' read annotattions crud operation'))]
- 
- // [/protected]
- public Response read(@PathParam("id") final Long [apply_parameterMethodClassicIn('id')/]){
-
-	// [d.name/] read crud operation
-	// [protected (d.getUserCodeId(d.name + ' read crud operation'))]
-
-    return RsResponseHelper.responseForEntity([apply_attributeFinal('service facade')/].read([apply_parameterMethodClassicIn('id')/]));
-
-	// [/protected]
- }
-
+[template private writeReadOperation(d : environment::DTO) post(self.trim())]
+  /**
+   * Récupération d'un enregistrement à partir de son identifiant unique (crud).
+   *
+   * @param id : l'identifiant unique de l'enregistrement.
+   * @return un objet de type Response.
+   */
+   @GET
+   @Path("/{id}")
+   @Consumes(RsMediaType.c_text_plain_utf8)
+   @Produces(RsMediaType.c_application_json_utf8)
+   // [d.name/] read annotations crud operation
+   [protected (d.getUserCodeId(d.name + ' read annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+   [/protected]
+  
+   public Response read(@PathParam("id") final Long ['id'.apply_parameterMethodClassicIn()/]){
+  
+  	// [d.name/] read crud operation
+  	[protected (d.getUserCodeId(d.name + ' read crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+         return RsResponseHelper.responseForEntity(['service facade'.apply_attributeFinal()/].read(['id'.apply_parameterMethodClassicIn()/]));
+     
+   [/protected]
+  
+   }
 [/template]
 
 [comment : write crud operation for creation. /]
-[template private writeCreateOperation(d : DTO) post(trim())]
-/**
- * Création d'un nouvel enregistrement (crud).
- *
- * @param [apply_parameterMethodClassicIn(d.name)/] : la nouvelle occurence à enregistrer.
- * @return un objet de type Response.
- */
- @POST
- @Consumes(RsMediaType.c_application_json_utf8)
- @Produces(RsMediaType.c_application_json_utf8)
- // [d.name/] create annotations crud operation
- // [protected (d.getUserCodeId(d.name + ' create annotattions crud operation'))]
- 
- // [/protected]
- public Response create(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]){
-
-	// [d.name/] create crud operation
-	// [protected (d.getUserCodeId(d.name + ' create crud operation'))]
-
-    return RsResponseHelper.responseForCreate([apply_attributeFinal('service facade')/].create([apply_parameterMethodClassicIn(d.name)/]));
-
-	// [/protected]
- }
-
+[template private writeCreateOperation(d : environment::DTO) post(self.trim())]
+  /**
+   * Création d'un nouvel enregistrement (crud).
+   *
+   * @param [d.name.apply_parameterMethodClassicIn()/] : la nouvelle occurence à enregistrer.
+   * @return un objet de type Response.
+   */
+   @POST
+   @Consumes(RsMediaType.c_application_json_utf8)
+   @Produces(RsMediaType.c_application_json_utf8)
+   // [d.name/] create annotations crud operation
+   [protected (d.getUserCodeId(d.name + ' create annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+   [/protected]
+  
+   public Response create(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]){
+  
+  	// [d.name/] create crud operation
+  	[protected (d.getUserCodeId(d.name + ' create crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+         return RsResponseHelper.responseForCreate(['service facade'.apply_attributeFinal()/].create([d.name.apply_parameterMethodClassicIn()/]));
+     
+   [/protected]
+  
+   }
 [/template]
 
 [comment : write crud operation for update. /]
-[template private writeUpdateOperation(d : DTO) post(trim())]
-/**
- * Mise à jour d'un enregistrement (crud).
- *
- * @param [apply_parameterMethodClassicIn(d.name)/] : l' occurence à enregistrer pour modification.
- * @return un objet de type Response.
- */
- @PUT
- @Consumes(RsMediaType.c_application_json_utf8)
- @Produces(RsMediaType.c_text_plain_utf8)
- // [d.name/] update annotations crud operation
- // [protected (d.getUserCodeId(d.name + ' update annotattions crud operation'))]
- 
- // [/protected]
- public Response update(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]){
-
-	// [d.name/] update crud operation
-	// [protected (d.getUserCodeId(d.name + ' update crud operation'))]
-
- 	return RsResponseHelper.responseForUpdate([apply_attributeFinal('service facade')/].update([apply_parameterMethodClassicIn(d.name)/]));
-
-	// [/protected]
- }
-
+[template private writeUpdateOperation(d : environment::DTO) post(self.trim())]
+  /**
+   * Mise à jour d'un enregistrement (crud).
+   *
+   * @param [d.name.apply_parameterMethodClassicIn()/] : l' occurence à enregistrer pour modification.
+   * @return un objet de type Response.
+   */
+   @PUT
+   @Consumes(RsMediaType.c_application_json_utf8)
+   @Produces(RsMediaType.c_text_plain_utf8)
+   // [d.name/] update annotations crud operation
+   [protected (d.getUserCodeId(d.name + ' update annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+   [/protected]
+  
+   public Response update(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]){
+  
+  	// [d.name/] update crud operation
+  	[protected (d.getUserCodeId(d.name + ' update crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+      	return RsResponseHelper.responseForUpdate(['service facade'.apply_attributeFinal()/].update([d.name.apply_parameterMethodClassicIn()/]));
+     
+   [/protected]
+  
+   }
 [/template]
 
 [comment : write crud operation for delete. /]
-[template private writeDeleteOperation(d : DTO) post(trim())]
-/**
- * Suppression d'un enregistrement existant (crud).
- *
- * @param [apply_parameterMethodClassicIn(d.name)/] : l'occurence à supprimer.
- * @return un objet de type Response.
- */
- @DELETE
- @Consumes(RsMediaType.c_application_json_utf8)
- @Produces(RsMediaType.c_text_plain_utf8)
- // [d.name/] delete annotations crud operation
- // [protected (d.getUserCodeId(d.name + ' delete annotattions crud operation'))]
- 
- // [/protected]
- public Response delete(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]){
-
-	// [d.name/] delete crud operation
-	// [protected (d.getUserCodeId(d.name + ' delete crud operation'))]
-
-	[apply_attributeFinal('service facade')/].delete([apply_parameterMethodClassicIn(d.name)/]);
-    return RsResponseHelper.responseForDelete();
-
-	// [/protected]
- }
-[/template]
-
-[comment : Write all the required imports. /]
-[template private writeImports (s : Service, d : DTO) post(trim())]
-[s.initImports(true, 'java.util.List')/]
-[s.addImport('jakarta.ws.rs.*')/]
-[s.addImport('jakarta.ws.rs.core.*')/]
-[s.addImport('fr.spi4j.ws.rs.RsMediaType')/]
-[s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
-[s.addImport('fr.spi4j.ws.rs.RsStatusType')/]
-[s.addImport('jakarta.inject.Inject', s.useWsServiceInjection())/]
-[s.addImport(buildPackageRS() + '.' + s.buildRSServicesFacadeFactoryClassName(), not s.useWsServiceInjection())/]
-[s.addImport(s.buildPackageWsApi() + '.' + s.buildServiceFacadeRSInterfaceName(d))/]
-[comment : Imports for all Xtos required for the service. /]
-[if not s.oclIsUndefined()]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-	[if o.isRSOperation()]
-		[s.addImport('fr.spi4j.ws.rs.RsPaginatorHelper', o.paged)/]
-		[s.addImport('fr.spi4j.ws.rs.RsConstants', o.paged)/]
-		[s.addImport('fr.spi4j.ws.rs.RsSecured', o.isSecured())/]
-		[comment : List input parameters. /]
-		[for (p : Parameter | o.input)]
-			[if p.type.oclIsTypeOf(DTO)][s.addImport(buildImportXto(p.type.oclAsType(DTO)))/][/if]
-		[/for]
-	[/if]
-[/for][/if]
-[s.flushImports()/]
-[/template]
+[template private writeDeleteOperation(d : environment::DTO) post(self.trim())]
+  /**
+   * Suppression d'un enregistrement existant (crud).
+   *
+   * @param [d.name.apply_parameterMethodClassicIn()/] : l'occurence à supprimer.
+   * @return un objet de type Response.
+   */
+   @DELETE
+   @Consumes(RsMediaType.c_application_json_utf8)
+   @Produces(RsMediaType.c_text_plain_utf8)
+   // [d.name/] delete annotations crud operation
+   [protected (d.getUserCodeId(d.name + ' delete annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+   [/protected]
+  
+   public Response delete(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]){
+  
+  	// [d.name/] delete crud operation
+  	[protected (d.getUserCodeId(d.name + ' delete crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+     
+     	['service facade'.apply_attributeFinal()/].delete([d.name.apply_parameterMethodClassicIn()/]);
+         return RsResponseHelper.responseForDelete();
+     
+   [/protected]
+  
+   }[/template]
 
 [comment : Write all the required imports. /]
-[template private writeImports (s : SecurityScheme) post(trim())]
+[template private writeImports(s : soa::Service, d : environment::DTO) post(self.trim())]
+  [s.initImports(true, 'java.util.List')/]
+  [s.addImport('jakarta.ws.rs.*')/]
+  [s.addImport('jakarta.ws.rs.core.*')/]
+  [s.addImport('fr.spi4j.ws.rs.RsMediaType')/]
+  [s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
+  [s.addImport('fr.spi4j.ws.rs.RsStatusType')/]
+  [s.addImport('jakarta.inject.Inject', s.useWsServiceInjection())/]
+  [s.addImport(s.buildPackageRS() + '.' + s.buildRSServicesFacadeFactoryClassName(), not s.useWsServiceInjection())/]
+  [s.addImport(s.buildPackageWsApi() + '.' + s.buildServiceFacadeRSInterfaceName(d))/]
+  [if (not (s = null))]
+    [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+      [if (o.isRSOperation())]
+        		[s.addImport('fr.spi4j.ws.rs.RsPaginatorHelper', o.paged)/]
+        		[s.addImport('fr.spi4j.ws.rs.RsConstants', o.paged)/]
+        		[s.addImport('fr.spi4j.ws.rs.RsSecured', o.isSecured())/]
+        [for (p : soa::Parameter | o.input)]
+          			[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
+          
+        [/for]
+      [/if]
+    [/for]
+  [/if]
+  [s.flushImports()/][/template]
+
+[comment : Write all the required imports. /]
+[template private writeImports(s : soa::SecurityScheme) post(self.trim())]
 [/template]
 
 [comment : Write all the required imports for auth code. /]
-[template private writeImportsAuth (s : SecurityScheme) post(trim())]
-[s.initImports()/]
-[s.addImport(buildPackageRS() + '.' + buildRSGenericFilterClassName())/]
-[s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
-[s.addImport('fr.spi4j.ws.rs.RsTokenDefaultConnector')/]
-[s.addImport('fr.spi4j.ws.rs.RsTokenHelper')/]
-[s.addImport('jakarta.ws.rs.Consumes')/]
-[s.addImport('jakarta.ws.rs.GET')/]
-[s.addImport('jakarta.ws.rs.Path')/]
-[s.addImport('jakarta.ws.rs.Produces')/]
-[s.addImport('jakarta.ws.rs.core.Context')/]
-[s.addImport('jakarta.ws.rs.core.UriInfo')/]
-[s.addImport('jakarta.ws.rs.core.MediaType')/]
-[s.addImport('jakarta.ws.rs.core.Response')/]
-[s.flushImports()/]
-[/template]
+[template private writeImportsAuth(s : soa::SecurityScheme) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport(s.buildPackageRS() + '.' + s.buildRSGenericFilterClassName())/]
+  [s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
+  [s.addImport('fr.spi4j.ws.rs.RsTokenDefaultConnector')/]
+  [s.addImport('fr.spi4j.ws.rs.RsTokenHelper')/]
+  [s.addImport('jakarta.ws.rs.Consumes')/]
+  [s.addImport('jakarta.ws.rs.GET')/]
+  [s.addImport('jakarta.ws.rs.Path')/]
+  [s.addImport('jakarta.ws.rs.Produces')/]
+  [s.addImport('jakarta.ws.rs.core.Context')/]
+  [s.addImport('jakarta.ws.rs.core.UriInfo')/]
+  [s.addImport('jakarta.ws.rs.core.MediaType')/]
+  [s.addImport('jakarta.ws.rs.core.Response')/]
+  [s.flushImports()/][/template]
 
 [comment : Write all the required imports for password. /]
-[template private writeImportsPass (s : SecurityScheme) post(trim())]
-[s.initImports()/]
-[s.addImport(buildPackageRS() + '.' + buildRSGenericFilterClassName())/]
-[s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
-[s.addImport('fr.spi4j.ws.rs.RsTokenDefaultConnector')/]
-[s.addImport('fr.spi4j.ws.rs.RsTokenHelper')/]
-[s.addImport('jakarta.ws.rs.Consumes')/]
-[s.addImport('jakarta.ws.rs.GET')/]
-[s.addImport('jakarta.ws.rs.Path')/]
-[s.addImport('jakarta.ws.rs.Produces')/]
-[s.addImport('jakarta.ws.rs.core.MediaType')/]
-[s.addImport('jakarta.ws.rs.core.Response')/]
-[s.addImport('jakarta.ws.rs.core.Context')/]
-[s.addImport('jakarta.ws.rs.core.UriInfo')/]
-[s.flushImports()/]
-[/template]
+[template private writeImportsPass(s : soa::SecurityScheme) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport(s.buildPackageRS() + '.' + s.buildRSGenericFilterClassName())/]
+  [s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
+  [s.addImport('fr.spi4j.ws.rs.RsTokenDefaultConnector')/]
+  [s.addImport('fr.spi4j.ws.rs.RsTokenHelper')/]
+  [s.addImport('jakarta.ws.rs.Consumes')/]
+  [s.addImport('jakarta.ws.rs.GET')/]
+  [s.addImport('jakarta.ws.rs.Path')/]
+  [s.addImport('jakarta.ws.rs.Produces')/]
+  [s.addImport('jakarta.ws.rs.core.MediaType')/]
+  [s.addImport('jakarta.ws.rs.core.Response')/]
+  [s.addImport('jakarta.ws.rs.core.Context')/]
+  [s.addImport('jakarta.ws.rs.core.UriInfo')/]
+  [s.flushImports()/][/template]
 
 [comment : Write all the required imports for credentials. /]
-[template private writeImportsCred (s : SecurityScheme) post(trim())]
-[s.initImports()/]
-[s.addImport(buildPackageRS() + '.' + buildRSGenericFilterClassName())/]
-[s.addImport('fr.spi4j.ws.rs.RsConstants')/]
-[s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
-[s.addImport('fr.spi4j.ws.rs.RsTokenDefaultConnector')/]
-[s.addImport('fr.spi4j.ws.rs.RsTokenHelper')/]
-[s.addImport('jakarta.ws.rs.Consumes')/]
-[s.addImport('jakarta.ws.rs.GET')/]
-[s.addImport('jakarta.ws.rs.HeaderParam')/]
-[s.addImport('jakarta.ws.rs.Path')/]
-[s.addImport('jakarta.ws.rs.Produces')/]
-[s.addImport('jakarta.ws.rs.core.MediaType')/]
-[s.addImport('jakarta.ws.rs.core.Response')/]
-[s.flushImports()/]
-[/template]
+[template private writeImportsCred(s : soa::SecurityScheme) post(self.trim())]
+  [s.initImports()/]
+  [s.addImport(s.buildPackageRS() + '.' + s.buildRSGenericFilterClassName())/]
+  [s.addImport('fr.spi4j.ws.rs.RsConstants')/]
+  [s.addImport('fr.spi4j.ws.rs.RsResponseHelper')/]
+  [s.addImport('fr.spi4j.ws.rs.RsTokenDefaultConnector')/]
+  [s.addImport('fr.spi4j.ws.rs.RsTokenHelper')/]
+  [s.addImport('jakarta.ws.rs.Consumes')/]
+  [s.addImport('jakarta.ws.rs.GET')/]
+  [s.addImport('jakarta.ws.rs.HeaderParam')/]
+  [s.addImport('jakarta.ws.rs.Path')/]
+  [s.addImport('jakarta.ws.rs.Produces')/]
+  [s.addImport('jakarta.ws.rs.core.MediaType')/]
+  [s.addImport('jakarta.ws.rs.core.Response')/]
+  [s.flushImports()/][/template]
 
 [comment : Add a specific comment if the operation is for token recovery. /]
-[template private addCommentForSecurityToken (o : Operation) post(trim())]
-
-// ---------------------------------------------------------
-// Avant d'envoyer la réponse avec le token, modifier 
-// les paramètres de création du token dans l'implémentation 
-// de la facade : [o.ancestors(Service)->first().buildServiceFacadeRSClassName(null)/].java
-// ---------------------------------------------------------
-
+[template private addCommentForSecurityToken(o : soa::Operation) post(self.trim())]
+  
+  // ---------------------------------------------------------
+  // Avant d'envoyer la réponse avec le token, modifier 
+  // les paramètres de création du token dans l'implémentation 
+  // de la facade : [o.ancestors(soa::Service)->first().buildServiceFacadeRSClassName(null)/].java
+  // ---------------------------------------------------------
 [/template]
 
 [comment : too specific to bring up in services.mtl. /]
-[query private hasToExternalizeFacade (o : Operation) : Boolean =
-	(o.hasToExternalizeFacadeMethod() 
-	and not o.isEligibleForCreateResponse()) 
-/]
+[query private hasToExternalizeFacade(o : soa::Operation) : Boolean = o.hasToExternalizeFacadeMethod() and not o.isEligibleForCreateResponse()/]
 
-[comment : too specific to bring up in services.mtl. / ]
-[query private hasURI (o : Operation) : Boolean = 
-	not o.URI.oclIsUndefined() and o.URI.size() > 0
-/]
+[comment : too specific to bring up in services.mtl. /]
+[query private hasURI(o : soa::Operation) : Boolean = not (o.URI = null) and o.URI.size() > 0/]

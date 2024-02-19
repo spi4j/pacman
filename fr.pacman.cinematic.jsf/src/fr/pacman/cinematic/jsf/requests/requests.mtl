@@ -1,46 +1,57 @@
-[comment encoding = UTF-8 /]
 [**
  * The documentation of the module requests.
  */]
-[module requests('http://www.obeonetwork.org/dsl/cinematic/3.0.0')]
+[module requests('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
 
-[import fr::pacman::cinematic::jsf::services::cinematicServices /]
+[import fr::pacman::cinematic::jsf::services::cinematicServices/]
 
+[comment encoding = UTF-8 /]
 [**
  * The documentation of the query isFile.
  * @param aWidget
- */]
-[query public isFile(aWidget : Widget) : Boolean = 
-aWidget.qualifiedName() = 'html.file'
-/]
+*/]
+[query public isFile(aWidget : toolkits::Widget) : Boolean = aWidget.qualifiedName() = 'html.file'/]
 
 [**
  * The documentation of the query qualifiedName.
  * @param aWidget
- */]
-[query public qualifiedName(aWidget : Widget) : String = aWidget.eContainer(Toolkit).name + '.' + aWidget.name/]
+*/]
+[query public qualifiedName(aWidget : toolkits::Widget) : String = aWidget.eContainer(toolkits::Toolkit).name + '.' + aWidget.name/]
 
 [**
  * The documentation of the query qualifiedName.
  * @param aWET
- */]
-[query public qualifiedName(aWET : WidgetEventType) : String = aWET.eContainer(Toolkit).name + '.' + aWET.name/]
+*/]
+[query public qualifiedName(aWET : toolkits::WidgetEventType) : String = aWET.eContainer(toolkits::Toolkit).name + '.' + aWET.name/]
 
-[query public hasMultipleTransitionsForEvent(aViewState : ViewState, aEvent: Event) : Boolean = 
-aViewState.getNextStates(aEvent)->notEmpty() and aViewState.getNextStates(aEvent)->size() > 1 /]
+[query public hasMultipleTransitionsForEvent(aViewState : flow::ViewState, aEvent : cinematic::Event) : Boolean = aViewState.getNextStates(aEvent)->notEmpty() and aViewState.getNextStates(aEvent)->size() > 1/]
 
-[query public isTopLevelViewContainer(anAVE : AbstractViewElement) : Boolean = not(anAVE.eContainer().oclIsTypeOf(ViewContainer))/]
-[query public isPage(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.file' /]
-[query public isPanel(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.panel' /]
-[query public isTable(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.table' /]
-[query public isText(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.text' /]
-[query public isTextarea(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.textarea' /]
-[query public isCheckbox(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.checkbox' /]
-[query public isRadio(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.radio' /]
-[query public isButton(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.button' /]
-[query public isPassword(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.password' /]
-[query public isImage(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.image' /]
-[query public isLink(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.link' /]
-[query public isCombo(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.combo' /]
-[query public isLabel(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.label' /]
-[query public isDateField(anAVE : AbstractViewElement) : Boolean = getProperty(anAVE.widget.qualifiedName()) = 'jsf.date' /]
+[query public isTopLevelViewContainer(anAVE : view::AbstractViewElement) : Boolean = not anAVE.eContainer().oclIsTypeOf(view::ViewContainer)/]
+
+[query public isPage(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.file'/]
+
+[query public isPanel(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.panel'/]
+
+[query public isTable(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.table'/]
+
+[query public isText(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.text'/]
+
+[query public isTextarea(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.textarea'/]
+
+[query public isCheckbox(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.checkbox'/]
+
+[query public isRadio(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.radio'/]
+
+[query public isButton(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.button'/]
+
+[query public isPassword(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.password'/]
+
+[query public isImage(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.image'/]
+
+[query public isLink(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.link'/]
+
+[query public isCombo(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.combo'/]
+
+[query public isLabel(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.label'/]
+
+[query public isDateField(anAVE : view::AbstractViewElement) : Boolean = anAVE.getProperty(anAVE.widget.qualifiedName()) = 'jsf.date'/]

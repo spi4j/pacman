@@ -1,863 +1,835 @@
-[comment encoding = UTF-8 /]
-[module RSFrontResourcesTest('http://www.obeonetwork.org/dsl/soa/4.0.0',
-                    		 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module RSFrontResourcesTest('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
-[import fr::pacman::commons::common::licence /]
-[import fr::pacman::commons::common::packages /]
-[import fr::pacman::commons::common::names /]
-[import fr::pacman::commons::common::classes /]
-[import fr::pacman::commons::common::comments /]
-[import fr::pacman::commons::common::types /]
-[import fr::pacman::commons::common::imports /]
-[import fr::pacman::commons::common::utils /]
-
-[import fr::pacman::commons::soa::common::services /]
-[import fr::pacman::commons::soa::common::methods /]
-[import fr::pacman::commons::soa::common::comments /]
-[import fr::pacman::commons::soa::common::packages /]
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::comments/]
+[import fr::pacman::commons::common::types/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::soa::common::services/]
+[import fr::pacman::commons::soa::common::methods/]
+[import fr::pacman::commons::soa::common::comments/]
+[import fr::pacman::commons::soa::common::packages/]
 [import fr::pacman::commons::soa::convention::rule::enumerationRule/]
+[import fr::pacman::soapifirst::common::classes/]
+[import fr::pacman::soapifirst::common::services/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
 
-[import fr::pacman::soapifirst::common::classes /]
-[import fr::pacman::soapifirst::common::services /]
-
-[import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::commons::convention::rule::variableRule /]
-[import fr::pacman::commons::convention::rule::attributeRule /]
-[import fr::pacman::commons::convention::rule::parameterRule /]
-[import fr::pacman::commons::convention::rule::classRule /]
-[import fr::pacman::commons::convention::rule::commonRule /]
-
-
+[comment encoding = UTF-8 /]
 [comment : **********************************************************/]
 [comment : Create the helper class for the JUnit test of a resource. /]
 [comment : **********************************************************/]
-[template public rsFrontResourceTestHelper (c : Component) post(trim())]
-[licence()/]
-package [buildPackageRsFrontResources()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports. /]
-[c.writeImports()/]
-
-// [/protected]
-
-/**
- * Classe utilitaire pour faciliter l'ensemble des tests JUnit. 
- * Elle permet principalement :
- *  
- *  - De gérer automatiquement la récupération d'un jeton d'authentification si le service est sécurisé.
- *  - De gérer un affichage console pour faciliter le débogage de l'Api avant packaging. 
- * 
- * @author [getAuthorName()/]
- */
-public abstract class [buildRSFrontResourceTestHelperClassName()/] {
-
-	/**
-	 * Le logger pour la classe de test.
-	 */
-	private final static Logger [apply_attributeFinalStatic('test log')/] = LogManager.getLogger([buildRSFrontResourceTestHelperClassName()/].class);
-
-	/**
-	 * Stockage du nom de la classe et de la méthode de test en cours (pas de multithreading).
-	 */
-	private static String [apply_attributeStatic('current test class name')/];
-	private static String [apply_attributeStatic('current test method name')/];
-
-	/**
-	 * Stockage temporaire du jeton pour l'authentification.
-	 */
-	private static String [apply_attributeStatic('token')/];
-
-	/**
-	 * Constructeur privé (classe utilitaire).
-	 */
-	private [buildRSFrontResourceTestHelperClassName()/](){
-		//RAS.
-	}
-
-	/**
-	 * Permet d'enregistrer le nom de la classe de test en cours dans le Helper.
-	 * Utilisé pour le logger.
-	 *
-	 * @param <C> [apply_parameterMethodClassicIn('current test class name')/] : 
-	 */
-	protected static <C> void [apply_methodDefault('register class')/](final Class<C> [apply_parameterMethodClassicIn('current test class name')/]) {
-	
-		[buildRSFrontResourceTestHelperClassName()/].[apply_attributeStatic('current test class name')/] = 
-				[apply_parameterMethodClassicIn('current test class name')/].getName();
-	}
-
-	/**
-	 * Permet d'enregistrer le nom de la méthode de test en cours dans le Helper.
-	 * Utilisé pour le logger.
-	 *
-	 * @param [apply_parameterMethodClassicIn('current test method name')/] : 
-	 */
-	protected static void [apply_methodDefault('register method')/](final String [apply_parameterMethodClassicIn('current test method name')/]) {
-	
-		[buildRSFrontResourceTestHelperClassName()/].[apply_attributeStatic('current test method name')/] = 
-				[apply_parameterMethodClassicIn('current test method name')/];
-	}
-
-	/**
-	 * Positionne le jeton d'authentification dans le Helper.
-	 *
-	 * @param [apply_parameterMethodClassicIn('token')/] :
-	 *					Le jeton d'authentification à enregistrer temporairement.
-	 */
-	protected static void [apply_methodSet('auth token')/] (final String [apply_parameterMethodClassicIn('token')/]) {
-
-		[buildRSFrontResourceTestHelperClassName()/].[apply_attributeStatic('token')/] = [apply_parameterMethodClassicIn('token')/];
-	}
-
-	/**
- 	 * Récupération d'un paramètre d'initialisation pour un service.
-	 *
- 	 * @param <T>
- 	 * @param [apply_parameterMethodClassicIn('global param')/] : 
-	 *					Le paramètre global (potentiellement commun à plusieurs opérations).
-	 *
- 	 * @param [apply_parameterMethodClassicIn('local param')/] : 
-	 *					Le paramètre local (spécifique à l'opération).
-	 *
- 	 * @return Le paramètre en fonction de la valeur null ou non.
- 	 */
-	protected static <T> T  [apply_methodSet('param')/](T [apply_parameterMethodClassicIn('global param')/], 
-		T [apply_parameterMethodClassicIn('local param')/]) {
-		
-		if(null != [apply_parameterMethodClassicIn('local param')/]) {
-			return [apply_parameterMethodClassicIn('local param')/]; 
-		}
-		
-		return [apply_parameterMethodClassicIn('global param')/];
-	}
-
-	/**
-	 * Récupération du jeton d'authentification pour l'application (hors Passerelle PES).
-	 *
-	 * @return Le jeton d'authentification.
-	 */
-	protected static String [apply_methodGet('auth token')/]() {
-
-		return [apply_attributeStatic('token')/];
-	}
-
-	[if c.isOauth2()]
-	/**
-	 * Remplir le formulaire avec les paramètres d'authentification dans le cadre
-	 * d'un service externe d'authentification de type OAUTH2 ou Open Id Connect. Il
-	 * s'agit ici d'une authorisation de type "password", indépendamment du flux qui
-	 * a été initialement demandé pour le protocol d'authentification. Ce flux est
-	 * uniquement dédié aux tests et c'est au développeur de l'application cliente
-	 * d'implémenter le flux cible evec le serveur d'authentification.
-	 * 
-	 *
-	 * @return Le formulaire pour la demande de connection.
-	 */
-	private static Form [apply_methodGet('token form')/](){
-		
-		final Form [apply_variableDefault('token form')/] = new Form();
-
-		[apply_variableDefault('token form')/].param("username","");
-		[apply_variableDefault('token form')/].param("password","");
-		[apply_variableDefault('token form')/].param("client_id","");
-		[apply_variableDefault('token form')/].param("client_secret","");
-		[apply_variableDefault('token form')/].param("grant_type","password");
-
-		return [apply_variableDefault('token form')/];
-	}
-	[/if]
-
-	[if c.isSecured()]
-	/**
-	 * Récupération du token applicatif de l'application (hors Passerelle PES) pour les tests. 
-	 */
-	protected static void [apply_methodDefault('authenticate')/](){
-		
-		// for authenticate
-		// [protected (c.getUserCodeId('for authenticate'))]
-
-		// Tentative de récupération du token.
-		if(null == [apply_attributeStatic('token')/]) {
-			[comment : Code for apiKey or Http basic auth. /]
-			[if c.isApiKey()]
-			// On lance le test pour la récupération du jeton.
-			[let s : Service = c.getServiceDefinedForAuthentication() ]
-			[if not s.oclIsUndefined()]
-			final [s.buildRSFrontResourceTestClassName()/] [apply_variableFinal('auth service')/] = 
-				new [s.buildRSFrontResourceTestClassName()/]();
-			[apply_variableFinal('auth service')/].[apply_methodDefault('test ' + s.getOperationDefinedForAuthentication().name)/]();
-			[/if]
-			[/let]
-			[/if]
-			[comment : Code for oauth2 or open id connect. /]
-			[if c.isOauth2()]
-			// Force le chargement de la configuration.
-			[buildRSFrontConfigClassName()/].[apply_methodGet('configuration')/]("[getApplicationName().toUpperCase()/]");
-			// Récupération du jeton.
-			final Client [apply_attributeDefault('client')/] = ClientBuilder.newBuilder()
-				.sslContext([buildRSClientFactoryClassName()/].[apply_methodGet(' SSL context')/]())
-				.hostnameVerifier((s1, s2) -> true).build();
-
-			[comment : If we are here, there must be a token oauth2 or open id connect. For now take the first one ! /]
-			[apply_attributeStatic('token')/] = new JSONObject([apply_attributeDefault('client')/].target([buildRSFrontTokensConfigClassName()/]
-				.[apply_methodGet(c.securitySchemes->select(s : SecurityScheme | (s.type = soa::SecuritySchemeType::OAUTH2 
-				or s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT ))->first().name +  ' server token endpoint')/]())
-				.request(MediaType.APPLICATION_JSON).post(Entity.form([apply_methodGet('token form')/]()))
-				.readEntity(String.class)).getString("access_token");
-
-			[/if]
-			[if c.isBasicAuth()]
-			// Construction et récupération du "jeton".
-			// Positionner ici les paramètres pour le login et le mot de passe.
-			try {
-				[apply_attributeStatic('token')/] = [buildRSFrontTokensConfigClassName()/].[apply_methodDefault('build http basic auth token')/]("",""); 	
-			} catch (UnsupportedEncodingException [apply_parameterMethodClassicIn('e')/]) {
-				throw new [buildRSFrontExceptionClassName()/]([apply_parameterMethodClassicIn('e')/]);
-			}
-			[/if]
-		}
-
-		// [/protected]
-	}
-	[/if]
-
-	/**
-	 * Valeur binaire aléatoire pour les tests.
-	 *
-	 * @return An array of bytes.
-	 */
-	protected static byte['[]'/] [apply_methodGet('random bytes')/](final String [apply_parameterMethodClassicIn('s')/]) {
-	    int len = [apply_parameterMethodClassicIn('s')/].length();
-	    byte['[]'/] [apply_variableDefault('data')/] = new byte['[len / 2]'/];
-	    for (int i = 0; i < len; i += 2) {
-	        [apply_variableDefault('data')/]['[i / 2]'/] = (byte) ((Character.digit([apply_parameterMethodClassicIn('s')/].charAt(i), 16) << 4)
-	              + Character.digit([apply_parameterMethodClassicIn('s')/].charAt(i+1), 16));
-	    }
-	    return [apply_variableDefault('data')/];
-	}
-
-	/**
-	 * Ecriture de la pile des erreurs dans une chaine de caractères.
-	 *
-	 * @param [apply_parameterMethodClassicIn('exception')/] :
-     * @return La pile convertie en chaine de caractères.
-	 */
-	protected static String [apply_methodDefault('stack trace to string')/] (final Exception [apply_parameterMethodClassicIn('exception')/]) {
-
-		final StringWriter [apply_variableFinal('sw')/] = new StringWriter();
-		final PrintWriter [apply_variableFinal('pw')/] = new PrintWriter([apply_variableFinal('sw')/]);
-		[apply_parameterMethodClassicIn('exception')/].printStackTrace([apply_variableFinal('pw')/]);
-		return [apply_variableFinal('sw')/].toString();
-	}
-
-	/**
-	 * Affiche de manière intelligible l'exception dans la console pour aider au debogage.
-	 *
-	 * @param [apply_parameterMethodClassicIn('exception')/] : 
-	 * 						L'exception à afficher dans la console.		
-	 */
-	protected static void [apply_methodDefault('display error')/](final [buildRSFrontExceptionClassName()/] [apply_parameterMethodClassicIn('exception')/])  {
-
-		// Création d'une chaine de caractères lisible pour l'utilisateur.
-		final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();
-		[apply_variableFinal('str builder')/].append([apply_methodGet('pretty operation printing')/]([apply_attributeStatic('current test method name')/]));
-		[apply_variableFinal('str builder')/].append([apply_methodGet('pretty headers printing')/]([buildRSFrontResourcesContextHolder()/].[apply_methodGet('headers')/]()));
-		[apply_variableFinal('str builder')/].append([apply_methodGet('pretty error printing')/]([apply_parameterMethodClassicIn('exception')/]));
-
-		// Affichage de la chaine de caractères sur la console.
-		[apply_attributeFinalStatic('test log')/].error([apply_variableFinal('str builder')/].toString());
-
-		fail("Message : " + [apply_parameterMethodClassicIn('exception')/].getMessage());
-	}
-
-	/**
-	 * Affiche de manière intelligible l'exception dans la console pour aider au debogage.
-	 *
-	 * @param [apply_parameterMethodClassicIn('exception')/] : 
-	 * 						L'exception à afficher dans la console.	
-	 */
-	private static String [apply_methodGet('pretty error printing')/](final [buildRSFrontExceptionClassName()/] [apply_parameterMethodClassicIn('exception')/])  {
-	
-		// for pretty error printing
-		// [protected (c.getUserCodeId('for pretty error printing'))]
-
-		final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();
-		
-		[apply_variableFinal('str builder')/].append("\n\nCode retour  : ").append([apply_parameterMethodClassicIn('exception')/].[apply_methodGet('status code')/]());
-		[apply_variableFinal('str builder')/].append(" - ").append([apply_parameterMethodClassicIn('exception')/].getMessage()).append("\nURI          : ");
-		[apply_variableFinal('str builder')/].append([apply_parameterMethodClassicIn('exception')/].[apply_methodGet('called uri')/]()).append("\nInformations : ");
-		[apply_variableFinal('str builder')/].append([apply_parameterMethodClassicIn('exception')/].[apply_methodGet('additional info')/]()).append("\n\n");
-		
-		return [apply_variableFinal('str builder')/].toString();
-	
-		// [/protected]
-	}
-
-	/**
-	 * Affiche de manière intelligible le retour de la ressource demandée.
-	 * On sérialise à nouveau l'objet Java avec la librairie GSON pour 
-	 * bénéficier de la récursivité totale sur la grappe d'objets.
-	 * 
-	 * @param [apply_parameterMethodClassicIn('entity')/] : 
-	 * 			L'objet à afficher sur la console.
-	 *
-	 * @param [apply_parameterMethodClassicIn('operation')/] : 
-	 * 			Le nom de l'opération (la méthode) testée pour affichage sur la console.
-	 */
-	protected static void [apply_methodDefault('display response')/](final Object [apply_parameterMethodClassicIn('entity')/]) {
-		
-		// for display response
-		// [protected (c.getUserCodeId('for display response'))]
-
-		// Parsing de la grappe d'objets sur l'entité retournée.
-		final Gson [apply_variableFinal('gson parser')/] = new GsonBuilder()
-				.generateNonExecutableJson()
-				.serializeSpecialFloatingPointValues()
-				.enableComplexMapKeySerialization()
-				.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE_WITH_SPACES)
-				.setLongSerializationPolicy(LongSerializationPolicy.STRING)
-				.setDateFormat("dd-MM-yyyy'T'HH:mm:ssXXX")
-				.setPrettyPrinting()
-				.serializeNulls()
-				.create(); 
-
-		// Création d'une chaine de caractères lisible pour l'utilisateur.
-		final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();
-		[apply_variableFinal('str builder')/].append([apply_methodGet('pretty operation printing')/]([apply_attributeStatic('current test method name')/]));
-		[apply_variableFinal('str builder')/].append([apply_methodGet('pretty headers printing')/]([buildRSFrontResourcesContextHolder()/].[apply_methodGet('headers')/]()));
-		[apply_variableFinal('str builder')/].append([apply_methodGet('pretty entity printing')/]([apply_variableFinal('gson parser')/].toJson([apply_parameterMethodClassicIn('entity')/])));
-		
-		// Ecriture de la chaine complète sur la console.
-		[apply_attributeFinalStatic('test log')/].info([apply_variableFinal('str builder')/].toString());
-
-		// [/protected]
-	}
-
-	/**
-	 * Affiche de manière intelligible des en-têtes pour la sortie 
-	 * console dans le cadre du débogage.
-	 * 
-	 * @param [apply_parameterMethodClassicIn('headers')/] : 
-	 * 				Les en-têtes à afficher.
-	 * @return La chaine de caractère formatée pour affichage dans la console.
-	 */
-	private static String [apply_methodGet('pretty headers printing')/](final Headers [apply_parameterMethodClassicIn('headers')/]) {
-		
-		// for pretty headers printing
-		// [protected (c.getUserCodeId('for pretty headers printing'))]
-
-		if([buildRSFrontConfigClassName()/].[apply_methodDefault('is debug display headers')/]()){
-			// Création d'une chaine de caractères lisible pour l'utilisateur.
-			final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();	
-			
-			// Affichage des en-têtes pour le contexte de la requête.
-			[apply_variableFinal('str builder')/].append("\nEn-têtes : REQUEST   *************************************************");
-			for (Entry<String, List<Object>> [apply_variableDefault('entry')/] : [apply_parameterMethodClassicIn('headers')/]
-				.[apply_methodGet('request headers')/]().entrySet() ){
-				[apply_methodDefault('pretty headers printing')/]([apply_variableDefault('str builder')/], [apply_variableDefault('entry')/]);
-			}
-
-			// Cas spécifique du serveur injoignable, aucun élément de réponse en provenance du serveur.
-			if(null == [apply_parameterMethodClassicIn('headers')/].[apply_methodGet('response headers')/]()) {
-				[apply_variableFinal('str builder')/].append("\n**********************************************************************");
-				return [apply_variableFinal('str builder')/].toString();
-			}
-			
-			// Affichage des en-têtes pour le contexte de la réponse.
-			[apply_variableFinal('str builder')/].append("\nEn-têtes : RESPONSE   *************************************************");
-			for (Entry<String, List<String>> [apply_variableDefault('entry')/] : [apply_parameterMethodClassicIn('headers')/]
-				.[apply_methodGet('response headers')/]().entrySet() ){
-				[apply_methodDefault('pretty headers printing')/]([apply_variableDefault('str builder')/], [apply_variableDefault('entry')/]);
-			}
-			[apply_variableFinal('str builder')/].append("\n**********************************************************************");
-			return [apply_variableFinal('str builder')/].toString();
-		}
-		return "";
-	
-		// [/protected]
-	}
-
-	/**
-	* Formattage des informations contenues dans l'en-tête.
-	*
-	* @param [apply_parameterMethodClassicIn('str builder')/] : 
-	*					Le builder pour l'aggrégation des données issues de l'en-tête.
-	* @param [apply_parameterMethodClassicIn('entry')/] :
-	*					Les informations issues de l'en-tête.
-	* @return Le builder.
-	*/
-	private static StringBuilder [apply_methodDefault('pretty headers printing')/](final StringBuilder [apply_parameterMethodClassicIn('str builder')/], 
-			final Entry<String, ?> [apply_parameterMethodClassicIn('entry')/]) {
-	
-		// for pretty headers printing builder
-		// [protected (c.getUserCodeId('for pretty headers printing builder'))]
-
-		[apply_parameterMethodClassicIn('str builder')/].append("\n           ");
-		[apply_parameterMethodClassicIn('str builder')/].append([apply_parameterMethodClassicIn('entry')/].getKey());
-		[apply_parameterMethodClassicIn('str builder')/].append(" : ");
-		[apply_parameterMethodClassicIn('str builder')/].append([apply_parameterMethodClassicIn('entry')/].getValue());
-
-		return [apply_parameterMethodClassicIn('str builder')/];
-
-		// [/protected]
-	}
-
-	/**
-	 * Formattage des informations sur la méthode en cours de test.
-	 *
-	 * @return Une chaine de caractères pour l'affichage de la méthode testée.
-	 */
-	private static String [apply_methodGet('pretty operation printing')/](final String [apply_parameterMethodClassicIn('operation')/]) {
-		
-		// for pretty operation printing
-		// [protected (c.getUserCodeId('for pretty operation printing'))]
-
-		final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();
-		[apply_variableFinal('str builder')/].append("\n\n");
-		[apply_variableFinal('str builder')/].append("**********************************************************************\n");
-		[apply_variableFinal('str builder')/].append("Classe   : ").append([apply_attributeStatic('current test class name')/]).append(".\n");
-		[apply_variableFinal('str builder')/].append("Méthode  : ").append([apply_parameterMethodClassicIn('operation')/]).append(".");
-		
-		if(![buildRSFrontConfigClassName()/].[apply_methodDefault('is debug display headers')/]()) {
-			[apply_variableFinal('str builder')/].append("\n**********************************************************************");
-		}
-
-		return [apply_variableFinal('str builder')/].toString();
-
-		// [/protected]
-	}
-
-	/**
-	 * La sérialisation GJSON effectue la majorité du travail mais dans 
-	 * le cadre de l'affichage, on effectue quelques opérations supplémentaires.
-	 *  
-	 * @param [apply_parameterMethodClassicIn('json serialization')/] : 
-	 * 				L'objet sérialisé Json par la librairie GJSON.
-	 * 
-	 * @return Une chaine de caractère formatée pour un affichage sur une console (ou dans un fichier).
-	 */
-	private static String [apply_methodGet('pretty entity printing')/](String [apply_parameterMethodClassicIn('json serialization')/]) {
-		
-		Matcher [apply_variableDefault('matcher')/] = Pattern.compile("\"(.*)\":").matcher([apply_parameterMethodClassicIn('json serialization')/]);
-		
-		if ([buildRSFrontConfigClassName()/].[apply_methodDefault('is debug display attr upper')/]()) {
-			
-			StringBuffer [apply_variableDefault('str buffer')/] = new StringBuffer();
-			while ([apply_variableDefault('matcher')/].find()) {
-				[apply_variableDefault('matcher')/].appendReplacement([apply_variableDefault('str buffer')/], 
-					[apply_variableDefault('matcher')/].group().toUpperCase());
-			}		
-			[apply_variableDefault('matcher')/].appendTail([apply_variableDefault('str buffer')/]);
-			[apply_parameterMethodClassicIn('json serialization')/] = [apply_variableDefault('str buffer')/].toString();
-		}
-		 
-		// for pretty entity printing
-		// [protected (c.getUserCodeId('for pretty entity printing'))]
-
-		return [apply_parameterMethodClassicIn('json serialization')/]
-				.trim()
-				.replace(")]}'\n{", "\n\r")
-				.replaceAll("\"(.*)\":", "$1 :")
-				.replaceAll("\n( *)\\},\n *\\{", [apply_methodDefault('new record')/]())
-				.replaceAll("(\\['['/] *\\n)( *)\\{", [apply_methodDefault('first record')/]())
-				.replaceAll("['['/]\\{\\}]", "")
-				.replaceAll(",(\n)", "$1")
-				.replaceAll("(null),", "$1")
-				.replaceAll("\n *\n", "\n")
-				.replaceAll("(\n *)_", "$1") 		//Si norme SAFRAN.
-				.replaceAll("<!NLE>|</!NLE>","\n") 	//Espacement pour les listes.
-				.replaceAll("\\}$", "");
-
-		// [/protected]
-	}
-	
-	/**
-	 * Affiche une ligne spécifique pour afficher un nouvel élément dans une liste.
-	 * 
-	 * @return La ligne pour afficher le nouvel élément dans la liste.
-	 */
-	private static String [apply_methodDefault('new record')/]() {
-		
-		// for new record
-		// [protected (c.getUserCodeId('for new record'))]
-
-		StringBuilder [apply_variableDefault('str builder')/] = new StringBuilder();
-		[apply_variableDefault('str builder')/].append("<!NLE>\n$1  -----------------------------------------------\n");
-		[apply_variableDefault('str builder')/].append("$1  ---------- NOUVEL ELEMENT DE LISTE ------------\n");
-		[apply_variableDefault('str builder')/].append("$1  -----------------------------------------------</!NLE>");
-		return [apply_variableDefault('str builder')/].toString();
-
-		// [/protected]
-	}
-
-	/**
-	 * Affiche une ligne spécifique pour afficher le premier élément dans une liste.
-	 * 
-	 * @return La ligne pour afficher le premier élément dans la liste.
-	 */
-	private static String firstRecord() {
-		
-		// Start of user code for new record
-
-		StringBuilder [apply_variableDefault('str builder')/] = new StringBuilder();
-		[apply_variableDefault('str builder')/].append("$1").append("<!NLE>$2  -----------------------------------------------\n");
-		[apply_variableDefault('str builder')/].append("$2  ---------- PREMIER ELEMENT DE LISTE -----------\n");
-		[apply_variableDefault('str builder')/].append("$2  -----------------------------------------------</!NLE>");
-		return [apply_variableDefault('str builder')/].toString();
-
-		// End of user code
-	}
-}
-[/template]
-
-
+[template public rsFrontResourceTestHelper(c : soa::Component) post(self.trim())]
+  [c.licence()/]
+  package [c.buildPackageRsFrontResources()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [c.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Classe utilitaire pour faciliter l'ensemble des tests JUnit. 
+   * Elle permet principalement :
+   *  
+   *  - De gérer automatiquement la récupération d'un jeton d'authentification si le service est sécurisé.
+   *  - De gérer un affichage console pour faciliter le débogage de l'Api avant packaging. 
+   * 
+   * @author [c.getAuthorName()/]
+   */
+  public abstract class [c.buildRSFrontResourceTestHelperClassName()/] {
+  
+  	/**
+  	 * Le logger pour la classe de test.
+  	 */
+  	private final static Logger ['test log'.apply_attributeFinalStatic()/] = LogManager.getLogger([c.buildRSFrontResourceTestHelperClassName()/].class);
+  
+  	/**
+  	 * Stockage du nom de la classe et de la méthode de test en cours (pas de multithreading).
+  	 */
+  	private static String ['current test class name'.apply_attributeStatic()/];
+  	private static String ['current test method name'.apply_attributeStatic()/];
+  
+  	/**
+  	 * Stockage temporaire du jeton pour l'authentification.
+  	 */
+  	private static String ['token'.apply_attributeStatic()/];
+  
+  	/**
+  	 * Constructeur privé (classe utilitaire).
+  	 */
+  	private [c.buildRSFrontResourceTestHelperClassName()/](){
+  		//RAS.
+  	}
+  
+  	/**
+  	 * Permet d'enregistrer le nom de la classe de test en cours dans le Helper.
+  	 * Utilisé pour le logger.
+  	 *
+  	 * @param <C> ['current test class name'.apply_parameterMethodClassicIn()/] : 
+  	 */
+  	protected static <C> void ['register class'.apply_methodDefault()/](final Class<C> ['current test class name'.apply_parameterMethodClassicIn()/]) {
+  	
+  		[c.buildRSFrontResourceTestHelperClassName()/].['current test class name'.apply_attributeStatic()/] = 
+  				['current test class name'.apply_parameterMethodClassicIn()/].getName();
+  	}
+  
+  	/**
+  	 * Permet d'enregistrer le nom de la méthode de test en cours dans le Helper.
+  	 * Utilisé pour le logger.
+  	 *
+  	 * @param ['current test method name'.apply_parameterMethodClassicIn()/] : 
+  	 */
+  	protected static void ['register method'.apply_methodDefault()/](final String ['current test method name'.apply_parameterMethodClassicIn()/]) {
+  	
+  		[c.buildRSFrontResourceTestHelperClassName()/].['current test method name'.apply_attributeStatic()/] = 
+  				['current test method name'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	/**
+  	 * Positionne le jeton d'authentification dans le Helper.
+  	 *
+  	 * @param ['token'.apply_parameterMethodClassicIn()/] :
+  	 *					Le jeton d'authentification à enregistrer temporairement.
+  	 */
+  	protected static void ['auth token'.apply_methodSet()/] (final String ['token'.apply_parameterMethodClassicIn()/]) {
+  
+  		[c.buildRSFrontResourceTestHelperClassName()/].['token'.apply_attributeStatic()/] = ['token'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	/**
+   	 * Récupération d'un paramètre d'initialisation pour un service.
+  	 *
+   	 * @param <T>
+   	 * @param ['global param'.apply_parameterMethodClassicIn()/] : 
+  	 *					Le paramètre global (potentiellement commun à plusieurs opérations).
+  	 *
+   	 * @param ['local param'.apply_parameterMethodClassicIn()/] : 
+  	 *					Le paramètre local (spécifique à l'opération).
+  	 *
+   	 * @return Le paramètre en fonction de la valeur null ou non.
+   	 */
+  	protected static <T> T  ['param'.apply_methodSet()/](T ['global param'.apply_parameterMethodClassicIn()/], 
+  		T ['local param'.apply_parameterMethodClassicIn()/]) {
+  		
+  		if(null != ['local param'.apply_parameterMethodClassicIn()/]) {
+  			return ['local param'.apply_parameterMethodClassicIn()/]; 
+  		}
+  		
+  		return ['global param'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	/**
+  	 * Récupération du jeton d'authentification pour l'application (hors Passerelle PES).
+  	 *
+  	 * @return Le jeton d'authentification.
+  	 */
+  	protected static String ['auth token'.apply_methodGet()/]() {
+  
+  		return ['token'.apply_attributeStatic()/];
+  	}
+  
+  [if (c.isOauth2())]
+    	/**
+    	 * Remplir le formulaire avec les paramètres d'authentification dans le cadre
+    	 * d'un service externe d'authentification de type OAUTH2 ou Open Id Connect. Il
+    	 * s'agit ici d'une authorisation de type "password", indépendamment du flux qui
+    	 * a été initialement demandé pour le protocol d'authentification. Ce flux est
+    	 * uniquement dédié aux tests et c'est au développeur de l'application cliente
+    	 * d'implémenter le flux cible evec le serveur d'authentification.
+    	 * 
+    	 *
+    	 * @return Le formulaire pour la demande de connection.
+    	 */
+    	private static Form ['token form'.apply_methodGet()/](){
+    		
+    		final Form ['token form'.apply_variableDefault()/] = new Form();
+    
+    		['token form'.apply_variableDefault()/].param("username","");
+    		['token form'.apply_variableDefault()/].param("password","");
+    		['token form'.apply_variableDefault()/].param("client_id","");
+    		['token form'.apply_variableDefault()/].param("client_secret","");
+    		['token form'.apply_variableDefault()/].param("grant_type","password");
+    
+    		return ['token form'.apply_variableDefault()/];
+    	}
+  [/if]
+  
+  [if (c.isSecured())]
+    	/**
+    	 * Récupération du token applicatif de l'application (hors Passerelle PES) pour les tests. 
+    	 */
+    	protected static void ['authenticate'.apply_methodDefault()/](){
+    		
+    		// for authenticate
+    		[protected (c.getUserCodeId('for authenticate')) startTagPrefix('// ') endTagPrefix('// ')]
+        
+        		// Tentative de récupération du token.
+        		if(null == ['token'.apply_attributeStatic()/]) {
+        [if (c.isApiKey())]
+          			// On lance le test pour la récupération du jeton.
+          [let s : soa::Service = c.getServiceDefinedForAuthentication()]
+            [if (not (s = null))]
+              			final [s.buildRSFrontResourceTestClassName()/] ['auth service'.apply_variableFinal()/] = 
+              				new [s.buildRSFrontResourceTestClassName()/]();
+              			['auth service'.apply_variableFinal()/].[('test ' + s.getOperationDefinedForAuthentication().name).apply_methodDefault()/]();
+            [/if]
+          [/let]
+        [/if]
+        [if (c.isOauth2())]
+          			// Force le chargement de la configuration.
+          			[c.buildRSFrontConfigClassName()/].['configuration'.apply_methodGet()/]("[c.getApplicationName().toUpper()/]");
+          			// Récupération du jeton.
+          			final Client ['client'.apply_attributeDefault()/] = ClientBuilder.newBuilder()
+          				.sslContext([c.buildRSClientFactoryClassName()/].[' SSL context'.apply_methodGet()/]())
+          				.hostnameVerifier((s1, s2) -> true).build();
+          
+          			['token'.apply_attributeStatic()/] = new JSONObject(['client'.apply_attributeDefault()/].target([c.buildRSFrontTokensConfigClassName()/]
+          				.[(c.securitySchemes->select(s | s.type = soa::SecuritySchemeType::OAUTH2 or s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)->first().name + ' server token endpoint').apply_methodGet()/]())
+          				.request(MediaType.APPLICATION_JSON).post(Entity.form(['token form'.apply_methodGet()/]()))
+          				.readEntity(String.class)).getString("access_token");
+          
+        [/if]
+        [if (c.isBasicAuth())]
+          			// Construction et récupération du "jeton".
+          			// Positionner ici les paramètres pour le login et le mot de passe.
+          			try {
+          				['token'.apply_attributeStatic()/] = [c.buildRSFrontTokensConfigClassName()/].['build http basic auth token'.apply_methodDefault()/]("",""); 	
+          			} catch (UnsupportedEncodingException ['e'.apply_parameterMethodClassicIn()/]) {
+          				throw new [c.buildRSFrontExceptionClassName()/](['e'.apply_parameterMethodClassicIn()/]);
+          			}
+        [/if]
+        		}
+        
+      [/protected]
+    
+    	}
+  [/if]
+  
+  	/**
+  	 * Valeur binaire aléatoire pour les tests.
+  	 *
+  	 * @return An array of bytes.
+  	 */
+  	protected static byte['['/]] ['random bytes'.apply_methodGet()/](final String ['s'.apply_parameterMethodClassicIn()/]) {
+  	    int len = ['s'.apply_parameterMethodClassicIn()/].length();
+  	    byte['['/]] ['data'.apply_variableDefault()/] = new byte['['/]len / 2];
+  	    for (int i = 0; i < len; i += 2) {
+  	        ['data'.apply_variableDefault()/]['['/]i / 2] = (byte) ((Character.digit(['s'.apply_parameterMethodClassicIn()/].charAt(i), 16) << 4)
+  	              + Character.digit(['s'.apply_parameterMethodClassicIn()/].charAt(i+1), 16));
+  	    }
+  	    return ['data'.apply_variableDefault()/];
+  	}
+  
+  	/**
+  	 * Ecriture de la pile des erreurs dans une chaine de caractères.
+  	 *
+  	 * @param ['exception'.apply_parameterMethodClassicIn()/] :
+       * @return La pile convertie en chaine de caractères.
+  	 */
+  	protected static String ['stack trace to string'.apply_methodDefault()/] (final Exception ['exception'.apply_parameterMethodClassicIn()/]) {
+  
+  		final StringWriter ['sw'.apply_variableFinal()/] = new StringWriter();
+  		final PrintWriter ['pw'.apply_variableFinal()/] = new PrintWriter(['sw'.apply_variableFinal()/]);
+  		['exception'.apply_parameterMethodClassicIn()/].printStackTrace(['pw'.apply_variableFinal()/]);
+  		return ['sw'.apply_variableFinal()/].toString();
+  	}
+  
+  	/**
+  	 * Affiche de manière intelligible l'exception dans la console pour aider au debogage.
+  	 *
+  	 * @param ['exception'.apply_parameterMethodClassicIn()/] : 
+  	 * 						L'exception à afficher dans la console.		
+  	 */
+  	protected static void ['display error'.apply_methodDefault()/](final [c.buildRSFrontExceptionClassName()/] ['exception'.apply_parameterMethodClassicIn()/])  {
+  
+  		// Création d'une chaine de caractères lisible pour l'utilisateur.
+  		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+  		['str builder'.apply_variableFinal()/].append(['pretty operation printing'.apply_methodGet()/](['current test method name'.apply_attributeStatic()/]));
+  		['str builder'.apply_variableFinal()/].append(['pretty headers printing'.apply_methodGet()/]([c.buildRSFrontResourcesContextHolder()/].['headers'.apply_methodGet()/]()));
+  		['str builder'.apply_variableFinal()/].append(['pretty error printing'.apply_methodGet()/](['exception'.apply_parameterMethodClassicIn()/]));
+  
+  		// Affichage de la chaine de caractères sur la console.
+  		['test log'.apply_attributeFinalStatic()/].error(['str builder'.apply_variableFinal()/].toString());
+  
+  		fail("Message : " + ['exception'.apply_parameterMethodClassicIn()/].getMessage());
+  	}
+  
+  	/**
+  	 * Affiche de manière intelligible l'exception dans la console pour aider au debogage.
+  	 *
+  	 * @param ['exception'.apply_parameterMethodClassicIn()/] : 
+  	 * 						L'exception à afficher dans la console.	
+  	 */
+  	private static String ['pretty error printing'.apply_methodGet()/](final [c.buildRSFrontExceptionClassName()/] ['exception'.apply_parameterMethodClassicIn()/])  {
+  	
+  		// for pretty error printing
+  		[protected (c.getUserCodeId('for pretty error printing')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+      		
+      		['str builder'.apply_variableFinal()/].append("\n\nCode retour  : ").append(['exception'.apply_parameterMethodClassicIn()/].['status code'.apply_methodGet()/]());
+      		['str builder'.apply_variableFinal()/].append(" - ").append(['exception'.apply_parameterMethodClassicIn()/].getMessage()).append("\nURI          : ");
+      		['str builder'.apply_variableFinal()/].append(['exception'.apply_parameterMethodClassicIn()/].['called uri'.apply_methodGet()/]()).append("\nInformations : ");
+      		['str builder'.apply_variableFinal()/].append(['exception'.apply_parameterMethodClassicIn()/].['additional info'.apply_methodGet()/]()).append("\n\n");
+      		
+      		return ['str builder'.apply_variableFinal()/].toString();
+      	
+    [/protected]
+  
+  	}
+  
+  	/**
+  	 * Affiche de manière intelligible le retour de la ressource demandée.
+  	 * On sérialise à nouveau l'objet Java avec la librairie GSON pour 
+  	 * bénéficier de la récursivité totale sur la grappe d'objets.
+  	 * 
+  	 * @param ['entity'.apply_parameterMethodClassicIn()/] : 
+  	 * 			L'objet à afficher sur la console.
+  	 *
+  	 * @param ['operation'.apply_parameterMethodClassicIn()/] : 
+  	 * 			Le nom de l'opération (la méthode) testée pour affichage sur la console.
+  	 */
+  	protected static void ['display response'.apply_methodDefault()/](final Object ['entity'.apply_parameterMethodClassicIn()/]) {
+  		
+  		// for display response
+  		[protected (c.getUserCodeId('for display response')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		// Parsing de la grappe d'objets sur l'entité retournée.
+      		final Gson ['gson parser'.apply_variableFinal()/] = new GsonBuilder()
+      				.generateNonExecutableJson()
+      				.serializeSpecialFloatingPointValues()
+      				.enableComplexMapKeySerialization()
+      				.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE_WITH_SPACES)
+      				.setLongSerializationPolicy(LongSerializationPolicy.STRING)
+      				.setDateFormat("dd-MM-yyyy'T'HH:mm:ssXXX")
+      				.setPrettyPrinting()
+      				.serializeNulls()
+      				.create(); 
+      
+      		// Création d'une chaine de caractères lisible pour l'utilisateur.
+      		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+      		['str builder'.apply_variableFinal()/].append(['pretty operation printing'.apply_methodGet()/](['current test method name'.apply_attributeStatic()/]));
+      		['str builder'.apply_variableFinal()/].append(['pretty headers printing'.apply_methodGet()/]([c.buildRSFrontResourcesContextHolder()/].['headers'.apply_methodGet()/]()));
+      		['str builder'.apply_variableFinal()/].append(['pretty entity printing'.apply_methodGet()/](['gson parser'.apply_variableFinal()/].toJson(['entity'.apply_parameterMethodClassicIn()/])));
+      		
+      		// Ecriture de la chaine complète sur la console.
+      		['test log'.apply_attributeFinalStatic()/].info(['str builder'.apply_variableFinal()/].toString());
+      
+    [/protected]
+  
+  	}
+  
+  	/**
+  	 * Affiche de manière intelligible des en-têtes pour la sortie 
+  	 * console dans le cadre du débogage.
+  	 * 
+  	 * @param ['headers'.apply_parameterMethodClassicIn()/] : 
+  	 * 				Les en-têtes à afficher.
+  	 * @return La chaine de caractère formatée pour affichage dans la console.
+  	 */
+  	private static String ['pretty headers printing'.apply_methodGet()/](final Headers ['headers'.apply_parameterMethodClassicIn()/]) {
+  		
+  		// for pretty headers printing
+  		[protected (c.getUserCodeId('for pretty headers printing')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		if([c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()){
+      			// Création d'une chaine de caractères lisible pour l'utilisateur.
+      			final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();	
+      			
+      			// Affichage des en-têtes pour le contexte de la requête.
+      			['str builder'.apply_variableFinal()/].append("\nEn-têtes : REQUEST   *************************************************");
+      			for (Entry<String, List<Object>> ['entry'.apply_variableDefault()/] : ['headers'.apply_parameterMethodClassicIn()/]
+      				.['request headers'.apply_methodGet()/]().entrySet() ){
+      				['pretty headers printing'.apply_methodDefault()/](['str builder'.apply_variableDefault()/], ['entry'.apply_variableDefault()/]);
+      			}
+      
+      			// Cas spécifique du serveur injoignable, aucun élément de réponse en provenance du serveur.
+      			if(null == ['headers'.apply_parameterMethodClassicIn()/].['response headers'.apply_methodGet()/]()) {
+      				['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
+      				return ['str builder'.apply_variableFinal()/].toString();
+      			}
+      			
+      			// Affichage des en-têtes pour le contexte de la réponse.
+      			['str builder'.apply_variableFinal()/].append("\nEn-têtes : RESPONSE   *************************************************");
+      			for (Entry<String, List<String>> ['entry'.apply_variableDefault()/] : ['headers'.apply_parameterMethodClassicIn()/]
+      				.['response headers'.apply_methodGet()/]().entrySet() ){
+      				['pretty headers printing'.apply_methodDefault()/](['str builder'.apply_variableDefault()/], ['entry'.apply_variableDefault()/]);
+      			}
+      			['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
+      			return ['str builder'.apply_variableFinal()/].toString();
+      		}
+      		return "";
+      	
+    [/protected]
+  
+  	}
+  
+  	/**
+  	* Formattage des informations contenues dans l'en-tête.
+  	*
+  	* @param ['str builder'.apply_parameterMethodClassicIn()/] : 
+  	*					Le builder pour l'aggrégation des données issues de l'en-tête.
+  	* @param ['entry'.apply_parameterMethodClassicIn()/] :
+  	*					Les informations issues de l'en-tête.
+  	* @return Le builder.
+  	*/
+  	private static StringBuilder ['pretty headers printing'.apply_methodDefault()/](final StringBuilder ['str builder'.apply_parameterMethodClassicIn()/], 
+  			final Entry<String, ?> ['entry'.apply_parameterMethodClassicIn()/]) {
+  	
+  		// for pretty headers printing builder
+  		[protected (c.getUserCodeId('for pretty headers printing builder')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		['str builder'.apply_parameterMethodClassicIn()/].append("\n           ");
+      		['str builder'.apply_parameterMethodClassicIn()/].append(['entry'.apply_parameterMethodClassicIn()/].getKey());
+      		['str builder'.apply_parameterMethodClassicIn()/].append(" : ");
+      		['str builder'.apply_parameterMethodClassicIn()/].append(['entry'.apply_parameterMethodClassicIn()/].getValue());
+      
+      		return ['str builder'.apply_parameterMethodClassicIn()/];
+      
+    [/protected]
+  
+  	}
+  
+  	/**
+  	 * Formattage des informations sur la méthode en cours de test.
+  	 *
+  	 * @return Une chaine de caractères pour l'affichage de la méthode testée.
+  	 */
+  	private static String ['pretty operation printing'.apply_methodGet()/](final String ['operation'.apply_parameterMethodClassicIn()/]) {
+  		
+  		// for pretty operation printing
+  		[protected (c.getUserCodeId('for pretty operation printing')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+      		['str builder'.apply_variableFinal()/].append("\n\n");
+      		['str builder'.apply_variableFinal()/].append("**********************************************************************\n");
+      		['str builder'.apply_variableFinal()/].append("Classe   : ").append(['current test class name'.apply_attributeStatic()/]).append(".\n");
+      		['str builder'.apply_variableFinal()/].append("Méthode  : ").append(['operation'.apply_parameterMethodClassicIn()/]).append(".");
+      		
+      		if(![c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()) {
+      			['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
+      		}
+      
+      		return ['str builder'.apply_variableFinal()/].toString();
+      
+    [/protected]
+  
+  	}
+  
+  	/**
+  	 * La sérialisation GJSON effectue la majorité du travail mais dans 
+  	 * le cadre de l'affichage, on effectue quelques opérations supplémentaires.
+  	 *  
+  	 * @param ['json serialization'.apply_parameterMethodClassicIn()/] : 
+  	 * 				L'objet sérialisé Json par la librairie GJSON.
+  	 * 
+  	 * @return Une chaine de caractère formatée pour un affichage sur une console (ou dans un fichier).
+  	 */
+  	private static String ['pretty entity printing'.apply_methodGet()/](String ['json serialization'.apply_parameterMethodClassicIn()/]) {
+  		
+  		Matcher ['matcher'.apply_variableDefault()/] = Pattern.compile("\"(.*)\":").matcher(['json serialization'.apply_parameterMethodClassicIn()/]);
+  		
+  		if ([c.buildRSFrontConfigClassName()/].['is debug display attr upper'.apply_methodDefault()/]()) {
+  			
+  			StringBuffer ['str buffer'.apply_variableDefault()/] = new StringBuffer();
+  			while (['matcher'.apply_variableDefault()/].find()) {
+  				['matcher'.apply_variableDefault()/].appendReplacement(['str buffer'.apply_variableDefault()/], 
+  					['matcher'.apply_variableDefault()/].group().toUpperCase());
+  			}		
+  			['matcher'.apply_variableDefault()/].appendTail(['str buffer'.apply_variableDefault()/]);
+  			['json serialization'.apply_parameterMethodClassicIn()/] = ['str buffer'.apply_variableDefault()/].toString();
+  		}
+  		 
+  		// for pretty entity printing
+  		[protected (c.getUserCodeId('for pretty entity printing')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		return ['json serialization'.apply_parameterMethodClassicIn()/]
+      				.trim()
+      				.replace(")]}'\n{", "\n\r")
+      				.replaceAll("\"(.*)\":", "$1 :")
+      				.replaceAll("\n( *)\\},\n *\\{", ['new record'.apply_methodDefault()/]())
+      				.replaceAll("(\\['['/] *\\n)( *)\\{", ['first record'.apply_methodDefault()/]())
+      				.replaceAll("['['/]\\{\\}]", "")
+      				.replaceAll(",(\n)", "$1")
+      				.replaceAll("(null),", "$1")
+      				.replaceAll("\n *\n", "\n")
+      				.replaceAll("(\n *)_", "$1") 		//Si norme SAFRAN.
+      				.replaceAll("<!NLE>|</!NLE>","\n") 	//Espacement pour les listes.
+      				.replaceAll("\\}$", "");
+      
+    [/protected]
+  
+  	}
+  	
+  	/**
+  	 * Affiche une ligne spécifique pour afficher un nouvel élément dans une liste.
+  	 * 
+  	 * @return La ligne pour afficher le nouvel élément dans la liste.
+  	 */
+  	private static String ['new record'.apply_methodDefault()/]() {
+  		
+  		// for new record
+  		[protected (c.getUserCodeId('for new record')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		StringBuilder ['str builder'.apply_variableDefault()/] = new StringBuilder();
+      		['str builder'.apply_variableDefault()/].append("<!NLE>\n$1  -----------------------------------------------\n");
+      		['str builder'.apply_variableDefault()/].append("$1  ---------- NOUVEL ELEMENT DE LISTE ------------\n");
+      		['str builder'.apply_variableDefault()/].append("$1  -----------------------------------------------</!NLE>");
+      		return ['str builder'.apply_variableDefault()/].toString();
+      
+    [/protected]
+  
+  	}
+  
+  	/**
+  	 * Affiche une ligne spécifique pour afficher le premier élément dans une liste.
+  	 * 
+  	 * @return La ligne pour afficher le premier élément dans la liste.
+  	 */
+  	private static String firstRecord() {
+  		
+  		// Start of user code for new record
+  
+  		StringBuilder ['str builder'.apply_variableDefault()/] = new StringBuilder();
+  		['str builder'.apply_variableDefault()/].append("$1").append("<!NLE>$2  -----------------------------------------------\n");
+  		['str builder'.apply_variableDefault()/].append("$2  ---------- PREMIER ELEMENT DE LISTE -----------\n");
+  		['str builder'.apply_variableDefault()/].append("$2  -----------------------------------------------</!NLE>");
+  		return ['str builder'.apply_variableDefault()/].toString();
+  
+  		// End of user code
+  	}
+  }[/template]
 
 [comment : **************************************************************/]
 [comment : Create the front test (client) resource for the REST service. /]
 [comment : **************************************************************/]
-[template public rsFrontResourceTest(s : Service)]
-[licence()/]
-package [buildPackageRsFrontResources()/];
-// [protected ('for imports')]
-
-[comment : Write all required imports./]
-[s.writeImports()/]
-
-// [/protected]
-
-/**
- * Classe de test JUnit pour la ressource frontale (client) : '[s.buildRSFrontResourceTestClassName()/]'.
- *
- * @author [getAuthorName()/]
- */
-public class [s.buildRSFrontResourceTestClassName()/] {
-
-	[comment : Initialisation for all input params (2 services min with 3 operations). /]
-	[if s.hasGlobalInitParams()][resetParamNotAlreadyWrited()/]
-	// *****************************************************************
-	// Liste des paramètres en entrée pour les différents services.
-	// Effectuer ici (si besoin) les initialisations communes  
-	// pour plusieurs services. !! Attention dans le cas ou plusieurs 
-	// paramètres ont le même nom mais un type différent, il sont alors 
-	// suffixés (ex param_1, param_2, etc...)
-	// *****************************************************************
-
-	// for global input parameters declaration
-	// [protected (s.getUserCodeId('for global input parameters declaration'))]
-
-	[for (p : Parameter | s.ownedInterface.ownedOperations.input->sortedBy(name))]
-	[let paramName : String = p.getGlobalInputParamName()]
-	[comment : Write the global parameter only if the name <> null ! (if null -> duplicated parameter.) /]
-	[if not paramName.oclIsUndefined()]
-	private [p.addInitInputParam(true, true, paramName)/]
-	[/if][/let][/for]
-
-	// [/protected]
-	[/if]
-
-	[comment : Initialisation for all JUnit tests. /]
-	/**
-	 * Enregistrement de la classe de test auprès du Helper.
-	 * Récupération du token si le service est sécurisé.
-	 */
-	@BeforeAll
-	public static void [apply_methodDefault('init')/](){
-
-		// for init
-		// [protected (s.getUserCodeId('for init'))]
-
-		[buildRSFrontResourceTestHelperClassName()/].[apply_methodDefault('register class')/](
-			[s.buildRSFrontResourceTestClassName()/].class);
-
-		[if s.isSecured() and not s.isDefinedForAuthentication()]
-		// Récupération du token applicatif (Hors Passerelle PES).
-		[buildRSFrontResourceTestHelperClassName()/].[apply_methodDefault('authenticate')/]();
-		[/if]
-
-		// [/protected]
-	}
-
-	[for (o : Operation | s.ownedInterface.ownedOperations)]
-   [comment : strictly respect this indentation. /]
-   /**
-   * [o.description/]
- [getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
-	@Test
-	@SuppressWarnings("unused")
-	public void [apply_methodDefault('test ' +  o.name)  /]() {
-
-		try {
-
-			[o.writePreMethods()/]
-	
-			// for [o.userCodeForOperation()/]
-			// [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
-
-			[o.addInitInputParamsInIfExist(s)/]
-
-			// [/protected]
-
-			[s.writeServiceCallForOperation(o)/]
-
-			[o.writeNotNullAssertion()/]
-
-			// for response [o.userCodeForOperation()/]
-			// [protected (o.getUserCodeId('for response ' + o.userCodeForOperation()))]
-			
-			[o.writePostMethods()/]
-
-			// [/protected]
-
-		} catch ([buildRSFrontExceptionClassName()/] [apply_parameterMethodClassicIn('exception')/]) {
-			
-			[o.writeErrorTrapping()/]
-		}
-	}
-
-	[/for]
-}
-
+[template public rsFrontResourceTest(s : soa::Service)]
+  [s.licence()/]
+  package [s.buildPackageRsFrontResources()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    [s.writeImports()/]
+    
+  [/protected]
+  
+  
+  /**
+   * Classe de test JUnit pour la ressource frontale (client) : '[s.buildRSFrontResourceTestClassName()/]'.
+   *
+   * @author [s.getAuthorName()/]
+   */
+  public class [s.buildRSFrontResourceTestClassName()/] {
+  
+  [if (s.hasGlobalInitParams())]
+    [s.resetParamNotAlreadyWrited()/]
+    	// *****************************************************************
+    	// Liste des paramètres en entrée pour les différents services.
+    	// Effectuer ici (si besoin) les initialisations communes  
+    	// pour plusieurs services. !! Attention dans le cas ou plusieurs 
+    	// paramètres ont le même nom mais un type différent, il sont alors 
+    	// suffixés (ex param_1, param_2, etc...)
+    	// *****************************************************************
+    
+    	// for global input parameters declaration
+    	[protected (s.getUserCodeId('for global input parameters declaration')) startTagPrefix('// ') endTagPrefix('// ')]
+       
+       [for (p : soa::Parameter | s.ownedInterface.ownedOperations->asSequence()->collect(temp1 | temp1.input)->sortedBy(temp2 | temp2.name))]
+         [let paramName : String = p.getGlobalInputParamName()]
+           [if (not (paramName = null))]
+             	private [p.addInitInputParam(true, true, paramName)/]
+           [/if]
+         [/let]
+       [/for]
+       
+     [/protected]
+    
+  [/if]
+  
+  	/**
+  	 * Enregistrement de la classe de test auprès du Helper.
+  	 * Récupération du token si le service est sécurisé.
+  	 */
+  	@BeforeAll
+  	public static void ['init'.apply_methodDefault()/](){
+  
+  		// for init
+  		[protected (s.getUserCodeId('for init')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+      		[s.buildRSFrontResourceTestHelperClassName()/].['register class'.apply_methodDefault()/](
+      			[s.buildRSFrontResourceTestClassName()/].class);
+      
+      [if (s.isSecured() and not s.isDefinedForAuthentication())]
+        		// Récupération du token applicatif (Hors Passerelle PES).
+        		[s.buildRSFrontResourceTestHelperClassName()/].['authenticate'.apply_methodDefault()/]();
+      [/if]
+      
+    [/protected]
+  
+  	}
+  
+  [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+       /**
+       * [o.description/]
+     [o.getComParamsIn()/][o.comParamOut()/][o.comRSFaults()/]    */
+    	@Test
+    	@SuppressWarnings("unused")
+    	public void [('test ' + o.name).apply_methodDefault()/]() {
+    
+    		try {
+    
+    			[o.writePreMethods()/]
+    	
+    			// for [o.userCodeForOperation()/]
+    			[protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+         
+         			[o.addInitInputParamsInIfExist(s)/]
+         
+       [/protected]
+    
+    
+    			[s.writeServiceCallForOperation(o)/]
+    
+    			[o.writeNotNullAssertion()/]
+    
+    			// for response [o.userCodeForOperation()/]
+    			[protected (o.getUserCodeId('for response ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+         			
+         			[o.writePostMethods()/]
+         
+       [/protected]
+    
+    
+    		} catch ([o.buildRSFrontExceptionClassName()/] ['exception'.apply_parameterMethodClassicIn()/]) {
+    			
+    			[o.writeErrorTrapping()/]
+    		}
+    	}
+    
+  [/for]
+  }
 [/template]
 
 [comment : Write junit security if the developer make mistakes on filter or interceptor. /]
-[template private writeNotNullAssertion (o : Operation) post(trim())]
-[if o.hasDtoParamOutXto()]assertNotNull([apply_variableDefault('entity')/], "L'entité retournée est nulle, "
-		+ "vérifier le filtre et / ou l'intercepteur.");[/if]
+[template private writeNotNullAssertion(o : soa::Operation) post(self.trim())]
+  [if (o.hasDtoParamOutXto())]
+    assertNotNull(['entity'.apply_variableDefault()/], "L'entité retournée est nulle, "
+    		+ "vérifier le filtre et / ou l'intercepteur.");[/if]
 [/template]
 
 [comment : Write token recovery method and log to console (if exists)./]
-[template private writePostMethods(o : Operation) post(trim())]
-[if o.isDefinedForAuthentication()][o.addSuggestedEntityTokenMethod()/][c(1)/][/if][o.addLogToConsole()/]
-[/template]
+[template private writePostMethods(o : soa::Operation) post(self.trim())]
+  [if (o.isDefinedForAuthentication())][o.addSuggestedEntityTokenMethod()/][1.c()/][/if]
+  [o.addLogToConsole()/][/template]
 
 [comment : Write register method and (if exists) the token assertion./]
-[template private writePreMethods(o : Operation) post(trim())]
-[o.writeRegisterMethodToHelper()/][if o.isApiKey() or o.isBasicAuth()][c(2)/][o.writeTokenAssertion()/][/if]
+[template private writePreMethods(o : soa::Operation) post(self.trim())]
+  [o.writeRegisterMethodToHelper()/][if (o.isApiKey() or o.isBasicAuth())][2.c()/][o.writeTokenAssertion()/][/if]
 [/template]
 
 [comment : Write the method to register the name of the operation for loggin (1/2)./]
-[template private writeRegisterMethodToHelper (o : Operation) post(trim())]
-// Enregistrement du nom de la méthode pour la sortie console.
-[buildRSFrontResourceTestHelperClassName()/].[o.writeRegisterMethodToHelper_2()/]
-[/template]
+[template private writeRegisterMethodToHelper(o : soa::Operation) post(self.trim())]
+  // Enregistrement du nom de la méthode pour la sortie console.
+  [o.buildRSFrontResourceTestHelperClassName()/].[o.writeRegisterMethodToHelper_2()/][/template]
 
 [comment : Write the method to register the name of the operation for loggin (2/2)./]
-[template private writeRegisterMethodToHelper_2 (o : Operation) post(trim())]
-[apply_methodDefault('register method')/]("[apply_methodDefault('test ' +  o.name)/]");
-[/template]
+[template private writeRegisterMethodToHelper_2(o : soa::Operation) post(self.trim())]
+  ['register method'.apply_methodDefault()/]("[('test ' + o.name).apply_methodDefault()/]");[/template]
 
 [comment : Write a not null assertion to check the token./]
-[template private writeTokenAssertion (o : Operation) post (trim())]
-assertNotNull([buildRSFrontResourceTestHelperClassName()/].[apply_methodGet('auth token')/](), 
-	"Token manquant, jouer la demande d'authentification.");
-[/template]
+[template private writeTokenAssertion(o : soa::Operation) post(self.trim())]
+  assertNotNull([o.buildRSFrontResourceTestHelperClassName()/].['auth token'.apply_methodGet()/](), 
+  	"Token manquant, jouer la demande d'authentification.");[/template]
 
 [comment : Add the return parameter if exists for the operation (MultiValuedMap or any other). /]
-[template private addReturnParamIfExists (o : Operation) post (trim())]
-[o.addReturnParamForMultiValuesMapIfExists()/][o.addOtherReturnParamIfExists()/]
-[/template]
+[template private addReturnParamIfExists(o : soa::Operation) post(self.trim())]
+  [o.addReturnParamForMultiValuesMapIfExists()/][o.addOtherReturnParamIfExists()/][/template]
 
 [comment : Add any return parameter if exists (other than MultiValuedMap). /]
-[template private addOtherReturnParamIfExists (o : Operation) post(trim())]
-[if o.hasParamOutXto()][o.paramOutXto()/] [apply_variableDefault('entity')/] = [/if]
+[template private addOtherReturnParamIfExists(o : soa::Operation) post(self.trim())]
+  [if (o.hasParamOutXto())][o.paramOutXto()/] ['entity'.apply_variableDefault()/] = [/if]
 [/template]
 
 [comment : Add all the lines for initialisation of input parameters if exists. /]
-[template private addInitInputParamsInIfExist (o : Operation, s : Service) post(trim())]
-[for (p : Parameter | o.input->asSet())][p.addInitInputParam(false, s.hasGlobalInitParams(), null)/][c(1)/][/for]
+[template private addInitInputParamsInIfExist(o : soa::Operation, s : soa::Service) post(self.trim())]
+  [for (p : soa::Parameter | o.input->asSet())][p.addInitInputParam(false, s.hasGlobalInitParams(), null)/][1.c()/][/for]
 [/template]
 
 [comment : Add the specific return parameter if verb is HEAD or OPTIONS. /]
-[template private addReturnParamForMultiValuesMapIfExists (o : Operation) post(trim())]
-[if o.isMultiValueMapRequired()]MultivaluedMap<String, Object> [apply_variableDefault('headers')/] = [/if]
+[template private addReturnParamForMultiValuesMapIfExists(o : soa::Operation) post(self.trim())]
+  [if (o.isMultiValueMapRequired())]MultivaluedMap<String, Object> ['headers'.apply_variableDefault()/] = [/if]
 [/template]
 
 [comment : Write the main call for the test. (call the delegate class and the selected operation). /]
-[template private writeServiceCallForOperation (s : Service, o : Operation) post(trim())]
-[o.addReturnParamIfExists()/] [s.buildRSFrontDelegateClassName()/].[o.writeOperation(s.hasGlobalInitParams(), s)/];
-[/template]
+[template private writeServiceCallForOperation(s : soa::Service, o : soa::Operation) post(self.trim())]
+  [o.addReturnParamIfExists()/] [s.buildRSFrontDelegateClassName()/].[o.writeOperation(s.hasGlobalInitParams(), s)/];[/template]
 
-[comment : Write the name of the selected operation for the service class. / ]
-[template private writeOperation (o : Operation, b : Boolean, s: Service) post(trim())]
-[apply_methodDefault(o.name)/]([o.addParameterForOperation(b, s)/][if o.isSecured()][o.addAuthTokenForOperation()/][/if])
-[/template]
+[comment : Write the name of the selected operation for the service class. /]
+[template private writeOperation(o : soa::Operation, b : Boolean, s : soa::Service) post(self.trim())]
+  [o.name.apply_methodDefault()/]([o.addParameterForOperation(b, s)/][if (o.isSecured())][o.addAuthTokenForOperation()/][/if]
+  )[/template]
 
 [comment : Add the specific parameter for token authorization (1/2).  /]
-[template private addAuthTokenForOperation (o : Operation) post(trim())]
-[if not o.input->isEmpty()], [c(1)/][/if][o.addAuthTokenForOperation_2()/]
-[/template]
+[template private addAuthTokenForOperation(o : soa::Operation) post(self.trim())]
+  [if (not o.input->isEmpty())], [1.c()/][/if]
+  [o.addAuthTokenForOperation_2()/][/template]
 
 [comment : Add the specific parameter for token authorization (2/2).  /]
-[template private addAuthTokenForOperation_2 (o : Operation) post(trim())]
-[buildRSFrontResourceTestHelperClassName()/].[apply_methodGet('auth token')/]()
-[/template]
+[template private addAuthTokenForOperation_2(o : soa::Operation) post(self.trim())]
+  [o.buildRSFrontResourceTestHelperClassName()/].['auth token'.apply_methodGet()/]()[/template]
 
 [comment : Add the initialisation line for an input parameter if needed. (1/3) !!!hack for type Binary!!! /]
 [comment : b1 -> write a global param ? | b2 -> gloabal params exists ? | paramName -> name of the global parameter. /]
-[template private addInitInputParam (p : Parameter, b1 : Boolean, b2 : Boolean, paramName : String) post(trim())]
-final [if (p.isTypeOfBinary())]byte['[]'/][else][p.paramTypeXto()/][/if] [p.addInitInputParam_2(b1, b2, paramName)/];
-[/template]
+[template private addInitInputParam(p : soa::Parameter, b1 : Boolean, b2 : Boolean, paramName : String) post(self.trim())]
+  final [if (p.isTypeOfBinary())]byte['['/]][else][p.paramTypeXto()/][/if]
+   [p.addInitInputParam_2(b1, b2, paramName)/];[/template]
 
 [comment : Add the initialisation line for input parameter. (2/3). /]
-[template private addInitInputParam_2(p : Parameter, b1 : Boolean, b2 : Boolean, paramName : String) post(trim())]
-[if b1][apply_attributeFinal(paramName)/] = [p.addInitParamAffectation()/][else][p.addInitInputParam_3(b2, paramName)/][/if] 
-[/template]
+[template private addInitInputParam_2(p : soa::Parameter, b1 : Boolean, b2 : Boolean, paramName : String) post(self.trim())]
+  [if (b1)][paramName.apply_attributeFinal()/] = [p.addInitParamAffectation()/][else][p.addInitInputParam_3(b2, paramName)/][/if]
+   [/template]
 
 [comment : Add the initialisation line for input parameter. (3/3). /]
-[template private addInitInputParam_3(p : Parameter, b2 : Boolean, paramName : String) post(trim())]
-[apply_variableDefault(p.name)/] = [if b2]null[else][p.addInitParamAffectation()/][/if]
+[template private addInitInputParam_3(p : soa::Parameter, b2 : Boolean, paramName : String) post(self.trim())]
+  [p.name.apply_variableDefault()/] = [if (b2)]null[else][p.addInitParamAffectation()/][/if]
 [/template]
 
-[comment : Add the suggested method (try to discover) for getting the token. / ]
-[template private addSuggestedEntityTokenMethod (o : Operation) post(trim())]
-// Completer cette méthode avec la valeur de retour du service.
-[buildRSFrontResourceTestHelperClassName()/].[apply_methodSet('auth token')/](null);
-[/template]
+[comment : Add the suggested method (try to discover) for getting the token. /]
+[template private addSuggestedEntityTokenMethod(o : soa::Operation) post(self.trim())]
+  // Completer cette méthode avec la valeur de retour du service.
+  [o.buildRSFrontResourceTestHelperClassName()/].['auth token'.apply_methodSet()/](null);[/template]
 
 [comment : Add the initialisation for the input parameter. (new .... / etc..)/]
-[template private addInitParamAffectation (p : Parameter) post(trim())]
-[if p.type.oclIsTypeOf(Enumeration)] [p.addInitParamForEnum()/] [elseif p.isMultiple()] new ArrayList<[p.typeXto()/]>()
-[elseif p.isTypeOfBinary()][buildRSFrontResourceTestHelperClassName()/].[apply_methodGet('random bytes')/]("FGW456456VBNXD555JH7787/§%¨¨HJHJKHKY")
-[elseif p.type.oclIsTypeOf(DTO)]new [p.paramTypeXto()/]([defaultValueForColumnType(p.type.name)/])
-[else][defaultValueForColumnType(p.type.name)/][/if]
+[template private addInitParamAffectation(p : soa::Parameter) post(self.trim())]
+  [if (p.type.oclIsTypeOf(environment::Enumeration))][p.addInitParamForEnum()/][elseif (p.isMultiple())]
+                                                                                  new ArrayList<[p.typeXto()/]>()
+                                                                               [elseif (p.isTypeOfBinary())]
+                                                                                 [p.buildRSFrontResourceTestHelperClassName()/].['random bytes'.apply_methodGet()/]("FGW456456VBNXD555JH7787/§%¨¨HJHJKHKY")
+                                                                               [elseif (p.type.oclIsTypeOf(environment::DTO))]
+                                                                                 new [p.paramTypeXto()/]([p.type.name.defaultValueForColumnType()/])
+                                                                               [else][p.type.name.defaultValueForColumnType()/][/if]
 [/template]
 
 [comment : Init the first literal for the enumeration parameter.  /]
-[template private addInitParamForEnum (p : Parameter) post(trim())]
-[p.paramTypeXto()/].[apply_enum(p.type.oclAsType(Enumeration).literals->first().name)/]
-[/template]
+[template private addInitParamForEnum(p : soa::Parameter) post(self.trim())]
+  [p.paramTypeXto()/].[p.type.oclAsType(environment::Enumeration).literals->first().name.apply_enum()/][/template]
 
 [comment : Write the list of parameters for the operation (1/4). /]
-[template private addParameterForOperation(o : Operation, b : Boolean, s : Service) post (trim())]
-[o.input->collectNested(addParameterForOperation_2(b, s))->sep(',' + c(1))/]
-[/template]
+[template private addParameterForOperation(o : soa::Operation, b : Boolean, s : soa::Service) post(self.trim())]
+  [o.input->collectNested(temp3 | temp3.addParameterForOperation_2(b, s))->sep(',' + 1.c())/][/template]
 
 [comment : Write the list of parameters for the operation (2/4)./]
-[template private addParameterForOperation_2( p : Parameter,  b : Boolean, s : Service) post (trim())]
-[if b][p.addParameterForOperation_3(b, s)/][else][p.addParameterForOperation_4(b, s)/][/if]
+[template private addParameterForOperation_2(p : soa::Parameter, b : Boolean, s : soa::Service) post(self.trim())]
+  [if (b)][p.addParameterForOperation_3(b, s)/][else][p.addParameterForOperation_4(b, s)/][/if]
 [/template]
 
 [comment : Write the list of parameters for the operation (3/4)./]
-[template private addParameterForOperation_3(p : Parameter,  b : Boolean, s : Service) post (trim())]
-[buildRSFrontResourceTestHelperClassName()/].[apply_methodSet('param')/]([p.addParameterForOperation_4(b, s)/])
-[/template]
+[template private addParameterForOperation_3(p : soa::Parameter, b : Boolean, s : soa::Service) post(self.trim())]
+  [p.buildRSFrontResourceTestHelperClassName()/].['param'.apply_methodSet()/]([p.addParameterForOperation_4(b, s)/])[/template]
 
 [comment : Write the list of parameters for the operation (4/4)./]
 [comment : b -> global param ? | s : Service for tab parameter reconstruction case of regenereation. /]
-[template private addParameterForOperation_4(p : Parameter, b : Boolean, s : Service) post (trim())]
-[if b][getAffectationPrefix()/][apply_attributeFinal(p.retreiveGlobalInputParamName(s))/], [/if][apply_variableDefault(p.name)/]
-[/template]
+[template private addParameterForOperation_4(p : soa::Parameter, b : Boolean, s : soa::Service) post(self.trim())]
+  [if (b)][p.getAffectationPrefix()/][p.retreiveGlobalInputParamName(s).apply_attributeFinal()/], [/if]
+  [p.name.apply_variableDefault()/][/template]
 
 [comment : Add alls imports for input parameters. (duplicate with RSFrontResourceTest) /]
-[template private addImportForInput (o : Operation, p : Parameter) post(trim())]
-[if p.type.oclIsTypeOf(DTO)][o.addImportForDto(p)/][elseif p.type.oclIsTypeOf(Enumeration)][o.addImportForEnum(p)/][/if]
+[template private addImportForInput(o : soa::Operation, p : soa::Parameter) post(self.trim())]
+  [if (p.type.oclIsTypeOf(environment::DTO))][o.addImportForDto(p)/][elseif (p.type.oclIsTypeOf(environment::Enumeration))][o.addImportForEnum(p)/][/if]
 [/template]
 
 [comment : Add an import line for a DTO (input or output parameter). (duplicate with RSFrontResourceTest)/]
-[template private addImportForDto (o : Operation, p : Parameter) post(trim())]
-[o.addImport(buildPackageWsApiDto(p.type.oclAsType(DTO)) + '.' + buildXtoClassNameFromDto(p.type.oclAsType(DTO))) /]
-[/template]
+[template private addImportForDto(o : soa::Operation, p : soa::Parameter) post(self.trim())]
+  [o.addImport(p.type.oclAsType(environment::DTO).buildPackageWsApiDto() + '.' + p.type.oclAsType(environment::DTO).buildXtoClassNameFromDto())/][/template]
 
 [comment : Add an import line for an enumeration (input parameter). (duplicate with RSFrontResourceTest)/]
-[template private addImportForEnum (o : Operation, p : Parameter) post(trim())]
-[o.addImport(buildPackageWsApiEnum(p.type.oclAsType(Enumeration)) + '.' + apply_classEnum(p.type.name)) /]
-[/template]
+[template private addImportForEnum(o : soa::Operation, p : soa::Parameter) post(self.trim())]
+  [o.addImport(p.type.oclAsType(environment::Enumeration).buildPackageWsApiEnum() + '.' + p.type.name.apply_classEnum())/][/template]
 
 [comment : Add a line for displaying the entity and the headers./]
-[template private addLogToConsole (o : Operation) post(trim())]
-[buildRSFrontResourceTestHelperClassName()/].[apply_methodDefault('display response')/]([o.getReturnValueName()/]);
-[/template]
+[template private addLogToConsole(o : soa::Operation) post(self.trim())]
+  [o.buildRSFrontResourceTestHelperClassName()/].['display response'.apply_methodDefault()/]([o.getReturnValueName()/]);[/template]
 
 [comment : Get the name for the return variable, depends of the verb (headers or entity). /]
-[template private getReturnValueName (o : Operation) post(trim())]
-[if soa::Verb::HEAD = o.verb][apply_variableDefault('headers')/]
-[elseif o.hasParamOutXto()][apply_variableDefault('entity')/]
-[else]"Pas de résultat dans le corps pour cette ressource."[/if]
+[template private getReturnValueName(o : soa::Operation) post(self.trim())]
+  [if (soa::Verb::HEAD = o.verb)]
+    ['headers'.apply_variableDefault()/]
+  [elseif (o.hasParamOutXto())]
+    ['entity'.apply_variableDefault()/]
+  [else]"Pas de résultat dans le corps pour cette ressource."[/if]
 [/template]
 
 [comment : Write the error trapping for the exception. (1/2) /]
-[template private writeErrorTrapping (o : Operation) post(trim())]
-[o.buildRSFrontResourceTestHelperClassName()/].[o.writeErrorTrapping_2()/]
-[/template]
+[template private writeErrorTrapping(o : soa::Operation) post(self.trim())]
+  [o.buildRSFrontResourceTestHelperClassName()/].[o.writeErrorTrapping_2()/][/template]
 
 [comment : Write the error trapping for the exception. (2/2) /]
-[template private writeErrorTrapping_2 (o : Operation) post(trim())]
-[apply_methodDefault('display error')/]([apply_parameterMethodClassicIn('exception')/]);
-[/template]
+[template private writeErrorTrapping_2(o : soa::Operation) post(self.trim())]
+  ['display error'.apply_methodDefault()/](['exception'.apply_parameterMethodClassicIn()/]);[/template]
 
 [comment : Write all the required imports. /]
-[template private writeImports (s : Service) post(trim())]
-[s.initImports(true)/]
-[comment : Import specific MultiValuedMap if HEAD / OPTIONS operation. /]
-[s.addImport('jakarta.ws.rs.core.MultivaluedMap', s.isMultiValueMapRequired()) /]  
-[s.addImport(buildPackageRsFrontDelegates() + '.' + s.buildRSFrontDelegateClassName())/]
-[s.addImport(buildPackageRsFrontExceptions() + '.' + buildRSFrontExceptionClassName())/]
-[s.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
-[s.addImport('org.junit.jupiter.api.BeforeAll')/]
-[s.addImport('org.junit.jupiter.api.Test')/]
-[comment : Add all imports for input and output parameters of each operation./]
-[for (o : Operation | s.ownedInterface.ownedOperations)]
-[if o.hasDtoParamOutXto()][o.addImportForDto(o.output->first()) /][/if]
-[for (p : Parameter | o.input->asSet())][o.addImportForInput(p)/][/for][/for]
-[comment : Flush all imports to the file. /]
-[s.flushImports()/]
-[/template]
+[template private writeImports(s : soa::Service) post(self.trim())]
+  [s.initImports(true)/]
+  [s.addImport('jakarta.ws.rs.core.MultivaluedMap', s.isMultiValueMapRequired())/]  
+  [s.addImport(s.buildPackageRsFrontDelegates() + '.' + s.buildRSFrontDelegateClassName())/]
+  [s.addImport(s.buildPackageRsFrontExceptions() + '.' + s.buildRSFrontExceptionClassName())/]
+  [s.addImport('static org.junit.jupiter.api.Assertions.assertNotNull')/]
+  [s.addImport('org.junit.jupiter.api.BeforeAll')/]
+  [s.addImport('org.junit.jupiter.api.Test')/]
+  [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
+    [if (o.hasDtoParamOutXto())][o.addImportForDto(o.output->first())/][/if]
+    
+    [for (p : soa::Parameter | o.input->asSet())][o.addImportForInput(p)/][/for]
+  [/for]
+  [s.flushImports()/][/template]
 
 [comment : Write all required imports. /]
-[template private writeImports (c : Component) post(trim())]
-[c.initImports()/]
-[c.addImport('java.io.PrintWriter')/]
-[c.addImport('java.io.StringWriter')/]
-[c.addImport('java.util.List')/]
-[c.addImport('java.util.Map.Entry')/]
-[c.addImport('java.util.regex.Matcher')/]
-[c.addImport('java.util.regex.Pattern')/]
-[c.addImport('org.apache.logging.log4j.LogManager')/]
-[c.addImport('org.apache.logging.log4j.Logger')/]
-[c.addImport('com.google.gson.LongSerializationPolicy')/]
-[c.addImport('com.google.gson.FieldNamingPolicy')/]
-[c.addImport('com.google.gson.Gson')/]
-[c.addImport('jakarta.ws.rs.client.Client')/]
-[c.addImport('jakarta.ws.rs.client.ClientBuilder')/]
-[c.addImport('com.google.gson.GsonBuilder')/]
-[c.addImport('jakarta.ws.rs.core.MediaType')/]
-[c.addImport('jakarta.ws.rs.core.Form')/]
-[c.addImport('org.json.JSONObject')/]
-[c.addImport('jakarta.ws.rs.client.Entity')/]
-[c.addImport('static org.junit.jupiter.api.Assertions.fail')/]
-[c.addImport(buildPackageRsFrontExceptions() + '.' + buildRSFrontExceptionClassName())/]
-[c.addImport(buildPackageRsFront() + '.' + buildRSFrontResourcesContextHolder())/]
-[c.addImport(buildPackageRsFront() + '.' + buildRSFrontResourcesContextHolder()+'.Headers')/]
-[c.addImport(buildPackageRsFront() + '.' + buildRSFrontConfigClassName())/]
-[c.addImport(buildPackageRsFront() + '.' + buildRSFrontTokensConfigClassName())/]
-[c.addImport(buildPackageRsFront() + '.' + buildRSClientFactoryClassName())/]
-[c.flushImports()/]
-[/template]
+[template private writeImports(c : soa::Component) post(self.trim())]
+  [c.initImports()/]
+  [c.addImport('java.io.PrintWriter')/]
+  [c.addImport('java.io.StringWriter')/]
+  [c.addImport('java.util.List')/]
+  [c.addImport('java.util.Map.Entry')/]
+  [c.addImport('java.util.regex.Matcher')/]
+  [c.addImport('java.util.regex.Pattern')/]
+  [c.addImport('org.apache.logging.log4j.LogManager')/]
+  [c.addImport('org.apache.logging.log4j.Logger')/]
+  [c.addImport('com.google.gson.LongSerializationPolicy')/]
+  [c.addImport('com.google.gson.FieldNamingPolicy')/]
+  [c.addImport('com.google.gson.Gson')/]
+  [c.addImport('jakarta.ws.rs.client.Client')/]
+  [c.addImport('jakarta.ws.rs.client.ClientBuilder')/]
+  [c.addImport('com.google.gson.GsonBuilder')/]
+  [c.addImport('jakarta.ws.rs.core.MediaType')/]
+  [c.addImport('jakarta.ws.rs.core.Form')/]
+  [c.addImport('org.json.JSONObject')/]
+  [c.addImport('jakarta.ws.rs.client.Entity')/]
+  [c.addImport('static org.junit.jupiter.api.Assertions.fail')/]
+  [c.addImport(c.buildPackageRsFrontExceptions() + '.' + c.buildRSFrontExceptionClassName())/]
+  [c.addImport(c.buildPackageRsFront() + '.' + c.buildRSFrontResourcesContextHolder())/]
+  [c.addImport(c.buildPackageRsFront() + '.' + c.buildRSFrontResourcesContextHolder() + '.Headers')/]
+  [c.addImport(c.buildPackageRsFront() + '.' + c.buildRSFrontConfigClassName())/]
+  [c.addImport(c.buildPackageRsFront() + '.' + c.buildRSFrontTokensConfigClassName())/]
+  [c.addImport(c.buildPackageRsFront() + '.' + c.buildRSClientFactoryClassName())/]
+  [c.flushImports()/][/template]
 
 [comment : Get the default test value depends of the parameter's type. /]
 [template private defaultValueForColumnType(type : String)]
-[if type.equalsIgnoreCase('String')]
-"S"[elseif type.equalsIgnoreCase('Boolean')]
-false[elseif type.equalsIgnoreCase('Integer')]
-1[elseif type.equalsIgnoreCase('Long')]
-1L[elseif type.equalsIgnoreCase('Float')]
-1F[elseif type.equalsIgnoreCase('Double')]
-1D[elseif type.equalsIgnoreCase('Date')]
-new Date()[elseif type.equalsIgnoreCase('Timestamp')]
-new Timestamp(new Date().getTime())[elseif type.equalsIgnoreCase('Time')]
-new Time(new Date().getTime())[elseif type.equalsIgnoreCase('Binary')]
-getRandomBinary()[elseif type.equalsIgnoreCase('Char')]
-'C'[/if]
+  [if (type.equalsIgnoreCase('String'))]"S"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]1[elseif (type.equalsIgnoreCase('Long'))]1L[elseif (type.equalsIgnoreCase('Float'))]1F[elseif (type.equalsIgnoreCase('Double'))]1D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp(new Date().getTime())[elseif (type.equalsIgnoreCase('Time'))]new Time(new Date().getTime())[elseif (type.equalsIgnoreCase('Binary'))]getRandomBinary()[elseif (type.equalsIgnoreCase('Char'))]'C'[/if]
 [/template]
 
 [comment : Too specific to bring up in common files, leave here. /]
-[query private hasBinaryType (s : Service) : Boolean =
-	s.ownedInterface.ownedOperations.input->exists(p : Parameter | p.isTypeOfBinary())
-	or s.ownedInterface.ownedOperations.output->exists(p : Parameter | p.isTypeOfBinary())
-/]
+[query private hasBinaryType(s : soa::Service) : Boolean = s.ownedInterface.ownedOperations->asSequence()->collect(temp4 | temp4.input)->exists(p | p.isTypeOfBinary()) or s.ownedInterface.ownedOperations->asSequence()->collect(temp5 | temp5.output)->exists(p | p.isTypeOfBinary())/]
 
 [comment : Add a carriage return (doubled if n = 2) Make a loop .... /]
-[template private c (n : Integer)]
-[lineSeparator()/][if n = 2][lineSeparator()/][/if]
+[template private c(n : Integer)]
+  [n.lineSeparator()/][if (n = 2)][n.lineSeparator()/][/if]
 [/template]
