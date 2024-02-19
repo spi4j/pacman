@@ -200,12 +200,10 @@
 [query public getInputDto(o : soa::Operation) : soa::Parameter = o.input->first()/]
 
 [comment : add parameters for paging in methods'signatures. /]
-[template public paramsInForPagingIfNeeded(o : soa::Operation, type : Boolean)]
+[template public paramsInForPagingIfNeeded(o : soa::Operation, type : Boolean) post(self.trim())]
   [if (o.paged)]
-    [if (o.input->size() > 0)], [/if]
-    [if (type)]final int [/if]
-    ['offset'.apply_parameterMethodClassicIn()/], [if (type)]final int [/if]
-    ['limit'.apply_parameterMethodClassicIn()/][/if]
+    [if (o.input->size() > 0)], [/if][if (type)]final int [/if]['offset'.apply_parameterMethodClassicIn()/], [if (type)]final int [/if]['limit'.apply_parameterMethodClassicIn()/]
+  [/if]
 [/template]
 
 [comment : If paged list add a new method to get the total count of paged request. true if RS facade/]
@@ -219,17 +217,17 @@
     public int [(o.name + ' total count').apply_methodDefault()/]()
     {
     	[protected (o.getUserCodeId(o.name)) startTagPrefix('// ') endTagPrefix('// ')]
-       
-       [if (b)]
-         	return [o.buildAppliUserBusinessGenClassName()/].get[s/] ().[(o.name + ' total count').apply_methodDefault()/]();
-       [else]
-         	// TODO Méthode à implémenter
-         	throw new UnsupportedOperationException ();
-       [/if]
-       
-     [/protected]
-    
+
+    	  [if (b)]
+    	    return [o.buildAppliUserBusinessGenClassName()/].get[s/] ().[(o.name + ' total count').apply_methodDefault()/]();
+    	  [else]
+    	    // TODO Méthode à implémenter
+    	    throw new UnsupportedOperationException ();
+    	  [/if]
+
+    	[/protected]
     }
+
   [/if]
 [/template]
 

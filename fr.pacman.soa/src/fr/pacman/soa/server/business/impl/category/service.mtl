@@ -47,10 +47,8 @@
       
     [/protected]
     
-    
     /**
-     * Implémentation du contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if]
-    . <br>
+     * Implémentation du contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if]. <br>
      * Pour rappel, les services sont sans état.
      * @author [s.getAuthorName()/]
      */
@@ -60,15 +58,13 @@
         @Stateless
       [/if]
     [/protected]
-    
-    public class [s.buildServiceClassName(d)/] [if (d.hasCrud())]extends [s.getClassNameForService_Abs()/]<[s.genPkType()/], [d.buildDtoClassName()/], [d.buildEntityColumnEnumName()/]> [/if]
-    implements [s.buildServiceInterfaceName(d)/]
+    public class [s.buildServiceClassName(d)/] [if (d.hasCrud())]extends [s.getClassNameForService_Abs()/]<[s.genPkType()/], [d.buildDtoClassName()/], [d.buildEntityColumnEnumName()/]> [/if]implements [s.buildServiceInterfaceName(d)/]
     {
     
        // Rappel : les services sont sans état.
        // attributs
        [protected (s.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
     
     
@@ -233,17 +229,16 @@
           
                 // [o.userCodeForOperation()/]
                 [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-                        // Appel des exigences
+                  // Appel des exigences
                   [if (o.useServiceRequirements())]
                     [for (req : requirement::Requirement | requirements)]
                             ['requirements'.apply_attributeFinal()/].exigence[req.getServiceRequirementsPrefix()/][req.id/] ();
                     [/for]
                   [/if]
-                        // TODO Méthode à implémenter
-                        throw new UnsupportedOperationException ();
-                  
+                  // TODO Méthode à implémenter
+                  throw new UnsupportedOperationException ();
+
                 [/protected]
-          
              }
           
         [/let]
@@ -253,9 +248,8 @@
     
        // [s.nameService(d)/]
        [protected (s.getUserCodeId(s.nameService(d))) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-    
     }[/let]
 [/template]
 

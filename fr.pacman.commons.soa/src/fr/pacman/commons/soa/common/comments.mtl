@@ -146,17 +146,14 @@
 
 [comment : /]
 [template private description(p : soa::Parameter, lowerFirst : Boolean)]
-  [if (p.description = null)][p.name/].[else]
-                                         [if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if]
-                                         .[/if]
+  [if (p.description = null)][p.name/].[else][if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
 [/template]
 
 [comment : /]
 [template public comParamsIn(o : soa::Operation)]
   [for (p : soa::Parameter | o.input)]
         * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-        *           (In)[if (p.isMandatory())](*)[/if]
-     [p.description(false)/]
+        *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
   [/for]
 [/template]
 

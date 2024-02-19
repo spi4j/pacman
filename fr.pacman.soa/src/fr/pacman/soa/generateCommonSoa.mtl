@@ -70,7 +70,6 @@
     	[if (n.useWS())][n.xtoAGenerer()->genSelectedXtos()/][/if]
     
   [/if]
-  
 [/template]
 
 [comment : Generation des Xtos (On recupere tous les XTO pour la selection). /]

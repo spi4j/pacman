@@ -50,7 +50,6 @@
       
     [/protected]
     
-    
     /**
      * Implémentations des exigences métiers de '[s.buildServiceClassName(d)/]'.
      * @author [s.getAuthorName()/]
@@ -81,9 +80,8 @@
     [/if]
        // [s.nameServiceRequirements(d)/]
        [protected (s.getUserCodeId(s.nameServiceRequirements(d))) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-    
     
     }[/let]
 [/template]

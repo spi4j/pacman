@@ -8,7 +8,7 @@
 
 [comment encoding = UTF-8 /]
 [comment : /]
-[query public getAttributes(d : environment::DTO) : OrderedSet(environment::Attribute) = d.getAttributes()/]
+[query public getAttributes(d : environment::DTO) : OrderedSet(environment::Attribute) = d.getAttributesJavaService()->asOrderedSet()/]
 
 [comment : /]
 [template public genPropertyType(a : environment::Attribute) post(self.trim())]
@@ -20,7 +20,7 @@
 [/template]
 
 [comment : /]
-[template public genPropertyTypeValid(a : environment::Attribute) post(self.trim())]
+[template public genPropertyTypeValid(a : environment::Attribute)]
   [if (a.type = null)]String[else][a.type.genTypeName()/][/if]
 [/template]
 

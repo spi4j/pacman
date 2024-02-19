@@ -136,12 +136,13 @@
 
 [comment Parametres /]
 [comment -----------/]
-[template public paramOutDto(o : soa::Operation)]
+[template public paramOutDto(o : soa::Operation) post(self.trim())]
   [if (o.output->size() <> 1)]void[else][o.output->first().paramTypeDto()/][/if]
 [/template]
 
-[template public paramsInDto(o : soa::Operation)]
-  [o.input->asOrderedSet()->paramsInDto()->sep(', ')/][/template]
+[template public paramsInDto(o : soa::Operation) post(self.trim())]
+  [o.input->asOrderedSet()->paramsInDto()->sep(', ')/]
+[/template]
 
 [comment : /]
 [template public parametersXtoFromDto(p : soa::Parameter)]
@@ -157,10 +158,16 @@
 
 [query public paramInDto(param : soa::Parameter) : String = 'final ' + param.paramTypeDto() + ' ' + param.name.sanitize().apply_parameterMethodClassicIn()/]
 
-[template private paramTypeDto(p : soa::Parameter)]
+[template private paramTypeDto(p : soa::Parameter) post(self.trim())]
   [if (p.isMultiple())]List<[p.typeDto()/]>[else][p.typeDto()/][/if]
 [/template]
 
-[template private typeDto(p : soa::Parameter)]
-  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][else][p.simpleTypeDto() + 'Dto'/][/if]
+[template private typeDto(p : soa::Parameter) post(self.trim())]
+  [if (p.type <> null)]
+    [if (p.type.oclIsKindOf(environment::PrimitiveType))]
+      [p.type.name.sanitize()/]
+    [else]
+      [p.simpleTypeDto() + 'Dto'/]
+    [/if]
+  [/if]
 [/template]

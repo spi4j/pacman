@@ -75,6 +75,8 @@ public final class DtoFromEntityUtils
       return v_finalAttributes;
    }
 
+   public static List<Attribute> getAttributesJavaService (final DTO p_dto) {return getAttributes(p_dto);}
+
    /**
     * Classe interne de gestion de recopie des attributs d'entité dans DTO
     * @author MINARM

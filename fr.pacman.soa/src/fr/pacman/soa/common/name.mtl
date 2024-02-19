@@ -109,10 +109,16 @@
 [template public nameFetchingStrategyTest(d : environment::DTO)]
   [d.nameClassDto()/]FetchingStrategy_Test[/template]
 
-[template public nameService(s : soa::Service, d : environment::DTO)]
-  [if (not (s = null))][s.nameService()/][else]
-                                           [if (not (d = null))][d.nameClassDto()/]Service[else]NAME NOT FOUND FOR SERVICE AND DTO NULL[/if]
-                                         [/if]
+[template public nameService(s : soa::Service, d : environment::DTO) post(self.trim())]
+  [if (not (s = null))]
+    [s.nameService()/]
+  [else]
+    [if (not (d = null))]
+      [d.nameClassDto()/]Service
+    [else]
+      NAME NOT FOUND FOR SERVICE AND DTO NULL
+    [/if]
+  [/if]
 [/template]
 
 [template public nameService(s : soa::Service)]

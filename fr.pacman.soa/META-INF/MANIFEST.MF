@@ -20,7 +20,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.acceleo.engine,
  fr.pacman.commons,
  fr.pacman.commons.soa,
- fr.pacman.test;resolution:=optional
+ fr.pacman.test;resolution:=optional,
+ org.eclipse.acceleo.aql;bundle-version="4.0.0",
+ org.eclipse.acceleo.query;bundle-version="8.0.2",
+ org.antlr.runtime;bundle-version="4.10.1",
+ org.obeonetwork.tools.migration;bundle-version="4.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
