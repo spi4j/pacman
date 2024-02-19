@@ -19,7 +19,7 @@
 [template public nameLibraryTableWithSchema(e : entity::Entity) post(self.trim())]
   [let libName : String = e.getLibraryNameForEntity(e.getApplicationName())]
     [for (prop : String | e.getAdditionnalLibraries())]
-      [if (prop.indexOf(libName) > 0)][e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][e.physicalName().first(e.maxTableSize())/][/if]
+      [if (prop.index(libName) > 0)][e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][e.physicalName().first(e.maxTableSize())/][/if]
     [/for]
   [/let]
 [/template]

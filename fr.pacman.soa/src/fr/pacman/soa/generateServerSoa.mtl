@@ -75,9 +75,9 @@
 [template private genMappers(m : soa::System)]
   
   [if (m.clientNeedXto() or m.isWSCrudApplication())]
-            [m.eAllContents(environment::DTO)->asSet()->sortedBy(temp1 | temp1.name).genMappers(m)/]
+            [m.eAllContents(environment::DTO)->asSet()->sortedBy(temp1 | temp1.name)->genMappers(m)/]
   [else]
-            [if (m.useWS())][m.xtoAGenerer().genMappers(m)/][/if]
+            [if (m.useWS())][m.xtoAGenerer()->genMappers(m)/][/if]
     
   [/if]
   
@@ -87,7 +87,7 @@
 [template private genMappers(xtos : OrderedSet(environment::DTO), n : environment::Namespace)]
   
   [if (not xtos->isEmpty())]
-        [xtos.genUserMapper(n)/]
+        [xtos->genUserMapper(n)/]
     [for (d : environment::DTO | xtos)]
       		[if (not d.isParent())][d.genMapperItf()/][d.genMapper()/][/if]
       

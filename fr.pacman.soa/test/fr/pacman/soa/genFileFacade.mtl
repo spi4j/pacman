@@ -163,7 +163,7 @@
 
 [comment @main/]
 [template public genUserMapper_facade(m : soa::System)]
-      [m.xtoAGenerer().genUserMapper(m)/][/template]
+      [m.xtoAGenerer()->genUserMapper(m)/][/template]
 
 [comment @main/]
 [template public genUserMatching_facade(m : soa::System)]

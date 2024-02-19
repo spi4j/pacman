@@ -21,7 +21,7 @@
   [racine.reqEnumGenerique(racine.buildPackageRequirement(), 'Enumération des exigences.', 'requirement'.apply_classEnum(), 'requirement version'.apply_classTest(), racine.mainCategories->asSequence(), racine.requirementBaseCategoryLevel() - 1)/][/template]
 
 [template public reqEnum(cat : requirement::Category)]
-  [cat.reqEnumGenerique(cat.buildPackageRequirementForCategory(), 'Enumération des exigences : ' + cat.name + '.', ('requirement ' + cat.id).apply_classEnum(), ('requirement ' + cat.id + ' version').apply_classTest(), Sequence{cat}, 1 - )/][/template]
+  [cat.reqEnumGenerique(cat.buildPackageRequirementForCategory(), 'Enumération des exigences : ' + cat.name + '.', ('requirement ' + cat.id).apply_classEnum(), ('requirement ' + cat.id + ' version').apply_classTest(), Sequence{cat}, -1)/][/template]
 
 [template private reqEnumGenerique(void : ecore::EObject, pkg : String, javadoc : String, nomEnum : String, nomVersionTest : String, categories : Sequence(requirement::Category), profondeurMax : Integer)]
   [void.licence()/]

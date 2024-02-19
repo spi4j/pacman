@@ -1,7 +1,7 @@
 [module SecurityUtils('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
 [import fr::pacman::commons::services::AnnotationUtils/]
-[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::commons::services::SecurityUtilsJava/]
 
 [comment encoding = UTF-8 /]
 [query public entityIsUser(e : entity::Entity) : Boolean = e.entityIsUserJavaService()/]
@@ -10,9 +10,9 @@
 
 [query public getListOfPermissions(o : soa::Operation, annotation : String) : Sequence(String) = o.getPermissionsListOfOperation(annotation)/]
 
-[query public getSetOfPermissions(n : environment::Namespace) : OrderedSet(String) = n.systemeRacine().eAllContents(soa::Operation).getSetOfAllKnownPermissions()/]
+[query public getSetOfPermissions(n : environment::Namespace) : OrderedSet(String) = n.systemeRacine().eAllContents(soa::Operation)->getSetOfAllKnownPermissions()/]
 
-[query public getSetOfPermissions(m : soa::System) : OrderedSet(String) = m.eAllContents(soa::Operation).getSetOfAllKnownPermissions()/]
+[query public getSetOfPermissions(m : soa::System) : OrderedSet(String) = m.eAllContents(soa::Operation)->getSetOfAllKnownPermissions()/]
 
 [query public permissionAnnotationExists(o : soa::Operation, annotation : String) : Boolean = o.annotationExists(annotation, false)/]
 

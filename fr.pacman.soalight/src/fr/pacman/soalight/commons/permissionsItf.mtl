@@ -12,7 +12,7 @@
 [import fr::pacman::commons::convention::rule::attributeRule/]
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::common::imports/]
-[import fr::pacman::commons::services::SecurityUtils/]
+[import fr::pacman::commons::services::SecurityUtilsJava/]
 
 [comment encoding = UTF-8 /]
 [template public permissionsItf(n : environment::Namespace)]
@@ -44,4 +44,4 @@
   
   }[/template]
 
-[query private getSetOfPermissions(n : environment::Namespace) : OrderedSet(String) = n.systemeRacine().eAllContents(soa::Operation).getSetOfAllKnownPermissions()/]
+[query private getSetOfPermissions(n : environment::Namespace) : OrderedSet(String) = n.systemeRacine().eAllContents(soa::Operation)->getSetOfAllKnownPermissions()/]

@@ -18,7 +18,7 @@
   [racine.reqVersionTestGenerique(racine.buildPackageRequirement(), 'Toutes les exigences du projet.', 'requirement'.apply_classEnum(), 'requirement version'.apply_classTest(), racine.mainCategories->asSequence(), racine.requirementBaseCategoryLevel() - 1)/][/template]
 
 [template public reqVersionTest(cat : requirement::Category)]
-  [cat.reqVersionTestGenerique(cat.buildPackageRequirementForCategory(), 'Exigences de ' + cat.name + '.', ('requirement ' + cat.id).apply_classEnum(), ('requirement ' + cat.id + ' version').apply_classTest(), Sequence{cat}, 1 - )/][/template]
+  [cat.reqVersionTestGenerique(cat.buildPackageRequirementForCategory(), 'Exigences de ' + cat.name + '.', ('requirement ' + cat.id).apply_classEnum(), ('requirement ' + cat.id + ' version').apply_classTest(), Sequence{cat}, -1)/][/template]
 
 [template private reqVersionTestGenerique(e : ecore::EObject, pkg : String, javadoc : String, nomReqEnum : String, nomVersionTest : String, categories : Sequence(requirement::Category), profondeurMax : Integer)]
   [e.licence()/]

@@ -21,7 +21,7 @@
 
 [comment : /]
 [template public genPropertyTypeValid(a : environment::Attribute) post(self.trim())]
-  [if (a.type = null or a.type.oclIsInvalid() or a.type = null)]String[else][a.type.genTypeName()/][/if]
+  [if (a.type = null)]String[else][a.type.genTypeName()/][/if]
 [/template]
 
 [comment  : /]
@@ -49,7 +49,7 @@
 [comment  bricolage pour supprimer le typage dans le cas d'une Map. /]
 [comment  pour l'instant utilisé dans le cas des méthodes de test. /]
 [template public mapTypeFilter(s : String) post(self.trim())]
-  [if (s.indexOf('Map') > 0)]Map[else][s/][/if]
+  [if (s.index('Map') > 0)]Map[else][s/][/if]
 [/template]
 
 [comment : Recuperation du type pour un champ additionnel./]

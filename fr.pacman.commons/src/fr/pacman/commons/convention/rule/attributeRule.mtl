@@ -19,15 +19,6 @@
 
 [query private norme_attributeMultiple(value : String) : String = value.norme_attributeMultipleJavaService()/]
 
-[**
- * Permet d'appliquer la norme sur l'affectation d'un attribut (ex "this._nomPersonne")
- * @param element L'élément sur lequel appliqué la norme (ex : "nom personne").
-*/]
-[template public apply_attributeAffectation(value : String)]
-  [value.norme_attributeAffectation()/][/template]
-
-[query private norme_attributeAffectation(value : String) : String = value.norme_attributeAffectationJavaService()/]
-
 [template public apply_attributeFinal(value : String)]
   [value.norme_attributeFinal()/][/template]
 

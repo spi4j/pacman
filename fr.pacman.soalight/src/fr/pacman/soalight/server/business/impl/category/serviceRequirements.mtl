@@ -75,7 +75,7 @@
     }[/let]
 [/template]
 
-[query private getAllRequirementsForService(s : soa::Service) : OrderedSet(requirement::Requirement) = s.getAllRequirementsForServiceJavaService()/]
+[query private getAllRequirementsForService(s : soa::Service) : OrderedSet(requirement::Requirement) = s.getAllRequirementsForServiceJavaService()->asOrderedSet()/]
 
 [template private annotationRequirement(req : requirement::Requirement)]
   [if (req.requirementBaseCategoryLevel() = 0)]@['requirement'.apply_classAnnotation()/](['requirement'.apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id/])[else]@[('requirement ' + req.getBaseCategoryForRequirement().id).apply_classAnnotation()/]([('requirement ' + req.getBaseCategoryForRequirement().id).apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id/])[/if]

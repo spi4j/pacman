@@ -104,18 +104,6 @@
 
 [query private isLibraryRs_invoke(any : ecore::EObject) : String = any.getIsLibraryRsJavaService()/]
 
-[query public getLibraryVersion(any : ecore::EObject) : String = any.getLibraryVersion_invoke().trim()/]
-
-[query private getLibraryVersion_invoke(any : ecore::EObject) : String = any.getLibraryVersionJavaService()/]
-
-[query public useLibrary(any : ecore::EObject) : Boolean = any.useLibrary_invoke().toBoolean()/]
-
-[query private useLibrary_invoke(any : ecore::EObject) : String = any.getUseLibraryJavaService()/]
-
-[query public getLibraryPackage(any : ecore::EObject) : String = any.getLibraryPackage_invoke().trim().toLower()/]
-
-[query private getLibraryPackage_invoke(any : ecore::EObject) : String = any.getLibraryPackageJavaService()/]
-
 [query public useWS(any : ecore::EObject) : Boolean = any.useWS_invoke().toBoolean()/]
 
 [query private useWS_invoke(any : ecore::EObject) : String = any.getUseWSJavaService()/]

@@ -92,7 +92,7 @@
      }
   
   [for (viewState : flow::ViewState | viewContainer.getViewStatesForViewContainer())]
-    [for (transition : flow::Transition | viewState.getTransitionsFromState(true).orderTransitions())]
+    [for (transition : flow::Transition | viewState.getTransitionsFromState(true)->orderTransitions())]
       [for (event : cinematic::Event | transition.on)]
         [if (event.name = null)]
              // FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements des transitions issues de l'état [viewState.name/]

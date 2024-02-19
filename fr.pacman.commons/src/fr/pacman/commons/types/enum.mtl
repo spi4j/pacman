@@ -89,15 +89,15 @@
       	/**
       	* Récupération d'un paramètre.
       	*/
-      	public [p.substring(p.indexOf(':') + 1)/] [p.substring(1, p.indexOf(':') - 1).apply_methodGet()/]() {
+      	public [p.substring(p.index(':') + 1)/] [p.substring(1, p.index(':') - 1).apply_methodGet()/]() {
       
-      		// get [p.substring(1, p.indexOf(':') - 1)/]
-      		[protected (e.getUserCodeId('get' + p.substring(1, p.indexOf(':') - 1))) startTagPrefix('// ') endTagPrefix('// ')]
+      		// get [p.substring(1, p.index(':') - 1)/]
+      		[protected (e.getUserCodeId('get' + p.substring(1, p.index(':') - 1))) startTagPrefix('// ') endTagPrefix('// ')]
           	
         [/protected]
       
       	
-      		return [p.getAffectationPrefix()/][p.substring(1, p.indexOf(':') - 1).apply_attributeFinal()/];
+      		return [e.getAffectationPrefix()/][p.substring(1, p.index(':') - 1).apply_attributeFinal()/];
       	}
       
     [/for]
@@ -130,7 +130,7 @@
   	/** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
    : [l.description/]. */
   [let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]
-        [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(i, nbParams)/][/for]
+        [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(pIndex, nbParams)/][/for]
     )[/let]
 [/template]
 
@@ -154,8 +154,8 @@
 [template private writeLiteralParamLine(p : String, m : Integer)]
   [if (m = 1)], [/if]
   [if (m = 0)]private [/if]
-  [if (m < 2)]final [p.substring(p.indexOf(':') + 1)/] [/if]
-  [p.substring(1, p.indexOf(':') - 1).writeLiteralParamLine_2(m)/][/template]
+  [if (m < 2)]final [p.substring(p.index(':') + 1)/] [/if]
+  [p.substring(1, p.index(':') - 1).writeLiteralParamLine_2(m)/][/template]
 
 [comment : /]
 [template private writeLiteralParamLine_2(p : String, m : Integer)]

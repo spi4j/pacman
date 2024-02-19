@@ -77,7 +77,7 @@
     
     [for (it : entity::Entity | b.types->select(el | el.oclIsKindOf(entity::Entity)))]
       [if (not it.oclAsType(environment::ObeoDSMObject).isReferentiel())]
-              final int [('nb max ' + it.name).apply_variableDefault()/] = [it.getAnnotation_VOL_NB_ROWS()/];[if (it.getAnnotation_VOL_NB_ROWS() = 1 - )] // TODO Renseigner l'annotation VOL_NB_ROWS sur l'entité [it.name/][/if]
+              final int [('nb max ' + it.name).apply_variableDefault()/] = [it.getAnnotation_VOL_NB_ROWS()/];[if (it.getAnnotation_VOL_NB_ROWS() = -1)] // TODO Renseigner l'annotation VOL_NB_ROWS sur l'entité [it.name/][/if]
         
       [/if]
     [/for]

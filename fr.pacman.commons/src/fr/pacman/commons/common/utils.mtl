@@ -53,7 +53,7 @@
 [query public isMultiple(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE_STAR or p.multiplicity = environment::MultiplicityKind::ZERO_STAR/]
 
 [comment : Check if the object exists and is valid. /]
-[query public isValidObject(e : environment::ObeoDSMObject) : Boolean = not (e = null) and not e.oclIsInvalid()/]
+[query public isValidObject(e : environment::ObeoDSMObject) : Boolean = not (e = null)/]
 
 [comment : Search for xtsopsup existence. /]
 [query public hasXtopSup(any : ecore::EObject) : Boolean = any.get_automaticColumnsProperties()->collect(temp1 | temp1.contains('xtopsup')) <> false/]

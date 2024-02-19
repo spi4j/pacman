@@ -11,15 +11,11 @@
 
 [comment encoding = UTF-8 /]
 [template public fullName(e : entity::Entity)]
-  [e.eContents(environment::Namespace)->collect(temp1 | temp1.name)->sep('.')/].[e.name/][/template]
+  .[e.name/][/template]
 
 [template public fullName(t : environment::Type)]
   [if (t.oclIsTypeOf(entity::Entity))]
     [t.oclAsType(entity::Entity).fullName()/]
-  [elseif (t.oclIsTypeOf(environment::Attribute))]
-    [t.oclAsType(environment::Attribute).fullName()/]
-  [elseif (t.oclIsTypeOf(environment::Reference))]
-    [t.oclAsType(environment::Reference).fullName()/]
   [/if]
 [/template]
 
@@ -246,7 +242,7 @@
 
 [query public nameUUID(msg : String) : String = msg.name()/]
 
-[query public randomUUID(any : ecore::EObject) : String = any.uniqueJavaService()/]
+[query public randomUUID(any : ecore::EObject) : String = any.unique()/]
 
 [template public physicalName(e : entity::Entity)]
   [if (e.metadatas.annotationsPN()->size() > 0)][e.metadatas.annotationsPN()->at(1).body/][else][e.name/][/if]
@@ -256,7 +252,7 @@
   [if (p.metadatas.annotationsPN()->size() > 0)][p.metadatas.annotationsPN()->at(1).body/][else][p.name/][/if]
 [/template]
 
-[query public annotationsPN(m : environment::MetaDataContainer) : OrderedSet(environment::Annotation) = if m = null then OrderedSet{} else m.metadatas->select(m | not (m.oclAsType(environment::Annotation).title = null) and m.oclAsType(environment::Annotation).title.equalsIgnoreCase('PHYSICAL_NAME') and not (m.oclAsType(environment::Annotation).body = null) and m.oclAsType(environment::Annotation).body <> '')->asSequence()->collect(temp19 | temp19.oclAsType(environment::Annotation)) endif/]
+[query public annotationsPN(m : environment::MetaDataContainer) : OrderedSet(environment::Annotation) = if m = null then OrderedSet{} else m.metadatas->select(m | not (m.oclAsType(environment::Annotation).title = null) and m.oclAsType(environment::Annotation).title.equalsIgnoreCase('PHYSICAL_NAME') and not (m.oclAsType(environment::Annotation).body = null) and m.oclAsType(environment::Annotation).body <> '')->asOrderedSet()->collect(temp19 | temp19.oclAsType(environment::Annotation)) endif/]
 
 [template public genAutomaticColumns(e : entity::Entity)]
   [for (columnProp : String | e.get_automaticColumnsProperties())]

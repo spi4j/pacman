@@ -9,6 +9,6 @@
 [comment encoding = UTF-8 /]
 [template public genUserMapper(xtoAGenerer : OrderedSet(environment::DTO), n : environment::Namespace)]
   [file (n.getServerSourceDir().filename(n.buildPackageMapper(), n.buildAppliUserMapperGenClassName() + '.java'), overwrite, 'UTF-8')]
-    [xtoAGenerer.userMapper(n)/]
+    [xtoAGenerer->userMapper(n)/]
   [/file]
 [/template]

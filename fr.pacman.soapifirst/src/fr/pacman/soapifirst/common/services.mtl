@@ -41,7 +41,7 @@
 [comment : SSL : Check if the service pass throught a secure socket layer. /]
 [comment : Independant of a service secured or not secured./]
 [comment : Always true for the moment -> from configuration file. /]
-[query public needSecuredSocketLayer(c : soa::Component) : Boolean = not (c = null) and not (c.servers->first() = null) and c.servers->first().URL.indexOf('https://') = 1/]
+[query public needSecuredSocketLayer(c : soa::Component) : Boolean = not (c = null) and not (c.servers->first() = null) and c.servers->first().URL.index('https://') = 1/]
 
 [comment : JUNIT : Check if the management of global parameters can be activated for JUnit tests./]
 [query public hasGlobalInitParams(s : soa::Service) : Boolean = s.eAllContents(soa::Operation)->size() > 1 and s.eAllContents(soa::Parameter)->select(p | not (p.restData = null))->size() > 3/]

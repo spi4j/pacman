@@ -105,7 +105,7 @@ l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)
   [l->asSequence()->collect(temp3 | temp3.namePropertyId())->collect(s | prefix + s + suffix)->sep(se)/][/template]
 
 [comment les références d'un Dto sans multiplicité et les références multiple vers ce Dto /]
-[query public referencesNoStarAndReferencingStar(s : environment::DTO) : OrderedSet(environment::Reference) = s.references->select(r | not r.isMultiple() and r.navigable)->union(s.biggestParentUntilDtoRegistry().eAllContents(environment::Reference)->select(r | r.isMultiple() and r.referencedType = s and r.navigable and (r.oppositeOf = null or not r.oppositeOf.isMultiple()))->asOrderedSet())->sortedBy(temp4 | temp4.name.toLower())/]
+[query public referencesNoStarAndReferencingStar(s : environment::DTO) : OrderedSet(environment::Reference) = s.references->select(r | not r.isMultiple() and r.navigable)->asOrderedSet()->union(s.biggestParentUntilDtoRegistry().eAllContents(environment::Reference)->select(r | r.isMultiple() and r.referencedType = s and r.navigable and (r.oppositeOf = null or not r.oppositeOf.isMultiple()))->asOrderedSet())->sortedBy(temp4 | temp4.name.toLower())/]
 
 [query private biggestParentUntilDtoRegistry(o : environment::ObeoDSMObject) : environment::ObeoDSMObject = if o.eContainer() = null then o else o.eContainer().oclAsType(environment::ObeoDSMObject).biggestParentUntilDtoRegistry() endif/]
 
@@ -117,7 +117,7 @@ l.nameProperty()->collect(s : String | prefix+s+suffix)->sep(se)
 
 [query public referencingStarStar(s : environment::DTO) : OrderedSet(environment::Reference) = s.references->select(r | r.isMultiple() and not (r.oppositeOf = null) and r.oppositeOf.isMultiple() and r.oppositeOf.navigable and not r.isComputed())->asOrderedSet()->sortedBy(temp7 | temp7.name.toLower())/]
 
-[query public navigableProperties(s : environment::DTO) : OrderedSet(environment::Property) = s.getAttributes()->union(s.references->select(r | r.navigable)->union(s.referencingStar())->asOrderedSet()->sortedBy(temp8 | temp8.name.toLower()))->asOrderedSet()/]
+[query public navigableProperties(s : environment::DTO) : OrderedSet(environment::Property) = s.getAttributes()->union(s.references->select(r | r.navigable)->asOrderedSet()->union(s.referencingStar())->sortedBy(temp8 | temp8.name.toLower()))->asOrderedSet()/]
 
 [query public isReferenceNoStar(s : environment::DTO, r : environment::Reference) : Boolean = s.references->includes(r) and not r.isMultiple() and r.navigable/]
 

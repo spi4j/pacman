@@ -56,7 +56,7 @@
 [query public physicalShortName(any : ecore::EObject) : String = any.getAnnotation_PHYSICAL_SHORT_NAME()/]
 
 [comment Query pour savoir s'il y a une annotation 'PHYSICAL_SHORT_NAME' de manière non récursive /]
-[query private getAnnotation_PHYSICAL_SHORT_NAME(p_entityOuReference : ecore::EObject) : String = p_entityOuReference.getAnnotation_PHYSICAL_SHORT_NAME(false)/]
+[query private getAnnotation_PHYSICAL_SHORT_NAME(p_entityOuReference : ecore::EObject) : String = p_entityOuReference.oclAsType(environment::ObeoDSMObject).getAnnotation_PHYSICAL_SHORT_NAME(false)/]
 
 [query public physicalName(e : entity::Entity) : String = if e.hasPhysicalName() then e.getAnnotationBody('PHYSICAL_NAME', false) else e.name.sanitize().toUpper() endif/]
 

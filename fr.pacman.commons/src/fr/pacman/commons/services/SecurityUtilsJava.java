@@ -16,7 +16,7 @@ import fr.pacman.commons.Activator;
  * 
  * @author MINARM
  */
-public class SecurityUtils
+public class SecurityUtilsJava
 {
 
    /**

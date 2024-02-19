@@ -56,7 +56,7 @@
         [for (f : soa::Flow | s.flows)]
           [s.getSpi4jId()/].[f.writeFlowName()/].key = authorization
           [s.getSpi4jId()/].[f.writeFlowName()/].flow = [f.flowType/]
-          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].scopes = [f.scopes->asSequence()->collect(temp1 | temp1.name)->flatten()->sep(' ')/]
+          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].scopes = [f.scopes->asSequence()->collect(temp1 | temp1.name)->sep(' ')/]
           [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.token = [f.tokenURL/]
           [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.refresh = [f.refreshURL/]
           [if (f.isAuthCode() and s.isAuthOidc())]
@@ -909,7 +909,7 @@
 
 [comment : Write all tokens spi4j ids (part 1) /]
 [template private writeAuthenticationTokens(o : soa::Operation) post(self.trim())]
-  [for (s : soa::SecurityScheme | o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.securityScheme))][s.writeAuthenticationTokens(i)/][/for]
+  [for (s : soa::SecurityScheme | o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.securityScheme))][s.writeAuthenticationTokens(sIndex)/][/for]
 [/template]
 
 [comment : Write all tokens spi4j ids (part 2)/]
@@ -921,7 +921,7 @@
 [comment : Write all tokens spi4j ids (part 3)/]
 [template private writeAuthenticationTokens(s : soa::SecurityScheme) post(self.trim())]
   [for (f : soa::Flow | s.flows)]
-    [if (i > 1)], [/if]
+    [if (fIndex > 1)], [/if]
     [s.getSpi4jId()/]_[f.writeFlowName()/][/for]
 [/template]
 

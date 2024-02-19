@@ -87,9 +87,9 @@
         [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
           [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
             [if (r.containingType.oclAsType(entity::Entity) = e)]
-                  [databaseType.genColumnReferenceId(r, i)/],
+                  [databaseType.genColumnReferenceId(r, rIndex)/],
             [elseif (r.oppositeOf = null)]
-                  [databaseType.genColumnReferencingId(r, i)/],
+                  [databaseType.genColumnReferencingId(r, rIndex)/],
             [/if]
           [/for]
         [else]
@@ -141,7 +141,7 @@
         
             [if (r.hasXtopSup())][r.gen_automaticColumn(databaseType, r.getXtopSuppKey())/][/if]
         
-            [databaseType.genConstraintPKJointure(r, i)/]
+            [databaseType.genConstraintPKJointure(r, rIndex)/]
         );
       [/for]
     [/if]
@@ -153,9 +153,9 @@
   [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
     [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
       [if (r.containingType.oclAsType(entity::Entity) = e)]
-        [e.genIDXMultiple(r, databaseType, compteur + i - 1, i)/]
+        [e.genIDXMultiple(r, databaseType, compteur + rIndex - 1, rIndex)/]
       [elseif (r.oppositeOf = null)]
-        [e.genIDXMultipleInverse(r, databaseType, compteur + i - 1, i)/]
+        [e.genIDXMultipleInverse(r, databaseType, compteur + rIndex - 1, rIndex)/]
       [/if]
     [else]
       [if (r.containingType.oclAsType(entity::Entity) = e)]

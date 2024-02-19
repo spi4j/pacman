@@ -65,9 +65,9 @@
 [template private genXtos(n : environment::Namespace)]
   
   [if (n.clientNeedXto() or n.isWSCrudApplication())]
-    	[n.eAllContents(environment::DTO)->asSet().genSelectedXtos()/]
+    	[n.eAllContents(environment::DTO)->asSet()->genSelectedXtos()/]
   [else]
-    	[if (n.useWS())][n.xtoAGenerer().genSelectedXtos()/][/if]
+    	[if (n.useWS())][n.xtoAGenerer()->genSelectedXtos()/][/if]
     
   [/if]
   
@@ -160,7 +160,7 @@
   [d.genSelectedDto()/]
   
   [if (d.clientNeedXto() or not (d.systemeRacine() = null) and d.systemeRacine().xtoAGenerer()->includes(d) and d.useWS())]
-    	[Sequence{d}->asSet().genSelectedXtos()/]
+    	[Sequence{d}->asSet()->genSelectedXtos()/]
   [/if]
    
   [if (d.systemeRacine() = null and not d.isNotPersistent() and not d.isParent() and d.serviceFromDto() = null)]
@@ -174,7 +174,7 @@
 [template public GenerateCommonPackage(n : environment::Namespace)]
   
   [if (n.clientNeedXto() or not (n.systemeRacine() = null) and n.useWS())]
-    	[n.systemeRacine().xtoAGenerer()->select(d | n.eAllContents(environment::DTO)->includes(d)).genSelectedXtos()/]
+    	[n.systemeRacine().xtoAGenerer()->select(d | n.eAllContents(environment::DTO)->includes(d))->genSelectedXtos()/]
   [/if]
       
   [for (d : environment::DTO | n.eAllContents(environment::DTO))]

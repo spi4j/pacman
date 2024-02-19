@@ -67,7 +67,7 @@
       [s.getSpi4jId()/].endpoint.refresh = [s.flows->asSequence()->collect(temp3 | temp3.refreshURL)/]
       [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)][s.getSpi4jId()/].endpoint.userInfo = [s.connectURL/][/if]
       
-      [s.getSpi4jId()/].scopes = [s.flows->asSequence()->collect(temp4 | temp4.scopes)->collect(temp5 | temp5.name)->flatten()->sep(',')/]
+      [s.getSpi4jId()/].scopes = [s.flows->asSequence()->collect(temp4 | temp4.scopes)->collect(temp5 | temp5.name)->sep(',')/]
     [/if]
   [/for]
   # ----------------------------------------------------------------------------

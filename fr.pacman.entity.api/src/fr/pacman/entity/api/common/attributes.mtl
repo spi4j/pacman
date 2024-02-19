@@ -47,7 +47,7 @@
 [template public genPropertyTypeOrPK(a : environment::Attribute)]
   [if (a.isIdentifier)]
     [a.genPkType()/]
-  [elseif (a.type.oclIsInvalid() or a.type = null)]
+  [elseif (a.type = null)]
     String
   [else][a.type.genTypeName()/][/if]
 [/template]
@@ -166,9 +166,9 @@
 
 [query public isComputed(p : environment::Property) : Boolean = not (p.metadatas = null) and p.metadatas.metadatas->exists(m | not (m = null) and not (m.oclAsType(environment::Annotation).title = null) and m.oclAsType(environment::Annotation).title.equalsIgnoreCase('COMPUTED'))/]
 
-[query public navigableProperties1(e : entity::Entity) : OrderedSet(environment::Property) = e.attributesNoPk()->union(e.references->select(r | r.navigable)->union(e.referencingStar())->asOrderedSet()->sortedBy(temp18 | temp18.name.toLower()))->asOrderedSet()/]
+[query public navigableProperties1(e : entity::Entity) : OrderedSet(environment::Property) = e.attributesNoPk()->union(e.references->select(r | r.navigable)->asOrderedSet()->union(e.referencingStar())->sortedBy(temp18 | temp18.name.toLower()))->asOrderedSet()/]
 
-[query public navigableProperties(e : entity::Entity) : OrderedSet(environment::Property) = e.attributesNoPk()->union(e.ownedReferences->select(r | r.isMultiple() and r.navigable and not (r.oppositeOf = null)))->union(e.ownedReferences->select(r | not r.isMultiple() and r.navigable))->asOrderedSet()->sortedBy(temp19 | temp19.name.toLower())->asOrderedSet()/]
+[query public navigableProperties(e : entity::Entity) : OrderedSet(environment::Property) = e.attributesNoPk()->union(e.ownedReferences->select(r | r.isMultiple() and r.navigable and not (r.oppositeOf = null))->asOrderedSet())->union(e.ownedReferences->select(r | not r.isMultiple() and r.navigable)->asOrderedSet())->sortedBy(temp19 | temp19.name.toLower())->asOrderedSet()/]
 
 [comment Renvoie sous la forme d'un OrderedSet la liste des attributs d'une Entity qui possèdent une méta-donnée Annotation de titre "COMPUTED". /]
 [query public attributesNotComputed(e : entity::Entity) : OrderedSet(environment::Attribute) = e.getAttributes()->select(a | not a.isComputed())->asOrderedSet()/]

@@ -18,8 +18,8 @@
 [/template]
 
 [template public importViewElementsImplementations(viewElements : OrderedSet(view::ViewElement))]
-  [viewElements->asSequence()->collect(temp1 | temp1.widget)->asSet().orderWidgets().importWidgetsImplementations()/]
-  [viewElements.importViewElementsDependencies(true)/][/template]
+  [viewElements->asSequence()->collect(temp1 | temp1.widget)->asSet()->orderWidgets()->importWidgetsImplementations()/]
+  [viewElements->importViewElementsDependencies(true)/][/template]
 
 [query private orderWidgets(widgets : OrderedSet(toolkits::Widget)) : OrderedSet(toolkits::Widget) = widgets->sortedBy(w | w.widgetComparator())/]
 

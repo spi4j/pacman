@@ -48,7 +48,7 @@
  * Paramétrage fin
 */]
 [comment etourne le système racine d'un Service/]
-[query public getRoot(s : soa::Service) : environment::ObeoDSMObject = s.getRootJavaService()/]
+[query public getRoot(s : soa::Service) : environment::ObeoDSMObject = s.getRootJavaService().oclAsType(environment::ObeoDSMObject)/]
 
 [comment OA : Teste si une propriété (attribut ou référence) est obligatoire/]
 [query public isMandatory(p : environment::Property) : Boolean = p.isMandatorySoa()/]

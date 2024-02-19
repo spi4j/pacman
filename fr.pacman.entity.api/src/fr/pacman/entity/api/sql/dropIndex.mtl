@@ -35,7 +35,7 @@
 [template private dropIDX(e : entity::Entity, ent : entity::Entity, databaseType : String, compteur : Integer)]
   [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
     [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
-      [e.dropIDX(r, databaseType, compteur + i - 1)/];
+      [e.dropIDX(r, databaseType, compteur + rIndex - 1)/];
     [else]
       [e.dropIDX(r, databaseType, compteur)/];
     [/if]

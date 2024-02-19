@@ -42,7 +42,7 @@
   private [a.genTypeAndName()/][/template]
 
 [template public genPropertyTypeValid(a : environment::Attribute)]
-  [if (a.type = null or a.type.oclIsInvalid() or a.type = null)]
+  [if (a.type = null)]
     String
   [else]
     [a.type.genTypeName()/]

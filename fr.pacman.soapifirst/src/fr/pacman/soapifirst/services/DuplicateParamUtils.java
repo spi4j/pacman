@@ -201,11 +201,12 @@ public class DuplicateParamUtils {
 	/**
 	 * Reset the array list before use.
 	 */
-	public static void reset() {
+	public static boolean reset() {
 		_params = null;
+		return false;
 	}
 
-	public static void resetJavaService(Object object){reset();}
+	public static boolean resetJavaService(Object object){return reset();}
 
 	/**
 	 * Container for the global parameter.

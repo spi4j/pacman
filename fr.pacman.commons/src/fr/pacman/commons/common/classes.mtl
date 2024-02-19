@@ -139,7 +139,7 @@
 [query public buildRSFrontResourcesContextHolder(any : ecore::EObject) : String = (any.getApplicationName() + ' front context holder').apply_classDefault()/]
 
 [comment etourne le système racine d'un objet/]
-[query public getRoot(any : ecore::EObject) : environment::ObeoDSMObject = any.getRootJavaService()/]
+[query public getRoot(any : ecore::EObject) : environment::ObeoDSMObject = any.getRootJavaService().oclAsType(environment::ObeoDSMObject)/]
 
 [comment : Retourne la valeur de la métadonnée 'LIBRARY_NAME' pour le DTO. /]
 [query private getExternalLibraryName(d : environment::DTO) : String = d.metadatas.getAnnotationBody('LIBRARY_NAME')/]
@@ -167,7 +167,7 @@
 [query public hasEntityWithVersion(d : environment::DTO) : Boolean = d.findEntityForDto().hasVersion()/]
 
 [comment etourne le type du champ qui porte la version sur l'entité associée à ce DTO/]
-[query public getEntityVersionType(d : environment::DTO) : environment::PrimitiveType = d.findEntityForDto().getVersionType()/]
+[query public getEntityVersionType(d : environment::DTO) : environment::DataType = d.findEntityForDto().getVersionType()/]
 
 [comment etourne l'entity associée à un DTO/]
 [query private findEntityForDto(d : environment::DTO) : entity::Entity = if not (d.getRoot() = null) and d.getRoot().eAllContents(entity::Entity)->exists(e | e.name.equalsIgnoreCase(d.name) or d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') and e.name.equalsIgnoreCase(d.name.substring(1, d.name.size() - 3))) then d.getRoot().eAllContents(entity::Entity)->select(e | e.name.equalsIgnoreCase(d.name) or d.name.substring(d.name.size() - 2).equalsIgnoreCase('dto') and e.name.equalsIgnoreCase(d.name.substring(1, d.name.size() - 3)))->first() else null endif/]
@@ -176,7 +176,7 @@
 [query public hasVersion(e : entity::Entity) : Boolean = if e = null then false else e.attributes->exists(a | a.isVersion()) endif/]
 
 [comment etourne le type du champ qui porte la version sur cette entité/]
-[query public getVersionType(e : entity::Entity) : environment::PrimitiveType = if e = null then null else e.attributes->select(a | a.isVersion())->first().type endif/]
+[query public getVersionType(e : entity::Entity) : environment::DataType = if e = null then null else e.attributes->select(a | a.isVersion())->first().type endif/]
 
 [comment etourne true si l'attribut de l'entité possède l'annotation Version/]
 [query public isVersion(a : environment::Attribute) : Boolean = a.annotationExists('VERSION', false)/]

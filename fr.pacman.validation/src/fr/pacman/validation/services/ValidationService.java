@@ -84,10 +84,7 @@ public final class ValidationService
       final EStructuralFeature v_nameFeature = p_obj.eClass().getEStructuralFeature("name");
       if (v_nameFeature != null)
       {
-         return (p_niveau + "  " + p_obj.getClass().getName() + "  " + p_message + ".  Nom de l'élément : " + p_ob
-
-message du problème
-* @return une chai 'infor ation  e l'er updviewJavaService( @deprecated Méthode appe,e uniquement dans ,s modules Acceleo (*.m){return updview( appe,nt dans ,eleo (*.m);}j.eGet(v_nameFeature));
+         return (p_niveau + "  " + p_obj.getClass().getName() + "  " + p_message + ".  Nom de l'élément : " + p_obj.eGet(v_nameFeature));
       }
       else
       {

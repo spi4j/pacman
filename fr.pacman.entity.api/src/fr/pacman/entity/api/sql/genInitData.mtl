@@ -83,7 +83,7 @@
   [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
     [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
       [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
-        [if (r.containingType.oclAsType(entity::Entity) = e)], [r.nameColumnId(i)/][elseif (r.oppositeOf = null)], [r.nameColumnReferencingId(i)/][/if]
+        [if (r.containingType.oclAsType(entity::Entity) = e)], [r.nameColumnId(rIndex)/][elseif (r.oppositeOf = null)], [r.nameColumnReferencingId(rIndex)/][/if]
       [/for]
     [else]
       [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]

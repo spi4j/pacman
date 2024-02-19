@@ -52,4 +52,4 @@
   [/for]
 [/template]
 
-[query public getViewEvents(event : cinematic::Event) : OrderedSet(view::ViewEvent) = if event.oclIsTypeOf(view::ViewEvent) then OrderedSet{event} else if event.oclIsTypeOf(flow::FlowEvent) then event.oclAsType(flow::FlowEvent).binds->asSequence()->collect(temp1 | temp1.getViewEvents()) else OrderedSet{} endif endif/]
+[query public getViewEvents(event : cinematic::Event) : OrderedSet(view::ViewEvent) = if event.oclIsTypeOf(view::ViewEvent) then OrderedSet{event} else if event.oclIsTypeOf(flow::FlowEvent) then event.oclAsType(flow::FlowEvent).binds->asOrderedSet()->collect(temp1 | temp1.getViewEvents()) else OrderedSet{} endif endif/]

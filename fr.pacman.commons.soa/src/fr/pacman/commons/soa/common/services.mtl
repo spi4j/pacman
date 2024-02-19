@@ -79,7 +79,7 @@
 [query public getPermissionSchemeSecured(c : soa::Component) : soa::SecurityScheme = c.securitySchemes->first()/]
 
 [comment : Return all the associated tokens for the authentication mechanism. /]
-[query public getAuthenticationTokens(o : soa::Operation) : String = if o.isValidOperation() and o.isSecured() then o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.securityScheme)->collect(temp4 | temp4.getSpi4jId())->asSet()->flatten()->sep(', ') else 'no token found !' endif/]
+[query public getAuthenticationTokens(o : soa::Operation) : String = if o.isValidOperation() and o.isSecured() then o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.securityScheme)->collect(temp4 | temp4.getSpi4jId())->asSet()->sep(', ')->toString() else 'no token found !' endif/]
 
 [comment : Check if the operation is specific for auth token delivery. /]
 [query public isDefinedForAuthentication(o : soa::Operation) : Boolean = o.isValidOperation() and not (o.getTokenType() = null) and 'auth'.equalsIgnoreCase(o.getTokenType())/]
@@ -143,7 +143,7 @@
 [query public hasDefinedListPageSize(o : soa::Operation) : Boolean = o.isValidOperation() and not (o.getDefinedListPageSize() = null)/]
 
 [comment : Return the value of the metadata 'PAGE_SIZE'. /]
-[query public getDefinedListPageSize(o : soa::Operation) : Integer = o.metadatas.getAnnotationBody('PAGE_SIZE')/]
+[query public getDefinedListPageSize(o : soa::Operation) : Integer = o.metadatas.getAnnotationBody('PAGE_SIZE').toInteger()/]
 
 [comment : Return the value of the metadata 'CALLBACK'. /]
 [query public getCallbackType(o : soa::Operation) : String = o.metadatas.getAnnotationBody('CALLBACK')/]

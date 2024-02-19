@@ -1,4 +1,4 @@
-[module presenter('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+[module presenter('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0')/]
 
 [import fr::pacman::commons::common::licence/]
 [import fr::pacman::commons::common::classes/]
@@ -94,7 +94,7 @@
      }
   
   [for (viewState : flow::ViewState | viewContainer.getViewStatesForViewContainer())]
-    [for (transition : flow::Transition | viewState.getTransitionsFromState(true).orderTransitions())]
+    [for (transition : flow::Transition | viewState.getTransitionsFromState(true)->orderTransitions())]
       [for (event : cinematic::Event | transition.on)]
         [if (event.name = null)]
              // FIXME : Un événement ne porte pas de nom ! Attention à nommer tous les événements des transitions issues de l'état [viewState.name/]
@@ -160,7 +160,7 @@
   [/if]
   
   [for (viewState : flow::ViewState | v.getViewStatesForViewContainer())]
-    [for (transition : flow::Transition | viewState.getTransitionsFromState(true).orderTransitions())]
+    [for (transition : flow::Transition | viewState.getTransitionsFromState(true)->orderTransitions())]
       [for (event : cinematic::Event | transition.on)]
         [if (not (event.name = null) and not (transition.to = null))]
           [for (state : flow::FlowState | transition.to.getAllFollowingStatesWithoutGardOrEvent(true)->union(Sequence{transition.to}))]

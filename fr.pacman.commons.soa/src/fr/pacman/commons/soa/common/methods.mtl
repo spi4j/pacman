@@ -70,7 +70,7 @@
 
 [comment : Write the correct type for the Xto parameter. /]
 [template public typeXto(p : soa::Parameter)]
-  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.indexOf('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name.apply_classEnum()/][else][p.simpleTypeDto() + 'Xto'/][/if]
+  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name.apply_classEnum()/][else][p.simpleTypeDto() + 'Xto'/][/if]
 [/template]
 
 [comment : /]

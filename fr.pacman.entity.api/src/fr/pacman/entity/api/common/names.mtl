@@ -96,9 +96,9 @@
 
 [query public buildPackageBusinessApi(any : ecore::EObject) : String = any.getApplicationPackage() + '.' + any.getPackageBusiness() + '.' + any.getPackageApi()/]
 
-[query public categoryHierarchy(e : entity::Entity) : String = if e.ancestors(environment::Namespace)->size() < 1 then '' else '.' + e.ancestors(environment::Namespace)->select(temp1 | temp1.oclIsTypeOf(environment::Namespace) and not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.') endif/]
+[query public categoryHierarchy(e : entity::Entity) : String = if e.ancestors(environment::Namespace)->size() < 1 then '' else '.' + e.ancestors(environment::Namespace)->select(temp1 | not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.') endif/]
 
-[query public categoryHierarchy(r : environment::Reference) : String = if r.ancestors(environment::Namespace)->size() < 1 then '' else '.' + r.ancestors(environment::Namespace)->select(temp6 | temp6.oclIsTypeOf(environment::Namespace) and not (temp6.name = null))->reverse()->collect(temp7 | temp7.oclAsType(environment::Namespace))->collect(temp8 | temp8.name)->collect(temp9 | temp9.sanitize())->collect(temp10 | temp10.toLower())->sep('.') endif/]
+[query public categoryHierarchy(r : environment::Reference) : String = if r.ancestors(environment::Namespace)->size() < 1 then '' else '.' + r.ancestors(environment::Namespace)->select(temp6 | not (temp6.name = null))->reverse()->collect(temp7 | temp7.oclAsType(environment::Namespace))->collect(temp8 | temp8.name)->collect(temp9 | temp9.sanitize())->collect(temp10 | temp10.toLower())->sep('.') endif/]
 
 [query public buildAttributesEnumName(e : entity::Entity) : String = (e.buildSimpleEntityName() + ' attributes').apply_classEnum()/]
 

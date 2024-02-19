@@ -32,7 +32,7 @@ public final class UuidUtils
    /**
     * @return un UUID aléatoire
     */
-   public static String unique ()
+   public static String unique (Object o)
    {
       return UUID.randomUUID().toString();
    }

@@ -761,7 +761,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = DtoUtil.checkMandatoryField("[p.nameBase()/]", [p.name.toLowerFirst().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [if (p.oclIsTypeOf(environment::Attribute))][d.validateSize(p.oclAsType(environment::Attribute))/][/if]
+  [d.validateSize(p)/]
 [/template]
 
 [template private validProperty(d : environment::DTO, p : environment::Reference)]

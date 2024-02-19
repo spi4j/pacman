@@ -70,9 +70,9 @@
       [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
         [if (r.oppositeOf = null and r.isMultiple())]
           ,
-          [r.enumStructReferencingId(i)/][elseif (r.containingType.oclAsType(entity::Entity) = e)]
+          [r.enumStructReferencingId(rIndex)/][elseif (r.containingType.oclAsType(entity::Entity) = e)]
                                            ,
-                                           [r.enumStructReferenceId(i)/][/if]
+                                           [r.enumStructReferenceId(rIndex)/][/if]
       [/for]
     [else]
       [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]

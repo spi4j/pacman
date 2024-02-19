@@ -16,13 +16,13 @@
 
 [query public serviceSeulFromSystem(s : soa::Service, m : soa::System) : Boolean = not m.listeDtosFromSystem()->exists(d | d.buildSimpleDtoName() = s.buildSimpleServiceName())/]
 
-[query public xtoAGenerer(o : environment::ObeoDSMObject) : OrderedSet(environment::DTO) = o.eAllContents(soa::Operation).xtoAGenererJavaService()/]
+[query public xtoAGenerer(o : environment::ObeoDSMObject) : OrderedSet(environment::DTO) = o.eAllContents(soa::Operation)->xtoAGenererJavaService()/]
 
-[query public listeDtos(n : environment::Namespace) : OrderedSet(environment::DTO) = n.eAllContents(environment::DTO).listeDtosJavaService()/]
+[query public listeDtos(n : environment::Namespace) : OrderedSet(environment::DTO) = n.eAllContents(environment::DTO)->listeDtosJavaService()/]
 
-[query public listeDtosFromSystem(m : soa::System) : OrderedSet(environment::DTO) = m.eAllContents(environment::DTO).listeDtosJavaService()/]
+[query public listeDtosFromSystem(m : soa::System) : OrderedSet(environment::DTO) = m.eAllContents(environment::DTO)->listeDtosJavaService()/]
 
-[query public listeServicesFromSystem(m : soa::System) : OrderedSet(soa::Service) = m.eAllContents(soa::Service).listeServices()/]
+[query public listeServicesFromSystem(m : soa::System) : OrderedSet(soa::Service) = m.eAllContents(soa::Service)->listeServices()/]
 
 [query public clientNeedXto(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('GWT'))/]
 

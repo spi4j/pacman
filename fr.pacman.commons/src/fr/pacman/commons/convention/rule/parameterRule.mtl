@@ -48,8 +48,3 @@
   [value.norme_parameterMethodReset()/][/template]
 
 [query private norme_parameterMethodReset(value : String) : String = value.norme_parameterMethodResetJavaService()/]
-
-[template public apply_parameterMethodSetter(value : String)]
-  [value.norme_parameterMethodSetter()/][/template]
-
-[query private norme_parameterMethodSetter(value : String) : String = value.norme_parameterMethodSetterJavaService()/]

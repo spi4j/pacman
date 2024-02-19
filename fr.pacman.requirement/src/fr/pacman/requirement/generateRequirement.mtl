@@ -33,7 +33,7 @@
   [if (currentLevel < cat.requirementBaseCategoryLevel())]
         [cat.generateRecursiveRequirements(currentLevel)/]
   [else]
-    [if (not Sequence{cat}->asSequence()->findRequirements(1 - )->isEmpty())]
+    [if (not Sequence{cat}->asSequence()->findRequirements(-1)->isEmpty())]
               [cat.genRequirementEnum()/]
               [cat.genAnnotationRequirement()/]
               [cat.genRequirementVersionTest()/]

@@ -3,6 +3,8 @@ package fr.pacman.commons.services;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * Compteur de propriétés.
  * @author MINARM
@@ -34,9 +36,10 @@ public class PropertyCounter
     * (Re)initialise le compteur pour une propriete.
     * @param p_property la propriete a (re)initialiser
     */
-   public void initPropertyCount (final String p_property)
+   public EObject initPropertyCount (final String p_property)
    {
       _counters.put(p_property, 0);
+      return null;
    }
 
 }
