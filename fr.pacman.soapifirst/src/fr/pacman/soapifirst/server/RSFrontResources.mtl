@@ -362,12 +362,12 @@ public class [buildRSFrontTokensConfigClassName()/] {
 	 */
 	public static String [apply_methodDefault('build http basic auth token')/]([writeBasicAuthParams()/]) throws UnsupportedEncodingException{
 			 
-		final byte['[]'/] [apply_variableDefault('password')/] = [apply_parameterMethodClassicIn('password')/].getBytes(Charset.forName("iso-8859-1"));
-		final byte['[]'/] [apply_variableDefault('prefix')/] = (p_userName + ":").getBytes(Charset.forName("iso-8859-1"));
-		final byte['[]'/] [apply_variableDefault('usernamePassword')/] = new byte['['/][apply_variableDefault('prefix')/].length + [apply_variableDefault('password')/].length[']'/];
+		final byte['[]'/] [apply_variableDefault('passwd')/] = [apply_parameterMethodClassicIn('password')/].getBytes(Charset.forName("iso-8859-1"));
+		final byte['[]'/] [apply_variableDefault('prefix')/] = ([apply_parameterMethodClassicIn('user name')/] + ":").getBytes(Charset.forName("iso-8859-1"));
+		final byte['[]'/] [apply_variableDefault('usernamePassword')/] = new byte['['/][apply_variableDefault('prefix')/].length + [apply_variableDefault('passwd')/].length[']'/];
 
 		System.arraycopy([apply_variableDefault('prefix')/], 0, [apply_variableDefault('usernamePassword')/], 0, [apply_variableDefault('prefix')/].length);
-		System.arraycopy([apply_variableDefault('password')/], 0, [apply_variableDefault('usernamePassword')/], [apply_variableDefault('prefix')/].length, [apply_variableDefault('password')/].length);
+		System.arraycopy([apply_variableDefault('password')/], 0, [apply_variableDefault('usernamePassword')/], [apply_variableDefault('prefix')/].length, [apply_variableDefault('password')/].length());
 		return new String(Base64.getEncoder().encode([apply_variableDefault('usernamePassword')/]), "ASCII");
 	} 
 	[/if]
@@ -432,7 +432,7 @@ public final class [s.buildRSFrontDelegateClassName()/] {
 
   	[comment : strictly respect this indentation. /]
   	/**
-  	* [o.description/]
+  	* [o.description.sanitizeForStars()/]
 [getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
   	public static [o.writeParamOutIfexist()/] [apply_methodDefault(o.name)/]([o.addParamsInXtoIfExists()/]) {
 		
@@ -505,7 +505,7 @@ public final class [s.buildRSFrontResourceClassName()/] extends [buildRSFrontRes
 
   [comment : strictly respect this indentation. /]
   /**
-  * [o.description/]
+  * [o.description.sanitizeForStars()/]
 [getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
   public [o.writeParamOutIfexist()/] [apply_methodDefault(o.name)/]([o.addParamsInXtoIfExists()/]) {
 
@@ -588,7 +588,7 @@ MultivaluedMap<String, Object>
 
 [comment : Format the input parameter and add some code in case of Enumeration. /]
 [template private addGenericInputParam (p : Parameter) post(trim())]
-[apply_parameterMethodClassicIn(p.name)/][if p.isTypeOfEnum()].[apply_methodGet('value')/]()[/if]
+[apply_parameterMethodClassicIn(p.name.sanitizeRJK())/][if p.isTypeOfEnum()].[apply_methodGet('value')/]()[/if]
 [/template]
 
 [comment : TODO find howto rewire to addGenericInputParam (p : Parameter). /]
@@ -744,6 +744,6 @@ MultivaluedMap<String, Object>
 [comment : Duplicate method (private) - check if IDRest defined if so take IDRest.  /]
 [query private addParamForPassingModeXtoRs(param : Parameter) : String =
 if (not param.restData.restId.oclIsUndefined() and param.restData.restId.size() > 0)
-  then param.restData.restId else param.name endif
+  then param.restData.restId else param.name.sanitizeRJK() endif
 /]
 

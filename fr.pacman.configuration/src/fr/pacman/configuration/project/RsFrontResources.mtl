@@ -709,7 +709,7 @@ public class [buildRSFrontResourcesContextHolder()/] {
 				return;
 		}
 
-		[getAffectationPrefix()/].[apply_attributeStatic('headers _thread _local')/]
+		[apply_attributeStatic('headers _thread _local')/]
 				.set(new Headers([apply_parameterMethodClassicIn('map')/]));
 	}
 
@@ -737,7 +737,7 @@ public class [buildRSFrontResourcesContextHolder()/] {
 	 */
 	public static Headers [apply_methodGet('headers')/]() {
 		
-		return [getAffectationPrefix()/][apply_attributeStatic('headers _thread _local')/].get();
+		return [apply_attributeStatic('headers _thread _local')/].get();
 	}
 
 	/**
@@ -745,8 +745,8 @@ public class [buildRSFrontResourcesContextHolder()/] {
 	 */
 	public static void [apply_methodDefault('remove')/]() {
 		
-		[getAffectationPrefix()/][apply_attributeStatic('headers _thread _local')/].remove();
-		[getAffectationPrefix()/].[apply_attributeStatic('headers _thread _local')/] = null;
+		[apply_attributeStatic('headers _thread _local')/].remove();
+		[apply_attributeStatic('headers _thread _local')/] = null;
 	}
 	
 	/**

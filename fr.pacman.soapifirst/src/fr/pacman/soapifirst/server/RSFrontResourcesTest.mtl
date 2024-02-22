@@ -550,7 +550,7 @@ public class [s.buildRSFrontResourceTestClassName()/] {
 	[let paramName : String = p.getGlobalInputParamName()]
 	[comment : Write the global parameter only if the name <> null ! (if null -> duplicated parameter.) /]
 	[if not paramName.oclIsUndefined()]
-	private [p.addInitInputParam(true, true, paramName)/]
+	private [p.addInitInputParam(true, true, paramName.sanitizeRJK())/]
 	[/if][/let][/for]
 
 	// [/protected]
@@ -581,7 +581,7 @@ public class [s.buildRSFrontResourceTestClassName()/] {
 	[for (o : Operation | s.ownedInterface.ownedOperations)]
    [comment : strictly respect this indentation. /]
    /**
-   * [o.description/]
+   * [o.description.sanitizeForStars()/]
  [getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
 	@Test
 	@SuppressWarnings("unused")
@@ -701,12 +701,12 @@ final [if (p.isTypeOfBinary())]byte['[]'/][else][p.paramTypeXto()/][/if] [p.addI
 
 [comment : Add the initialisation line for input parameter. (2/3). /]
 [template private addInitInputParam_2(p : Parameter, b1 : Boolean, b2 : Boolean, paramName : String) post(trim())]
-[if b1][apply_attributeFinal(paramName)/] = [p.addInitParamAffectation()/][else][p.addInitInputParam_3(b2, paramName)/][/if] 
+[if b1][apply_attributeFinal(paramName.sanitizeRJK())/] = [p.addInitParamAffectation()/][else][p.addInitInputParam_3(b2, paramName)/][/if] 
 [/template]
 
 [comment : Add the initialisation line for input parameter. (3/3). /]
 [template private addInitInputParam_3(p : Parameter, b2 : Boolean, paramName : String) post(trim())]
-[apply_variableDefault(p.name)/] = [if b2]null[else][p.addInitParamAffectation()/][/if]
+[apply_variableDefault(p.name.sanitizeRJK())/] = [if b2]null[else][p.addInitParamAffectation()/][/if]
 [/template]
 
 [comment : Add the suggested method (try to discover) for getting the token. / ]
@@ -746,7 +746,7 @@ final [if (p.isTypeOfBinary())]byte['[]'/][else][p.paramTypeXto()/][/if] [p.addI
 [comment : Write the list of parameters for the operation (4/4)./]
 [comment : b -> global param ? | s : Service for tab parameter reconstruction case of regenereation. /]
 [template private addParameterForOperation_4(p : Parameter, b : Boolean, s : Service) post (trim())]
-[if b][getAffectationPrefix()/][apply_attributeFinal(p.retreiveGlobalInputParamName(s))/], [/if][apply_variableDefault(p.name)/]
+[if b][getAffectationPrefix()/][apply_attributeFinal((p.retreiveGlobalInputParamName(s)).sanitizeRJK())/], [/if][apply_variableDefault(p.name.sanitizeRJK())/]
 [/template]
 
 [comment : Add alls imports for input parameters. (duplicate with RSFrontResourceTest) /]

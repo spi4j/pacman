@@ -10,6 +10,7 @@
 
 [import fr::pacman::commons::soa::common::attributes /]
 [import fr::pacman::commons::soa::common::names /]
+[import fr::pacman::commons::soa::common::utils /]
 
 [import fr::pacman::commons::convention::rule::methodRule /]
 [import fr::pacman::commons::convention::rule::parameterRule /]
@@ -103,7 +104,7 @@ if (not param.restData.restId.oclIsUndefined() and param.restData.restId.size() 
 
 [comment : /]
 [query public paramInXto(param : Parameter) : String =
-'final ' + param.paramTypeXto() + ' ' + apply_parameterMethodClassicIn(param.name.sanitize())
+'final ' + param.paramTypeXto() + ' ' + apply_parameterMethodClassicIn(param.name.sanitizeRJK())
  /]
 
 [comment : write the code for operation's out parameter in WS. /]
@@ -165,7 +166,7 @@ List<[type(p)/]>[else]
 
 [comment : /]
 [template public parametersXtoRS (p : Parameter)]
-[apply_parameterMethodClassicIn(p.name)/]
+[apply_parameterMethodClassicIn(p.name.sanitizeRJK())/]
 [/template]
 
 [comment : /]

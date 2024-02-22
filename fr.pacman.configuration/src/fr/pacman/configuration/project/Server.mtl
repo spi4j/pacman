@@ -321,9 +321,11 @@
 
 	<name>rest-mapping-fragment</name>
 
+	<!-- Ne pas laisser à la valeur par défaut sous peine --> 
+	<!-- de ne pouvoir accéder au fichier Swagger. -->
   	<servlet-mapping>
     	<servlet-name>RSServlet</servlet-name>
-    	<url-pattern>/api/*</url-pattern>
+    	<url-pattern>/*</url-pattern>
   	</servlet-mapping>
 
 </web-fragment>

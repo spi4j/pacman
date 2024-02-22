@@ -486,6 +486,7 @@
 		[/if]
 		[if isLibraryRS()]
 		<jersey-apache-connector.version>3.1.2</jersey-apache-connector.version>
+		<xml.bind.version>2.3.1</xml.bind.version>
 		[/if]
 		[if useWS() or isLibraryRS()]
    		<jackson.annotation.version>2.15.2</jackson.annotation.version>

@@ -51,6 +51,10 @@ endif
 	invoke('fr.pacman.soa.services.WSUtils', 'listeServices(java.util.List)', Sequence{m.eAllContents(Service)})
 /]
 
+[query public getBaseURI (m : System) : String = 
+	invoke('fr.pacman.soa.services.WSUtils', 'buildBaseUri(java.util.List)', Sequence{m.eAllContents(Component)})
+/]
+
 [query public clientNeedXto(any : OclAny) : Boolean =
     getClientTypes()->exists(client : String | client.equalsIgnoreCase('GWT'))
 /]

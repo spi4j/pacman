@@ -156,7 +156,7 @@
 
 [comment : /]
 [template private description(p : Parameter, lowerFirst : Boolean)]
-[if (p.description.oclIsUndefined())][p.name/].[else][if lowerFirst][p.description.toLowerFirst()/][else][p.description/][/if].[/if]
+[if (p.description.oclIsUndefined())][p.name/].[else][if lowerFirst][p.description.toLowerFirst().sanitizeForStars()/][else][p.description.sanitizeForStars()/][/if].[/if]
 [/template]
 
 [comment : /]
@@ -196,4 +196,9 @@
 [comment : Check if a parameter is mandatory (specific for comments). /]
 [query private isMandatory(p : Parameter) : Boolean =
 	p.multiplicity=MultiplicityKind::ONE or p.multiplicity=MultiplicityKind::ONE_STAR     
+/]
+
+[comment : remove all '*' from description. /]
+[query public sanitizeForStars (s : String) : String =
+  if not s.oclIsUndefined() then s.replaceAll('\\*+', '\'') else '' endif
 /]

@@ -164,7 +164,7 @@ public class [buildBoostrapClassName()/] {
 		[apply_variableDefault('webapp')/].setResourceBase("[webapp.getDevWebAppContext()/]");
 		[if hasToWriteOtherWebappForApi()]
 		WebAppContext [apply_variableDefault('webapp api')/] = new WebAppContext();
-		[apply_variableDefault('webapp api')/].setContextPath("/api");
+		[apply_variableDefault('webapp api')/].setContextPath("/");
 		// Recherche des annotations dans les sources ou dans le war deployé. 
 		[apply_variableDefault('webapp api')/].setAttribute([apply_attributeFinalStatic('jetty include jar pattern')/], ".*/target/classes/|.*\\.war");
 		[apply_variableDefault('webapp api')/].setResourceBase("../[getWebappProjectName()/]/[getWebappDir()/]");
@@ -196,7 +196,7 @@ public class [buildBoostrapClassName()/] {
 		[/if]
 
 		String [apply_variableDefault('doc base')/] =  new File("[webapp.getDevWebAppContext()/]").getAbsolutePath();
-		Context [apply_variableDefault('context')/] = [buildServerNameWithPrefix()/].addWebapp("[true.getContext()/]", [apply_variableDefault('doc base')/]);
+		Context [apply_variableDefault('context')/] = [buildServerNameWithPrefix()/].addWebapp("/", [apply_variableDefault('doc base')/]);
 		[if hasToWriteOtherWebappForApi()]
 		String [apply_variableDefault('doc base api')/] = new File("../[getWebappProjectName()/]/[getWebappDir()/]").getAbsolutePath();
 		Context [apply_variableDefault('context api')/] = [buildServerNameWithPrefix()/].addWebapp("[false.getContext()/]", [apply_variableDefault('doc base api')/]);

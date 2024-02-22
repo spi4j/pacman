@@ -109,17 +109,32 @@
 			<version>${user-library-[getLibraryName(prop)/].version}</version>
 		</dependency>
 		[/for][/if]
-		[if useWS() or isLibraryRS()]
-		<dependency>
+		[if useWS()]
+	    <dependency>
     		<groupId>com.fasterxml.jackson.core</groupId>
     		<artifactId>jackson-annotations</artifactId>
     		<version>${jackson.annotation.version}</version>
 		</dependency>
+		[/if]
+		[if useWS() or isLibraryRS()]
  		<dependency>
     		<groupId>jakarta.xml.bind</groupId>
     		<artifactId>jakarta.xml.bind-api</artifactId>
     		<version>${jakarta.xml.bind.version}</version>
 		</dependency>
+		[/if]
+		[if isLibraryRS()]
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <version>${jackson.annotation.version}</version>
+        </dependency>
+		<!-- Juste pour la configuration deserialisation Json -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${xml.bind.version}</version>
+        </dependency>
 		[/if]
 		[if hasHttpEmbeddedServer() and 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
 		<dependency>

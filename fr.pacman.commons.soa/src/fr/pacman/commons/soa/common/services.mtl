@@ -275,6 +275,11 @@
 
 [comment : Return the main URI for the service. /]
 [query public getUri (s : Service) : String =
+	normalizePath('/' + s.eContainer(Component).buildUriComponentVersion() + s.URI).trim()
+/]
+
+[comment : Return the main URI for the service. /]
+[query private getUri_old (s : Service) : String =
    if (s.eContainer(Component).URI.oclIsUndefined() 
 		or s.eContainer(Component).URI.size() = 0) then 
 		normalizePath('/' + s.eContainer(Component).buildUriComponentVersion() + s.URI).trim()

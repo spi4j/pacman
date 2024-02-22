@@ -95,16 +95,8 @@
 
   	<servlet-mapping>
     	<servlet-name>RSServlet</servlet-name>
-    	<url-pattern>/api/*</url-pattern>
+    	<url-pattern>[m.getBaseURI()/]</url-pattern>
   	</servlet-mapping>
-	[for (c : Component | m.eAllContents(Component))]
-	[if not c.URI.oclIsUndefined() and c.URI.size() > 0]
-  	<servlet-mapping>
-    	<servlet-name>RSServlet</servlet-name>
-    	<url-pattern>[normalizePath('/' + c.URI + '/*')/]</url-pattern>
-  	</servlet-mapping>
-	[/if]
-	[/for]
 
 </web-fragment>
 [/template]
