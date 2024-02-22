@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.test
 Bundle-ManifestVersion: 2
 Bundle-Name: Acceleo Test Module Runtime Plug-in
 Bundle-SymbolicName: fr.pacman.test
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.environment,

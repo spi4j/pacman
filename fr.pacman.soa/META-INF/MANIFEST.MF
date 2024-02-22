@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.soa
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - SOA
 Bundle-SymbolicName: fr.pacman.soa
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Activator: fr.pacman.soa.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,

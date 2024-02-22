@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.validation.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Validation UI
 Bundle-SymbolicName: fr.pacman.validation.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Activator: fr.pacman.validation.ui.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.ui,

@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.soapifirst.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - SOAPIFIRST UI
 Bundle-SymbolicName: fr.pacman.soapifirst.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Activator: fr.pacman.soapifirst.ui.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.ui,
