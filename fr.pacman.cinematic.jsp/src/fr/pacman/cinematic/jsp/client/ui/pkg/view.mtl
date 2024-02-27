@@ -720,4 +720,4 @@
 [query private getAttribut(e : view::AbstractViewElement) : environment::Attribute = if e.oclIsKindOf(view::ViewElement) and not (e.oclAsType(view::ViewElement).searchBindingFor() = null) and e.oclAsType(view::ViewElement).searchBindingFor().oclIsKindOf(environment::Attribute) then e.oclAsType(view::ViewElement).searchBindingFor().oclAsType(environment::Attribute) else null endif/]
 
 [comment : Non utilisé pour l'instant. A voir. /]
-[query private valid(o : environment::ObeoDSMObject) : Boolean = not (o = null) and not o.oclIsInvalid()/]
+[query private valid(o : environment::ObeoDSMObject) : Boolean = not (o = null)/]

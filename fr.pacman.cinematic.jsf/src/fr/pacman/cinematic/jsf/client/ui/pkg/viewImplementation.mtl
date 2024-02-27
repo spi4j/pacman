@@ -52,7 +52,7 @@
       [for (aVC : view::ViewContainer | aViewState.viewContainers)]
         [for (anAVE : view::AbstractViewElement | aVC.ownedElements)]
           [if (anAVE.isButton())]
-            [for (transition : flow::Transition | aViewState.getTransitionsFromState(true).orderTransitions())]
+            [for (transition : flow::Transition | aViewState.getTransitionsFromState(true)->orderTransitions())]
               [if (not transition.on->isEmpty())]
                 [for (flowEvent : flow::FlowEvent | transition.on->select(var0 | var0.oclIsTypeOf(flow::FlowEvent)))]
                   [if (not flowEvent.binds->isEmpty())]
@@ -143,8 +143,8 @@
 
 [template private genJsfPanel(anAVE : view::AbstractViewElement, aViewState : flow::ViewState, viewContainer : view::ViewContainer) post(self.trim())]
   <h:panelGrid>
-  [for (anAVE : view::AbstractViewElement | anAVE.oclAsType(view::ViewContainer).ownedElements)]
-    		[anAVE.genJsfWidget(aViewState, viewContainer)/]		
+  [for (element : view::AbstractViewElement | anAVE.oclAsType(view::ViewContainer).ownedElements)]
+    		[element.genJsfWidget(aViewState, viewContainer)/]		
   [/for]
   </h:panelGrid>[/template]
 
@@ -153,9 +153,9 @@
   <br>
   [if (anAVE.oclIsTypeOf(view::ViewContainer))]
     <p:dataTable border="1" id="table[anAVE.name.toUpperFirst()/]" paginator="true" sortMode="multiple" selectionMode="single" lazy="true">
-    [for (anAVE : view::AbstractViewElement | anAVE.oclAsType(view::ViewContainer).ownedElements)]
+    [for (element : view::AbstractViewElement | anAVE.oclAsType(view::ViewContainer).ownedElements)]
       		<p:column headerText="[aViewState.name/]">
-      			<h:outputText value="[anAVE.genJsfWidget(aViewState, viewContainer)/]" />			
+      			<h:outputText value="[element.genJsfWidget(aViewState, viewContainer)/]" />			
       		</p:column>		
     [/for]
     </p:dataTable>	
@@ -247,7 +247,7 @@
   [anAVE.events->select(temp1 | not (temp1 = null))->first().genLink(aViewState)/][/template]
 
 [template private genLink(aViewEvent : view::ViewEvent, aViewState : flow::ViewState) post(self.trim())]
-  [if (aViewEvent.getFlowEvent() = null or aViewEvent.getFlowEvent().oclIsInvalid())]
+  [if (aViewEvent.getFlowEvent() = null)]
     [let nexts : OrderedSet(flow::FlowState) = aViewState.getNextStates(aViewEvent)]
       [if (nexts->isEmpty())]
         javascript:alert('No transition found on this event.\nPlease check your model.');
@@ -280,7 +280,7 @@
 
 [template private genEventOld(aViewEvent : view::ViewEvent, aViewState : flow::ViewState) post(self.trim())]
   [if (not (aViewEvent.type = null))]
-    [if (aViewEvent.getProperty(aViewEvent.type.qualifiedName()) = 'jsf.event.onClick')]
+    [if (aViewEvent.type.qualifiedName().getProperty() = 'jsf.event.onClick')]
       [aViewEvent.genEventOnClick(aViewState)/]
     [/if]
   [/if]

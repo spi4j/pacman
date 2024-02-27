@@ -274,7 +274,7 @@
   [o.name.sanitize().toLowerFirst()/][/template]
 
 [template private writeType(p : soa::Parameter) post(self.trim())]
-  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.indexOf('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name/][else][p.type.name.sanitize() + 'Dto'/][/if]
+  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name/][else][p.type.name.sanitize() + 'Dto'/][/if]
 [/template]
 
 [comment : Write all imports for the controller./]

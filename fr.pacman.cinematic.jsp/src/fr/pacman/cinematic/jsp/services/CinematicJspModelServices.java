@@ -28,7 +28,7 @@ public class CinematicJspModelServices {
 	 * 
 	 * @param p_root : le diagramme de cinématique root.
 	 */
-	public static void init(final CinematicRoot p_root) {
+	public static boolean init(final CinematicRoot p_root) {
 
 		_header = null;
 		_footer = null;
@@ -59,6 +59,7 @@ public class CinematicJspModelServices {
 				}
 			}
 		}
+		return false;
 	}
 
 	public static ViewState get_headerState() {

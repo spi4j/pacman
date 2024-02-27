@@ -6,7 +6,6 @@
 [import fr::pacman::commons::common::utils/]
 [import fr::pacman::cinematic::api::common::packages/]
 [import fr::pacman::cinematic::jsf::common::jsf_commons/]
-[import fr::pacman::cinematic::jsf::common::jsf_widgets/]
 [import fr::pacman::cinematic::jsf::common::name/]
 
 [comment encoding = UTF-8 /]
@@ -16,7 +15,7 @@
 
 [query public namePackagePagesContainer(viewContainer : view::ViewContainer) : String = viewContainer.packageHierarchy()/]
 
-[query public namePackagePagesContainerWithoutDot(any : ecore::EObject) : String = if any = null or any.ancestors(cinematic::Package)->isEmpty() then '' else any.ancestors(cinematic::Package)->collect(temp1 | temp1.name)->collect(temp2 | temp2.sanitize())->collect(temp3 | temp3.toLower())->reverse()->sep('.') endif/]
+[query public namePackagePagesContainerWithoutDot(any : ecore::EObject) : String = if any = null or any.ancestors(cinematic::Package)->isEmpty() then '' else any.ancestors(cinematic::Package)->collect(temp1 | temp1.name)->collect(temp2 | temp2.sanitize())->collect(temp3 | temp3.toLower())->reverse()->sep('.')->toString() endif/]
 
 [**
  * The documentation of the template genFullQualifiedFileName.

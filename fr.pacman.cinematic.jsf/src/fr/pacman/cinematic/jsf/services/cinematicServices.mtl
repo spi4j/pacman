@@ -5,7 +5,7 @@
 [comment encoding = UTF-8 /]
 [query public getNextStates(arg0 : flow::FlowState, arg1 : cinematic::Event) : OrderedSet(flow::FlowState) = arg0.getNextStatesJavaService(arg1)/]
 
-[query public getID(any : ecore::EObject) : String = any.getIdJavaService()/]
+[query public getID(any : ecore::EObject) : Integer = any.getIdJavaService()/]
 
 [query public getUnBindedViewEvent(arg0 : view::ViewContainer) : OrderedSet(view::ViewEvent) = arg0.getUnBindedViewEventJavaService()/]
 
