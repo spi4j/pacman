@@ -14,7 +14,7 @@ import fr.pacman.commons.properties.PacmanProperty;
  *
  * @author MINARM
  */
-public class AttributeRule extends PacmanPropertiesCategory_Abs
+public class AttributeNamingRule extends PacmanPropertiesCategory_Abs
 {
 
    private static final String c_idParam_attributeDefault = "attributeDefault";

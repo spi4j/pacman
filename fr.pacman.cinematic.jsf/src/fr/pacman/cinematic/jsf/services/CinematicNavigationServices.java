@@ -31,7 +31,7 @@ import fr.pacman.cinematic.api.services.CinematicModelServices;
  * @author arichard
  * 
  */
-public class CinematicServices {
+public class CinematicNavigationServices {
 	
 	static private int counter = 0;
 	synchronized static public int getId() {
