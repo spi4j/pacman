@@ -335,15 +335,6 @@
 					<module>fr.pacman.validation</module> <module>fr.pacman.estimation</module -->
 			</modules>
 
-			<dependencies>
-				<dependency>
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-					<version>4.10</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-
 			<build>
 				<plugins>
 					<!-- We copy the .class from target / classes to target / test-classes 
