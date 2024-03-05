@@ -6,11 +6,11 @@
 package fr.application.ws.api.annuaire;
 // Start of user code for imports
 
+import fr.spi4j.exception.Spi4jValidationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
 
 // End of user code
 
@@ -27,7 +27,7 @@ public interface GradesServiceRSFacade_Itf
     * @return grades.
 	*/
     // Start of user code Annotations MethodefindAllGrades
-
+    
     // End of user code
    List<GradeXto> findAllGrades ();
 
@@ -42,7 +42,7 @@ public interface GradesServiceRSFacade_Itf
     * @return grades.
 	*/
     // Start of user code Annotations MethodefindAllPagedGrades
-
+    
     // End of user code
    List<GradeXto> findAllPagedGrades (final int p_offset, final int p_limit);
 

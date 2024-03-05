@@ -15,6 +15,7 @@ import fr.application.persistence.ApplicationUserPersistence;
 import fr.application.persistence.api.annuaire.PersonneColumns_Enum;
 import fr.application.persistence.api.annuaire.PersonneDao_Itf;
 import fr.application.persistence.api.annuaire.PersonneEntity_Itf;
+import fr.spi4j.persistence.DatabaseLineStatus_Enum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -93,9 +94,8 @@ public class PersonneMatch extends ApplicationMatch_Abs<Long, PersonneDto, Perso
       v_entity.set_Grade_id (p_dto.get_grade_id ());
       v_entity.set_MarieAvec_id (p_dto.get_marieAvec_id ());
       v_entity.set_personneParentDe_id (p_dto.get_personneParentDe_id ());
-      // TODO renseigner les champs automatiques
-      v_entity.set_xdmaj(new Date());
-      v_entity.set_xtopsup(false);
+      v_entity.set_xdmaj(p_dto.get_xdmaj());
+      v_entity.set_xtopsup(p_dto.get_xtopsup());
       // End of user code
 
       return v_entity;
@@ -135,6 +135,8 @@ public class PersonneMatch extends ApplicationMatch_Abs<Long, PersonneDto, Perso
       p_dto.set_grade_id (p_entity.get_Grade_id ());
       p_dto.set_marieAvec_id (p_entity.get_MarieAvec_id ());
       p_dto.set_personneParentDe_id (p_entity.get_personneParentDe_id ());
+      p_dto.set_xdmaj(p_entity.get_xdmaj());
+      p_dto.set_xtopsup(p_entity.get_xtopsup());
       // End of user code
    }
 

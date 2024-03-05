@@ -7,6 +7,7 @@ package fr.application.business.api.annuaire;
 // Start of user code for imports
 
 import fr.spi4j.business.Service_Itf;
+import fr.spi4j.exception.Spi4jValidationException;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 // End of user code
 public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
 {
+
 
    /**
     * Obtenir la liste d'objets de type 'Personne' associés à l'instance de type 'Personne'.
@@ -44,6 +46,7 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
 	// Start of user code Annotations findPersonneById_Personne_personne_Long_identifiant
 
 	// End of user code
+	
     PersonneDto findPersonneById (final Long p_identifiant); 
 
 	
@@ -58,6 +61,7 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
 	// Start of user code Annotations findPersonneByName_Personne_personne_String_nom
 
 	// End of user code
+	
     PersonneDto findPersonneByName (final String p_nom); 
 
 	
@@ -72,12 +76,13 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
 	// Start of user code Annotations findPersonneByIdFromRest_Personne_personne_Long_identifiant
 
 	// End of user code
+	
     PersonneDto findPersonneByIdFromRest (final Long p_identifiant); 
 
 	
 
     // Méthodes PersonneService_Itf
     // Start of user code Méthodes PersonneService_Itf
-
+    
     // End of user code
 }

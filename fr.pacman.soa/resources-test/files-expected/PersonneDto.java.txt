@@ -6,6 +6,7 @@
 package fr.application.business.api.annuaire;
 // Start of user code for imports
 
+import fr.application.business.ApplicationAutoFieldsDto_Abs;
 import fr.application.business.ApplicationUserBusiness;
 import fr.application.business.api.ref.GradeDto;
 import fr.spi4j.business.dto.DtoUtil;
@@ -22,7 +23,7 @@ import java.util.List;
  * DTO 'Personne'.
  * @author safr@n
  */
-public class PersonneDto implements Dto_Itf<Long>
+public class PersonneDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<Long>
 {
    /**
     * SerialUid.
@@ -544,9 +545,19 @@ public class PersonneDto implements Dto_Itf<Long>
    {
       // toString
       // Start of user code toString
-
-      return getClass().getSimpleName() + '[' + _id + ", " + get_nom() + ", " + get_prenom() + ", " + get_civil() + ", " + get_dateNaissance() + ", " + get_salaire()   + ", " + get_grade_id ()  + ", " + get_marieAvec_id ()  + ", " + get_personneParentDe_id ()  + ']';
-
+      
+            return getClass().getSimpleName() + '[' + _id + ", " + get_nom()
+            return getClass().getSimpleName() + '[' + _id  + ", " + get_prenom()
+            return getClass().getSimpleName() + '[' + _id  + ", " + get_civil()
+            return getClass().getSimpleName() + '[' + _id  + ", " + get_dateNaissance()
+            return getClass().getSimpleName() + '[' + _id  + ", " + get_salaire()
+            return getClass().getSimpleName() + '[' + _id  
+            return getClass().getSimpleName() + '[' + _id   + ", " + get_grade_id ()
+            return getClass().getSimpleName() + '[' + _id   + ", " + get_marieAvec_id ()
+            return getClass().getSimpleName() + '[' + _id   + ", " + get_personneParentDe
+            return getClass().getSimpleName() + '[' + _id _id () 
+            return  + ']';
+      
       // End of user code
    }
 

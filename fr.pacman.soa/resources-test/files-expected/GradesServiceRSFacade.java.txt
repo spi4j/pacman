@@ -6,6 +6,7 @@ import fr.application.mapper.ApplicationUserMapper;
 import fr.application.ws.api.annuaire.GradesServiceRSFacade_Itf;
 import fr.application.ws.api.ref.GradeXto;
 import fr.spi4j.ws.rs.exception.RsNoResultException;
+import fr.spi4j.ws.rs.exception.Spi4jValidationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class GradesServiceRSFacade implements GradesServiceRSFacade_Itf
 	public GradesServiceRSFacade(){
 		super();
 	}
+
 
     /**
     * 

@@ -15,6 +15,7 @@ import fr.spi4j.persistence.DatabaseLineStatus_Enum;
 import fr.spi4j.persistence.dao.OperatorLogical_Enum;
 import fr.spi4j.persistence.dao.TableCriteria;
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
+import fr.spi4j.type.XtopSup;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +61,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
       // Start of user code create
 
 	  final TypeEntity v_entity = convertDtoToEntity(p_dto);
-      v_entity.set_xtopsup(new XtopSup());
+      v_entity.set_xtopsup(new XtopSup(DatabaseLineStatus_Enum.active));
       v_entity.set_xdmaj(new Date());
       getDao().create(v_entity);
       refreshDtoFromEntity(v_entity, p_dto);
@@ -76,7 +77,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
 
       final TypeEntity v_entityFound = getDao().findById(p_id);
       // Si le xtopsup est < 3 on renvoie une exception comme si la donnée n'avait pas été trouvée.
-      if (!DatabaseLineStatus_Enum.forSelect(v_entityFound.get_xtopsup()))
+      if (!DatabaseLineStatus_Enum.forSelect(v_entityFound.get_xtopsup().get_value()))
          throw new Spi4jRuntimeException("Donnée non trouvée (id=" + p_id + ')', "???");
      
       return convertEntityToDto(v_entityFound);
@@ -135,13 +136,13 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
 
 	  // Si la ligne n'est pas active, on rejete la demande. 
 	  final TypeEntity v_entityFound = getDao().findById(p_dto.getId());
-	  if(null == v_entityFound || !DatabaseLineStatus_Enum.forUpdate(v_entityFound.get_xtopsup()))
+	  if(null == v_entityFound || !DatabaseLineStatus_Enum.forUpdate(v_entityFound.get_xtopsup().get_value()))
 			throw new Spi4jRuntimeException("Cette donnée a été supprimée par un autre utilisateur.", "???");
 
 	  // On effectue la mise à jour.
       final TypeEntity v_entity = convertDtoToEntity(p_dto);
       v_entity.set_xdmaj(new Date());
-      v_entity.set_xtopsup(DatabaseLineStatus_Enum.active.get_value());
+      v_entity.set_xtopsup(new XtopSup(DatabaseLineStatus_Enum.active));
       getDao().update(v_entity);
       refreshDtoFromEntity(v_entity, p_dto);
 
@@ -159,10 +160,10 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
 
       // Si v_entityFound est null ou que l'entité à supprimer a déjà le xtopsup > 1 
       // alors on renvoie une exception indiquant que la donnée a déjà été supprimée.
-	  if (null == v_entityFound || !DatabaseLineStatus_Enum.forDelete(v_entityFound.get_xtopsup()))
+	  if (null == v_entityFound || !DatabaseLineStatus_Enum.forDelete(v_entityFound.get_xtopsup().get_value()))
          throw new Spi4jRuntimeException("Cette donnée a été supprimée par un autre utilisateur.", "???");
      
- 	  v_entity.set_xtopsup(DatabaseLineStatus_Enum.deletedForAll.get_value());
+ 	  v_entity.set_xtopsup(new XtopSup(DatabaseLineStatus_Enum.deletedForAll));
       v_entity.set_xdmaj(new Date());
       getDao().update(v_entity);
       refreshDtoFromEntity(v_entity, p_dto);

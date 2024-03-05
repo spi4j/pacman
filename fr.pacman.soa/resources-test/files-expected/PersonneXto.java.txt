@@ -32,7 +32,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "PersonneXto", namespace = "http://annuaire.application.fr/xto")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PersonneXto implements Serializable, Xto_Itf<Long>, RsXto_Itf
+public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Long>, RsXto_Itf
 {
 
    private static final long serialVersionUID = 1L;
@@ -42,112 +42,128 @@ public class PersonneXto implements Serializable, Xto_Itf<Long>, RsXto_Itf
    /** L'identifiant. */
    // for annotation_id
    // Start of user code for annotation_id
-   @XmlElement(namespace = "", name = "id")
-   @JsonProperty("id")
-   private Long _id;
+      @XmlElement(namespace = "", name = "id")
+      @JsonProperty("id")
+   
+      private Long _id;
    // End of user code
 
    /** . */
    // for annotation_nom
    // Start of user code for annotation_nom
-   @XmlElement(namespace = "", name = "nom")
-   @JsonProperty("nom")
+      @XmlElement(namespace = "", name = "nom")
+      @JsonProperty("nom")
+   
    // End of user code
    private String _nom;
 
    /** . */
    // for annotation_prenom
    // Start of user code for annotation_prenom
-   @XmlElement(namespace = "", name = "prenom")
-   @JsonProperty("prenom")
+      @XmlElement(namespace = "", name = "prenom")
+      @JsonProperty("prenom")
+   
    // End of user code
    private String _prenom;
 
    /** . */
    // for annotation_civil
    // Start of user code for annotation_civil
-   @XmlElement(namespace = "", name = "civil")
-   @JsonProperty("civil")
+      @XmlElement(namespace = "", name = "civil")
+      @JsonProperty("civil")
+   
    // End of user code
    private Boolean _civil;
 
    /** . */
    // for annotation_dateNaissance
    // Start of user code for annotation_dateNaissance
-   @XmlElement(namespace = "", name = "dateNaissance")
-   @JsonProperty("dateNaissance")
+      @XmlElement(namespace = "", name = "dateNaissance")
+      @JsonProperty("dateNaissance")
+   
    // End of user code
    private Date _dateNaissance;
 
    /** . */
    // for annotation_salaire
    // Start of user code for annotation_salaire
-   @XmlElement(namespace = "", name = "salaire")
-   @JsonProperty("salaire")
+      @XmlElement(namespace = "", name = "salaire")
+      @JsonProperty("salaire")
+   
    // End of user code
    private Double _salaire;
 
    /** La FK sur le Type 'Grade'. */
    // for annotation_1_grade_id
    // Start of user code for annotation_1_grade_id
-   @XmlElement(namespace = "", name = "grade_id")
-   @JsonProperty("grade_id")
+      @XmlElement(namespace = "", name = "grade_id")
+      @JsonProperty("grade_id")
+   
    // End of user code
    private Long _grade_id;
 
    /** L'instance de 'Invalid' associee a  l'instance de 'Personne' courante. */
    // for annotation_grade
    // Start of user code for annotation_grade
-   @XmlElement(namespace = "", name = "grade")
-   @JsonProperty("grade")
+      @XmlElement(namespace = "", name = "grade")
+      @JsonProperty("grade")
+   
    // End of user code
    private GradeXto _grade;
 
    /** La FK sur le Type 'Personne'. */
    // for annotation_1_marieAvec_id
    // Start of user code for annotation_1_marieAvec_id
-   @XmlElement(namespace = "", name = "marieAvec_id")
-   @JsonProperty("marieAvec_id")
+      @XmlElement(namespace = "", name = "marieAvec_id")
+      @JsonProperty("marieAvec_id")
+   
    // End of user code
    private Long _marieAvec_id;
 
    /** L'instance de 'Invalid' associee a  l'instance de 'Personne' courante. */
    // for annotation_marieAvec
    // Start of user code for annotation_marieAvec
-   @XmlElement(namespace = "", name = "marieAvec")
-   @JsonProperty("marieAvec")
+      @XmlElement(namespace = "", name = "marieAvec")
+      @JsonProperty("marieAvec")
+   
    // End of user code
    private PersonneXto _marieAvec;
 
    /** La liste de type 'Adresse' associee a  l'instance de 'Personne' courante. */
    // for annotation__tab_adresses
    // Start of user code for annotation__tab_adresses
-   @XmlElement(namespace = "", name = "adresses")
-   @JsonProperty("adresses")
+      @XmlElement(namespace = "", name = "adresses")
+      @JsonProperty("adresses")
+   
    // End of user code
    private List<AdresseXto> _tab_adresses;
 
    /** La liste de type 'Personne' associee a  l'instance de 'Personne' courante. */
    // for annotation__tab_parentDe
    // Start of user code for annotation__tab_parentDe
-   @XmlElement(namespace = "", name = "parentDe")
-   @JsonProperty("parentDe")
+      @XmlElement(namespace = "", name = "parentDe")
+      @JsonProperty("parentDe")
+   
    // End of user code
    private List<PersonneXto> _tab_parentDe;
 
    /** La liste de type 'Pays' associee a  l'instance de 'Personne' courante. */
    // for annotation__tab_pays
    // Start of user code for annotation__tab_pays
-   @XmlElement(namespace = "", name = "pays")
-   @JsonProperty("pays")
+      @XmlElement(namespace = "", name = "pays")
+      @JsonProperty("pays")
+   
    // End of user code
    private List<PaysXto> _tab_pays;
 
    /** La FK sur le type 'Personne'. */
    // for annotation_parentDe_id
    // Start of user code for annotation_parentDe_id
-   @XmlElement(namespace = "", name = "personneParentDe_id")
-   @JsonProperty("personneParentDe_id")
+      @XmlElement(namespace = "", name = "personneParentDe
+   _id")
+      @JsonProperty("personneParentDe
+_id")
+   
    // End of user code
    private Long _personneParentDe_id;
 
@@ -440,9 +456,18 @@ public class PersonneXto implements Serializable, Xto_Itf<Long>, RsXto_Itf
    {
       // toString
       // Start of user code toString
-
-      return getClass().getName() + '['  + getId ()  + ", " + get_nom()   + ", " + get_prenom()   + ", " + get_civil()   + ", " + get_dateNaissance()   + ", " + get_salaire()   + ", " + get_grade_id () + ", " + get_marieAvec_id () + ']';
-
+      
+            return getClass().getName() + '['  + getId ()  + ", " + get_nom()
+            return    + ", " + get_prenom()
+            return    + ", " + get_civil()
+            return    + ", " + get_dateNaissance()
+            return    + ", " + get_salaire()
+            return   
+            return  + ", " + get_grade_id ()
+            return  + ", " + get_marieAvec_id ()
+            return  
+            return + ']';
+      
       // End of user code
    }
 }

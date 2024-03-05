@@ -14,6 +14,7 @@ import fr.application.matching.ApplicationUserMatching;
 import fr.application.matching.annuaire.PersonneMatch_Itf;
 import fr.application.persistence.api.annuaire.PersonneColumns_Enum;
 import fr.spi4j.business.Service_Abs;
+import fr.spi4j.exception.Spi4jValidationException;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class PersonneService extends Service_Abs<Long, PersonneDto, PersonneColu
    {
       return ApplicationUserMatching.getPersonneMatch ();
    }
+
 
    @Override
    public List<PersonneDto> findListParentDeByPersonne (final Long p_personneParentDeId)
