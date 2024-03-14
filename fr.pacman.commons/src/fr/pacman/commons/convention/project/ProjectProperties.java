@@ -313,7 +313,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                         new ClientProjectStrategy()),
 
                PacmanProperty.newRequired(c_idParam_typeNaming, "SUN", 
-                        "Norme de nommage pour Java", 
+                        "Norme de nommage pour Java (SUN / SAFRAN)", 
                         new NormeProjectStrategy()),
 
                PacmanProperty.newRequired(c_idParam_new_line, "\r\n", 

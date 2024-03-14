@@ -1050,8 +1050,6 @@ public class PropertiesPage extends WizardPage {
 				widgetSelected(p_e);
 			}
 		});
-
-		_namingCode = v_httpServer.getItem(0);
 	}
 
 	/**
