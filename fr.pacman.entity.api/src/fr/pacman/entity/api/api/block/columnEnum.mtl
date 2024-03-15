@@ -208,7 +208,7 @@ public enum [buildEntityColumnEnumName(e)/] implements [getClassNameForColumnsNa
 
 [query public roleEnum(e : Entity) : String = 'L\'énumeration définissant les informations de chaque colonne pour le type ' + nameSimpleEntity(e) /]
 
-[comment : Check also if the size is an integer (if not cannot treat the size). /]
+[comment : Check also if the size is an integer (if not cannot treat the size, set '-1' in enumeration ). /]
 [query private hasValideSize(p : Property) : Boolean = 
  p.metadatas.hasSize() and  p.metadatas.size().indexOf(',') = 0 and  p.metadatas.size().indexOf('.') = 0
 /]

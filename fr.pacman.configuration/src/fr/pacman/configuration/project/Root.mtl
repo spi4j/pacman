@@ -447,7 +447,6 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
 		<jakarta-transaction-api.version>2.0.1</jakarta-transaction-api.version>
         <opencsv.version>5.7.1</opencsv.version>
-        <mail.version>1.6.2</mail.version>
 		<xstream.version>1.4.20</xstream.version>
         <mockito-core.version>5.3.1</mockito-core.version>
         <ehcache-core.version>2.6.11</ehcache-core.version>
