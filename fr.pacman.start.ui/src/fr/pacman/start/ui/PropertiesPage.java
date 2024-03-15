@@ -667,6 +667,21 @@ public class PropertiesPage extends WizardPage {
 	}
 
 	/**
+	 * Enable or disable the combo box for code naming convention.
+	 * 
+	 * @param p_enable
+	 */
+	private void manageActivationForCodeNaming(final boolean p_enable) {
+		final Composite v_groupCodeNaming = _lstCompositesToManage.get(Id.CB_CODE_NAMING);
+		Combo v_combo = (Combo) v_groupCodeNaming;
+		v_combo.setEnabled(p_enable);
+		if (!p_enable) {
+			v_combo.select(0);
+			v_combo.notifyListeners(SWT.Selection, new Event());
+		}
+	}
+
+	/**
 	 * Enable or disable the specific simplified layer for DTO
 	 * 
 	 * @param p_enable
@@ -885,6 +900,7 @@ public class PropertiesPage extends WizardPage {
 		manageActivationForUseBDD(p_enable);
 		manageActivationForUseConfiguration(p_enable);
 		manageActivationForH2EmbeddedDatabase(p_enable);
+		manageActivationForCodeNaming(p_enable);
 
 		// Inactive in all cases.
 		manageActivationForCrudOperations(false);
@@ -1001,6 +1017,7 @@ public class PropertiesPage extends WizardPage {
 
 		final Combo v_namingCode = addComboBoxWithLabel(p_container, TextUtil.c_LBL_JAVA_NAMING,
 				PacmanConfig.c_JAVA_NAMING_LIST, 0, TextUtil.c_TLP_JAVA_NAMING);
+		_lstCompositesToManage.put(Id.CB_CODE_NAMING, v_namingCode);
 
 		v_namingCode.addSelectionListener(new SelectionListener() {
 
@@ -3256,16 +3273,16 @@ public class PropertiesPage extends WizardPage {
 	private enum Id {
 
 		RD_DBDD, RD_TU, RD_REQUIREMENT, RD_EJB, RD_MATCH, RD_SECURITY, RD_SOA_WS, RD_LIBRARY, RD_LIBRARYREST,
-		CB_TYPE_IHM, CB_USE_BDD, RD_DEBUG, RD_FETCHSTRATEGY, RD_LOG4J, RD_CRUD, RD_HK2, RD_REQVERSION, CH_TYPE_BDD,
-		CH_MOD_LST_FILES, RD_USE_LIBRARY, TX_USE_LIBRARY_GROUP, TX_USE_LIBRARY_ARTIFACT, TX_USE_LIBRARY_VERSION,
-		CHBT_ENTITY, CHBT_SOAP, CHBT_DATABASE, TX_REQ_PREFIX, TX_REQ_LEVEL, TX_AUTHOR, CHBT_REQUIREMENT, CHBT_CINEMATIC,
-		RDNO_LIB, RDYES_LIB, RDNO_TU, RDYES_TU, RDNO_MATCH, RDYES_MATCH, RDNO_REQ, RDYES_REQ, RDNO_WS, RDYES_WS,
-		RDNO_SECU, RDYES_SECU, RDNO_BDD, RDYES_BDD, RDNO_EJB, RDYES_EJB, CHBT_H2, CHBT_POSTGRES, CHBT_ORACLE,
-		CHBT_ORACLE_32, CHBT_MYSQL, CHBT_MARIADB, CHBT_SQLSERVER, ODB_SQL_COLUMNS, ODB_SQL_PREFIX, ODB_SQL_TABLESPACE,
-		ODB_SQL_SCHEMA, ODB_SQL_NBCOLUMNS, LIB_USE_NBCOLUMNS, LIB_USE_LIBRARY, CH_CHXTOMAJ, RDNO_USE_LIBRARY,
-		RDNO_DEBUG, RDYES_DEBUG, RDYES_FETCH, RDNO_FETCH, RDYES_LOG4J, RDNO_LOG4J, RDYES_CRUD, RDNO_CRUD, RDYES_HK2,
-		RDNO_HK2, RDNO_REQVERSION, RDYES_REQVERSION, CB_HTTP_SERVER, RD_SOA_WMS, RDYES_WMS, RDNO_WMS, RD_USECONFIG,
-		RDYES_USECONFIG, RDNO_USECONFIG, RD_EMBEDH2, RDYES_EMBEDH2, RDNO_EMBEDH2;
+		CB_TYPE_IHM, CB_CODE_NAMING, CB_USE_BDD, RD_DEBUG, RD_FETCHSTRATEGY, RD_LOG4J, RD_CRUD, RD_HK2, RD_REQVERSION,
+		CH_TYPE_BDD, CH_MOD_LST_FILES, RD_USE_LIBRARY, TX_USE_LIBRARY_GROUP, TX_USE_LIBRARY_ARTIFACT,
+		TX_USE_LIBRARY_VERSION, CHBT_ENTITY, CHBT_SOAP, CHBT_DATABASE, TX_REQ_PREFIX, TX_REQ_LEVEL, TX_AUTHOR,
+		CHBT_REQUIREMENT, CHBT_CINEMATIC, RDNO_LIB, RDYES_LIB, RDNO_TU, RDYES_TU, RDNO_MATCH, RDYES_MATCH, RDNO_REQ,
+		RDYES_REQ, RDNO_WS, RDYES_WS, RDNO_SECU, RDYES_SECU, RDNO_BDD, RDYES_BDD, RDNO_EJB, RDYES_EJB, CHBT_H2,
+		CHBT_POSTGRES, CHBT_ORACLE, CHBT_ORACLE_32, CHBT_MYSQL, CHBT_MARIADB, CHBT_SQLSERVER, ODB_SQL_COLUMNS,
+		ODB_SQL_PREFIX, ODB_SQL_TABLESPACE, ODB_SQL_SCHEMA, ODB_SQL_NBCOLUMNS, LIB_USE_NBCOLUMNS, LIB_USE_LIBRARY,
+		CH_CHXTOMAJ, RDNO_USE_LIBRARY, RDNO_DEBUG, RDYES_DEBUG, RDYES_FETCH, RDNO_FETCH, RDYES_LOG4J, RDNO_LOG4J,
+		RDYES_CRUD, RDNO_CRUD, RDYES_HK2, RDNO_HK2, RDNO_REQVERSION, RDYES_REQVERSION, CB_HTTP_SERVER, RD_SOA_WMS,
+		RDYES_WMS, RDNO_WMS, RD_USECONFIG, RDYES_USECONFIG, RDNO_USECONFIG, RD_EMBEDH2, RDYES_EMBEDH2, RDNO_EMBEDH2;
 
 		static boolean isIdType_RD_NO(Id p_id) {
 

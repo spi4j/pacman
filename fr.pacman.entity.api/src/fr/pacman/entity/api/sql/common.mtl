@@ -34,7 +34,7 @@
 [/template]
 
 [comment : getSQLTableSchema() ne peut pas être null ou non défini (on peut enlever le test..). /]
-[template private get_schema(e : Entity)]
+[template public get_schema(e : Entity)]
 [if hasSQLTableSchema()][getSQLTableSchema()/][/if]
 [/template]
 
@@ -109,6 +109,10 @@ invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNbColumnsInUniqueIndex(ja
 
 [query public get_defaultColumn(void : OclAny, columnProp : String) : String =
     getConfigValue(defaultColumnProperty(columnProp))
+/]
+
+[query public get_description(columnProp : String) : String =
+    getConfigValue(descriptionColumnProperty(columnProp))
 /]
 
 [query public get_typeColumn(void : OclAny, columnProp : String) : String =

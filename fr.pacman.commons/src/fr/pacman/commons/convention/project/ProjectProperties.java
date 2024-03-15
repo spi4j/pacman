@@ -306,10 +306,10 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                         "La version de SPI4J utilisee par les generateurs"),
 
                PacmanProperty.newRequired(c_idParam_database_type, "H2",
-                        "Type de la base de donnees, parmi Oracle, H2, Mysql, MariaDB, Postgresql (plusieurs possibles, separes par des virgules)"),
+                        "Type(s) de base(s) de donnees (Oracle / Oracle_32 / H2 / MySQL / MariaDB / PostgreSQL"),
 
                PacmanProperty.newRequired(c_idParam_client_type, "",
-                        "Type de client, pour l'instant uniquement SWING, GWT, JSF, JSP ou vide",
+                        "Type de client (SWING / GWT / JSF / JSP)",
                         new ClientProjectStrategy()),
 
                PacmanProperty.newRequired(c_idParam_typeNaming, "SUN", 

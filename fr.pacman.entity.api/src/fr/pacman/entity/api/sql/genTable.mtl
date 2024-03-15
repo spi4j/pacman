@@ -39,6 +39,11 @@
 
 [template private genColumnReferencingId(databaseType : String, r : Reference)]
 [nameColumnReferencingId(r)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[/template] 
+
+[comment : Pour la table referencee l'entitee n'est pas la bonne mais elle sert juste pour la tracabilite. /]
+[template private genTableReferencingWithSchema(e : Entity, databaseType : String, r : Reference)]
+[e.get_schema()/][e.get_prefix()/][physicalNameReferencing(r)/]
 [/template]
 
 [template public genPK(databaseType : String, e : Entity)]
@@ -73,6 +78,7 @@
 /****************************************************************/
 create table [nameTableWithSchema(e).toUpper()/]
 (
+    # PK de la table [nameTableWithSchema(e).toUpper()/]
     [genPK(databaseType, e)/],
 [for (a : Attribute | e.attributesNoPk())]
 [if (not a.isComputed())]
@@ -99,6 +105,7 @@ create table [nameTableWithSchema(e).toUpper()/]
 [if r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
     [genColumnReferenceId(databaseType, r)/],
 [elseif r.oppositeOf.oclIsUndefined() ][comment]referencing[/comment]
+    # FK vers la table [e.genTableReferencingWithSchema(databaseType, r)/]
     [genColumnReferencingId(databaseType, r)/],
 [/if]
 [/for]
@@ -178,7 +185,20 @@ create table [nameTableJointureWithSchema(r).toUpper()/]
 
 [template private gen_automaticColumn(void : OclAny, databaseType : String, columnProp : String) post(trim())]
 [if (columnProp.hasToWriteColumn())]
+# [columnProp.gen_automaticColumComment_1()/]
 [get_nameColumn(columnProp)/] [gen_typeColumn(databaseType, columnProp)/][if columnHasDefault(columnProp)] default [get_defaultColumn(columnProp)/][/if][if columnNotNull(columnProp)] not null[/if],[/if]
+[/template]
+
+[template private gen_automaticColumComment_1(columnProp : String)] [comment : 1/3 /]
+[if get_nameColumn(columnProp).equalsIgnoreCase(getXtopSupName())]Indicateur pour savoir si l'enregistrement est valide[else][columnProp.gen_automaticColumComment_2()/][/if]
+[/template]
+
+[template private gen_automaticColumComment_2(columnProp : String)] [comment : 2/3 /]
+[if get_nameColumn(columnProp).equalsIgnoreCase(getXdMajName())]Date de mise à jour de la ligne[else][columnProp.gen_automaticColumComment_3()/][/if]
+[/template]
+
+[template private gen_automaticColumComment_3(columnProp : String)] [comment : 3/3 /]
+[columnProp.get_description()/]
 [/template]
 
 [template private gen_typeColumn(void : OclAny, databaseType : String, columnProp : String)]

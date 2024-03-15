@@ -586,6 +586,11 @@
 	columnProp + '.default' 
 /]
 
+[comment : Recuperation de la clé pour la decription de la propriete additionnelle (champ auto). /]
+[query public descriptionColumnProperty(columnProp : String) : String = 
+	columnProp + '.comment' 
+/]
+
 [comment : Recuperation de la clé pour la nullite de la propriete additionnelle (champ auto). /]
 [query public notnullColumnProperty(columnProp : String) : String = 
 	columnProp + '.notnull' 

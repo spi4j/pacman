@@ -28,27 +28,27 @@ XXX columnEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX
 
 [template private enumStructAttribute (a : Attribute)]
    /** [apply_attributeEnum(a.nameSimpleProperty())/]. */
-   [apply_attributeEnum(a.nameSimpleProperty())/]("[apply_attributeEnum(a.nameSimpleProperty())/]", "[nameColumn(a)/]", [a.type.genTypeName()/].class, [mandatory(a)/], [if hasSize(a.metadatas)][size(a.metadatas)/][else]-1[/if], false)
+   [apply_attributeEnum(a.nameSimpleProperty())/]("[apply_attributeEnum(a.nameSimpleProperty())/]", "[nameColumn(a)/]", [a.type.genTypeName()/].class, [mandatory(a)/], [if hasValideSize(a)][size(a.metadatas)/][else]-1[/if], false)
 [/template]
 
 [template private enumStructReferenceId (r : Reference, compteur : Integer)]
    /** [apply_attributeEnum(r.nameSimpleProperty())/]. */
-   [apply_attributeEnum(r.nameSimpleProperty())/]("[apply_attributeEnum(r.nameSimpleProperty())/]", "[nameColumnId(r,compteur)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
+   [apply_attributeEnum(r.nameSimpleProperty())/]("[apply_attributeEnum(r.nameSimpleProperty())/]", "[nameColumnId(r,compteur)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasValideSize(r)][size(r.metadatas)/][else]-1[/if], false)
 [/template]
 
 [template private enumStructReferenceId (r : Reference)]
    /** [apply_attributeEnum(r.nameSimpleProperty())/]. */
-   [apply_attributeEnum(r.nameSimpleProperty())/]("[apply_attributeEnum(r.nameSimpleProperty())/]", "[nameColumnId(r)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
+   [apply_attributeEnum(r.nameSimpleProperty())/]("[apply_attributeEnum(r.nameSimpleProperty())/]", "[nameColumnId(r)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasValideSize(r)][size(r.metadatas)/][else]-1[/if], false)
 [/template]
 
 [template private enumStructReferencingId (r : Reference, compteur : Integer)]
    /** [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]. */
-   [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]("[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]", "[nameColumnReferencingId(r,compteur)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
+   [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]("[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]", "[nameColumnReferencingId(r,compteur)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasValideSize(r)][size(r.metadatas)/][else]-1[/if], false)
 [/template]
 
 [template private enumStructReferencingId (r : Reference)]
    /** [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]. */
-   [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]("[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]", "[nameColumnReferencingId(r)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasSize(r.metadatas)][size(r.metadatas)/][else]-1[/if], false)
+   [apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]("[apply_attributeEnum(r.nameBaseReferenceInverse())/][namePK_ID()/]", "[nameColumnReferencingId(r)/]", [r.genPkType()/].class, [mandatory(r)/], [if hasValideSize(r)][size(r.metadatas)/][else]-1[/if], false)
 [/template]
 
 
@@ -208,3 +208,7 @@ public enum [buildEntityColumnEnumName(e)/] implements [getClassNameForColumnsNa
 
 [query public roleEnum(e : Entity) : String = 'L\'énumeration définissant les informations de chaque colonne pour le type ' + nameSimpleEntity(e) /]
 
+[comment : Check also if the size is an integer (if not cannot treat the size). /]
+[query private hasValideSize(p : Property) : Boolean = 
+ p.metadatas.hasSize() and  p.metadatas.size().indexOf(',') = 0 and  p.metadatas.size().indexOf('.') = 0
+/]
