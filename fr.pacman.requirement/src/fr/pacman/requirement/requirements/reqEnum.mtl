@@ -14,7 +14,7 @@
 [import fr::pacman::commons::convention::rule::parameterRule /]
 [import fr::pacman::commons::convention::rule::commonRule /]
 [import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::requirement::commons /]
+[import fr::pacman::requirement::common::commons /]
 [import fr::pacman::commons::common::properties /]
 [import fr::pacman::commons::common::names /]
 
@@ -53,7 +53,7 @@ public enum [nomEnum/] implements Requirement_Itf
 [for (req : Requirement | findRequirements(categories, profondeurMax))]
    /**
     * [req.name /] :[encodeJavadoc('', req.statement)/][encodeJavadoc('Provenance : ', req.rationale)/][encodeJavadoc('Critère d\'acceptance : ', req.acceptanceCriteria)/]<br>
-    * Voir [nomVersionTest/]#testVersion_[getServiceRequirementsPrefix()/][req.id /]()
+    * Voir [nomVersionTest/]#testVersion_[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /]()
     */
 [for (o : EObject | req.referencedObject)]
 [if o.oclIsKindOf(Operation)]
@@ -63,7 +63,7 @@ public enum [nomEnum/] implements Requirement_Itf
    [comment]L'énumération doit avoir peu de paramètres car sinon il y a une erreur de compilation à partir d'un certain nombre de requirements[/comment]
    [comment](The code for the static initializer is exceeding the 65535 bytes limit),[/comment]
    [comment]donc l'id sera déterminé dynamiquement et les attributs statement, rationale et acceptanceCriteria sont seulement dans la javadoc[/comment]
-   [getServiceRequirementsPrefix()/][req.id /]("[req.name.escape() /]", "[req.version/]")[if req <> categories.eAllContents(Requirement)->last()],[else];[/if]
+   [getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /]("[req.name.escape() /]", "[req.version/]")[if req <> categories.eAllContents(Requirement)->last()],[else];[/if]
 
 [/for]
    /** Id. */

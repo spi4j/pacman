@@ -7,12 +7,13 @@
 [import fr::pacman::commons::common::licence /]
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::utils /]
 
 [import fr::pacman::commons::convention::rule::classRule /]
 [import fr::pacman::commons::convention::rule::attributeRule /]
 [import fr::pacman::commons::convention::rule::parameterRule /]
 [import fr::pacman::commons::convention::rule::methodRule /]
-[import fr::pacman::requirement::commons /]
+[import fr::pacman::requirement::common::commons /]
 
 [import fr::pacman::commons::common::properties /]
 [import fr::pacman::commons::common::names /]
@@ -46,16 +47,16 @@ public class [nomVersionTest/]
 {
 [for (req : Requirement | findRequirements(categories, profondeurMax))]
    /**
-    * Vérifier que la version de l'exigence [getServiceRequirementsPrefix()/][req.id /] est la même entre la modèlisation et l'implémentation courante.
-    * @see [nomReqEnum/]#[getServiceRequirementsPrefix()/][req.id /]
+    * Vérifier que la version de l'exigence [getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /] est la même entre la modèlisation et l'implémentation courante.
+    * @see [nomReqEnum/]#[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /]
     */
    @Test
-   public void testVersion_[getServiceRequirementsPrefix()/][req.id /] ()
+   public void testVersion_[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /] ()
    {
       // Version de la modélisation : "[req.version/]"
-      // [protected (e.getUserCodeId('testVersion_' + getServiceRequirementsPrefix() + req.id))]
+      // [protected (e.getUserCodeId('testVersion_' + getServiceRequirementsPrefix() + req.id.sanitizeReqID()))]
       // TODO Affecter le No de la version d'implémentation lorsque celle-ci sera conforme avec celle de la modélisation
-      [nomReqEnum/].[getServiceRequirementsPrefix()/][req.id /].set_versionImplem([getTestRequirementVersionningInitial(req)/]);
+      [nomReqEnum/].[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /].set_versionImplem([getTestRequirementVersionningInitial(req)/]);
       // [/protected]
    }
 

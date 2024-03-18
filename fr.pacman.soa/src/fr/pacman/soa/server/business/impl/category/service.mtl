@@ -227,7 +227,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
       // Appel des exigences en provenance de la modélisation
       [if useServiceRequirements()]
       [for (req : Requirement | requirements)]
-      // [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id /] ();
+      // [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /] ();
       [/for]
       [/if]
 
@@ -236,7 +236,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
       // Appel des exigences
       [if useServiceRequirements()]
       [for (req : Requirement | requirements)]
-      [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id /] ();
+      [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /] ();
       [/for]
       [/if]
       // TODO Méthode à implémenter

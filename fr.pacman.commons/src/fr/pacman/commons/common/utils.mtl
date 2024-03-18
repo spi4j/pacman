@@ -5,6 +5,9 @@
 
 [import fr::pacman::commons::common::properties /]
 
+[query public sanitizeReqID (s : String) : String = 
+ 	s.replaceAll('-', '_')
+/]
 
 [query public sanitize(msg : String) : String =
     invoke('fr.pacman.commons.services.StringUtils', 'sanitize(java.lang.String)', Sequence{msg.normalize()})

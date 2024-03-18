@@ -6,6 +6,7 @@
 [import fr::pacman::commons::common::licence /]
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::utils /]
 
 [import fr::pacman::soa::common::imports /]
 [import fr::pacman::soa::common::packages /]
@@ -66,17 +67,17 @@ public class [buildServiceRequirementsClassName(s, d)/]
 
 [if not s.oclIsUndefined()]
 [for (req : Requirement | getAllRequirementsForService(s))]
-   // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id + '_javadoc'))]
+   // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id.sanitizeReqID() + '_javadoc'))]
    /**
-    * Test de l'exigence [getServiceRequirementsPrefix()/][req.id /]. <br>
+    * Test de l'exigence [getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /]. <br>
     * [req.statement.replaceAll('\r\n', ' <br>\r\n    * ') /]
     */
    // [/protected]
    [annotationRequirement(req)/]
    // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id))]
-   public void [apply_methodDefault('exigence')/][getServiceRequirementsPrefix()/][req.id /] ()
+   public void [apply_methodDefault('exigence')/][getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /] ()
    {
-      throw new RequirementException([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id /], "Exigence non implémentée");
+      throw new RequirementException([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /], "Exigence non implémentée");
    }
 
    // [/protected]
@@ -97,6 +98,6 @@ invoke('fr.pacman.soa.services.RequirementUtils', 'getAllRequirementsForService(
 
 [template private annotationRequirement(req : Requirement)]
 [if requirementBaseCategoryLevel() = 0]
-@[apply_classAnnotation('requirement')/]([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id /])[else]
-@[apply_classAnnotation('requirement ' + getBaseCategoryForRequirement(req).id)/]([apply_classEnum('requirement ' + getBaseCategoryForRequirement(req).id)/].[getServiceRequirementsPrefix()/][req.id /])[/if]
+@[apply_classAnnotation('requirement')/]([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /])[else]
+@[apply_classAnnotation('requirement ' + getBaseCategoryForRequirement(req).id)/]([apply_classEnum('requirement ' + getBaseCategoryForRequirement(req).id)/].[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /])[/if]
 [/template]

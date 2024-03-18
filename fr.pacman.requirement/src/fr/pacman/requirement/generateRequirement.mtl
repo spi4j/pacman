@@ -2,7 +2,7 @@
 [module generateRequirement('http://www.obeonetwork.org/dsl/requirement/1.0')/]
 
 [import fr::pacman::commons::common::classes /]
-[import fr::pacman::requirement::commons /]
+[import fr::pacman::requirement::common::commons /]
 [import fr::pacman::requirement::files::genRequirementEnum /]
 [import fr::pacman::requirement::files::genRequirementVersionTest /]
 [import fr::pacman::requirement::files::genAnnotationRequirement /]
