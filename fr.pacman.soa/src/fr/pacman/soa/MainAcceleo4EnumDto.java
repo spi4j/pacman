@@ -12,8 +12,9 @@ import java.util.Map;
 import org.eclipse.acceleo.Module;
 import org.eclipse.acceleo.aql.AcceleoUtil;
 import org.eclipse.acceleo.aql.evaluation.AcceleoEvaluator;
-import org.eclipse.acceleo.aql.evaluation.writer.DefaultGenerationStrategy;
-import org.eclipse.acceleo.aql.evaluation.writer.IAcceleoGenerationStrategy;
+import org.eclipse.acceleo.aql.evaluation.strategy.DefaultGenerationStrategy;
+import org.eclipse.acceleo.aql.evaluation.strategy.DefaultWriterFactory;
+import org.eclipse.acceleo.aql.evaluation.strategy.IAcceleoGenerationStrategy;
 import org.eclipse.acceleo.aql.parser.AcceleoParser;
 import org.eclipse.acceleo.aql.parser.ModuleLoader;
 import org.eclipse.acceleo.query.AQLUtils;
@@ -125,7 +126,7 @@ public class MainAcceleo4EnumDto {
 		final Module module = (Module) resolver.resolve(moduleQualifiedName);
 		final URI destination = URI.createFileURI(outputFolder);
 		final IAcceleoGenerationStrategy strategy = new DefaultGenerationStrategy(
-				resourceSetForModels.getURIConverter());
+				resourceSetForModels.getURIConverter(), new DefaultWriterFactory());
 		final URI logURI = AcceleoUtil.getlogURI(destination, "acceleo.log");
 		try {
 			AcceleoUtil.generate(evaluator, queryEnvironment, module, model, strategy,
