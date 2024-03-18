@@ -78,7 +78,7 @@
 /****************************************************************/
 create table [nameTableWithSchema(e).toUpper()/]
 (
-    # PK de la table [nameTableWithSchema(e).toUpper()/]
+    /* PK de la table [nameTableWithSchema(e).toUpper()/] */
     [genPK(databaseType, e)/],
 [for (a : Attribute | e.attributesNoPk())]
 [if (not a.isComputed())]
@@ -105,7 +105,7 @@ create table [nameTableWithSchema(e).toUpper()/]
 [if r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
     [genColumnReferenceId(databaseType, r)/],
 [elseif r.oppositeOf.oclIsUndefined() ][comment]referencing[/comment]
-    # FK vers la table [e.genTableReferencingWithSchema(databaseType, r)/]
+    /* FK vers la table [e.genTableReferencingWithSchema(databaseType, r)/] */
     [genColumnReferencingId(databaseType, r)/],
 [/if]
 [/for]
@@ -185,7 +185,7 @@ create table [nameTableJointureWithSchema(r).toUpper()/]
 
 [template private gen_automaticColumn(void : OclAny, databaseType : String, columnProp : String) post(trim())]
 [if (columnProp.hasToWriteColumn())]
-# [columnProp.gen_automaticColumComment_1()/]
+/* [columnProp.gen_automaticColumComment_1()/] */
 [get_nameColumn(columnProp)/] [gen_typeColumn(databaseType, columnProp)/][if columnHasDefault(columnProp)] default [get_defaultColumn(columnProp)/][/if][if columnNotNull(columnProp)] not null[/if],[/if]
 [/template]
 
