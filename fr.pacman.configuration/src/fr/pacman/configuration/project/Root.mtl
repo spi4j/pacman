@@ -475,7 +475,6 @@
 		<!-- Librairie additionnelle utilisateur. -->
 		<user-library-[getLibraryName(prop)/].version>[getLibraryVersion(prop)/]</user-library-[getLibraryName(prop)/].version>
 		[/for][/if]
-
 		[if useTestBDD()]
         <jbehave-site-resources.version>3.5</jbehave-site-resources.version>
         <jbehave-core.version>5.1</jbehave-core.version>
@@ -499,9 +498,11 @@
         <gwt-user.version>2.7.0</gwt-user.version>
         <gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>
 		[elseif 'jsp'.equalsIgnoreCase(getClient())]
-		<jstl-api.version>3.0.0</jstl-api.version>
+        <jstl-api.version>3.0.0</jstl-api.version>
 		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
-		<jstl.version>11.0.0</jstl.version>[else]<jstl.version>3.0.1</jstl.version>[/if]
+        <jstl.version>11.0.0</jstl.version>[else]
+        <jstl.version>3.0.1</jstl.version>
+		[/if]
 		[elseif 'jsf'.equalsIgnoreCase(getClient())]
 		<jakarta-faces.version>3.0.0</jakarta-faces.version>
         <primefaces.version>6.2</primefaces.version>
