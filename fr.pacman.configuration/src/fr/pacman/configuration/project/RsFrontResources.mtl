@@ -821,11 +821,8 @@ public class [buildRSFrontResourcesContextHolder()/] {
 [template public rsFrontTokensConfiguration (any : OclAny)]
 [licence()/]
 package [buildPackageRsFront()/];
-// [protected ('for imports')]
 
 import java.util.Properties;
-
-// [/protected]
 
 /**
 * Classe détenant les informations des jetons.

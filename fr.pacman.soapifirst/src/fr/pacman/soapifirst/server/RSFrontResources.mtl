@@ -147,7 +147,7 @@ debug.display.headers = true
 [comment : ******************************************/]
 [comment : Create the token(s) configuration object. /]
 [comment : ******************************************/]
-[template public rsFrontTokensConfiguration (c : Component)]
+[template public rsFrontTokensConfiguration (c : Component) post(trim())]
 [licence()/]
 package [buildPackageRsFront()/];
 // [protected ('for imports')]
