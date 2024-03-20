@@ -280,6 +280,11 @@
 </project>
 [/template]
 
+[template public commonSpotbugsSecurity(any : OclAny) post (trim())]
+<FindBugsFilter>
+</FindBugsFilter>
+[/template]
+
 [template public commonCheck_Spi4j(any : OclAny) post (trim())]
 <?xml version="1.0" encoding="UTF-8"?>
 

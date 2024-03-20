@@ -177,12 +177,12 @@
                     </rulesets>
                 </configuration>
             </plugin>
-            <!-- Rapport findbugs -->
+            <!-- Rapport spotbugs (anciennement findbugs) -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs-maven-plugin.version}</version>
-                <configuration>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+            	<configuration>
                     <onlyAnalyze>none</onlyAnalyze>
                 </configuration>
             </plugin>

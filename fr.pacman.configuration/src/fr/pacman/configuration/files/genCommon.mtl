@@ -17,6 +17,16 @@
 [file (filename(getCommonProjectName(), '', 'pom.xml'), false, 'UTF-8')]
 [commonPom() /]
 [/file]
+
+[comment : Creation du fichier de conf spotbugs-security-include.xml /]
+[file (filename(getCommonProjectName(), getCommonsConfDir(), 'spotbugs-security-include.xml'), false, 'UTF-8')]
+[commonSpotbugsSecurity() /]
+[/file]
+
+[comment : Creation du fichier de conf spotbugs-security-exclude.xml /]
+[file (filename(getCommonProjectName(), getCommonsConfDir(), 'spotbugs-security-exclude.xml'), false, 'UTF-8')]
+[commonSpotbugsSecurity() /]
+[/file]
 [/if]
 
 [comment : Creation du fichier de conf Spi4j Checks_Spi4j.xml /]
