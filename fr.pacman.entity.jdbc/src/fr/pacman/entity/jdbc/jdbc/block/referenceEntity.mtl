@@ -48,13 +48,13 @@ public class [buildReferenceImplClassName(r)/] [if hasAutomaticColumns()]extends
     */
    private static final long serialVersionUID = -1;
 
-   // Constantes [buildReferenceImplClassName(r)/]
+   [displayClearUserCodeId ('Constantes ' + buildReferenceImplClassName(r))/]
    // [protected (r.getUserCodeId('Constantes ' + buildReferenceImplClassName(r)))]
 
    // [/protected]
 
    // ATTRIBUTS
-  // Methodes [buildReferenceImplClassName(r)/]
+  [displayClearUserCodeId ('Methodes ' + buildReferenceImplClassName(r))/]
   // [protected (r.getUserCodeId('Methodes ' + buildReferenceImplClassName(r)))]
 
    // [/protected]
@@ -68,7 +68,7 @@ public class [buildReferenceImplClassName(r)/] [if hasAutomaticColumns()]extends
     private [genPkType()/] [apply_attributeDefault(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/];
 	
 
-   // Attributs [buildReferenceImplClassName(r)/]
+   [displayClearUserCodeId ('Attributs ' + buildReferenceImplClassName(r))/]
    // [protected (r.getUserCodeId('Attributs ' + buildReferenceImplClassName(r)))]
 
    // [/protected]
@@ -158,7 +158,7 @@ public class [buildReferenceImplClassName(r)/] [if hasAutomaticColumns()]extends
    }
 
 
-   // Methodes 2 [buildReferenceImplClassName(r)/]
+   [displayClearUserCodeId ('Methodes 2 ' + buildReferenceImplClassName(r))/]
    // [protected (r.getUserCodeId('Methodes 2 ' + buildReferenceImplClassName(r)))]
 
    // [/protected]

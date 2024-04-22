@@ -44,6 +44,7 @@
 [comment : Generation des fichiers XML pour la partie xxx-webapp /]
 [any.genWebapp(fromStarter) /]
 
-[comment : Generation pour xxx-client/]
+[comment : Generation pour xxx-client /]
 [any.genClient(fromStarter) /]
+
 [/template]

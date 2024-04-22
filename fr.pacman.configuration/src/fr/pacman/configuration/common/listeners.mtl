@@ -36,7 +36,7 @@ public class [buildInitializationListenerClassName()/] implements ServletContext
    {
       	Parameters.initServletContext([apply_parameterMethodClassicIn('event')/].getServletContext());
 
-      	// contextInitialized
+      	[displayClearUserCodeId ('contextInitialized')/]
       	// [protected (any.getUserCodeId('context initialized'))]
 		[if useEjb()]
         //TransactionInterceptor.initUserPersistence([buildParamPersistenceClassName()/].getUserPersistence());[/if]
@@ -50,13 +50,13 @@ public class [buildInitializationListenerClassName()/] implements ServletContext
    @Override
    public void contextDestroyed (final ServletContextEvent [apply_parameterMethodClassicIn('event')/])
    {
-      	// contextDestroyed
+      	[displayClearUserCodeId ('contextDestroyed')/]
       	// [protected (any.getUserCodeId('context destroyed'))]
 
       	// [/protected]
    }
 
-   // Methodes
+   [displayClearUserCodeId ('Methodes')/]
    // [protected (any.getUserCodeId('Methodes'))]
 
    // [/protected]

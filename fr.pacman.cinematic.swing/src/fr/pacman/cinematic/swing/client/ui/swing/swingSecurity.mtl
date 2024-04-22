@@ -38,7 +38,7 @@ public final class Initialization
 	public static void initialize ()
 	{
 
-		// Initialization
+		[displayClearUserCodeId ('Initialization')/]
 		// [protected (root.getUserCodeId('Initialization'))]
 
 		// [/protected]
@@ -76,7 +76,7 @@ public class ClientSecurityManager implements AuthorizationService_Itf
 		final Set<String> v_listPerm = new HashSet<>();
 		boolean v_isSuperAdmin = false;
 		
-		// Security
+		[displayClearUserCodeId ('Security')/]
 		// [protected (root.getUserCodeId('Security'))]
 
 		// [/protected]

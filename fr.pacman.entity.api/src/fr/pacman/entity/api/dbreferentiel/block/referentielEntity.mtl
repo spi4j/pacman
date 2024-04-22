@@ -57,7 +57,7 @@ public final class [buildReferentielEntityClassName(e)/]
     private static final [r.containingType.oclAsType(entity::Entity).buildDaoInterfaceName()/] [apply_attributeFinalStatic(r.containingType.oclAsType(entity::Entity).name + ' dao')/] = [buildParamPersistenceClassName()/].getUserPersistence().[apply_methodDefault('get '+ buildDaoName(r.containingType.oclAsType(entity::Entity)))/]();
     [/for]
 
-    // Constantes [buildReferentielEntityClassName(e)/]
+    [displayClearUserCodeId ('Constantes ' + buildReferentielEntityClassName(e))/]
     // [protected (e.getUserCodeId('Constantes ' + buildReferentielEntityClassName(e)))]
 
     // [/protected]
@@ -65,7 +65,7 @@ public final class [buildReferentielEntityClassName(e)/]
 
    // ATTRIBUTS
 
-   // Attributs [buildReferentielEntityClassName(e)/]
+   [displayClearUserCodeId ('Attributs ' + buildReferentielEntityClassName(e))/]
    // [protected (e.getUserCodeId('Attributs ' + buildReferentielEntityClassName(e)))]
 
    // [/protected]
@@ -156,7 +156,7 @@ public final class [buildReferentielEntityClassName(e)/]
         CSVReader [apply_variableDefault('csv reader')/] =  new CSVReader (new FileReader( [apply_variableDefault('nom fic csv complet')/]), ';', '"', 1);
         String ['['/]] [apply_variableDefault('csv line')/];
 
-   	    // PreTraitement [buildReferentielEntityClassName(e)/]
+   	    [displayClearUserCodeId ('PreTraitement ' + buildReferentielEntityClassName(e))/]
    	    // [protected (e.getUserCodeId('PreTraitement ' + buildReferentielEntityClassName(e)))]
 
         // [/protected]
@@ -318,7 +318,7 @@ public final class [buildReferentielEntityClassName(e)/]
     [/for]
     [/if]
 
-          // PreSave [buildReferentielEntityClassName(e)/]
+          [displayClearUserCodeId ('PreSave ' + buildReferentielEntityClassName(e))/]
           // [protected (e.getUserCodeId('PreSave ' + buildReferentielEntityClassName(e)))]
 
           // [/protected]
@@ -364,7 +364,7 @@ public final class [buildReferentielEntityClassName(e)/]
           /** Incrementation du nombre de lignes traitees */
           [apply_variableDefault('nb lignes traitees')/] ++;
 
-          // PostSave [buildReferentielEntityClassName(e)/]
+          [displayClearUserCodeId ('PostSave ' + buildReferentielEntityClassName(e))/]
           // [protected (e.getUserCodeId('PostSave ' + buildReferentielEntityClassName(e)))]
 
           // [/protected]
@@ -389,14 +389,14 @@ public final class [buildReferentielEntityClassName(e)/]
       [apply_attributeFinalStatic('LOG')/].info( "Import Referentiel [e.name/], nombre de ligne(s) sans traitement (delete d'un non existant): " + [apply_variableDefault('nb lignes sans traitement')/] );
       [apply_attributeFinalStatic('LOG')/].info( "/** FIN Import Referentiel Entity [e.name/] **/\n" );
 
-      // PostTraitement [buildReferentielEntityClassName(e)/]
+      [displayClearUserCodeId ('PostTraitement ' + buildReferentielEntityClassName(e))/]
       // [protected (e.getUserCodeId('PostTraitement ' + buildReferentielEntityClassName(e)))]
 
       // [/protected]
 
    }
 
-   // Methodes [buildReferentielEntityClassName(e)/]
+   [displayClearUserCodeId ('Methodes ' + buildReferentielEntityClassName(e))/]
    // [protected (e.getUserCodeId('Methodes ' + buildReferentielEntityClassName(e)))]
 
    // [/protected]

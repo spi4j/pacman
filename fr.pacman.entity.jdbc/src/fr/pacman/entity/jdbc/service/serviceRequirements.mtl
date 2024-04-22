@@ -21,7 +21,6 @@
 [licence()/]
 [let self : OclAny = if not e.oclIsUndefined() then e else 'PACKAGE NOT FOUND FOR AND Entity NULL' endif]
 package [buildPackageBusinessImplementationServiceEntity(e)/];
-
 // [protected ('for imports')]
 
 // [/protected]
@@ -33,7 +32,7 @@ package [buildPackageBusinessImplementationServiceEntity(e)/];
 public class [buildServiceRequirementsClassName(e)/]
 {
 
-   // [buildServiceRequirementsClassName(e)/]
+   [displayClearUserCodeId (buildServiceRequirementsClassName(e))/]
    // [protected (e.getUserCodeId(buildServiceRequirementsClassName(e)))]
 
    // [/protected]

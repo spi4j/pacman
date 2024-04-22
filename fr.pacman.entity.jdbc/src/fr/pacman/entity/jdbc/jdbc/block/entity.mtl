@@ -50,7 +50,7 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
     */
    private static final long serialVersionUID = -1;
 
-   // Constantes [buildEntityImplClassName(e)/]
+   [displayClearUserCodeId ('Constantes ' + buildEntityImplClassName(e))/]
    // [protected (e.getUserCodeId('Constantes ' + buildEntityImplClassName(e)))]
 
    // [/protected]
@@ -91,7 +91,7 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
 
 [/if]
 [/for]
-   // Attributs [buildEntityImplClassName(e)/]
+   [displayClearUserCodeId ('Attributs ' + buildEntityImplClassName(e))/]
    // [protected (e.getUserCodeId('Attributs ' + buildEntityImplClassName(e)))]
 
    // [/protected]
@@ -237,7 +237,7 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
    }
 [/if]
 
-   // Methodes [buildEntityImplClassName(e)/]
+   [displayClearUserCodeId ('Methodes ' + buildEntityImplClassName(e))/]
    // [protected (e.getUserCodeId('Methodes ' + buildEntityImplClassName(e)))]
 
    // [/protected]

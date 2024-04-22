@@ -35,7 +35,7 @@ package [namePackageContainerBean(viewContainer)/];
  * Bean [nameBeanFirstLower(viewContainer)/]
  * @author [getAuthorName()/]
  */
-// Annotation
+[displayClearUserCodeId ('Annotation')/]
 // [protected (viewContainer.getUserCodeId('Annotation'))]
 @SuppressWarnings("serial")
 @ManagedBean(name="[nameBeanFirstLower(viewContainer)/]")
@@ -76,7 +76,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
 		[/if]			
 	[/for]
 	
-   // Attributs
+   [displayClearUserCodeId ('Attributs')/]
    // [protected (viewContainer.getUserCodeId('Attributs'))]   
     
    // [/protected]
@@ -87,7 +87,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
 	 */
 	@PostConstruct
 	public void init() {
-		// init
+		[displayClearUserCodeId ('init')/]
 		// [protected (viewContainer.getUserCodeId('init'))]       
    		// [/protected]
 	}
@@ -138,7 +138,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
     */      
 						
     public void valueChangeChBox[element.name.toUpperFirst()/](ValueChangeEvent e){
-		// Value Change Event'+'[element.name/]
+		[displayClearUserCodeId ('Value Change Event' + '\'' + element.name + '\'')/]
 		// [protected (element.getUserCodeId('Value Change Event'+'[element.name/]'))]
 		
       	// [/protected]
@@ -159,7 +159,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
     */      
 							[if ('onChange'.equalsIgnoreCase(eventElement.type.name))] 
     public void [flowEvent.nameActionBean()/](ValueChangeEvent e){
-		// Value Change Event
+		[displayClearUserCodeId ('Value Change Event')/]
 		// [protected (viewContainer.getUserCodeId('Value Change Event With Param'))]
 		
       	// [/protected]
@@ -169,7 +169,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
     {		
 		 // URL de redirection;		
 		String urlRedirect = "";
-      // [eventElement.nameActionBean()/]
+      [displayClearUserCodeId (eventElement.nameActionBean())/]
       // [protected (eventElement.getUserCodeId(eventElement.nameActionBean() + 'flow'))]
 		
       // [/protected]	   
@@ -181,7 +181,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
 			[else]
 				[if ('onChange'.equalsIgnoreCase(eventElement.type.name))] 
     public void [eventElement.nameActionBean()/](ValueChangeEvent e){
-		// Value Change Event
+		[displayClearUserCodeId ('Value Change Event')/]
 		// [protected (viewContainer.getUserCodeId('Value Change Event'))]
 		
       	// [/protected]
@@ -191,7 +191,7 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
     {
 	    // URL de redirection;		
 		String urlRedirect = "";
-      // [eventElement.nameActionBean()/]
+      [displayClearUserCodeId (eventElement.nameActionBean())/]
       // [protected (eventElement.getUserCodeId(eventElement.nameActionBean()))]
 		
       // [/protected]	   
@@ -265,8 +265,8 @@ public class [nameBean(viewContainer)/] extends [buildJsfBeanAbstractName()/] im
     * Méthodes utilisateurs
 	*	
     */ 
-   // Méthode
-   // [protected (viewContainer.getUserCodeId('Méthode'))]   
+   [displayClearUserCodeId ('Methode')/]
+   // [protected (viewContainer.getUserCodeId('Methode'))]   
     
    // [/protected]
 }	

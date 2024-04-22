@@ -26,7 +26,7 @@ package [namePackageViewContainerInterface(viewContainer)/];
  * Interface de vue.
  * @author [getAuthorName()/]
  */
-// annotation class
+[displayClearUserCodeId ('annotation class')/]
 // [protected (viewContainer.getUserCodeId('annotation class'))]
 @UserView("[viewContainer.name/]")
 // [/protected]
@@ -35,7 +35,7 @@ public interface [nameViewInterface(viewContainer)/] extends View_Itf
 
 [for (element : ViewElement | viewContainer.viewElements)]
    [if not (clientPropertiesPrefix = 'client.swing' and element.widget.name = 'Button')]
-   // [element.name + '_' + getInterfaceName(element.widget)/]
+   [displayClearUserCodeId (element.name + '_' + getInterfaceName(element.widget))/]
    // [protected (element.getUserCodeId(element.name + '_' + getInterfaceName(element.widget)))]
 
    /**
@@ -55,7 +55,7 @@ public interface [nameViewInterface(viewContainer)/] extends View_Itf
 
    [/if]
 [/for]
-   // [nameViewInterface(viewContainer)/]
+   [displayClearUserCodeId (nameViewInterface(viewContainer))/]
    // [protected (viewContainer.getUserCodeId(nameViewInterface(viewContainer)))]
 
    // [/protected]

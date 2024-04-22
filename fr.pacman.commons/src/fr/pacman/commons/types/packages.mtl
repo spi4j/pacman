@@ -16,9 +16,15 @@
     getApplicationPackage() + '.types'
 /]
 
-[query public buildPackageEnum(e : Enumeration) : String =
-    buildPackageTypePrimitif() + '.enums'
+[query public buildPackageEnum(e : Enumeration) : String = 
+	if not getCommonEnumsPackage().oclIsUndefined() 
+	   and getCommonEnumsPackage().size() > 0 then 
+		getApplicationPackage() + '.' + getCommonEnumsPackage()
+	else 
+		getApplicationPackage() + e.blockHierarchy()
+	endif
 /]
+
 [**
  * Paramétrage Fin
 */]

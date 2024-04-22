@@ -42,7 +42,7 @@ package [buildPackagePersistenceApiEntity(e)/];
  * Classe de test du dao '[buildDaoInterfaceName(e)/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (e.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs()/]
@@ -81,7 +81,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
       [apply_attributeStatic('dao')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get ' + buildDaoName(e))/]();
 
-      // set up before class
+      [displayClearUserCodeId ('set up before class')/]
       // [protected (e.getUserCodeId('set up before class'))]
       // [/protected]
    }
@@ -94,7 +94,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
    {
       [apply_attributeStatic('user persistence')/].begin();
 
-      // set up
+      [displayClearUserCodeId ('set up')/]
       // [protected (e.getUserCodeId('set up'))]
       // [/protected]
    }
@@ -128,7 +128,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 			"L'entity n'a pas ete trouvee dans la liste de toutes les entitys");
 
 [/if]
-      // findAll assertions
+      [displayClearUserCodeId ('findAll assertions')/]
       // [protected (e.getUserCodeId('findAll assertions'))]
 
       // [/protected]
@@ -145,7 +145,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
    {
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
 
-      // create
+      [displayClearUserCodeId ('create')/]
       // [protected (e.getUserCodeId('create'))]
       // TODO renseigner donnees de test
       [for (a : Attribute | e.attributesNoPk())]
@@ -158,7 +158,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 	  [finalizeTestCreateMethod(e, 'entity')/]
 	  assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // create assertions
+      [displayClearUserCodeId ('create assertions')/]
       // [protected (e.getUserCodeId('create assertions'))]
 
       // [/protected]
@@ -176,7 +176,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
    {
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
 
-      // create null on mandatory
+      [displayClearUserCodeId ('create null on mandatory')/]
       // [protected (e.getUserCodeId('create null on mandatory'))]
       // TODO renseigner donnees de test
       [for (a : Attribute | e.attributesNoPk())]
@@ -207,7 +207,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
    {
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
 
-      // create with null values
+      [displayClearUserCodeId ('create with null values')/]
       // [protected (e.getUserCodeId('create with null values'))]
       // TODO renseigner donnees de test
       [for (a : Attribute | e.attributesNoPk())]
@@ -220,7 +220,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 	  [finalizeTestCreateMethod(e, 'entity')/]
 	  assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // create assertions with null values
+      [displayClearUserCodeId ('create assertions with null values')/]
       // [protected (e.getUserCodeId('create assertions with null values'))]
 
       // [/protected]
@@ -252,7 +252,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
       assertNotNull([apply_variableDefault('entity')/].toString(), "L'entity creee devrait avoir un toString");
 
-      // findById assertions
+      [displayClearUserCodeId ('findById assertions')/]
       // [protected (e.getUserCodeId('findById assertions'))]
 
       // [/protected]
@@ -270,7 +270,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity insert')/] = [apply_attributeStatic('user persistence')/].[apply_methodDefault('get '+ buildEntityName(e))/]();
 
-      // findAllFieldInserted create
+      [displayClearUserCodeId ('findAllFieldInserted create')/]
       // [protected (e.getUserCodeId('findAllFieldInserted create'))]
       // TODO renseigner donnees de test
   [for (a : Attribute | e.attributesNoPk())]
@@ -300,7 +300,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       [apply_methodDefault('set crud id')/]([apply_variableDefault('entity insert')/].getId());
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity read')/] = [apply_attributeStatic('dao')/].findById(crudId);
 
-      // findAllFieldInserted assertions
+      [displayClearUserCodeId ('findAllFieldInserted assertions')/]
       // [protected (e.getUserCodeId('findAllFieldInserted assertions'))]
       HashCodeBuilder [apply_variableDefault('hash code builder entity insert')/] = new HashCodeBuilder();
 
@@ -428,7 +428,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_variableDefault('entitys')/].get(0);
       assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // findByColumn assertions
+      [displayClearUserCodeId ('findByColumn assertions')/]
       // [protected (e.getUserCodeId('findByColumn assertions'))]
 
       // [/protected]
@@ -463,7 +463,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_variableDefault('entitys')/].get(0);
       assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // findByCriteria assertions
+      [displayClearUserCodeId ('findByCriteria assertions')/]
       // [protected (e.getUserCodeId('findByCriteria assertions'))]
 
       // [/protected]
@@ -482,7 +482,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_attributeStatic('dao')/].findById(crudId);
 
-      // update
+      [displayClearUserCodeId ('update')/]
       // [protected (e.getUserCodeId('update'))]
 
       // [/protected]
@@ -491,7 +491,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 
       assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity mise a jour devrait avoir une cle primaire renseignee");
 
-      // update assertions
+      [displayClearUserCodeId ('update assertions')/]
       // [protected (e.getUserCodeId('update assertions'))]
 
       // [/protected]
@@ -514,7 +514,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       assertNull(EntityUtil.findInCollectionById([apply_variableFinal('all')/], crudId), 
 			"L'entity ne devrait plus exister dans la liste de toutes les entitys");
 
-      // delete assertions
+      [displayClearUserCodeId ('delete assertions')/]
       // [protected (e.getUserCodeId('delete assertions'))]
 
       // [/protected]
@@ -614,7 +614,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 [/if]
 [/for]
 
-      // test validate
+      [displayClearUserCodeId ('test validate')/]
       // [protected (e.getUserCodeId('test validate'))]
 
       // [/protected]
@@ -655,7 +655,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
    {
       [apply_attributeStatic('user persistence')/].rollback();
 
-      // tear down
+      [displayClearUserCodeId ('tear down')/]
       // [protected (e.getUserCodeId('tear down'))]
       // [/protected]
    }
@@ -667,7 +667,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
     */
    private [a.type.name.toUpperFirst()/] getRandom[genPropertyTypeNoGenerics(a)/] ()
    {
-      // getRandom_[a.type.name.toUpperFirst()/]
+      [displayClearUserCodeId ('getRandom_' + a.type.name.toUpperFirst())/]
       // [protected (a.getUserCodeId('getRandom_'+a.type.name.toUpperFirst()))]
 
       return [if ((a.type.name <> null) and (a.type.name.contains('<')))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
@@ -678,7 +678,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
     [/if]
 [/for]
 
-   // specific service test
+   [displayClearUserCodeId ('specific service test')/]
    // [protected (e.getUserCodeId('specific service test'))]
 
    // [/protected]

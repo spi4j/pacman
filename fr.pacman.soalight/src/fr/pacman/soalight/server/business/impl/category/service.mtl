@@ -63,7 +63,7 @@ import jakarta.ejb.Stateless;
  * Pour rappel, les services sont sans état.
  * @author [getAuthorName()/]
  */
-// Annotations Service
+[displayClearUserCodeId ('Annotations Service')/]
 // [protected (s.getUserCodeId('Annotations Service'))]
 [if useEjb()]
 @Stateless
@@ -73,7 +73,7 @@ public class [buildServiceClassName(s)/]  [if isFromEntityService(s) ]extends [g
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   [displayClearUserCodeId ('attributs')/]
    // [protected (s.getUserCodeId('attributs'))]
 
    // [/protected]
@@ -108,7 +108,7 @@ public class [buildServiceClassName(s)/]  [if isFromEntityService(s) ]extends [g
       [apply_attributeFinal('requirements')/].exigence[getServiceRequirementsPrefix()/][req.id /]();
       [/for]
 	  [/if]
-	  // [userCodeForOperation(o)/]
+	  [displayClearUserCodeId (userCodeForOperation(o))/]
 	  // [protected (o.getUserCodeId(userCodeForOperation(o)))]
 	  // TODO Méthode à implémenter
       throw new UnsupportedOperationException();
@@ -119,7 +119,7 @@ public class [buildServiceClassName(s)/]  [if isFromEntityService(s) ]extends [g
 [/let]
 [/for]
 [/if]
-   // Methodes [buildServiceClassName(s)/]
+   [displayClearUserCodeId ('Methodes ' + buildServiceClassName(s))/]
    // [protected (s.getUserCodeId('Methodes ' + buildServiceClassName(s)))]
 
    // [/protected]

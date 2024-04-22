@@ -31,7 +31,7 @@ package [namePackageFlowManager(flow)/];
 public class [nameFlow(flow)/] extends SpiFlowManager_Abs
 {
 
-   // Attributs [nameFlow(flow)/]
+   [displayClearUserCodeId ('Attributs' + nameFlow(flow))/]
    // [protected (flow.getUserCodeId('Attributs ' + nameFlow(flow)))]
 
    // [/protected]
@@ -59,7 +59,7 @@ public class [nameFlow(flow)/] extends SpiFlowManager_Abs
    @Override
    public void onStart ()
    {
-      // Pre onStart
+      [displayClearUserCodeId ('Pre onStart')/]
       // [protected (flow.getUserCodeId('Pre onStart'))]
 
 [if not flow.getInitialState().getAllFollowingStatesWithoutGardOrEvent(false)->filter(ViewState).viewContainers->isEmpty() and not flowHasMainPanel(flow) and hasRootPresenter(flow)]
@@ -69,14 +69,14 @@ public class [nameFlow(flow)/] extends SpiFlowManager_Abs
 
 [gestionTransition(flow.getInitialState(), 'onStart', flowHasMainPanel(flow))/]
 
-      // Post onStart
+      [displayClearUserCodeId ('Post onStart')/]
       // [protected (flow.getUserCodeId('Post onStart'))]
 
       // [/protected]
 
    }
 
-   // Méthodes [nameFlow(flow)/]
+   [displayClearUserCodeId ('Méthodes ' +  nameFlow(flow))/]
    // [protected (flow.getUserCodeId('Méthodes ' + nameFlow(flow)))]
 
    // [/protected]

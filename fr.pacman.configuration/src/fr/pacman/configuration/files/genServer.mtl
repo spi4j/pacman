@@ -11,10 +11,10 @@
 [import fr::pacman::configuration::project::CXFServlet /]
 [import fr::pacman::configuration::project::RSResources /]
 [import fr::pacman::configuration::project::RsFrontResources /]
+[import fr::pacman::configuration::project::Servlets]
+[import fr::pacman::configuration::project::Batch /]
 
 [import fr::pacman::configuration::common::names]
-[import fr::pacman::configuration::project::Servlets]
-
 
 [template public genServer(any : OclAny, fromStarter : Boolean)]
 
@@ -72,6 +72,13 @@
 [file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildAdministrationServletClassName() + '.java'), false, 'UTF-8')]
 [administrationServlet()/]
 [/file]
+
+[comment : Generate jberet.properties /]
+[if useBatch()]
+[file (filename(getServerProjectName(), getServerResourcesDir(), 'jberet.properties'), false, 'UTF-8')]
+[jberetConfigFile()/]
+[/file]
+[/if]
 
 [/if]
 

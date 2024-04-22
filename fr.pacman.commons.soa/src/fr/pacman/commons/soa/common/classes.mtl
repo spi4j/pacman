@@ -14,6 +14,10 @@
 	apply_classTest(buildSimpleDtoName(d) + ' xto')
  /]
 
+[query public buildBatchClassName(s : Service) : String = 
+	apply_classDefault(s.name.replaceAll('(?i)batch','') + ' batch') 
+/]
+
 [query public buildRSServicesFacadeFactoryClassName(any : OclAny) : String =
 	apply_classDefault(getApplicationName() + ' services facade factory')
  /]

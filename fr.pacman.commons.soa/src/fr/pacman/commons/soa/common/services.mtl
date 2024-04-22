@@ -10,6 +10,17 @@
 [import fr::pacman::commons::convention::rule::parameterRule /]
 [import fr::pacman::commons::convention::rule::methodRule /]
 
+[comment  : Get all services (private / public) but without specific batch services. /]
+[query public getServices (m : System) : Sequence(Service) = 
+	if not useBatch() then  m.eAllContents(Service) else  m.eAllContents(Service)
+	->select(s : Service | not s.eContainer().oclAsType(Component).name.equalsIgnoreCase('component2')) endif
+/]
+
+[comment  : Get all services specificaly dedicated to batch. /]
+[query public getBatchs (m : System) : Sequence(Service) = 
+	m.eAllContents(Service)->select(s : Service | s.eContainer().oclAsType(Component).name.equalsIgnoreCase('component2')) 
+/]
+
 [comment : Get the spi4j ID for the security scheme. /]
 [comment : This method exist because of the inversion in swagger between 'key' and 'name' notions. /]
 [comment : Furthermore, the key is only for ApiKey else (Oauth2, OIDC) take the name .... / ]
@@ -454,6 +465,7 @@
 @Override
 public int [apply_methodDefault(o.name + ' total count')/]()
 {
+	[displayClearUserCodeId (o.getUserCodeId(o.name))/]
 	// [protected (o.getUserCodeId(o.name))]
 
 	[comment : write method for RsFacade. /]
@@ -477,7 +489,7 @@ public int [apply_methodDefault(o.name + ' total count')/]()
 * Méthode spécifique pour la pagination de l'opération : [o.name /]
 * @return le nombre total d'éléments pour l'opération.
 */
-// Annotations Methode' + o.name + 'total count
+[displayClearUserCodeId ('Annotations Methode ' + o.name + 'total count')/]
 // [protected (o.getUserCodeId('Annotations Methode' + o.name + 'total count'))]
 
 // [/protected]

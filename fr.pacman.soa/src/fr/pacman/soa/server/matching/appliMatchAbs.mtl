@@ -58,7 +58,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
          extends [getClassNameForMatch_Abs()/]<TypeId, TypeDto, TypeEntity, Columns_Enum>
 {
 
-   // attributs
+   [displayClearUserCodeId ('attributs')/]
    // [protected (n.getUserCodeId('attributs'))]
 
    // [/protected]
@@ -66,7 +66,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public void create (final TypeDto [apply_parameterMethodClassicIn('dto')/]) throws Spi4jValidationException
    {
-      // create
+      [displayClearUserCodeId ('create')/]
       // [protected (n.getUserCodeId('create'))]
 
 	  final TypeEntity [apply_variableFinal('entity')/] = convertDtoToEntity([apply_parameterMethodClassicIn('dto')/]);
@@ -81,7 +81,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public TypeDto findById (final TypeId [apply_parameterMethodClassicIn('id')/])
    {
-      // findById
+      [displayClearUserCodeId ('findById')/]
       // [protected (n.getUserCodeId('findById'))]
 
       final TypeEntity [apply_variableFinal('entity found')/] = getDao().findById([apply_parameterMethodClassicIn('id')/]);
@@ -97,7 +97,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public List<TypeDto> findAll ()
    {
-      // findAll
+      [displayClearUserCodeId ('findAll')/]
       // [protected (n.getUserCodeId('findAll'))]
 
 	  final Map<String, String> [apply_variableFinal('xtopsup status')/] = new HashMap<>();
@@ -118,7 +118,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public List<TypeDto> findAll (final Columns_Enum [apply_parameterMethodClassicIn('order by column')/])
    {
-      // findAllOrberByColumn
+      [displayClearUserCodeId ('findAllOrberByColumn')/]
       // [protected (n.getUserCodeId('findAllOrberByColumn'))]
  	  
       final TableCriteria<[getClassNameForColumnsNames_Itf()/]> [apply_variableFinal('table criteria')/] = new TableCriteria<>("");
@@ -140,7 +140,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public void update (final TypeDto [apply_parameterMethodClassicIn('dto')/]) throws Spi4jValidationException
    {
-      // update
+      [displayClearUserCodeId ('update')/]
       // [protected (n.getUserCodeId('update'))]
 
 	  // Si la ligne n'est pas active, on rejete la demande. 
@@ -161,7 +161,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public void delete (final TypeDto [apply_parameterMethodClassicIn('dto')/]) throws Spi4jValidationException
    {
-      // delete
+      [displayClearUserCodeId ('delete')/]
       // [protected (n.getUserCodeId('delete'))]
 
       final TypeEntity [apply_variableFinal('entity')/] = convertDtoToEntity([apply_parameterMethodClassicIn('dto')/]);
@@ -185,7 +185,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public int deleteAll ()
    {
-      // deleteAll
+      [displayClearUserCodeId ('deleteAll')/]
       // [protected (n.getUserCodeId('deleteAll'))]
 
       // Attention ici on veut probablement faire un vrai deleteAll() et non pas mettre à 1 la colonne xtopsup
@@ -197,7 +197,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public int deleteByCriteria (final TableCriteria<Columns_Enum> [apply_parameterMethodClassicIn('criteria')/])
    {
-      // deleteByCriteria
+      [displayClearUserCodeId ('deleteByCriteria')/]
       // [protected (n.getUserCodeId('deleteByCriteria'))]
 
       @SuppressWarnings("unchecked")
@@ -225,7 +225,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public List<TypeDto> findByColumn (final Columns_Enum [apply_parameterMethodClassicIn('column')/], final Object [apply_parameterMethodClassicIn('value')/])
    {
-      // findByColumn
+      [displayClearUserCodeId ('findByColumn')/]
       // [protected (n.getUserCodeId('findByColumn'))]
 
       final TableCriteria<[getClassNameForColumnsNames_Itf()/]> [apply_variableFinal('table criteria')/] = new TableCriteria<>("");
@@ -248,7 +248,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    public List<TypeDto> findByCriteria (final String [apply_parameterMethodClassicIn('criteria')/],
             final Map<String, ? extends Object> [apply_parameterMethodMultipleMap('value name')/])
    {
-      // findByCriteriaSql
+      [displayClearUserCodeId ('findByCriteriaSql')/]
       // [protected (n.getUserCodeId('findByCriteriaSql'))]
 
       // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
@@ -275,7 +275,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    public List<TypeDto> findByCriteria (final String [apply_parameterMethodClassicIn('criteria')/],
             final Map<String, ? extends Object> [apply_parameterMethodMultipleMap('value name')/], final int [apply_parameterMethodClassicIn('nb lignes max')/], final int [apply_parameterMethodClassicIn('nb lignes start')/])
    {
-      // findByCriteriaSqlNbLignes
+      [displayClearUserCodeId ('findByCriteriaSqlNbLignes')/]
       // [protected (n.getUserCodeId('findByCriteriaSqlNbLignes'))]
 
       // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
@@ -302,7 +302,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
    @Override
    public List<TypeDto> findByCriteria (final TableCriteria<Columns_Enum> [apply_parameterMethodClassicIn('criteria')/])
    {
-      // findByCriteria
+      [displayClearUserCodeId ('findByCriteria')/]
       // [protected (n.getUserCodeId('findByCriteria'))]
 
       @SuppressWarnings("unchecked")
@@ -321,7 +321,7 @@ public abstract class [buildAppliMatchAbstractName()/]<TypeId, TypeDto extends [
       // [/protected]
    }
 
-   // autres methodes
+   [displayClearUserCodeId ('autres methodes')/]
    // [protected (n.getUserCodeId('autres methodes'))]
 
    /**

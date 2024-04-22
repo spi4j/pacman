@@ -165,7 +165,6 @@ public abstract class PacmanGenerator_Abs extends AbstractAcceleoGenerator
          // donc possible pour certains générateurs de demander expressement la 
          // desactivation du cache.
          AcceleoPreferences.switchQueryCache(getSwitchQueryCache());
-         
          super.doGenerate(p_monitor);
    }
 

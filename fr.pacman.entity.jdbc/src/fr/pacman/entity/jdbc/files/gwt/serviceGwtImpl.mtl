@@ -43,7 +43,7 @@ public class [buildServiceGwtImplementationName(e)/] extends SpiRemoteServiceImp
 
    protected [buildMapperInterfaceName(e)/] getMapper ()
    {
-      // Mapper
+      [displayClearUserCodeId ('Mapper')/]
       // [protected (e.getUserCodeId('Mapper'))]
 
       return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildMapperClassName(e))/]();
@@ -52,7 +52,7 @@ public class [buildServiceGwtImplementationName(e)/] extends SpiRemoteServiceImp
 
    protected [buildServiceInterfaceName(e)/] getService ()
    {
-      // Service
+      [displayClearUserCodeId ('Service')/]
       // [protected (e.getUserCodeId('Service'))]
       return [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceClassName(e))/]();
       // [/protected]
@@ -113,7 +113,7 @@ public class [buildServiceGwtImplementationName(e)/] extends SpiRemoteServiceImp
 		getService().delete(getMapper().convertXtoItfToEntity([apply_parameterMethodClassicIn('xto')/]));		
 	}
 
-   // [nameServiceInterfaceGwt(e)/]
+   [displayClearUserCodeId (nameServiceInterfaceGwt(e))/]
    // [protected (e.getUserCodeId(nameServiceInterfaceGwt(e)))]
 
    // [/protected]

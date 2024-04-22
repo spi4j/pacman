@@ -54,7 +54,7 @@ public class [buildAppliUserBusinessEntityGenClassName()/] extends [getClassName
       super();
    }
 
-	// Getter de services Crud
+	[displayClearUserCodeId ('Getter de services Crud')/]
 	// [protected (r.getUserCodeId('Getter de services Crud'))]
 
 [for (e : Entity | r.eAllContents(Entity))]
@@ -117,7 +117,7 @@ public class [buildAppliUserBusinessEntityGenClassName()/] extends [getClassName
       // on ne référence pas les classes d'implémentations "serveur" des services
       // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
 
-   // Bingding correspondant aux Services Crud
+   [displayClearUserCodeId ('Bingding correspondant aux Services Crud')/]
    // [protected (r.getUserCodeId('Bingding correspondant aux Services Crud'))]
 
 [for (e : Entity| r.eAllContents(Entity))]

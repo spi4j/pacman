@@ -5,6 +5,7 @@
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::names /]
 [import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::imports/]
 
 [import fr::pacman::configuration::common::names /]
 [import fr::pacman::configuration::common::properties /]
@@ -30,7 +31,8 @@
     <name>[getApplicationName()/] - Partie commune</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 		
 	<!--
@@ -145,7 +147,8 @@
 		[/if]
 
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 	
 		[if useConfigFileSpi4jFrwk()]
@@ -208,7 +211,8 @@
                 </configuration>
             </plugin>
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--
@@ -270,7 +274,8 @@
         <build.projectArtifactId>${project.parent.artifactId}</build.projectArtifactId>
         <build.projectVersion>${project.parent.version}</build.projectVersion>
 		<!--
-		// [protected ('for properties')]
+		[displayClearUserCodeId ('for properties')/]
+		// [protected (getUserCodeId('for properties'))]
 		-->
 		
 		<!--
@@ -577,7 +582,7 @@ public class [buildInfoClassName()/] extends BuildInfo_Abs
     */
    public String getBuildId ()
    {
-      return [apply_attributeFinal('infos')/].get("build.id");
+      return [getAffectationPrefix()/][apply_attributeFinal('infos')/].get("build.id");
    }
 
    /**
@@ -585,25 +590,25 @@ public class [buildInfoClassName()/] extends BuildInfo_Abs
     */
    public String getUniqueId ()
    {
-      return [apply_attributeFinal('infos')/].get("build.tag");
+      return [getAffectationPrefix()/][apply_attributeFinal('infos')/].get("build.tag");
    }
 
    @Override
    public String getNomApplication ()
    {
-      return [apply_attributeFinal('infos')/].get("build.projectArtifactId");
+      return [getAffectationPrefix()/][apply_attributeFinal('infos')/].get("build.projectArtifactId");
    }
 
    @Override
    public String getVersion ()
    {
-      return [apply_attributeFinal('infos')/].get("build.projectVersion");
+      return [getAffectationPrefix()/][apply_attributeFinal('infos')/].get("build.projectVersion");
    }
 
    @Override
    public String getRevision ()
    {
-      return [apply_attributeFinal('infos')/].get("build.svnRevision");
+      return [getAffectationPrefix()/][apply_attributeFinal('infos')/].get("build.svnRevision");
    }
 
    @Override
@@ -730,7 +735,7 @@ public abstract class [buildConfigProviderClassName()/] {
 
 		final Logger [apply_variableDefault('logger')/] = LogManager.getLogger([buildConfigProviderClassName()/].class);
 
-  	 	// init [buildConfigProviderClassName()/]
+  	 	[displayClearUserCodeId ('init' + buildConfigProviderClassName())/]
    		// [protected ('init' + buildConfigProviderClassName())]
 
 		try {

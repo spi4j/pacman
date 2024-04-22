@@ -146,7 +146,7 @@ public class [buildRSContextResolverClassName()/] extends RsDefaultContextResolv
       // traiter le même objet différemment selon qu'il soit utilisé en SOAP
       // ou REST.
 
-      // [buildRSContextResolverClassName()/]
+      [displayClearUserCodeId (buildRSContextResolverClassName())/]
       // [protected (any.getUserCodeId(buildRSContextResolverClassName()))]
 
       super(new JacksonAnnotationIntrospector());
@@ -193,7 +193,7 @@ public class [buildRSExceptionHandlerClassName()/] extends RsExceptionHandler_Ab
 	@Override
 	protected void handleException (final Exception [apply_parameterMethodClassicIn('exception')/])
 	{
-		// [buildRSExceptionHandlerClassName()/]
+		[displayClearUserCodeId (buildRSExceptionHandlerClassName())/]
 		// [protected (any.getUserCodeId(buildRSExceptionHandlerClassName()))]
 
 		// [/protected]
@@ -216,7 +216,7 @@ public class [buildRSExceptionHandlerClassName()/] extends RsExceptionHandler_Ab
 			return new RsUnauthorizedException([apply_parameterMethodClassicIn('exception')/]);
 		}
 	  	[/if]
-      	// convertToSpi4jRestException
+      	[displayClearUserCodeId ('convertToSpi4jRestException')/]
       	// [protected (any.getUserCodeId('convertToSpi4jRestException'))]
 
       	// [/protected]
@@ -359,7 +359,7 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
  	@Override
    	protected RsFilterConfigurator initFilterConfig ()
    	{
-		// init filter config
+		[displayClearUserCodeId ('init filter config')/]
 		// [protected (any.getUserCodeId('init filter config'))]
 
 		return new RsFilterConfigurator("[getApplicationName().toUpper()/]").set_debugMode();
@@ -377,7 +377,7 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
 	@Override
 	protected RsTokensConfigurator_Itf initTokensConfig() 
 	{
-		// init tokens config
+		[displayClearUserCodeId ('init tokens config')/]
 		// [protected (any.getUserCodeId('init tokens config'))]
 		
 		return new [buildRSTokensConfiguratorClassName()/]();
@@ -402,7 +402,7 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
 	@Override
 	protected void provideClaimsToApplication(final String [apply_parameterMethodClassicIn('spi4j id')/], final Claims [apply_parameterMethodClassicIn('claims')/])
 	{
-      	// provide claims application
+      	[displayClearUserCodeId ('provide claims application')/]
       	// [protected (any.getUserCodeId('provide claims application'))]
 
  		// [/protected]
@@ -419,7 +419,7 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
 	@Override
 	protected RsXto_Itf buildRefreshedTokenResponse(RsAuthTokenXtoWrapper p_tokenWrapper) {
 		
-	    // build refreshed token reponse
+	    [displayClearUserCodeId ('build refreshed token reponse')/]
 	    // [protected (any.getUserCodeId('build refreshed token reponse'))]
 
 		return null;
@@ -437,7 +437,7 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
 	@Override
 	protected void beforeFilter (final ContainerRequestContext [apply_parameterMethodClassicIn('request ctx')/])
 	{
-		// before filter
+		[displayClearUserCodeId ('before filter')/]
 		// [protected (any.getUserCodeId('before filter'))]
 
  		// [/protected]
@@ -453,7 +453,7 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
 	@Override
 	protected void afterFilter (final ContainerResponseContext [apply_parameterMethodClassicIn('response ctx')/])
 	{
-      	// after filter
+      	[displayClearUserCodeId ('after filter')/]
       	// [protected (any.getUserCodeId('after filter'))]
 
  		// [/protected]

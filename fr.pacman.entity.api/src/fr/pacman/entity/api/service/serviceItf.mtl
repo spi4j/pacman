@@ -39,7 +39,7 @@ package [buildPackageServiceApiEntity(e)/];
  * Définit le contrat de services spécifiques pour le type : '[buildEntityImplClassName(e)/].
  * @author [getAuthorName()/]
  */
-// Annotations Service
+[displayClearUserCodeId ('Annotations Service')/]
 // [protected (e.getUserCodeId('Annotations Service'))]
 [if useEjb()]
 @Local
@@ -48,7 +48,7 @@ package [buildPackageServiceApiEntity(e)/];
 public interface [buildServiceInterfaceName(e)/] extends [if not e.isNotPersistent()][getClassNameForEntityService_Itf()/]<[genPkType()/], [buildEntityInterfaceName(e)/]> [if isReferentiel(e)], [getClassNameForServiceReferentiel_Itf()/][/if][else]ApplicationService_Itf[/if]
 {
 
-	// Methodes [buildServiceInterfaceName(e)/]
+	[displayClearUserCodeId ('Methodes ' + buildServiceInterfaceName(e))/]
 	// [protected (e.getUserCodeId('Methodes ' + buildServiceInterfaceName(e)))]
 
 [if not e.isNotPersistent()]

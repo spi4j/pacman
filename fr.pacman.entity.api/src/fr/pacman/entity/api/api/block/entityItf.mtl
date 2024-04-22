@@ -42,7 +42,7 @@ public interface [buildEntityInterfaceName(e)/] extends [if hasAutomaticColumns(
 {
    // CONSTANTES
 
-   // Constantes [buildEntityInterfaceName(e)/]
+   [displayClearUserCodeId ('Constantes ' + buildEntityInterfaceName(e))/]
    // [protected (e.getUserCodeId('Constantes ' + buildEntityInterfaceName(e)))]
 
    // [/protected]
@@ -151,7 +151,7 @@ public interface [buildEntityInterfaceName(e)/] extends [if hasAutomaticColumns(
 [/for]
 [/if]
 
-   // Methodes [buildEntityInterfaceName(e)/]
+   [displayClearUserCodeId ('Methodes ' + buildEntityInterfaceName(e))/]
    // [protected (e.getUserCodeId('Methodes ' + buildEntityInterfaceName(e)))]
 
    // [/protected]

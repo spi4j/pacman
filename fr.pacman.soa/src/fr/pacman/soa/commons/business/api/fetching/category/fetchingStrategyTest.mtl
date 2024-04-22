@@ -39,7 +39,7 @@ package [d.buildPackageFetchingStrategyDto()/];
  * Suite de test '[d.buildFetchingStrategyClassName()/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (d.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [d.buildFetchingStrategyTestClassName()/] extends [getClassNameForFetchingStrategyTester_Abs()/]
@@ -150,7 +150,7 @@ public class [d.buildFetchingStrategyTestClassName()/] extends [getClassNameForF
 [/for]
    }
 
-   // specific methods
+   [displayClearUserCodeId ('specific methods')/]
    // [protected (d.getUserCodeId('specific methods'))]
 
    // [/protected]

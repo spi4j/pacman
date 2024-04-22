@@ -64,7 +64,7 @@ public class [nameAppliAsyncCallback()/]<T> extends DefaultAsyncCallback<T>
       {
          return null;
       }
-      // Propagation des erreurs
+      [displayClearUserCodeId ('Propagation des erreurs')/]
       // [protected (any.getUserCodeId('Propagation des erreurs'))]
       // if (p_className.equals(MonException.class.getName()))
       // {
@@ -77,7 +77,7 @@ public class [nameAppliAsyncCallback()/]<T> extends DefaultAsyncCallback<T>
    @Override
    protected void doOnError (final Throwable p_caught)
    {
-      // Gestion des erreurs
+      [displayClearUserCodeId ('Gestion des erreurs')/]
       // [protected (any.getUserCodeId('Gestion des erreurs'))]
       // if (p_caught instanceof MonException)
       // {
@@ -90,7 +90,7 @@ public class [nameAppliAsyncCallback()/]<T> extends DefaultAsyncCallback<T>
       // [/protected]
    }
 
-   // [nameAppliAsyncCallback()/]
+   [displayClearUserCodeId (nameAppliAsyncCallback())/]
    // [protected (any.getUserCodeId(nameAppliAsyncCallback()))]
 
    // [/protected]

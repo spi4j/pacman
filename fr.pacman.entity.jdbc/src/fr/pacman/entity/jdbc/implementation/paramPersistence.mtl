@@ -53,7 +53,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
 {
    private static final Logger [apply_attributeFinalStatic('log')/] = LogManager.getLogger([buildParamPersistenceClassName()/].class);
 
-   // Resources Physiques
+   [displayClearUserCodeId ('Resources Physiques')/]
    // [protected (r.getUserCodeId('Resources Physiques'))]
 
    /** Chemin de la base H2 (test ou base embarquee). */
@@ -83,7 +83,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
    {
       super([apply_attributeFinalStatic('id appli')/]);
 
-      // Constructeur
+      [displayClearUserCodeId ('Constructeur')/]
       // [protected (r.getUserCodeId('Constructeur'))]
 
 	  // Positionne l'indicateur à "true" si l'application est lancée en mode h2.
@@ -105,7 +105,8 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
 [/if]
 
 [if hasAdditionnalLibraries()]
-	[apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/]();
+      // Injection de la persistance dans la (ou les) librairie(s) utilisee(s) par l'application.
+	  [apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/]();
 [/if]
 
       // [/protected]
@@ -203,7 +204,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
    @Override
    protected void [apply_methodDefault('after init')/] ()
    {
-      // afterInit
+      [displayClearUserCodeId ('afterInit')/]
       // [protected (r.getUserCodeId('afterInit'))]
 
 	  // Uniquement si application en mode h2.
@@ -242,12 +243,12 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
    protected void initElemParamPersistence () // NOPMD
    {
       // Ajout de différentes ressources au ElemResourceManager
-      // Ajout Resources
+      [displayClearUserCodeId ('Ajout Resources')/]
       // [protected (r.getUserCodeId('Ajout Resources'))]
       // [apply_attributeFinal('ElemResourceManager')/].addResourcePhysical([apply_attributeFinalStatic('Local resource physical')/], fr.spi4j.persistence.Mode_Enum.nomade);
       // [/protected]
 
-      // Default Dao
+      [displayClearUserCodeId ('Default Dao')/]
       // [protected (r.getUserCodeId('Default Dao'))]
       // Ajouter le paramétrage pour le DAO par défaut
       setDefaultDao(DefaultJdbcDao.class, [apply_attributeFinal('ElemResourceManager')/]);
@@ -255,7 +256,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
 
 [for (e : Entity | r.eAllContents(Entity))]
 [if not e.isNotPersistent() or useMatching()]
-      // [buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e)/]
+      [displayClearUserCodeId (buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e))/]
       // [protected (e.getUserCodeId(buildPackagePersistenceApiEntity(e) + '.' + buildEntityInterfaceName(e)))]
       // Ajouter le paramétrage pour l'entité "[buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/]"
       addElemParamPersistence([buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/].class, new ElemParamPersistence(
@@ -273,7 +274,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
    private ResourcePhysical_Abs [apply_methodDefault('create resource physical')/] ()
    {
 
-	  // Creation resource physique
+	  [displayClearUserCodeId ('Creation resource physique')/]
 	  // [protected (r.getUserCodeId('Creation resource physique'))]
 
 	  final ResourcePhysical_Abs [apply_variableDefault('resource physical')/];
@@ -283,7 +284,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
 
 			// Chargement de la base H2.
 			[apply_attributeFinalStatic('log')/].info("Démarrage du serveur/application sur base H2.");
-			[apply_variableDefault('resource physical')/] = new DefaultResourcePhysical("jdbc:h2:" + [apply_attributeFinalStatic('chemin base h2')/], "sa", "",
+			[apply_variableDefault('resource physical')/] = new DefaultResourcePhysical("jdbc:h2:" + [apply_attributeFinalStatic('chemin base h2')/], "", "",
                   ResourceType_Enum.ressourceH2NonXA);
 	  } else {
 			[comment : Si application web alors configuration obligatoire par jndi. /]
@@ -332,7 +333,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
     */
    private void [apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/] ()
    {
-      // [apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')/]
+      [displayClearUserCodeId (apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries'))/]
       // [protected (r.getUserCodeId(apply_methodDefault('inject ' + getApplicationName() + ' ElemResourceManagerInLibraries')))]
       // TODO renseigner le(s) initialisation(s) de paramPersistence des librairies avec celui de [getApplicationName()/]
 	
@@ -346,7 +347,7 @@ public final class [buildParamPersistenceClassName()/] extends ParamPersistence_
    }
 [/if]
 
-   // Methodes
+   [displayClearUserCodeId ('Methodes')/]
    // [protected (r.getUserCodeId('Methodes'))]
 
    // [/protected]

@@ -530,7 +530,7 @@ public class [buildGwtUserBusinessIntegration()/] extends [buildGwtUserBusinessC
    @Override
    public void initBindings ()
    {
-	  // bin GWT Service
+	  [displayClearUserCodeId ('bin GWT Service')/]
 	  // [protected (any.getUserCodeId('bin GWT Service'))]
 	  /** Genererer les bindings de services Gwt
       /** bind(XXXGwtService.class, wrapIntegrationService(XXXGwtServiceAsync.class, new XXXGwtServiceImpl())); */

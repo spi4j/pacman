@@ -105,7 +105,7 @@ public class [buildAppliMatchClassName(d)/] extends [if hasAutomaticColumns()][b
       // [apply_variableFinal('entity')/].[r.getNameSetterInverseDtoId()/] ([apply_parameterMethodClassicIn('dto')/].[apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/] ());
 [/for]
 
-      // convertDtoToEntity
+      [displayClearUserCodeId ('convertDtoToEntity')/]
       // [protected (d.getUserCodeId('convertDtoToEntity'))]
       [apply_methodDefault('check ' + d.name)/]([genPkType()/].class[for (a : Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : Reference | d.referencesNoStar())], [r.nameDto()/].class[/for][for (r : Reference | d.referencingStar())], [r.containingType.oclAsType(DTO).nameDto()/].class[/for]);
       [apply_variableFinal('entity')/].setId([apply_parameterMethodClassicIn('dto')/].getId ());
@@ -169,7 +169,7 @@ public class [buildAppliMatchClassName(d)/] extends [if hasAutomaticColumns()][b
       // [apply_parameterMethodClassicIn('dto')/].[r.getNameSetterInverseDtoId()/] ([apply_parameterMethodClassicIn('entity')/].[r.getNameGetterInverseDtoId()/] ());
 [/for]
 
-      // refreshDtoFromEntity
+      [displayClearUserCodeId ('refreshDtoFromEntity')/]
       // [protected (d.getUserCodeId('refreshDtoFromEntity'))]
       [apply_methodDefault('check ' + d.name)/] ([genPkType()/].class[for (a : Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : Reference | d.referencesNoStar())], [r.referencedType.oclAsType(DTO).buildDtoClassName()/].class[/for][for (r : Reference | d.referencingStar())], [r.containingType.oclAsType(DTO).buildDtoClassName()/].class[/for]);
       [apply_parameterMethodClassicIn('dto')/].setId ([apply_parameterMethodClassicIn('entity')/].getId ());
@@ -320,7 +320,7 @@ public class [buildAppliMatchClassName(d)/] extends [if hasAutomaticColumns()][b
    }
 
 [/for]
-   // [buildAppliMatchClassName(d)/]
+   [displayClearUserCodeId (buildAppliMatchClassName(d))/]
    // [protected (d.getUserCodeId(buildAppliMatchClassName(d)))]
 
    // [/protected]

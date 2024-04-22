@@ -166,6 +166,7 @@ public class AcceleoGenrateStartAction extends Wizard implements INewWizard {
 		v_properties.put(GenerateStart.c_PROP_H2_EMBEDDED, _pageOne.getH2EmbeddedDatabase());
 		v_properties.put(GenerateStart.c_PROP_AUTHOR_NAME, _pageOne.getAuthorName());
 		v_properties.put(GenerateStart.c_PROP_MODE_DEBUG, _pageOne.getModeDebug());
+		v_properties.put(GenerateStart.c_PROP_USE_BATCH, _pageOne.getUseBatch());
 		v_properties.put(GenerateStart.c_PROP_PROJECT_VERSION, "0.0.1-SNAPSHOT");
 		v_properties.put(GenerateStart.c_PROP_SPI4J_VERSION, _spi4JVersion);
 		v_properties.put(GenerateStart.c_PROP_LOG4J, _pageOne.getLog4j());

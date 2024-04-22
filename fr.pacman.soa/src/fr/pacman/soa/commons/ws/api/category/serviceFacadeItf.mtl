@@ -51,7 +51,7 @@ public interface [buildServiceFacadeCXFInterfaceName(s)/]
     * [o.description/].
 [getComParamsIn(o)/][comParamOut(o)/]
 	*/
-    // Annotations Méthode
+    [displayClearUserCodeId ('Annotations Méthode')/]
     // [protected (s.getUserCodeId('Annotations Méthode'))]
 
     // [/protected]

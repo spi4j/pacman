@@ -59,7 +59,7 @@ public class [apply_classDefault('referentiel utils')/]
 	/**  Le logger  */
     private static final Logger [apply_attributeFinalStatic('LOG')/] = LogManager.getLogger ( [apply_classDefault('referentiel utils')/].class );
 
-    // Constantes [apply_classDefault('referentiel utils')/]
+    [displayClearUserCodeId ('Constantes ' + apply_classDefault('referentiel utils'))/]
     // [protected (r.getUserCodeId('Constantes ' + apply_classDefault('referentiel utils')))]
 
     // [/protected]
@@ -67,7 +67,7 @@ public class [apply_classDefault('referentiel utils')/]
 
    // ATTRIBUTS
 
-    // Attributs [apply_classDefault('referentiel utils')/]
+    [displayClearUserCodeId ('Attributs ' + apply_classDefault('referentiel utils'))/]
     // [protected (r.getUserCodeId('Attributs ' + apply_classDefault('referentiel utils')))]
 
     // [/protected]
@@ -212,7 +212,7 @@ public class [apply_classDefault('referentiel utils')/]
    }
 
 
-   // Methodes [apply_classDefault('referentiel utils')/]
+   [displayClearUserCodeId ('Methodes ' + apply_classDefault('referentiel utils'))/]
    // [protected (r.getUserCodeId('Methodes ' + apply_classDefault('referentiel utils')))]
 
    // [/protected]

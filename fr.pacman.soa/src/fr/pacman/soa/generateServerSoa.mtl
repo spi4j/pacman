@@ -27,6 +27,7 @@
 [import fr::pacman::soa::files::genWebappRemotingServlet/]
 [import fr::pacman::soa::files::genCXFServlet/]
 [import fr::pacman::soa::files::genRSResources/]
+[import fr::pacman::soa::files::genBatch/]
 
 
 [comment : ****************************************************************/]
@@ -47,6 +48,8 @@
 	[m.genMappers()/]
     [comment : Generation des implementations de service. /]
     [m.genServicesImpls()/]
+	[comment : Generation des implementations de service batch. /]
+	[m.genBatchsImpls()/]
 	[comment : Generation des services DTO (crud) si option crud active. /]
 	[m.genDtos()/]
 
@@ -58,12 +61,11 @@
 		[comment : m.genRsAuthResources()/]
 		[m.genRsOAuth2Resources()/]
 		[m.genRsWebXmlServletMappingFragment()/]
+		[comment : Creation des fabriques ou de l'injection pour les services REST. /]
+		[if isFacadeHk2Injection()][m.genRSApplicationConfig()/][/if]
+		[if isFacadeFactory()][m.genRSServicesFacadeFactory()/][/if]
+		[m.genCXFServlet()/]
 	[/if]
-	[comment : Generation du servlet CXF. /]
-	[if m.useWS()][m.genCXFServlet()/][/if]
-	[comment : Creation des fabriques ou de l'injection pour les services REST. /]
-	[if isFacadeHk2Injection()][m.genRSApplicationConfig()/][/if]
-	[if isFacadeFactory()][m.genRSServicesFacadeFactory()/][/if]
     [comment : Si client SWING, génération de WebappRemotingServlet /]
     [if clientNeedRemotingServlet()][genWebappRemotingServlet()/][/if]
 	[comment : Generation de la couche de securité si appli web et schemas de securite detectes. /]
@@ -126,7 +128,7 @@
 [comment : Generation des implementations pour les services. /]
 [template private genServicesImpls (m : System)]
 
-[for (s : Service | m.eAllContents(Service))][s.genServiceImplementations()/][/for]
+[for (s : Service | m.getServices())][s.genServiceImplementations()/][/for]
 
 [/template]
 
@@ -136,12 +138,31 @@
 
 [if s.serviceSeul()][s.genService()/][s.genServiceTest()/]
 [if useServiceRequirements()][s.genServiceRequirements()/][/if][/if]
+
 [if s.hasCXFOperations()][s.genServiceCXF()/][/if]
 [if s.hasRSOperations()][s.genServiceRS(null)/]
 [s.genRSResource(null)/][/if]
 
 [/template]
 
+[comment : Generation des implementations pour les services batch. /]
+[template private genBatchsImpls (m : System)]
+
+[if useBatch()]
+	[m.genJobsOperator()/]
+	[comment : m.genBatchsXml()/]
+	[for (s : Service | m.getBatchs())][s.genBatchImplementations()/][/for]
+[/if]
+
+[/template]
+
+[comment : Generation des implementations pour un seul batch. /]
+[template private genBatchImplementations (s : Service)] 
+
+[s.genBatch()/]
+[s.genBatchsXml()/]
+
+[/template]
 
 [comment : Generation des autres ressources (matcher, requirement, etc... ). /]
 [template private genAllOtherSelectedResources (m : System)]

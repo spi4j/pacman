@@ -65,7 +65,7 @@ public class [buildServiceGwtImplementationName(s, d)/][if not serviceSeul] exte
    @Override
    protected [buildMapperInterfaceName(d)/] getMapper ()
    {
-      // Mapper
+      [displayClearUserCodeId ('Mapper')/]
       // [protected (s.getUserCodeId('Mapper'))]
       // Le Mapper n'est peut-être pas dans [d.specificOrDefaultIdAppli().toUpperFirst() /], il est peut-être dans un autre domaine qui contient les XTO
       return [buildAppliUserMapperGenClassName()/].[apply_methodDefault('get ' + buildMapperClassName(d))/]();
@@ -75,7 +75,7 @@ public class [buildServiceGwtImplementationName(s, d)/][if not serviceSeul] exte
    @Override
    protected [buildServiceInterfaceName(s, d)/] getService ()
    {
-      // Service
+      [displayClearUserCodeId ('Service')/]
       // [protected (s.getUserCodeId('Service'))]
       return [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s, d))/]();
       // [/protected]
@@ -120,7 +120,7 @@ public class [buildServiceGwtImplementationName(s, d)/][if not serviceSeul] exte
 [/if]
 [if s <> null and not s.ownedInterface.oclIsUndefined()]
 [for (o : Operation | s.ownedInterface.ownedOperations)]
-   // [userCodeForOperation(o)/]
+   [displayClearUserCodeId (userCodeForOperation(o))/]
    // [protected (o.getUserCodeId(userCodeForOperation(o)))]
 
    @Override
@@ -143,7 +143,7 @@ public class [buildServiceGwtImplementationName(s, d)/][if not serviceSeul] exte
 
 [/for]
 [/if]
-   // [nameServiceInterfaceGwt(s, d)/]
+   [displayClearUserCodeId (nameServiceInterfaceGwt(s, d))/]
    // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s, d)))]
 
    // [/protected]

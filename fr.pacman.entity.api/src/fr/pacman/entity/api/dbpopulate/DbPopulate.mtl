@@ -143,6 +143,7 @@ public class [apply_classDefault(b.name + ' populate')/]
 
       for (long [apply_variableDefault('i')/] = 0; [apply_variableDefault('i')/] < [apply_parameterMethodClassicIn('nb max ' + e.name)/]; [apply_variableDefault('i')/]++)
       {
+		 [displayClearUserCodeId ('for Initialization : ' + e.name)/]
          // [protected (e.getUserCodeId('for Initialization : ' + e.name))]
          // TODO renseigner données de test
          // Affecter l'identifiant

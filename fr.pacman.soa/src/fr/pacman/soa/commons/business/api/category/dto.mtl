@@ -71,7 +71,7 @@ public abstract class [s.buildAppliDtoAbstractClassName()/] {
 	*/
 	private static final long serialVersionUID = -1;
 
-	// Constantes
+	[displayClearUserCodeId ('Constantes')/]
 	// [protected (s.getUserCodeId('Constantes'))]
 
 	// [/protected]
@@ -83,7 +83,7 @@ public abstract class [s.buildAppliDtoAbstractClassName()/] {
    	private [columnProp.getTypeColumn()/] [apply_attributeDefault(columnProp.getNameColumn())/];[lineSeparator()/]
 	[/if][/for]
 
-	// Commons Attributs 
+	[displayClearUserCodeId ('Commons Attributs')/] 
 	// [protected (s.getUserCodeId('Commons Attributs'))]
 
 	// [/protected]
@@ -207,7 +207,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
 
 [/if]
 [if d.isNotPersistent()]
-   // Attributs
+   [displayClearUserCodeId ('Attributs')/]
    // [protected (d.getUserCodeId('Attributs'))]
 
    /** L'identifiant. */
@@ -226,7 +226,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
       super();
 [if d.isNotPersistent()]
 
-      // Constructeur
+      [displayClearUserCodeId ('Constructeur')/]
       // [protected (d.getUserCodeId('Constructeur'))]
 
       // [/protected]
@@ -284,7 +284,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
    public [genPkType()/] getId ()
    {
       [if d.isNotPersistent()]
-      // getId
+      [displayClearUserCodeId ('getId')/]
       // [protected (d.getUserCodeId('getId'))]
 
       return [namePK_ID()/];
@@ -299,7 +299,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
    public void setId (final [genPkType()/] [apply_parameterMethodClassicIn(nameENUM_PK_ID())/])
    {
       [if d.isNotPersistent()]
-      // setId
+      [displayClearUserCodeId ('setId')/]
       // [protected (d.getUserCodeId('setId'))]
 
       [getAffectationPrefix()/][namePK_ID()/] = [apply_parameterMethodClassicIn(nameENUM_PK_ID())/];
@@ -330,7 +330,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
    sinon le getter retourne l'attribut.
    [/comment]
    [if (a.isComputed())]
-      // [apply_attributeDefault(a.name)/]
+      [displayClearUserCodeId (apply_attributeDefault(a.name))/]
       // [protected (a.getUserCodeId(apply_attributeDefault(a.name)))]
       // TODO Calculer l'attribut
       return null;
@@ -508,7 +508,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
     */
    [r.getGetter()/]
    {
-      // [apply_methodGet(r.referencedType.oclAsType(DTO).name.normalize())/]
+      [displayClearUserCodeId (apply_methodGet(r.referencedType.oclAsType(DTO).name.normalize()))/]
       // [protected (r.getUserCodeId(apply_methodGet(r.referencedType.oclAsType(DTO).name.normalize())))]
       // TODO Calculer la référence
       return null;
@@ -525,7 +525,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
     */
    [r.getGetterListDto()/]
    {
-      // [apply_methodDefault('get'+ apply_attributeMultiple(r.referencedType.oclAsType(DTO).name.normalize()))/]
+      [displayClearUserCodeId (apply_methodDefault('get'+ apply_attributeMultiple(r.referencedType.oclAsType(DTO).name.normalize())))/]
       // [protected (r.getUserCodeId(apply_methodDefault('get'+ apply_attributeMultiple(r.referencedType.oclAsType(DTO).name.normalize()))))]
       // TODO Calculer la référence
       return null;
@@ -685,7 +685,7 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
    @Override
    public String toString ()
    {
-      // toString
+      [displayClearUserCodeId ('toString')/]
       // [protected (d.getUserCodeId('toString'))]
 
       return [d.toString()/]
@@ -693,13 +693,10 @@ public class [d.buildDtoClassName()/] [d.getImplementation()/]
       // [/protected]
    }
 
-[if d.isNotPersistent()]
-   // Méthodes
-   // [protected (d.getUserCodeId('Méthodes'))]
+   [displayClearUserCodeId ('Methodes')/]
+   // [protected (d.getUserCodeId('Methodes'))]
 
    // [/protected]
-
-[/if]
 }
 [/template]
 

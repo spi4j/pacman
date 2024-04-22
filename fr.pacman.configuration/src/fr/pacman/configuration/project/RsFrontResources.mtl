@@ -276,7 +276,7 @@ import java.net.URI;
  * @author [getAuthorName()/].
  */
 
-// [buildRSFrontExceptionClassName()/]
+[displayClearUserCodeId (buildRSFrontExceptionClassName())/]
 // [protected(any.getUserCodeId(buildRSFrontExceptionClassName()))]
 
 public class [buildRSFrontExceptionClassName()/] extends RuntimeException {
@@ -551,6 +551,7 @@ public class [buildRSFrontResourcesDefaultFilter()/] implements ClientRequestFil
 	@Override
 	public void filter(ClientRequestContext [apply_parameterMethodClassicIn('request context')/]) throws IOException {
 
+		[displayClearUserCodeId (any.getUserCodeId(buildRSFrontResourcesDefaultFilter() + '_ClientRequestContext'))/]
 		// [protected (any.getUserCodeId(buildRSFrontResourcesDefaultFilter() + '_ClientRequestContext'))]
 
 		// Indique que le client converse en Français (si possible).
@@ -583,6 +584,7 @@ public class [buildRSFrontResourcesDefaultFilter()/] implements ClientRequestFil
 	public void filter(ClientRequestContext [apply_parameterMethodClassicIn('request context')/],
 		ClientResponseContext [apply_parameterMethodClassicIn('response context')/]) throws IOException {
 
+		[displayClearUserCodeId (any.getUserCodeId(buildRSFrontResourcesDefaultFilter() + '_ClientResponseFilter'))/]
 		// [protected (any.getUserCodeId(buildRSFrontResourcesDefaultFilter() + '_ClientResponseFilter'))]
 
 		// Si mode débug, on stocke les en-têtes dans le ThreadLocal.

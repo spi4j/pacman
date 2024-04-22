@@ -158,7 +158,8 @@
         </dependency>
 		[httpEmbeddedServerDependencies(false)/]
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 		
 		<!--
@@ -171,7 +172,8 @@
 			[plugins(false)/]
            	[httpEmbeddedServerPlugins(false)/]
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--

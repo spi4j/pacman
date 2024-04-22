@@ -62,10 +62,10 @@ public enum [e.buildEnumName()/]
     */
 	private [e.buildEnumName()/] (final String [apply_parameterMethodClassicIn('literal')/][e.writeLiteralParams(1)/]) {
 
-        [apply_attributeFinal('value')/] = [apply_parameterMethodClassicIn('literal')/];
+        [getAffectationPrefix()/][apply_attributeFinal('value')/] = [apply_parameterMethodClassicIn('literal')/];
 		[e.writeLiteralParams(2)/]
 
-    // constructeur
+    [displayClearUserCodeId ('constructeur')/]
     // [protected (e.getUserCodeId('constructeur'))]
 	
     // [/protected]
@@ -93,7 +93,7 @@ public enum [e.buildEnumName()/]
 	*/
 	public [p.substring(p.indexOf(':') + 1)/] [p.substring(1, p.indexOf(':')-1).apply_methodGet()/]() {
 
-		// get [p.substring(1, p.indexOf(':')-1)/]
+		[displayClearUserCodeId ('get ' + p.substring(1, p.indexOf(':')-1))/]
 		// [protected (e.getUserCodeId('get' + p.substring(1, p.indexOf(':')-1)))]
 	
 		// [/protected]
@@ -105,7 +105,7 @@ public enum [e.buildEnumName()/]
 	[/if]
 
 
-    // specifique
+    [displayClearUserCodeId ('specifique')/]
     // [protected (e.getUserCodeId('specifique'))]
 	
     // [/protected]
@@ -130,7 +130,7 @@ public enum [e.buildEnumName()/]
 [template private enumStruct (l : Literal, s : String)]
 	/** [if not l.name.oclIsUndefined() and l.name.trim().size() > 0][l.name/][else]BLANK[/if] : [l.description/]. */
 	[let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]
-    [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(i, nbParams)/][/for])[/let]
+    [l.name.toUpper()/]("[l.name.trim()/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(i, nbParams)/][/for])[/let]
 [/template]
 
 [comment : prepare pour si decide de positionner les guillemets automatiquement a partir de la structure. /]

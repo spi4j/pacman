@@ -29,7 +29,8 @@
     <name>[getApplicationName()/] - Packaging webapp serveur</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 		
 	<!--
@@ -97,7 +98,8 @@
         </dependency>
 		[httpEmbeddedServerDependencies(true)/]
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 		
 		<!--
@@ -109,7 +111,8 @@
 			[plugins(true)/]
 			[httpEmbeddedServerPlugins(true)/]
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--

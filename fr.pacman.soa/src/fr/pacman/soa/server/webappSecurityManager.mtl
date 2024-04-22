@@ -42,7 +42,7 @@ public class [buildSecurityWebAppHelperName()/]
 	 */
 	public static void registerAuthenticatedUser(final User_Itf [apply_parameterMethodClassicIn('authenticated user')/])	{
 
-		// register authenticated user
+		[displayClearUserCodeId ('register authenticated user')/]
 		// [protected (any.getUserCodeId('register authenticated user'))]
 
 		// Positionner ici l'ensemble du code nécessaire pour la gestion des permissions de l'utilisateur

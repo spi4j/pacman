@@ -51,7 +51,7 @@ public interface [buildServiceGwtInterfaceName(s)/] extends RemoteService
 
 [if s <> null and not s.ownedInterface.oclIsUndefined()]
 [for (o : Operation | s.ownedInterface.ownedOperations)]
-   // [userCodeForOperation(o)/]
+   [displayClearUserCodeId (userCodeForOperation(o))/]
    // [protected (o.getUserCodeId(userCodeForOperation(o)))]
 
    /**
@@ -63,7 +63,7 @@ public interface [buildServiceGwtInterfaceName(s)/] extends RemoteService
 
 [/for]
 [/if]
-   // [nameServiceInterfaceGwt(s)/]
+   [displayClearUserCodeId (nameServiceInterfaceGwt(s))/]
    // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s)))]
 
    // [/protected]

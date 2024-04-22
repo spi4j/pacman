@@ -31,7 +31,8 @@
     <name>[getApplicationName()/] - Partie serveur</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 		
 	// [/protected]
 	-->
@@ -260,11 +261,34 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-		<!--
-		// [protected ('for dependencies')]
+		[if useBatch()]
+        <dependency>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
+            <version>${jakarta-batch-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jberet</groupId>
+            <artifactId>jberet-core</artifactId>
+            <version>${jberet.version}</version>
+       </dependency>
+       <dependency>
+           <groupId>org.jberet</groupId>
+           <artifactId>jberet-support</artifactId>
+           <version>${jberet.version}</version>
+       </dependency>
+       <dependency>
+           <groupId>org.jberet</groupId>
+           <artifactId>jberet-se</artifactId>
+           <version>${jberet.version}</version>
+       </dependency>
+	  [/if]
+	  <!--
+	  [displayClearUserCodeId ('for dependencies')/]
+	  // [protected (getUserCodeId('for dependencies'))]
 		
-		// [/protected]
-		-->
+	  // [/protected]
+	  -->
     </dependencies>
 
     <build>
@@ -298,7 +322,8 @@
                 </configuration>
             </plugin>
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 		
 			// [/protected]
 			-->
@@ -316,8 +341,8 @@
 
 	<name>rest-mapping-fragment</name>
 
-	<!-- Ne pas laisser à la valeur par défaut sous peine --> 
-	<!-- de ne pouvoir accéder au fichier Swagger. -->
+	<!-- Ne pas laisser Ã  la valeur par dÃ©faut sous peine --> 
+	<!-- de ne pouvoir accÃ©der au fichier Swagger. -->
   	<servlet-mapping>
     	<servlet-name>RSServlet</servlet-name>
     	<url-pattern>/*</url-pattern>
@@ -362,7 +387,7 @@ public final class [buildSecurityInitializationClassName()/]
     */
   	public static void [apply_methodDefault('initialize')/] (final ServletContext [apply_parameterMethodClassicIn('servlet context')/])
   	{
-		// security initialization
+		[displayClearUserCodeId ('security initialization')/]
 		// [protected (any.getUserCodeId('security initialization'))]
 
 		Parameters.initServletContext( [apply_parameterMethodClassicIn('servlet context')/]);
@@ -399,7 +424,7 @@ public final class [buildSecurityInitializationClassName()/]
 		//	}
 		//});
 
-		// security server
+		[displayClearUserCodeId ('security server')/]
 		// [protected (any.getUserCodeId('security server'))]
 
 		// [/protected]
@@ -434,7 +459,7 @@ public class [buildSecurityManagerClassName()/] implements AuthorizationService_
 		final Set<String> [apply_variableFinal('list perm')/] = new HashSet<>();
       	boolean [apply_variableDefault('is super admin')/] = Boolean.FALSE;
 
-		// security manager
+		[displayClearUserCodeId ('security manager')/]
 		// [protected (any.getUserCodeId('security manager'))]
 
 		final User_Itf [apply_variableDefault('user')/] = Spi4jSecurity_Abs.getInstance().getCurrentUser();
@@ -468,7 +493,7 @@ public class [buildSecurityListenerClassName()/] implements ServletContextListen
 		[buildSecurityInitializationClassName()/].[apply_methodDefault('initialize')/]([apply_parameterMethodClassicIn('event')/].getServletContext());
 		[buildSecurityInitializationClassName()/].[apply_methodDefault('initialize server security')/]();
 
-		// initialization listener
+		[displayClearUserCodeId ('initialization listener')/]
 		// [protected (any.getUserCodeId('initialization listener'))]
 
 		// [/protected]

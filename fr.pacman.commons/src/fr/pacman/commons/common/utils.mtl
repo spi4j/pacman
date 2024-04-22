@@ -5,8 +5,9 @@
 
 [import fr::pacman::commons::common::properties /]
 
+[comment : /]
 [query public sanitizeReqID (s : String) : String = 
- 	s.replaceAll('-', '_')
+ 	if not s.oclIsUndefined() then s.replaceAll('-', '_') else 'ID_INVALID' endif
 /]
 
 [query public sanitize(msg : String) : String =
@@ -111,12 +112,12 @@ endif
 
 [comment : Search for xtsopsup existence. /]
 [query public hasXtopSup(any : OclAny) : Boolean = 
-	get_automaticColumnsProperties().contains('xtopsup') <> false
+	getSQLTableAdditionalFields().contains('xtopsup')
 /]
 
 [comment : Search for xdmaj existence. /]
 [query public hasXdMaj(any : OclAny) : Boolean = 
-	get_automaticColumnsProperties().contains('xdmaj') <> false
+	getSQLTableAdditionalFields().contains('xdmaj')
 /]
 
 [comment : Search for xdmaj or xtopsup existence. Must be optimised. /]

@@ -77,7 +77,7 @@ public interface [buildAppliMatchInterfaceName(d)/] extends [getClassNameForMatc
     void [apply_methodDefault('delete ' +r.name.normalize())/] (final [buildDtoClassName(d)/] [apply_parameterMethodClassicIn('dto')/]);
 
 [/for]
-   // [nameMatchInterface(d)/]
+   [displayClearUserCodeId (nameMatchInterface(d))/]
    // [protected (d.getUserCodeId(nameMatchInterface(d)))]
 
    // [/protected]

@@ -106,7 +106,7 @@
 [comment : Ecriture pour les surcharges de code javascript specifiques a la page. /]
 [template private writeSpecificPageScript(viewContainer : ViewContainer) post (trim())]
 <script>
-	// [viewContainer.name/] js
+	[displayClearUserCodeId (viewContainer.name + ' js')/]
 	// [protected (viewContainer.getUserCodeId(viewContainer.name + ' js'))]
 	// Placer ici les portions de javascript personnalisées.
 
@@ -153,7 +153,7 @@
 <!-- Placer ici les styles spécifiques pour la page (si besoin) -->
 <style>
 	/* Le double slash n'a pas d'impact dans le style pour les navigateurs actuels...  */
-	/* [viewContainer.name/] css */
+	[displayClearUserCodeId (viewContainer.name + ' css')/]
 	// [protected (viewContainer.getUserCodeId(viewContainer.name + ' css'))]
 
 	[viewContainer.layout.scanViewLayoutsStyle()/]
@@ -165,7 +165,7 @@
 [comment : Ecriture d'une zone protegee dans le corps de la page. /]
 [template private writeProtectedBodyZone (viewContainer : ViewContainer, viewState : ViewState, label : String) post (trim())]
 <!-- Positionner ici toute la partie de code personnalisé pour la portion de page (si nécessaire).
-// [viewContainer.name + label/]
+[displayClearUserCodeId (viewContainer.name + ' label')/]
 // [protected (viewContainer.getUserCodeId(viewContainer.name + label))]
 -->
 
@@ -187,7 +187,7 @@
 	 'input_'. Pour voir l'id exact du DTO aller dans la page et 
 	 récupérer l'identifiant du DTO qui a été automatiquement généré
 	 pour le champ. 
-// [viewState.name/] jsp use bean
+[displayClearUserCodeId (viewState.name + ' jsp use bean')/]
 // [protected (viewState.getUserCodeId(viewState.name + ' jsp use bean'))]
 -->
 
@@ -305,7 +305,7 @@
 [comment : Ici on parle de la partie technique (non graphique) pour le formulaire. /]
 [template private writeEndForm(layout : Layout, viewState : ViewState)]
 <!-- Positionner ici le code personnalisé pour le formulaire (si nécessaire). 
-// [layout.getLayoutId(viewState)/] zone formulaire
+[displayClearUserCodeId (layout.getLayoutId(viewState) + ' zone formulaire')/]
 // [protected (layout.getUserCodeId(layout.getLayoutId(viewState) + ' zone formulaire'))]
 -->
 
@@ -412,7 +412,7 @@ and not layout.getLayoutElement().label.oclIsUndefined()][layout.getLayoutElemen
 	<!-- On profite du laxisme html avec un colspan fixe, possibilité de modifier 
 		 le colspan apres première génération.
 
-	// [viewElement.getViewElementId()/] zone tableau [dto.name/]
+	[displayClearUserCodeId (viewElement.getViewElementId() + ' zone tableau ' + dto.name)/]
 	// [protected (viewElement.getUserCodeId(viewElement.getViewElementId() + ' zone tableau' + dto.name))]
 	-->
 	
@@ -481,7 +481,7 @@ and not layout.getLayoutElement().label.oclIsUndefined()][layout.getLayoutElemen
 [let attributs : Sequence(String) = customCode.tokenize(',')]
 [for (attribut : String | attributs)][attribut.trim()/]="
 [attribut.writeCommentBegin()/]
-// [prefix/][viewElement.getViewElementId()/]_[attribut.trim()/]
+[displayClearUserCodeId (prefix + viewElement.getViewElementId() +'_' + attribut.trim())/]
 // [protected (viewElement.getUserCodeId(prefix + viewElement.getViewElementId() + '_' + attribut.trim()))]
 [attribut.writeCommentEnd()/] 
 
@@ -549,7 +549,7 @@ and not layout.getLayoutElement().label.oclIsUndefined()][layout.getLayoutElemen
 [if not viewElement.events->isEmpty()][viewElement.writeJsRouting(viewContainer, viewState)/][else]>[/if]
 <c:forEach items="${[viewElement.getTargetBeanName()/]}" var="item" varStatus="status">
 <!-- 
-// [viewElement.getViewElementId()/]
+[displayClearUserCodeId (viewElement.getViewElementId())/]
 // [protected (viewElement.getUserCodeId(viewElement.getViewElementId()))]
 -->
 <option value="${item.get_value()}">${item.get_label()}</option>
@@ -646,7 +646,7 @@ value="[viewElement.writeInputValue()/]" [viewElement.writeCustomCode()/]/>
 <script>
 	function [viewElement.name/]CustomMethodJS(event) {
 		<!--
-		 // [viewElement.name/]CustomMethodJS
+		 [displayClearUserCodeId (viewElement.name + 'CustomMethodJS')/]
 		 // [protected (viewElement.getUserCodeId(viewElement.name + 'CustomMethodJS'))]
 		-->
 [if viewElement.isButtonSubmit()]

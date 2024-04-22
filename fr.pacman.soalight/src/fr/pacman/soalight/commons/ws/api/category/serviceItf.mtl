@@ -63,7 +63,7 @@ import jakarta.ejb.Local;
  * Définit le contrat de services spécifiques.
  * @author [getAuthorName()/]
  */
-// Annotations Service
+[displayClearUserCodeId ('Annotations Service')/]
 // [protected (s.getUserCodeId('Annotations Service'))]
 [if useEjb()]
 @Local
@@ -79,13 +79,13 @@ public interface [buildServiceInterfaceName(s)/] extends [if isFromEntityService
 [getComParamsIn(o)/][comParamOut(o)/]
 	*/
 	[if permissionAnnotationExists(o, 'PERMISSIONS') or permissionAnnotationExists(o, 'PERMISSIONS_OR') or permissionAnnotationExists(o, 'PERMISSIONS_AND') or permissionAnnotationExists(o, 'ACCEPT_UNAUTHENTIFIED')]
-	// Annotations [userCodeForOperation(o)/]
+	[displayClearUserCodeId ('Annotations ' + userCodeForOperation(o))/]
 	// [protected (o.getUserCodeId('Annotations ' +  userCodeForOperation(o)))]
 	
 	// [/protected]
 	[generateAnnotationPermission(o) /]
 	[else]
-	// Annotations [userCodeForOperation(o)/]
+	[displayClearUserCodeId ('Annotations ' + userCodeForOperation(o))/]
 	// [protected (o.getUserCodeId('Annotations ' +  userCodeForOperation(o)))]
 	
 	// [/protected]
@@ -94,7 +94,7 @@ public interface [buildServiceInterfaceName(s)/] extends [if isFromEntityService
 
 [/for]
 [/if]
-    // Methodes [buildServiceInterfaceName(s)/]
+    [displayClearUserCodeId ('Methodes ' + buildServiceInterfaceName(s))/]
     // [protected (s.getUserCodeId('Methodes ' + buildServiceInterfaceName(s)))]
 
     // [/protected]

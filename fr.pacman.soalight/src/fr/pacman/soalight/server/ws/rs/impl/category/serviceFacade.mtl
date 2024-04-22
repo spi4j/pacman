@@ -79,7 +79,7 @@ public class [s.buildServiceFacadeRSClassName(null)/] implements [s.buildService
 	*/
 	public final static [s.buildServiceFacadeRSClassName(null)/] [apply_attributeFinal('instance')/]  = new [s.buildServiceFacadeRSClassName(null)/]();
 	[/if]
-	// attributs
+	[displayClearUserCodeId ('attributs')/]
 	// [protected (s.getUserCodeId('attributs'))]
 
     // [/protected]
@@ -122,7 +122,7 @@ public class [s.buildServiceFacadeRSClassName(null)/] implements [s.buildService
 [comment : ******************************************************************************/]
 [template public genericOperationFacade( o : Operation, s : Service)]
 [comment : something to return /]
-// for [o.userCodeForOperation()/]
+[displayClearUserCodeId ('for ' + o.userCodeForOperation())/]
 // [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
 
 [comment : something to return (Entity or primitive). /]

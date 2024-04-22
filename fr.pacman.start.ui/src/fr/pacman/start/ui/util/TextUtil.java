@@ -79,6 +79,7 @@ public class TextUtil {
 	public static final String c_LBL_BT_UNSELECT_ALL = "Tout désélectionner";
 	public static final String c_LBL_MODEL = "Fichiers de modélisation à générer";
 	public static final String c_LBL_TU_CRUD = "Tests unitaires pour les services CRUD";
+	public static final String c_LBL_GEN_BATCH = "Implémentation de traitements batchs";
 	public static final String c_LBL_CREATE_GE = "Création d'application de gestion des entités (CRUD)";
 	public static final String c_LBL_SIMPLE_ARCH = "Architecture Simplifiée (Sans couche DTO)";
 	public static final String c_LBL_REQUIREMENTS = "Implémentation des services des exigences";
@@ -116,7 +117,7 @@ public class TextUtil {
 	public static final String c_LBL_AUTHOR = "Auteur";
 	public static final String c_LBL_DEBUG = "Mode debug";
 	public static final String c_LBL_FETCHING = "Fetching Strategy";
-	public static final String c_LBL_LOG4J = "Générer les fichiers log4j2.xml";
+	public static final String c_LBL_LOG4J = "Génération des fichiers log4j2.xml";
 	public static final String c_LBL_HK2 = "Api Rest - Utilisation injection CDI";
 	public static final String c_LBL_EH2 = "Base H2 embarquée";
 	public static final String c_LBL_REQUIREMENT_PREFIX = "Requirements - Préfixe";
@@ -135,6 +136,7 @@ public class TextUtil {
 	public static final String c_TLP_AUTHOR = "Le nom de l'auteur ou de l'organisme à indiquer pour l'ensemble des commentaires.";
 	public static final String c_TLP_HK2 = "Uilisation CDI HK2 (Jersey) ou de simple fabriques (pattern factory).";
 	public static final String c_TLP_REQUIREMENT_PREFIX = "Ajout automatique d'un préfixe devant l'ensemble de règles de gestion.";
+	public static final String c_TLP_CRUD = "Accessible uniquement si activation des services REST / SOAP.";
 	public static final String c_TLP_REQUIREMENT_LEVEL = "";
 	public static final String c_TLP_NO = "";
 

@@ -47,7 +47,7 @@ public interface [s.buildServiceFacadeRSInterfaceName(null)/]
     /**
     * [o.description/].
 [getComParamsIn(o)/][comParamOut(o)/]    */
-   // Annotations Méthode
+   [displayClearUserCodeId ('Annotations Méthode')/]
    // [protected (s.getUserCodeId('Annotations Méthode'))]
 
    // [/protected]
@@ -56,7 +56,7 @@ public interface [s.buildServiceFacadeRSInterfaceName(null)/]
 [/if]
 [/for]
 [/if]
-   // [buildServiceFacadeInterfaceName(s)/]
+   [displayClearUserCodeId (buildServiceFacadeInterfaceName(s))/]
    // [protected (s.getUserCodeId(buildServiceFacadeInterfaceName(s)))]
 
    // [/protected]

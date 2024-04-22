@@ -22,7 +22,8 @@
     <name>[getApplicationName()/] - Partie cliente</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 	
 	<!--

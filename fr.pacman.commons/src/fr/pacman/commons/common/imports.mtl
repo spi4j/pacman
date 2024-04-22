@@ -61,6 +61,11 @@
  		'flushImports(org.obeonetwork.dsl.environment.ObeoDSMObject)', Sequence{e})
 /]
 
+[comment : Display user code id in clear. /]
+[query public displayClearUserCodeId (s : String) : String = 
+	if not s.isClearUserCode() and s.isClearUserCodeHash() then '// ' + s else '' endif
+/]
+
 [comment : Create a hash for user code from the id (string parameter). /]
 [query public getUserCodeId (any : OclAny, s : String) : String = 
 	if any.isClearUserCode() then s else any.userCodeWithComment(s) endif

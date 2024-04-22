@@ -83,7 +83,7 @@ public interface [buildServiceGwtInterfaceName(s, d)/][if (not serviceSeul)] ext
 [/if]
 [if s <> null and not s.ownedInterface.oclIsUndefined()]
 [for (o : Operation | s.ownedInterface.ownedOperations)]
-   // [userCodeForOperation(o)/]
+   [displayClearUserCodeId (userCodeForOperation(o))/]
    // [protected (o.getUserCodeId(userCodeForOperation(o)))]
 
    /**
@@ -95,7 +95,7 @@ public interface [buildServiceGwtInterfaceName(s, d)/][if (not serviceSeul)] ext
 
 [/for]
 [/if]
-   // [nameServiceInterfaceGwt(s, d)/]
+   [displayClearUserCodeId (nameServiceInterfaceGwt(s, d))/]
    // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s, d)))]
 
    // [/protected]

@@ -59,7 +59,7 @@ public interface [buildServiceGwtInterfaceName(e)/] extends GwtRemoteService<[ge
 
 [/for]
 [/if]
-   // [nameServiceInterfaceGwt(e)/]
+   [displayClearUserCodeId (nameServiceInterfaceGwt(e))/]
    // [protected (e.getUserCodeId(nameServiceInterfaceGwt(e)))]
 
    // [/protected]

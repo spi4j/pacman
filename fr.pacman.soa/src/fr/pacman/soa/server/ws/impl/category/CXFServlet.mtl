@@ -47,7 +47,7 @@ public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/
       */
 [for (service : Service | m.eAllContents(Service))]
 [if service.hasCXFOperations()]
-	// [buildServiceName(service, null)/]
+	[displayClearUserCodeId (buildServiceName(service, null))/]
 	// [protected (service.getUserCodeId(buildServiceName(service, null)))]
 
 	  // Déploiement du Webservice  [buildServiceName(service, null) /]
@@ -101,7 +101,7 @@ public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/
       */
 [for (service : Service | component.eAllContents(Service))]
 	[if service.hasCXFOperations()]
-	 // [buildServiceName(service, null)/]
+	 [displayClearUserCodeId (buildServiceName(service, null))/]
 	 // [protected (service.getUserCodeId(buildServiceName(service, null)))]
 
      // Déploiement du Webservice  [buildServiceName(service, null) /]
@@ -151,7 +151,7 @@ public class [buildCXFServletClassName()/] extends [buildCXFAbstractClassName()/
       * deployWebService(new MonServiceFacade(), "/MonServiceService");
       */
 
-      // [buildServiceName(service, null)/]
+      [displayClearUserCodeId (buildServiceName(service, null))/]
       // [protected (service.getUserCodeId(buildServiceName(service, null)))]
 
       // Déploiement du Webservice  [buildServiceName(service, null) /]

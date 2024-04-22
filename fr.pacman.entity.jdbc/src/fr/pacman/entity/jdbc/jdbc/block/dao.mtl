@@ -47,14 +47,14 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
 {
    // CONSTANTES
 
-   // Constantes [buildDaoImplClassName(e)/]
+   [displayClearUserCodeId ('Constantes ' + buildDaoImplClassName(e))/]
    // [protected (e.getUserCodeId('Constantes ' + buildDaoImplClassName(e)))]
 
    // [/protected]
 
    // ATTRIBUTS
 
-   // Attributs [buildDaoImplClassName(e)/]
+   [displayClearUserCodeId ('Attributs ' + buildDaoImplClassName(e))/]
    // [protected (e.getUserCodeId('Attributs ' + buildDaoImplClassName(e)))]
 
    // [/protected]
@@ -189,7 +189,7 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
       return [apply_variableDefault('entity')/];
    }
 
-   // Methodes [buildDaoImplClassName(e)/]
+   [displayClearUserCodeId ('Methodes ' + buildDaoImplClassName(e))/]
    // [protected (e.getUserCodeId('Methodes ' + buildDaoImplClassName(e)))]
 
    // [/protected]

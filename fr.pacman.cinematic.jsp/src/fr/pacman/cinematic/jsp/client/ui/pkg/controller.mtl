@@ -49,7 +49,7 @@ package [viewState.namePackageContainerController()/];
  */
 public class [viewState.buildJspControllerClassName()/] { 
 
-	// attributs for controller
+	[displayClearUserCodeId ('attributs for controller')/]
 	// [protected (viewState.getUserCodeId('attributs for controller'))]
 
 	// [/protected]
@@ -82,13 +82,13 @@ package [viewContainer.namePackageContainerController()/];
  * 
  * @author [getAuthorName()/]
  */
-// [viewState.buildJspControllerClassName()/] annotations
+[displayClearUserCodeId (viewState.buildJspControllerClassName() + ' annotations')/]
 // [protected (viewState.getUserCodeId(viewState.buildJspControllerClassName() + ' annotations'))]
 
 // [/protected]
 public class [viewState.buildJspControllerClassName()/] extends JspController_Abs { 
 
-	// attributs for controller
+	[displayClearUserCodeId ('attributs for controller')/]
 	// [protected (viewState.getUserCodeId('attributs for controller'))]
 
 	// [/protected]
@@ -101,7 +101,7 @@ public class [viewState.buildJspControllerClassName()/] extends JspController_Ab
 	 */
 	public [viewState.buildJspControllerClassName()/] () {
 
-		// default error dispatch
+		[displayClearUserCodeId ('default error dispatch')/]
 		// [protected (viewState.getUserCodeId('default error dispatch'))]
 
 		super([buildJspDispatcherClassName()/].[apply_attributeEnum('systemViewState_error')/]);
@@ -116,7 +116,7 @@ public class [viewState.buildJspControllerClassName()/] extends JspController_Ab
 	public [buildJspDispatcherClassName()/] [apply_methodDefault('execute')/](final HttpServletRequest [apply_parameterMethodClassicIn('request')/], 
 		final JspControllerMessenger_Itf [apply_parameterMethodClassicIn('messenger')/], final String [apply_parameterMethodClassicIn('method')/]) {
 	
-		// methode [apply_methodDefault('execute')/]
+		[displayClearUserCodeId ('methode ' + apply_methodDefault('execute'))/]
 		// [protected (viewState.getUserCodeId('methode ' + apply_methodDefault('execute')))]
 
 		// [/protected]
@@ -148,7 +148,7 @@ public class [viewState.buildJspControllerClassName()/] extends JspController_Ab
 	public [buildJspDispatcherClassName()/] [apply_methodDefault('init')/](final HttpServletRequest [apply_parameterMethodClassicIn('request')/], 
 		final JspControllerMessenger_Itf [apply_parameterMethodClassicIn('messenger')/]) {
 
-		// methode [apply_methodDefault('init')/]
+		[displayClearUserCodeId ('methode ' + apply_methodDefault('init'))/]
 		// [protected (viewState.getUserCodeId('methode ' + apply_methodDefault('init')))]
 
 		[comment : Liste toutes les evenements de type 'onLoad' associes au controlleur./]
@@ -180,7 +180,7 @@ public class [viewState.buildJspControllerClassName()/] extends JspController_Ab
 	public [buildJspDispatcherClassName()/] [event.getEventName()/](final HttpServletRequest [apply_parameterMethodClassicIn('request')/], 
 		final JspControllerMessenger_Itf [apply_parameterMethodClassicIn('messenger')/]) {
 
-		// methode [event.getEventName()/]
+		[displayClearUserCodeId ('methode ' + event.getEventName())/]
 		// [protected (viewState.getUserCodeId('methode ' + event.getEventName()))]
 
 		[event.getEventName().writeActionsIfExist(viewState, false) /]
@@ -197,7 +197,7 @@ public class [viewState.buildJspControllerClassName()/] extends JspController_Ab
 	[/if][/for]
 
 	[comment : zone libre pour le codage de methodes. /]
-	// [viewState.buildJspControllerClassName()/]
+	[displayClearUserCodeId (viewState.buildJspControllerClassName())/]
 	// [protected (viewState.getUserCodeId(viewState.buildJspControllerClassName()))]
 	
 	// [/protected]
@@ -211,7 +211,7 @@ public class [viewState.buildJspControllerClassName()/] extends JspController_Ab
 	 */
 	 public boolean activateOnLoad() {
 		
-		// methode activateOnLoad
+		[displayClearUserCodeId ('methode activateOnLoad')/]
 		// [protected (viewState.getUserCodeId('methode activateOnLoad'))]
 	
 		return Boolean.[if viewState.isReferentialController()]TRUE[else]FALSE[/if];	

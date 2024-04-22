@@ -40,7 +40,7 @@ public enum [buildJspDispatcherClassName()/] implements JspDispatcherEnum_Itf {
 
 	// Placer ici des énumérations supplémentaires si besoin.	
 	
-	// define enumeration sub controllers
+	[displayClearUserCodeId ('define enumeration sub controllers')/]
 	// [protected (root.getUserCodeId('define enumeration sub controllers'))]
 
 	// [/protected]
@@ -119,7 +119,7 @@ public enum [buildJspDispatcherClassName()/] implements JspDispatcherEnum_Itf {
 		
 		// Modifier ici la chaine de routage si besoin.		
 
-		// [apply_methodDefault('dispatch')/]
+		[displayClearUserCodeId ('dispatch') /]
 		// [protected (root.getUserCodeId(apply_methodDefault('dispatch')))]
 
 		if([apply_methodDefault('redirect')/]()){

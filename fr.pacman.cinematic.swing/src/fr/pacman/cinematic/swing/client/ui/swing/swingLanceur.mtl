@@ -75,7 +75,7 @@ public final class [nameSwingLanceur()/]
     */
    public static void init (final String['[]'/] p_args)
    {
-      // Initialisation
+      [displayClearUserCodeId ('Initialisation')/]
       // [protected (root.getUserCodeId('Initialisation'))]
       // Look and feel Nimbus plutôt qu'Ocean par défaut
       for (final LookAndFeelInfo v_info : UIManager.getInstalledLookAndFeels())

@@ -57,7 +57,7 @@ public class [buildServiceFacadeClassName(s)/] implements [buildServiceFacadeInt
    @Override
    public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/])
    {
-	 // [userCodeForOperation(o)/]
+	 [displayClearUserCodeId (userCodeForOperation(o))/]
 	 // [protected (o.getUserCodeId(userCodeForOperation(o)))]
 [if o.paramOutXto() <> 'void']
       return [if not o.output->first().type.oclIsKindOf(PrimitiveType)]
@@ -75,7 +75,7 @@ public class [buildServiceFacadeClassName(s)/] implements [buildServiceFacadeInt
 [/if]
 [/for]
 [/if]
-   // [buildServiceFacadeClassName(s)/]
+   [displayClearUserCodeId (buildServiceFacadeClassName(s))/]
    // [protected (s.getUserCodeId(buildServiceFacadeClassName(s)))]
 
    // [/protected]

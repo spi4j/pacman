@@ -26,14 +26,14 @@ public class [t.name.toUpperFirst()/]
 
    // ATTRIBUTS
 
-   // Attributs
+   [displayClearUserCodeId ('Attributs')/]
    // [protected (t.getUserCodeId('Attributs'))]
 
    // [/protected]
 
 
-   // Méthodes
-   // [protected (t.getUserCodeId('Méthodes'))]
+   [displayClearUserCodeId ('Methodes')/]
+   // [protected (t.getUserCodeId('Methodes'))]
 
    // [/protected]
 

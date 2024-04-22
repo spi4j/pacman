@@ -39,7 +39,7 @@ import [buildPackageBusiness() + '.' + buildAppliUserBusinessGenClassName()/];
  */
 public class WebappRemotingServlet extends fr.spi4j.remoting.RemotingServlet
 {
-   // WebappRemotingServlet
+   [displayClearUserCodeId ('WebappRemotingServlet')/]
    // [protected (any.getUserCodeId('WebappRemotingServlet'))]
 
    private static final long serialVersionUID = 1L;

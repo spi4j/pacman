@@ -89,13 +89,13 @@ package [buildPackageBusinessApiDto(d)/];
 // [/protected]
 
 /**
- * L'énumération définissant les informations de chaque attribut pour le type '[d.nameClassDto()/]'.
+ * L'énumération définissant les informations yyy de chaque attribut pour le type '[d.nameClassDto()/]'.
  * @author [getAuthorName()/]
  */
 public enum [d.buildAttributesEnumName()/] implements [getClassNameForAttributesNames_Itf()/]
 {
 [if d.isNotPersistent() and not d.isParent()]
-   // Enumeration Attributs
+   [displayClearUserCodeId ('Enumeration Attributs')/]
    // [protected (d.getUserCodeId('Enumeration Attributs'))]
 
    // [/protected]

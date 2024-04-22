@@ -47,7 +47,7 @@ public abstract class [s.buildAppliXtoAbstractClassName()/] {
 
 	// CONSTANTES
 
-	// Constantes
+	[displayClearUserCodeId ('Constantes')/]
 	// [protected (s.getUserCodeId('Constantes'))]
 
 	// [/protected]
@@ -61,7 +61,7 @@ public abstract class [s.buildAppliXtoAbstractClassName()/] {
    	private [columnProp.getTypeColumn()/] [apply_attributeDefault(columnProp.getNameColumn())/];[lineSeparator()/]
 	[/if][/for]
 
-	// Commons Attributs 
+	[displayClearUserCodeId ('Commons Attributs')/] 
 	// [protected (s.getUserCodeId('Commons Attributs'))]
 
 	// [/protected]
@@ -140,7 +140,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
    [comment : for the moment, leave the code but block ./]
    [if not d.hasParent() and not isLibraryRS()]
    /** L'identifiant. */
-   // for annotation_[nameENUM_PK_ID()/]
+   [displayClearUserCodeId ('for annotation_'+nameENUM_PK_ID())/]
    // [protected (d.getUserCodeId('for annotation_' + nameENUM_PK_ID()))]
    @XmlElement(namespace = "", name = "[nameENUM_PK_ID()/]")
    [if useWS()]@JsonProperty("[nameENUM_PK_ID()/]")[/if]
@@ -152,7 +152,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
 [for (a : Attribute | d.attributesNotComputed())]
 [if not isPropertyFromParent(a, d)]
    /** [a.description/]. */
-   // for annotation_[nameBaseAttribute(a)/]
+   [displayClearUserCodeId ('for annotation_' + nameBaseAttribute(a))/]
    // [protected (d.getUserCodeId('for annotation_' + nameBaseAttribute(a)))]
    @XmlElement(namespace = "", name = "[nameBaseAttribute(a)/]")
    [if useWS()]@JsonProperty("[nameBaseAttribute(a)/]")[/if]
@@ -166,7 +166,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
 [if not r.referencedType.oclAsType(DTO).isNotPersistent() and not isLibraryRS()]
    [comment : for REST services, we dont need a FK reference. (no persistence)/]
    /** La FK sur le Type '[r.nameClassXto()/]'. */
-   // for annotation_1_[nameBaseReference(r) + namePK_ID()/]
+   [displayClearUserCodeId ('for annotation_1_' + nameBaseReference(r) + namePK_ID())/]
    // [protected (r.getUserCodeId('for annotation_1_' + nameBaseReference(r) + namePK_ID()))]
    @XmlElement(namespace = "", name = "[nameBaseReference(r)/][namePK_ID()/]")
    [if useWS()]@JsonProperty("[nameBaseReference(r)/][namePK_ID()/]")[/if]
@@ -175,7 +175,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
 [/if]
 
    /** L'instance de '[r.referencedType.oclAsType(DTO).genTypeName()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
-   // for annotation_[nameBaseReference(r)/]
+   [displayClearUserCodeId ('for annotation_' + nameBaseReference(r))/]
    // [protected (r.getUserCodeId('for annotation_' + nameBaseReference(r)))]
    @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
    [if useWS()]@JsonProperty("[nameBaseReference(r)/]")[/if]
@@ -187,7 +187,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
 [for (r : Reference | d.referencesStarStar())]
 [if not isPropertyFromParent(r, d)]
    /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
-   // for annotation_1_[apply_attributeMultiple(r.name.toLowerFirst())/]
+   [displayClearUserCodeId ('for annotation_1_' + apply_attributeMultiple(r.name.toLowerFirst()))/]
    // [protected (r.getUserCodeId('for annotation_1_' + apply_attributeMultiple(r.name.toLowerFirst())))]
    @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
    [if useWS()]@JsonProperty("[nameBaseReference(r)/]")[/if]
@@ -199,7 +199,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
 [for (r : Reference | d.referencesStarNoStar())]
 [if not isPropertyFromParent(r, d)]
    /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
-   // for annotation_[apply_attributeMultiple(r.name.toLowerFirst())/]
+   [displayClearUserCodeId ('for annotation_' + apply_attributeMultiple(r.name.toLowerFirst()))/]
    // [protected (r.getUserCodeId('for annotation_' + apply_attributeMultiple(r.name.toLowerFirst())))]
    @XmlElement(namespace = "", name = "[nameBaseReference(r)/]")
    [if useWS()]@JsonProperty("[nameBaseReference(r)/]")[/if]
@@ -211,7 +211,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
 [for (r : Reference | d.referencingStar())]
 [if not isPropertyFromParent(r, d) and not isLibraryRS()]
    /** La FK sur le type '[r.containingType.oclAsType(DTO).nameBaseXtoUP()/]'. */
-   // for annotation_[nameBaseReference(r) + namePK_ID()/]
+   [displayClearUserCodeId ('for annotation_' + nameBaseReference(r) + namePK_ID())/]
    // [protected (r.getUserCodeId('for annotation_' + nameBaseReference(r) + namePK_ID()))]
    @XmlElement(namespace = "", name = "[nameBaseReferenceInverse(r)/][namePK_ID()/]")
    [if useWS()]@JsonProperty("[nameBaseReferenceInverse(r)/][namePK_ID()/]")[/if]
@@ -407,7 +407,7 @@ public [if d.isParent()]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.g
    @Override
    public String toString ()
    {
-      // toString
+      [displayClearUserCodeId ('toString')/]
       // [protected (d.getUserCodeId('toString'))]
 
       return [d.toString()/]

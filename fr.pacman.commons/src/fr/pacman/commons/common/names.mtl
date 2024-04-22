@@ -5,6 +5,7 @@
               'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
 [import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::properties /]
 
 [query public getApplicationName(any : OclAny) : String = 
 	getApplicationName_invoke().trim()
@@ -171,6 +172,18 @@ else
 endif
 /]
 
+[comment : securite, si pas de presence _id on ajoute a la fin de la reference /]
+[query public buildSimpleReferenceName (s : String) : String = 
+if(useIdSqlSuffixForReferences()) then 
+	if (s.size() > nameSQL_REF_ID().size() + 1 
+		and s.substring(s.size() - nameSQL_REF_ID().size() + 1).equalsIgnoreCase(nameSQL_REF_ID())) then 
+		s
+	else 
+		s + nameSQL_REF_ID()
+	endif 
+else s endif
+/]
+
 [comment : Get and write the name for the primary key. /]
 [template public namePK_ID(any : OclAny)]
 _id
@@ -183,6 +196,6 @@ id
 
 [comment : Get and write the name for the reference key. /]
 [template public nameSQL_REF_ID(any : OclAny)]
-[any.namePK_ID().toUpperCase() /]
+[namePK_ID().toUpperCase() /]
 [/template]
 

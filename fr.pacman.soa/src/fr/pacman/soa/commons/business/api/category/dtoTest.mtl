@@ -51,7 +51,7 @@ package [buildPackageBusinessApiDto(d)/];
  * Classe de test pour le DTO '[d.nameClassDto()/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (d.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [d.buildDtoTestClassName()/] extends [getClassNameForBeanTester_Abs()/]
@@ -125,7 +125,7 @@ public class [d.buildDtoTestClassName()/] extends [getClassNameForBeanTester_Abs
 [/for]
       // test des valeurs
       [if d.isNotPersistent()]
-      // getId
+      [displayClearUserCodeId ('getId')/]
       // [protected (d.getUserCodeId('getId'))]
       assertEquals([apply_variableDefault(nameENUM_PK_ID())/], [apply_variableDefault('dto')/].getId(), "Champ id incorrect");
       // [/protected]
@@ -150,8 +150,8 @@ public class [d.buildDtoTestClassName()/] extends [getClassNameForBeanTester_Abs
       assertEquals([apply_variableDefault(r.nameBaseReferenceInverse())/], [apply_variableDefault('dto')/].[apply_methodGet(r.nameBaseReferenceInverse())/][namePK_ID()/](), "Champ [nameSimpleProperty(r)/] incorrect");
 [/for]
 
-      // Remplissage références du dto
-      // [protected (d.getUserCodeId('Remplissage références du dto'))]
+      [displayClearUserCodeId ('Remplissage references du dto')/]
+      // [protected (d.getUserCodeId('Remplissage references du dto'))]
 
       // [/protected]
 
@@ -190,7 +190,7 @@ public class [d.buildDtoTestClassName()/] extends [getClassNameForBeanTester_Abs
     */   
    private [a.type.name.toUpperFirst()/] getRandom[genPropertyTypeNoGenerics(a).mapTypeFilter()/] ()
    {
-	  // getRandom_[a.type.name.toUpperFirst()/]
+	  [displayClearUserCodeId ('getRandom_' + a.type.name.toUpperFirst())/]
 	  // [protected (a.getUserCodeId('getRandom_'+a.type.name.toUpperFirst()))]
 
 		return [if ((a.type.name.contains('<')))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];

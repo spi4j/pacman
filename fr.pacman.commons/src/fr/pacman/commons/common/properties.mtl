@@ -117,6 +117,14 @@
 	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseConfigFilesSpi4jFrwk()', Sequence{})
 /]
 
+[query public useBatch(any : OclAny) : Boolean =
+	useBatch_invoke().toBoolean()
+/]
+
+[query private useBatch_invoke(any : OclAny) : String = 
+    invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseBatch()', Sequence{})
+/]
+
 [query public useMatching(any : OclAny) : Boolean =
     useMatching_invoke().toBoolean()
 /]
@@ -169,7 +177,7 @@
    	isClearUserCode_invoke().toBoolean()
 /]
 
-[query public isClearUserCode_invoke(any : OclAny) : String =
+[query private isClearUserCode_invoke(any : OclAny) : String =
    	invoke('fr.pacman.commons.convention.project.ProjectProperties','getIsClearUserCode()', Sequence{})
 /]
 
@@ -469,7 +477,7 @@
 	getPagingPageCountKey_invoke()
 /]
 
-[query public getPagingPageCountKey_invoke(any : OclAny) : String =
+[query private getPagingPageCountKey_invoke(any : OclAny) : String =
 	invoke('fr.pacman.commons.convention.project.ProjectProperties','getJavaPagingCount()', Sequence{})
 /]
 
@@ -478,8 +486,26 @@
 	getPagingCurrentPageIdxKey_invoke()
 /]
 
-[query public getPagingCurrentPageIdxKey_invoke(any : OclAny) : String =
+[query private getPagingCurrentPageIdxKey_invoke(any : OclAny) : String =
 	invoke('fr.pacman.commons.convention.project.ProjectProperties','getPagingCurrentPageIdxKey()', Sequence{})
+/]
+
+[comment : Display clear value before hashcode for user code, case hashcode is enabled. /]
+[query public isClearUserCodeHash(any : OclAny) : Boolean = 
+	isClearUserCodeHash_invoke().toBoolean()
+/]
+
+[query private isClearUserCodeHash_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','isClearUserCodeHash()', Sequence{})
+/]
+
+[comment : . /]
+[query public useIdSqlSuffixForReferences(any : OclAny) : Boolean = 
+	useIdSqlSuffixForReferences_invoke().toBoolean()
+/]
+
+[query private useIdSqlSuffixForReferences_invoke(any : OclAny) : String =
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','useIdSqlSuffixForReferences()', Sequence{})
 /]
 
 [comment : Get the header key for current page size property. /]

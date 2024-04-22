@@ -69,7 +69,7 @@ public class [buildServiceRequirementsClassName(s)/]
 [/for]
 [/if]
 
-   // [buildServiceRequirementsClassName(s)/]
+   [displayClearUserCodeId (buildServiceRequirementsClassName(s))/]
    // [protected (s.getUserCodeId(buildServiceRequirementsClassName(s)))]
 
    // [/protected]

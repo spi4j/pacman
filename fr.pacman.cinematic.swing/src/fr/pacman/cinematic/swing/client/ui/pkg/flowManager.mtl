@@ -29,7 +29,7 @@ package [namePackageFlowManager(flow)/];
 public class [nameFlow(flow)/] extends SpiFlowManager_Abs
 {
 
-   // Attributs [nameFlow(flow)/]
+   [displayClearUserCodeId ('Attributs ' + nameFlow(flow))/]
    // [protected (flow.getUserCodeId('Attributs ' + nameFlow(flow)))]
 
    // [/protected]
@@ -57,7 +57,7 @@ public class [nameFlow(flow)/] extends SpiFlowManager_Abs
    @Override
    public void onStart ()
    {
-      // Pre onStart
+      [displayClearUserCodeId ('Pre onStart')/]
       // [protected (flow.getUserCodeId('Pre onStart'))]
       // [/protected]
 

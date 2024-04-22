@@ -1,0 +1,46 @@
+[comment encoding = UTF-8 /]
+[module Batch('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[template public jberetConfigFile(any : OclAny) post(trim())]
+# Facultatif, les valeurs valides sont 'jdbc', 'infinispan', 'mongodb' et 'in-memory'. 
+# La valeur par défaut est 'jdbc'. 
+# job-repository-type = 
+
+# Facultatif, la valeur par défaut est 'jdbc:h2:~/jberet-repo' pour la base de données h2 comme SGBD de référentiel des tâches par défaut.
+# Pour la base h2 en mémoire, db-url = jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+# Pour mongodb, db-url inclut tous les paramètres de MongoClientURI, y compris les hôtes, les ports, le nom d'utilisateur et le mot de passe,
+# Utiliser le répertoire cible pour stocker la base de données
+# db-url = 
+# db-user =
+# db-password =
+# db-properties =
+
+# Configuré, le 'java.util.concurrent.ThreadPoolExecutor' est créé avec des propriétés liées aux threads comme paramètres.
+# thread-pool-type =
+
+# Obligatoire pour le type 'configuré', les nouvelles tâches sont d'abord traitées en créant des threads principaux.
+# thread-pool-core-size =
+
+# Obligatoire pour le type 'configuré', si tous les threads principaux sont occupés, les nouvelles tâches sont mises en file d'attente.
+# Indique la taille de la file d'attente de travail. Si 0 ou négatif, une 'java.util.concurrent.SynchronousQueue' est utilisée.
+# thread-pool-queue-capacity =
+
+# Obligatoire pour le type 'configuré', indique la taille maximale du pool de threads.
+# Si la file d'attente est pleine, des threads non essentiels supplémentaires sont créés pour gérer les nouvelles tâches.
+# thread-pool-max-size =
+
+# Obligatoire pour le type 'configuré', indique le nombre de secondes pendant lesquelles un thread peut rester inactif.
+# thread-pool-keep-alive-time =
+
+# Facultatif, les valeurs valides sont 'true' ou 'false', la valeur par défaut est 'false'.
+# thread-pool-allow-core-thread-timeout = 
+
+# Facultatif, les valeurs valides sont 'true' ou 'false', la valeur par défaut est 'false'.
+# thread-pool-prestart-all-core-threads = 
+
+# Facultatif, nom complet d'une classe qui implémente 'java.util.concurrent.ThreadFactory'.
+# thread-factory =
+
+# Facultatif, nom complet d'une classe qui implémente 'java.util.concurrent.RejectedExecutionHandler'.
+# thread-pool-rejection-policy =
+[/template]

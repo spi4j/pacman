@@ -307,11 +307,10 @@ endif
 /]
 
 [comment : Calcul de la taille maximale en fonction de la base de données et de la cible. /]
-[comment : !!!! Attention aux problemes de performance on doit appeler a chaque fois le service Java..
-ce qui n'est absolument pas optimise. /]
-[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = 
+[comment: Suite a migration packappli, la max est a 30 et non 32 pour compatibilite. /]
+[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = 	
 	if isDbOracle32() then
-		32 - (prefix + suffix) 
+		30 - (prefix + suffix) 
 	else 
 		128
 	endif

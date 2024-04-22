@@ -47,7 +47,7 @@ package [buildPackageImplWs(s)/];
 public class [buildServiceFacadeCXFClassName(s)/] implements [buildServiceFacadeCXFInterfaceName(s)/]
 {
 
-	// attributs
+	[displayClearUserCodeId ('attributs')/]
 	// [protected (s.getUserCodeId('attributs'))]
 
     // [/protected]
@@ -62,7 +62,7 @@ public class [buildServiceFacadeCXFClassName(s)/] implements [buildServiceFacade
    @Override
    public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/])
    {
-	// [userCodeForOperation(o)/]
+	[displayClearUserCodeId (userCodeForOperation(o))/]
 	// [protected (o.getUserCodeId(userCodeForOperation(o)))]
 
 [if o.paramOutXto() <> 'void']
@@ -83,7 +83,7 @@ public class [buildServiceFacadeCXFClassName(s)/] implements [buildServiceFacade
 [/if]
 [/for]
 [/if]
-   // [buildServiceFacadeCXFClassName(s)/]
+   [displayClearUserCodeId (buildServiceFacadeCXFClassName(s))/]
    // [protected (s.getUserCodeId(buildServiceFacadeCXFClassName(s)))]
 
    // [/protected]

@@ -73,7 +73,7 @@ public class [buildServiceGwtImplementationName(s)/] extends SpiRemoteServiceImp
 [if s <> null and not s.ownedInterface.oclIsUndefined()]
 [if not s.ownedInterface.ownedOperations->isEmpty()]
 [for (o : Operation | s.ownedInterface.ownedOperations)]
-   // [userCodeForOperation(o)/]
+   [displayClearUserCodeId (userCodeForOperation(o))/]
    // [protected (o.getUserCodeId(userCodeForOperation(o)))]
    @Override
    public [paramOutXto(o)/] [apply_methodDefault(o.name)/] ([paramsInXto(o)/])
@@ -95,7 +95,7 @@ public class [buildServiceGwtImplementationName(s)/] extends SpiRemoteServiceImp
 [/if]
 [/if]
 
-   // [nameServiceInterfaceGwt(s)/]
+   [displayClearUserCodeId (nameServiceInterfaceGwt(s))/]
    // [protected (s.getUserCodeId(nameServiceInterfaceGwt(s)))]
 
    // [/protected]

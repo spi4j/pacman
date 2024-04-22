@@ -51,7 +51,7 @@ public class [buildMapperClassName(d)/] extends [getClassNameForMapper_Abs()/]<[
    {
       final [buildXtoClassNameFromDto(d)/] [apply_variableFinal('xto')/] = super.convertDtoToXto([apply_parameterMethodClassicIn('dto')/]);
 
-      // convertDtoToXto
+      [displayClearUserCodeId ('convertDtoToXto')/]
       // [protected (d.getUserCodeId('convertDtoToXto'))]
 
       // [/protected]
@@ -64,7 +64,7 @@ public class [buildMapperClassName(d)/] extends [getClassNameForMapper_Abs()/]<[
    {
       final [buildDtoClassName(d)/] [apply_variableFinal('dto')/] = super.convertXtoToDto([apply_parameterMethodClassicIn('xto')/]);
 
-      // convertXtoToDto
+      [displayClearUserCodeId ('convertXtoToDto')/]
       // [protected (d.getUserCodeId('convertXtoToDto'))]
 
       // [/protected]
@@ -108,7 +108,7 @@ public class [buildMapperClassName(d)/] extends [getClassNameForMapper_Abs()/]<[
       return super.getSpecificMapper([apply_parameterMethodClassicIn('field name')/]);
    }
 
-   // [nameMapper(d)/]
+   [displayClearUserCodeId (nameMapper(d))/]
    // [protected (d.getUserCodeId(nameMapper(d)))]
 
    // [/protected]

@@ -116,7 +116,7 @@ public final class [buildAppliUserBusinessGenClassName()/] extends [buildAppliUs
 
 [for (srv : Service | listeServicesFromSystem(n))]
 [if (serviceSeul(srv) and ( not isFromEntityService(srv))) ]
-      // Binding correspondant au Service [buildServiceInterfaceName(srv)/]
+      [displayClearUserCodeId ('Binding correspondant au Service ' + buildServiceInterfaceName(srv))/]
       // [protected (srv.getUserCodeId('Binding correspondant au Service ' + buildServiceInterfaceName(srv)))]
       final [buildServiceInterfaceName(srv)/] [apply_variableObjectDefault(buildServiceName(srv))/] = wrapService([buildServiceInterfaceName(srv)/].class, "[buildPackageBusinessImplementationService(srv)/].[buildServiceClassName(srv)/]");
       bind([buildServiceInterfaceName(srv)/].class, [apply_variableObjectDefault(buildServiceName(srv))/]);

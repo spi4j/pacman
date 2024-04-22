@@ -59,7 +59,7 @@ package [buildPackageBusinessImplementationServiceDto(s, d)/];
  * Pour rappel, les services sont sans état.
  * @author [getAuthorName()/]
  */
-// annotations service
+[displayClearUserCodeId ('annotations service')/]
 // [protected (s.getUserCodeId('annotations service'))]
 [if useEjb()]
 @Stateless
@@ -69,7 +69,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   [displayClearUserCodeId ('attributs')/]
    // [protected (s.getUserCodeId('attributs'))]
 
    // [/protected]
@@ -98,7 +98,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
     * @param [apply_parameterMethodClassicIn('id')/] : Identifiant unique pour l'instance à obtenir.
     * @return [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Read'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Read')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read'))]
 
 	// [/protected]
@@ -114,7 +114,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
 	* @return [buildDtoClassName(d)/] : la nouvelle instance de type '[buildDtoClassName(d)/]'.
     * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Create'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Create')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create'))]
 
 	// [/protected]
@@ -129,7 +129,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
     * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
     * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Update'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Update')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update'))]
 
 	// [/protected]
@@ -144,7 +144,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
     * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
     * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Delete'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Delete')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete'))]
 
 	// [/protected]
@@ -231,7 +231,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
       [/for]
       [/if]
 
-      // [userCodeForOperation(o)/]
+      [displayClearUserCodeId (userCodeForOperation(o))/]
       // [protected (o.getUserCodeId(userCodeForOperation(o)))]
       // Appel des exigences
       [if useServiceRequirements()]
@@ -251,7 +251,7 @@ public class [buildServiceClassName(s, d)/] [if (hasCrud(d))]extends [getClassNa
 [/for]
 [/if]
 
-   // [nameService(s, d)/]
+   [displayClearUserCodeId (nameService(s, d))/]
    // [protected (s.getUserCodeId(nameService(s, d)))]
 
    // [/protected]

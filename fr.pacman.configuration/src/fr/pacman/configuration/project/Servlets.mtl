@@ -255,7 +255,7 @@ public class [buildCacheManagerClassName()/] implements ServletContextListener
       ServiceCacheProxy.clearCaches();
       [apply_attributeFinalStatic('log')/].info("Caches purges");
 
-	  // for reloading caches
+	  [displayClearUserCodeId ('for reloading caches')/]
 	  // [protected (any.getUserCodeId('for reloading caches'))]
 
       // [/protected]

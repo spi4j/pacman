@@ -28,7 +28,7 @@ public class InitializationListener implements ServletContextListener
    @Override
    public void contextInitialized (final ServletContextEvent p_event)
    {
-		// Context initialized
+		[displayClearUserCodeId ('Context initialized')/]
 	  	// [protected (root.getUserCodeId('context initialized'))]
 
       	Parameters.initServletContext(p_event.getServletContext());
@@ -42,14 +42,14 @@ public class InitializationListener implements ServletContextListener
    @Override
    public void contextDestroyed (final ServletContextEvent p_event)
    {
-		// Context destroyed
+		[displayClearUserCodeId ('Context destroyed')/]
 	  	// [protected (root.getUserCodeId('context destroyed'))]
 
  		// [/protected]
    }
    
-   // Méthodes
-   // [protected (root.getUserCodeId('Méthodes'))]
+   [displayClearUserCodeId ('Methodes')/]
+   // [protected (root.getUserCodeId('Methodes'))]
 
    // [/protected]
 

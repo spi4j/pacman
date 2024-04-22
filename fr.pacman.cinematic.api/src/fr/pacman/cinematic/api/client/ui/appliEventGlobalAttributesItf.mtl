@@ -23,7 +23,7 @@ package [namePackageClient()/];
 public interface [buildAppliEventGlobalAttributesItf()/]
 {
 
-   // [buildAppliEventGlobalAttributesItf()/]
+   [displayClearUserCodeId (buildAppliEventGlobalAttributesItf())/]
    // [protected (any.getUserCodeId(buildAppliEventGlobalAttributesItf()))]
 
    /** La clé contenant le DTO */

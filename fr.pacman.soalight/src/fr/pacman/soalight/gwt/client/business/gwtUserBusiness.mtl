@@ -96,7 +96,7 @@ public class [buildGwtUserBusinessClassName()/] extends GwtUserBusiness_Abs
 [/for]
    }
 
-   // Methodes
+   [displayClearUserCodeId ('Methodes')/]
    // [protected (n.getUserCodeId('Methodes'))]
 
    /**

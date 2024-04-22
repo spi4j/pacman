@@ -509,7 +509,7 @@ public final class [s.buildRSFrontResourceClassName()/] extends [buildRSFrontRes
 [getComParamsIn(o)/][comParamOut(o)/][comRSFaults(o)/]    */
   public [o.writeParamOutIfexist()/] [apply_methodDefault(o.name)/]([o.addParamsInXtoIfExists()/]) {
 
-    // for [o.userCodeForOperation()/]
+    [displayClearUserCodeId ('for ' + o.userCodeForOperation())/]
     // [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
 
     [o.writeReturnParamsIfExists()/] [o.hackHeadClose()/][apply_methodDefault('target')/]()

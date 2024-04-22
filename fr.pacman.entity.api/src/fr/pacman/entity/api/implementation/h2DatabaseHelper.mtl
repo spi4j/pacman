@@ -99,7 +99,7 @@ public final class [buildH2DatabaseHelperClassName()/] extends H2DatabaseHelper
       [apply_attributeFinalStatic('instance')/].initDatabase();
    }
 
-   // Methodes
+   [displayClearUserCodeId ('Methodes')/]
    // [protected (r.getUserCodeId('Methodes'))]
 
    // [/protected]

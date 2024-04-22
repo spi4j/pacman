@@ -102,7 +102,7 @@ public class [buildBoostrapClassName()/] {
 	 */
 	private int getDefaultHttpPort(final String['[]'/] [apply_parameterMethodClassicIn('args')/]) throws ParseException  {
 	
-		// getDefaultHttpPort
+		[displayClearUserCodeId ('getDefaultHttpPort')/]
 		// [protected (any.getUserCodeId('getDefaultHttpPort'))]
 
 		Options [apply_variableDefault('option')/] = new Options();
@@ -127,7 +127,7 @@ public class [buildBoostrapClassName()/] {
 	 */
 	private void start (final String['[]'/] [apply_parameterMethodClassicIn('args')/]) throws Exception {
 
-		// start
+		[displayClearUserCodeId ('start')/]
 		// [protected (any.getUserCodeId('start'))]
 
 		[if 'tomee'.equalsIgnoreCase(getHttpEmbeddedServer())]
@@ -262,7 +262,7 @@ public class [buildBoostrapClassName()/] {
 	 */
 	private void addBasicAuthUsers() {
 
-		// addBasicAuthUsers
+		[displayClearUserCodeId ('addBasicAuthUsers')/]
    		// [protected (any.getUserCodeId('addBasicAuthUsers'))]
 
 		if(null != [buildServerNameWithPrefix()/]) {
@@ -292,7 +292,7 @@ public class [buildBoostrapClassName()/] {
 	 */
 	public void waitForInterrupt() throws Exception {
 
-		// waitForInterrupt
+		[displayClearUserCodeId ('waitForInterrupt')/]
    		// [protected (any.getUserCodeId('waitForInterrupt'))]
 		
 		if(System.in.read()!=-1) {
@@ -309,7 +309,7 @@ public class [buildBoostrapClassName()/] {
 	 */
 	public void stop() throws Exception {
 
-		// stop
+		[displayClearUserCodeId ('stop')/]
    		// [protected (any.getUserCodeId('stop'))]
 
 		[apply_attributeStatic('log')/].info("Demande de fermeture pour le serveur [getApplicationName()/]...");

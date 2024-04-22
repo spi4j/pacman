@@ -41,17 +41,11 @@ public class PacmanConfig {
 	public static final String c_IHM_TYPE_NO_DBDD = "JSF";
 	public static final String c_MODEL_AIRD_NAME = "representations.aird";
 	public static final String c_JAVA_11 = "version 11";
-	public static final String c_JAVA_12 = "version 12";
-	public static final String c_JAVA_13 = "version 13";
-	public static final String c_JAVA_14 = "version 14";
-	public static final String c_JAVA_15 = "version 15";
-	public static final String c_JAVA_16 = "version 16";
 	public static final String c_JAVA_17 = "version 17";
-	public static final String c_JAVA_18 = "version 18";
-	public static final String c_JAVA_19 = "version 19";
-	public static final String c_JAVA_20 = "version 20";
+	public static final String c_JAVA_20 = "version 21";
 	public static final String c_NORME_SUN = "SUN";
 	public static final String c_NORME_SAFRAN = "SAFRAN";
+	public static final String c_NORME_CUSTOM = "CUSTOM";
 	public static final String c_CLIENT_SWING = "SWING";
 	public static final String c_CLIENT_GWT = "GWT";
 	public static final String c_CLIENT_JSF = "JSF";
@@ -70,12 +64,11 @@ public class PacmanConfig {
 
 	// Initialisation des listes deroulantes.
 	public static final String[] c_USE_BDD_LIST = new String[] { "OUI", "NON" };
-	public static final String[] c_JAVA_NAMING_LIST = new String[] { c_NORME_SUN, c_NORME_SAFRAN };
+	public static final String[] c_JAVA_NAMING_LIST = new String[] { c_NORME_SUN, c_NORME_SAFRAN, c_NORME_CUSTOM };
 	public static final String[] c_IHM_TYPE_LIST = new String[] { "", c_CLIENT_SWING, c_CLIENT_GWT, c_CLIENT_JSF,
 			c_CLIENT_JSP };
 	
-	public static final String[] c_JAVA_VERSION_LIST = new String[] { c_JAVA_11, c_JAVA_12, c_JAVA_13, c_JAVA_14,
-			c_JAVA_15, c_JAVA_16, c_JAVA_17, c_JAVA_18, c_JAVA_19, c_JAVA_20 };
+	public static final String[] c_JAVA_VERSION_LIST = new String[] { c_JAVA_11, c_JAVA_17, c_JAVA_20 };
 	
 	public static final String[] c_HTTP_SERVER_LIST = new String[] { c_HTTP_NONE, c_HTTP_TOMCAT };
 	public static final String[] c_SQL_TYPE_COLUMN_LIST = new String[] { "Binary", "Boolean", "Date", "Double", "Float",
@@ -140,14 +133,7 @@ public class PacmanConfig {
 		c_JAVA_VERSION = new HashMap<String, String>();
 
 		c_JAVA_VERSION.put(c_JAVA_11, "11");
-		c_JAVA_VERSION.put(c_JAVA_12, "12");
-		c_JAVA_VERSION.put(c_JAVA_13, "13");
-		c_JAVA_VERSION.put(c_JAVA_14, "14");
-		c_JAVA_VERSION.put(c_JAVA_15, "15");
-		c_JAVA_VERSION.put(c_JAVA_16, "16");
 		c_JAVA_VERSION.put(c_JAVA_17, "17");
-		c_JAVA_VERSION.put(c_JAVA_18, "18");
-		c_JAVA_VERSION.put(c_JAVA_19, "19");
 		c_JAVA_VERSION.put(c_JAVA_20, "20");
 	}
 

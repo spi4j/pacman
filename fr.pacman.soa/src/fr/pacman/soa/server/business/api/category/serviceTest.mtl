@@ -65,7 +65,7 @@ package [buildPackageBusinessApiServiceDto(s, d)/];
  * Classe de test du service '[buildServiceInterfaceName(s, d)/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (s.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTester_Abs()/]
@@ -108,7 +108,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
       [/if]
       [apply_attributeStatic('service')/] = [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s, d))/] ();
 
-      // set up before class
+      [displayClearUserCodeId ('set up before class')/]
       // [protected (s.getUserCodeId('set up before class'))]
       // [/protected]
    }
@@ -123,7 +123,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
 	  [apply_attributeStatic('user persistence')/].begin ();
 	  [/if]
 
-      // set up
+      [displayClearUserCodeId ('set up')/]
       // [protected (s.getUserCodeId('set up'))]
       // [/protected]
    }
@@ -155,7 +155,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
 			"Le dto n'a pas été trouvé dans la liste de tous les dto");
 [/if]
 
-      // findAll assertions
+      [displayClearUserCodeId ('findAll assertions')/]
       // [protected (s.getUserCodeId('findAll assertions'))]
 
       // [/protected]
@@ -172,7 +172,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
    {
       final [buildDtoClassName(d)/] [apply_variableFinal(buildDtoClassName(d))/] = new [buildDtoClassName(d)/] ();
 
-      // create
+      [displayClearUserCodeId ('create')/]
       // [protected (s.getUserCodeId('create'))]
       // TODO renseigner données de test
   [for (a : Attribute | d.attributesNotComputed())]
@@ -219,7 +219,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
 
       assertNotNull ([apply_variableFinal('created' + buildDtoClassName(d))/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
 
-      // create assertions
+      [displayClearUserCodeId ('create assertions')/]
       // [protected (s.getUserCodeId('create assertions'))]
 
 [for (r : Reference | d.referencesStarStar())]
@@ -252,7 +252,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
       assertNotNull ([apply_variableFinal('dto')/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
       assertNotNull ([apply_variableFinal('dto')/].toString (), "Le dto créé devrait avoir un toString");
 
-      // findById assertions
+      [displayClearUserCodeId ('findById assertions')/]
       // [protected (s.getUserCodeId('findById assertions'))]
 
       // [/protected]
@@ -271,7 +271,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
 
       final [buildDtoClassName(d)/] [apply_variableFinal('dto')/] = [apply_attributeStatic('service')/].findById ([apply_attributeStatic('crud id')/]);
 
-      // update
+      [displayClearUserCodeId ('update')/]
       // [protected (s.getUserCodeId('update'))]
 
   [for (r : Reference | d.referencesNoStar())]
@@ -286,7 +286,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
 
       assertNotNull ([apply_variableFinal('updated dto')/].getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
 
-      // update assertions
+      [displayClearUserCodeId ('update assertions')/]
       // [protected (s.getUserCodeId('update assertions'))]
 
       // [/protected]
@@ -309,7 +309,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
       assertNull (DtoUtil.findInCollectionById ([apply_variableFinal('all')/], crudId), 
 			"Le dto ne devrait plus exister dans la liste de tous les dto");
 
-      // delete assertions
+      [displayClearUserCodeId ('delete assertions')/]
       // [protected (s.getUserCodeId('delete assertions'))]
 
       // [/protected]
@@ -324,7 +324,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
    public void [apply_methodDefault('test get column')/] ()
    {
       [buildUserMatchingGenClassName()/].[apply_methodDefault('get ' + buildAppliMatchName(d))/] ().getColumn ([d.buildAttributesEnumName()/].id);
-      // getColumn
+      [displayClearUserCodeId ('getColumn')/]
       // [protected (s.getUserCodeId('getColumn'))]
       [if d.attributesNotComputed()->size() > 0]
       [buildUserMatchingGenClassName()/].[apply_methodDefault('get ' + buildAppliMatchName(d))/] ().getColumn ([d.buildAttributesEnumName()/].[apply_attributeEnum(d.attributesNotComputed()->first().name)/]);
@@ -343,7 +343,7 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
    @Test
    public void [apply_methodDefault('test ' + o.userCodeForJavaOperation())/] () throws Throwable
    {
-      // [userCodeForOperation(o)/]
+      [displayClearUserCodeId (userCodeForOperation(o))/]
       // [protected (o.getUserCodeId(userCodeForOperation(o)))]
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -362,12 +362,12 @@ public class [buildServiceTestClassName(s, d)/]  extends [getClassNameForBeanTes
       [apply_attributeStatic('user persistence')/].rollback ();
  	  [/if]
 
-      // tear down
+      [displayClearUserCodeId ('tear down')/]
       // [protected (s.getUserCodeId('tear down'))]
       // [/protected]
    }
 
-   // specific service test
+   [displayClearUserCodeId ('specific service test')/]
    // [protected (s.getUserCodeId('specific service test'))]
 
    // [/protected]

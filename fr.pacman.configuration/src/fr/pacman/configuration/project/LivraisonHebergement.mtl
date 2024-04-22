@@ -4,6 +4,7 @@
 [import fr::pacman::commons::common::properties / ]
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports/]
 
 [import fr::pacman::configuration::common::properties / ]
 
@@ -273,7 +274,8 @@
         </fileSet>
 
 		<!--
-		// [protected ('filesets')]
+		[displayClearUserCodeId ('filesets')/]
+		// [protected (getUserCodeId('filesets'))]
 		-->
 
 		<!--

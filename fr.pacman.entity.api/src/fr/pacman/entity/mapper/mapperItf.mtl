@@ -35,7 +35,7 @@ import [buildPackageWsApiEntity(e)/].[buildXtoClassNameFromEntity(e)/];
 public interface [buildEntityMapperInterfaceName(e)/] extends [getClassNameForEntityMapper_Itf()/]<[buildEntityInterfaceName(e)/], [buildXtoClassNameFromEntity(e)/]>
 {
 
-   // [nameMapperInterface(e)/]
+   [displayClearUserCodeId (nameMapperInterface(e))/]
    // [protected (e.getUserCodeId(nameMapperInterface(e)))]
 
    // [/protected]

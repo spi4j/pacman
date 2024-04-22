@@ -140,7 +140,7 @@
 [template public userCode(any : OclAny)]
 
 <!-- 
-// Zone libre utilisateur
+[displayClearUserCodeId ('Zone libre utilisateur')/]
 // [protected (any.getUserCodeId('zone libre utilisateur'))]
 -->
 

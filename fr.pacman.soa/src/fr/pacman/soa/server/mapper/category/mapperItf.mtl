@@ -34,7 +34,7 @@ package [buildPackageMapperDto(d)/];
 public interface [buildMapperInterfaceName(d)/] extends [getClassNameForMapper_Itf()/]<[buildDtoClassName(d)/], [buildXtoClassNameFromDto(d)/]>
 {
 
-   // [nameMapperInterface(d)/]
+   [displayClearUserCodeId (nameMapperInterface(d))/]
    // [protected (d.getUserCodeId(nameMapperInterface(d)))]
 
    // [/protected]

@@ -83,7 +83,7 @@ public final class [buildReferentielReferenceClassName(r)/]
 
 	// ATTRIBUTS
 
-    // Attributs [buildReferentielReferenceClassName(r)/]
+    [displayClearUserCodeId ('Attributs ' + buildReferentielReferenceClassName(r))/]
     // [protected (r.getUserCodeId('Attributs ' + buildReferentielReferenceClassName(r)))]
 
     // [/protected]
@@ -141,7 +141,7 @@ public final class [buildReferentielReferenceClassName(r)/]
 	  [apply_attributeFinalStatic('LOG')/].info( "/** DEBUT Import Referentiel Relation [r.name/], update de [r.containingType.name/] depuis [r.referencedType.name/] **/" );
 	  [apply_attributeFinalStatic('LOG')/].info( "Import Relation de [r.containingType.name/] depuis [r.referencedType.name/], nom du fkCritere: " + [apply_variableDefault('nom col fk critere')/] );
 
-   	  // PreTraitement [buildReferentielReferenceClassName(r)/]
+   	  [displayClearUserCodeId ('PreTraitement ' + buildReferentielReferenceClassName(r))/]
    	  // [protected (r.getUserCodeId('PreTraitement ' + buildReferentielReferenceClassName(r)))]
 
    	  // [/protected]
@@ -200,7 +200,7 @@ public final class [buildReferentielReferenceClassName(r)/]
 			[/for]
 		  [/if]
 
-   		  	// PreUpdate [buildReferentielReferenceClassName(r)/]
+   		  	[displayClearUserCodeId ('PreUpdate ' + buildReferentielReferenceClassName(r))/]
    		  	// [protected (r.getUserCodeId('PreUpdate ' + buildReferentielReferenceClassName(r)))]
 
    		  	// [/protected]
@@ -243,7 +243,7 @@ public final class [buildReferentielReferenceClassName(r)/]
 			}
 		    [apply_variableDefault('nb lignes traitees')/] ++;
 
-   		    // PostUpdate [buildReferentielReferenceClassName(r)/]
+   		    [displayClearUserCodeId ('PostUpdate ' + buildReferentielReferenceClassName(r))/]
    		    // [protected (r.getUserCodeId('PostUpdate ' + buildReferentielReferenceClassName(r)))]
 
    		    // [/protected]
@@ -282,13 +282,14 @@ public final class [buildReferentielReferenceClassName(r)/]
 	  /** Log de fin du traitement */
 	  [apply_attributeFinalStatic('LOG')/].info( "/** FIN Import Referentiel Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/]  **/\n" );
 
-   	  // PostTraitement [buildReferentielReferenceClassName(r)/]
+   	  [displayClearUserCodeId ('PostTraitement ' + buildReferentielReferenceClassName(r))/]
    	  // [protected (r.getUserCodeId(r.getUserCodeId('PostTraitement ' + buildReferentielReferenceClassName(r))))]
 
    	  // [/protected]
 
    }
 
+   [displayClearUserCodeId ('Methodes ' + buildReferentielReferenceClassName(r))/]
    // [protected ('Methodes ' + buildReferentielReferenceClassName(r))]
 
    // [/protected]

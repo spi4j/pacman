@@ -32,7 +32,7 @@ package [e.buildPackageWsApiEnum()/];
 */
 public enum [e.buildClassNameFromEnumForXto() /] {
 
- 	// [e.buildClassNameFromEnumForXto()/]
+ 	[displayClearUserCodeId (e.buildClassNameFromEnumForXto())/]
  	// [protected (e.getUserCodeId(e.buildClassNameFromEnumForXto()))]
 
     [if not e.literals->isEmpty()]

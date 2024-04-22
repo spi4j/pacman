@@ -54,7 +54,7 @@ import [getImportForBeanTester_Abs()/];
  * Classe de test du service '[buildServiceInterfaceName(s)/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (s.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_Abs()/]
@@ -68,7 +68,7 @@ public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_
    @SuppressWarnings("all")
    private static [buildServiceInterfaceName(s)/] [apply_attributeStatic('service')/];
 
-    // Spécifique
+    [displayClearUserCodeId ('Spécifique')/]
     // [protected (s.getUserCodeId('Spécifique'))]
 
     // [/protected]
@@ -83,7 +83,7 @@ public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_
       [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
       [apply_attributeStatic('service')/] = [buildAppliUserBusinessGenClassName()/].[apply_methodDefault('get ' + buildServiceName(s))/]();
 
-      // set up before class
+      [displayClearUserCodeId ('set up before class')/]
       // [protected (s.getUserCodeId('set up before class'))]
       // [/protected]
    }
@@ -96,7 +96,7 @@ public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_
    {
       [apply_attributeStatic('user persistence')/].begin();
 
-      // set up
+      [displayClearUserCodeId ('set up')/]
       // [protected (s.getUserCodeId('set up'))]
       // [/protected]
    }
@@ -109,7 +109,7 @@ public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_
    {
       [apply_attributeStatic('user persistence')/].rollback();
 
-      // tear down
+      [displayClearUserCodeId ('tear down')/]
       // [protected (s.getUserCodeId('tear down'))]
       // [/protected]
    }
@@ -123,7 +123,7 @@ public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_
    @Test
    public void [apply_methodDefault('test ' + o.name.replaceAll('_', ' '))/] () throws Throwable
    {
-      // [userCodeForOperation(o).replaceAll('Dto', ' ')/]
+      [displayClearUserCodeId (userCodeForOperation(o).replaceAll('Dto', ' '))/]
       // [protected (o.getUserCodeId(userCodeForOperation(o).replaceAll('Dto', ' ')))]
       // TODO : A Implémenter
       fail("Test non implémenté");
@@ -133,7 +133,7 @@ public class [buildServiceTestClassName(s)/] extends [getClassNameForBeanTester_
 [/for]
 [/if]
 
-   // Methodes [buildServiceTestClassName(s)/]
+   [displayClearUserCodeId ('Methodes ' + buildServiceTestClassName(s))/]
    // [protected (s.getUserCodeId('Methodes ' + buildServiceTestClassName(s)))]
 
    // [/protected]

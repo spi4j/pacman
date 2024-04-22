@@ -287,7 +287,7 @@ public class [e.buildXtoClassNameFromEntity()/] implements Serializable, [getCla
    @Override
    public String toString ()
    {
-      // toString
+      [displayClearUserCodeId ('toString')/]
       // [protected (e.getUserCodeId('toString'))]
 
       return [e.toString()/]

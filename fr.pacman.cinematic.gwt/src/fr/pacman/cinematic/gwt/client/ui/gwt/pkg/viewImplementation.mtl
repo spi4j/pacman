@@ -31,7 +31,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
 {
 
 [for (element : ViewElement | viewContainer.viewElements)]
-   // Declaration [element.name + '_' + genericType(element, getImplementationClass(element.widget), false)/]
+   [displayClearUserCodeId ('Declaration' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false))/]
    // [protected (element.getUserCodeId('Declaration ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false)))]
 
    private final [genericType(element, getImplementationClass(element.widget), false)/] [nameVariableElement(element)/];
@@ -39,7 +39,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    // [/protected]
 
 [/for]
-   // Attributs
+   [displayClearUserCodeId ('Attributs')/]
    // [protected (viewContainer.getUserCodeId('Attributs'))]
    private final VerticalPanel _content;
 
@@ -53,7 +53,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    {
       super(p_presenter);
 
-      // avant initialisation
+      [displayClearUserCodeId ('avant initialisation')/]
       // [protected (viewContainer.getUserCodeId('avant initialisation'))]
       _content = new VerticalPanel();
       _content.add(new HTML("<h1>[viewContainer.name/]</h1>"));
@@ -62,7 +62,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
 
       // initialisation des composants
 [for (element : ViewElement | viewContainer.viewElements)]
-      // Parametrage [element.name + '_' + genericType(element, getImplementationClass(element.widget), false)/]
+      [displayClearUserCodeId ('Parametrage' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false))/]
       // [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false)))]
 
       [nameVariableElement(element)/] = new [genericType(element, getImplementationClass(element.widget), false)/]([paramViewElementInConstructor(element)/]);
@@ -85,6 +85,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
          @Override
          public void onValueChange (final ValueChangeEvent<[getElementType(element)/]> p_event)
     [else]
+	  [displayClearUserCodeId (viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name))/]
       // [protected (viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name))]
       [nameVariableElement(element)/].addXXXHandler(new XXXHandler()
       {
@@ -110,8 +111,8 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
 
   [/for]
 [/for]
-      // après initialisation
-      // [protected (viewContainer.getUserCodeId('après initialisation'))]
+      [displayClearUserCodeId ('apres initialisation')/]
+      // [protected (viewContainer.getUserCodeId('apres initialisation'))]
       add(_content);
 
 [if not viewContainer.widget.oclIsUndefined() and viewContainer.widget.name = 'MainPanel']
@@ -125,7 +126,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    @Override
    public void addView (final View_Itf p_view)
    {
-      // addView
+      [displayClearUserCodeId ('addView')/]
       // [protected (viewContainer.getUserCodeId('addView'))]
       if (p_view instanceof IsWidget)
       {
@@ -148,7 +149,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    @Override
    public void restoreView (final View_Itf p_view)
    {
-      // restoreView
+      [displayClearUserCodeId ('restoreView')/]
       // [protected (viewContainer.getUserCodeId('restoreView'))]
 
       // [/protected]
@@ -157,7 +158,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    @Override
    public void removeView (final View_Itf p_view)
    {
-      // removeView
+      [displayClearUserCodeId ('removeView')/]
       // [protected (viewContainer.getUserCodeId('removeView'))]
       if (p_view instanceof IsWidget)
       {
@@ -178,7 +179,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    }
 
 [for (element : ViewElement | viewContainer.viewElements)]
-   // Getter [element.name + '_' + genericType(element, getImplementationClass(element.widget), false)/]
+   [displayClearUserCodeId ('Getter' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false))/]
    // [protected (element.getUserCodeId('Getter ' + element.name + '_' + genericType(element, getImplementationClass(element.widget), false)))]
 
    @Override
@@ -190,7 +191,7 @@ public class [nameViewImplementation(viewContainer)/] extends [genericType(viewC
    // [/protected]
 
 [/for]
-   // [nameViewImplementation(viewContainer)/]
+   [displayClearUserCodeId (nameViewImplementation(viewContainer))/]
    // [protected (viewContainer.getUserCodeId(nameViewImplementation(viewContainer)))]
 
    // [/protected]

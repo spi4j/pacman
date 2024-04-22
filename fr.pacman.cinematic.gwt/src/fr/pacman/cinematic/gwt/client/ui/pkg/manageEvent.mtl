@@ -13,6 +13,7 @@
 [template public gestionTransition (etat : FlowState, evenement : String, fromMainPanel : Boolean) ]
 [for (state : FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
   [if state.oclIsKindOf(ViewState)]
+	  [displayClearUserCodeId (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(ViewState).name))/]
       // [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(ViewState).name))]
     [for (nextView : ViewContainer | state.oclAsType(ViewState).viewContainers)]
       // affichage de l'écran [nextView.name/]
@@ -36,12 +37,14 @@
 
       // [/protected]
 [elseif state.oclIsKindOf(SubflowState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(SubflowState).name))]
+	  [displayClearUserCodeId (evenement.getUserCodeId(evenement + ' : Demarrage du Flow ' + state.oclAsType(SubflowState).name))/]
+      // [protected (evenement.getUserCodeId(evenement + ' : Demarrage du Flow ' + state.oclAsType(SubflowState).name))]
       final [nameFlow(state.oclAsType(SubflowState).subflow)/] [apply_variableDefault(nameFlow(state.oclAsType(SubflowState).subflow).normalize())/] = new [nameFlow(state.oclAsType(SubflowState).subflow)/](this);
       [apply_variableDefault(nameFlow(state.oclAsType(SubflowState).subflow).normalize())/].start();
       // [/protected]
 [elseif state.oclIsKindOf(ActionState)]
-      // [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(ActionState).name))]
+      [displayClearUserCodeId (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(ActionState).name))/]
+	  // [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(ActionState).name))]
       // TODO [state.oclAsType(ActionState).name/]
       // [/protected]
 

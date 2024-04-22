@@ -80,7 +80,7 @@ import jakarta.ejb.Stateless;
  * Pour rappel, les services sont sans état.
  * @author [getAuthorName()/]
  */
-// Annotations Service
+[displayClearUserCodeId ('Annotations Service')/]
 // [protected (e.getUserCodeId('Annotations Service'))]
 [if useEjb()]
 @Stateless
@@ -90,7 +90,7 @@ public class [buildServiceImplClassName(e)/] [if not e.isNotPersistent()]extends
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   [displayClearUserCodeId ('attributs')/]
    // [protected (e.getUserCodeId('attributs'))]
 
    // [/protected]
@@ -101,7 +101,7 @@ public class [buildServiceImplClassName(e)/] [if not e.isNotPersistent()]extends
 [/if]
 
 
-    // Methodes [buildServiceClassName(e)/]
+    [displayClearUserCodeId ('Methodes ' + buildServiceClassName(e))/]
     // [protected (e.getUserCodeId('Methodes ' + buildServiceClassName(e)))]
 
 [if not e.isNotPersistent()]

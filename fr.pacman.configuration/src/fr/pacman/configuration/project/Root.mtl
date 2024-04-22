@@ -5,6 +5,7 @@
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::names /]
 [import fr::pacman::commons::common::utils /]
+[import fr::pacman::commons::common::imports/]
 
 [import fr::pacman::configuration::common::properties /]
 
@@ -75,7 +76,8 @@
 	[/if]
 	
 	<!-- 
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 
 	[if isLibraryRS()]
@@ -283,7 +285,8 @@
             </plugin>
 	
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--
@@ -359,7 +362,8 @@
                     <reportSet>
                         <reports>
 			                <!--
-			                // [protected ('for info reports')]
+							[displayClearUserCodeId ('for info reports')/]
+			                // [protected (getUserCodeId('for info reports'))]
 			                -->
 
                             <report>summary</report>
@@ -539,7 +543,8 @@
 		[/if]
 
 		<!--
-		// [protected ('for properties')]
+		[displayClearUserCodeId ('for properties')/]
+		// [protected (getUserCodeId('for properties'))]
 		-->
 
 		[if isLibraryRS()]
@@ -555,6 +560,10 @@
 
 		<!-- <quartz.version>2.3.2</quartz.version> -->
 		<!-- <snakeyaml.version>2.1</snakeyaml.version>-->
+		[/if]
+		[if useBatch()]
+		<jakarta-batch-api.version>1.0.1</jakarta-batch-api.version>
+		<jberet.version>1.0.2.Final</jberet.version>
 		[/if]
 
 		<!--

@@ -19,7 +19,7 @@ import java.io.InputStream;
 
 // [/protected]
 
-// for library rs binary class
+[displayClearUserCodeId ('for library rs binary class')/]
 // [protected (any.getUserCodeId('for library rs binary class'))]
 public class Binary extends InputStream {
 

@@ -38,7 +38,7 @@ public interface [buildAppliPermissionsInterfaceName()/]
    String [n.apply_attributeFinalStatic(permission)/] = "[permission /]";
 
 [/for]
-   // [buildAppliPermissionsInterfaceName()/]
+   [displayClearUserCodeId (buildAppliPermissionsInterfaceName())/]
    // [protected (n.getUserCodeId(buildAppliPermissionsInterfaceName()))]
 
    // [/protected]

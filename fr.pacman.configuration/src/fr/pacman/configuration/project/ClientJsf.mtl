@@ -33,7 +33,8 @@
     <name>[getApplicationName()/] - Client JSF</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 	
 	<!--	
@@ -151,7 +152,8 @@
         </dependency>
 		[httpEmbeddedServerDependencies(false)/]
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 		
 		<!--
@@ -164,7 +166,8 @@
 			[plugins(false)/]
 			[httpEmbeddedServerPlugins(false)/]
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--
@@ -249,7 +252,7 @@ public class  [getApplicationNameUpperFirst()/]Converter implements Converter
     private static Map<String, Object> entities = new HashMap<String, Object>();
     [/if]
 
-   // Attributs
+   [displayClearUserCodeId ('Attributs')/]
    // [protected (any.getUserCodeId('Attributs'))]
 
    // [/protected]
@@ -306,7 +309,7 @@ public class  [getApplicationNameUpperFirst()/]Converter implements Converter
         return (clazz.toString() + id.toString()).replace(" ", "");
     }
 
-   // Methode
+   [displayClearUserCodeId ('Methode')/]
    // [protected (any.getUserCodeId('Methode'))]
 
    // [/protected]
@@ -614,7 +617,7 @@ public abstract class [buildJsfBeanAbstractName()/]
     /** Log applicatifs */
     private static final Logger [apply_attributeFinalStatic('log')/] = LogManager.getLogger([buildJsfBeanAbstractName()/].class);
 
-    // Attributs
+    [displayClearUserCodeId ('Attributs')/]
     // [protected (any.getUserCodeId('Attributs'))]
 
     // [/protected]
@@ -698,7 +701,7 @@ public abstract class [buildJsfBeanAbstractName()/]
     }
 
 
-    // Methodes
+    [displayClearUserCodeId ('Methodes')/]
     // [protected (any.getUserCodeId('Methodes'))]
 
     // [/protected]

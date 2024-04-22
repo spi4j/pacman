@@ -39,7 +39,7 @@ package [buildPackageWsApiDto(d)/];
  * Classe de test pour le XTO '[d.nameClassXto()/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (d.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [d.buildXtoTestClassName()/] extends [getClassNameForBeanTester_Abs()/]
@@ -137,7 +137,7 @@ public class [d.buildXtoTestClassName()/] extends [getClassNameForBeanTester_Abs
     */
    private [a.type.name.toUpperFirst()/] getRandom[genPropertyTypeNoGenerics(a)/] ()
    {
-	  // getRandom_[a.type.name.toUpperFirst()/]
+	  [displayClearUserCodeId ('getRandom_' + a.type.name.toUpperFirst())/]
 	  // [protected (a.getUserCodeId('getRandom_'+a.type.name.toUpperFirst()))]
 
 		return [if ((a.type.name <> null) and (a.type.name.contains('<')))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];

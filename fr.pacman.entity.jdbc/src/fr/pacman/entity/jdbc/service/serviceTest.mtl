@@ -45,7 +45,7 @@ package [buildPackageBusinessApiService(e)/];
  * Classe de test du service '[buildServiceInterfaceName(e)/]'.
  * @author [getAuthorName()/]
  */
-// Annotation for class
+[displayClearUserCodeId ('Annotation for class')/]
 // [protected (e.getUserCodeId('Annotation for class'))]
 // [/protected]
 public class [buildServiceTestClassName(e)/]
@@ -63,7 +63,7 @@ public class [buildServiceTestClassName(e)/]
 
 [if not e.isNotPersistent()]
 [if useTestsCRUD()]
-   // Spécifique
+   [displayClearUserCodeId ('Spécifique')/]
    // [protected (e.getUserCodeId('Spécifique'))]
 
    /** L'id du '[buildEntityInterfaceName(e)/]' stocké en base. */
@@ -92,7 +92,7 @@ public class [buildServiceTestClassName(e)/]
       [apply_attributeStatic('user persistence')/] = [buildParamPersistenceClassName()/].[apply_methodDefault('get user persistence')/]();
       [apply_attributeStatic('service')/] = [buildAppliUserBusinessEntityGenClassName()/].[apply_methodDefault('get ' + buildServiceClassName(e))/]();
 
-      // set up before all
+      [displayClearUserCodeId ('set up before all')/]
       // [protected (e.getUserCodeId('set up before all'))]
       // [/protected]
    }
@@ -105,7 +105,7 @@ public class [buildServiceTestClassName(e)/]
    {
       [apply_attributeStatic('user persistence')/].begin();
 
-      // set up
+      [displayClearUserCodeId ('set up')/]
       // [protected (e.getUserCodeId('set up'))]
       // [/protected]
    }
@@ -118,12 +118,12 @@ public class [buildServiceTestClassName(e)/]
    {
       [apply_attributeStatic('user persistence')/].rollback ();
 
-      // tear down
+      [displayClearUserCodeId ('tear down')/]
       // [protected (e.getUserCodeId('tear down'))]
       // [/protected]
    }
 	
-	// Methodes [buildServiceTestClassName(e)/]
+	[displayClearUserCodeId ('Methodes ' + buildServiceTestClassName(e))/]
 	// [protected (e.getUserCodeId('Methodes ' + buildServiceTestClassName(e)))]
 
 
@@ -168,7 +168,7 @@ public class [buildServiceTestClassName(e)/]
    {
       final [buildEntityInterfaceName(e)/] [apply_variableFinal('entity')/] = new [buildEntityImplClassName(e)/]();
 
-      // create
+      [displayClearUserCodeId ('create')/]
       // [protected (e.getUserCodeId('create'))]
       // TODO renseigner données de test
 [for (a : Attribute | e.attributes)]
@@ -217,7 +217,7 @@ public class [buildServiceTestClassName(e)/]
 
       assertNotNull ([apply_variableFinal('created entity')/].getId (), "Le entity créé devrait avoir une clé primaire renseignée");
 
-      // create assertions
+      [displayClearUserCodeId ('create assertions')/]
       // [protected (e.getUserCodeId('create assertions'))]
 
 [for (r : Reference | e.referencesStarStar())]

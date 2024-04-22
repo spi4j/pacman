@@ -149,7 +149,7 @@ public abstract class [d.buildDtoClassName()/] implements [getClassNameForDto_It
    sinon le getter retourne l'attribut.
    [/comment]
    [if (a.isComputed())]
-      // [apply_attributeDefault(a.name)/]
+      [displayClearUserCodeId (apply_attributeDefault(a.name))/]
       // [protected (a.getUserCodeId(apply_attributeDefault(a.name)))]
       // TODO Calculer l'attribut
       return null;
@@ -317,7 +317,7 @@ public abstract class [d.buildDtoClassName()/] implements [getClassNameForDto_It
     */
    [r.getGetter()/]
    {
-      // [apply_methodGet(r.name.normalize())/]
+      [displayClearUserCodeId (apply_methodGet(r.name.normalize()))/]
       // [protected (r.getUserCodeId(apply_methodGet(r.name.normalize())))]
       // TODO Calculer la référence
       return null;
@@ -332,7 +332,7 @@ public abstract class [d.buildDtoClassName()/] implements [getClassNameForDto_It
     */
    [r.getGetterListDto()/]
    {
-      // [apply_methodDefault('get'+ apply_attributeMultiple(r.name.normalize()))/]
+      [displayClearUserCodeId (apply_methodDefault('get'+ apply_attributeMultiple(r.name.normalize())))/]
       // [protected (r.getUserCodeId(apply_methodDefault('get'+ apply_attributeMultiple(r.name.normalize()))))]
       // TODO Calculer la référence
       return null;

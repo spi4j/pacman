@@ -22,6 +22,11 @@
 /]
 
 [comment : /]
+[query public buildPackageServiceBatch(s: Service) : String =
+   buildPackageBusiness() + '.' + getPackageBatch() + '.'  + s.eContainer().oclAsType(Component).name.toLower()
+/]
+
+[comment : /]
 [query public getNamespaceXto(d : DTO) : String =
     invoke(
         'fr.pacman.commons.services.StringUtils',

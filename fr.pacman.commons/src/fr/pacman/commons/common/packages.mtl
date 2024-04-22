@@ -270,6 +270,14 @@
 	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonsTestResourceDir()', Sequence{})
 /]
 
+[query public getCommonEnumsPackage(any : OclAny) : String = 
+	getCommonEnumsPackage_invoke().trim().toLower()
+/]
+
+[query private getCommonEnumsPackage_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getCommonEnumsPackage()', Sequence{})
+/]
+
 [query public getWebappResourceDir(any : OclAny) : String =
 	getWebappResourceDir_invoke().trim().ensureTrailingSlash()
 /]
@@ -560,12 +568,12 @@
  /]
 
 [query public buildPackageRS(any : OclAny) : String =
-    getApplicationPackage() +'.ws.rs'
+    getApplicationPackage() + '.ws.rs'
  /]
 
 [comment : b : if 'true' then create a package for crud operations. /]
 [query public buildPackageRsResources(any : OclAny, b : Boolean) : String =
-    buildPackageRS() + '.resources' + if b then '.administration' else '' endif
+     buildPackageBusiness() +  '.ws.rs.resources' + if b then '.administration' else '' endif
  /]
 
 [query public buildPackageRsFrontResources(any : OclAny) : String =
@@ -593,7 +601,15 @@
 /]
 
 [query public buildPackageStories(any : OclAny) : String =
-    getApplicationPackage() + 'stories'
+    getApplicationPackage() + '.stories'
+/]
+
+[query public buildPackageBatch(any : OclAny) : String =
+   getApplicationName() + '.' + getPackageBatch()
+/]
+
+[query public getPackageBatch(any : OclAny) : String =
+    'batch'
 /]
 
 [query public getPackageSteps(any : OclAny) : String =

@@ -58,7 +58,7 @@ public interface [buildServiceGwtAsyncClassName(e)/] extends GwtRemoteServiceAsy
    void [apply_methodDefault('find list ' + r.name + ' by ' + r.containingType.oclAsType(Entity).buildSimpleEntityName())/] (final [genPkType()/] [apply_parameterMethodClassicIn(r.containingType.name)/][namePK_ID()/], final AsyncCallback<List<[buildXtoClassNameFromEntity(r.referencedType.oclAsType(Entity))/]>> callback);
 
 [/for]
-   // [buildServiceGwtAsyncClassName(e)/]
+   [displayClearUserCodeId (buildServiceGwtAsyncClassName(e))/]
    // [protected (e.getUserCodeId(buildServiceGwtAsyncClassName(e)))]
 
    // [/protected]

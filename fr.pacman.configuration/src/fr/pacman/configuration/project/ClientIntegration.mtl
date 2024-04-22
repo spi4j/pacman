@@ -7,6 +7,7 @@
 [import fr::pacman::commons::common::names /]
 [import fr::pacman::commons::common::utils /]
 [import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::imports/]
 
 [import fr::pacman::commons::convention::rule::classRule /]
 [import fr::pacman::commons::convention::rule::methodRule /]
@@ -32,7 +33,8 @@
     <name>[getApplicationName()/] - Partie integration</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 	
 	<!--
@@ -107,7 +109,8 @@
             <version>${h2.version}</version>
         </dependency>
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 		
 		<!--
@@ -145,7 +148,8 @@
 			[jBehaveDependencyPlugin() /]
 			[/if]
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--

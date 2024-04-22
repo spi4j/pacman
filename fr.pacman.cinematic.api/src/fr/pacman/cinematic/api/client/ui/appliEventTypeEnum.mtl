@@ -25,7 +25,7 @@ import fr.spi4j.ui.mvp.EventType;
 public enum [buildAppliEventTypeEnum()/] implements EventType
 {
 
-   // [buildAppliEventTypeEnum()/]
+   [displayClearUserCodeId (buildAppliEventTypeEnum())/]
    // [protected (any.getUserCodeId(buildAppliEventTypeEnum()))]
 
    /** Erreur */

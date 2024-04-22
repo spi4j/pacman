@@ -4,6 +4,8 @@
 [import fr::pacman::commons::common::properties / ]
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports/]
+
 [import fr::pacman::configuration::common::webXml /]
 
 [template public javaWebStartPom(any : OclAny) post (trim())]
@@ -21,7 +23,8 @@
     <name>[getApplicationName()/] - Packaging webapp JavaWebStart</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 	
 	<!--
@@ -54,7 +57,8 @@
             <version>${log4j.version}</version>
         </dependency>
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 		
 		<!--
@@ -121,7 +125,8 @@
                 </executions>
             </plugin>
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--

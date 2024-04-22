@@ -4,6 +4,7 @@
 [import fr::pacman::commons::common::properties / ]
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::imports/]
 
 [import fr::pacman::configuration::common::pomXml /]
 [import fr::pacman::configuration::common::webXml /]
@@ -23,7 +24,8 @@
     <name>[getApplicationName()/] - Client RIA GWT</name>
 
 	<!--
-	// [protected ('for custom code')]
+	[displayClearUserCodeId ('for custom code')/]
+	// [protected (getUserCodeId('for custom code'))]
 	-->
 	
 	<!--
@@ -147,7 +149,8 @@
 		</dependency>
 		[/for][/if]
 		<!--
-		// [protected ('for dependencies')]
+		[displayClearUserCodeId ('for dependencies')/]
+		// [protected (getUserCodeId('for dependencies'))]
 		-->
 		
 		<!--
@@ -247,7 +250,8 @@
                 </executions>
             </plugin>
 			<!--
-			// [protected ('for plugins')]
+			[displayClearUserCodeId ('for plugins')/]
+			// [protected (getUserCodeId('for plugins'))]
 			-->
 		
 			<!--

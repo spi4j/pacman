@@ -149,12 +149,23 @@ else
 endif
 /]
 
+[comment : On ajoute une securite supplementaire sur _id pour les noms des references avec .buildSimpleReferenceName() /]
+[comment : Comme l'ID n'est pas present dans la vue physique, cela permet de s'assurer des erreurs de l'utilisateur /]
+[comment : qui a oublie de rajouter _ID a la fin de la refence pour la cle etrangere. /]
 [query public physicalNameId(r : Reference) : String =
-     physicalName(r) + r.nameSQL_REF_ID()
+     r.physicalName().buildSimpleReferenceName()
 /]
 
 [query public physicalNameId(r : Reference, compteur : Integer) : String =
-     physicalName(r,compteur) + r.nameSQL_REF_ID()
+     r.physicalName(compteur).buildSimpleReferenceName()
+/]
+
+[query public physicalNameReferencingId(r : Reference) : String =
+     physicalNameReferencing(r).buildSimpleReferenceName()
+/]
+
+[query public physicalNameReferencingId(r : Reference, compteur : Integer) : String =
+     physicalNameReferencing(r,compteur).buildSimpleReferenceName()
 /]
 
 [query public physicalNameReferencing(r : Reference) : String =
@@ -175,14 +186,6 @@ if hasPhysicalName(r) then
 else
      physicalName(r.containingType.oclAsType(entity::Entity)).first(maxHalfColumnReferenceSize()) + '_' + compteur
 endif
-/]
-
-[query public physicalNameReferencingId(r : Reference) : String =
-     physicalNameReferencing(r) + r.nameSQL_REF_ID()
-/]
-
-[query public physicalNameReferencingId(r : Reference, compteur : Integer) : String =
-     physicalNameReferencing(r,compteur) + r.nameSQL_REF_ID()
 /]
 
 [query public physicalNameJointure(r : Reference) : String =

@@ -60,7 +60,7 @@ package [buildPackageBusinessApiServiceDto(s, d)/];
  * Définit le contrat de services spécifiques[if hasCrud(d)] pour un type '[nameClassDto(d)/]'[/if].
  * @author [getAuthorName()/]
  */
-// Annotations Service
+[displayClearUserCodeId ('Annotations Service')/]
 // [protected (d.getUserCodeId('Annotations Service'))]
 [if useEjb()]
 @Local
@@ -77,7 +77,7 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
     * @param [apply_parameterMethodClassicIn('id')/] : Identifiant unique pour l'instance à obtenir.
     * @return [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Read'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Read')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read'))]
 
 	// [/protected]
@@ -90,7 +90,7 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
 	* @return [buildDtoClassName(d)/] : la nouvelle instance de type '[buildDtoClassName(d)/]'.
     * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Create'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Create')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create'))]
 
 	// [/protected]
@@ -102,7 +102,7 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
     * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
     * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Update'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Update')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update'))]
 
 	// [/protected]
@@ -114,7 +114,7 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
     * @param [apply_parameterMethodClassicIn(d.name)/] : l'instance de type '[buildDtoClassName(d)/]'.
     * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[buildDtoClassName(d)/]'.
 	*/
-	// Annotations [d.name.sanitize() + '_Delete'/]
+	[displayClearUserCodeId ('Annotations ' + d.name.sanitize() + '_Delete')/]
 	// [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete'))]
 
 	// [/protected]
@@ -128,7 +128,7 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
 [comParamInverseIdIn(r)/]
     * @return une liste de [buildDtoClassName(d)/] ayant [apply_parameterMethodClassicIn(nameParamInverseId(r))/] = [apply_parameterMethodClassicIn(nameParamInverseId(r))/]
     */
-	// Annotations [r.name.sanitize() + apply_parameterMethodClassicIn(nameParamInverseId(r))/]
+	[displayClearUserCodeId ('Annotations ' + r.name.sanitize() + apply_parameterMethodClassicIn(nameParamInverseId(r))) /]
 	// [protected (r.getUserCodeId('Annotations ' + r.name.sanitize() + apply_parameterMethodClassicIn(nameParamInverseId(r))))]
 
 	// [/protected]
@@ -168,7 +168,7 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
     * [o.description/]
 [getComParamsIn(o)/][comParamOut(o)/]
 	*/
-	// Annotations [userCodeForOperation(o)/]
+	[displayClearUserCodeId ('Annotations ' + userCodeForOperation(o))/]
 	// [protected (o.getUserCodeId('Annotations ' + userCodeForOperation(o)))]
 
 	// [/protected]
@@ -180,8 +180,8 @@ public interface [buildServiceInterfaceName(s, d)/][if hasCrud(d)] extends [getC
 
 [/for]
 [/if]
-    // Méthodes [buildServiceInterfaceName(s, d)/]
-    // [protected (d.getUserCodeId('Méthodes ' + buildServiceInterfaceName(s, d)))]
+    [displayClearUserCodeId ('Methodes ' + buildServiceInterfaceName(s, d))/]
+    // [protected (d.getUserCodeId('Methodes ' + buildServiceInterfaceName(s, d)))]
 
     // [/protected]
 }[/let]

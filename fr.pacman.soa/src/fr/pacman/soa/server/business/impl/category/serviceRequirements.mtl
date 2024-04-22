@@ -41,7 +41,6 @@
 [licence()/]
 [let self : OclAny = if not s.oclIsUndefined() then s else if not d.oclIsUndefined() then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
 package [buildPackageBusinessImplementationServiceDto(s, d)/];
-
 // [protected ('for imports')]
 
 [if not getAllRequirementsForService(s)->isEmpty()]
@@ -67,14 +66,14 @@ public class [buildServiceRequirementsClassName(s, d)/]
 
 [if not s.oclIsUndefined()]
 [for (req : Requirement | getAllRequirementsForService(s))]
-   // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id.sanitizeReqID() + '_javadoc'))]
+ 
    /**
     * Test de l'exigence [getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /]. <br>
-    * [req.statement.replaceAll('\r\n', ' <br>\r\n    * ') /]
+    * [if not req.statement.oclIsUndefined()][req.statement.replaceAll('\r\n', ' <br>\r\n    * ') /][/if]
     */
-   // [/protected]
    [annotationRequirement(req)/]
    // [protected (req.getUserCodeId(getServiceRequirementsPrefix() + req.id))]
+
    public void [apply_methodDefault('exigence')/][getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /] ()
    {
       throw new RequirementException([apply_classEnum('requirement')/].[getServiceRequirementsPrefix()/][req.id.sanitizeReqID() /], "Exigence non implémentée");
@@ -84,7 +83,7 @@ public class [buildServiceRequirementsClassName(s, d)/]
 
 [/for]
 [/if]
-   // [nameServiceRequirements(s, d)/]
+   [displayClearUserCodeId (nameServiceRequirements(s, d))/]
    // [protected (s.getUserCodeId(nameServiceRequirements(s, d)))]
 
    // [/protected]

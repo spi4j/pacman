@@ -45,8 +45,8 @@ public class [nameGwtViews()/] extends ViewsAssociation
          return (TypeView) new [nameViewImplementation(viewContainer)/](([namePresenter(viewContainer)/]) p_presenter);
       }
 [/for]
-      // Vues supplémentaires
-      // [protected (r.getUserCodeId('Vues supplémentaires'))]
+      [displayClearUserCodeId ('Vues supplementaires')/]
+      // [protected (r.getUserCodeId('Vues supplementaires'))]
 
       // [/protected]
 
@@ -62,7 +62,7 @@ public class [nameGwtViews()/] extends ViewsAssociation
                "Ne recherchez pas un présenteur selon son annotation @UserView dans vos écrans");
    }
 
-   // GwtViews
+   [displayClearUserCodeId ('GwtViews')/]
    // [protected (r.getUserCodeId('GwtViews'))]
 
    // [/protected]

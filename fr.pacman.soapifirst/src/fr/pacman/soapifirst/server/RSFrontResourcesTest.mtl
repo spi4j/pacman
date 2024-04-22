@@ -174,7 +174,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	 */
 	protected static void [apply_methodDefault('authenticate')/](){
 		
-		// for authenticate
+		[displayClearUserCodeId ('for authenticate')/]
 		// [protected (c.getUserCodeId('for authenticate'))]
 
 		// Tentative de récupération du token.
@@ -279,7 +279,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	 */
 	private static String [apply_methodGet('pretty error printing')/](final [buildRSFrontExceptionClassName()/] [apply_parameterMethodClassicIn('exception')/])  {
 	
-		// for pretty error printing
+		[displayClearUserCodeId ('for pretty error printing')/]
 		// [protected (c.getUserCodeId('for pretty error printing'))]
 
 		final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();
@@ -307,7 +307,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	 */
 	protected static void [apply_methodDefault('display response')/](final Object [apply_parameterMethodClassicIn('entity')/]) {
 		
-		// for display response
+		[displayClearUserCodeId ('for display response')/]
 		// [protected (c.getUserCodeId('for display response'))]
 
 		// Parsing de la grappe d'objets sur l'entité retournée.
@@ -344,7 +344,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	 */
 	private static String [apply_methodGet('pretty headers printing')/](final Headers [apply_parameterMethodClassicIn('headers')/]) {
 		
-		// for pretty headers printing
+		[displayClearUserCodeId ('for pretty headers printing')/]
 		// [protected (c.getUserCodeId('for pretty headers printing'))]
 
 		if([buildRSFrontConfigClassName()/].[apply_methodDefault('is debug display headers')/]()){
@@ -390,7 +390,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	private static StringBuilder [apply_methodDefault('pretty headers printing')/](final StringBuilder [apply_parameterMethodClassicIn('str builder')/], 
 			final Entry<String, ?> [apply_parameterMethodClassicIn('entry')/]) {
 	
-		// for pretty headers printing builder
+		[displayClearUserCodeId ('for pretty headers printing builder')/]
 		// [protected (c.getUserCodeId('for pretty headers printing builder'))]
 
 		[apply_parameterMethodClassicIn('str builder')/].append("\n           ");
@@ -410,7 +410,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	 */
 	private static String [apply_methodGet('pretty operation printing')/](final String [apply_parameterMethodClassicIn('operation')/]) {
 		
-		// for pretty operation printing
+		[displayClearUserCodeId ('for pretty operation printing')/]
 		// [protected (c.getUserCodeId('for pretty operation printing'))]
 
 		final StringBuilder [apply_variableFinal('str builder')/] = new StringBuilder();
@@ -452,7 +452,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 			[apply_parameterMethodClassicIn('json serialization')/] = [apply_variableDefault('str buffer')/].toString();
 		}
 		 
-		// for pretty entity printing
+		[displayClearUserCodeId ('for pretty entity printing')/]
 		// [protected (c.getUserCodeId('for pretty entity printing'))]
 
 		return [apply_parameterMethodClassicIn('json serialization')/]
@@ -479,7 +479,7 @@ public abstract class [buildRSFrontResourceTestHelperClassName()/] {
 	 */
 	private static String [apply_methodDefault('new record')/]() {
 		
-		// for new record
+		[displayClearUserCodeId ('for new record')/]
 		// [protected (c.getUserCodeId('for new record'))]
 
 		StringBuilder [apply_variableDefault('str builder')/] = new StringBuilder();
@@ -543,7 +543,7 @@ public class [s.buildRSFrontResourceTestClassName()/] {
 	// suffixés (ex param_1, param_2, etc...)
 	// *****************************************************************
 
-	// for global input parameters declaration
+	[displayClearUserCodeId ('for global input parameters declaration')/]
 	// [protected (s.getUserCodeId('for global input parameters declaration'))]
 
 	[for (p : Parameter | s.ownedInterface.ownedOperations.input->sortedBy(name))]
@@ -564,7 +564,7 @@ public class [s.buildRSFrontResourceTestClassName()/] {
 	@BeforeAll
 	public static void [apply_methodDefault('init')/](){
 
-		// for init
+		[displayClearUserCodeId ('for init')/]
 		// [protected (s.getUserCodeId('for init'))]
 
 		[buildRSFrontResourceTestHelperClassName()/].[apply_methodDefault('register class')/](
@@ -591,7 +591,7 @@ public class [s.buildRSFrontResourceTestClassName()/] {
 
 			[o.writePreMethods()/]
 	
-			// for [o.userCodeForOperation()/]
+			[displayClearUserCodeId ('for ' + o.userCodeForOperation())/]
 			// [protected (o.getUserCodeId('for ' + o.userCodeForOperation()))]
 
 			[o.addInitInputParamsInIfExist(s)/]
@@ -602,7 +602,7 @@ public class [s.buildRSFrontResourceTestClassName()/] {
 
 			[o.writeNotNullAssertion()/]
 
-			// for response [o.userCodeForOperation()/]
+			[displayClearUserCodeId ('for response ' + o.userCodeForOperation())/]
 			// [protected (o.getUserCodeId('for response ' + o.userCodeForOperation()))]
 			
 			[o.writePostMethods()/]

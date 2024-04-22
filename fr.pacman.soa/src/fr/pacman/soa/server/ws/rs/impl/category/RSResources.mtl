@@ -155,7 +155,7 @@ public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response auth(@Context UriInfo [apply_parameterMethodClassicIn('uri info')/]) {
 
-		// [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId (s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId(s.name + '_'+ f.writeFlowName()))]
 		
 		return RsResponseHelper.responseForTokens(RsTokenHelper
@@ -239,7 +239,7 @@ public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
 		final String [apply_parameterMethodClassicIn('credentials')/], 
 		@Context UriInfo [apply_parameterMethodClassicIn('uri info')/]) {
 
-		// [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId (s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId(s.name + '_'+ f.writeFlowName()))]
 
 		return RsResponseHelper.responseForTokens(RsTokenHelper
@@ -299,7 +299,7 @@ public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
 	public Response auth(@HeaderParam(RsConstants.c_auth_header_authorization)
 		final String [apply_parameterMethodClassicIn('application secret')/]) {
 
-		// [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId (s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId(s.name + '_'+ f.writeFlowName()))]
 
 		return RsResponseHelper.responseForTokens(RsTokenHelper
@@ -328,7 +328,7 @@ import fr.spi4j.ws.rs.RsRefreshToken;
 
 // [/protected]
 
-// for path
+[displayClearUserCodeId ('for path')/]
 // [protected (m.getUserCodeId('for path'))]
 @Path("/tokens")
 // [/protected]
@@ -392,7 +392,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 	@Override
 	public void defineRequiredTokens(final RsTokensContainer p_tokensContainer) 
 	{
-		// define required tokens
+		[displayClearUserCodeId ('define required tokens')/]
 		// [protected (m.getUserCodeId('define required tokens'))]
 
 		// [/protected]
@@ -405,7 +405,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		// Modifier et compléter le token d'accès si besoin.
 		// Description : [s.description/]
 
-		// token config [s.name/]
+		[displayClearUserCodeId ('token config ' + s.name)/]
 		// [protected (s.getUserCodeId('token config ' + s.name))]
 
 		p_tokensContainer.addAccessToken(
@@ -428,7 +428,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		// Description : [s.description/]
 		[if f.isAuthCode() and s.isAuthOidc()]
 
-		// token config [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
 
 		p_tokensContainer.addAccessToken(
@@ -456,7 +456,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		[/if]
 		[if f.isAuthCode() and s.isAuthOauth2()]
 
-		// token config [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
 
 		p_tokensContainer.addAccessToken(
@@ -483,7 +483,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		[/if]
 		[if f.isAuthPassord() or f.isAuthImplicit()]
 
-		// token config [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
 
 		p_tokensContainer.addAccessToken(
@@ -509,7 +509,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		[/if]
 		[if f.isAuthCredential()]
 
-		// token config [s.name/]_[f.writeFlowName()/]
+		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
 
 		p_tokensContainer.addAccessToken(
@@ -545,7 +545,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		[if s.isAuthApiKey()]
 		// Modifier et compléter le token de rafraîchissement si besoin.
 
-		// [s.getUserCodeId('token config refresh [s.name/]')/]
+		[displayClearUserCodeId (s.getUserCodeId('token config refresh ' + s.name))/]
 		// [protected (s.getUserCodeId('token config refresh ' + s.name))]
 
 		p_tokensContainer.addRefreshToken(
@@ -630,7 +630,7 @@ public class [s.buildRSResourceClassName(d) /]
    [let auth : Boolean = o.isDefinedForAuthentication()]
    public Response [apply_methodDefault(o.name)/]([o.paramsInXtoRS()/][o.paramsInPaginatorIfNeeded()/]){
 
-		// [o.userCodeForOperation()/]
+		[displayClearUserCodeId (o.userCodeForOperation())/]
 		// [protected (o.getUserCodeId(o.getUserCodeId(o.userCodeForOperation())))]
 
 		[comment : very particular format to avoid unwanted carriage return. /]
@@ -948,7 +948,7 @@ UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[c(1)/].build([o.write
  // [/protected]
  public Response read(@PathParam("id") final Long [apply_parameterMethodClassicIn('id')/]){
 
-	// [d.name/] read crud operation
+	[displayClearUserCodeId (d.name + ' read crud operation')/]
 	// [protected (d.getUserCodeId(d.name + ' read crud operation'))]
 
     return RsResponseHelper.responseForEntity([apply_attributeFinal('service facade')/].read([apply_parameterMethodClassicIn('id')/]));
@@ -969,13 +969,13 @@ UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[c(1)/].build([o.write
  @POST
  @Consumes(RsMediaType.c_application_json_utf8)
  @Produces(RsMediaType.c_application_json_utf8)
- // [d.name/] create annotations crud operation
+ [displayClearUserCodeId (d.name + ' create annotations crud operation')/]
  // [protected (d.getUserCodeId(d.name + ' create annotattions crud operation'))]
  
  // [/protected]
  public Response create(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]){
 
-	// [d.name/] create crud operation
+	[displayClearUserCodeId (d.name + ' create crud operation')/]
 	// [protected (d.getUserCodeId(d.name + ' create crud operation'))]
 
     return RsResponseHelper.responseForCreate([apply_attributeFinal('service facade')/].create([apply_parameterMethodClassicIn(d.name)/]));
@@ -996,7 +996,7 @@ UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[c(1)/].build([o.write
  @PUT
  @Consumes(RsMediaType.c_application_json_utf8)
  @Produces(RsMediaType.c_text_plain_utf8)
- // [d.name/] update annotations crud operation
+ [displayClearUserCodeId (d.name + ' update annotations crud operation')/]
  // [protected (d.getUserCodeId(d.name + ' update annotattions crud operation'))]
  
  // [/protected]
@@ -1023,13 +1023,13 @@ UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[c(1)/].build([o.write
  @DELETE
  @Consumes(RsMediaType.c_application_json_utf8)
  @Produces(RsMediaType.c_text_plain_utf8)
- // [d.name/] delete annotations crud operation
- // [protected (d.getUserCodeId(d.name + ' delete annotattions crud operation'))]
+ [displayClearUserCodeId (d.name + ' delete annotations crud operation')/]
+ // [protected (d.getUserCodeId(d.name + ' delete annotations crud operation'))]
  
  // [/protected]
  public Response delete(final [d.buildXtoClassNameFromDto()/] [apply_parameterMethodClassicIn(d.name)/]){
 
-	// [d.name/] delete crud operation
+	[displayClearUserCodeId (d.name + ' delete crud operation')/]
 	// [protected (d.getUserCodeId(d.name + ' delete crud operation'))]
 
 	[apply_attributeFinal('service facade')/].delete([apply_parameterMethodClassicIn(d.name)/]);

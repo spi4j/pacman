@@ -10,11 +10,15 @@ import java.util.Map.Entry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -25,6 +29,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -55,9 +60,11 @@ public class PropertiesPage extends WizardPage {
 	public static final String c_VERSION = "version";
 	public static final String c_VARIOUS = "divers";
 	public static final String c_TABIDX = "tabIdx";
+	public static final String c_TABFLD = "tabfld";
 
 	// Beware for shell.disposed !
 	private Text _packageName;
+	private Label _labelBDD;
 
 	// All options are under string format (wrong or not ?)
 	private String _ihm = "";
@@ -84,6 +91,7 @@ public class PropertiesPage extends WizardPage {
 	private String _modeDebug = PacmanConfig.c_BOOL_STR_NO;
 	private String _typeRC = PacmanConfig.c_CARRIAGE_RETURN_W;
 	private String _unitTests = PacmanConfig.c_BOOL_STR_YES;
+	private String _useBatch = PacmanConfig.c_BOOL_STR_NO;
 	private String _generateMatching = PacmanConfig.c_BOOL_STR_YES;
 	private String _fetchingStrategy = PacmanConfig.c_BOOL_STR_NO;
 	private String _requirementVersion = PacmanConfig.c_VERSION_INIT_NONE;
@@ -93,20 +101,21 @@ public class PropertiesPage extends WizardPage {
 	private String _hk2 = PacmanConfig.c_BOOL_STR_YES;
 	private String _eh2 = PacmanConfig.c_BOOL_STR_NO;
 
-	private Label _labelBDD;
-
 	private final List<String> _bdNames = new ArrayList<>();
 	private final List<String> _mdCodes = new ArrayList<>();
 	private final List<AddLibrary> _useLibraries = new ArrayList<>();
 	private final List<AddColumn> _sqlAddColumns = new ArrayList<>();
 	private final List<AddColumn> _sqlReservedAddColumns = new ArrayList<>();
-	private Map<Id, Composite> _lstCompositesToManage = new Hashtable<>();
+	private final Map<Id, Composite> _lstCompositesToManage = new Hashtable<>();
+	private final Color _defaultTabColor = new Color(Display.getCurrent (), 255, 255, 255);
+
+	private final int _defaultWidth = 700;
+	private final int _defaultHeight = 350;
 
 	/**
 	 * Properties for the page.
 	 */
 	protected PropertiesPage() {
-
 		super(TextUtil.c_LBL_DIALOG);
 		setTitle(TextUtil.c_LBL_TITLE);
 		setImageDescriptor(getSafranLogoForWizard());
@@ -119,7 +128,6 @@ public class PropertiesPage extends WizardPage {
 	 * @return ImageDescriptor
 	 */
 	private static ImageDescriptor getSafranLogoForWizard() {
-
 		return Activator.imageDescriptorFromPlugin(Activator.c_PLUGIN_ID, Activator.c_PLUGIN_LOGO);
 	}
 
@@ -172,50 +180,11 @@ public class PropertiesPage extends WizardPage {
 		addTextRequirementPrefix(v_containers.get(c_VARIOUS));
 		addTextRequirementLevel(v_containers.get(c_VARIOUS));
 		addRadioRequirementVersion(v_containers.get(c_VARIOUS));
-
+		//addRadioGenBatch(v_containers.get(c_GENERATE));
 		manageInitialDeactivations();
 		setControl(v_container);
+		resize(v_containers.get(c_TABFLD));
 		setPageComplete(false);
-		resize(true);
-	}
-
-	/**
-	 * Set the default size for the wizard. To be completed...
-	 */
-	private void resize(final boolean p_defaultSize) {
-
-		if (p_defaultSize)
-			getShell().setSize(getShell().computeSize(700, 770));
-	}
-
-	/**
-	 * Get the default generic GridLayout for the TabItem.
-	 * 
-	 * @return
-	 */
-	private Layout getDefaultLayout() {
-
-		return new GridLayout(2, true);
-	}
-
-	/**
-	 * Get the specific GridLayout for the Database TabItem.
-	 * 
-	 * @return
-	 */
-	private Layout getLayoutForODatabase() {
-
-		return new GridLayout(1, false);
-	}
-
-	/**
-	 * Get the specific GridLayout for the Libraries TabItem.
-	 * 
-	 * @return
-	 */
-	private Layout getLayoutForLibraries() {
-
-		return new GridLayout(1, false);
 	}
 
 	/**
@@ -225,20 +194,47 @@ public class PropertiesPage extends WizardPage {
 	 * @return
 	 */
 	private Map<String, Composite> addTabFolder(final Composite p_container) {
-
 		final Map<String, Composite> v_containers = new HashMap<String, Composite>();
 		final TabFolder v_tabFolder = new TabFolder(p_container, SWT.NONE);
-		v_tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		v_containers.put(c_PROJECT, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_CONFIG, getDefaultLayout()));
-		v_containers.put(c_GENERATE, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_GENERATE, getDefaultLayout()));
+		v_containers.put(c_PROJECT, addScrollTabItem(v_tabFolder, TextUtil.c_LBL_TB_CONFIG, getDefaultLayout(), 450));
+		v_containers.put(c_GENERATE,
+				addScrollTabItem(v_tabFolder, TextUtil.c_LBL_TB_GENERATE, getLayoutForGenerate(), 550));
 		v_containers.put(c_MODELING, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_MODELING, getDefaultLayout()));
 		v_containers.put(c_LIBRARY, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_LIBRARY, getLayoutForLibraries()));
-		v_containers.put(c_ODATABASE, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_ODATABASE, getLayoutForODatabase()));
-		v_containers.put(c_VARIOUS, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_VARIOUS, getDefaultLayout()));
+		v_containers.put(c_ODATABASE,
+				addScrollTabItem(v_tabFolder, TextUtil.c_LBL_TB_ODATABASE, getLayoutForODatabase(), 550));
+		v_containers.put(c_VARIOUS, addScrollTabItem(v_tabFolder, TextUtil.c_LBL_TB_VARIOUS, getDefaultLayout(), 550));
 		v_containers.put(c_VERSION, addTabItem(v_tabFolder, TextUtil.c_LBL_TB_VERSIONNING, getDefaultLayout()));
 		v_tabFolder.setBackground(p_container.getParent().getBackground());
-		p_container.setLayout(new GridLayout());
+		v_tabFolder.setSize(_defaultWidth, _defaultHeight);
+		v_containers.put(c_TABFLD, v_tabFolder);
 		return v_containers;
+	}
+
+	/**
+	 * Creation of a scrollable item tab with its containers.
+	 * 
+	 * @param p_container
+	 * @param p_tabName
+	 * @param p_layout
+	 * @return
+	 */
+	protected Composite addScrollTabItem(final TabFolder p_container, final String p_tabItemName, final Layout p_layout,
+			final int p_minHeigh) {
+		final TabItem v_tabItem = new TabItem(p_container, SWT.NONE);
+		final ScrolledComposite v_scroller = new ScrolledComposite(p_container, SWT.V_SCROLL);
+		v_scroller.setLayout(new FillLayout());
+
+		Composite v_pageItem = new Composite(v_scroller, SWT.NONE);
+		v_pageItem.setLayout(p_layout);
+		v_pageItem.setBackground(_defaultTabColor);
+		v_tabItem.setText(p_tabItemName);
+		v_scroller.setContent(v_pageItem);
+		v_scroller.setExpandVertical(true);
+		v_scroller.setExpandHorizontal(true);
+		v_scroller.setMinHeight(p_minHeigh);
+		v_tabItem.setControl(v_scroller);
+		return v_pageItem;
 	}
 
 	/**
@@ -251,13 +247,71 @@ public class PropertiesPage extends WizardPage {
 	 */
 	private Composite addTabItem(final TabFolder p_container, final String p_tabItemName, final Layout p_layout) {
 
-		final TabItem v_tabItem = new TabItem(p_container, SWT.BORDER | SWT.SINGLE);
-		final Composite v_pageItem = new Composite(p_container, SWT.BORDER | SWT.SINGLE);
-		v_pageItem.setBackground(p_container.getParent().getBackground());
+		final TabItem v_tabItem = new TabItem(p_container, SWT.NONE);
+		final Composite v_pageItem = new Composite(p_container, SWT.NONE);
+		v_pageItem.setBackground(_defaultTabColor);
 		v_tabItem.setText(p_tabItemName);
 		v_tabItem.setControl(v_pageItem);
 		v_pageItem.setLayout(p_layout);
 		return v_pageItem;
+	}
+
+	/**
+	 * Set the default size for the wizard page. Automatically resized for height by
+	 * the wizardpage so no need for offset.
+	 */
+	private void resize(final Composite p_container) {
+		getShell().setSize(_defaultWidth + 30, _defaultHeight);
+		p_container.getParent().addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				p_container.setSize(p_container.getParent().getSize().x, p_container.getParent().getSize().y);
+			}
+		});
+	}
+
+	/**
+	 * Get the default generic GridLayout for the TabItem.
+	 * 
+	 * @return
+	 */
+	private Layout getDefaultLayout() {
+		return new GridLayout(2, true);
+	}
+
+	/**
+	 * Get specific GridLayout for the Generate TabItem.
+	 * 
+	 * @return
+	 */
+	private Layout getLayoutForGenerate() {
+		return new GridLayout(2, false);
+	}
+
+	/**
+	 * Get the specific GridLayout for the Database TabItem.
+	 * 
+	 * @return
+	 */
+	private Layout getLayoutForODatabase() {
+		return new GridLayout(1, false);
+	}
+
+	/**
+	 * Get the specific GridLayout for the Libraries TabItem.
+	 * 
+	 * @return
+	 */
+	private Layout getLayoutForLibraries() {
+		return new GridLayout(1, false);
+	}
+	
+	/**
+	 * Get the specific GridLayout for the Library TabItem.
+	 * 
+	 * @return
+	 */
+	private Layout getLayoutForLibrary() {
+		return new GridLayout(2, false);
 	}
 
 	/**
@@ -274,11 +328,11 @@ public class PropertiesPage extends WizardPage {
 		Label v_label = new Label(p_container, SWT.NONE);
 		v_label.setToolTipText(p_tooltip);
 		v_label.setText(p_labelValue);
+		v_label.setBackground(_defaultTabColor);
 
 		final Text v_element = new Text(p_container, SWT.BORDER | SWT.SINGLE);
 		v_element.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		v_element.setText(p_defaultValue);
-
 		return v_element;
 	}
 
@@ -299,11 +353,11 @@ public class PropertiesPage extends WizardPage {
 		Label v_label = new Label(p_container, SWT.NONE);
 		v_label.setToolTipText(p_tooltip);
 		v_label.setText(p_labelValue);
+		v_label.setBackground(_defaultTabColor);
 
 		final Text v_element = new Text(p_container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		v_element.setLayoutData(new GridData(GridData.FILL_BOTH));
 		v_element.setText(p_defaultValue);
-
 		return v_element;
 	}
 
@@ -321,12 +375,12 @@ public class PropertiesPage extends WizardPage {
 		Label v_label = new Label(p_container, SWT.NONE);
 		v_label.setToolTipText(p_tooltip);
 		v_label.setText(p_labelValue);
+		v_label.setBackground(_defaultTabColor);
 
 		Combo v_combo = new Combo(p_container, SWT.BORDER);
 		v_combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		v_combo.setItems(p_elements);
 		v_combo.select(p_defaultSelection);
-
 		return v_combo;
 	}
 
@@ -345,6 +399,7 @@ public class PropertiesPage extends WizardPage {
 		v_group.setLayout(v_fillLayout);
 		v_group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		v_group.setCursor(new Cursor(p_container.getDisplay(), SWT.CURSOR_HAND));
+		v_group.setBackground(_defaultTabColor);
 		return v_group;
 	}
 
@@ -363,6 +418,7 @@ public class PropertiesPage extends WizardPage {
 		GridData v_gridData = new GridData(GridData.FILL_HORIZONTAL);
 		v_group.setLayoutData(v_gridData);
 		v_group.setCursor(new Cursor(p_container.getDisplay(), SWT.CURSOR_HAND));
+		v_group.setBackground(_defaultTabColor);
 		return v_group;
 	}
 
@@ -377,6 +433,7 @@ public class PropertiesPage extends WizardPage {
 		Composite v_group = new Composite(p_container, SWT.NONE);
 		GridLayout v_gridLayout = new GridLayout(2, true);
 		GridData v_gridData = new GridData(GridData.FILL_HORIZONTAL);
+		v_group.setBackground(_defaultTabColor);
 		v_group.setLayoutData(v_gridData);
 		v_group.setLayout(v_gridLayout);
 		v_gridLayout.marginHeight = 0;
@@ -520,7 +577,7 @@ public class PropertiesPage extends WizardPage {
 
 		for (int v_idx = 0; v_idx < p_nbColumns; v_idx++) {
 			Composite v_item = addTabItem(v_useLibrariesTabFolder, TextUtil.c_LBL_USE_LIBRARY + (v_idx + 1),
-					getDefaultLayout());
+					getLayoutForLibrary());
 			addTextLibraryName(v_item, v_idx);
 			addTextLibraryPackage(v_item, v_idx);
 			addTextLibraryVersion(v_item, v_idx);
@@ -1076,6 +1133,7 @@ public class PropertiesPage extends WizardPage {
 
 		Label v_label = new Label(p_container, SWT.NONE);
 		v_label.setText(TextUtil.c_LBL_SPI4J_VERSION);
+		v_label.setBackground(_defaultTabColor);
 
 		Label v_spi4J = new Label(p_container, SWT.NONE);
 		FontData v_fontData = v_spi4J.getFont().getFontData()[0];
@@ -1083,6 +1141,7 @@ public class PropertiesPage extends WizardPage {
 				new FontData(v_fontData.getName(), v_fontData.getHeight(), SWT.BOLD));
 		v_spi4J.setFont(font);
 		v_spi4J.setText(_spi4jVersion);
+		v_spi4J.setBackground(_defaultTabColor);
 	}
 
 	/**
@@ -1171,6 +1230,7 @@ public class PropertiesPage extends WizardPage {
 		v_label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false));
 		v_label.setToolTipText(TextUtil.c_TLP_BDD);
 		v_label.setText(TextUtil.c_LBL_BDD);
+		v_label.setBackground(_defaultTabColor);
 
 		Composite v_groupDatabase = addGroupCheckBox(p_container);
 		_lstCompositesToManage.put(Id.CH_TYPE_BDD, v_groupDatabase);
@@ -1178,6 +1238,7 @@ public class PropertiesPage extends WizardPage {
 		Button v_btnOracle32 = new Button(v_groupDatabase, SWT.CHECK);
 		v_btnOracle32.setText(PacmanConfig.c_ORACLE + " (Version < 12.2)");
 		v_btnOracle32.setData(Id.CHBT_ORACLE_32);
+		v_btnOracle32.setBackground(_defaultTabColor);
 
 		v_btnOracle32.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1198,6 +1259,7 @@ public class PropertiesPage extends WizardPage {
 		Button v_btnOracle = new Button(v_groupDatabase, SWT.CHECK);
 		v_btnOracle.setText(PacmanConfig.c_ORACLE + " (Version > 12.1)");
 		v_btnOracle.setData(Id.CHBT_ORACLE);
+		v_btnOracle.setBackground(_defaultTabColor);
 
 		v_btnOracle.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1218,6 +1280,7 @@ public class PropertiesPage extends WizardPage {
 		Button v_btnPostgresql = new Button(v_groupDatabase, SWT.CHECK);
 		v_btnPostgresql.setText(PacmanConfig.c_POSTGRESQL);
 		v_btnPostgresql.setData(Id.CHBT_POSTGRES);
+		v_btnPostgresql.setBackground(_defaultTabColor);
 
 		v_btnPostgresql.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1236,6 +1299,7 @@ public class PropertiesPage extends WizardPage {
 		Button v_btnMysql = new Button(v_groupDatabase, SWT.CHECK);
 		v_btnMysql.setText(PacmanConfig.c_MYSQL);
 		v_btnMysql.setData(Id.CHBT_MYSQL);
+		v_btnMysql.setBackground(_defaultTabColor);
 
 		v_btnMysql.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1254,6 +1318,7 @@ public class PropertiesPage extends WizardPage {
 		Button v_btnMariaDB = new Button(v_groupDatabase, SWT.CHECK);
 		v_btnMariaDB.setText(PacmanConfig.c_MARIA_DB);
 		v_btnMariaDB.setData(Id.CHBT_MARIADB);
+		v_btnMariaDB.setBackground(_defaultTabColor);
 
 		v_btnMariaDB.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1273,6 +1338,7 @@ public class PropertiesPage extends WizardPage {
 		Button v_btnH2 = new Button(v_groupDatabase, SWT.CHECK);
 		v_btnH2.setText(PacmanConfig.c_H2);
 		v_btnH2.setData(Id.CHBT_H2);
+		v_btnH2.setBackground(_defaultTabColor);
 
 		v_btnH2.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1306,15 +1372,18 @@ public class PropertiesPage extends WizardPage {
 		_lstCompositesToManage.put(Id.RD_TU, v_groupTU);
 
 		v_label.setText(TextUtil.c_LBL_TU_CRUD);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupTU, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setSelection(true);
 		v_ouiButton.setData(Id.RDYES_TU);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupTU, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_TU);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1350,15 +1419,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupGenMatching = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_MATCH, v_groupGenMatching);
 		v_label.setText(TextUtil.c_LBL_SIMPLE_ARCH);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupGenMatching, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_MATCH);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupGenMatching, SWT.RADIO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_MATCH);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1398,15 +1470,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupSrvReq = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_REQUIREMENT, v_groupSrvReq);
 		v_label.setText(TextUtil.c_LBL_REQUIREMENTS);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupSrvReq, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setSelection(true);
 		v_ouiButton.setData(Id.RDYES_REQ);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupSrvReq, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_REQ);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1440,15 +1515,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupWS = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_SOA_WS, v_groupWS);
 		v_label.setText(TextUtil.c_LBL_SOA_WS);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupWS, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_WS);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupWS, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_WS);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1532,17 +1610,20 @@ public class PropertiesPage extends WizardPage {
 		Label v_label = new Label(p_container, SWT.NONE);
 		v_label.setToolTipText(TextUtil.c_TLP_SECURITY);
 		v_label.setText(TextUtil.c_LBL_SECURITY);
+		v_label.setBackground(_defaultTabColor);
 		Composite v_groupSecurity = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_SECURITY, v_groupSecurity);
 
 		Button v_ouiButton = new Button(v_groupSecurity, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_SECU);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupSecurity, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_SECU);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1575,6 +1656,8 @@ public class PropertiesPage extends WizardPage {
 		_labelBDD = new Label(p_container, SWT.NONE);
 		_labelBDD.setText(TextUtil.c_LBL_TEST);
 		_labelBDD.setToolTipText(TextUtil.c_TLP_TEST);
+		_labelBDD.setBackground(_defaultTabColor);
+
 		Composite v_groupGenDBDD = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_DBDD, v_groupGenDBDD);
 		v_groupGenDBDD.setToolTipText(TextUtil.c_TLP_TEST);
@@ -1582,11 +1665,13 @@ public class PropertiesPage extends WizardPage {
 		Button v_ouiButton = new Button(v_groupGenDBDD, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_BDD);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupGenDBDD, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_BDD);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1621,15 +1706,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupSrvEjb = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_EJB, v_groupSrvEjb);
 		v_label.setText(TextUtil.c_LBL_EJB);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupSrvEjb, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_EJB);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupSrvEjb, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_EJB);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1663,13 +1751,16 @@ public class PropertiesPage extends WizardPage {
 		Label v_label = new Label(p_container, SWT.NONE);
 		Composite v_groupRC = addGroupRadio(p_container);
 		v_label.setText(TextUtil.c_LBL_CARRIAGE_RETURN);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_rnButton = new Button(v_groupRC, SWT.RADIO);
 		v_rnButton.setText(TextUtil.c_LBL_CARRIAGE_RETURN_W);
 		v_rnButton.setSelection(true);
+		v_rnButton.setBackground(_defaultTabColor);
 
 		Button v_nButton = new Button(v_groupRC, SWT.RADIO);
 		v_nButton.setText(TextUtil.c_LBL_CARRIAGE_RETURN_L);
+		v_nButton.setBackground(_defaultTabColor);
 
 		v_rnButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1704,15 +1795,18 @@ public class PropertiesPage extends WizardPage {
 		_lstCompositesToManage.put(Id.RD_USECONFIG, v_groupRCG);
 		v_label.setToolTipText(TextUtil.c_TLP_USE_CONFIG);
 		v_label.setText(TextUtil.c_LBL_USE_CONFIG);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_yesButton = new Button(v_groupRCG, SWT.RADIO);
 		v_yesButton.setText(TextUtil.c_LBL_YES);
 		v_yesButton.setData(Id.RDYES_USECONFIG);
+		v_yesButton.setBackground(_defaultTabColor);
 
 		Button v_noButton = new Button(v_groupRCG, SWT.RADIO);
 		v_noButton.setText(TextUtil.c_LBL_NO);
 		v_noButton.setData(Id.RDNO_USECONFIG);
 		v_noButton.setSelection(true);
+		v_noButton.setBackground(_defaultTabColor);
 
 		v_yesButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1747,15 +1841,18 @@ public class PropertiesPage extends WizardPage {
 		_lstCompositesToManage.put(Id.RD_LIBRARY, v_groupIsLibrary);
 		v_label.setText(TextUtil.c_LBL_PROJECT_LIBRARY);
 		v_label.setToolTipText(TextUtil.c_TLP_PROJECT_LIBRARY);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupIsLibrary, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_LIB);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupIsLibrary, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_LIB);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1789,13 +1886,16 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupIsLibraryRs = addGroupRadio(p_container);
 		v_label.setText(TextUtil.c_LBL_PROJECT_LIBRARY_RS);
 		v_label.setToolTipText(TextUtil.c_TLP_PROJECT_LIBRARY_RS);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupIsLibraryRs, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupIsLibraryRs, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1832,6 +1932,7 @@ public class PropertiesPage extends WizardPage {
 		v_label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false));
 		v_label.setToolTipText(TextUtil.c_TLP_MODEL);
 		v_label.setText(TextUtil.c_LBL_MODEL);
+		v_label.setBackground(_defaultTabColor);
 
 		Composite v_groupModel = addGroupCheckBox(p_container);
 		_lstCompositesToManage.put(Id.CH_MOD_LST_FILES, v_groupModel);
@@ -1839,6 +1940,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnEntity = new Button(v_groupModel, SWT.CHECK);
 		v_btnEntity.setText(TextUtil.c_LBL_MODEL_ENTITY);
 		v_btnEntity.setData(Id.CHBT_ENTITY);
+		v_btnEntity.setBackground(_defaultTabColor);
 
 		v_btnEntity.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1856,6 +1958,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnSoa = new Button(v_groupModel, SWT.CHECK);
 		v_btnSoa.setText(TextUtil.c_LBL_MODEL_SOA);
 		v_btnSoa.setData(Id.CHBT_SOAP);
+		v_btnSoa.setBackground(_defaultTabColor);
 
 		v_btnSoa.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1873,6 +1976,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnDatabase = new Button(v_groupModel, SWT.CHECK);
 		v_btnDatabase.setText(TextUtil.c_LBL_MODEL_DATABASE);
 		v_btnDatabase.setData(Id.CHBT_DATABASE);
+		v_btnDatabase.setBackground(_defaultTabColor);
 
 		v_btnDatabase.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1890,6 +1994,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnCinematic = new Button(v_groupModel, SWT.CHECK);
 		v_btnCinematic.setText(TextUtil.c_LBL_MODEL_CINEMATIC);
 		v_btnCinematic.setData(Id.CHBT_CINEMATIC);
+		v_btnCinematic.setBackground(_defaultTabColor);
 
 		v_btnCinematic.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1907,6 +2012,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnRequirement = new Button(v_groupModel, SWT.CHECK);
 		v_btnRequirement.setText(TextUtil.c_LBL_MODEL_REQUIREMENT);
 		v_btnRequirement.setData(Id.CHBT_REQUIREMENT);
+		v_btnRequirement.setBackground(_defaultTabColor);
 
 		v_btnRequirement.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -1925,7 +2031,6 @@ public class PropertiesPage extends WizardPage {
 		GridData v_gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		v_gridData.verticalIndent = 30;
 		v_btnSelectAll.setLayoutData(v_gridData);
-
 		v_btnSelectAll.setText(TextUtil.c_LBL_BT_SELECT_ALL);
 		v_btnSelectAll.addSelectionListener(new SelectionAdapter() {
 
@@ -2228,6 +2333,51 @@ public class PropertiesPage extends WizardPage {
 	 * 
 	 * @param p_container
 	 */
+	public void addRadioGenBatch(final Composite p_container) {
+
+		Label v_label = new Label(p_container, SWT.NONE);
+		Composite v_groupBatch = addGroupRadio(p_container);
+		_lstCompositesToManage.put(Id.RD_BATCH, v_groupBatch);
+
+		v_label.setText(TextUtil.c_LBL_GEN_BATCH);
+		v_label.setBackground(_defaultTabColor);
+
+		Button v_ouiButton = new Button(v_groupBatch, SWT.RADIO);
+		v_ouiButton.setText(TextUtil.c_LBL_YES);
+		v_ouiButton.setData(Id.RDYES_BATCH);
+		v_ouiButton.setBackground(_defaultTabColor);
+
+		Button v_nonButton = new Button(v_groupBatch, SWT.RADIO);
+		v_nonButton.setText(TextUtil.c_LBL_NO);
+		v_nonButton.setData(Id.RDNO_BATCH);
+		v_nonButton.setSelection(true);
+		v_nonButton.setBackground(_defaultTabColor);
+
+		v_ouiButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent p_e) {
+
+				if (((Button) p_e.getSource()).getSelection())
+					_useBatch = PacmanConfig.c_BOOL_STR_YES;
+			}
+		});
+
+		v_nonButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent p_e) {
+
+				if (((Button) p_e.getSource()).getSelection())
+					_useBatch = PacmanConfig.c_BOOL_STR_NO;
+			}
+		});
+	}
+
+	/**
+	 * 
+	 * @param p_container
+	 */
 	private void addRadioForSqlColumnNullValue(final Composite p_container, final int p_tabIdx) {
 
 		Label v_label = new Label(p_container, SWT.NONE);
@@ -2235,15 +2385,18 @@ public class PropertiesPage extends WizardPage {
 		v_groupNullValue.setData(c_TABIDX, p_tabIdx);
 
 		v_label.setText(TextUtil.c_LBL_SQL_COLUMN_NULL);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupNullValue, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setSelection(true);
 		v_ouiButton.setData(Id.RDYES_TU);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupNullValue, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_TU);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2408,13 +2561,16 @@ public class PropertiesPage extends WizardPage {
 		// _lstCompositesToManage.put(Id.RD_TU, v_groupTU);
 
 		v_label.setText(TextUtil.c_LBL_LIBRARY_DATABASE);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupLD, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupLD, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2568,15 +2724,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupModeDebug = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_DEBUG, v_groupModeDebug);
 		v_label.setText(TextUtil.c_LBL_DEBUG);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupModeDebug, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_DEBUG);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupModeDebug, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_DEBUG);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2611,15 +2770,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupFetchStrategy = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_FETCHSTRATEGY, v_groupFetchStrategy);
 		v_label.setText(TextUtil.c_LBL_FETCHING);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupFetchStrategy, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_FETCH);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupFetchStrategy, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_FETCH);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2654,15 +2816,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupLog4j = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_LOG4J, v_groupLog4j);
 		v_label.setText(TextUtil.c_LBL_LOG4J);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupLog4j, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setSelection(true);
 		v_ouiButton.setData(Id.RDYES_LOG4J);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupLog4j, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_LOG4J);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2698,15 +2863,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupHk2 = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_HK2, v_groupHk2);
 		v_label.setText(TextUtil.c_LBL_HK2);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupHk2, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setSelection(true);
 		v_ouiButton.setData(Id.RDYES_HK2);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupHk2, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_HK2);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2741,15 +2909,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupH2 = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_EMBEDH2, v_groupH2);
 		v_label.setText(TextUtil.c_LBL_EH2);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupH2, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_EMBEDH2);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupH2, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setData(Id.RDNO_EMBEDH2);
 		v_nonButton.setSelection(true);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2785,15 +2956,18 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupReqVersion = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_REQVERSION, v_groupReqVersion);
 		v_label.setText(TextUtil.c_LBL_REQUIREMENT_VERSION);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupReqVersion, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_NONE);
 		v_ouiButton.setSelection(true);
 		v_ouiButton.setData(Id.RDYES_REQVERSION);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupReqVersion, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_CURRENT);
 		v_nonButton.setData(Id.RDNO_REQVERSION);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2855,6 +3029,7 @@ public class PropertiesPage extends WizardPage {
 		Label v_label = new Label(v_groupMain, SWT.NONE);
 		v_label.setToolTipText(TextUtil.c_TLP_COLUMNS_SUPMAJ);
 		v_label.setText(TextUtil.c_LBL_COLUMNS_SUPMAJ);
+		v_label.setBackground(_defaultTabColor);
 
 		Composite v_groupXtopSupXdMaj = addGroupRadio(v_groupMain);
 		_lstCompositesToManage.put(Id.CH_CHXTOMAJ, v_groupXtopSupXdMaj);
@@ -2862,6 +3037,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnXdMaj = new Button(v_groupXtopSupXdMaj, SWT.CHECK);
 		v_btnXdMaj.setText(TextUtil.c_LBL_XDMAJ);
 		v_btnXdMaj.setToolTipText(TextUtil.c_TIP_XDMAJ);
+		v_btnXdMaj.setBackground(_defaultTabColor);
 
 		v_btnXdMaj.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -2891,6 +3067,7 @@ public class PropertiesPage extends WizardPage {
 		final Button v_btnXtopSup = new Button(v_groupXtopSupXdMaj, SWT.CHECK);
 		v_btnXtopSup.setText(TextUtil.c_LBL_XTOSUP);
 		v_btnXtopSup.setToolTipText(TextUtil.c_TIP_XTOSUP);
+		v_btnXtopSup.setBackground(_defaultTabColor);
 
 		v_btnXtopSup.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent p_e) {
@@ -2935,17 +3112,21 @@ public class PropertiesPage extends WizardPage {
 		Composite v_groupCRUD = addGroupRadio(p_container);
 		_lstCompositesToManage.put(Id.RD_CRUD, v_groupCRUD);
 		v_label.setText(TextUtil.c_LBL_CRUD);
+		v_label.setToolTipText(TextUtil.c_TLP_CRUD);
+		v_label.setBackground(_defaultTabColor);
 
 		Button v_ouiButton = new Button(v_groupCRUD, SWT.RADIO);
 		v_ouiButton.setText(TextUtil.c_LBL_YES);
 		v_ouiButton.setData(Id.RDYES_CRUD);
 		v_ouiButton.setEnabled(false);
+		v_ouiButton.setBackground(_defaultTabColor);
 
 		Button v_nonButton = new Button(v_groupCRUD, SWT.RADIO);
 		v_nonButton.setText(TextUtil.c_LBL_NO);
 		v_nonButton.setSelection(true);
 		v_nonButton.setData(Id.RDNO_CRUD);
 		v_nonButton.setEnabled(false);
+		v_nonButton.setBackground(_defaultTabColor);
 
 		v_ouiButton.addSelectionListener(new SelectionAdapter() {
 
@@ -3170,6 +3351,10 @@ public class PropertiesPage extends WizardPage {
 		return _eh2;
 	}
 
+	public String getUseBatch() {
+		return _useBatch;
+	}
+
 	public String getDataBasesNames() {
 		StringBuilder v_dbNames = new StringBuilder();
 		for (int i = 0; i < _bdNames.size(); i++) {
@@ -3272,7 +3457,7 @@ public class PropertiesPage extends WizardPage {
 	 */
 	private enum Id {
 
-		RD_DBDD, RD_TU, RD_REQUIREMENT, RD_EJB, RD_MATCH, RD_SECURITY, RD_SOA_WS, RD_LIBRARY, RD_LIBRARYREST,
+		RD_DBDD, RD_TU, RD_BATCH, RD_REQUIREMENT, RD_EJB, RD_MATCH, RD_SECURITY, RD_SOA_WS, RD_LIBRARY, RD_LIBRARYREST,
 		CB_TYPE_IHM, CB_CODE_NAMING, CB_USE_BDD, RD_DEBUG, RD_FETCHSTRATEGY, RD_LOG4J, RD_CRUD, RD_HK2, RD_REQVERSION,
 		CH_TYPE_BDD, CH_MOD_LST_FILES, RD_USE_LIBRARY, TX_USE_LIBRARY_GROUP, TX_USE_LIBRARY_ARTIFACT,
 		TX_USE_LIBRARY_VERSION, CHBT_ENTITY, CHBT_SOAP, CHBT_DATABASE, TX_REQ_PREFIX, TX_REQ_LEVEL, TX_AUTHOR,
@@ -3282,7 +3467,8 @@ public class PropertiesPage extends WizardPage {
 		ODB_SQL_PREFIX, ODB_SQL_TABLESPACE, ODB_SQL_SCHEMA, ODB_SQL_NBCOLUMNS, LIB_USE_NBCOLUMNS, LIB_USE_LIBRARY,
 		CH_CHXTOMAJ, RDNO_USE_LIBRARY, RDNO_DEBUG, RDYES_DEBUG, RDYES_FETCH, RDNO_FETCH, RDYES_LOG4J, RDNO_LOG4J,
 		RDYES_CRUD, RDNO_CRUD, RDYES_HK2, RDNO_HK2, RDNO_REQVERSION, RDYES_REQVERSION, CB_HTTP_SERVER, RD_SOA_WMS,
-		RDYES_WMS, RDNO_WMS, RD_USECONFIG, RDYES_USECONFIG, RDNO_USECONFIG, RD_EMBEDH2, RDYES_EMBEDH2, RDNO_EMBEDH2;
+		RDYES_WMS, RDNO_WMS, RD_USECONFIG, RDYES_USECONFIG, RDNO_USECONFIG, RD_EMBEDH2, RDYES_EMBEDH2, RDNO_EMBEDH2,
+		RDYES_BATCH, RDNO_BATCH;
 
 		static boolean isIdType_RD_NO(Id p_id) {
 

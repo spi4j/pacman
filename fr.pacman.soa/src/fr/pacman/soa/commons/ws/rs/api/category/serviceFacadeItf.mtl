@@ -57,6 +57,7 @@ public interface [s.buildServiceFacadeRSInterfaceName(d)/]
     * [o.description/].
 [o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/]
 	*/
+	[displayClearUserCodeId (o.getUserCodeId('Annotations Methode' + o.name))/]
     // [protected (o.getUserCodeId('Annotations Methode' + o.name))]
 
     // [/protected]

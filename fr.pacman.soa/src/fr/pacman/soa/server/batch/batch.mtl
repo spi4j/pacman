@@ -1,0 +1,48 @@
+[comment encoding = UTF-8 /]
+[module batch('http://www.obeonetwork.org/dsl/soa/4.0.0',
+                'http://www.obeonetwork.org/dsl/environment/3.0.0',
+                'http://www.obeonetwork.org/dsl/requirement/1.0')/]
+
+[import fr::pacman::commons::common::licence /]
+[import fr::pacman::commons::common::classes /]
+
+[import fr::pacman::commons::soa::common::packages /]
+[import fr::pacman::commons::soa::common::classes /]
+[import fr::pacman::commons::soa::common::services /]
+
+[comment : Create the batch. /]
+[template public batch(s : Service)]
+[licence()/]
+package [s.buildPackageServiceBatch()/];
+
+public class [s.buildBatchClassName()/] {
+
+}
+[/template]
+
+[comment : Create the xml definition file for all specified batchs. /]
+[template public batchsXml(m : System)]
+[for (s : Service | m.getBatchs())]
+[s.name/]
+[/for]
+[/template]
+
+[comment : Create the xml definition file for all specified batchs. /]
+[template public batchsXml(s : Service)]
+<job id="[s.name.toLower()/]" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+[for (o : Operation | s.ownedInterface.ownedOperations)]
+	<step id="[o.name.toLower()/]">
+		<properties>
+		</properties>
+		<batchlet ref="" />
+	</step>
+[/for]
+</job>
+[/template]
+
+[comment : /]
+[template public batchsJobOperator()]
+
+public class [buildBatchsJobsOperatorClassName()/] {
+}
+[/template]

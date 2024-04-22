@@ -35,7 +35,7 @@ public interface [buildReferenceEntityInterfaceName(r)/] extends [if hasAutomati
 {
    // CONSTANTES
 
-   // Constantes [buildReferenceEntityInterfaceName(r)/]
+   [displayClearUserCodeId ('Constantes ' + buildReferenceEntityInterfaceName(r))/]
    // [protected (r.getUserCodeId('Constantes ' + buildReferenceEntityInterfaceName(r)))]
 
    // [/protected]

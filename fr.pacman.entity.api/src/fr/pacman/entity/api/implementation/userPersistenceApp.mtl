@@ -46,8 +46,6 @@ public final class [buildUserPersistenceAppClassName()/] extends [getClassNameFo
 
 [for (e : Entity | r.eAllContents(Entity))]
 
-   // [apply_methodDefault('get '+ buildEntityName(e))/]
-   // [protected (e.getUserCodeId(apply_methodDefault('get '+ buildEntityName(e))))]
    /**
     * Obtenir l'entité '[buildEntityInterfaceName(e)/]'.
     * @return L'instance désirée.
@@ -56,11 +54,9 @@ public final class [buildUserPersistenceAppClassName()/] extends [getClassNameFo
    {
       return getEntity ([buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/].class);
    }
-   // [/protected]
 
 [if not e.isNotPersistent() or useMatching()]
-   // [apply_methodDefault('get '+ buildDaoName(e))/]
-   // [protected (e.getUserCodeId(apply_methodDefault('get '+ buildDaoName(e))))]
+
    /**
     * Obtenir le DAO '[buildDaoInterfaceName(e)/]'.
     * @return L'instance désirée.
@@ -69,7 +65,7 @@ public final class [buildUserPersistenceAppClassName()/] extends [getClassNameFo
    {
       return getDao ([buildPackagePersistenceApiEntity(e)/].[buildEntityInterfaceName(e)/].class);
    }
-   // [/protected]
+
 [/if]
 [/for]
 }

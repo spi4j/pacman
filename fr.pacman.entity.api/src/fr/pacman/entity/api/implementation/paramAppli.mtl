@@ -27,7 +27,7 @@ public interface [buildParamAppliClassName()/]
    /** L'identifiant de l'application. */
    String [apply_attributeFinalStatic('id appli')/] = "[getApplicationName()/]";
 
-   // Constantes
+   [displayClearUserCodeId ('Constantes')/]
    // [protected (r.getUserCodeId('Constantes'))]
 
    // [/protected]

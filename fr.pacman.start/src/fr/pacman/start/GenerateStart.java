@@ -86,6 +86,7 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	public static final String c_PROP_JAVA_VERSION = "java.version";
 	public static final String c_DATEBASE_TYPES = "database.type";
 	public static final String c_PROP_EJB_SRV = "ejbservice.enabled";
+	public static final String c_PROP_USE_BATCH = "batch.layer.enabled";
 	public static final String c_PROP_REQ_SRV = "servicerequirements.enabled";
 	public static final String c_PROP_SRV_CRUD_TU = "tests.crud.enabled";
 	public static final String c_PROP_CR_FORMAT = "new.line";

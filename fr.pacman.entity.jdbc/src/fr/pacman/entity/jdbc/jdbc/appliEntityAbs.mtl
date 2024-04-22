@@ -45,7 +45,7 @@ public abstract class [buildAppliEntityAbstractClassName()/]<TypeId> implements 
     */
    private static final long serialVersionUID = -1;
 
-   // Constantes
+   [displayClearUserCodeId ('Constantes')/]
    // [protected (r.getUserCodeId('Constantes'))]
 
    // [/protected]
@@ -56,7 +56,7 @@ public abstract class [buildAppliEntityAbstractClassName()/]<TypeId> implements 
 [r.getAutomaticAttribut(columnProp) /]
 
 [/for]
-   // Attributs
+   [displayClearUserCodeId ('Attributs')/]
    // [protected (r.getUserCodeId('Attributs'))]
 
    // [/protected]
