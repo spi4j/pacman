@@ -30,7 +30,7 @@ XXX attributesEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX
 
 [template public enumStruct (a : Attribute, e : Entity)]
    /** [nameBaseAttribute(a)/]. */
-   [apply_attributeEnum(a.name.normalize())/]("[apply_attributeEnum(a.name.normalize())/]", "[a.description.escape()/]", [a.type.genTypeName()/].class, [mandatory(a)/], [if hasSize(a.metadatas)][size(a.metadatas)/][else]-1[/if])
+   [apply_attributeEnum(a.name.normalize())/]("[apply_attributeEnum(a.name.normalize())/]", "[a.description.escape()/]", [a.type.genTypeNameWithPreCheck()/].class, [mandatory(a)/], [if hasSize(a.metadatas)][size(a.metadatas)/][else]-1[/if])
 [/template]
 
 [template public enumStruct (r : Reference, e : Entity)]

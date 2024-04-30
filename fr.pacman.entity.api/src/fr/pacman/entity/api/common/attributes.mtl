@@ -80,11 +80,6 @@ List<[genPropertyTypeOrPK(a)/]>
 [if (isMandatory(p))]true[else]false[/if]
 [/template]
 
-[template public genTypeName(t : Type)]
-[if t.oclIsKindOf(Enumeration)]
-[apply_classEnum(t.name)/][else][t.name.sanitize()/][/if]
-[/template]
-
 [comment : Placé ici car concerne la récupération de l'attribut xtopsup. /]
 [template public completeXtopSupValue (e : Entity, columnProp : String)]
 [if 'xtopsup'.equalsIgnoreCase(e.get_nameColumn(columnProp))].get_value()[/if]

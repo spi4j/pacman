@@ -4,6 +4,7 @@
 
 [import fr::pacman::commons::common::utils /]
 [import fr::pacman::commons::common::properties /]
+[import fr::pacman::commons::common::attributes /]
 
 [import fr::pacman::commons::convention::rule::classRule /]
 [import fr::pacman::commons::convention::rule::attributeRule /]
@@ -26,12 +27,6 @@ List<[genPropertyTypeValid(a)/]>
 [template public genPropertyTypeValid(a : Attribute) post(trim())]
 [if (a.type = null or a.type.oclIsInvalid() or a.type.oclIsUndefined())]
 String[else][a.type.genTypeName()/][/if]
-[/template]
-
-[comment  : /]
-[template public genTypeName(t : Type)]
-[if t.oclIsKindOf(Enumeration)]
-[apply_classEnum(t.name)/][else][t.name.sanitize()/][/if]
 [/template]
 
 [comment : /]

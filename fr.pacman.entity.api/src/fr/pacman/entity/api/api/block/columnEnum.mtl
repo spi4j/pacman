@@ -28,7 +28,7 @@ XXX columnEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX
 
 [template private enumStructAttribute (a : Attribute)]
    /** [apply_attributeEnum(a.nameSimpleProperty())/]. */
-   [apply_attributeEnum(a.nameSimpleProperty())/]("[apply_attributeEnum(a.nameSimpleProperty())/]", "[nameColumn(a)/]", [a.type.genTypeName()/].class, [mandatory(a)/], [if hasValideSize(a)][size(a.metadatas)/][else]-1[/if], false)
+   [apply_attributeEnum(a.nameSimpleProperty())/]("[apply_attributeEnum(a.nameSimpleProperty())/]", "[nameColumn(a)/]", [a.type.genTypeNameWithPreCheck()/].class, [mandatory(a)/], [if hasValideSize(a)][size(a.metadatas)/][else]-1[/if], false)
 [/template]
 
 [template private enumStructReferenceId (r : Reference, compteur : Integer)]

@@ -98,14 +98,14 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
 [for (a : Attribute | e.attributesNoPk())]
 [comment test is computed sert dans le cas de génération dsans matching/]
 [if (not a.isComputed())]
-     [if a.type.genTypeName()='Binary']
+     [if a.type.genTypeNameWithPreCheck()='Binary']
       if ([apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()==null)
       {
          [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), null);
       }
       else
       {
-         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if a.type.genTypeName()='Binary'].getInputStream()[/if]);
+         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if a.type.genTypeNameWithPreCheck()='Binary'].getInputStream()[/if]);
       }
      [else]
       [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if (a.type.oclIsTypeOf(Enumeration))].getValue()[/if]);
@@ -113,14 +113,14 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
 [/if]
 [/for]
 [for (a : Attribute | e.getInheritDtoAttributes())]
-     [if a.type.genTypeName()='Binary']
+     [if a.type.genTypeNameWithPreCheck()='Binary']
       if ([apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()==null)
       {
          [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), null);
       }
       else
       {
-         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if (a.type.oclIsTypeOf(Enumeration))].getValue()[/if][if a.type.genTypeName() ='Binary'].getInputStream()[/if]);
+         [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]()[if (a.type.oclIsTypeOf(Enumeration))].getValue()[/if][if a.type.genTypeNameWithPreCheck() ='Binary'].getInputStream()[/if]);
       }
      [else]
       [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameColumnProperty(a))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].[apply_methodGet(nameSimpleProperty(a))/]());
