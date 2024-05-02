@@ -63,8 +63,8 @@ package [buildPackagePersistenceApiEntity(e)/];
 [comClass(roleEnum())/]
 public enum [buildEntityColumnEnumName(e)/] implements [getClassNameForColumnsNames_Itf()/]
 {
-   /** [nameSimplePropertyID(e)/]. */
-   [nameSimplePropertyID(e)/]("[apply_attributeDefault(nameSimplePropertyID(e))/]", "[namePK(e)/]", [genPkType()/].class, true, -1, true)[if not e.attributesNoPk()->isEmpty()],
+   /** [apply_attributeEnum(nameSimplePropertyID(e))/]. */
+   [apply_attributeEnum(nameSimplePropertyID(e))/]("[apply_attributeDefault(nameSimplePropertyID(e))/]", "[namePK(e)/]", [genPkType()/].class, true, -1, true)[if not e.attributesNoPk()->isEmpty()],
 [e.attributesNoPk().enumStructAttribute()->sep(',\r\n')/][/if][if not e.getInheritDtoAttributes()->isEmpty()],
 [e.getInheritDtoAttributes().enumStructAttribute()->sep(',\r\n')/][/if]
 [for (ent : Entity | e.entitiesReferencedOrReferencing() )]

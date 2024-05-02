@@ -423,7 +423,7 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
       [apply_methodDefault('test create')/]();
 
 [/if]
-      final List<[buildEntityInterfaceName(e)/]> [apply_variableDefault('entitys')/] = [apply_attributeStatic('dao')/].findByColumn([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/], crudId);
+      final List<[buildEntityInterfaceName(e)/]> [apply_variableDefault('entitys')/] = [apply_attributeStatic('dao')/].findByColumn([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameSimplePropertyID(e))/], crudId);
       assertEquals(1, [apply_variableDefault('entitys')/].size(), "Il ne devrait exister qu'une entity");
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_variableDefault('entitys')/].get(0);
       assertNotNull([apply_variableDefault('entity')/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
@@ -456,8 +456,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 [/if]
       final TableCriteria<[buildEntityColumnEnumName(e)/]> [apply_variableFinal('table')/] = new TableCriteria<>(
                "Test 'find by criteria' en cherchant sur l'id");
-      [apply_variableFinal('table')/].addCriteria([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/], Operator_Enum.equals, [apply_attributeStatic('crud id')/]);
-      [apply_variableFinal('table')/].addOrderByDesc([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/]);
+      [apply_variableFinal('table')/].addCriteria([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameSimplePropertyID(e))/], Operator_Enum.equals, [apply_attributeStatic('crud id')/]);
+      [apply_variableFinal('table')/].addOrderByDesc([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameSimplePropertyID(e))/]);
       final List<[buildEntityInterfaceName(e)/]> [apply_variableDefault('entitys')/] = [apply_attributeStatic('dao')/].findByCriteria([apply_variableFinal('table')/]);
       assertEquals(1, [apply_variableDefault('entitys')/].size(), "Il ne devrait exister qu'une entity");
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = [apply_variableDefault('entitys')/].get(0);

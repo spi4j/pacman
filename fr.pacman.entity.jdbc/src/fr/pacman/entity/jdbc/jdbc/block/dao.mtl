@@ -82,10 +82,11 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
       [comment]// Note pour Pacman : le nom "aw_personnecompetence" de la table de jointure est déterminé par défaut par le préfix + les 2 noms d'entités en relation N-N
       // et ce nom peut être surchargé par une Annotation PHYSICAL_NAME sur la relation N-N dans le modéle[/comment]
       final String [apply_variableFinal('jointure sql')/] = " inner join " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +   r.name.sanitize())/] + " on "
-               + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name')/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity))/] + " = "
-               + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +  r.name.sanitize())/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[ nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity))/]
-               + " where " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +  r.name.sanitize())/] + "." + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/] + " = :[nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/]";
-      final Map<String, Long> [apply_variableFinal('params')/] = Collections.singletonMap ("[nameSimplePropertyID(r.containingType.oclAsType(entity::Entity))/]", [apply_parameterMethodObjectIn(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]);
+               + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name')/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeEnum(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/] + " = "
+               + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +  r.name.sanitize())/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeEnum(nameSimplePropertyID(r.referencedType.oclAsType(entity::Entity)))/]
+               + " where " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeFinalStatic('table name ' + nameSimpleEntity(r.containingType.oclAsType(entity::Entity)) +  r.name.sanitize())/] + "." + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[apply_attributeEnum(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/] 
+               + " = :[apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]";
+      final Map<String, Long> [apply_variableFinal('params')/] = Collections.singletonMap ("[apply_attributeDefault(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]", [apply_parameterMethodObjectIn(nameSimplePropertyID(r.containingType.oclAsType(entity::Entity)))/]);
       return [buildParamPersistenceClassNameForEntity(r.referencedType.oclAsType(entity::Entity))/].[apply_methodDefault('get user persistence')/]().[apply_methodDefault('get '+ buildDaoName(r.referencedType.oclAsType(entity::Entity)))/]().findByCriteria ([apply_variableFinal('jointure sql')/], [apply_variableFinal('params')/]);
    }
 
@@ -94,7 +95,7 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
    protected Map<String, Object> getMapValueByLogicalNameFromEntity (final [buildEntityInterfaceName(e)/] [apply_parameterMethodObjectIn('entity')/])
    {
       final Map<String, Object> [e.apply_variableMultipleMap('value by column name')/] = new LinkedHashMap<>();
-      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].getId());
+      [e.apply_variableMultipleMap('value by column name')/].put([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameSimplePropertyID(e))/].getLogicalColumnName(), [apply_parameterMethodObjectIn('entity')/].getId());
 [for (a : Attribute | e.attributesNoPk())]
 [comment test is computed sert dans le cas de génération dsans matching/]
 [if (not a.isComputed())]
@@ -150,7 +151,7 @@ public class [buildDaoImplClassName(e)/] extends [getClassNameForDaoJdbc_Abs()/]
    protected [buildEntityInterfaceName(e)/] getEntityFromMapValueByLogicalName (final Map<String, Object> [apply_parameterMethodMultipleMap('value by column name')/])
    {
       final [buildEntityInterfaceName(e)/] [apply_variableDefault('entity')/] = new [buildEntityImplClassName(e)/] ();
-      [apply_variableDefault('entity')/].setId(([genPkType()/]) [apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[nameSimplePropertyID(e)/].getLogicalColumnName()));
+      [apply_variableDefault('entity')/].setId(([genPkType()/]) [apply_parameterMethodMultipleMap('value by column name')/].get([buildEntityColumnEnumName(e)/].[apply_attributeEnum(nameSimplePropertyID(e))/].getLogicalColumnName()));
 [for (a : Attribute | e.attributesNoPk())]
 [if (not a.isComputed())]
      [if (useSpi4jSecurity() and not useMatching() and (entityIsUser(e) and a.name = 'identifiant'))]
