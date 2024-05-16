@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>fr.pacman</groupId>
 		<artifactId>pacman-parent</artifactId>
-		<version>4.5.0</version>
+		<version>4.5.1</version>
 	</parent>
 	<artifactId>fr.pacman.start</artifactId>
 	<packaging>eclipse-plugin</packaging>

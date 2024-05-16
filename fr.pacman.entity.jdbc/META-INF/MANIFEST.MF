@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.entity.jdbc
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Persistance JDBC
 Bundle-SymbolicName: fr.pacman.entity.jdbc
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.5.1.qualifier
 Bundle-Activator: fr.pacman.entity.jdbc.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,

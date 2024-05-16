@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.cinematic.gwt.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Safr@n
 Bundle-SymbolicName: fr.pacman.branding;singleton:=true
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.5.1.qualifier
 Bundle-Activator: fr.pacman.branding.Activator
 Bundle-Vendor: Safr@n
 Bundle-RequiredExecutionEnvironment: JavaSE-11

@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.cinematic.jsp
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Cinematic JSP
 Bundle-SymbolicName: fr.pacman.cinematic.jsp
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.5.1.qualifier
 Bundle-Activator: fr.pacman.cinematic.jsp.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,

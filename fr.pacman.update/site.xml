@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/fr.pacman.entity.jdbc.ui.feature_4.5.0.jar" id="fr.pacman.entity.jdbc.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.entity.jdbc.ui.feature_4.5.1.jar" id="fr.pacman.entity.jdbc.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.entity.dbpopulate.ui.feature_4.5.0.jar" id="fr.pacman.entity.dbpopulate.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.entity.dbpopulate.ui.feature_4.5.1.jar" id="fr.pacman.entity.dbpopulate.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.entity.sql.ui.feature_4.5.0.jar" id="fr.pacman.entity.sql.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.entity.sql.ui.feature_4.5.1.jar" id="fr.pacman.entity.sql.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.entity.xmi.ui.feature_4.5.0.jar" id="fr.pacman.entity.xmi.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.entity.xmi.ui.feature_4.5.1.jar" id="fr.pacman.entity.xmi.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.requirement.ui.feature_4.5.0.jar" id="fr.pacman.requirement.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.requirement.ui.feature_4.5.1.jar" id="fr.pacman.requirement.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.soa.ui.feature_4.5.0.jar" id="fr.pacman.soa.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.soa.ui.feature_4.5.1.jar" id="fr.pacman.soa.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.soapifirst.ui.feature_4.5.0.jar" id="fr.pacman.soapifirst.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.soapifirst.ui.feature_4.5.1.jar" id="fr.pacman.soapifirst.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.cinematic.gwt.ui.feature_4.5.0.jar" id="fr.pacman.cinematic.gwt.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.cinematic.gwt.ui.feature_4.5.1.jar" id="fr.pacman.cinematic.gwt.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.cinematic.jsf.ui.feature_4.5.0.jar" id="fr.pacman.cinematic.jsf.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.cinematic.jsf.ui.feature_4.5.1.jar" id="fr.pacman.cinematic.jsf.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.cinematic.swing.ui.feature_4.5.0.jar" id="fr.pacman.cinematic.swing.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.cinematic.swing.ui.feature_4.5.1.jar" id="fr.pacman.cinematic.swing.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.start.ui.feature_4.5.0.jar" id="fr.pacman.start.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.start.ui.feature_4.5.1.jar" id="fr.pacman.start.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.validation.ui.feature_4.5.0.jar" id="fr.pacman.validation.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.validation.ui.feature_4.5.1.jar" id="fr.pacman.validation.ui.feature" version="4.5.1">
       <category name="fr.gouv.mindef"/>
    </feature>
-   <feature url="features/fr.pacman.estimation.ui.feature_4.5.0.jar" id="fr.pacman.estimation.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.estimation.ui.feature_4.5.1.jar" id="fr.pacman.estimation.ui.feature" version="4.5.1">
       <category name="fr.pacman.ana"/>
    </feature>
-   <feature url="features/fr.pacman.environment.ui.feature_4.5.0.jar" id="fr.pacman.environment.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.environment.ui.feature_4.5.1.jar" id="fr.pacman.environment.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.requirementsgrouper.ui.feature_4.5.0.jar" id="fr.pacman.requirementsgrouper.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.requirementsgrouper.ui.feature_4.5.1.jar" id="fr.pacman.requirementsgrouper.ui.feature" version="4.5.1">
       <category name="fr.pacman.ana"/>
    </feature>
-   <feature url="features/fr.pacman.entity.dbreferentiel.ui.feature_4.5.0.jar" id="fr.pacman.entity.dbreferentiel.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.entity.dbreferentiel.ui.feature_4.5.1.jar" id="fr.pacman.entity.dbreferentiel.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.configuration.ui.feature_4.5.0.jar" id="fr.pacman.configuration.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.configuration.ui.feature_4.5.1.jar" id="fr.pacman.configuration.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
-   <feature url="features/fr.pacman.cinematic.jsp.ui.feature_4.5.0.jar" id="fr.pacman.cinematic.jsp.ui.feature" version="4.5.0">
+   <feature url="features/fr.pacman.cinematic.jsp.ui.feature_4.5.1.jar" id="fr.pacman.cinematic.jsp.ui.feature" version="4.5.1">
       <category name="fr.pacman.dev"/>
    </feature>
    <category-def name="fr.pacman.dev" label="PacMan - Développement (Safr@n)"/>

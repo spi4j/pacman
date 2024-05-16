@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.requirement.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Requirement UI
 Bundle-SymbolicName: fr.pacman.requirement.ui;singleton:=true
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.5.1.qualifier
 Bundle-Activator: fr.pacman.requirement.ui.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.ui,
