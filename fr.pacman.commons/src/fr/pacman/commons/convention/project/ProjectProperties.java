@@ -252,6 +252,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    
    private static final String c_idParam_wms_enabled = "wms.layer.enabled";
    
+   private static final String c_idParam_ws_health_enabled = "ws.health.enabled";
+   
    private static final String c_idParam_ws_security_scheme_id = "ws.security.scheme.spi4id";
 
    private static final String c_idParam_ws_hk2_enabled = "ws.layer.hk2.enabled";
@@ -401,6 +403,9 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                
                PacmanProperty.newRequired(c_idParam_wms_enabled, "false",
                         "Flag indiquant si on veut generer des micro services web (non genere par defaut)"),
+               
+               PacmanProperty.newRequired(c_idParam_ws_health_enabled, "false",
+                       "Flag indiquant si on veut generer une api d'observabilite pour l'application (non genere par defaut)"),
 
                PacmanProperty.newRequired(c_idParam_ws_hk2_enabled, "true",
                         "Flag indiquant si on veut utiliser l'injection pour les services web REST (oui par defaut)"),
@@ -1473,7 +1478,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    
    public static String getUseBatch() 
    {
-	   return PacmanPropertiesManager.get_property(c_idParam_use_batch);
+	   return "false";
+	   //return PacmanPropertiesManager.get_property(c_idParam_use_batch);
    }
    
    public static String isClearUserCodeHash() 
@@ -1481,9 +1487,14 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
 	   return PacmanPropertiesManager.get_property(c_idParam_is_clearUserCodeHash);
    }   
    
-   public static String useIdSqlSuffixForReferences() 
+   public static String getUseIdSqlSuffixForReferences() 
    {
 	   return PacmanPropertiesManager.get_property(c_idParam_server_sql_idsuffix_enabled);
+   }
+   
+   public static String getUseHealthApi() 
+   {
+	   return PacmanPropertiesManager.get_property(c_idParam_ws_health_enabled);
    }
 
    public static String getXtoSupKey () 

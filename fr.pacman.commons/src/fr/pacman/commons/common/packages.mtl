@@ -604,6 +604,10 @@
     getApplicationPackage() + '.stories'
 /]
 
+[query public buildPackageWsApi(any : OclAny) : String =
+    buildPackageWs() + '.' + getPackageApi() 
+/]
+
 [query public buildPackageBatch(any : OclAny) : String =
    getApplicationName() + '.' + getPackageBatch()
 /]

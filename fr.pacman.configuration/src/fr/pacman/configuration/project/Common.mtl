@@ -145,12 +145,19 @@
 			<version>${log4j-slf4j.version}</version>
 		</dependency>
 		[/if]
+		[if useHealthApi()]
+        <dependency>
+  			<groupId>org.json</groupId>
+  			<artifactId>json</artifactId>
+  			<version>${json.version}</version> 
+		</dependency>	
+		[/if]
 
 		<!--
 		[displayClearUserCodeId ('for dependencies')/]
 		// [protected (getUserCodeId('for dependencies'))]
 		-->
-	
+
 		[if useConfigFileSpi4jFrwk()]
 		<!-- A décommenter en fonction de l'utilisation des diverses options
 		pour l'utilisation du framework spi4j dans le cas de la gestion des

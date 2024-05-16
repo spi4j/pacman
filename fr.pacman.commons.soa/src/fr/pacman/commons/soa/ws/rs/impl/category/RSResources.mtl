@@ -63,6 +63,16 @@ public class [buildRSServicesFacadeFactoryClassName()/]
 	}
 [/for]
 [/if][/if]
+[if useHealthApi()]
+	/**
+	 * Récupération de l'interface pour la facade du service : health. 
+	 * @return [buildRsHealthServiceInterfaceName()/] : L'interface pour le service.
+	 */
+	public static [buildRsHealthServiceInterfaceName()/] [apply_methodGet(buildRsHealthServiceInterfaceName())/](){
+		
+		return [buildRsHealthServiceClassName()/].[apply_attributeFinal('instance')/];
+	}
+[/if]
 }
 [/template]
 
@@ -102,6 +112,9 @@ public class [buildRSApplicationConfigClassName()/] extends ResourceConfig
 				[if m.isCrudApplication()][for (d : DTO | m.eAllContents(DTO))]
 				bind([buildServiceFacadeRSClassName(null, d)/].class).to([buildServiceFacadeRSInterfaceName(null, d)/].class);
 				[/for][/if]
+				[if useHealthApi()]
+				bind([buildRsHealthServiceClassName()/].class).to([buildRsHealthServiceInterfaceName()/].class);
+				[/if]
 			}
 		});
 	}

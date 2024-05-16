@@ -172,8 +172,11 @@ public class WSUtils {
 	public static String buildBaseUri(final List<Component> p_components) {
 		String v_baseUri = "";
 		for (Component v_component : p_components) {
-			if (hasRSOperations(v_component) && null != v_component.getURI()) {
-				String v_uri = ("/" + v_component.getURI() + "/").trim().replaceAll("/+", "/");
+			if (hasRSOperations(v_component)) {
+				String v_uri = "/";
+				if(null != v_component.getURI() && !v_component.getURI().trim().isEmpty()) {
+					v_uri += (v_component.getURI() + "/").trim().replaceAll("/+", "/");
+				}
 				if (v_baseUri.isEmpty()) {
 					v_baseUri = v_uri;
 					continue;

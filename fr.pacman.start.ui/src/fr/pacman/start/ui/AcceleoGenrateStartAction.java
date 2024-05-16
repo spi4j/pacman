@@ -172,6 +172,7 @@ public class AcceleoGenrateStartAction extends Wizard implements INewWizard {
 		v_properties.put(GenerateStart.c_PROP_LOG4J, _pageOne.getLog4j());
 		v_properties.put(GenerateStart.c_PROP_APP_CRUD, _pageOne.getCrud());
 		v_properties.put(GenerateStart.c_PROP_INJECT_HK2, _pageOne.getHk2());
+		v_properties.put(GenerateStart.c_PROP_USE_HEALTH_API, _pageOne.getUseHealthApi());
 		// On rajoute les proprietes additionnelles si elles existent.
 		v_properties.putAll(_pageOne.getSqlAddColumnsDetail());
 		v_properties.putAll(_pageOne.getAddLibrariesDetail());

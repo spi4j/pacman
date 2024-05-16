@@ -18,10 +18,6 @@
 	apply_classDefault(s.name.replaceAll('(?i)batch','') + ' batch') 
 /]
 
-[query public buildRSServicesFacadeFactoryClassName(any : OclAny) : String =
-	apply_classDefault(getApplicationName() + ' services facade factory')
- /]
-
 [query public buildServiceFacadeRSClassName(s : Service, d : DTO) : String =
 	if not s.oclIsUndefined() then apply_classImplem(s.buildSimpleServiceName() + ' service RS facade')
 	else apply_classImplem(d.buildSimpleDtoName() + ' CRUD service RS facade') endif

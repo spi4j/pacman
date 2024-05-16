@@ -14,6 +14,7 @@ public class TextUtil {
 		// EMPTY
 	}
 
+	public static final String c_ERR = "Une erreur est servenue lors de la création du projet : ";
 	public static final String c_ERR_DIALOG_TITLE = "ATTENTION";
 	public static final String c_ERR_PROPERTY = "Impossible de charger la propriété.";
 	public static final String c_ERR_WIZARD = "Impossible de charger le wizard";
@@ -86,6 +87,7 @@ public class TextUtil {
 	public static final String c_LBL_SOA_WS = "Génération de Webservices (SOAP/REST)";
 	public static final String c_LBL_SOA_WMS = "Génération de Microservices (REST)";
 	public static final String c_LBL_SECURITY = "Implémentation de la sécurité";
+	public static final String c_LBL_HEALTH_API = "Génération de l'API d'observabilité";
 	public static final String c_LBL_TEST = "Génération de tests de comportement";
 	public static final String c_LBL_TEST_TOOLTIP = "Option valable pour l'IHM de type GWT Ou SWING";
 	public static final String c_LBL_EJB = "Génération des services type EJB";
@@ -126,7 +128,7 @@ public class TextUtil {
 	public static final String c_LBL_CRUD = "Génération application CRUD";
 	public static final String c_TIP_XTOSUP = "Suppression logique";
 	public static final String c_TIP_XDMAJ = "Date de mise à jour";
-	public static final String c_ERR = "Une erreur est servenue lors de la création du projet : ";
+	
 	public static final String c_TLP_PROJECT_NAME = "Le nom du projet avec lequel le squelette de l'application sera généré.";
 	public static final String c_TLP_IHM_TYPE = "L'interface client pour le projet.";
 	public static final String c_TLP_BDD_USE = "Inqique si le projet est en relation avec une base de données.";
@@ -162,10 +164,15 @@ public class TextUtil {
 			+ "\nSUN : nommage standard, SAFRAN : nommage spécifique et plus détaillé.";
 	public static final String c_TLP_SECURITY = "Utilisation de la couche spécifique spi4j pour la gestion "
 			+ "des rôles et des utilisateurs.";
+	public static final String c_TLP_HEALTH_API = "Génère automatique une API rest pour létat de santé de l'application.";
 	public static final String c_ERR_MODEL_CONFIG = "Impossible de finaliser la configuration du projet de modélisation."
 			+ System.getProperty("line.separator") + "Veuillez terminer manuellement la configuration "
 			+ "(activation des 'Viewpoints' et création des models. Cause de l'erreur : ";
 	public static final String c_ERR_MODEL = "Impossible de finaliser la configuration du projet de modélisation."
 			+ System.getProperty("line.separator") + "Veuillez terminer manuellement la configuration ";
+	
+	public static final String c_DLG_HEALTH_TITLE = "Activation de l'observabilité";
+	public static final String c_DLG_HEALTH_QUESTION = "L'activation de l'api d'observabilité entraine l'activation automatique de la génération de services web, confirmez vous cette option ?";
+	
 
 }

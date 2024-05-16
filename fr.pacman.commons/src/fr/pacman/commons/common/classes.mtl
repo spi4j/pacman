@@ -81,6 +81,14 @@
 	apply_classDefault(getApplicationName() + ' jobs operator')
 /]
 
+[query public buildHealthExternalServicesClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationName() + ' health external services')
+/]
+
+[query public buildHealthExternalServiceClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationName() + ' health external service info')
+/]
+
 [query public buildGwtUserBusinessClassName(any : OclAny) : String =
 	apply_classDefault(getApplicationName() + ' gwt user business')
  /]
@@ -91,6 +99,10 @@
 
 [query public buildRSContextResolverClassName(any : OclAny) : String =
 	apply_classDefault(getApplicationName() + ' context resolver')
+ /]
+
+[query public buildRSServicesFacadeFactoryClassName(any : OclAny) : String =
+	apply_classDefault(getApplicationName() + ' services facade factory')
  /]
 
 [query public buildRSExceptionHandlerClassName(any : OclAny) : String =
@@ -198,6 +210,21 @@
 	apply_classInterface(getApplicationName() + ' permissions')
  /]
 
+[comment : Get the name for specific health facade interface. /]
+[query public buildRsHealthServiceInterfaceName(any: OclAny) : String = 
+	apply_classInterface(getApplicationName() + ' health service')
+/]
+
+[comment : Get the name for specific health facade implementation. /]
+[query public  buildRsHealthServiceClassName(any: OclAny) : String = 
+	apply_classImplem(getApplicationName() + ' health application service')
+/]
+
+[comment : Get the name for specific health resource implementation. /]
+[query public  buildRsHealthResourceClassName(any: OclAny) : String = 
+	apply_classDefault(getApplicationName() + ' health resource')
+/]
+
 [comment : Get the name for the client factory for Api First import. /]
 [query public buildRSClientFactoryClassName(any : OclAny) : String =
 	apply_classDefault(getApplicationName() + ' client factory')
@@ -261,6 +288,16 @@ apply_classDefault(getApplicationName() + ' tokens configuration')
 [comment : Get the name for the default context holder for all the front resources. /]
 [query public buildRSFrontResourcesContextHolder(any : OclAny) : String =
 	apply_classDefault(getApplicationName() + ' front context holder')
+/]
+
+[comment : Le nom du conteneur principal pour l'api d'observabilite (health). /]
+[query public buildHealthDataXtoClassName (any : OclAny) : String = 
+	apply_classDefault(getApplicationName() + ' health xto') 
+/]
+
+[comment : Le nom du conteneur principal pour l'api d'observabilite (info). /]
+[query public buildInfoDataXtoClassName (any : OclAny) : String = 
+	apply_classDefault(getApplicationName() + ' info xto') 
 /]
 
 [comment]Retourne le système racine d'un objet[/comment]

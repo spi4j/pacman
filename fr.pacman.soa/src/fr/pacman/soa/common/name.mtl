@@ -71,11 +71,11 @@
 
 [comment] le nom de la clé primaire dans les énumérations[/comment]
 [template public nameSimplePropertyIDInEnum(d : DTO)]
-[d.nameBaseDto().toLower()/][namePK_ID()/]
+[apply_attributeEnum(d.nameBaseDto() + namePK_ID())/]
 [/template]
 
 [template public nameSimplePropertyIDInEnum(r : Reference)]
-[r.nameBaseDto().toLower()/][namePK_ID()/]
+[apply_attributeEnum(r.nameBaseDto() + namePK_ID())/]
 [/template]
 
 [template private nameBaseService(s : Service)]

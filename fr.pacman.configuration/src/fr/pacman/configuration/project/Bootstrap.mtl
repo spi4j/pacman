@@ -196,7 +196,7 @@ public class [buildBoostrapClassName()/] {
 		[/if]
 
 		String [apply_variableDefault('doc base')/] =  new File("[webapp.getDevWebAppContext()/]").getAbsolutePath();
-		Context [apply_variableDefault('context')/] = [buildServerNameWithPrefix()/].addWebapp("/", [apply_variableDefault('doc base')/]);
+		Context [apply_variableDefault('context')/] = [buildServerNameWithPrefix()/].addWebapp("", [apply_variableDefault('doc base')/]);
 		[if hasToWriteOtherWebappForApi()]
 		String [apply_variableDefault('doc base api')/] = new File("../[getWebappProjectName()/]/[getWebappDir()/]").getAbsolutePath();
 		Context [apply_variableDefault('context api')/] = [buildServerNameWithPrefix()/].addWebapp("[false.getContext()/]", [apply_variableDefault('doc base api')/]);
@@ -206,7 +206,7 @@ public class [buildBoostrapClassName()/] {
 		[buildServerNameWithPrefix()/].getConnector();
 		[/if]
 		addBasicAuthUsers();
-		addSpecificXmlContext([apply_variableDefault('context')/]);
+		[if useBDD()]addSpecificXmlContext([apply_variableDefault('context')/]);[/if]
 		[if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
 		[buildServerNameWithPrefix()/].setStopTimeout(0x2710L);
 		[buildServerNameWithPrefix()/].setStopAtShutdown(true);
@@ -218,7 +218,7 @@ public class [buildBoostrapClassName()/] {
 
  		// [/protected]
 	}
-
+	[if useBDD()]
 	/**
 	 * Récupération (si besoin) et lecture du fichier de configuration externe
 	 * "context.xml". Si la base de données n'est pas une base embarquée de type H2,
@@ -255,7 +255,7 @@ public class [buildBoostrapClassName()/] {
 		[else]
 		// RAS : Il s'agit d'une base H2 embarquée.
 		[/if]
-	} 
+	} [/if]
 
 	/**
 	 * Paramétrage de la liste des utilisateurs dans le serveur embarqué.

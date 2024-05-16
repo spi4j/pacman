@@ -51,12 +51,20 @@ Un fichier de configuration par défaut pour l'application a été créé dans :
 [getServerResourcesDir()/][getApplicationName()/]Application.properties
 --------------------------------------------------------------------------------------------------------
 
-Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA dans : 
+Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA : 
 
 --------------------------------------------------------------------------------------------------------
 [getServerResourcesDir()/][getApplicationName()/]Tokens.properties
 --------------------------------------------------------------------------------------------------------
+[if useHealthApi()]
 
+Deux fichiers de configuration pour l'api de santé de l'application ont été créés : 
+
+--------------------------------------------------------------------------------------------------------
+[getServerResourcesDir()/][getApplicationName()/]Info.properties
+[getServerResourcesDir()/][getApplicationName()/]Health.properties
+--------------------------------------------------------------------------------------------------------
+[/if]
 [/template]
 
 
@@ -235,11 +243,59 @@ public class [buildRSExceptionHandlerClassName()/] extends RsExceptionHandler_Ab
 [licence()/]
 package [buildPackageRS()/];
 
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
+[if useHealthApi()]
+import [buildPackageWsApi()/].[buildRsHealthServiceInterfaceName()/];
+[/if]
 
 public class [buildRSApplicationConfigClassName()/] extends ResourceConfig
 {
-	//RAS.
+	[if useHealthApi()]
+	public [buildRSApplicationConfigClassName()/]() {
+
+		packages("[buildPackageRsResources(false)/]");
+
+		register(new AbstractBinder() {
+			@Override
+			protected void configure() {
+				bind([buildRsHealthServiceClassName()/].class).to([buildRsHealthServiceInterfaceName()/].class);
+			}
+		});
+	}		
+	[else]
+		//RAS.
+	[/if]	
+}
+[/template]
+
+[comment : ***********************************************************************/]
+[comment : Generate the facade factory for RS health services facade (no @Inject)./]
+[comment : ***********************************************************************/]
+[template public RSServicesFacadeFactory(any : OclAny)]
+[licence()/]
+package [buildPackageRS()/];
+// [protected ('for imports')]
+
+import [buildPackageWsApi()/].[buildRsHealthServiceInterfaceName()/];
+
+// [/protected]
+
+/**
+ *  Fabrique pour l'ensemble des facades internes.
+ *
+ * @author [getAuthorName()/]
+ */
+public class [buildRSServicesFacadeFactoryClassName()/]
+{
+	/**
+	 * Récupération de l'interface pour la facade du service : health. 
+	 * @return [buildRsHealthServiceInterfaceName()/] : L'interface pour le service.
+	 */
+	public static [buildRsHealthServiceInterfaceName()/] [apply_methodGet(buildRsHealthServiceInterfaceName())/](){
+		
+		return [buildRsHealthServiceClassName()/].[apply_attributeFinal('instance')/];
+	}
 }
 [/template]
 

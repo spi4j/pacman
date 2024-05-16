@@ -5,10 +5,11 @@
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::properties /]
 [import fr::pacman::commons::common::log4j /]
-
+[import fr::pacman::commons::common::classes /]
 
 [import  fr::pacman::configuration::project::Common /]
 [import  fr::pacman::configuration::common::names /]
+[import fr::pacman::configuration::project::RsHealthResources /]
 
 [template public genCommon(any : OclAny, fromStarter : Boolean)]
 
@@ -62,5 +63,11 @@
 [/file]
 [/if]
 
+[comment : Création de l'interface pour le service d'observabilite. /]
+[if useHealthApi()]
+[file (filename(getCommonProjectName(), getCommonsSourceDir(), buildPackageWsApi(), buildRsHealthServiceInterfaceName() + '.java'), false, 'UTF-8')]
+[rsHealthServiceInterface()/]
+[/file]
+[/if]
 [/template]
 

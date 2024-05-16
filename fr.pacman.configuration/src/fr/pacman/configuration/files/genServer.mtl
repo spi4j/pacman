@@ -11,6 +11,7 @@
 [import fr::pacman::configuration::project::CXFServlet /]
 [import fr::pacman::configuration::project::RSResources /]
 [import fr::pacman::configuration::project::RsFrontResources /]
+[import fr::pacman::configuration::project::RsHealthResources /]
 [import fr::pacman::configuration::project::Servlets]
 [import fr::pacman::configuration::project::Batch /]
 
@@ -121,6 +122,13 @@
 [rsApplicationConfig()/]
 [/file][/if]
 
+[comment : Generate the application factory for REST publication, if no health api, will be generated latter. /]
+[if not useWsServiceInjection() and useHealthApi()]
+[file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRS(), buildRSServicesFacadeFactoryClassName() + '.java'), false, 'UTF-8')]
+[RSServicesFacadeFactory()/]
+[/file]
+[/if]
+
 [comment : Generate a .properties file with the default configuration for the application. /]
 [file (filename(getServerProjectName(), getServerResourcesDir(), '', getApplicationName() + 'Application.properties'), false, 'UTF-8')]
 [rsConfigurationFile()/]
@@ -181,7 +189,40 @@
 [file (filename(getServerProjectName(), getServerSourceDir(),  buildPackageRsFront(), buildRSFrontResourcesAbstractClassName() + '.java'), false, 'UTF-8')]
 [rsFrontResourceAbstract()/]
 [/file]
+[/if]
 
+[comment : Generation for health services web. /]
+[if useHealthApi()]
+
+[comment : Generation for health facade. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), buildPackageRS(), buildRsHealthServiceClassName() + '.java'), false, 'UTF-8')]
+[rsHealthServiceImplementation()/]
+[/file]
+
+[comment : Generation for health resources. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), buildPackageRsResources(false), buildRsHealthResourceClassName() + '.java'), false, 'UTF-8')]
+[rsHealthResource()/]
+[/file]
+
+[comment : Generation for health properties file. /]
+[file (filename(getServerProjectName(), getServerResourcesDir(), '', getApplicationName() + 'Health.properties'), false, 'UTF-8')]
+[rsHealthProperties()/]
+[/file]
+
+[comment : Generation for info properties file. /]
+[file (filename(getServerProjectName(), getServerResourcesDir(), '', getApplicationName() + 'Info.properties'), false, 'UTF-8')]
+[rsInfoProperties()/]
+[/file]
+
+[comment : Generation for health services. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), buildPackageRS(), buildHealthExternalServicesClassName() + '.java'), false, 'UTF-8')]
+[rsHealthServices()/]
+[/file]
+
+[comment : Generation for health service. /]
+[file (filename(getServerProjectName(), getServerSourceDir(), buildPackageRS(), buildHealthExternalServiceClassName() + '.java'), false, 'UTF-8')]
+[rsHealthService()/]
+[/file]
 [/if]
 
 [/template]

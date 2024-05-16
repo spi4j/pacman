@@ -525,6 +525,9 @@
 		<json.version>20231013</json.version>
 		<jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
 		[/if]
+		[if useHealthApi()]
+		<json.version>20240303</json.version>
+		[/if]
 		[if  'gwt'.equalsIgnoreCase(getClient())]
         <gwt-user.version>2.7.0</gwt-user.version>
         <gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>

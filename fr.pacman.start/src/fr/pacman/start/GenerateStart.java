@@ -108,6 +108,7 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	public static final String c_PROP_REQUIREMENT_LEVEL = "requirement.category.base.level";
 	public static final String c_PROP_REQUIREMENT_PREFIX = "requirement.prefix";
 	public static final String c_PROP_MODE_DEBUG = "pacman.mode.debug";
+	public static final String c_PROP_USE_HEALTH_API = "ws.health.enabled";
 	public static final String c_PROP_LOG4J = "log4j.enabled";
 	public static final String c_PROP_H2_EMBEDDED = "h2.embedded.enabled";
 	public static final String c_PROP_FETCHING_STRATEGY = "fetchingstrategy.enabled";

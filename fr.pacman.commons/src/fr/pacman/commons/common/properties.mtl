@@ -92,6 +92,14 @@
 	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseTestsCRUD()', Sequence{})
 /]
 
+[query public useHealthApi(any : OclAny) : Boolean =
+    useHealthApi_invoke().toBoolean()
+/]
+
+[query private useHealthApi_invoke(any : OclAny) : String = 
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseHealthApi()', Sequence{})
+/]
+
 [query public useFetchingStrategy(any : OclAny) : Boolean =
     useFetchingStrategy_invoke().toBoolean()
 /]
@@ -505,7 +513,7 @@
 /]
 
 [query private useIdSqlSuffixForReferences_invoke(any : OclAny) : String =
-	invoke('fr.pacman.commons.convention.project.ProjectProperties','useIdSqlSuffixForReferences()', Sequence{})
+	invoke('fr.pacman.commons.convention.project.ProjectProperties','getUseIdSqlSuffixForReferences()', Sequence{})
 /]
 
 [comment : Get the header key for current page size property. /]

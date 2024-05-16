@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -92,6 +93,7 @@ public class PropertiesPage extends WizardPage {
 	private String _typeRC = PacmanConfig.c_CARRIAGE_RETURN_W;
 	private String _unitTests = PacmanConfig.c_BOOL_STR_YES;
 	private String _useBatch = PacmanConfig.c_BOOL_STR_NO;
+	private String _useHealthApi = PacmanConfig.c_BOOL_STR_NO;
 	private String _generateMatching = PacmanConfig.c_BOOL_STR_YES;
 	private String _fetchingStrategy = PacmanConfig.c_BOOL_STR_NO;
 	private String _requirementVersion = PacmanConfig.c_VERSION_INIT_NONE;
@@ -107,7 +109,7 @@ public class PropertiesPage extends WizardPage {
 	private final List<AddColumn> _sqlAddColumns = new ArrayList<>();
 	private final List<AddColumn> _sqlReservedAddColumns = new ArrayList<>();
 	private final Map<Id, Composite> _lstCompositesToManage = new Hashtable<>();
-	private final Color _defaultTabColor = new Color(Display.getCurrent (), 255, 255, 255);
+	private final Color _defaultTabColor = new Color(Display.getCurrent(), 255, 255, 255);
 
 	private final int _defaultWidth = 700;
 	private final int _defaultHeight = 350;
@@ -148,6 +150,7 @@ public class PropertiesPage extends WizardPage {
 		addRadioTU(v_containers.get(c_GENERATE));
 		addRadioSrvReq(v_containers.get(c_GENERATE));
 		addRadioSrvEjb(v_containers.get(c_GENERATE));
+		addRadioUseHealthApi(v_containers.get(c_GENERATE));
 		addRadioGenMatching(v_containers.get(c_GENERATE));
 		addRadioUseSecurity(v_containers.get(c_GENERATE));
 		addRadioWS(v_containers.get(c_GENERATE));
@@ -180,7 +183,7 @@ public class PropertiesPage extends WizardPage {
 		addTextRequirementPrefix(v_containers.get(c_VARIOUS));
 		addTextRequirementLevel(v_containers.get(c_VARIOUS));
 		addRadioRequirementVersion(v_containers.get(c_VARIOUS));
-		//addRadioGenBatch(v_containers.get(c_GENERATE));
+		// addRadioGenBatch(v_containers.get(c_GENERATE));
 		manageInitialDeactivations();
 		setControl(v_container);
 		resize(v_containers.get(c_TABFLD));
@@ -304,7 +307,7 @@ public class PropertiesPage extends WizardPage {
 	private Layout getLayoutForLibraries() {
 		return new GridLayout(1, false);
 	}
-	
+
 	/**
 	 * Get the specific GridLayout for the Library TabItem.
 	 * 
@@ -780,6 +783,32 @@ public class PropertiesPage extends WizardPage {
 		v_combo.setEnabled(p_enable);
 		v_combo.select((p_enable) ? 0 : 1);
 		v_combo.notifyListeners(SWT.Selection, new Event());
+	}
+
+	/**
+	 * Retreive a composite and check all widgets, if a widget is radion type and
+	 * the name of the widget correspond to the name parameter, select the widget.
+	 * 
+	 * @param p_composite
+	 */
+	private void setSelectionForRadio(Composite p_composite, final Id p_id) {
+
+		Control[] v_lstControls = p_composite.getChildren();
+
+		for (Control v_control : v_lstControls) {
+			if (v_control instanceof Button) {
+				Button v_button = (Button) v_control;
+				int v_style = v_button.getStyle();
+				if ((v_style & SWT.RADIO) != 0) {
+					if (v_button.getData() == p_id) {
+						v_button.setSelection(true);
+						v_button.notifyListeners(SWT.Selection, new Event());
+					} else {
+						v_button.setSelection(false);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -1642,6 +1671,67 @@ public class PropertiesPage extends WizardPage {
 
 				if (((Button) p_e.getSource()).getSelection())
 					_useSecurity = PacmanConfig.c_BOOL_STR_NO;
+			}
+		});
+	}
+
+	/**
+	 * Radio button for choosing the use of health api.
+	 * 
+	 * @param p_container
+	 */
+	private void addRadioUseHealthApi(final Composite p_container) {
+
+		Label v_label = new Label(p_container, SWT.NONE);
+		v_label.setToolTipText(TextUtil.c_TLP_HEALTH_API);
+		v_label.setText(TextUtil.c_LBL_HEALTH_API);
+		v_label.setBackground(_defaultTabColor);
+		Composite v_groupHealthApi = addGroupRadio(p_container);
+		_lstCompositesToManage.put(Id.RD_HEALTH, v_groupHealthApi);
+
+		Button v_ouiButton = new Button(v_groupHealthApi, SWT.RADIO);
+		v_ouiButton.setText(TextUtil.c_LBL_YES);
+		v_ouiButton.setData(Id.RDYES_HEALTH);
+		v_ouiButton.setBackground(_defaultTabColor);
+
+		Button v_nonButton = new Button(v_groupHealthApi, SWT.RADIO);
+		v_nonButton.setText(TextUtil.c_LBL_NO);
+		v_nonButton.setSelection(true);
+		v_nonButton.setData(Id.RDNO_HEALTH);
+		v_nonButton.setBackground(_defaultTabColor);
+
+		v_ouiButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent p_e) {
+
+				if (((Button) p_e.getSource()).getSelection()) {
+					if (!Boolean.valueOf(_srvWS)) {
+						MessageBox dialog = new MessageBox(p_container.getShell(),
+								SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
+						dialog.setText(TextUtil.c_DLG_HEALTH_TITLE);
+						dialog.setMessage(TextUtil.c_DLG_HEALTH_QUESTION);
+						if (dialog.open() == SWT.OK) {
+							setSelectionForRadio(_lstCompositesToManage.get(Id.RD_SOA_WS), Id.RDYES_WS);
+							_useHealthApi = PacmanConfig.c_BOOL_STR_YES;
+						} else {
+							((Button) p_e.getSource()).setSelection(false);
+							v_nonButton.setSelection(true);
+						}
+					} else {
+						_useHealthApi = PacmanConfig.c_BOOL_STR_YES;
+					}
+				}
+			}
+		});
+
+		v_nonButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent p_e) {
+
+				if (((Button) p_e.getSource()).getSelection())
+					_useHealthApi = PacmanConfig.c_BOOL_STR_NO;
 			}
 		});
 	}
@@ -3331,6 +3421,10 @@ public class PropertiesPage extends WizardPage {
 		return _modeDebug;
 	}
 
+	public String getUseHealthApi() {
+		return _useHealthApi;
+	}
+
 	public String getCrud() {
 		return _crud;
 	}
@@ -3468,7 +3562,7 @@ public class PropertiesPage extends WizardPage {
 		CH_CHXTOMAJ, RDNO_USE_LIBRARY, RDNO_DEBUG, RDYES_DEBUG, RDYES_FETCH, RDNO_FETCH, RDYES_LOG4J, RDNO_LOG4J,
 		RDYES_CRUD, RDNO_CRUD, RDYES_HK2, RDNO_HK2, RDNO_REQVERSION, RDYES_REQVERSION, CB_HTTP_SERVER, RD_SOA_WMS,
 		RDYES_WMS, RDNO_WMS, RD_USECONFIG, RDYES_USECONFIG, RDNO_USECONFIG, RD_EMBEDH2, RDYES_EMBEDH2, RDNO_EMBEDH2,
-		RDYES_BATCH, RDNO_BATCH;
+		RDYES_BATCH, RDNO_BATCH, RD_HEALTH, RDYES_HEALTH, RDNO_HEALTH;
 
 		static boolean isIdType_RD_NO(Id p_id) {
 

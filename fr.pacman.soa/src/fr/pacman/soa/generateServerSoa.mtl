@@ -83,7 +83,6 @@
 
 [/template]
 
-
 [comment : Generation des mappers. /]
 [template private genMappers (m : System)]
 
