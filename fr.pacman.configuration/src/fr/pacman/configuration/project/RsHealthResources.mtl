@@ -375,7 +375,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
 
 /**
  * Ressource pour les différents services d'information et de santé pour
@@ -385,9 +384,6 @@ import jakarta.ws.rs.core.UriInfo;
  */
 @Path("/")
 public class [buildRsHealthResourceClassName()/] {
-
-	@Context
-	UriInfo uriInfo;
 
 	/**
 	 * Récupération du singleton pour la façade du service.
