@@ -264,6 +264,8 @@
 				<module>fr.pacman.estimation</module>
 				<module>fr.pacman.test</module>
 				<!-- UI modules. -->
+				<module>fr.pacman.soa.ide.ui</module>
+				
 				<module>fr.pacman.configuration.ui</module>
 				<module>fr.pacman.start.ui</module>
 				<module>fr.pacman.environment.ui</module>
@@ -274,7 +276,9 @@
 				<module>fr.pacman.entity.xmi.ui</module>
 				<module>fr.pacman.requirement.ui</module>
 				<module>fr.pacman.requirementsgrouper.ui</module>
-				<module>fr.pacman.soa.ui</module>
+				<!-- 
+				<module>fr.pacman.soa.ui</module> 
+				-->
 				<module>fr.pacman.soapifirst.ui</module>
 				<module>fr.pacman.cinematic.gwt.ui</module>
 				<module>fr.pacman.cinematic.jsf.ui</module>

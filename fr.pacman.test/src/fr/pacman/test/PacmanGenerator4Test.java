@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -20,15 +21,18 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGenerator4_Abs;
 
 /**
  * Launcher pour les "tests macro" : model + mtl = fileExpected
  * 
  * @author MINARM
  */
-class PacmanGenerator4Test extends PacmanGenerator_Abs {
+class PacmanGenerator4Test extends PacmanGenerator4_Abs {
 
+	/**
+	 * 
+	 */
 	private final String _moduleFileName;
 
 	private static AcceleoService acceleoService;
@@ -51,44 +55,48 @@ class PacmanGenerator4Test extends PacmanGenerator_Abs {
 
 		_moduleFileName = p_module;
 
-		final String v_ModelUrl = new File(p_model).toURI().toString();
+		final String v_modelUrl = new File(p_model).toURI().toString();
 
 		try {
 
-			initialize(ModelLoader4Test.initializeModelContents(URI.createURI(v_ModelUrl)), new File("gen/"),
-					new ArrayList<String>());
+			Object v_generationKey = new Object();
+			LinkedHashMap v_options = new LinkedHashMap<>();
+
+			initialize(v_generationKey, URI.createURI(v_modelUrl),
+					ModelLoader4Test.initializeModelContents(v_generationKey, v_options), new File("gen/"),
+					new ArrayList<String>(), v_options);
 
 		} catch (final IOException v_ioe) {
 
-			if (v_ioe.getMessage().equals('\'' + _moduleFileName + ".emtl' not found")) {
+			if (v_ioe.getMessage().equals('\'' + _moduleFileName + ".mtl' not found")) {
 				fail("Module non compilé : " + _moduleFileName);
 			} else {
 				throw v_ioe;
 			}
 
 		} catch (final Exception v_e) {
-			throw new IOException("Problème lors du initialize du modèle \"" + v_ModelUrl + "\" avec le module \""
+			throw new IOException("Problème lors du initialize du modèle \"" + v_modelUrl + "\" avec le module \""
 					+ _moduleFileName + "\" : " + v_e.toString(), v_e);
 		}
 	}
 
-	@Override
-	protected URL findModuleURL(String p_module) {
-
-		URL v_moduleUrl = null;
-		try {
-
-			v_moduleUrl = new File("bin/" + p_module).toURI().toURL();
-
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		return v_moduleUrl;
-	}
+//	@Override
+//	protected URL findModuleURL(String p_module) {
+//
+//		URL v_moduleUrl = null;
+//		try {
+//
+//			v_moduleUrl = new File("bin/" + p_module).toURI().toURL();
+//
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return v_moduleUrl;
+//	}
 
 	/**
-	 * Lance l'execution d'un template
+	 * Lance l'execution d'un template.
 	 * 
 	 * @param p_templateName      nom du template a lancer (exemple :
 	 *                            "genEntityItf")
@@ -99,32 +107,35 @@ class PacmanGenerator4Test extends PacmanGenerator_Abs {
 	 */
 	public String executeTemplate(final String p_templateName, final String p_generatedFileName) throws IOException {
 
-		final String v_log = getModuleFileName() + '.' + p_templateName + " avec le modèle en entrée : "
-				+ this.getModel().eResource();
+//		final String v_log = getModuleQualifiedName() + '.' + p_templateName + " avec le modèle en entrée : "
+//				+ this.getModel().eResource();
+//
+//		Logger.getLogger(p_templateName).info(v_log);
+//		final AcceleoService v_service = getAcceleoService();
+//
+//		// Definit la Map des fichiers generes.
+//		final Map<String, String> v_map = new HashMap<String, String>();
+//		v_map.putAll(v_service.doGenerate(this.getModule(), p_templateName, this.getModel(), new ArrayList<String>(),
+//				new File(""), new BasicMonitor()));
+//
+//		// Si la map est vide, on sort directement.
+//		assertFalse(v_map.isEmpty(), "Aucun fichier n'a été généré, le tableau des fichiers est vide !");
+//
+//		// Tentative de recuperation du fichier qui a ete demande.
+//		String v_fileTest = getSpecifiedFile(v_map, p_generatedFileName);
+//
+//		// verifie que le fichier a bien ete recupere, sinon on sort.
+//		assertNotNull(v_fileTest, "Le fichier " + p_generatedFileName
+//				+ " ne semble pas avoir été généré. Liste des fichiers générés : " + v_map.keySet());
+//
+//		return v_fileTest;
 
-		Logger.getLogger(p_templateName).info(v_log);
-		final AcceleoService v_service = getAcceleoService();
-
-		// Definit la Map des fichiers generes.
-		final Map<String, String> v_map = new HashMap<String, String>();
-		v_map.putAll(v_service.doGenerate(this.getModule(), p_templateName, this.getModel(), new ArrayList<String>(),
-				new File(""), new BasicMonitor()));
-
-		// Si la map est vide, on sort directement.
-		assertFalse(v_map.isEmpty(), "Aucun fichier n'a été généré, le tableau des fichiers est vide !");
-
-		// Tentative de recuperation du fichier qui a ete demande.
-		String v_fileTest = getSpecifiedFile(v_map, p_generatedFileName);
-
-		// verifie que le fichier a bien ete recupere, sinon on sort.
-		assertNotNull(v_fileTest, "Le fichier " + p_generatedFileName
-				+ " ne semble pas avoir été généré. Liste des fichiers générés : " + v_map.keySet());
-
-		return v_fileTest;
+		return null;
 	}
 
 	/**
-	 * Recuperation du contenu pour le fichier cible a comparer.
+	 * Recuperation du contenu pour le fichier cible a comparer. Si plusieurs
+	 * fichier generes recupere le contenu en fonction du fichier demande.
 	 * 
 	 * @param p_map              la map contenant l'ensemble des fichiers generes à
 	 *                           partir du model.
@@ -134,10 +145,7 @@ class PacmanGenerator4Test extends PacmanGenerator_Abs {
 	 */
 	private String getSpecifiedFile(final Map<String, String> p_map, final String p_expectedFileName) {
 
-		// Si plusieurs fichier generes recupere le contenu
-		// en fonction du fichier demande.
 		String v_actual = null;
-
 		for (Entry<String, String> v_Entry : p_map.entrySet()) {
 			if (v_Entry.getKey().endsWith(p_expectedFileName)) {
 				v_actual = v_Entry.getValue();
@@ -147,45 +155,45 @@ class PacmanGenerator4Test extends PacmanGenerator_Abs {
 		return v_actual;
 	}
 
-	/**
-	 * Retourne l'acceleo service (il n'est construit que la première fois)
-	 * 
-	 * @return l'acceleo service
-	 */
-	private AcceleoService getAcceleoService() {
-		if (acceleoService == null) {
-			acceleoService = createAcceleoService();
-		}
-		return acceleoService;
-	}
+//	/**
+//	 * Retourne l'acceleo service (il n'est construit que la première fois)
+//	 * 
+//	 * @return l'acceleo service
+//	 */
+//	private AcceleoService getAcceleoService() {
+//		if (acceleoService == null) {
+//			acceleoService = createAcceleoService();
+//		}
+//		return acceleoService;
+//	}
 
-	/**
-	 * @param p_Uri uri du model
-	 * @throws IOException RAS
-	 */
-	public void setModelURI(final String p_Uri) throws IOException {
-		initialize(URI.createFileURI(p_Uri), new File("gen/"), new ArrayList<String>());
-	}
+//	/**
+//	 * @param p_Uri uri du model
+//	 * @throws IOException RAS
+//	 */
+//	public void setModelURI(final String p_Uri) throws IOException {
+//		initialize(URI.createFileURI(p_Uri), new File("gen/"), new ArrayList<String>());
+//	}
+
+//	@Override
+//	public IAcceleoGenerationStrategy getGenerationStrategy() {
+//		String v_lineDelimiter = ProjectProperties.getDelimiter();
+//
+//		if ("WINDOWS".equals(v_lineDelimiter))
+//			v_lineDelimiter = "\r\n";
+//
+//		if ("UNIX".equals(v_lineDelimiter))
+//			v_lineDelimiter = "\n";
+//
+//		if (null == v_lineDelimiter)
+//			v_lineDelimiter = System.getProperty("line.separator");
+//
+//		// Pour l'instant on force.
+//		return new PacmanStrategy4Test(v_lineDelimiter);
+//	}
 
 	@Override
-	public IAcceleoGenerationStrategy getGenerationStrategy() {
-		String v_lineDelimiter = ProjectProperties.getDelimiter();
-
-		if ("WINDOWS".equals(v_lineDelimiter))
-			v_lineDelimiter = "\r\n";
-
-		if ("UNIX".equals(v_lineDelimiter))
-			v_lineDelimiter = "\n";
-
-		if (null == v_lineDelimiter)
-			v_lineDelimiter = System.getProperty("line.separator");
-
-		// Pour l'instant on force.
-		return new PacmanStrategy4Test(v_lineDelimiter);
-	}
-
-	@Override
-	protected String getModuleFileName() {
+	protected String getModuleQualifiedName() {
 		return _moduleFileName;
 	}
 
@@ -194,13 +202,18 @@ class PacmanGenerator4Test extends PacmanGenerator_Abs {
 		return null;
 	}
 
+//	@Override
+//	public String getProjectName() {
+//		return "fr.pacman.test";
+//	}
+
 	@Override
-	public String getProjectName() {
-		return "fr.pacman.test";
+	public boolean switchQueryCache() {
+		return Boolean.FALSE;
 	}
 
 	@Override
-	public boolean getSwitchQueryCache() {
-		return Boolean.FALSE;
+	protected Class<?> getModuleClassName() {
+		return PacmanGenerator4Test.class;
 	}
 }

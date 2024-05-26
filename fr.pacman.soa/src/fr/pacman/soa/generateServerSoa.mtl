@@ -34,21 +34,19 @@
 [comment @main/]
 [template public GenerateServerSystem(m : soa::System)]
   
-      [m.genLog4j()/]
-  	[if (m.usePersistence())][m.genUserMatching()/][/if]
-  
-      [if (m.hasAutomaticColumns())][m.genAppliMatchAbs()/][/if]
-  
-  	[m.genMappers()/]
-      [m.genServicesImpls()/]
-  	[m.genDtos()/]
+   [m.genLog4j()/]
+  [if (m.usePersistence())][m.genUserMatching()/][/if]
+  [if (m.hasAutomaticColumns())][m.genAppliMatchAbs()/][/if]
+  [m.genMappers()/]
+  [m.genServicesImpls()/]
+  [m.genDtos()/]
   
   [if (m.useWS())]
-    		[m.genRsTokensConfigurator()/]
-    		[m.genRsTokensFileConfig()/]
-    		[m.genRsTechnicalTokensResources()/]
-    		[m.genRsOAuth2Resources()/]
-    		[m.genRsWebXmlServletMappingFragment()/]
+  	[m.genRsTokensConfigurator()/]
+	[m.genRsTokensFileConfig()/]
+	[m.genRsTechnicalTokensResources()/]
+	[m.genRsOAuth2Resources()/]
+	[m.genRsWebXmlServletMappingFragment()/]
   [/if]
   	[if (m.useWS())][m.genCXFServlet()/][/if]
   

@@ -144,14 +144,14 @@ public abstract class PacmanExecutor4Test {
 		PacmanPropertiesManager.initProperties(new File(v_fileHelper.getModelPath()).toURI().getPath());
 
 		// Fichier .mtl à tester ainsi que le modele en entree.
-		final PacmanGenerator4Test v_Generator = new PacmanGenerator4Test(
+		final PacmanGenerator4Test v_generator = new PacmanGenerator4Test(
 				v_fileHelper.getModuleFullName(p_packageName), v_fileHelper.getModelFullName(p_modelName));
 
 		// Contenu du fichier de reference.
 		String v_expectedText = v_fileHelper.getFileBody(v_fileHelper.getExpectedFileFullName(p_fileName));
 
 		// Execution et recuperation du contenu pour le fichier genere.
-		String v_fileText = v_Generator.executeTemplate(p_templateName, v_fileHelper
+		String v_fileText = v_generator.executeTemplate(p_templateName, v_fileHelper
 				.getGeneratedFileFullName((null == p_fileGeneratedName) ? p_fileName : p_fileGeneratedName));
 
 		// Traitement des dates de generation.

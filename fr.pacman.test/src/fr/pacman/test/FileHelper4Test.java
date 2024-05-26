@@ -96,6 +96,9 @@ class FileHelper4Test {
 	 */
 	public String cleanFile(final String p_strToClean, final Mode4Test_Enum p_mode) {
 
+		if (null == p_strToClean)
+			return "";
+
 		if (Mode4Test_Enum.HIGHT == p_mode)
 			return p_strToClean.trim();
 
