@@ -7,6 +7,10 @@
             class="fr.pacman.soa.ide.ui.handlers.GenerateCommonSoaGeneratorHandler"
             commandId="fr.pacman.soa.ide.ui.commands.generateCommonSoaGeneratorCommand">
       </handler>
+      <handler
+            class="fr.pacman.soa.ide.ui.handlers.GenerateServerSoaGeneratorHandler"
+            commandId="fr.pacman.soa.ide.ui.commands.generateServerSoaGeneratorCommand">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -33,6 +37,30 @@
                   </with>
                </visibleWhen>
             </command>
+            <command
+                  commandId="fr.pacman.soa.ide.ui.commands.generateServerSoaGeneratorCommand"
+                  id="fr.pacman.soa.ide.ui.menus.generateServerSoaGeneratorCommand"
+                  label="fr::pacman::soa::generateServerSoa">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.extension"
+                                 value="soa">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -46,6 +74,11 @@
             categoryId="fr.pacman.soa.ide.ui.commands.generatorsCategory"
             id="fr.pacman.soa.ide.ui.commands.generateCommonSoaGeneratorCommand"
             name="fr::pacman::soa::generateCommonSoa">
+      </command>
+      <command
+            categoryId="fr.pacman.soa.ide.ui.commands.generatorsCategory"
+            id="fr.pacman.soa.ide.ui.commands.generateServerSoaGeneratorCommand"
+            name="fr::pacman::soa::generateServerSoa">
       </command>
    </extension>
 
