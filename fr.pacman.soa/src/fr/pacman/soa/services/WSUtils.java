@@ -175,7 +175,7 @@ public class WSUtils {
 			if (hasRSOperations(v_component)) {
 				String v_uri = "/";
 				if(null != v_component.getURI() && !v_component.getURI().trim().isEmpty()) {
-					v_uri += (v_component.getURI() + "/").trim().replaceAll("/+", "/");
+					v_uri += (v_component.getURI() + "/").trim();
 				}
 				if (v_baseUri.isEmpty()) {
 					v_baseUri = v_uri;
@@ -187,7 +187,7 @@ public class WSUtils {
 				}
 			}
 		}
-		return v_baseUri + "*";
+		return (v_baseUri + "*").replaceAll("/+", "/");
 	}
 
 	/**
