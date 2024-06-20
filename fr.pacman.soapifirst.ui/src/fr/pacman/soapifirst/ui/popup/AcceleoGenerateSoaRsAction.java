@@ -6,7 +6,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.ILog;
 
 import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.soapifirst.ui.Activator;
 import fr.pacman.soapifirst.ui.common.GenerateSoaRsFromFile;
 
@@ -26,7 +26,7 @@ public class AcceleoGenerateSoaRsAction extends AcceleoGenerateSafranAction<IFil
 	}
 
 	@Override
-	protected SafranGenerator_Abs<IFile> getSafranGenerator(IFile p_modelURI, List<? extends Object> p_arguments) {
+	protected SafranGeneratorOld_Abs<IFile> getSafranGenerator(IFile p_modelURI, List<? extends Object> p_arguments) {
 		return new GenerateSoaRsFromFile(p_modelURI, p_arguments);
 	}
 }

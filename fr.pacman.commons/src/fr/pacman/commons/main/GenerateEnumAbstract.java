@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @generated NOT
  */
-public abstract class GenerateEnumAbstract extends PacmanGenerator_Abs
+public abstract class GenerateEnumAbstract extends PacmanGeneratorOld_Abs
 {
 	 /**
 	    * The name of the module.

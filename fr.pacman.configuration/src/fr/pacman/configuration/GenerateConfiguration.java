@@ -18,14 +18,14 @@ import java.util.List;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 
 /**
  * Entry point of the 'GenerateConfiguration' generation module.
  *
  * @generated NOT
  */
-public class GenerateConfiguration extends PacmanGenerator_Abs {
+public class GenerateConfiguration extends PacmanGeneratorOld_Abs {
 
 	/**
 	 * Used by plugins pacman.configuration and pacman.start.

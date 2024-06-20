@@ -1,20 +1,14 @@
-//Start of user code copyright
-//End of user code
-
 package fr.pacman.soa.ide.ui;
 
-//Start of user code imports
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 
-//End of user code
-
 /**
  * Plugin's activator class.
  * 
- * @author patri
+ * @author MINARM
  */
 public class Activator extends EMFPlugin {
 
@@ -50,7 +44,8 @@ public class Activator extends EMFPlugin {
 	}
 
 	/**
-	 * Class implementing the EclipsePlugin instance, instanciated when the code is run in an OSGi context.
+	 * Class implementing the EclipsePlugin instance, instanciated when the code is
+	 * run in an OSGi context.
 	 * 
 	 * @author cedric
 	 */
@@ -61,12 +56,8 @@ public class Activator extends EMFPlugin {
 		 */
 		public Implementation() {
 			super();
-
-			// Remember the static instance.
-			//
 			plugin = this;
 		}
-
 	}
 
 	/**
@@ -81,11 +72,9 @@ public class Activator extends EMFPlugin {
 	/**
 	 * Logs the given exception as error or warning.
 	 * 
-	 * @param exception
-	 *            The exception to log.
-	 * @param blocker
-	 *            <code>True</code> if the message must be logged as error, <code>False</code> to log it as a
-	 *            warning.
+	 * @param exception The exception to log.
+	 * @param blocker   <code>True</code> if the message must be logged as error,
+	 *                  <code>False</code> to log it as a warning.
 	 */
 	public static void log(Exception exception, boolean blocker) {
 		final int severity;
@@ -100,11 +89,9 @@ public class Activator extends EMFPlugin {
 	/**
 	 * Puts the given message in the error log view, as error or warning.
 	 * 
-	 * @param message
-	 *            The message to put in the error log view.
-	 * @param blocker
-	 *            <code>True</code> if the message must be logged as error, <code>False</code> to log it as a
-	 *            warning.
+	 * @param message The message to put in the error log view.
+	 * @param blocker <code>True</code> if the message must be logged as error,
+	 *                <code>False</code> to log it as a warning.
 	 */
 	public static void log(String message, boolean blocker) {
 		int severity = IStatus.WARNING;
@@ -117,5 +104,4 @@ public class Activator extends EMFPlugin {
 		}
 		Activator.INSTANCE.log(new Status(severity, PLUGIN_ID, errorMessage));
 	}
-
 }

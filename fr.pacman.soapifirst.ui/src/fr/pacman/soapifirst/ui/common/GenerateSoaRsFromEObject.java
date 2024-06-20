@@ -10,9 +10,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.obeonetwork.dsl.soa.System;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.commons.services.PlugInUtils;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.commons.ui.SafranGenerator_Enum;
 import fr.pacman.soapifirst.GenerateCommonSoaRs;
 import fr.pacman.soapifirst.GenerateServerSoaRs;
@@ -20,7 +20,7 @@ import fr.pacman.soapifirst.GenerateServerSoaRs;
 /**
  * Main entry point of the 'SOA API FIRST' generation module.
  */
-public class GenerateSoaRsFromEObject extends SafranGenerator_Abs<EObject> {
+public class GenerateSoaRsFromEObject extends SafranGeneratorOld_Abs<EObject> {
 
 	/**
 	 * Constructeur.
@@ -43,10 +43,10 @@ public class GenerateSoaRsFromEObject extends SafranGenerator_Abs<EObject> {
 	}
 
 	@Override
-	protected List<PacmanGenerator_Abs> getPacmanGenerators(EObject p_input, List<? extends Object> p_arguments)
+	protected List<PacmanGeneratorOld_Abs> getPacmanGenerators(EObject p_input, List<? extends Object> p_arguments)
 			throws IOException {
 
-		final List<PacmanGenerator_Abs> v_generators = new ArrayList<PacmanGenerator_Abs>();
+		final List<PacmanGeneratorOld_Abs> v_generators = new ArrayList<PacmanGeneratorOld_Abs>();
 		
 		v_generators.add(new GenerateServerSoaRs(p_input, getServerProject(), p_arguments));
 		v_generators.add(new GenerateCommonSoaRs(p_input, getCommonsProject(), p_arguments));

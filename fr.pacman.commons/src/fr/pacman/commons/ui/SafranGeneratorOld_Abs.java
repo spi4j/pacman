@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import fr.pacman.commons.Activator;
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.errorgen.ErrorGeneration;
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.commons.services.ImportsUtils;
 import fr.pacman.commons.services.PlugInUtils;
@@ -39,7 +39,7 @@ import fr.pacman.commons.services.StringUtils;
  * 
  * @TODO : modifications a effectuer. Attention aux valeurs nulles on simplifie pour l'instant mais voir si la propriete n'est pas remontee.
  */
-public abstract class SafranGenerator_Abs<Type>
+public abstract class SafranGeneratorOld_Abs<Type>
 {
 
    /**
@@ -60,7 +60,7 @@ public abstract class SafranGenerator_Abs<Type>
     * @param p_arguments
     *           are the other arguments
     */
-   public SafranGenerator_Abs (final Type p_input, final List<? extends Object> p_arguments)
+   public SafranGeneratorOld_Abs (final Type p_input, final List<? extends Object> p_arguments)
    {
       this._input = p_input;
       this._arguments = p_arguments;
@@ -89,7 +89,7 @@ public abstract class SafranGenerator_Abs<Type>
       if (hasIncompatibleModel() || hasIncompatibleProperties()) return;
 
       // Enregistrement et lancement de l'ensemble des generateurs.
-      for (final PacmanGenerator_Abs v_generator : getPacmanGenerators(_input, _arguments))
+      for (final PacmanGeneratorOld_Abs v_generator : getPacmanGenerators(_input, _arguments))
       {
          if (v_generator.getTargetFolder() != null)
          {
@@ -223,7 +223,7 @@ public abstract class SafranGenerator_Abs<Type>
     * @throws IOException
     *            erreur lors de l'instanciation d'un generateur
     */
-   protected abstract List<PacmanGenerator_Abs> getPacmanGenerators (Type p_input, List<? extends Object> p_arguments)
+   protected abstract List<PacmanGeneratorOld_Abs> getPacmanGenerators (Type p_input, List<? extends Object> p_arguments)
             throws IOException;
 
    /**

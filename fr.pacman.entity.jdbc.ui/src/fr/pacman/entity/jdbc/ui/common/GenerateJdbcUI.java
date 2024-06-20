@@ -19,8 +19,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
-import fr.pacman.commons.main.PacmanGenerator_Abs;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.commons.ui.SafranGenerator_Enum;
 import fr.pacman.entity.api.GenerateEntityItfApiSoaLight;
 import fr.pacman.entity.api.GenerateEnumEntity;
@@ -32,7 +32,7 @@ import fr.pacman.entity.jdbc.GenerateEntityJdbcSoaLight;
 /**
  * Main entry point of the 'Entity' generation module.
  */
-public class GenerateJdbcUI extends SafranGenerator_Abs<IFile> {
+public class GenerateJdbcUI extends SafranGeneratorOld_Abs<IFile> {
 
 	/**
 	 * Constructeur.
@@ -47,10 +47,10 @@ public class GenerateJdbcUI extends SafranGenerator_Abs<IFile> {
 	}
 
 	@Override
-	protected List<PacmanGenerator_Abs> getPacmanGenerators(final IFile p_file,
+	protected List<PacmanGeneratorOld_Abs> getPacmanGenerators(final IFile p_file,
 			final List<? extends Object> p_arguments) throws IOException {
 		final URI v_modelURI = getModelUri();
-		final List<PacmanGenerator_Abs> v_generators = new ArrayList<PacmanGenerator_Abs>();
+		final List<PacmanGeneratorOld_Abs> v_generators = new ArrayList<PacmanGeneratorOld_Abs>();
 		if (!matchingLayerEnable()) {
 			v_generators.add(new GenerateEntityItfApiSoaLight(v_modelURI, getCommonsProject(), p_arguments));
 			v_generators.add(new GenerateEnumEntity(v_modelURI, getCommonsProject(), p_arguments));

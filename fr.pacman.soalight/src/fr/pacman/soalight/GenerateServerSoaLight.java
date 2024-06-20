@@ -23,14 +23,14 @@ import org.obeonetwork.dsl.environment.Namespace;
 import org.obeonetwork.dsl.soa.Component;
 import org.obeonetwork.dsl.soa.Service;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 
 /**
  * Entry point of the 'GenerateServerSoa' generation module.
  * 
  * @generated NOT
  */
-public class GenerateServerSoaLight extends PacmanGenerator_Abs {
+public class GenerateServerSoaLight extends PacmanGeneratorOld_Abs {
 	/**
 	 * The name of the module.
 	 */

@@ -12,7 +12,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.validation.config.ConfigurationManager_Itf;
 import fr.pacman.validation.config.XmlConfigurationManager;
 import fr.pacman.validation.services.DslValidationRuleDefinitionService;
@@ -27,7 +27,7 @@ import fr.pacman.validation.services.rules.DslValidationRuleNokBean;
  * 
  * @author MINARM
  */
-public class JavaValidationGenerator extends PacmanGenerator_Abs
+public class JavaValidationGenerator extends PacmanGeneratorOld_Abs
 {
 
    private static final ConfigurationManager_Itf c_config = new XmlConfigurationManager();

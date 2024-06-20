@@ -31,7 +31,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.ecore.EObject;
 import org.obeonetwork.dsl.overview.impl.OverviewFactoryImpl;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.configuration.GenerateConfiguration;
 
@@ -40,7 +40,7 @@ import fr.pacman.configuration.GenerateConfiguration;
  * 
  * @generated NOT
  */
-public class GenerateStart extends PacmanGenerator_Abs {
+public class GenerateStart extends PacmanGeneratorOld_Abs {
 	/**
 	 * Liste des fichiers binaires qui seront copies par Pacman Start vers le projet
 	 * cible dans le cadre d'un projet SWING.

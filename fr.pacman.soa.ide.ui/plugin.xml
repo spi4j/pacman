@@ -8,8 +8,8 @@
             commandId="fr.pacman.soa.ide.ui.commands.generateCommonSoaGeneratorCommand">
       </handler>
       <handler
-            class="fr.pacman.soa.ide.ui.handlers.GenerateServerSoaGeneratorHandler"
-            commandId="fr.pacman.soa.ide.ui.commands.generateServerSoaGeneratorCommand">
+            class="fr.pacman.soa.ide.ui.handlers.SoaGeneratorHandler"
+            commandId="fr.pacman.soa.ide.ui.commands.SoaGeneratorCommand">
       </handler>
    </extension>
    <extension
@@ -21,8 +21,9 @@
                label="Generators">
             <command
                   commandId="fr.pacman.soa.ide.ui.commands.generateCommonSoaGeneratorCommand"
-                  id="fr.pacman.soa.ide.ui.menus.generateCommonSoaGeneratorCommand"
-                  label="fr::pacman::soa::generateCommonSoa">
+                  id="fr.pacman.soa.ide.ui.menus.generateCommonSoaGeneratorCommand" 
+                  icon="icons/safran.png" 
+                  label="Génération SOA Yvan">
                <visibleWhen
                      checkEnabled="false">
                   <with
@@ -31,16 +32,17 @@
                            ifEmpty="false"
                            operator="and">
                         <instanceof
-                              value="org.obeonetwork.dsl.soa.System">
+                              value="org.eclipse.core.resources.IFile">
                         </instanceof>
                      </iterate>
                   </with>
                </visibleWhen>
             </command>
             <command
-                  commandId="fr.pacman.soa.ide.ui.commands.generateServerSoaGeneratorCommand"
-                  id="fr.pacman.soa.ide.ui.menus.generateServerSoaGeneratorCommand"
-                  label="fr::pacman::soa::generateServerSoa">
+                  commandId="fr.pacman.soa.ide.ui.commands.SoaGeneratorCommand"
+                  id="fr.pacman.soa.ide.ui.menus.SoaGeneratorCommand" 
+                  icon="icons/safran.png" 
+                  label="Génération SOA">
                <visibleWhen
                      checkEnabled="false">
                   <with
@@ -77,9 +79,10 @@
       </command>
       <command
             categoryId="fr.pacman.soa.ide.ui.commands.generatorsCategory"
-            id="fr.pacman.soa.ide.ui.commands.generateServerSoaGeneratorCommand"
+            id="fr.pacman.soa.ide.ui.commands.SoaGeneratorCommand"
             name="fr::pacman::soa::generateServerSoa">
       </command>
    </extension>
 
 </plugin>
+

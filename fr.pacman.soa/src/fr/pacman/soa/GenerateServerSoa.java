@@ -8,13 +8,21 @@ import java.util.Map;
 import org.eclipse.acceleo.aql.AcceleoUtil;
 import org.eclipse.acceleo.query.ast.TypeLiteral;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironment;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.obeonetwork.dsl.entity.EntityPackage;
+import org.obeonetwork.dsl.entity.util.EntityResourceFactoryImpl;
 import org.obeonetwork.dsl.environment.EnvironmentPackage;
+import org.obeonetwork.dsl.overview.OverviewPackage;
+import org.obeonetwork.dsl.overview.util.OverviewResourceFactoryImpl;
+import org.obeonetwork.dsl.requirement.RequirementPackage;
+import org.obeonetwork.dsl.requirement.util.RequirementResourceFactoryImpl;
 import org.obeonetwork.dsl.soa.SoaPackage;
+import org.obeonetwork.dsl.soa.util.SoaResourceFactoryImpl;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
@@ -23,7 +31,7 @@ import fr.pacman.commons.main.PacmanGenerator_Abs;
  * 
  * @author MINARM
  */
-public class GenerateCommonSoa extends PacmanGenerator_Abs {
+public class GenerateServerSoa extends PacmanGenerator_Abs {
 
 	/**
 	 * Get the list of templates to execute in the selected generator, depending the
@@ -34,10 +42,9 @@ public class GenerateCommonSoa extends PacmanGenerator_Abs {
 	@Override
 	protected List<String> getTemplates() {
 
-		// TODO à modifier / compléter en fonction de la sélection. Passer qqe chose en
-		// paramètre pour avoir le discriminant.
+		// TODO à modifier / compléter en fonction de la sélection.
 		List<String> v_templates = new ArrayList<>();
-		v_templates.add("GenerateCommonSystem");
+		v_templates.add("GenerateServerSystem");
 		return v_templates;
 	}
 
@@ -49,7 +56,7 @@ public class GenerateCommonSoa extends PacmanGenerator_Abs {
 	@Override
 	public String getModuleQualifiedName() {
 
-		return "fr::pacman::soa::generateCommonSoa";
+		return "fr::pacman::soa::generateServerSoa";
 	}
 
 	/**
@@ -60,7 +67,7 @@ public class GenerateCommonSoa extends PacmanGenerator_Abs {
 	@Override
 	public String getProjectName() {
 
-		return ProjectProperties.getCommonProjectName();
+		return ProjectProperties.getServerProjectName();
 	}
 
 	/**
@@ -72,7 +79,7 @@ public class GenerateCommonSoa extends PacmanGenerator_Abs {
 	protected Map<String, String> getOptions() {
 
 		Map<String, String> res = new LinkedHashMap<>();
-		res.put(AcceleoUtil.LOG_URI_OPTION, "acceleo.log");
+		// res.put(AcceleoUtil.LOG_URI_OPTION, "acceleo.log");
 		res.put(AcceleoUtil.NEW_LINE_OPTION, System.lineSeparator());
 		return res;
 	}

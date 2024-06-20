@@ -122,7 +122,7 @@ public abstract class AcceleoGenerateSafranAction<Type> extends ActionDelegate i
                   // PacmanPropertiesManager.clearProperties();
                   for (final Type v_node : _selection)
                   {
-                     final SafranGenerator_Abs<Type> v_generator;
+                     final SafranGeneratorOld_Abs<Type> v_generator;
                      final IProject v_modelProject = getProjectFromNode(v_node);
                      v_generator = getSafranGenerator(v_node, getArguments());
 
@@ -373,7 +373,7 @@ public abstract class AcceleoGenerateSafranAction<Type> extends ActionDelegate i
     *           les arguments de la génération
     * @return le générateur utilisé par ce plugin
     */
-   protected abstract SafranGenerator_Abs<Type> getSafranGenerator (Type p_modelURI,
+   protected abstract SafranGeneratorOld_Abs<Type> getSafranGenerator (Type p_modelURI,
             List<? extends Object> p_arguments);
 
 }

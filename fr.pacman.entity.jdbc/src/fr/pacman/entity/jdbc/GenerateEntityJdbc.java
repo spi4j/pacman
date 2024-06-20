@@ -22,14 +22,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.obeonetwork.dsl.entity.Entity;
 import org.obeonetwork.dsl.environment.Namespace;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 
 /**
  * Entry point of the 'Entity' generation module.
  * 
  * @generated NOT
  */
-public class GenerateEntityJdbc extends PacmanGenerator_Abs {
+public class GenerateEntityJdbc extends PacmanGeneratorOld_Abs {
 
 	/**
 	 * The name of the module.

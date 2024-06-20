@@ -9,13 +9,18 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
+import org.eclipse.acceleo.aql.AcceleoUtil;
 import org.eclipse.acceleo.aql.evaluation.GenerationResult;
 import org.eclipse.acceleo.aql.ide.ui.dialog.AbstractResourceSelectionDialog;
 import org.eclipse.acceleo.aql.ide.ui.dialog.FolderSelectionDialog;
+import org.eclipse.acceleo.aql.parser.AcceleoParser;
+import org.eclipse.acceleo.query.ast.ASTNode;
 import org.eclipse.acceleo.query.ast.TypeLiteral;
+import org.eclipse.acceleo.query.ide.runtime.impl.namespace.OSGiQualifiedNameResolver;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironment;
+import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameResolver;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -23,16 +28,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.ui.PlatformUI;
-import org.obeonetwork.dsl.soa.System;
+import org.osgi.framework.Bundle;
 
 import fr.pacman.soa.GenerateCommonSoaGenerator;
+
+import org.obeonetwork.dsl.soa.System;
 
 //End of user code
 
@@ -48,7 +57,19 @@ public class GenerateCommonSoaGeneratorEclipse extends GenerateCommonSoaGenerato
 	 * The selected value.
 	 * @generated
 	 */
-	private final List<EObject> value;
+	private final List<EObject> values;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param selected
+	 *            the selected {@link IFile}
+	 * @generated
+	 */
+	public GenerateCommonSoaGeneratorEclipse(IFile selected) {
+		super(Collections.singletonList(selected.getLocation().toString()), getTarget(selected));
+		this.values = null;
+	}
 
 	/**
 	 * Constructor.
@@ -59,7 +80,7 @@ public class GenerateCommonSoaGeneratorEclipse extends GenerateCommonSoaGenerato
 	 */
 	public GenerateCommonSoaGeneratorEclipse(System selected) {
 		super(Collections.emptyList(), getTarget(selected));
-		this.value = Collections.singletonList(selected);
+		this.values = Collections.singletonList(selected);
 	}
 
 	/**
@@ -68,18 +89,61 @@ public class GenerateCommonSoaGeneratorEclipse extends GenerateCommonSoaGenerato
 	@Override
 	protected List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
 			Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels) {
-		return value;
+		final List<EObject> res;
+
+		if (values != null) {
+			res = values;
+		} else {
+			res = super.getValues(queryEnvironment, valuesCache, type, resourceSetForModels);
+		}
+
+		return res;
+		
 	}
 
 	/**
-	 * Gets the target folder for the selected {@link System}.
-	 * 
-	 * @param selected
-	 *            the model {@link System}
-	 * @return the target folder for the selected {@link System}
 	 * @generated
 	 */
-	private static String getTarget(System selected) {
+	@Override
+	protected void loadResources(ResourceSet resourceSetForModels, List<String> resources) {
+		for (String resource : resources) {
+			resourceSetForModels.getResource(URI.createFileURI(resource), true);
+		}
+	}
+
+	/**
+	 * @generated
+	 */
+	@Override
+	protected void standaloneInitialization(ResourceSet resourceSetForModels) {
+		// nothing to do here
+	}
+
+	/**
+	 * @generated
+	 */
+	@Override
+	protected IQualifiedNameResolver createResolver() {
+		final String bundleIdentifier = "fr.pacman.soa";
+		final Bundle bundle = Platform.getBundle(bundleIdentifier);
+		if (bundle == null || bundle.getState() == Bundle.UNINSTALLED) {
+			Activator.getDefault().log(new Status(IStatus.ERROR, getClass(), "The Bundle " + bundleIdentifier
+					+ " must be available in the target platform."));
+		}
+		return new OSGiQualifiedNameResolver(bundle, AcceleoParser.QUALIFIER_SEPARATOR);
+	}
+
+	/**
+	 * Gets the target folder for the selected {@link System} or selected
+	 * {@link IFile}.
+	 * 
+	 * @param selected
+	 *            the model {@link System} or selected {@link IFile}
+	 * @return the target folder for the selected {@link System} or selected
+	 *         {@link IFile}
+	 * @generated
+	 */
+	private static String getTarget(Object selected) {
 		final String res;
 
 		final AbstractResourceSelectionDialog dialog = new FolderSelectionDialog(PlatformUI.getWorkbench()
@@ -137,20 +201,26 @@ public class GenerateCommonSoaGeneratorEclipse extends GenerateCommonSoaGenerato
 	 */
 	protected void printDiagnostic(Diagnostic diagnostic) {
 		if (diagnostic.getMessage() != null) {
+			final String location;
+			if (!diagnostic.getData().isEmpty() && diagnostic.getData().get(0) instanceof ASTNode) {
+				location = AcceleoUtil.getLocation((ASTNode)diagnostic.getData().get(0)) + ": ";
+			} else {
+				location = "";
+			}
 			switch (diagnostic.getSeverity()) {
 				case Diagnostic.INFO:
-					Activator.getDefault().log(new Status(IStatus.INFO, diagnostic.getSource(), diagnostic
-							.getMessage(), diagnostic.getException()));
+					Activator.getDefault().log(new Status(IStatus.INFO, diagnostic.getSource(),
+							location + diagnostic.getMessage(), diagnostic.getException()));
 					break;
 
-				case Diagnostic.WARNING:
-					Activator.getDefault().log(new Status(IStatus.WARNING, diagnostic.getSource(), diagnostic
-							.getMessage(), diagnostic.getException()));
+						case Diagnostic.WARNING:
+					Activator.getDefault().log(new Status(IStatus.WARNING, diagnostic.getSource(),
+							location + diagnostic.getMessage(), diagnostic.getException()));
 					break;
 
-				case Diagnostic.ERROR:
-					Activator.getDefault().log(new Status(IStatus.ERROR, diagnostic.getSource(), diagnostic
-							.getMessage(), diagnostic.getException()));
+						case Diagnostic.ERROR:
+					Activator.getDefault().log(new Status(IStatus.ERROR, diagnostic.getSource(),
+							location + diagnostic.getMessage(), diagnostic.getException()));
 					break;
 			}
 		}

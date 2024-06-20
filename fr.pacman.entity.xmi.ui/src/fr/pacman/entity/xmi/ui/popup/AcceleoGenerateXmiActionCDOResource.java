@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.cdo.eresource.CDOResource;
 
 import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.entity.xmi.ui.Activator;
 import fr.pacman.entity.xmi.ui.common.GenerateXmiUICDOResource;
 
@@ -39,7 +39,7 @@ public class AcceleoGenerateXmiActionCDOResource extends AcceleoGenerateSafranAc
    }
 
    @Override
-   protected SafranGenerator_Abs<CDOResource> getSafranGenerator (final CDOResource p_modelURI, final List<? extends Object> p_arguments)
+   protected SafranGeneratorOld_Abs<CDOResource> getSafranGenerator (final CDOResource p_modelURI, final List<? extends Object> p_arguments)
    {
       return new GenerateXmiUICDOResource(p_modelURI, p_arguments);
    }

@@ -1,195 +1,355 @@
-/*******************************************************************************
- * Copyright (c) 2008, 2010 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
 package fr.pacman.commons.main;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.acceleo.common.preference.AcceleoPreferences;
-import org.eclipse.acceleo.engine.generation.strategy.IAcceleoGenerationStrategy;
-import org.eclipse.acceleo.engine.service.AbstractAcceleoGenerator;
-import org.eclipse.acceleo.engine.service.AcceleoService;
-import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.acceleo.Module;
+import org.eclipse.acceleo.OpenModeKind;
+import org.eclipse.acceleo.Template;
+import org.eclipse.acceleo.aql.AcceleoUtil;
+import org.eclipse.acceleo.aql.evaluation.AcceleoEvaluator;
+import org.eclipse.acceleo.aql.evaluation.GenerationResult;
+import org.eclipse.acceleo.aql.evaluation.strategy.DefaultGenerationStrategy;
+import org.eclipse.acceleo.aql.evaluation.strategy.DefaultWriterFactory;
+import org.eclipse.acceleo.aql.evaluation.strategy.IAcceleoGenerationStrategy;
+import org.eclipse.acceleo.aql.evaluation.writer.IAcceleoWriter;
+import org.eclipse.acceleo.aql.parser.AcceleoParser;
+import org.eclipse.acceleo.aql.parser.ModuleLoader;
+import org.eclipse.acceleo.query.AQLUtils;
+import org.eclipse.acceleo.query.ast.ASTNode;
+import org.eclipse.acceleo.query.ast.EClassifierTypeLiteral;
+import org.eclipse.acceleo.query.ast.TypeLiteral;
+import org.eclipse.acceleo.query.runtime.impl.namespace.ClassLoaderQualifiedNameResolver;
+import org.eclipse.acceleo.query.runtime.impl.namespace.JavaLoader;
+import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironment;
+import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameResolver;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
-import fr.pacman.commons.convention.project.ProjectProperties;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 /**
- * Entry point of the 'Generate' generation module.
+ * 
+ * @author MINARM
  */
-public abstract class PacmanGenerator_Abs extends AbstractAcceleoGenerator {
+public abstract class PacmanGenerator_Abs {
 
 	/**
-	 * @return le nom du module de generation
-	 */
-	protected abstract String getModuleFileName();
-
-	/**
-	 * @return la liste des templates de generation
-	 */
-	protected abstract String[] getModuleTemplates();
-
-	/**
-	 * L'URI du modele.
-	 */
-	protected URI _modelURI;
-
-	/**
-	 * Les eventuels arguments.
-	 */
-	protected List<? extends Object> _arguments;
-
-	/**
-	 * Constructeur.
-	 */
-	public PacmanGenerator_Abs() {
-		super();
-	}
-
-	/**
-	 * This allows clients to instantiates a generator with all required
-	 * information.
 	 * 
-	 * @param p_model        We'll iterate over the content of this element to find
-	 *                       Objects matching the first parameter of the template we
-	 *                       need to call.
-	 * @param p_targetFolder This will be used as the output folder for this
-	 *                       generation : it will be the base path against which all
-	 *                       file block URLs will be resolved.
-	 * @param p_arguments    If the template which will be called requires more than
-	 *                       one argument taken from the model, pass them here.
-	 * @throws IOException This can be thrown in three scenarios : the module cannot
-	 *                     be found, it cannot be loaded, or the model cannot be
-	 *                     loaded.
 	 */
-	public PacmanGenerator_Abs(final EObject p_model, final File p_targetFolder,
-			final List<? extends Object> p_arguments) throws IOException {
-		initialize(p_model, p_targetFolder, p_arguments);
-	}
+	protected List<String> _resources;
 
 	/**
-	 * This allows clients to instantiates a generator with all required
-	 * information.
-	 * 
-	 * @param p_modelURI     URI where the model on which this generator will be
-	 *                       used is located.
-	 * @param p_targetFolder This will be used as the output folder for this
-	 *                       generation : it will be the base path against which all
-	 *                       file block URLs will be resolved.
-	 * @param p_arguments    If the template which will be called requires more than
-	 *                       one argument taken from the model, pass them here.
-	 * @throws IOException This can be thrown in three scenarios : the module cannot
-	 *                     be found, it cannot be loaded, or the model cannot be
-	 *                     loaded.
+	 * The root base path for code generation.
 	 */
-	public PacmanGenerator_Abs(final URI p_modelURI, final File p_targetFolder,
-			final List<? extends Object> p_arguments) throws IOException {
-		initialize(p_modelURI, p_targetFolder, p_arguments);
-	}
-
-	@Override
-	public void initialize(final EObject p_model, final File p_folder, final List<?> p_arguments) throws IOException {
-		super.initialize(p_model, p_folder, p_arguments);
-	}
-
-	@Override
-	public void initialize(final URI p_modelURI, final File p_folder, final List<?> p_arguments) throws IOException {
-		_modelURI = p_modelURI;
-		_arguments = p_arguments;
-		super.initialize(p_modelURI, p_folder, p_arguments);
-	}
+	private String _baseTarget;
 
 	/**
-	 * This will be used to get the list of templates that are to be launched by
-	 * this launcher.
+	 * Creates the default {@link ResourceSet}.
 	 * 
-	 * @return The list of templates to call on the module {@link #getModuleName()}.
-	 */
-	@Override
-	public String[] getTemplateNames() {
-		return getModuleTemplates();
-	}
-
-	/**
-	 * This will be called in order to find and load the module that will be
-	 * launched through this launcher. We expect this name not to contain file
-	 * extension, and the module to be located beside the launcher.
-	 * 
-	 * @return The name of the module that is to be launched.
-	 */
-	@Override
-	public String getModuleName() {
-		return getModuleFileName();
-	}
-
-	/**
-	 * This can be used to update the resource set's package registry with all
-	 * needed EPackages.
-	 * 
-	 * @param p_resourceSet The resource set which registry has to be updated.
+	 * @return the created default {@link ResourceSet}
 	 * @generated
 	 */
-	@Override
-	public void registerPackages(final ResourceSet p_resourceSet) {
-		super.registerPackages(p_resourceSet);
+	protected ResourceSet createDefaultResourceSet() {
+		return new ResourceSetImpl();
 	}
 
 	/**
-	 * @return le nom du projet du generateur.
+	 * Set the list of selected resources for the code generator.
+	 * 
+	 * @param p_resources the list of selected resources.
+	 */
+	public void setResources(List<String> p_resources) {
+		_resources = p_resources;
+	}
+
+	/**
+	 * Set the root base path for code generation.
+	 * 
+	 * @param p_baseTarget the root base path for code generation
+	 */
+	public void setBaseTarget(String p_baseTarget) {
+		_baseTarget = p_baseTarget;
+	}
+
+	/**
+	 * Get the list of templates to execute in the selected generator, depending the
+	 * type of the selected object.
+	 * 
+	 * @return the list of templates to execute.
+	 */
+	protected abstract List<String> getTemplates();
+
+	/**
+	 * Get the name for the project specifically impacted by code generation.
+	 * 
+	 * @return the project name.
 	 */
 	public abstract String getProjectName();
 
 	/**
-	 * @return le generateur doit il activer ou desactiver le cache pour les
-	 *         queries.
+	 * Get the module full qualified name.
+	 * 
+	 * @return the module qualified name under string format.
 	 */
-	public abstract boolean getSwitchQueryCache();
+	public abstract String getModuleQualifiedName();
 
 	/**
-	 * Methode principale pour le generateur.
+	 * Get the code generation options.
+	 * 
+	 * @return a list of options for code generation.
 	 */
-	@Override
-	public void doGenerate(final Monitor p_monitor) throws IOException {
-		// Par defaut le resultat des queries Acceleo sont mis en cache, ce qui
-		// peut perturber le fonctionnement des services Java Statefull. Il est
-		// donc possible pour certains générateurs de demander expressement la
-		// desactivation du cache.
-		AcceleoPreferences.switchQueryCache(getSwitchQueryCache());
+	protected abstract Map<String, String> getOptions();
 
-		super.doGenerate(p_monitor);
+	/**
+	 * Creates the {@link ResourceSet} for models.
+	 * 
+	 * @param p_generationKey the generation key
+	 * @param p_options       the {@link Map} of options
+	 * @param p_exceptions    the {@link List} of exceptions
+	 * @param p_resourceSet   the default {@link ResourceSet}
+	 * @return the created {@link ResourceSet} for models
+	 */
+	protected ResourceSet createResourceSetForModel(Object p_generationKey, Map<String, String> p_options,
+			List<Exception> p_exceptions, ResourceSet p_resourceSet) {
+		return AQLUtils.createResourceSetForModels(p_exceptions, p_generationKey, p_resourceSet, p_options);
 	}
 
-	@Override
-	protected AcceleoService createAcceleoService() {
-		final AcceleoService v_service = super.createAcceleoService();
-		return v_service;
+	/**
+	 * Get
+	 * 
+	 * @param module
+	 * 
+	 * @return a list of templates to execute, depending the type of the selected
+	 *         resource.
+	 */
+	// TODO : ajouter un parametre pour le type de ressource.
+	protected List<Template> getTemplatesToExecute(Module p_module) {
+
+		List<Template> v_templatesToExecute = new ArrayList<>();
+		for (Template v_template : AcceleoUtil.getMainTemplates(p_module)) {
+			if (getTemplates().contains(v_template.getName())) {
+				v_templatesToExecute.add(v_template);
+			}
+		}
+		return v_templatesToExecute;
 	}
 
-	@Override
-	public IAcceleoGenerationStrategy getGenerationStrategy() {
-		String v_lineDelimiter = ProjectProperties.getDelimiter();
+	protected abstract List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
+			final Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels);
 
-		if ("WINDOWS".equals(v_lineDelimiter))
-			v_lineDelimiter = "\r\n";
+	/**
+	 * 
+	 */
+	// TODO si on lance plusieurs générateurs certainement déplacer certaines
+	// parties à mutualiser (au niveau UI ?) ailleurs.????
+	public void generate() {
 
-		if ("UNIX".equals(v_lineDelimiter))
-			v_lineDelimiter = "\n";
+		final String moduleQualifiedName = getModuleQualifiedName();
+		final Map<String, String> options = getOptions();
+		final Object generationKey = new Object();
+		final List<Exception> exceptions = new ArrayList<>();
+		final ResourceSet resourceSet = createDefaultResourceSet();
+		final ResourceSet resourceSetForModels = createResourceSetForModel(generationKey, options, exceptions,
+				resourceSet);
+		//
+		loadResources(resourceSetForModels, _resources);
 
-		if (null == v_lineDelimiter)
-			v_lineDelimiter = System.getProperty("line.separator");
+		// prepare Acceleo environment
+		final IQualifiedNameResolver resolver = createResolver();
+		final IQualifiedNameQueryEnvironment queryEnvironment = createAcceleoQueryEnvironment(options, resolver,
+				resourceSetForModels);
+		AcceleoEvaluator evaluator = createAcceleoEvaluator(resolver, queryEnvironment);
+		final IAcceleoGenerationStrategy strategy = createGenerationStrategy(resourceSetForModels);
 
-		// Pour l'instant on force.
-		return new PacmanStrategy(v_lineDelimiter);
+		final Module module = (Module) resolver.resolve(moduleQualifiedName);
+		// final URI logURI = AcceleoUtil.getlogURI(targetURI,
+		// options.get(AcceleoUtil.LOG_URI_OPTION));
+
+		try {
+			final Map<EClass, List<EObject>> valuesCache = new LinkedHashMap<>();
+			for (Template template : getTemplatesToExecute(module)) {
+
+				System.out.println(">>>" + template.getName());
+
+				final EClassifierTypeLiteral eClassifierTypeLiteral = (EClassifierTypeLiteral) template.getParameters()
+						.get(0).getType().getAst();
+				final List<EObject> values = getValues(queryEnvironment, valuesCache, eClassifierTypeLiteral,
+						resourceSetForModels);
+
+				final String parameterName = template.getParameters().get(0).getName();
+				Map<String, Object> variables = new LinkedHashMap<>();
+				for (EObject value : values) {
+					variables.put(parameterName, value);
+					URI targetURI = URI.createFileURI(_baseTarget + "/" + getProjectName() + "/");
+					URI logURI = null;
+					System.out.println(">>> generation dans " + targetURI.path());
+					AcceleoUtil.generate(template, variables, evaluator, queryEnvironment, strategy, targetURI, logURI);
+				}
+			}
+		} finally {
+
+			AQLUtils.cleanResourceSetForModels(generationKey, resourceSetForModels);
+			AcceleoUtil.cleanServices(queryEnvironment, resourceSetForModels);
+			printDiagnostics(evaluator.getGenerationResult());
+		}
+	}
+
+	/**
+	 * Creates the {@link IQualifiedNameResolver}.
+	 * 
+	 * @return the created {@link IQualifiedNameResolver}
+	 * @generated
+	 */
+	protected IQualifiedNameResolver createResolver() {
+		return new ClassLoaderQualifiedNameResolver(this.getClass().getClassLoader(),
+				AcceleoParser.QUALIFIER_SEPARATOR);
+	}
+
+	/**
+	 * 
+	 * @param resourceSetForModels
+	 * @return
+	 */
+	protected IAcceleoGenerationStrategy createGenerationStrategy(ResourceSet resourceSetForModels) {
+		final IAcceleoGenerationStrategy strategy = new DefaultGenerationStrategy(
+				resourceSetForModels.getURIConverter(), new DefaultWriterFactory()) {
+			@Override
+			public IAcceleoWriter createWriterFor(URI uri, OpenModeKind openMode, Charset charset, String lineDelimiter)
+					throws IOException {
+				// System.out.println(uri.toString());
+				return super.createWriterFor(uri, openMode, charset, lineDelimiter);
+			}
+		};
+
+		return strategy;
+	}
+
+	/**
+	 * Registers the given {@link EPackage} in the given
+	 * {@link IQualifiedNameQueryEnvironment} recursively.
+	 * 
+	 * @param environment the {@link IQualifiedNameQueryEnvironment}
+	 * @param ePackage    the {@link EPackage}
+	 * @generated
+	 */
+	public static void registerEPackage(IQualifiedNameQueryEnvironment environment, EPackage ePackage) {
+		environment.registerEPackage(ePackage);
+		for (EPackage child : ePackage.getESubpackages()) {
+			registerEPackage(environment, child);
+		}
+	}
+
+	protected void loadResources(ResourceSet resourceSetForModels, List<String> resources) {
+		for (String resource : resources) {
+			resourceSetForModels.getResource(URI.createFileURI(resource), true);
+		}
+	}
+
+	/**
+	 * Creates the {@link IQualifiedNameQueryEnvironment}.
+	 * 
+	 * @param options              the {@link Map} of options
+	 * @param resolver             the {@link IQualifiedNameResolver}
+	 * @param resourceSetForModels the {@link ResourceSet} for models
+	 * @return the created {@link IQualifiedNameQueryEnvironment}
+	 * @generated
+	 */
+	protected IQualifiedNameQueryEnvironment createAcceleoQueryEnvironment(Map<String, String> options,
+			IQualifiedNameResolver resolver, ResourceSet resourceSetForModels) {
+		final IQualifiedNameQueryEnvironment queryEnvironment = AcceleoUtil.newAcceleoQueryEnvironment(options,
+				resolver, resourceSetForModels, false);
+		for (String nsURI : new ArrayList<String>(EPackage.Registry.INSTANCE.keySet())) {
+			registerEPackage(queryEnvironment, EPackage.Registry.INSTANCE.getEPackage(nsURI));
+		}
+
+		return queryEnvironment;
+	}
+
+	/**
+	 * Creates the {@link AcceleoEvaluator}
+	 * 
+	 * @param resolver         the {@link IQualifiedNameResolver}
+	 * @param queryEnvironment the {@link IQualifiedNameQueryEnvironment}
+	 * @return the created {@link AcceleoEvaluator}
+	 * @generated
+	 */
+	protected AcceleoEvaluator createAcceleoEvaluator(IQualifiedNameResolver resolver,
+			IQualifiedNameQueryEnvironment queryEnvironment) {
+		AcceleoEvaluator evaluator = new AcceleoEvaluator(queryEnvironment.getLookupEngine(), System.lineSeparator());
+		resolver.addLoader(new ModuleLoader(new AcceleoParser(), evaluator));
+		resolver.addLoader(new JavaLoader(AcceleoParser.QUALIFIER_SEPARATOR, false));
+
+		return evaluator;
+	}
+
+	/**
+	 * Prints the diagnostics for the given {@link GenerationResult}.
+	 * 
+	 * @param generationResult the {@link GenerationResult}
+	 * @generated
+	 */
+	protected void printDiagnostics(GenerationResult generationResult) {
+		if (generationResult.getDiagnostic().getSeverity() > Diagnostic.INFO) {
+			PrintStream stream;
+			switch (generationResult.getDiagnostic().getSeverity()) {
+			case Diagnostic.WARNING:
+				stream = System.out;
+				stream.println("WARNING");
+				break;
+			case Diagnostic.ERROR:
+				// Fall-through
+			default:
+				// Shouldn't happen as we only show warnings and errors
+				stream = System.err;
+				stream.println("ERROR");
+				break;
+			}
+			printDiagnostic(stream, generationResult.getDiagnostic(), "");
+		}
+	}
+
+	/**
+	 * Prints the given {@link Diagnostic} for the given {@link PrintStream}.
+	 * 
+	 * @param stream      the {@link PrintStream}
+	 * @param diagnostic  the {@link Diagnostic}
+	 * @param indentation the current indentation
+	 * @generated
+	 */
+	protected void printDiagnostic(PrintStream stream, Diagnostic diagnostic, String indentation) {
+		String nextIndentation = indentation;
+		if (diagnostic.getMessage() != null) {
+			stream.print(indentation);
+			switch (diagnostic.getSeverity()) {
+			case Diagnostic.INFO:
+				stream.print("INFO ");
+				break;
+
+			case Diagnostic.WARNING:
+				stream.print("WARNING ");
+				break;
+
+			case Diagnostic.ERROR:
+				stream.print("ERROR ");
+				break;
+			}
+			if (!diagnostic.getData().isEmpty() && diagnostic.getData().get(0) instanceof ASTNode) {
+				stream.print(AcceleoUtil.getLocation((ASTNode) diagnostic.getData().get(0)));
+			}
+			stream.println(": " + diagnostic.getMessage());
+			nextIndentation += "\t";
+		}
+		for (Diagnostic child : diagnostic.getChildren()) {
+			printDiagnostic(stream, child, nextIndentation);
+		}
 	}
 }

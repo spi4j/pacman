@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.ILog;
 
 import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.entity.jdbc.ui.Activator;
 import fr.pacman.entity.jdbc.ui.common.GenerateJdbcUI;
 
@@ -39,7 +39,7 @@ public class AcceleoGenerateJdbcAction extends AcceleoGenerateSafranAction<IFile
    }
 
    @Override
-   protected SafranGenerator_Abs<IFile> getSafranGenerator (final IFile p_modelURI, final List<? extends Object> p_arguments)
+   protected SafranGeneratorOld_Abs<IFile> getSafranGenerator (final IFile p_modelURI, final List<? extends Object> p_arguments)
    {
       return new GenerateJdbcUI(p_modelURI, p_arguments);
    }

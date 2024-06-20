@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.entity.api.Activator;
 
 /**
@@ -28,7 +28,7 @@ import fr.pacman.entity.api.Activator;
  * 
  * @generated NOT
  */
-public class GenerateXmi extends PacmanGenerator_Abs
+public class GenerateXmi extends PacmanGeneratorOld_Abs
 {
    /**
     * The name of the module.

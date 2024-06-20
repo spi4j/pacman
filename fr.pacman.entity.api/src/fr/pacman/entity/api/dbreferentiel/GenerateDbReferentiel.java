@@ -19,7 +19,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.entity.api.Activator;
 
 /**
@@ -27,7 +27,7 @@ import fr.pacman.entity.api.Activator;
  * 
  * @generated NOT
  */
-public class GenerateDbReferentiel extends PacmanGenerator_Abs
+public class GenerateDbReferentiel extends PacmanGeneratorOld_Abs
 {
    /**
     * The name of the module.

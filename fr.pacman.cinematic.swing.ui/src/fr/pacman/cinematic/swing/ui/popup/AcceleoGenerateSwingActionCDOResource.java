@@ -18,7 +18,7 @@ import org.eclipse.emf.cdo.eresource.CDOResource;
 import fr.pacman.cinematic.swing.ui.Activator;
 import fr.pacman.cinematic.swing.ui.common.GenerateSwingUICDOResource;
 import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 
 /**
  * Entity code generation.
@@ -39,7 +39,7 @@ public class AcceleoGenerateSwingActionCDOResource extends AcceleoGenerateSafran
    }
 
    @Override
-   protected SafranGenerator_Abs<CDOResource> getSafranGenerator (final CDOResource p_modelURI, final List<? extends Object> p_arguments)
+   protected SafranGeneratorOld_Abs<CDOResource> getSafranGenerator (final CDOResource p_modelURI, final List<? extends Object> p_arguments)
    {
       return new GenerateSwingUICDOResource(p_modelURI, p_arguments);
    }
