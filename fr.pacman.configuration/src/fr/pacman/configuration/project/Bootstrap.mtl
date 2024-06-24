@@ -28,6 +28,7 @@ import org.apache.commons.cli.ParseException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import fr.spi4j.ws.rs.RsFilter_Abs;
 
 [if 'jetty'.equalsIgnoreCase(getHttpEmbeddedServer())]
 import java.net.URL;
@@ -77,22 +78,16 @@ public class [buildBoostrapClassName()/] {
 
 			[buildBoostrapClassName()/] [apply_variableDefault('bootstrap')/] = new [buildBoostrapClassName()/]();
 			[apply_variableDefault('bootstrap')/].start([apply_parameterMethodClassicIn('args')/]);
-
-			[apply_attributeStatic('log')/].info("Lancement du serveur [getApplicationName()/] : OK.");
-			[apply_attributeStatic('log')/].info("Appuyez sur n'importe quelle touche pour stopper le serveur...");
-
 			[apply_variableDefault('bootstrap')/].waitForInterrupt();
 
-		} catch (ParseException p_e) {
-			
+		} catch (ParseException [apply_parameterMethodClassicIn('e')/]) {
+		
 			[apply_attributeStatic('log')/].warn([apply_attributeFinalStatic('err parse msg')/]);
 
 		} catch (Exception [apply_parameterMethodClassicIn('e')/]) {
 
 			[apply_attributeStatic('log')/].fatal("Lancement du serveur [getApplicationName()/] : KO : " + [apply_parameterMethodClassicIn('e')/].getMessage());
-			
 			Runtime.getRuntime().halt(1);
-			// System.exit(1);
 		}
 	}
 
@@ -286,14 +281,24 @@ public class [buildBoostrapClassName()/] {
 	}
 
 	/**
-	 * Mise en écoute du serveur et tentative d'arrêt 
-	 * en cas de détection d'un crash de la JVM.
+	 * Mise en écoute du serveur et tentative d'arrêt en cas de détection d'un crash
+	 * de la JVM. On place ici un test pour vérifier le bon démarrage du filtre,
+	 * cela permet de forcer l'arrêt du serveur, codé à la base pour être résilient
+	 * sur les erreurs d'initialisation des webapps.
+	 * 
 	 * @throws InterruptedException 
 	 */
 	public void waitForInterrupt() throws Exception {
 
 		[displayClearUserCodeId ('waitForInterrupt')/]
    		// [protected (any.getUserCodeId('waitForInterrupt'))]
+
+		if (RsFilter_Abs.hasInitializationfailure()) {
+			[apply_attributeStatic('log')/].fatal("Lancement du serveur safran : KO. Arrêt du serveur...\n" );
+			Runtime.getRuntime().halt(1);
+		} else {
+			[apply_attributeStatic('log')/].info("Lancement du serveur [getApplicationName()/] : OK.\nAppuyez sur n'importe quelle touche pour stopper le serveur...\n");
+		}
 		
 		if(System.in.read()!=-1) {
 			stop();
@@ -321,7 +326,6 @@ public class [buildBoostrapClassName()/] {
 				[/if]
 				[buildServerNameWithPrefix()/] = null;
 				Runtime.getRuntime().halt(0);
-				// System.exit(0);
 			} catch (Exception  [apply_variableDefault('e')/]) {
 				[apply_attributeStatic('log')/].info("Fermeture du serveur OK mais avec un avertissement : " +  [apply_variableDefault('e')/]);
 			}

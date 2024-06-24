@@ -351,6 +351,7 @@ import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.ext.Provider;
 
 [if useSpi4jSecurity()]import fr.spi4j.lib.security.Spi4jSecurity_Abs;[/if]
+import fr.spi4j.ws.rs.RsLogger;
 import fr.spi4j.ws.rs.RsFilter_Abs;
 import fr.spi4j.ws.rs.RsFilterConfigurator;
 import fr.spi4j.ws.rs.RsAuthTokenXtoWrapper;
@@ -516,6 +517,24 @@ public class [buildRSGenericFilterClassName()/] extends RsFilter_Abs
 		[if (useSpi4jSecurity())]
 		Spi4jSecurity_Abs.getInstance().deconnexion();
 		[/if]
+	}
+
+	/**
+	 * Appliquer ici toutes les opérations à effectuer en cas d'erreur lors de
+	 * l'initialisation du filtre.
+	 * 
+	 * @param [apply_parameterMethodClassicIn('exception')/] : L'exception initiale ayant entrainé l'echec de
+	 *                    l'initialisation du filtre.
+	 */
+	@Override
+	protected void onInitializationFailure(Exception [apply_parameterMethodClassicIn('exception')/]) 
+	{
+      	[displayClearUserCodeId ('on initialization failure')/]
+      	// [protected (any.getUserCodeId('on initialization failure'))]
+
+		RsLogger.get_log().fatal([apply_parameterMethodClassicIn('exception')/], [apply_parameterMethodClassicIn('exception')/].getCause());
+
+ 		// [/protected]
 	}
 }
 [/template]

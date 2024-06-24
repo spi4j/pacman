@@ -52,30 +52,33 @@
 [/if]
 [if s.type = soa::SecuritySchemeType::HTTP]
 [/if]
-[if s.isAuthOidc()  or s.isAuthOauth2()]
+[if s.isAuthOidc() or s.isAuthOauth2()]
 [s.getSpi4jId()/].key.location = HEADER
 [s.getSpi4jId()/].read.timeout = 10000
 [s.getSpi4jId()/].connect.timeout = 15000
 [s.getSpi4jId()/].client.id = ['['/]Placer ici l'identifiant pour le serveur d'authentification[']'/]
 [s.getSpi4jId()/].client.secret = ['['/]Placer ici le secret pour le serveur d'authentification[']'/] 
+[if s.isAuthOidc()][comment : For oidc flow is unique and always authorization code. /]
+[s.getSpi4jId()/].endpoint.connect = [s.connectURL/]
+[/if]
+[if s.isAuthOauth2()]
 [s.getSpi4jId()/].endpoint.certs =  ['['/]Placer ici l'uri pour l'obtention des certificats[']'/]
+[/if]
 [for (f : Flow | s.flows)][comment : avoid return carriage/ ]
 [s.getSpi4jId()/].[f.writeFlowName()/].key = authorization
 [s.getSpi4jId()/].[f.writeFlowName()/].flow = [f.flowType/]
 [s.getSpi4jId()/].[f.writeFlowName().toLower()/].scopes = [f.scopes.name->flatten()->sep(' ')/]
+[if s.isAuthOauth2()]
 [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.token = [f.tokenURL/]
 [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.refresh = [f.refreshURL/]
-[if f.isAuthCode() and s.isAuthOidc()]
+[if f.isAuthCode()]
 [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
-[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur[']'/][s.writeCallback()/]
-[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo = [s.connectURL/]
-[/if]
-[if f.isAuthCode() and s.isAuthOauth2()]
-[s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
+[/if][/if]
+[if f.isAuthCode()]
 [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur[']'/][s.writeCallback()/]
 [/if]
 [if f.isAuthCredential()]
-[s.getSpi4jId()/].[f.writeFlowName()/].application.secret = ['['/]Placer ici le secret interne pour l'appleication[']'/]
+[s.getSpi4jId()/].[f.writeFlowName()/].application.secret = ['['/]Placer ici le secret interne pour l'application[']'/]
 [/if]
 [/for][/if]
 [/for][/for]
@@ -136,7 +139,7 @@ public class [s.buildRSO2AuthenticationResourceClassName(f)/] {
 	 * sécurité.
 	 *
 	 * Récupération de(s) jeton(s) dans le cas d'un protocole d'authentification de
-	 * type OAUT2 / AUTHORIZATION CODE GRANT. La requête initiale est à effectuer au
+	 * type OAUTH2 / AUTHORIZATION CODE GRANT. La requête initiale est à effectuer au
 	 * niveau du FRONT afin de récupérer le code temporaire et d'appeler ce service.
 	 * 
 	 * Ne pas oublier que, comme mesure de sécurité supplémentaire, le serveur
@@ -421,16 +424,15 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 
 		// [/protected]
 		[/if]
-		[comment : OAUTH2 / OIDC create an access token. /]
-		[if  s.isAuthOidc() or isAuthOauth2(s)]
+		[comment : OAUTH2 create an access token. /]
+		[if s.isAuthOauth2() or s.isAuthOidc()]
 		[for (f : Flow | s.flows)]
 		// Modifier et compléter le token d'accès si besoin.
 		// Description : [s.description/]
-		[if f.isAuthCode() and s.isAuthOidc()]
-
+		[if f.isAuthCode()]
 		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
-
+		[if s.isAuthOauth2()]
 		p_tokensContainer.addAccessToken(
 				new RsToken.Builder()
 					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
@@ -439,26 +441,19 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
 					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
 					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-					.withUserInfoEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo")
 					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
 					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
 					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)	
 					.withClientSecret("[s.getSpi4jId()/].client.secret")
 					.withClientId("[s.getSpi4jId()/].client.id")
 					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
 					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
 					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
 					.withPrefixedBy("Bearer"));
-
-		// [/protected]
 		[/if]
-		[if f.isAuthCode() and s.isAuthOauth2()]
-
-		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
-		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
-
+		[if s.isAuthOidc()]
 		p_tokensContainer.addAccessToken(
 				new RsToken.Builder()
 					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
@@ -466,23 +461,20 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
 					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
 					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+					.withConnectEndPoint("[s.getSpi4jId()/].endpoint.connect")
 					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
 					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)	
 					.withClientSecret("[s.getSpi4jId()/].client.secret")
 					.withClientId("[s.getSpi4jId()/].client.id")
 					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
 					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
 					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
 					.withPrefixedBy("Bearer"));
-
+		[/if]
 		// [/protected]
 		[/if]
 		[if f.isAuthPassord() or f.isAuthImplicit()]
-
 		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
 
@@ -490,7 +482,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 				new RsToken.Builder()
 					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
 					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+					.withAuthFlow(RsAuthFlow_Enum.authorizationCode)
 					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
 					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
 					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
@@ -508,7 +500,6 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		// [/protected]
 		[/if]
 		[if f.isAuthCredential()]
-
 		[displayClearUserCodeId ('token config ' + s.name + '_' + f.writeFlowName())/]
 		// [protected (f.getUserCodeId('token config ' + s.name + '_'+ f.writeFlowName()))]
 
@@ -516,8 +507,8 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 				new RsToken.Builder()
 					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
 					.withPassingMode("[s.getSpi4jId()/].key.location")
-					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
 					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
 					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
 					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
 					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
@@ -528,7 +519,6 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 					.withClientId("[s.getSpi4jId()/].client.id")
 					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
 					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
 					.withApplicationSecret("[s.getSpi4jId()/].[f.writeFlowName()/].application.secret")
 					.withPrefixedBy("Bearer"));
 
@@ -537,6 +527,7 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 
 		[/for]
 		[/if]
+		
 		[comment : /]
 		[if  s.type = soa::SecuritySchemeType::HTTP ]
 					
@@ -544,7 +535,6 @@ public class [buildRSTokensConfiguratorClassName()/] implements RsTokensConfigur
 		[comment : Add a default refresh token. /]
 		[if s.isAuthApiKey()]
 		// Modifier et compléter le token de rafraîchissement si besoin.
-
 		[displayClearUserCodeId (s.getUserCodeId('token config refresh ' + s.name))/]
 		// [protected (s.getUserCodeId('token config refresh ' + s.name))]
 
@@ -666,7 +656,7 @@ RsConstants.[key/],[apply_methodGet('param')/](RsConstants.[key/], [apply_variab
 
 [comment : Write secured annotation if needed (only with access tokens..). /]
 [template private addSecured (o : Operation) post(trim())]
-@RsSecured(tokens = "[o.writeAuthenticationTokens()/]")
+@RsSecured(tokens = "[o.writeAuthenticationTokens()/]", scopes = "[o.writeAuthenticationScopes()/]")
 [/template]
 
 [comment : Write path annotation if needed. /]
@@ -913,6 +903,11 @@ UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[c(1)/].build([o.write
 [comment : /]
 [template private writeFlowName (f : Flow ) post(trim())]
 [f.flowType.toString().substring(1,2).toLower() /]
+[/template]
+
+[comment : Write all scopes for the operation. (scope name is unique.)/]
+[template private writeAuthenticationScopes (o : Operation) post(trim())]
+[for (s : Scope | o.getAllSecurityApplications().scopes)][if i > 1],[/if] [s.name/][/for]
 [/template]
 
 [comment : Write all tokens spi4j ids (part 1) /]

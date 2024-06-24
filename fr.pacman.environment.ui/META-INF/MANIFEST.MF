@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.environment.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Environment UI
 Bundle-SymbolicName: fr.pacman.environment.ui;singleton:=true
-Bundle-Version: 4.5.1.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.environment.ui.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.ui,

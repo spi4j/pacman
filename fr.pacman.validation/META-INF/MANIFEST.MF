@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.validation
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Model Validation
 Bundle-SymbolicName: fr.pacman.validation
-Bundle-Version: 4.5.1.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.validation.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,

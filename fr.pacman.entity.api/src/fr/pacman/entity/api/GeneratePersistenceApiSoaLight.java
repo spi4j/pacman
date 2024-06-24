@@ -348,6 +348,9 @@ public class GeneratePersistenceApiSoaLight extends AbstractAcceleoGenerator {
         if (!isInWorkspace(org.obeonetwork.dsl.environment.EnvironmentPackage.class)) {
             resourceSet.getPackageRegistry().put(org.obeonetwork.dsl.environment.EnvironmentPackage.eINSTANCE.getNsURI(), org.obeonetwork.dsl.environment.EnvironmentPackage.eINSTANCE);
         }
+        if (!isInWorkspace(org.obeonetwork.dsl.environment.metadatadef.MetadatadefPackage.class)) {
+            resourceSet.getPackageRegistry().put(org.obeonetwork.dsl.environment.metadatadef.MetadatadefPackage.eINSTANCE.getNsURI(), org.obeonetwork.dsl.environment.metadatadef.MetadatadefPackage.eINSTANCE);
+        }
         
         /*
          * If you want to change the content of this method, do NOT forget to change the "@generated"

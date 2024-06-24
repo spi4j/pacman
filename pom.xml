@@ -6,7 +6,7 @@
 
 	<groupId>fr.pacman</groupId>
 	<artifactId>pacman-parent</artifactId>
-	<version>4.5.1</version>
+	<version>4.6.0</version>
 	<packaging>pom</packaging>
 	<name>pacman-parent</name>
 	<description>Projet parent aux generateurs Pacman pour Safr@n.</description>

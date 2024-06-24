@@ -59,14 +59,16 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	 */
 	private static final List<String> c_SWAGGER_FILES = Arrays.asList("src/main/webapp/swagger/favicon-16x16.png",
 			"src/main/webapp/swagger/favicon-32x32.png", "src/main/webapp/swagger/index.html",
-			"src/main/webapp/swagger/oauth2-redirect.html", "src/main/webapp/swagger/swagger-ui-bundle.js",
-			"src/main/webapp/swagger/swagger-ui-bundle.js.map", "src/main/webapp/swagger/swagger-ui-es-bundle-core.js",
-			"src/main/webapp/swagger/swagger-ui-es-bundle-core.js.map",
-			"src/main/webapp/swagger/swagger-ui-es-bundle.js", "src/main/webapp/swagger/swagger-ui-es-bundle.js.map",
-			"src/main/webapp/swagger/swagger-ui-standalone-preset.js",
-			"src/main/webapp/swagger/swagger-ui-standalone-preset.js.map", "src/main/webapp/swagger/swagger-ui.css",
+			"src/main/webapp/swagger/index.css", "src/main/webapp/swagger/oauth2-redirect.html",
+			"src/main/webapp/swagger/swagger-initializer.js", "src/main/webapp/swagger/swagger-ui.css",
 			"src/main/webapp/swagger/swagger-ui.css.map", "src/main/webapp/swagger/swagger-ui.js",
-			"src/main/webapp/swagger/swagger-ui.js.map");
+			"src/main/webapp/swagger/swagger-ui.js.map", "src/main/webapp/swagger/swagger-ui-bundle.js",
+			"src/main/webapp/swagger/swagger-ui-bundle.js.map", "src/main/webapp/swagger/swagger-ui-es-bundle.js",
+			"src/main/webapp/swagger/swagger-ui-es-bundle.js.map",
+			"src/main/webapp/swagger/swagger-ui-es-bundle-core.js",
+			"src/main/webapp/swagger/swagger-ui-es-bundle-core.js.map",
+			"src/main/webapp/swagger/swagger-ui-standalone-preset.js",
+			"src/main/webapp/swagger/swagger-ui-standalone-preset.js.map");
 
 	/**
 	 * The name of the module.
@@ -123,18 +125,18 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	public static final String c_PROP_LIB_ADD_JAR_NAME = "server.jar.additional.{$name}.name";
 	public static final String c_PROP_LIB_ADD_JAR_PACKAGE = "server.jar.additional.{$name}.package";
 	public static final String c_PROP_LIB_ADD_JAR_VERSION = "server.jar.additional.{$name}.version";
-	public static final String c_PROP_LIB_ADD_JAR_DATABASE = "server.jar.additional.{$name}.database";	
+	public static final String c_PROP_LIB_ADD_JAR_DATABASE = "server.jar.additional.{$name}.database";
 	public static final String c_PROP_LIB_ADD_JAR_PREFIX = "server.jar.additional.{$name}.table.prefix";
 	public static final String c_PROP_LIB_ADD_JAR_SCHEMA = "server.jar.additional.{$name}.database.schema";
 	public static final String c_PROP_SQL_ADD_COLUMNS = "server.sql.table.additional_fields";
 	public static final String c_PROP_SQL_ADD_COLUMNS_BASE = "server.sql.table.additional_field.{$name}";
 	public static final String c_PROP_SQL_ADD_COLUMNS_TYPE = "server.sql.table.additional_field.{$name}.type";
 	public static final String c_PROP_SQL_ADD_COLUMNS_DEFAULT = "server.sql.table.additional_field.{$name}.default";
-	public static final String c_PROP_SQL_ADD_COLUMNS_SIZE = "server.sql.table.additional_field.{$name}.size"; 
+	public static final String c_PROP_SQL_ADD_COLUMNS_SIZE = "server.sql.table.additional_field.{$name}.size";
 	public static final String c_PROP_SQL_ADD_COLUMNS_NAME = "server.sql.table.additional_field.{$name}.name";
-	public static final String c_PROP_SQL_ADD_COLUMNS_COMMENT = "server.sql.table.additional_field.{$name}.comment";  
+	public static final String c_PROP_SQL_ADD_COLUMNS_COMMENT = "server.sql.table.additional_field.{$name}.comment";
 	public static final String c_PROP_SQL_ADD_COLUMNS_NOT_NULL = "server.sql.table.additional_field.{$name}.notnull";
-	
+
 	// Evite pour la couche UI d'avoir a faire l'import du plugin configuration.
 	public static final String c_PROP_PROJECT_VERSION = GenerateConfiguration.c_PROP_PROJECT_VERSION;
 
@@ -204,7 +206,7 @@ public class GenerateStart extends PacmanGenerator_Abs {
 				v_generator.doGenerate(new BasicMonitor());
 			}
 		} catch (final IOException v_e) {
-			v_e.printStackTrace(); 
+			v_e.printStackTrace();
 		}
 	}
 
@@ -273,7 +275,7 @@ public class GenerateStart extends PacmanGenerator_Abs {
 				v_outputStream.close();
 			}
 		} finally {
-			if(null != v_inputStream) {
+			if (null != v_inputStream) {
 				v_inputStream.close();
 			}
 		}

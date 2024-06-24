@@ -2,7 +2,7 @@
 <feature
       id="fr.pacman.entity.jdbc.ui.feature"
       label="PacMan - Persistance JDBC"
-      version="4.5.1.qualifier"
+      version="4.6.0.qualifier"
       provider-name="Safr@n"
       plugin="fr.pacman.branding">
 

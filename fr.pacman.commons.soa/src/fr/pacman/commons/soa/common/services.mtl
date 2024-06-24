@@ -261,7 +261,7 @@
 [comment : Check (depends of the verb) if the operation needs to consume JSON. /]
 [query public hasToConsumeJson(o : Operation) : Boolean =
     isValidOperation(o)
-    and  o.public
+    and o.public
     and (soa::Verb::PUT = o.verb or
 	     soa::Verb::PATCH = o.verb or
 	     soa::Verb::POST = o.verb)
@@ -286,7 +286,7 @@
 
 [comment : Return the main URI for the service. /]
 [query public getUri (s : Service) : String =
-	normalizePath('/' + s.eContainer(Component).buildUriComponentVersion() + s.URI).trim()
+	normalizePath('/' + s.URI).trim()
 /]
 
 [comment : Return the main URI for the service. /]

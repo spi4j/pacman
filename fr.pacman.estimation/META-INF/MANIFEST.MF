@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.estimation
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Requirement
 Bundle-SymbolicName: fr.pacman.estimation
-Bundle-Version: 4.5.1.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.estimation.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,
