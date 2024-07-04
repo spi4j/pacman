@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.entity,
  org.obeonetwork.dsl.soa,
  fr.pacman.commons
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: fr.pacman.configuration,
  fr.pacman.configuration.common

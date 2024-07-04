@@ -310,6 +310,16 @@
 				<module>fr.pacman.update</module>
 			</modules>
 		</profile>
+		
+		<!-- Juste utile pour tester l'update site. -->
+		<profile>
+			<id>updatesite</id>
+			<modules>
+				<module>fr.pacman.branding</module>
+				<!-- Update site module. -->
+				<module>fr.pacman.update</module>				
+			</modules>
+		</profile>
 
 		<!-- Test profile. -->
 		<profile>
@@ -525,8 +535,8 @@
 	</profiles>
 
 	<properties>
-		<java.version>11</java.version>
-		<tycho-version>1.7.0</tycho-version>
+		<java.version>17</java.version>
+		<tycho-version>4.0.8</tycho-version>
 		<acceleo-version>3.6.4</acceleo-version>
 		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
 		<central-repository-url>https://repo.maven.apache.org/maven2</central-repository-url>

@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.ui,
  fr.pacman.commons,
  fr.pacman.soa,
  fr.pacman.soalight
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Import-Package: fr.pacman.entity.api

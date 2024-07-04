@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.ui,
  org.obeonetwork.dsl.soa,
  fr.pacman.commons,
  fr.pacman.commons.soa
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Export-Package: fr.pacman.soapifirst, 

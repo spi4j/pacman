@@ -10,7 +10,7 @@
 	</parent>
 	
 	<artifactId>fr.pacman.update</artifactId>
-	<packaging>eclipse-update-site</packaging>
+	<packaging>eclipse-repository</packaging>
 	<name>fr.pacman.update</name>
 	<description>Update Site Pacman pour Safr@n.</description>
 
@@ -18,12 +18,11 @@
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-packaging-plugin</artifactId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<!-- <format>${env.BUILD_NUMBER}_${env.BUILD_ID}</format> -->
-					<format>'test'</format>
-					<archiveSite>true</archiveSite>
+					<!-- Ne pas inclure les dependances transitives. -->
+					<includeAllDependencies>false</includeAllDependencies>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -37,22 +36,37 @@
 						</goals>
 						<configuration>
 							<target>
+								
+								<!-- Copy the xml file description in site archive. -->
+								<copy file="target/category.xml" 
+									tofile="target/repository/category.xml" />	
+									
 								<!-- Copy the update site folder. -->
 								<copy
 									todir="target/${project.artifactId}_${project.version}">
-									<fileset dir="target/site" />
+									<fileset dir="target/repository" />
 								</copy>
-
-								<!-- Copy the update site archive. -->
-								<copy file="target/site_assembly.zip"
-									tofile="target/${project.artifactId}_${project.version}.zip" />
+								
+								<!-- Delete the initial zip file. -->
+								<delete file="target/${project.artifactId}-${project.version}.zip" />
+								
+								<!-- Replace the initial zip file by the new version. -->
+                    			<zip destfile="target/${project.artifactId}_${project.version}.zip" update="true">
+                        			<fileset dir="target/${project.artifactId}_${project.version}" />
+                    			</zip>
 
 								<!-- Delete the other useless archive. -->
-								<delete file="target/site.zip" />
-
-								<!-- Delete the directory created by the antrun plugin. -->
+							
+								<delete>
+									<fileset dir="target/">
+										<include name ="*.properties"/>
+										<!-- include name="*.xml" --> 
+									</fileset>
+								</delete>
+							
+								<delete dir="target/targetPlatformRepository" />		
+								<delete dir="target/repository" />						
 								<delete dir="target/antrun" />
-
 							</target>
 						</configuration>
 					</execution>

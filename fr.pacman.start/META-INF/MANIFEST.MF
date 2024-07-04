@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.core.runtime,
  fr.pacman.commons,
  fr.pacman.configuration,
  fr.pacman.test;resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Export-Package: fr.pacman.start

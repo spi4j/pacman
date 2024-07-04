@@ -13,5 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  fr.pacman.commons,
  fr.pacman.configuration
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
