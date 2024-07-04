@@ -51,19 +51,24 @@ public class GenerateGwtUI extends SafranGenerator_Abs<IFile> {
 	}
 
 	@Override
-	public List<String> getProjectsNamesToRefresh() {
+	protected List<String> getProjectsNamesToRefresh() {
 		return Arrays.asList(getModelProjectName(), getClientGwtProjectName());
 	}
 
 	@Override
-	public List<Boolean> getValuesOfIncompatibleProperties() {
+	protected List<Boolean> getValuesOfIncompatibleProperties() {
 
 		return Arrays.asList(Boolean.parseBoolean(ProjectProperties.getIsLibraryRs()),
 				"GWT".equalsIgnoreCase(ProjectProperties.getClient()) ? Boolean.FALSE : Boolean.TRUE);
 	}
 	
 	@Override
-	public List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
+	protected List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
 		return Arrays.asList(SafranGenerator_Enum.CINEMATIC);
+	}
+
+	@Override
+	protected boolean getOrganizeImports() {
+		return true;
 	}
 }

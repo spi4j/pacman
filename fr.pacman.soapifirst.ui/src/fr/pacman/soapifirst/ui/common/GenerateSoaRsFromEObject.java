@@ -55,7 +55,7 @@ public class GenerateSoaRsFromEObject extends SafranGenerator_Abs<EObject> {
 	}
 
 	@Override
-	public List<String> getProjectsNamesToRefresh() {
+	protected List<String> getProjectsNamesToRefresh() {
 
 		final List<String> v_result = new ArrayList<String>();
 		v_result.add(getModelProjectName());
@@ -65,12 +65,17 @@ public class GenerateSoaRsFromEObject extends SafranGenerator_Abs<EObject> {
 	}
 
 	@Override
-	public List<Boolean> getValuesOfIncompatibleProperties() {
+	protected List<Boolean> getValuesOfIncompatibleProperties() {
 		return Arrays.asList(!Boolean.parseBoolean(ProjectProperties.getIsLibraryRs()));
 	}
 	
 	@Override
-	public List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
+	protected List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
 		return Arrays.asList(SafranGenerator_Enum.SOA);
+	}
+	
+	@Override
+	protected boolean getOrganizeImports() {
+		return true;
 	}
 }

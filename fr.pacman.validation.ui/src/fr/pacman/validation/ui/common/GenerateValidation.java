@@ -56,12 +56,17 @@ public class GenerateValidation extends SafranGenerator_Abs<URI>
    }
    
    @Override
-   public List<Boolean> getValuesOfIncompatibleProperties() {
+   protected List<Boolean> getValuesOfIncompatibleProperties() {
       return null;
    }
    
    @Override
-   public List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
+   protected List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
       return null;
    }
+   
+	@Override
+	protected boolean getOrganizeImports() {
+		return false;
+	}
 }

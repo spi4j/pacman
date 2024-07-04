@@ -144,7 +144,7 @@ public class GenerateCinematicJsp extends PacmanGenerator_Abs {
 	@Override
 	// Desenclanche le cache pour la generation des id pour 
 	// les div virtuesl des pages jsp.
-	public boolean getSwitchQueryCache() {
+	protected boolean getSwitchQueryCache() {
 		return Boolean.FALSE;
 	}
 }

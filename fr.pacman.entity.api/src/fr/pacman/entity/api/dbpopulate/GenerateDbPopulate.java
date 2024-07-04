@@ -136,7 +136,7 @@ public class GenerateDbPopulate extends PacmanGenerator_Abs
    }
 
    @Override
-   public boolean getSwitchQueryCache ()
+   protected boolean getSwitchQueryCache ()
    {
       return Boolean.TRUE;
    }

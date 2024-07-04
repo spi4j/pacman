@@ -533,8 +533,8 @@
 		<acceleo-releases_url>https://repo.eclipse.org/content/repositories/acceleo-releases</acceleo-releases_url>
 		<odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.3/community/11.3.2/repository/</odc-updatesite-url>
 		<!-- <odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.6/community/11.6.0/repository/</odc-updatesite-url>  -->
-		<is-updatesite-url>file:///C:/Travail/updateSiteDeltaPack-4.1.0</is-updatesite-url>
-		<eclipse-updatesite-url>http://download.eclipse.org/releases/2019-06/</eclipse-updatesite-url> 
+		<is-updatesite-url>file:///C:/Travail/updateSiteDeltaPack-5.1.0</is-updatesite-url>
+		<eclipse-updatesite-url>http://download.eclipse.org/releases/2023-03/</eclipse-updatesite-url> 
 		<!-- <eclipse-updatesite-url>http://download.eclipse.org/releases/2020-06/</eclipse-updatesite-url>  -->
 	</properties>
 </project>

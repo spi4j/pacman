@@ -37,7 +37,7 @@ public class GenerateConfigurationUI extends SafranGenerator_Abs<IFile> {
 	}
 
 	@Override
-	public List<String> getProjectsNamesToRefresh() {
+	protected List<String> getProjectsNamesToRefresh() {
 
 		// On prend la racine du projet.
 		ArrayList<String> v_projectsToRefresh = new ArrayList<>();
@@ -46,12 +46,17 @@ public class GenerateConfigurationUI extends SafranGenerator_Abs<IFile> {
 	}
 
 	@Override
-	public List<Boolean> getValuesOfIncompatibleProperties() {
+	protected List<Boolean> getValuesOfIncompatibleProperties() {
 		return null;
 	}
 
 	@Override
-	public List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
+	protected List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
 		return Arrays.asList(SafranGenerator_Enum.ENTITY, SafranGenerator_Enum.SOA);
+	}
+	
+	@Override
+	protected boolean getOrganizeImports() {
+		return true;
 	}
 }

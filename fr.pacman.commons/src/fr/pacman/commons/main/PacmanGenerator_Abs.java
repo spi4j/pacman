@@ -42,6 +42,16 @@ public abstract class PacmanGenerator_Abs extends AbstractAcceleoGenerator
    protected abstract String[] getModuleTemplates ();
 
    /**
+    * @return le nom du projet du generateur.
+    */
+   public abstract String getProjectName ();
+   
+   /**
+    * @return le generateur doit il activer ou desactiver le cache pour les queries.
+    */
+   protected abstract boolean getSwitchQueryCache ();   
+   
+   /**
     * L'URI du modele.
     */
    protected URI _modelURI;
@@ -143,16 +153,6 @@ public abstract class PacmanGenerator_Abs extends AbstractAcceleoGenerator
    {
       super.registerPackages(p_resourceSet);
    }
-
-   /**
-    * @return le nom du projet du generateur.
-    */
-   public abstract String getProjectName ();
-   
-   /**
-    * @return le generateur doit il activer ou desactiver le cache pour les queries.
-    */
-   public abstract boolean getSwitchQueryCache ();
 
    /**
     * Methode principale pour le generateur.

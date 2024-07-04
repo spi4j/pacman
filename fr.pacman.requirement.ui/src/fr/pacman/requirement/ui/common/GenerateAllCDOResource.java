@@ -49,17 +49,22 @@ public class GenerateAllCDOResource extends SafranGenerator_Abs<CDOResource> {
 	}
 
 	@Override
-	public List<String> getProjectsNamesToRefresh() {
+	protected List<String> getProjectsNamesToRefresh() {
 		return Arrays.asList(getModelProjectName(), getCommonsProjectName());
 	}
 	
 	@Override
-	public List<Boolean> getValuesOfIncompatibleProperties() {
+	protected List<Boolean> getValuesOfIncompatibleProperties() {
 		return Arrays.asList(Boolean.parseBoolean(ProjectProperties.getIsLibraryRs()));
 	}
 	
 	@Override
-	public List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
+	protected List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
 		return Arrays.asList(SafranGenerator_Enum.REQUIREMENT);
+	}
+	
+	@Override
+	protected boolean getOrganizeImports() {
+		return true;
 	}
 }

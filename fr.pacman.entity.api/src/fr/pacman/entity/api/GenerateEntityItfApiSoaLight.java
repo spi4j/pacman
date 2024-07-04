@@ -162,7 +162,7 @@ public class GenerateEntityItfApiSoaLight extends PacmanGenerator_Abs
    }
 
    @Override
-   public boolean getSwitchQueryCache ()
+   protected boolean getSwitchQueryCache ()
    {
       return Boolean.FALSE;
    }
