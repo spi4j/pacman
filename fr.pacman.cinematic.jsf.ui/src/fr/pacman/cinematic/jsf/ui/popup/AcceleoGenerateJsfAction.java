@@ -18,13 +18,13 @@ import org.eclipse.core.runtime.ILog;
 import fr.pacman.cinematic.jsf.ui.Activator;
 import fr.pacman.cinematic.jsf.ui.common.GenerateJsfUI;
 //import fr.pacman.cinematic.jsf.ui.common.GenerateJsfUI;
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 
 /**
  * Entity code generation.
  */
-public class AcceleoGenerateJsfAction extends AcceleoGenerateSafranAction<IFile>
+public class AcceleoGenerateJsfAction extends AcceleoGenerateSafranActionOld<IFile>
 {
 
    @Override

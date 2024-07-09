@@ -5,12 +5,12 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.ILog;
 
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.configuration.ui.Activator;
 import fr.pacman.configuration.ui.common.GenerateConfigurationUI;
 
-public class AcceleoGenerateConfigurationAction extends AcceleoGenerateSafranAction<IFile> {
+public class AcceleoGenerateConfigurationAction extends AcceleoGenerateSafranActionOld<IFile> {
 
 	@Override
 	protected String getPluginId() {

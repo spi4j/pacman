@@ -58,12 +58,12 @@ public abstract class PacmanUIGenerator_Abs {
 	 * 
 	 */
 	// protected List<EObject> _values;
-
+	
 	/**
 	 * The root path for the project. Serves as a basis for calculation of all other
 	 * paths (generation, refresh...).
 	 */
-	private File _basePath;
+	private File _rootPath;
 
 	/**
 	 * The file extension for the model file.
@@ -85,7 +85,7 @@ public abstract class PacmanUIGenerator_Abs {
 	public PacmanUIGenerator_Abs(IResource p_selectedResource) {
 
 		_resources = Collections.singletonList(p_selectedResource.getLocation().toString());
-		_basePath = new File(p_selectedResource.getLocation().toString()).getParentFile();
+		_rootPath = new File(p_selectedResource.getLocation().toString()).getParentFile();
 		_modelExt = URI.createPlatformResourceURI(((IFile) p_selectedResource).getFullPath().toString(), true)
 				.fileExtension();
 	}
@@ -93,7 +93,7 @@ public abstract class PacmanUIGenerator_Abs {
 	/**
 	 * Constructor.
 	 * 
-	 * @param p_selectedEObjects
+	 * @param p_selectedEObjects the selected....
 	 */
 	public PacmanUIGenerator_Abs(List<EObject> p_selectedEObjects) {
 
@@ -122,7 +122,16 @@ public abstract class PacmanUIGenerator_Abs {
 	 * 
 	 * @return the list off all compatible model files extensions.
 	 */
+	// TODO devient inutile maintenant avec la nouvelle disposition des menus ui associés aux extensions ?
+	// Mais peu aussi servir de double sécurité....
 	protected abstract List<SafranGenerator_Enum> getCompatibleModels();
+
+	/**
+	 * Flag for automatic import management.
+	 * 
+	 * @return 'true' to activate the automatic import management else 'false'.
+	 */
+	protected abstract boolean getOrganizeImports();
 
 	/**
 	 * Return the list of generators to execute for code generation.
@@ -143,7 +152,7 @@ public abstract class PacmanUIGenerator_Abs {
 	 */
 	public void generate() {
 
-		// TODO : A compléter....
+		// TODO : A compléter....améliorer, etc....
 		final IRunnableWithProgress v_operation = new IRunnableWithProgress() {
 
 			@Override
@@ -154,7 +163,7 @@ public abstract class PacmanUIGenerator_Abs {
 					ErrorGeneration.clear();
 
 					// Loading all '.properties' files for the generator.
-					PacmanPropertiesManager.initProperties(_basePath.getPath());
+					PacmanPropertiesManager.initProperties(_rootPath.getPath());
 
 					// Resetting some services.
 					ImportsUtils.resetAdditionalTypes();
@@ -167,12 +176,13 @@ public abstract class PacmanUIGenerator_Abs {
 						// Launch each registered generator.
 						for (PacmanGenerator_Abs v_generator : getGenerators()) {
 							v_generator.setResources(_resources);
-							v_generator.setBaseTarget(_basePath.getParent());
+							v_generator.setRootPath(_rootPath.getParent());
 							v_generator.generate();
 						}
 					} catch (final Exception p_e) {
 //	                           final IStatus v_status = new Status(IStatus.ERROR, getPluginId(), p_e.getMessage(), p_e);
 //	                           getLogger().log(v_status);
+						p_e.printStackTrace();
 
 					} finally {
 						// printDiagnostics(evaluator.getGenerationResult());
@@ -200,8 +210,9 @@ public abstract class PacmanUIGenerator_Abs {
 
 		} catch (final InvocationTargetException v_e) {
 
+			// TODO
 		} catch (final InterruptedException v_e) {
-
+			// TODO
 		}
 	}
 
@@ -290,7 +301,7 @@ public abstract class PacmanUIGenerator_Abs {
 
 		for (String v_projectToRefresh : v_projectsNamesToRefresh) {
 
-			final File v_targetFolder = new File(_basePath.getParent() + File.separator + v_projectToRefresh);
+			final File v_targetFolder = new File(_rootPath.getParent() + File.separator + v_projectToRefresh);
 			final IContainer v_targetWorkspaceContainer = ResourcesPlugin.getWorkspace().getRoot()
 					.getContainerForLocation(new Path(v_targetFolder.getAbsolutePath()));
 
@@ -298,7 +309,8 @@ public abstract class PacmanUIGenerator_Abs {
 				try {
 					v_targetWorkspaceContainer.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 					final IWorkbenchPartSite v_targetSite = getTargetSite();
-					if (Boolean.valueOf(ProjectProperties.getIsFormatImports()) && v_targetSite != null) {
+					if (Boolean.valueOf(ProjectProperties.getIsFormatImports()) && getOrganizeImports()
+							&& v_targetSite != null) {
 						refreshImports(v_targetWorkspaceContainer.getProject(), v_targetSite);
 					}
 				} catch (CoreException p_e) {
@@ -310,7 +322,7 @@ public abstract class PacmanUIGenerator_Abs {
 	}
 
 	// TODO attention au bundleIdentifier qui doit redescendre dans la classe
-	// fille.....
+	// fille.....A quoi sert cette methode, non appelée ???
 	protected IQualifiedNameResolver createResolver() {
 		final String bundleIdentifier = "fr.pacman.soa";
 		final Bundle bundle = Platform.getBundle(bundleIdentifier);
@@ -328,7 +340,6 @@ public abstract class PacmanUIGenerator_Abs {
 	 * 
 	 * @return 'true' if any incompatible model file is detected.
 	 */
-	// TODO : passer en liste.
 	protected boolean hasIncompatibleModel() {
 
 		if (null == getCompatibleModels() || _resources.isEmpty())
@@ -399,18 +410,17 @@ public abstract class PacmanUIGenerator_Abs {
 	}
 
 	/**
-	 * Get the active (current) workbench window.
+	 * Get the active (current) workbench window. If no active workbench, take the
+	 * first in workbench list.
 	 * 
 	 * @return The current workbench window.
 	 */
 	private IWorkbenchWindow getWorkbenchWindow() {
 		IWorkbench v_workbench = PlatformUI.getWorkbench();
 
-		// Try to get the active workbench.
 		if (hasView())
 			return v_workbench.getActiveWorkbenchWindow();
 
-		// If no active workbench, take the first in workbench list.
 		if (v_workbench.getWorkbenchWindowCount() > 0)
 			return v_workbench.getWorkbenchWindows()[0];
 
@@ -418,7 +428,7 @@ public abstract class PacmanUIGenerator_Abs {
 	}
 
 	/**
-	 * Get the target site for refresh import.
+	 * Get the target site.
 	 * 
 	 * @return The target site.
 	 */

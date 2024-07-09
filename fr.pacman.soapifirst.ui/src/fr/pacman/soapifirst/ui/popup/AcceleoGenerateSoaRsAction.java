@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.ILog;
 
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.soapifirst.ui.Activator;
 import fr.pacman.soapifirst.ui.common.GenerateSoaRsFromFile;
@@ -13,7 +13,7 @@ import fr.pacman.soapifirst.ui.common.GenerateSoaRsFromFile;
 /**
  * Soa import swagger code generation.
  */
-public class AcceleoGenerateSoaRsAction extends AcceleoGenerateSafranAction<IFile> {
+public class AcceleoGenerateSoaRsAction extends AcceleoGenerateSafranActionOld<IFile> {
 
 	@Override
 	protected String getPluginId() {

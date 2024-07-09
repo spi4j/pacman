@@ -50,7 +50,7 @@ public abstract class PacmanGenerator_Abs {
 	/**
 	 * The root base path for code generation.
 	 */
-	private String _baseTarget;
+	private String _rootPath;
 
 	/**
 	 * Creates the default {@link ResourceSet}.
@@ -76,8 +76,8 @@ public abstract class PacmanGenerator_Abs {
 	 * 
 	 * @param p_baseTarget the root base path for code generation
 	 */
-	public void setBaseTarget(String p_baseTarget) {
-		_baseTarget = p_baseTarget;
+	public void setRootPath(String p_rootPath) {
+		_rootPath = p_rootPath;
 	}
 
 	/**
@@ -124,9 +124,9 @@ public abstract class PacmanGenerator_Abs {
 	}
 
 	/**
-	 * Get
+	 * Get the list off all templates to execute for the acceleo module
 	 * 
-	 * @param module
+	 * @param module the acceleo module.
 	 * 
 	 * @return a list of templates to execute, depending the type of the selected
 	 *         resource.
@@ -189,7 +189,7 @@ public abstract class PacmanGenerator_Abs {
 				Map<String, Object> variables = new LinkedHashMap<>();
 				for (EObject value : values) {
 					variables.put(parameterName, value);
-					URI targetURI = URI.createFileURI(_baseTarget + "/" + getProjectName() + "/");
+					URI targetURI = URI.createFileURI(_rootPath + "/" + getProjectName() + "/");
 					URI logURI = null;
 					System.out.println(">>> generation dans " + targetURI.path());
 					AcceleoUtil.generate(template, variables, evaluator, queryEnvironment, strategy, targetURI, logURI);

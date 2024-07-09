@@ -1,4 +1,4 @@
-package fr.pacman.soa;
+package fr.pacman.entity.api;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -15,55 +15,30 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 
-/**
- * 
- * @author MINARM
- */
-public class GenerateCommonSoa extends PacmanGenerator_Abs {
+public class GenerateServerPersistenceApi extends PacmanGenerator_Abs {
 
-	/**
-	 * Get the list of templates to execute in the selected generator, depending the
-	 * type of the selected object.
-	 * 
-	 * @return the list of templates to execute.
-	 */
 	@Override
 	protected List<String> getTemplates() {
 
 		// TODO à modifier / compléter en fonction de la sélection. Passer qqe chose en
 		// paramètre pour avoir le discriminant.
 		List<String> v_templates = new ArrayList<>();
-		v_templates.add("GenerateCommonSystem");
+		v_templates.add("generatePersistenceApi");
 		return v_templates;
 	}
 
-	/**
-	 * Get the module full qualified name.
-	 * 
-	 * @return the module qualified name under string format.
-	 */
-	@Override
-	public String getModuleQualifiedName() {
-
-		return "fr::pacman::soa::generateCommonSoa";
-	}
-
-	/**
-	 * Get the project specifically impacted by the code generation.
-	 * 
-	 * @return the project name.
-	 */
 	@Override
 	public String getProjectName() {
 
-		return ProjectProperties.getCommonProjectName();
+		return ProjectProperties.getServerProjectName();
 	}
 
-	/**
-	 * Get the code generation options.
-	 * 
-	 * @return a list of options for code generation.
-	 */
+	@Override
+	public String getModuleQualifiedName() {
+
+		return "fr::pacman::entity::api::generateServerPersistenceApi";
+	}
+
 	@Override
 	protected Map<String, String> getOptions() {
 
@@ -75,9 +50,11 @@ public class GenerateCommonSoa extends PacmanGenerator_Abs {
 
 	@Override
 	protected List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
-			final Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels) {
+			Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels) {
+
 		final List<EObject> values = AcceleoUtil.getValues(type, queryEnvironment, resourceSetForModels.getResources(),
 				valuesCache);
 		return values;
 	}
+
 }

@@ -18,13 +18,13 @@ import org.eclipse.emf.cdo.eresource.CDOResource;
 import fr.pacman.cinematic.jsf.ui.Activator;
 import fr.pacman.cinematic.jsf.ui.common.GenerateJsfUICDOResource;
 //import fr.pacman.cinematic.jsf.ui.common.GenerateJsfUICDOResource;
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 
 /**
  * Entity code generation.
  */
-public class AcceleoGenerateJsfActionCDOResource extends AcceleoGenerateSafranAction<CDOResource>
+public class AcceleoGenerateJsfActionCDOResource extends AcceleoGenerateSafranActionOld<CDOResource>
 {
 
    @Override

@@ -716,22 +716,26 @@
   [for (r : environment::Reference | d.referencesNoStar())], [r.nameParam()/][/for]
 [/template]
 
-[template public toString(d : environment::DTO)]
-  getClass().getSimpleName() + '['['/]' + [d.namePK_ID()/] [d.endToString()/] + ']';[/template]
-
-[template public endToString(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())]
-    + ", " + [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')] getIdentifiant() [else][a.name.normalize().apply_methodGet()/]()[/if]
-     [/for]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-       [if (not r.isPropertyFromParent(d))] + ", " + [r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ()[/if]
-    [/if]
-  [/for]
-   [for (r : environment::Reference | d.referencingStar())]
-     [if (not r.isPropertyFromParent(d))] + ", " + [r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] () [/if]
-   [/for]
+[template public toString(d : environment::DTO) post(self.trim())]
+  getClass().getSimpleName() + '['['/]' + [d.namePK_ID()/] [d.endToString()/] + ']';
 [/template]
+
+[query public endToString(d : environment::DTO) : String = 
+  '+ ", " + ' +
+  (d.attributesNotComputed()->collect(a |
+    if a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant' then
+      'getIdentifiant()'
+    else
+      a.name.normalize().apply_methodGet() + '()'
+    endif)
+   +
+   d.referencesNoStar()->select(r | not r.referencedType.oclAsType(environment::DTO).isNotPersistent() and not r.isPropertyFromParent(d))
+   ->collect(r | r.name.toLowerFirst().apply_methodGet() + r.namePK_ID() + '()')
+   +
+   d.referencingStar()->select(r | not r.isPropertyFromParent(d))
+   ->collect(r | r.nameBaseReferenceInverse().apply_methodGet() + r.namePK_ID() + '()')
+  )->sep(' + ", " + ')->toString()
+/]
 
 [template public resetDtoReferencingParamsId(d : environment::DTO)]
   [for (r : environment::Reference | d.referencingStar())], final [r.genPkType()/] [r.nameParamInverseId()/][/for]

@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.ILog;
 
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.entity.xmi.ui.Activator;
 import fr.pacman.entity.xmi.ui.common.GenerateXmiUI;
@@ -23,7 +23,7 @@ import fr.pacman.entity.xmi.ui.common.GenerateXmiUI;
 /**
  * Entity code generation.
  */
-public class AcceleoGenerateXmiAction extends AcceleoGenerateSafranAction<IFile>
+public class AcceleoGenerateXmiAction extends AcceleoGenerateSafranActionOld<IFile>
 {
 
    @Override

@@ -5,12 +5,12 @@ import java.util.List;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.ecore.EObject;
 
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.soapifirst.ui.Activator;
 import fr.pacman.soapifirst.ui.common.GenerateSoaRsFromEObject;
 
-public class AcceleoGenerateSoaRsActionEObject extends AcceleoGenerateSafranAction<EObject> {
+public class AcceleoGenerateSoaRsActionEObject extends AcceleoGenerateSafranActionOld<EObject> {
 
 	@Override
 	protected String getPluginId() {

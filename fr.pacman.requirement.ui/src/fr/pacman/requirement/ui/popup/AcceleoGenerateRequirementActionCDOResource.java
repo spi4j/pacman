@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.cdo.eresource.CDOResource;
 
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
 import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 import fr.pacman.requirement.ui.Activator;
 import fr.pacman.requirement.ui.common.GenerateAllCDOResource;
@@ -23,7 +23,7 @@ import fr.pacman.requirement.ui.common.GenerateAllCDOResource;
 /**
  * Entity code generation.
  */
-public class AcceleoGenerateRequirementActionCDOResource extends AcceleoGenerateSafranAction<CDOResource>
+public class AcceleoGenerateRequirementActionCDOResource extends AcceleoGenerateSafranActionOld<CDOResource>
 {
 
    @Override
