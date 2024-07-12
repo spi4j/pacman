@@ -30,7 +30,6 @@
   
   [r.comClass(r.roleEntityItf())/]
   public interface [r.buildReferenceEntityInterfaceName()/] extends [if (r.hasAutomaticColumns())][r.buildAppliEntityInterfaceName()/]<[r.genPkType()/]>[else][r.getClassNameForEntity_Itf()/]<[r.genPkType()/]>[/if]
-  
   {
      // CONSTANTES
   

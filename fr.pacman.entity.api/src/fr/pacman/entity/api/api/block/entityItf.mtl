@@ -34,12 +34,7 @@
   
   
   [e.comClass(e.roleEntityItf())/]
-  public interface [e.buildEntityInterfaceName()/] extends [if (e.hasAutomaticColumns())]
-                                                             [e.buildAppliEntityInterfaceName()/]<[e.genPkType()/]>[if (e.useSpi4jSecurity() and not e.useMatching() and e.entityIsUser())], User_Itf[/if]
-                                                           [else]
-                                                             [e.getClassNameForEntity_Itf()/]<[e.genPkType()/]>[if (e.useSpi4jSecurity() and not e.useMatching() and e.entityIsUser())], User_Itf[/if]
-                                                           [/if]
-  
+  public interface [e.buildEntityInterfaceName()/] extends [if (e.hasAutomaticColumns())][e.buildAppliEntityInterfaceName()/]<[e.genPkType()/]>[if (e.useSpi4jSecurity() and not e.useMatching() and e.entityIsUser())], User_Itf[/if][else][e.getClassNameForEntity_Itf()/]<[e.genPkType()/]>[if (e.useSpi4jSecurity() and not e.useMatching() and e.entityIsUser())], User_Itf[/if][/if]
   {
      // CONSTANTES
   

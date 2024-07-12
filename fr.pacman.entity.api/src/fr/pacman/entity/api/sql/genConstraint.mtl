@@ -15,8 +15,7 @@
   /****************************************************************/
   ['Constraints'.genSlashedLine(r.sizeHeader())/]
   /****************************************************************/
-  [for (n : environment::Namespace | r.ownedNamespaces)][n.genConstraint()/][/for]
-[/template]
+  [for (n : environment::Namespace | r.ownedNamespaces)][n.genConstraint()/][/for][/template]
 
 [template public genConstraintWithoutHeader(r : entity::Root)]
   [for (b : environment::Namespace | r.ownedNamespaces)]
@@ -28,10 +27,7 @@
   [for (sn : environment::Namespace | n.ownedNamespaces)]
     [sn.genConstraint()/]
   [/for]
-  [for (e : entity::Entity | n.types->select(el | el.oclIsKindOf(entity::Entity)))]
-    [if (not e.isNotPersistent() or e.useMatching())][e.genConstraint()/][/if]
-  [/for]
-[/template]
+  [for (e : entity::Entity | n.types->select(el | el.oclIsKindOf(entity::Entity)))][if (not e.isNotPersistent() or e.useMatching())][e.genConstraint()/][/if][/for][/template]
 
 [template private genConstraint(e : entity::Entity)]
   [for (a : environment::Attribute | e.attributes())]
@@ -51,10 +47,7 @@
 
 [comment : construction du nom la table en fonction de l'entite externe (librairie) ou interne pour les relations bi-directionnelles. /]
 [template private referencedNameTableWithSchema(r : environment::Reference)]
-  [let e : entity::Entity = r.referencedType.oclAsType(entity::Entity)]
-    [if (e.isLibraryEntity(r.getApplicationName()))][e.nameLibraryTableWithSchema()/][else][e.nameTableWithSchema()/][/if]
-  [/let]
-[/template]
+  [let e : entity::Entity = r.referencedType.oclAsType(entity::Entity)][if (e.isLibraryEntity(r.getApplicationName()))][e.nameLibraryTableWithSchema()/][else][e.nameTableWithSchema()/][/if][/let][/template]
 
 [comment : le nouveau template permet simplement de passer le compteur (problématique OCL)./]
 [template private genFK(e : entity::Entity, ent : entity::Entity, compteur : Integer)]

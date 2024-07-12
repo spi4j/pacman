@@ -12,14 +12,12 @@
 */]
 [template public getComParamIn(p : environment::Property)]
       * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
-      *           (In)[if (p.isMandatory())](*)[/if]
-   [p.description(false)/][/template]
+      *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
 
 [template public getComParamsIn(o : soa::Operation)]
   [for (p : soa::Parameter | o.input)]
         * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
-        *           (In)[if (p.isMandatory())](*)[/if]
-     [p.description(false)/]
+        *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
   [/for]
 [/template]
 
@@ -41,13 +39,11 @@
 
 [template public comParamIn(p : environment::Property)]
       * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-      *           (In)[if (p.isMandatory())](*)[/if]
-   [p.description(false)/][/template]
+      *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
 
 [template public comParamOut(p : environment::Property)]
       * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-      *           (Out)[if (p.isMandatory())](*)[/if]
-   [p.description(false)/][/template]
+      *           (Out)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
 
 [template public comReturn(p : environment::Property)]
       * @return [p.description(false)/][/template]
@@ -56,22 +52,15 @@
       * [s/] [p.description(true)/][/template]
 
 [template private description(p : environment::Property, lowerFirst : Boolean)]
-  [if (p.description = null)][p.name/].[else]
-                                         [if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if]
-                                         .[/if]
-[/template]
+  [if (p.description = null)][p.name/].[else][if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if].[/if][/template]
 
 [template private description(p : soa::Parameter, lowerFirst : Boolean)]
-  [if (p.description = null)][p.name/].[else]
-                                         [if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if]
-                                         .[/if]
-[/template]
+  [if (p.description = null)][p.name/].[else][if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if].[/if][/template]
 
 [template public comParamsIn(o : soa::Operation)]
   [for (p : soa::Parameter | o.input)]
         * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-        *           (In)[if (p.isMandatory())](*)[/if]
-     [p.description(false)/]
+        *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
   [/for]
 [/template]
 

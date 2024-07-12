@@ -223,8 +223,7 @@
   [/if]
   [if (any.hasHttpEmbeddedServer())]
     		<fileSet>
-    			<directory>../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
-    /src/main/resources</directory>
+    			<directory>../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]/src/main/resources</directory>
     			<outputDirectory>bin</outputDirectory>
     			<includes>
     				<include>EmbeddedTomcat.bat</include>
@@ -252,17 +251,13 @@
             </fileSet>
   [/if]
           <fileSet>
-  			<directory>../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]server[/if]
-  /src/main/resources</directory>
-              <outputDirectory>[if (any.isLibraryRS())]properties[else]conf[/if]
-  </outputDirectory>
+  			<directory>../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]server[/if]/src/main/resources</directory>
+              <outputDirectory>[if (any.isLibraryRS())]properties[else]conf[/if]</outputDirectory>
               <includes>
                   <!-- Exemple de configuration log4j -->
                   <include>log4j2.xml</include>
   				[if (any.isLibraryRS())]<include>[any.getApplicationName()/]Application.properties</include>[/if]
-  
   				[if (any.isLibraryRS())]<include>[any.getApplicationName()/]Tokens.properties</include>[/if]
-  
               </includes>
           </fileSet>
           <fileSet>

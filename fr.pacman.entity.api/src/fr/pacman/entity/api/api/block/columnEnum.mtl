@@ -25,28 +25,23 @@
 
 [template private enumStructAttribute(a : environment::Attribute)]
      /** [a.nameSimpleProperty().apply_attributeEnum()/]. */
-     [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferenceId(r : environment::Reference, compteur : Integer)]
      /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
-     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferenceId(r : environment::Reference)]
      /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
-     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferencingId(r : environment::Reference, compteur : Integer)]
      /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
-     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferencingId(r : environment::Reference)]
      /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
-     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [comment sur la base de PersonneColomn_Enum en r97 /]
 [template public colomnEnum(e : entity::Entity)]

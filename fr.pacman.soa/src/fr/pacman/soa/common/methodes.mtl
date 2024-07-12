@@ -146,13 +146,7 @@
 
 [comment : /]
 [template public parametersXtoFromDto(p : soa::Parameter)]
-  [if (p.type.oclIsTypeOf(environment::DTO))]
-    [let return : environment::DTO = p.type.oclAsType(environment::DTO)]
-      [p.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (p.isMultiple())]List[/if]
-      XtoTo[if (p.isMultiple())]List[/if]
-      Dto ([p.name.apply_parameterMethodClassicIn()/])[/let]
-  [else][p.name.apply_parameterMethodClassicIn()/][/if]
-[/template]
+  [if (p.type.oclIsTypeOf(environment::DTO))][let return : environment::DTO = p.type.oclAsType(environment::DTO)][p.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (p.isMultiple())]List[/if]XtoTo[if (p.isMultiple())]List[/if]Dto ([p.name.apply_parameterMethodClassicIn()/])[/let][else][p.name.apply_parameterMethodClassicIn()/][/if][/template]
 
 [query private paramsInDto(inputs : OrderedSet(soa::Parameter)) : Sequence(String) = inputs->asSequence()->collect(temp1 | temp1.paramInDto())/]
 

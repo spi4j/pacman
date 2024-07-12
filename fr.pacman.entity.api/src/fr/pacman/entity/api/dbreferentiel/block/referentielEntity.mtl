@@ -177,14 +177,12 @@
   
   [for (a : environment::Attribute | e.attributesNoPk())]
               /** L'attribut [a.name/]	*/
-              [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
-     );
+              [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if] );
     [if (e.hasExcludeCriteria())]
       [if (e.excludeCriteria().contains(a.physicalName().toString()))]
                   @SuppressWarnings("unchecked")
                   Collection <String> [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map exclude criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
-                  if ( [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
-         ) )
+                  if ( [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if] ) )
                   {
                     ['filter enregistrement'.apply_variableDefault()/] = true;
                   }
@@ -194,8 +192,7 @@
       [if (e.includeCriteria().contains(a.physicalName().toString()))]
                   @SuppressWarnings("unchecked")
                   Collection <String> [('values include ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map include criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
-                  if ( ![('values include ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
-         ) )
+                  if ( ![('values include ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if] ) )
                   {
           	        ['filter enregistrement'.apply_variableDefault()/] = true;
                   }
@@ -234,14 +231,12 @@
   [/for]
   [for (a : environment::Attribute | e.getInheritDtoAttributes())]
               /** L'attribut [a.name/]	*/
-              [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
-     );
+              [(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if] );
     [if (e.hasExcludeCriteria())]
       [if (e.excludeCriteria().contains(a.physicalName().toString()))]
                   @SuppressWarnings("unchecked")
                   Collection <String> [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map exclude criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
-                  if ( [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
-         ) )
+                  if ( [('values exclude ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if] ) )
                   {
                     ['filter enregistrement'.apply_variableDefault()/] = true;
                   }
@@ -251,8 +246,7 @@
       [if (e.includeCriteria().contains(a.physicalName().toString()))]
                  @SuppressWarnings("unchecked")	
                  Collection <String> [('values include ' + a.nameSimpleProperty()).apply_variableDefault()/] = (Collection <String>) ['map include criteria'.apply_variableDefault()/].get( "[a.physicalName()/]" );
-                 if ( ![('values include ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if]
-         ) )
+                 if ( ![('values include ' + a.nameSimpleProperty()).apply_variableDefault()/].contains( [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.valueForColumn(e.buildEntityColumnEnumName(), 'csv line'.apply_variableDefault())/][/if] ) )
                  {
                     ['filter enregistrement'.apply_variableDefault()/] = true;
                  }

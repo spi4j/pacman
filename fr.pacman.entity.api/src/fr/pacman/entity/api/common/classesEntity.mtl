@@ -10,16 +10,13 @@
 [query private hasPhysicalName(e : entity::Entity) : Boolean = e.getAnnotationBody('PHYSICAL_NAME', false) <> null/]
 
 [template public physicalName(e : entity::Entity)]
-  [if (e.hasPhysicalName())][e.getAnnotationBody('PHYSICAL_NAME', false)/][else][e.name.sanitize().toUpper()/][/if]
-[/template]
+  [if (e.hasPhysicalName())][e.getAnnotationBody('PHYSICAL_NAME', false)/][else][e.name.sanitize().toUpper()/][/if][/template]
 
 [template public physicalName(p : environment::Property)]
-  [if (p.hasPhysicalName())][p.getAnnotationBody('PHYSICAL_NAME', false)/][else][p.name.sanitize().toUpper()/][/if]
-[/template]
+  [if (p.hasPhysicalName())][p.getAnnotationBody('PHYSICAL_NAME', false)/][else][p.name.sanitize().toUpper()/][/if][/template]
 
 [template public physicalNameJointure(r : environment::Reference)]
-  [if (r.hasPhysicalName())][r.getAnnotationBody('PHYSICAL_NAME', false)/][else][r.containingType.oclAsType(entity::Entity).name.sanitize().toUpper()/][r.referencedType.oclAsType(entity::Entity).name.sanitize().toUpper()/][/if]
-[/template]
+  [if (r.hasPhysicalName())][r.getAnnotationBody('PHYSICAL_NAME', false)/][else][r.containingType.oclAsType(entity::Entity).name.sanitize().toUpper()/][r.referencedType.oclAsType(entity::Entity).name.sanitize().toUpper()/][/if][/template]
 
 [comment NTITY : Teste si une propriété (attribut ou référence) est obligatoire/]
 [query public isMandatory(p : environment::Property) : Boolean = p.isMandatoryEntity()/]

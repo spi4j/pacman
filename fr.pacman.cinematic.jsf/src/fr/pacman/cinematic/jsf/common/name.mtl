@@ -19,5 +19,4 @@
 [query public transformList(chaine : String) : String = if chaine.index('HasList_Itf') > 0 then chaine.replace('HasList_Itf', 'List') else if chaine.index('HasSelection_Itf') > 0 then chaine.replace('HasSelection_Itf', 'List') else if chaine.index('HasMultipleSelection_Itf') > 0 then chaine.replace('HasMultipleSelection_Itf', 'List') else chaine endif endif endif/]
 
 [template public getLabel(anAVE : view::AbstractViewElement) post(self.trim())]
-  [if (not (anAVE.label = null) and anAVE.label.size() > 0)][anAVE.label/][else][anAVE.name/][/if]
-[/template]
+  [if (not (anAVE.label = null) and anAVE.label.size() > 0)][anAVE.label/][else][anAVE.name/][/if][/template]

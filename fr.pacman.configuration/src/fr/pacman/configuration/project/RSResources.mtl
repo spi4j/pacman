@@ -280,7 +280,6 @@
     import jakarta.ws.rs.ext.Provider;
     
     [if (any.useSpi4jSecurity())]import fr.spi4j.lib.security.Spi4jSecurity_Abs;[/if]
-    
     import fr.spi4j.ws.rs.RsFilter_Abs;
     import fr.spi4j.ws.rs.RsFilterConfigurator;
     import fr.spi4j.ws.rs.RsAuthTokenXtoWrapper;

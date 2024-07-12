@@ -43,14 +43,12 @@
 [template private genAppliDtoAbs(m : soa::System)]
   
   [if (m.hasAutomaticColumns())][m.genDtoAppliAbs()/][/if]
-  
 [/template]
 
 [comment : Generation de la classe regroupant les champs additionnels (XTO). /]
 [template private genAppliXtoAbs(m : soa::System)]
   
   [if ((m.clientNeedXto() or m.useWS()) and m.hasAutomaticColumns())][m.genXtoAppliAbs()/][/if]
-  
 [/template]
 
 [comment : Generation du fichier log4j dans les ressources. /]
@@ -58,7 +56,6 @@
 [template private genLog4j(m : soa::System)]
   
   [if (m.useLog4J())][m.genLog4j('commons')/][/if]
-  
 [/template]
 
 [comment : Generation des XTOs (On recupere tous les XTO pour la selection). /]
@@ -68,7 +65,6 @@
     	[n.eAllContents(environment::DTO)->asSet()->genSelectedXtos()/]
   [else]
     	[if (n.useWS())][n.xtoAGenerer()->genSelectedXtos()/][/if]
-    
   [/if]
 [/template]
 
@@ -77,7 +73,6 @@
   
   [for (d : environment::DTO | xtos)]
     	[if (not d.isParent())][d.genXtoTest()/][/if]
-    
         [d.genXto()/]
   [/for]
   
@@ -87,14 +82,12 @@
 [template private genServicesItfs(m : soa::System)]
   
   [for (s : soa::Service | m.eAllContents(soa::Service))][s.genServiceItfs()/][/for]
-  
 [/template]
 
 [comment : Generation des DTO (On recupere tous les DTO pour la selection). /]
 [template private genDtos(n : environment::Namespace)]
   
   [for (d : environment::DTO | n.listeDtos())][d.genSelectedDto()/][/for]
-  
 [/template]
 
 [comment : Generation des interfaces pour un seul service. /]
@@ -104,11 +97,8 @@
 [template private genServiceItfs(s : soa::Service)]
   
   [if (s.serviceSeul())][s.genServiceItf()/][/if]
-  
   [if (s.hasRSOperations())][s.genServiceRSItf(s.dtoFromService())/][/if]
-  
   [if (s.hasCXFOperations())][s.genServiceCXFItf()/][/if]
-  
 [/template]
 
 [comment : Generation pour un seul DTO (+ service si option crud active). /]
@@ -127,7 +117,6 @@
     	[d.genDtoTest()/]
     	[d.genAttributesEnum()/]
     	[if (d.useFetchingStrategy())][d.genFetchingStrategy()/][/if]
-    
   [/if]
   
 [/template]

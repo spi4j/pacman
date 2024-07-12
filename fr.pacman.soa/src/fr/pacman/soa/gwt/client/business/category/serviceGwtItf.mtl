@@ -51,7 +51,6 @@
      */
     @RemoteServiceRelativePath("../[s.getApplicationName()/]/[s.buildServiceName(d)/]")
     public interface [s.buildServiceGwtInterfaceName(d)/][if (not serviceSeul)] extends GwtRemoteService<[s.genPkType()/], [d.buildXtoClassNameFromDto()/]>[else] extends RemoteService[/if]
-    
     {
     
     [if (not serviceSeul)]

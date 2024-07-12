@@ -82,8 +82,7 @@
 
 [comment : /]
 [template public nameBaseReferenceTab(r : environment::Reference)]
-  [if (r.getListPrefix().size() = 0)][r.nameBaseReference()/][else][r.getListPrefix()/]_[r.nameBaseReference()/][/if]
-[/template]
+  [if (r.getListPrefix().size() = 0)][r.nameBaseReference()/][else][r.getListPrefix()/]_[r.nameBaseReference()/][/if][/template]
 
 [comment  : /]
 [template public nameBaseReferenceUpperFirst(r : environment::Reference)]
@@ -95,13 +94,11 @@
 
 [comment : /]
 [template public nameBaseReferenceInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDto() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDto() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if][/template]
 
 [comment : /]
 [template public nameBaseReferenceInverseUpperFirst(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/][else][r.oppositeOf.nameBaseReference().toString().toUpperFirst()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDtoUP()/][else][r.oppositeOf.nameBaseReference().toString().toUpperFirst()/][/if][/template]
 
 [comment  : /]
 [template public nameBaseDto(d : environment::DTO)]

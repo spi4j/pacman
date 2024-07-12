@@ -36,8 +36,7 @@
                               </UML:Attribute>[/template]
 
 [template public genXmiPK(e : entity::Entity)]
-  [if (e.ownedAttributes->exists(a | a.isIdentifier))][e.ownedAttributes->select(a | a.isIdentifier)->asSequence()->collect(temp2 | temp2.attributePK())/][else][e.entityPK()/][/if]
-[/template]
+  [if (e.ownedAttributes->exists(a | a.isIdentifier))][e.ownedAttributes->select(a | a.isIdentifier)->asSequence()->collect(temp2 | temp2.attributePK())/][else][e.entityPK()/][/if][/template]
 
 [template public attributePK(a : environment::Attribute)]
                               <UML:Attribute name = "[a.nameColumn()/]" xmi.id = "{[a.fullName().nameUUID()/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
@@ -86,8 +85,7 @@
   [OrderedSet{e.genXmiPK()}->sep('\r\n')/]
   [e.attributesNoPk()->asSequence()->collect(temp3 | temp3.attribute())->sep('\r\n')/]
   [e.getInheritDtoAttributes()->asSequence()->collect(temp4 | temp4.attribute())->sep('\r\n')/]
-  [if (e.hasAutomaticColumns())][e.genAutomaticColumns()/][/if]
-                          </UML:Classifier.feature>
+  [if (e.hasAutomaticColumns())][e.genAutomaticColumns()/][/if]                        </UML:Classifier.feature>
                       </UML:Class>[/template]
 
 [template public attributeMultiplicity(a : environment::Attribute)]
@@ -151,8 +149,7 @@
                               <UML:AssociationEnd xmi.id = "{[r.fullName().nameUUID()/]}b" visibility = "public">
                                   <UML:AssociationEnd.aggregation xmi.value = "none"/>
                                   <UML:AssociationEnd.changeability xmi.value = "changeable"/>
-                                  <UML:AssociationEnd.isNavigable xmi.value = "[if (r.navigable)]true[else]false[/if]
-  "/>
+                                  <UML:AssociationEnd.isNavigable xmi.value = "[if (r.navigable)]true[else]false[/if]"/>
                                   <UML:AssociationEnd.ordering xmi.value = "unordered"/>
                                   <UML:AssociationEnd.type>
                                       <UML:Classifier xmi.idref = "{[r.referencedType.oclAsType(entity::Entity).fullName().nameUUID()/]}"/>
@@ -245,12 +242,10 @@
 [query public randomUUID(any : ecore::EObject) : String = any.unique()/]
 
 [template public physicalName(e : entity::Entity)]
-  [if (e.metadatas.annotationsPN()->size() > 0)][e.metadatas.annotationsPN()->at(1).body/][else][e.name/][/if]
-[/template]
+  [if (e.metadatas.annotationsPN()->size() > 0)][e.metadatas.annotationsPN()->at(1).body/][else][e.name/][/if][/template]
 
 [template public physicalName(p : environment::Property)]
-  [if (p.metadatas.annotationsPN()->size() > 0)][p.metadatas.annotationsPN()->at(1).body/][else][p.name/][/if]
-[/template]
+  [if (p.metadatas.annotationsPN()->size() > 0)][p.metadatas.annotationsPN()->at(1).body/][else][p.name/][/if][/template]
 
 [query public annotationsPN(m : environment::MetaDataContainer) : OrderedSet(environment::Annotation) = if m = null then OrderedSet{} else m.metadatas->select(m | not (m.oclAsType(environment::Annotation).title = null) and m.oclAsType(environment::Annotation).title.equalsIgnoreCase('PHYSICAL_NAME') and not (m.oclAsType(environment::Annotation).body = null) and m.oclAsType(environment::Annotation).body <> '')->asOrderedSet()->collect(temp19 | temp19.oclAsType(environment::Annotation)) endif/]
 
@@ -277,8 +272,7 @@
 [/template]
 
 [template public xmiIdRefAutoColumns(e : entity::Entity, s : String)]
-  type[e.get_typeColumn(s)/][if (e.columnHasSize(s))][e.get_sizeColumn(s)/][/if]
-[/template]
+  type[e.get_typeColumn(s)/][if (e.columnHasSize(s))][e.get_sizeColumn(s)/][/if][/template]
 
 [template public typeXmiRef(type : String, size : String) post(self.trim())]
   [if (size = null or size.equalsIgnoreCase(''))]

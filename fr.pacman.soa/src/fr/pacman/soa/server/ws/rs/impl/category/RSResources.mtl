@@ -111,11 +111,8 @@
 [template public rsAuthenticationResource(s : soa::SecurityScheme, f : soa::Flow) post(self.trim())]
   [if (s.isAuthOauth2() or s.isAuthOidc())]
     [if (f.isAuthCode())][s.rsAuthenticationResourceAuthCode(f)/][/if]
-    
     [if (f.isAuthCredential())][s.rsAuthenticationResourceCredential(f)/][/if]
-    
-    [if (f.isAuthPassord())][s.rsAuthenticationResourcePassword(f)/][/if]
-  [/if]
+    [if (f.isAuthPassord())][s.rsAuthenticationResourcePassword(f)/][/if][/if]
 [/template]
 
 [comment : ************************************* /]
@@ -657,11 +654,8 @@
 
 [comment : write all the required REST annotations for the operation./]
 [template private writeAnnotations(o : soa::Operation) post(self.trim())]
-  @[o.verb.toString().toUpper()/][if (o.hasURI())][1.c()/][o.addPath()/][/if]
-  [if (o.isSecured())][1.c()/][o.addSecured()/][/if]
-  
-  [o.addProduce()/][if (o.hasToConsumeJson())][1.c()/][o.addConsume()/][/if]
-[/template]
+  @[o.verb.toString().toUpper()/][if (o.hasURI())][1.c()/][o.addPath()/][/if][if (o.isSecured())][1.c()/][o.addSecured()/][/if]
+  [o.addProduce()/][if (o.hasToConsumeJson())][1.c()/][o.addConsume()/][/if][/template]
 
 [comment : Write produce annotation. /]
 [template private addProduce(o : soa::Operation) post(self.trim())]
@@ -686,9 +680,7 @@
 
 [comment : Add paginator's parameters for token mode if needed. /]
 [template private paramsInPaginatorIfNeeded(o : soa::Operation) post(self.trim())]
-  [if (o.isPagingToken())]
-    [if (not o.input->isEmpty())], [/if]
-    [o.pageTokenParamInPaginator()/][/if]
+  [if (o.isPagingToken())][if (not o.input->isEmpty())], [/if][o.pageTokenParamInPaginator()/][/if]
 [/template]
 
 [comment : Add paginator's pageToken parameter in QueryParam mode for the endPoint. /]
@@ -697,8 +689,7 @@
 
 [comment : Write the service facade injection for the resource (1/3). /]
 [template private writeSingletonServiceFacade(s : soa::Service, d : environment::DTO) post(self.trim())]
-  [if (s.useWsServiceInjection())]@Inject[1.c()/][else]final [/if]
-  [s.buildServiceFacadeRSInterfaceName(d)/] [s.writeSingletonServiceFacade_2(d)/][/template]
+  [if (s.useWsServiceInjection())]@Inject[1.c()/][else]final [/if][s.buildServiceFacadeRSInterfaceName(d)/] [s.writeSingletonServiceFacade_2(d)/][/template]
 
 [comment : Write the service facade injection for the resource (2/3). /]
 [template private writeSingletonServiceFacade_2(s : soa::Service, d : environment::DTO) post(self.trim())]
@@ -718,18 +709,15 @@
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (2/4). /]
 [template private writeFullOperation_2(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (o.paged)][o.addNewPaginator()/][2.c()/][/if]
-  [o.writeFullOperation_3(async)/][/template]
+  [if (o.paged)][o.addNewPaginator()/][2.c()/][/if][o.writeFullOperation_3(async)/][/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (3/4). /]
 [template private writeFullOperation_3(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (o.hasToExternalizeFacade())][o.writeFullOperation_4(async)/];[2.c()/][/if]
-  [o.writeResponse(async)/][/template]
+  [if (o.hasToExternalizeFacade())][o.writeFullOperation_4(async)/];[2.c()/][/if][o.writeResponse(async)/][/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (4/4). /]
 [template private writeFullOperation_4(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (o.hasParamOutXto())][o.paramOutXto()/] [o.output->first().name.apply_variableDefault()/] = [/if]
-  [o.writeFacadeMethod()/][/template]
+  [if (o.hasParamOutXto())][o.paramOutXto()/] [o.output->first().name.apply_variableDefault()/] = [/if][o.writeFacadeMethod()/][/template]
 
 [comment : /]
 [template private writeCallbackOperation(o : soa::Operation) post(self.trim())]
@@ -741,8 +729,7 @@
 
 [comment : Add a new paginator for the Response object  (2/3). /]
 [template private addNewPaginator_2(o : soa::Operation) post(self.trim())]
-  ([o.addNewPaginatorParams()/])[1.c()/][o.addNewPaginatorParamTotalCount()/][if (o.isPagingUser())][1.c()/][o.addNewPaginatorPageParamNames()/][/if]
-  ;[/template]
+  ([o.addNewPaginatorParams()/])[1.c()/][o.addNewPaginatorParamTotalCount()/][if (o.isPagingUser())][1.c()/][o.addNewPaginatorPageParamNames()/][/if];[/template]
 
 [comment : Add the parameters for the new paginator (1/3). /]
 [template private addNewPaginatorParams(o : soa::Operation) post(self.trim())]
@@ -785,8 +772,7 @@
 
 [comment : Check first if the operation must be synchronous or asynchronous (depends of service). /]
 [template private writeResponseOperation(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (async)][o.writeASynchronousOperation()/][else][o.writeSynchronousOperation()/][/if]
-  ;[/template]
+  [if (async)][o.writeASynchronousOperation()/][else][o.writeSynchronousOperation()/][/if];[/template]
 
 [comment : Set the name and signature for the response builder asynchronous operation. /]
 [template private writeASynchronousOperation(o : soa::Operation) post(self.trim())]
@@ -813,8 +799,7 @@
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (4/5) /]
 [template private writeSuggestedOperation(o : soa::Operation) post(self.trim())]
-  [if (soa::Verb::POST = o.verb)]ForCreate[elseif (soa::Verb::PUT = o.verb or soa::Verb::PATCH = o.verb)]ForUpdate[/if]
-  [o.writeSuggestedOperation_2()/][/template]
+  [if (soa::Verb::POST = o.verb)]ForCreate[elseif (soa::Verb::PUT = o.verb or soa::Verb::PATCH = o.verb)]ForUpdate[/if][o.writeSuggestedOperation_2()/][/template]
 
 [comment : Set the name of the response builder synchronous operation, depending of the verb. (5/5) /]
 [template private writeSuggestedOperation_2(o : soa::Operation) post(self.trim())]
@@ -823,8 +808,7 @@
 
 [comment : Add the parameters in the response operation signature (for paged and not paged operations). /]
 [template private addOperationParameters(o : soa::Operation) post(self.trim())]
-  [if (o.paged)][o.writePagedOperation()/][else][o.writeNonPagedOperation()/][/if]
-  [1.c()/][o.addCustomStatus()/][o.addHeaderXdatasIfNeeded()/][/template]
+  [if (o.paged)][o.writePagedOperation()/][else][o.writeNonPagedOperation()/][/if][1.c()/][o.addCustomStatus()/][o.addHeaderXdatasIfNeeded()/][/template]
 
 [comment : Write an operation with return paged list. /]
 [template private writePagedOperation(o : soa::Operation) post(self.trim())]
@@ -832,14 +816,11 @@
 
 [comment : Write an operation with a non paged return list or anything else. /]
 [template private writeNonPagedOperation(o : soa::Operation) post(self.trim())]
-  [if (not o.hasToExternalizeFacadeMethod())][o.writeFacadeMethod()/][/if]
-  [o.addLocationURIIfCreateOperation()/][/template]
+  [if (not o.hasToExternalizeFacadeMethod())][o.writeFacadeMethod()/][/if][o.addLocationURIIfCreateOperation()/][/template]
 
 [comment : Add headers datas if needed. /]
 [template private addHeaderXdatasIfNeeded(o : soa::Operation) post(self.trim())]
-  [if (o.hasXDatas())]
-    [if (o.hasDtoParamOutXto())],xx [/if]
-    [o.addXDatas()/][/if]
+  [if (o.hasXDatas())][if (o.hasDtoParamOutXto())],xx [/if][o.addXDatas()/][/if]
 [/template]
 
 [comment : Main method for writing the internal facade method signature . /]
@@ -852,9 +833,7 @@
 
 [comment : Add technical input paging parameters for the internal facade method signature (1/3). /]
 [template private addFacadePagingParameters(o : soa::Operation) post(self.trim())]
-  [if (o.paged)]
-    [if (not o.input->isEmpty())], [/if]
-    [o.addFacadePagingParameters_2()/][/if]
+  [if (o.paged)][if (not o.input->isEmpty())], [/if][o.addFacadePagingParameters_2()/][/if]
 [/template]
 
 [comment : Add technical input paging parameters for the internal facade method signature (2/3). /]
@@ -900,8 +879,7 @@
 
 [comment : Write a fragment of the callback url for identification server. /]
 [template private writeCallback(s : soa::SecurityScheme) post(self.trim())]
-  [if (s.hasWebClient())]/[s.getApplicationName()/]-[s.getClient()/][else]/[s.getWebappProjectName()/][/if]
-  /api/callback/[s.name/][/template]
+  [if (s.hasWebClient())]/[s.getApplicationName()/]-[s.getClient()/][else]/[s.getWebappProjectName()/][/if]/api/callback/[s.name/][/template]
 
 [comment : /]
 [template private writeFlowName(f : soa::Flow) post(self.trim())]
@@ -914,15 +892,12 @@
 
 [comment : Write all tokens spi4j ids (part 2)/]
 [template private writeAuthenticationTokens(s : soa::SecurityScheme, i : Integer) post(self.trim())]
-  [if (i > 1)], [/if]
-  [if (s.isAuthOidc() or s.isAuthOauth2())][s.writeAuthenticationTokens()/][else][s.getSpi4jId()/][/if]
+  [if (i > 1)], [/if][if (s.isAuthOidc() or s.isAuthOauth2())][s.writeAuthenticationTokens()/][else][s.getSpi4jId()/][/if]
 [/template]
 
 [comment : Write all tokens spi4j ids (part 3)/]
 [template private writeAuthenticationTokens(s : soa::SecurityScheme) post(self.trim())]
-  [for (f : soa::Flow | s.flows)]
-    [if (fIndex > 1)], [/if]
-    [s.getSpi4jId()/]_[f.writeFlowName()/][/for]
+  [for (f : soa::Flow | s.flows)][if (fIndex > 1)], [/if][s.getSpi4jId()/]_[f.writeFlowName()/][/for]
 [/template]
 
 [comment : write crud operation for reading a DTO by id. /]
@@ -1057,7 +1032,6 @@
         		[s.addImport('fr.spi4j.ws.rs.RsSecured', o.isSecured())/]
         [for (p : soa::Parameter | o.input)]
           			[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
-          
         [/for]
       [/if]
     [/for]

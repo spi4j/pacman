@@ -69,9 +69,7 @@
           
           	  final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
                 [if (n.hasXtopSup())]['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.active));[/if]
-          
                 [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
-          
                 getDao().create(['entity'.apply_variableFinal()/]);
                 refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
           
@@ -155,9 +153,7 @@
           	  // On effectue la mise à jour.
                 final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
                 [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
-          
                 [if (n.hasXtoSup_XdMaj())]['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.active));[/if]
-          
                 getDao().update(['entity'.apply_variableFinal()/]);
                 refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
           
@@ -183,7 +179,6 @@
              	  ['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.deletedForAll));
           [/if]
                 [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
-          
                 getDao().update(['entity'.apply_variableFinal()/]);
                 refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
           

@@ -45,7 +45,6 @@
    * @author [s.getAuthorName()/]
    */
   [if (s.useWsServiceInjection())]@Service[/if]
-  
   public class [s.buildServiceFacadeRSClassName(d)/] implements [s.buildServiceFacadeRSInterfaceName(d)/]
   {
   [if (not s.useWsServiceInjection())]
@@ -63,8 +62,7 @@
   	/**
   	* Constructeur.
   	*/
-  	[if (s.useWsServiceInjection())]public[else]private[/if]
-   [s.buildServiceFacadeRSClassName(d)/](){
+  	[if (s.useWsServiceInjection())]public[else]private[/if] [s.buildServiceFacadeRSClassName(d)/](){
   		super();
   	}
   
@@ -105,11 +103,8 @@
     [if (o.hasParamOutXto())]
       [if (o.output->first() <> null and o.output->first().type.oclIsTypeOf(environment::DTO))]
         
-        [if (not o.output->first().isMultiple())]return [else][o.paramOutXto()/] ['result'.apply_attributeFinal()/] = [/if]
-        [o.buildAppliUserMapperGenClassName()/].[('get ' + o.output->first().type.oclAsType(environment::DTO).buildMapperClassName()).apply_methodDefault()/] ()
-        	.convert[if (o.output->first().isMultiple())]List[/if]
-        DtoTo[if (o.output->first().isMultiple())]List[/if]
-        Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ()
+        [if (not o.output->first().isMultiple())]return [else][o.paramOutXto()/] ['result'.apply_attributeFinal()/] = [/if][o.buildAppliUserMapperGenClassName()/].[('get ' + o.output->first().type.oclAsType(environment::DTO).buildMapperClassName()).apply_methodDefault()/] ()
+        	.convert[if (o.output->first().isMultiple())]List[/if]DtoTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ()
         	.[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/][o.paramsInForPagingIfNeeded(false)/]));
         
         [if (o.output->first().isMultiple())]
@@ -218,16 +213,13 @@
         		
         [for (p : soa::Parameter | o.input)]
           			[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
-          
         [/for]
         
       [elseif (s.isDefinedForAuthentication() and not o.public)]
-        		[if (o.hasDtoParamOutXto())][s.addImport(o.output->first().type.oclAsType(environment::DTO).buildDtoImport())/][/if]
-        		
+        		[if (o.hasDtoParamOutXto())][s.addImport(o.output->first().type.oclAsType(environment::DTO).buildDtoImport())/][/if]		
         
         [for (p : soa::Parameter | o.input)]
           			[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
-          
         [/for]
       [/if]
     [/for]
@@ -237,5 +229,4 @@
 
 [comment : Get the default null value depends of the parameter's type. /]
 [template private nullValueForColumnType(p : soa::Parameter)]
-  [if (p.type.name.equalsIgnoreCase('Boolean'))]false[elseif (p.type.name.equalsIgnoreCase('Integer'))]0[elseif (p.type.name.equalsIgnoreCase('Long'))]0L[elseif (p.type.name.equalsIgnoreCase('Float'))]0F[elseif (p.type.name.equalsIgnoreCase('Double'))]0D[else]null[/if]
-[/template]
+  [if (p.type.name.equalsIgnoreCase('Boolean'))]false[elseif (p.type.name.equalsIgnoreCase('Integer'))]0[elseif (p.type.name.equalsIgnoreCase('Long'))]0L[elseif (p.type.name.equalsIgnoreCase('Float'))]0F[elseif (p.type.name.equalsIgnoreCase('Double'))]0D[else]null[/if][/template]

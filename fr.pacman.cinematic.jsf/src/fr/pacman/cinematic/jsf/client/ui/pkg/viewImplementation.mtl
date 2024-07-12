@@ -201,8 +201,7 @@
 
 [template private genJsfCombo(anAVE : view::AbstractViewElement, viewContainer : view::ViewContainer) post(self.trim())]
   [anAVE.genJsfLabel()/]
-  <p:selectOneMenu id="selectMenu[anAVE.name.toUpperFirst()/]" name="[anAVE.name/]" [if (not anAVE.events->isEmpty())] valueChangeListener="[anAVE.genElementEvent(viewContainer)/]" [/if]
-  >
+  <p:selectOneMenu id="selectMenu[anAVE.name.toUpperFirst()/]" name="[anAVE.name/]" [if (not anAVE.events->isEmpty())] valueChangeListener="[anAVE.genElementEvent(viewContainer)/]" [/if]>
   </p:selectOneMenu> 			    [/template]
 
 [template private genJsfLabel(anAVE : view::AbstractViewElement) post(self.trim())]

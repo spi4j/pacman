@@ -35,10 +35,7 @@
 
 [comment encoding = UTF-8 /]
 [template public getExternalUserBusinessGen(d : environment::DTO)]
-  [for (r : environment::Reference | d.references)]
-    [if (r.referencedType.oclAsType(environment::DTO) <> null and not r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen().toString().contains(d.buildImportUserBusinessGen()))][r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen()/][/if]
-  [/for]
-[/template]
+  [for (r : environment::Reference | d.references)][if (r.referencedType.oclAsType(environment::DTO) <> null and not r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen().toString().contains(d.buildImportUserBusinessGen()))][r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen()/][/if][/for][/template]
 
 [template public dtoParent(d : environment::DTO)]
   [d.licence()/]
@@ -56,7 +53,6 @@
    * @author [d.getAuthorName()/]
    */
   public abstract class [d.buildDtoClassName()/] implements [d.getClassNameForDto_Itf()/]<[d.genPkType()/]>[if (d.useSpi4jSecurity() and d.dtoIsUser())], User_Itf[/if]
-  
   {
      /**
       * SerialUid.
@@ -338,12 +334,7 @@
   [if (d.hasMandatoryFields() or d.hasStringFieldWithSize())]
           // valide les attributs
           List<String> ['champs invalides'.apply_variableDefault()/] = null;
-    [for (a : environment::Attribute | d.attributesNotComputed())][d.validProperty(a)/][/for]
-    [for (r : environment::Reference | d.referencesNoStar())]
-      [if (r.oppositeOf = null or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable))][d.validProperty(r)/][/if]
-    [/for]
-    [for (r : environment::Reference | d.referencingStar())][d.validPropertyInverse(r)/][/for]
-          return ['champs invalides'.apply_variableDefault()/];
+    [for (a : environment::Attribute | d.attributesNotComputed())][d.validProperty(a)/][/for][for (r : environment::Reference | d.referencesNoStar())][if (r.oppositeOf = null or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable))][d.validProperty(r)/][/if][/for][for (r : environment::Reference | d.referencingStar())][d.validPropertyInverse(r)/][/for]      return ['champs invalides'.apply_variableDefault()/];
   [else]
           // aucun champ obligatoire
           return null;
@@ -356,8 +347,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = DtoUtil.checkMandatoryField("[p.nameBase()/]", [p.name.normalize().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [d.validateSize(p)/]
-[/template]
+  [d.validateSize(p)/][/template]
 
 [template private validProperty(d : environment::DTO, p : environment::Reference)]
   [if (p.isMandatory())]
@@ -376,10 +366,7 @@
 [/template]
 
 [template private nameBase(p : environment::Property)]
-  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameBaseAttribute()/][else]
-                                                                                                          [if (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).nameBaseReference()/][/if]
-                                                                                                        [/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameBaseAttribute()/][elseif (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).nameBaseReference()/][/if][/template]
 
 [template private validateSize(d : environment::DTO, a : environment::Attribute)]
   [if (a.hasSize() and a.type.name = 'String')]

@@ -28,8 +28,7 @@
         [e.dropUniqueIDX(a, databaseType, e.get_counterUN(1))/]
       [/if]
     [/for]
-    [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())][e.dropIDX(ent, databaseType, e.get_counterIDX(e.referencesNoStarAndReferencingStarAllNavigability(ent)->size()))/][/for]
-  [/for]
+    [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())][e.dropIDX(ent, databaseType, e.get_counterIDX(e.referencesNoStarAndReferencingStarAllNavigability(ent)->size()))/][/for][/for]
 [/template]
 
 [template private dropIDX(e : entity::Entity, ent : entity::Entity, databaseType : String, compteur : Integer)]
@@ -53,5 +52,4 @@
 
 [template private nameTableIDX(e : entity::Entity, databaseType : String)]
   [if (databaseType.isDbMsqlType())] on [e.nameTableWithSchema()/][else]
-                                                                  [/if]
-[/template]
+                                                                  [/if][/template]

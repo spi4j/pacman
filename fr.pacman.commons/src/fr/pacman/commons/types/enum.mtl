@@ -120,55 +120,33 @@
 
 [comment : construction sans parametre particulier. /]
 [template private enumStruct(l : environment::Literal)]
-     /** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
-   : [l.description/]. */
-     [if (not (l.name = null) and l.name.trim().size() > 0)][l.name.toUpper()/][else]BLANK[/if]
-  ("[l.name/]")[/template]
+     /** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if] : [l.description/]. */
+     [if (not (l.name = null) and l.name.trim().size() > 0)][l.name.toUpper()/][else]BLANK[/if]("[l.name/]")[/template]
 
 [comment : construction avec des parametres donnes par le developpeur. /]
 [template private enumStruct(l : environment::Literal, s : String)]
-  	/** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
-   : [l.description/]. */
-  [let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]
-        [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(pIndex, nbParams)/][/for]
-    )[/let]
-[/template]
+  	/** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if] : [l.description/]. */
+  [let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]    [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(pIndex, nbParams)/][/for])[/let][/template]
 
 [comment : prepare pour si decide de positionner les guillemets automatiquement a partir de la structure. /]
 [template private writeParamStruct(s : String, i : Integer, nbParams : Integer)]
-  [s.replaceAll('\'', '"')/][if (i < nbParams)], [/if]
-[/template]
+  [s.replaceAll('\'', '"')/][if (i < nbParams)], [/if][/template]
 
 [comment : ecriture d'un parametre utilisateur pour le literal. /]
 [comment : ATTENTION cette methode est utilisee pour la declaration, la signature du constructeur et l'intialisation dans le constructeur ! /]
 [comment : m (mode) = 0 definition des parametres, 1 signature constructeur, 2 initialisation constructeur. /]
 [template private writeLiteralParams(e : environment::Enumeration, m : Integer)]
-  [if (e.hasEnumLiteralParamsStructs())]
-    [for (p : String | e.getEnumLiteralParamsStructs().tokenize(','))]
-      [if (m = 0)]/** Paramètre supplémentaire utilisateur. */[p.lineSeparator()/][/if]
-      [p.writeLiteralParamLine(m)/][/for]
-  [/if]
-[/template]
+  [if (e.hasEnumLiteralParamsStructs())][for (p : String | e.getEnumLiteralParamsStructs().tokenize(','))][if (m = 0)]/** Paramètre supplémentaire utilisateur. */[p.lineSeparator()/][/if][p.writeLiteralParamLine(m)/][/for][/if][/template]
 
 [comment : /]
 [template private writeLiteralParamLine(p : String, m : Integer)]
-  [if (m = 1)], [/if]
-  [if (m = 0)]private [/if]
-  [if (m < 2)]final [p.substring(p.index(':') + 1)/] [/if]
-  [p.substring(1, p.index(':') - 1).writeLiteralParamLine_2(m)/][/template]
+  [if (m = 1)], [/if][if (m = 0)]private [/if][if (m < 2)]final [p.substring(p.index(':') + 1)/] [/if][p.substring(1, p.index(':') - 1).writeLiteralParamLine_2(m)/][/template]
 
 [comment : /]
 [template private writeLiteralParamLine_2(p : String, m : Integer)]
-  [if (m = 1)][p.apply_parameterMethodClassicIn()/][else]
-                                                     [if (m > 0)][p.getAffectationPrefix()/][/if]
-                                                     [p.apply_attributeFinal()/][/if]
-  [p.writeLiteralParamLine_3(m)/][/template]
+  [if (m = 1)][p.apply_parameterMethodClassicIn()/][else][if (m > 0)][p.getAffectationPrefix()/][/if][p.apply_attributeFinal()/][/if][p.writeLiteralParamLine_3(m)/][/template]
 
 [template private writeLiteralParamLine_3(p : String, m : Integer)]
-  [if (m = 2)] = [p.apply_parameterMethodClassicIn()/][/if]
-  [if (m = 0 or m = 2)]
-    ;[p.lineSeparator()/][if (m = 0)][p.lineSeparator()/][/if]
-  [/if]
-[/template]
+  [if (m = 2)] = [p.apply_parameterMethodClassicIn()/][/if][if (m = 0 or m = 2)];[p.lineSeparator()/][if (m = 0)][p.lineSeparator()/][/if][/if][/template]
 
 [query public roleEnum(e : environment::Enumeration) : String = 'Enumeration ' + e.buildEnumName()/]

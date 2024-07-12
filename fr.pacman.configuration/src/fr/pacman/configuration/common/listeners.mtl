@@ -36,10 +36,8 @@
   
         	// contextInitialized
         	[protected (any.getUserCodeId('context initialized')) startTagPrefix('// ') endTagPrefix('// ')]
-           [if (any.useEjb())]        //TransactionInterceptor.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());[/if]
-                   //TransactionFilter.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
+           [if (any.useEjb())]        //TransactionInterceptor.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());[/if]        //TransactionFilter.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
            [if (any.useConfigFileSpi4jFrwk())]		[any.buildConfigProviderClassName()/].init();[/if]
-           
          [/protected]
   
      }

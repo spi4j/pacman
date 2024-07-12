@@ -40,8 +40,7 @@
  * Paramétrage fin
 */]
 [template public genClassTypeName(a : environment::Attribute)]
-  [if (a.type.name <> null and a.type.name.contains('<'))][a.type.name.substring(1, a.type.name.index('<') - 1)/][else][a.type.genTypeName()/][/if]
-  .class[/template]
+  [if (a.type.name <> null and a.type.name.contains('<'))][a.type.name.substring(1, a.type.name.index('<') - 1)/][else][a.type.genTypeName()/][/if].class[/template]
 
 [template public genTypeAndName(a : environment::Attribute) post(self.trim())]
   [a.genPropertyType()/] [a.nameProperty()/][/template]

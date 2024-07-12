@@ -71,12 +71,10 @@
 [query public nameSimpleProperty_(p : environment::Property) : String = if p.oclIsKindOf(environment::Reference) then if p.name = null or p.name.size() = 0 then if p.oclAsType(environment::Reference).referencedType = null then 'XXXpas de nomXXX : ne devrait pas arriver car p.type est obligatoire : (1..1)' else 'ref' + p.oclAsType(environment::Reference).referencedType.oclAsType(entity::Entity).nameSimpleEntity().toUpperFirst() + p.namePK_ID() endif else p.name.sanitize().toLowerFirst() + p.namePK_ID() endif else if p.name = null or p.name.size() = 0 then 'XXXattribut sans nomXXX' else p.name.sanitize().toLowerFirst() endif endif/]
 
 [template public nameSimplePropertyInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else][r.oppositeOf.name.sanitize().toLowerFirst()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else][r.oppositeOf.name.sanitize().toLowerFirst()/][/if][/template]
 
 [template public nameSimplePropertyInverse(r : environment::Reference, compteur : Integer)]
-  [if (r.oppositeOf = null)][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else][r.oppositeOf.name.sanitize().toLowerFirst()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else][r.oppositeOf.name.sanitize().toLowerFirst()/][/if][/template]
 
 [comment le nom de la clé primaire d'une entitée dans les énumérations/]
 [template public nameSimplePropertyID(e : entity::Entity)]
@@ -123,15 +121,13 @@
   [r.name.sanitize().toLowerFirst()/][/template]
 
 [template public nameBaseReferenceTab(r : environment::Reference)]
-  [if (r.getListPrefix().size() = 0)][r.nameBaseReference()/][else][r.getListPrefix()/]_[r.nameBaseReference()/][/if]
-[/template]
+  [if (r.getListPrefix().size() = 0)][r.nameBaseReference()/][else][r.getListPrefix()/]_[r.nameBaseReference()/][/if][/template]
 
 [template public nameBaseReferenceUpperFirst(r : environment::Reference)]
   [r.name.sanitize().toUpperFirst()/][/template]
 
 [template public nameBaseReferenceInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if][/template]
 
 [template public getNameGetterListEntity(r : environment::Reference)]
   [('get ' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault()/][/template]
@@ -140,5 +136,4 @@
   [('set ' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault()/][/template]
 
 [template public enumValue(e : environment::Enumeration)]
-  [if (e.literals->first().name <> null and e.literals->first().name.contains('('))][e.literals->first().name.substring(1, e.literals->first().name.index('(') - 1).toUpperFirst()/][else][e.literals->first().name.toUpperFirst()/][/if]
-[/template]
+  [if (e.literals->first().name <> null and e.literals->first().name.contains('('))][e.literals->first().name.substring(1, e.literals->first().name.index('(') - 1).toUpperFirst()/][else][e.literals->first().name.toUpperFirst()/][/if][/template]

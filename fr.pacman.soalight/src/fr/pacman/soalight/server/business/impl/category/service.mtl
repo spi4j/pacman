@@ -64,8 +64,7 @@
       [/if]
     [/protected]
     
-    public class [s.buildServiceClassName()/]  [if (s.isFromEntityService())]extends [s.getClassNameForEntityService_Abs()/]<[s.genPkType()/], [s.buildEntityInterfaceNameFromService()/], [s.buildEntityColumnEnumNamefromService()/]> [/if]
-    implements [s.buildServiceInterfaceName()/]
+    public class [s.buildServiceClassName()/]  [if (s.isFromEntityService())]extends [s.getClassNameForEntityService_Abs()/]<[s.genPkType()/], [s.buildEntityInterfaceNameFromService()/], [s.buildEntityColumnEnumNamefromService()/]> [/if]implements [s.buildServiceInterfaceName()/]
     {
     
        // Rappel : les services sont sans état.

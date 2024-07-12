@@ -208,8 +208,7 @@
   		// methode activateOnLoad
   		[protected (viewState.getUserCodeId('methode activateOnLoad')) startTagPrefix('// ') endTagPrefix('// ')]
       	
-      		return Boolean.[if (viewState.isReferentialController())]TRUE[else]FALSE[/if]
-      ;	
+      		return Boolean.[if (viewState.isReferentialController())]TRUE[else]FALSE[/if];	
       	
     [/protected]
   
@@ -220,29 +219,12 @@
 [comment : Attention pour les actions, le parti pris est de les coder dans les flowEvents uniquement ! /]
 [comment : cela permet d'effectuer des regroupements, il faut donc lier l'evenement du flowEvent a l'evenement initial. /]
 [template private writeActionsIfExist(eventName : String, viewState : flow::ViewState, forComment : Boolean) post(self.trim())]
-  [for (t : flow::Transition | viewState.getTransitionsFromState(false))]
-    [if (not (t.to = null) and t.to.oclIsTypeOf(flow::ActionState))]
-      [for (evt : cinematic::Event | t.on)]
-        [if (evt.oclIsTypeOf(flow::FlowEvent))]
-          [for (ve : view::ViewEvent | evt.oclAsType(flow::FlowEvent).binds)]
-            [if (ve.getEventName().equalsIgnoreCase(eventName) or ve.type.name.equalsIgnoreCase('onLoad') and eventName.equalsIgnoreCase('init'))]
-              [for (o : soa::Operation | t.to.oclAsType(flow::ActionState).getOperationsForActionState())][o.writeFullAction(t, forComment)/][o.lineSeparator()/][/for]
-            [/if]
-          [/for]
-        [/if]
-      [/for]
-    [/if]
-  [/for]
-[/template]
+  [for (t : flow::Transition | viewState.getTransitionsFromState(false))][if (not (t.to = null) and t.to.oclIsTypeOf(flow::ActionState))][for (evt : cinematic::Event | t.on)][if (evt.oclIsTypeOf(flow::FlowEvent))][for (ve : view::ViewEvent | evt.oclAsType(flow::FlowEvent).binds)][if (ve.getEventName().equalsIgnoreCase(eventName) or ve.type.name.equalsIgnoreCase('onLoad') and eventName.equalsIgnoreCase('init'))][for (o : soa::Operation | t.to.oclAsType(flow::ActionState).getOperationsForActionState())][o.writeFullAction(t, forComment)/][o.lineSeparator()/][/for][/if][/for][/if][/for][/if][/for][/template]
 
 [comment : Ecriture de l'operation et de son positionnement dans la request si besoin. /]
 [template private writeFullAction(o : soa::Operation, t : flow::Transition, forComment : Boolean) post(self.trim())]
-  [if (forComment)]// [/if]
-  [o.writeOutputParamIExists()/][o.writeService()/].[o.writeOperation()/]([o.writeInputParamsIfExists()/]);
-  [if (o.hasOutputDto())]
-    [if (forComment)]// [/if]
-    ['request'.apply_parameterMethodClassicIn()/][t.writeScope()/].setAttribute([o.writeSetAttribute()/]);[/if]
-[/template]
+  [if (forComment)]// [/if][o.writeOutputParamIExists()/][o.writeService()/].[o.writeOperation()/]([o.writeInputParamsIfExists()/]);
+  [if (o.hasOutputDto())][if (forComment)]// [/if]['request'.apply_parameterMethodClassicIn()/][t.writeScope()/].setAttribute([o.writeSetAttribute()/]);[/if][/template]
 
 [comment : Ecriture de la methode pour positionner le DTO dans le bon evironnement (request,session,application). /]
 [template private writeScope(t : flow::Transition) post(self.trim())]
@@ -257,12 +239,7 @@
   "[o.output->first().type.oclAsType(environment::DTO).nameBeanImplementation()/]", [o.output->first().name.apply_variableDefault()/][/template]
 
 [template private writeOutputParamIExists(o : soa::Operation)]
-  [if (not o.output->isEmpty() and not (o.output->first() = null))]
-    [let p : soa::Parameter = o.output->first()]
-      [if (p.isMultiple())]List<[p.writeType()/]>[else][p.writeType()/][/if]
-       [p.name.apply_variableDefault()/][/let]
-     = [/if]
-[/template]
+  [if (not o.output->isEmpty() and not (o.output->first() = null))][let p : soa::Parameter = o.output->first()][if (p.isMultiple())]List<[p.writeType()/]>[else][p.writeType()/][/if] [p.name.apply_variableDefault()/][/let] = [/if][/template]
 
 [template private writeInputParamsIfExists(o : soa::Operation) post(self.trim())]
   [o.input->asOrderedSet()->paramsIn()->sep(',')/][/template]
@@ -274,8 +251,7 @@
   [o.name.sanitize().toLowerFirst()/][/template]
 
 [template private writeType(p : soa::Parameter) post(self.trim())]
-  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name/][else][p.type.name.sanitize() + 'Dto'/][/if]
-[/template]
+  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name/][else][p.type.name.sanitize() + 'Dto'/][/if][/template]
 
 [comment : Write all imports for the controller./]
 [template private writeImports(viewState : flow::ViewState) post(self.trim())]

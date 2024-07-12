@@ -66,7 +66,6 @@
       [s.getSpi4jId()/].endpoint.token = [s.flows->asSequence()->collect(temp2 | temp2.tokenURL)/]
       [s.getSpi4jId()/].endpoint.refresh = [s.flows->asSequence()->collect(temp3 | temp3.refreshURL)/]
       [if (s.type = soa::SecuritySchemeType::OPEN_ID_CONNECT)][s.getSpi4jId()/].endpoint.userInfo = [s.connectURL/][/if]
-      
       [s.getSpi4jId()/].scopes = [s.flows->asSequence()->collect(temp4 | temp4.scopes)->collect(temp5 | temp5.name)->sep(',')/]
     [/if]
   [/for]
@@ -546,10 +545,7 @@
 
 [comment : Add some PATH parameters. /]
 [template private addPathParamsIfExists(o : soa::Operation)]
-  [for (p : soa::Parameter | o.input)]
-    [if (p.restData.passingMode = soa::ParameterPassingMode::PATH)][p.lineSeparator()/][p.addPathParam()/][/if]
-  [/for]
-[/template]
+  [for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::PATH)][p.lineSeparator()/][p.addPathParam()/][/if][/for][/template]
 
 [comment : Add the request operation and cookies if exists (this format for carriage return)./]
 [template private addResquestOperationAndCookieParamsIfExists(o : soa::Operation) post(self.trim())]
@@ -575,10 +571,7 @@
 
 [comment : Add some HEADER parameters. /]
 [template private addHeaderParamsIfExists(o : soa::Operation) post(self.trim())]
-  [o.addHeaderForAuthorizationIfExist()/][for (p : soa::Parameter | o.input)]
-                                           [if (p.restData.passingMode = soa::ParameterPassingMode::HEADER)][p.lineSeparator()/][p.addHeaderParam()/][/if]
-                                         [/for]
-[/template]
+  [o.addHeaderForAuthorizationIfExist()/][for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::HEADER)][p.lineSeparator()/][p.addHeaderParam()/][/if][/for][/template]
 
 [comment : Add a specific header for the authorization token (if needed). /]
 [template private addHeaderForAuthorizationIfExist(o : soa::Operation) post(self.trim())]
@@ -587,10 +580,9 @@
 
 [comment : Add a specific header for the authorization token. /]
 [template private addHeaderForAuthorization(o : soa::Operation) post(self.trim())]
-  [if (not (o.getAuthTokenImportDescription() = null))]// [o.getAuthTokenImportDescription()/].[/if]
-   
-  .header("[o.getAuthTokenImportProperty()/]","[if (o.isBasicAuth())]Basic [else]Bearer [/if]
-  " + ['auth token'.addGenericInputParam()/])[/template]
+  [if (not (o.getAuthTokenImportDescription() = null))]// [o.getAuthTokenImportDescription()/].[/if] 
+  .header("[o.getAuthTokenImportProperty()/]","[if (o.isBasicAuth())]Basic [else]Bearer [/if]" + ['auth token'.addGenericInputParam()/])
+[/template]
 
 [comment : Add a HEADER parameter. /]
 [template private addHeaderParam(p : soa::Parameter) post(self.trim())]
@@ -598,11 +590,7 @@
 
 [comment : Add some QUERY parameters. /]
 [template private addQueryParamsIfExists(o : soa::Operation) post(self.trim())]
-  [for (p : soa::Parameter | o.input)]
-    [if (p.restData.passingMode = soa::ParameterPassingMode::QUERY)][p.lineSeparator()/][p.addQueryParam()/][/if]
-  [/for]
-  [if (o.isApiKey() and o.isAuthTokenImportFromQuery())][o.lineSeparator()/][o.addQueryParamForAuthorization()/][/if]
-[/template]
+  [for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::QUERY)][p.lineSeparator()/][p.addQueryParam()/][/if][/for][if (o.isApiKey() and o.isAuthTokenImportFromQuery())][o.lineSeparator()/][o.addQueryParamForAuthorization()/][/if][/template]
 
 [comment : Add a specific query param for the authorization token. /]
 [template private addQueryParamForAuthorization(o : soa::Operation) post(self.trim())]
@@ -643,16 +631,12 @@
 
 [comment : Add a specific parameter for token authorization (if needed). /]
 [template private addAuthTokenIfExists(o : soa::Operation, b : Boolean) post(self.trim())]
-  [if (o.isSecuredForImport())]
-    [if (not o.input->isEmpty())], [/if]
-    [o.addAuthToken(b)/][/if]
-[/template]
+  [if (o.isSecuredForImport())][if (not o.input->isEmpty())], [/if][o.addAuthToken(b)/][/if][/template]
 
 [comment : Add the specific parameter for token authorization. /]
 [comment : b = if true then write the full param with the type ('final String'). /]
 [template private addAuthToken(o : soa::Operation, b : Boolean) post(self.trim())]
-  [if (b)]final String [/if]
-  ['auth token'.apply_parameterMethodClassicIn()/][/template]
+  [if (b)]final String [/if]['auth token'.apply_parameterMethodClassicIn()/][/template]
 
 [comment : Add alls imports for input parameters. /]
 [template private addImportForInput(o : soa::Operation, p : soa::Parameter) post(self.trim())]
@@ -695,9 +679,7 @@
   
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
     [if (o.hasDtoParamOutXto())][o.addXtoImport(o.output->first().type.oclAsType(environment::DTO))/][/if]
-    
-    [for (p : soa::Parameter | o.input->asSet())][o.addImportForInput(p)/][/for]
-  [/for]
+    [for (p : soa::Parameter | o.input->asSet())][o.addImportForInput(p)/][/for][/for]
   [s.flushImports()/][/template]
 
 [comment : hack for the type Binary, for swagger import use 'byte' and not 'Binary'. Do not alter paramInXto(). /]

@@ -162,7 +162,6 @@
     <servlet>
     	<servlet-name>RSServlet</servlet-name>
     	[if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>[/if]
-    
     </servlet>
   [/if]
 [/template]

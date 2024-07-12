@@ -69,8 +69,7 @@
 
 [template public getComParamInverseIdIn(r : environment::Reference)]
       * @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
-      *           (In)[if (r.isMandatory())](*)[/if]
-   [r.descriptionInverse(false)/][/template]
+      *           (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
 
 [template public getSetterInverseIdEntity(r : environment::Reference)]
   public void [r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/] (final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/])[/template]

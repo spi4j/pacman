@@ -50,7 +50,6 @@
      * @author [s.getAuthorName()/]
      */
     public interface [s.buildServiceGwtAsyncClassName(d)/][if (not serviceSeul)] extends GwtRemoteServiceAsync<[s.genPkType()/], [d.buildXtoClassNameFromDto()/]>[/if]
-    
     {
     
     [if (not serviceSeul)]
@@ -84,9 +83,7 @@
                 /**
                  * [o.description/].
              [o.getComParamsIn()/][o.comParamOutCallback()/]    */
-                void [o.name.apply_methodDefault()/] ([o.paramsInXto()/][if (not o.input->isEmpty())], [/if]
-             final AsyncCallback<[if (o.output->isEmpty())]Void[else][o.paramOutXto()/][/if]
-             > callback);
+                void [o.name.apply_methodDefault()/] ([o.paramsInXto()/][if (not o.input->isEmpty())], [/if]final AsyncCallback<[if (o.output->isEmpty())]Void[else][o.paramOutXto()/][/if]> callback);
              
            [/protected]
         

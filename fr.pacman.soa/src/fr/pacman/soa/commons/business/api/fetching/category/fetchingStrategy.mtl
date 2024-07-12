@@ -100,8 +100,7 @@
              * Remonte au parent.
              * @return [d.buildFetchingStrategyClassName()/]
              */
-            public [d.buildFetchingStrategyClassName()/] [if (r.isMultiple())][('end ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/][else][('end ' + r.name).apply_methodDefault()/][/if]
-       ()
+            public [d.buildFetchingStrategyClassName()/] [if (r.isMultiple())][('end ' + r.getListPrefix() + ' ' + r.name).apply_methodDefault()/][else][('end ' + r.name).apply_methodDefault()/][/if] ()
             {
                return ([d.buildFetchingStrategyClassName()/]) getParent();
             }

@@ -100,12 +100,10 @@
               }
               else
               {
-                 ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.genTypeName() = 'Binary')].getInputStream()[/if]
-        );
+                 ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.genTypeName() = 'Binary')].getInputStream()[/if]);
               }
       [else]
-              ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if]
-        );
+              ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if]);
       [/if]
     [/if]
   [/for]
@@ -117,9 +115,7 @@
             }
             else
             {
-               ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if]
-      [if (a.type.genTypeName() = 'Binary')].getInputStream()[/if]
-      );
+               ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if][if (a.type.genTypeName() = 'Binary')].getInputStream()[/if]);
             }
     [else]
             ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]());
@@ -153,13 +149,9 @@
   [for (a : environment::Attribute | e.attributesNoPk())]
     [if (not a.isComputed())]
       [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
-              ['entity'.apply_variableDefault()/].setIdentifiant([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ((String)[else]([a.genPropertyType()/]) [/if]
-        ['value by column name'.apply_parameterMethodMultipleMap()/].get([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName ()))[if (a.type.oclIsTypeOf(environment::Enumeration))])[/if]
-        ;
+              ['entity'.apply_variableDefault()/].setIdentifiant([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ((String)[else]([a.genPropertyType()/]) [/if]['value by column name'.apply_parameterMethodMultipleMap()/].get([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName ()))[if (a.type.oclIsTypeOf(environment::Enumeration))])[/if];
       [else]
-              ['entity'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].['get enum by value'.apply_methodDefault()/] ((String)[else]([a.genPropertyType()/]) [/if]
-        ['value by column name'.apply_parameterMethodMultipleMap()/].get([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName ()))[if (a.type.oclIsTypeOf(environment::Enumeration))])[/if]
-        ;
+              ['entity'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].['get enum by value'.apply_methodDefault()/] ((String)[else]([a.genPropertyType()/]) [/if]['value by column name'.apply_parameterMethodMultipleMap()/].get([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName ()))[if (a.type.oclIsTypeOf(environment::Enumeration))])[/if];
       [/if]
     [/if]
   [/for]

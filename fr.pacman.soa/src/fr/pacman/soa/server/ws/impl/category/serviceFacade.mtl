@@ -66,9 +66,7 @@
            [if (o.paramOutXto() <> 'void')]
                    return [if (o.output->first() <> null and o.output->first().type.oclIsTypeOf(environment::DTO))]
                             [let return : environment::DTO = o.output->first().type.oclAsType(environment::DTO)]
-                              [o.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]
-                              DtoTo[if (o.output->first().isMultiple())]List[/if]
-                              Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/]));
+                              [o.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]DtoTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/]));
                             [/let]
                           [else]
                             [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp2 | temp2.parametersXtoFromDto())->sep(', ')/]);
@@ -103,11 +101,9 @@
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
     [if (o.isCXFOperation())]
       	[if (o.hasDtoParamOutXto())][s.addImport(o.output->first().type.oclAsType(environment::DTO).buildImportXto())/][/if]
-      
       	
       [for (p : soa::Parameter | o.input)]
         		[if (p.type.oclIsTypeOf(environment::DTO))][s.addImport(p.type.oclAsType(environment::DTO).buildImportXto())/][/if]
-        
       [/for]
     [/if]
   [/for]
