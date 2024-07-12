@@ -57,10 +57,7 @@
         // génération des champs
         final [d.genPkType()/] [d.nameENUM_PK_ID().apply_variableDefault()/] = getRandom[d.genPkType()/]();
   [for (a : environment::Attribute | d.attributesNotComputed())]
-          final [a.genPropertyType()/] [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else]
-                                                                                                                                                                                                                                                               getRandom[a.genPropertyTypeNoGenerics()/]([if (a.hasSize())][d.buildAttributesEnumName()/].[a.nameBaseAttribute()/].getSize()[/if]
-                                                                                                                                                                                                                                                              )[/if]
-    ;
+          final [a.genPropertyType()/] [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else] getRandom[a.genPropertyTypeNoGenerics()/]([if (a.hasSize())][d.buildAttributesEnumName()/].[a.nameBaseAttribute()/].getSize()[/if])[/if];
   [/for]
   [for (r : environment::Reference | d.referencesNoStar())]
     [if (not (r.referencedType = null))]
@@ -140,8 +137,7 @@
       	  // getRandom_[a.type.name.toUpperFirst()/]
       	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
            
-           		return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
-           ;
+           		return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
            
          [/protected]
       

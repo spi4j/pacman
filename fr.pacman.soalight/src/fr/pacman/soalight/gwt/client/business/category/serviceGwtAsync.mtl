@@ -49,9 +49,7 @@
                 /**
                  * [o.description/].
              [o.getComParamsIn()/][o.comParamOutCallback()/]    */
-                void [o.name.apply_methodDefault()/] ([o.paramsInXto()/][if (not o.input->isEmpty())], [/if]
-             final AsyncCallback<[if (o.output->isEmpty())]Void[else][o.paramOutXto()/][/if]
-             > callback);
+                void [o.name.apply_methodDefault()/] ([o.paramsInXto()/][if (not o.input->isEmpty())], [/if]final AsyncCallback<[if (o.output->isEmpty())]Void[else][o.paramOutXto()/][/if]> callback);
              
            [/protected]
         

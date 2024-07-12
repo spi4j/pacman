@@ -21,8 +21,7 @@
 [template public enumStruct(void : ecore::EObject, columnProp : String)]
   [if (columnProp.hasToWriteColumn())]
        /** [void.get_nameEnumField(columnProp)/] */
-       [void.get_nameEnumField(columnProp)/]("[void.get_nameEnumField(columnProp)/]", "[void.get_nameColumn(columnProp)/]", [void.get_typeColumn(columnProp)/].class, [void.columnNotNull(columnProp).toString()/], [if (void.columnHasSize(columnProp))][void.get_sizeColumn(columnProp)/][else]-1[/if]
-    , false)[/if]
+       [void.get_nameEnumField(columnProp)/]("[void.get_nameEnumField(columnProp)/]", "[void.get_nameColumn(columnProp)/]", [void.get_typeColumn(columnProp)/].class, [void.columnNotNull(columnProp).toString()/], [if (void.columnHasSize(columnProp))][void.get_sizeColumn(columnProp)/][else]-1[/if], false)[/if]
 [/template]
 
 [template public appliColumnsEnum(r : entity::Root)]

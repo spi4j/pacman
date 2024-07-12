@@ -55,11 +55,7 @@
         // génération des champs
         final [e.genPkType()/] [e.nameENUM_PK_ID().apply_variableDefault()/] = getRandom[e.genPkType()/]();
   [for (a : environment::Attribute | e.attributes())]
-          final [if (a.type.oclIsTypeOf(environment::Enumeration))] String[else][a.genPropertyType()/][/if]
-     [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] "[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]" [else]
-                                                                                                                                                                                            getRandom[a.genPropertyTypeNoGenerics()/]([if (a.hasSize())][a.metadatas.size()/][/if]
-                                                                                                                                                                                            )[/if]
-    ;
+          final [if (a.type.oclIsTypeOf(environment::Enumeration))] String[else][a.genPropertyType()/][/if] [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] "[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]" [else]getRandom[a.genPropertyTypeNoGenerics()/]([if (a.hasSize())][a.metadatas.size()/][/if])[/if];
   [/for]
   [for (r : environment::Reference | e.referencesNoStar())]
     
@@ -148,8 +144,7 @@
       	  // getRandom_[a.type.name.toUpperFirst()/]
       	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
            
-           		return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
-           ;
+           		return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
            
          [/protected]
       

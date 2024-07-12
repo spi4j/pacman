@@ -136,12 +136,10 @@
                             // Affecter l'identifiant
                             [(e.name + ' cour').apply_variableDefault()/].setId(['i'.apply_variableDefault()/]);
                    [for (a : environment::Attribute | e.attributesNoPk())]
-                              [(e.name + ' cour').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.defaultValueForColumnType(a.genPropertyType())/][/if]
-                     );
+                              [(e.name + ' cour').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.defaultValueForColumnType(a.genPropertyType())/][/if]);
                    [/for]
                    [for (a : environment::Attribute | e.getInheritDtoAttributes())]
-                              [(e.name + ' cour').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.defaultValueForColumnType(a.genPropertyType())/][/if]
-                     );
+                              [(e.name + ' cour').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.defaultValueForColumnType(a.genPropertyType())/][/if]);
                    [/for]
                    [if (e.hasAutomaticColumns())]
                      [for (columnProp : String | e.get_automaticColumnsProperties())]
@@ -168,16 +166,13 @@
 [/template]
 
 [template private defaultValueForColumnType(o : ecore::EObject, type : String)]
-  [if (type.equalsIgnoreCase('String'))]"s" + ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))](int) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Long'))]['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Float'))](float) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Double'))](double) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('XtopSup'))]new XtopSup(DatabaseLineStatus_Enum.active)[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp( new Date().getTime() )[elseif (type.equalsIgnoreCase('Time'))]new Time( new Date().getTime() )[elseif (type.equalsIgnoreCase('Char'))]'c'[elseif (type.equalsIgnoreCase('byte[]'))]new byte['['/]0][/if]
-[/template]
+  [if (type.equalsIgnoreCase('String'))]"s" + ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))](int) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Long'))]['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Float'))](float) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Double'))](double) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('XtopSup'))]new XtopSup(DatabaseLineStatus_Enum.active)[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp( new Date().getTime() )[elseif (type.equalsIgnoreCase('Time'))]new Time( new Date().getTime() )[elseif (type.equalsIgnoreCase('Char'))]'c'[elseif (type.equalsIgnoreCase('byte[]'))]new byte['['/]0][/if][/template]
 
 [template public MultiplicityKind(arg : environment::Reference)]
-  [if (arg.multiplicity = environment::MultiplicityKind::ONE)]11[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]01[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_STAR)]0N[elseif (arg.multiplicity = environment::MultiplicityKind::ONE_STAR)]1N[/if]
-[/template]
+  [if (arg.multiplicity = environment::MultiplicityKind::ONE)]11[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]01[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_STAR)]0N[elseif (arg.multiplicity = environment::MultiplicityKind::ONE_STAR)]1N[/if][/template]
 
 [template public getOppositeMultiplicityKind(r : environment::Reference)]
-  [if (not (r.oppositeOf = null))][r.oppositeOf.MultiplicityKind()/][elseif (r.multiplicity = environment::MultiplicityKind::ONE)]0N[elseif (r.multiplicity = environment::MultiplicityKind::ZERO_ONE)]0N[elseif (r.multiplicity = environment::MultiplicityKind::ZERO_STAR)]01[elseif (r.multiplicity = environment::MultiplicityKind::ONE_STAR)]01[/if]
-[/template]
+  [if (not (r.oppositeOf = null))][r.oppositeOf.MultiplicityKind()/][elseif (r.multiplicity = environment::MultiplicityKind::ONE)]0N[elseif (r.multiplicity = environment::MultiplicityKind::ZERO_ONE)]0N[elseif (r.multiplicity = environment::MultiplicityKind::ZERO_STAR)]01[elseif (r.multiplicity = environment::MultiplicityKind::ONE_STAR)]01[/if][/template]
 
 [query private isRelationNN(r : environment::Reference) : Boolean = if r.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.multiplicity = environment::MultiplicityKind::ONE_STAR then if not (r.oppositeOf = null) then if r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE_STAR then true else false endif else false endif else false endif/]
 
@@ -186,11 +181,9 @@
 [query private isRelation1N(r : environment::Reference) : Boolean = if r.multiplicity = environment::MultiplicityKind::ZERO_STAR or r.multiplicity = environment::MultiplicityKind::ONE_STAR then if not (r.oppositeOf = null) then if r.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_ONE or r.oppositeOf.multiplicity = environment::MultiplicityKind::ONE then true else false endif else true endif else false endif/]
 
 [template public getMinMultiplicity(arg : environment::Reference)]
-  [if (arg.multiplicity = environment::MultiplicityKind::ONE)]1[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]0[/if]
-[/template]
+  [if (arg.multiplicity = environment::MultiplicityKind::ONE)]1[elseif (arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]0[/if][/template]
 
 [template public getMaxMultiplicity(arg : environment::Reference)]
-  [if (arg.multiplicity = environment::MultiplicityKind::ONE or arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]1[/if]
-[/template]
+  [if (arg.multiplicity = environment::MultiplicityKind::ONE or arg.multiplicity = environment::MultiplicityKind::ZERO_ONE)]1[/if][/template]
 
 [query public getListEntityOfBlockAndReferencedEntities_sce(p_Namespace : environment::Namespace) : Sequence(entity::Entity) = p_Namespace.getListEntityOfBlockAndReferencedEntities()/]

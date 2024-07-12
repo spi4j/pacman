@@ -156,7 +156,6 @@
   
   [if (v.getTypePresenter() <> 'Object')]
     [if (v.useMatching())][v.addImport(v.searchBindingFor().oclAsType(environment::DTO).namePackageXto() + '.' + v.getTypePresenter())/][/if]
-    
   [/if]
   
   [for (viewState : flow::ViewState | v.getViewStatesForViewContainer())]

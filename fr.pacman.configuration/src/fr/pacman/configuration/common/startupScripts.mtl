@@ -47,8 +47,7 @@
     set "JDK_JAVA_OPTIONS=--illegal-access=deny --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
   [/if]
   echo Utilisation du jdk suivant pour le lancement de l'application : "%JAVA_HOME%"
-  %JAVA_HOME%/bin/java -jar [any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
-  .war %COMMAND%[/template]
+  %JAVA_HOME%/bin/java -jar [any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if].war %COMMAND%[/template]
 
 [comment : Creation du script externe de lancement pour l'application./]
 [template public clientEmbeddedHttpStartupBat(any : ecore::EObject) post(self.trim())]
@@ -88,10 +87,8 @@
   goto end
   
   :okJdk
-  if exist "../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
-  .war" goto okExecutable
-  echo L'executable "[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if]
-  .war" n'existe pas dans le répertoire racine.
+  if exist "../[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if].war" goto okExecutable
+  echo L'executable "[any.getApplicationName()/]-[if (any.hasClientWeb())]client-[any.getClient()/][else]webapp[/if].war" n'existe pas dans le répertoire racine.
   goto end
   
   :okExecutable

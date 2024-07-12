@@ -24,7 +24,6 @@
     [r.dropConstraintWithoutComment(databaseType)/]
     
     [for (n : environment::Namespace | r.ownedNamespaces)][n.genInitData()/][/for]
-    
     [r.genConstraintWithoutHeader()/]
     */
     
@@ -36,7 +35,6 @@
       [r.dropConstraint(databaseType)/]
       
       [for (n : environment::Namespace | r.ownedNamespaces)][n.genInitData()/][/for]
-      
       [r.genConstraint()/]
       
       /*
@@ -68,14 +66,10 @@
 [/template]
 
 [template private writeAdditionnalFields(any : ecore::EObject)]
-  [if (any.hasXtopSup())], [any.get_nameColumn(any.getXtopSuppKey())/][/if]
-  [if (any.hasXdMaj())], [any.get_nameColumn(any.getXdmajKey())/][/if]
-[/template]
+  [if (any.hasXtopSup())], [any.get_nameColumn(any.getXtopSuppKey())/][/if][if (any.hasXdMaj())], [any.get_nameColumn(any.getXdmajKey())/][/if][/template]
 
 [template private writeAdditionnalValues(any : ecore::EObject)]
-  [if (any.hasXtopSup())], '0'[/if]
-  [if (any.hasXdMaj())], current_date[/if]
-[/template]
+  [if (any.hasXtopSup())], '0'[/if][if (any.hasXdMaj())], current_date[/if][/template]
 
 [template private columnsEntity(e : entity::Entity)]
   [e.namePK()/][if (not e.attributesNoPk()->isEmpty())], [e.attributesNoPk()->asSequence()->collect(temp1 | temp1.nameColumn())->sep(', ')/][/if]
@@ -106,13 +100,10 @@
 [/template]
 
 [template private defaultSQLValue(type : environment::Type)]
-  [if (type.name.equalsIgnoreCase('String'))]'S'[elseif (type.name.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(type.name))]rawtohex('Test')[elseif (type.name.equalsIgnoreCase('Integer'))]0[elseif (type.name.equalsIgnoreCase('Long'))]0[elseif (type.name.equalsIgnoreCase('Float'))]0[elseif (type.name.equalsIgnoreCase('Double'))]0[elseif (type.name.equalsIgnoreCase('Date'))]current_date[elseif (type.name.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (type.name.equalsIgnoreCase('Time'))]current_timestamp[elseif (type.oclIsTypeOf(environment::Enumeration))]'DEFAULTENUM'[elseif (type.name.equalsIgnoreCase('Char'))]'C'[elseif (type.name.equalsIgnoreCase('XtopSup'))]'0'[/if]
-[/template]
+  [if (type.name.equalsIgnoreCase('String'))]'S'[elseif (type.name.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(type.name))]rawtohex('Test')[elseif (type.name.equalsIgnoreCase('Integer'))]0[elseif (type.name.equalsIgnoreCase('Long'))]0[elseif (type.name.equalsIgnoreCase('Float'))]0[elseif (type.name.equalsIgnoreCase('Double'))]0[elseif (type.name.equalsIgnoreCase('Date'))]current_date[elseif (type.name.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (type.name.equalsIgnoreCase('Time'))]current_timestamp[elseif (type.oclIsTypeOf(environment::Enumeration))]'DEFAULTENUM'[elseif (type.name.equalsIgnoreCase('Char'))]'C'[elseif (type.name.equalsIgnoreCase('XtopSup'))]'0'[/if][/template]
 
 [template private defaultSQLValue(a : environment::Attribute)]
-  [if (a.type.name.equalsIgnoreCase('String'))]'S'[elseif (a.type.name.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(a.type.name))]rawtohex('Test')[elseif (a.type.name.equalsIgnoreCase('Integer'))]0[elseif (a.type.name.equalsIgnoreCase('Long'))]0[elseif (a.type.name.equalsIgnoreCase('Float'))]0[elseif (a.type.name.equalsIgnoreCase('Double'))]0[elseif (a.type.name.equalsIgnoreCase('Date'))]current_date[elseif (a.type.name.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (a.type.name.equalsIgnoreCase('Time'))]current_timestamp[elseif (a.type.oclIsTypeOf(environment::Enumeration))]'[a.type.oclAsType(environment::Enumeration).literals->first().name/]'[elseif (a.type.name.equalsIgnoreCase('Char'))]'C'[elseif (a.type.name.equalsIgnoreCase('XtopSup'))]'0'[/if]
-[/template]
+  [if (a.type.name.equalsIgnoreCase('String'))]'S'[elseif (a.type.name.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(a.type.name))]rawtohex('Test')[elseif (a.type.name.equalsIgnoreCase('Integer'))]0[elseif (a.type.name.equalsIgnoreCase('Long'))]0[elseif (a.type.name.equalsIgnoreCase('Float'))]0[elseif (a.type.name.equalsIgnoreCase('Double'))]0[elseif (a.type.name.equalsIgnoreCase('Date'))]current_date[elseif (a.type.name.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (a.type.name.equalsIgnoreCase('Time'))]current_timestamp[elseif (a.type.oclIsTypeOf(environment::Enumeration))]'[a.type.oclAsType(environment::Enumeration).literals->first().name/]'[elseif (a.type.name.equalsIgnoreCase('Char'))]'C'[elseif (a.type.name.equalsIgnoreCase('XtopSup'))]'0'[/if][/template]
 
 [template private defaultSQLValue(type : String)]
-  [if (type.equalsIgnoreCase('String'))]'S'[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(type))]rawtohex('Test')[elseif (type.equalsIgnoreCase('Integer'))]0[elseif (type.equalsIgnoreCase('Long'))]0[elseif (type.equalsIgnoreCase('Float'))]0[elseif (type.equalsIgnoreCase('Double'))]0[elseif (type.equalsIgnoreCase('Date'))]current_date[elseif (type.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (type.equalsIgnoreCase('Time'))]current_timestamp[elseif (type.equalsIgnoreCase('Char'))]'C'[elseif (type.equalsIgnoreCase('XtopSup'))]'0'[else]'NULL'[/if]
-[/template]
+  [if (type.equalsIgnoreCase('String'))]'S'[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif ('Binary'.equalsIgnoreCase(type))]rawtohex('Test')[elseif (type.equalsIgnoreCase('Integer'))]0[elseif (type.equalsIgnoreCase('Long'))]0[elseif (type.equalsIgnoreCase('Float'))]0[elseif (type.equalsIgnoreCase('Double'))]0[elseif (type.equalsIgnoreCase('Date'))]current_date[elseif (type.equalsIgnoreCase('Timestamp'))]current_timestamp[elseif (type.equalsIgnoreCase('Time'))]current_timestamp[elseif (type.equalsIgnoreCase('Char'))]'C'[elseif (type.equalsIgnoreCase('XtopSup'))]'0'[else]'NULL'[/if][/template]

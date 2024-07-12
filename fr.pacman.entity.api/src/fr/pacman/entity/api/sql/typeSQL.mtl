@@ -15,14 +15,10 @@
 
 [comment : Pour l'instant (05/07/2022), on route MySql et MariaDB sur la meme methode. /]
 [template public typeDataBase(databaseType : String, n : String, size : String)]
-  [if (databaseType = null or databaseType.size() = 0)][n.typeOracle(size)/][elseif (databaseType.isDbOracleType())][n.typeOracle(size)/][elseif (databaseType.isDbOracle32Type())][n.typeOracle(size)/][elseif (databaseType.isDbMsqlType())][n.typeMysql(size)/][elseif (databaseType.isDbPostgresqlType())][n.typePostgres(size)/][elseif (databaseType.isDbH2Type())][n.typeH2(size)/][/if]
-[/template]
+  [if (databaseType = null or databaseType.size() = 0)][n.typeOracle(size)/][elseif (databaseType.isDbOracleType())][n.typeOracle(size)/][elseif (databaseType.isDbOracle32Type())][n.typeOracle(size)/][elseif (databaseType.isDbMsqlType())][n.typeMysql(size)/][elseif (databaseType.isDbPostgresqlType())][n.typePostgres(size)/][elseif (databaseType.isDbH2Type())][n.typeH2(size)/][/if][/template]
 
 [template public typeDataBase(databaseType : String, a : environment::Attribute, size : String)]
-  [if (not (a = null) and not (a.type = null))]
-    [if (a.isTypeOfEnumeration())][databaseType.typeDataBase('String', size)/][else][databaseType.typeDataBase(a.type.name, size)/][/if]
-  [else][databaseType.typeDataBase('', size)/][/if]
-[/template]
+  [if (not (a = null) and not (a.type = null))][if (a.isTypeOfEnumeration())][databaseType.typeDataBase('String', size)/][else][databaseType.typeDataBase(a.type.name, size)/][/if][else][databaseType.typeDataBase('', size)/][/if][/template]
 
 [template public typeDataBase(databaseType : String, r : environment::Reference)]
   [databaseType.typeDataBase('Reference', '')/][/template]
@@ -34,12 +30,10 @@
   [databaseType.typeDataBase('IdJointure', '')/][/template]
 
 [template public genConstraintPK(databaseType : String, e : entity::Entity)]
-  [if (databaseType = null or databaseType.size() = 0)][e.genConstraintPKDefault()/][elseif (databaseType.isDbOracleType())][e.genConstraintPKDefault()/][elseif (databaseType.isDbOracle32Type())][e.genConstraintPKDefault()/][elseif (databaseType.isDbMsqlType())][e.genConstraintPKMysql()/][elseif (databaseType.isDbPostgresqlType())][e.genConstraintPKDefault()/][elseif (databaseType.isDbH2Type())][e.genConstraintPKDefault()/][/if]
-[/template]
+  [if (databaseType = null or databaseType.size() = 0)][e.genConstraintPKDefault()/][elseif (databaseType.isDbOracleType())][e.genConstraintPKDefault()/][elseif (databaseType.isDbOracle32Type())][e.genConstraintPKDefault()/][elseif (databaseType.isDbMsqlType())][e.genConstraintPKMysql()/][elseif (databaseType.isDbPostgresqlType())][e.genConstraintPKDefault()/][elseif (databaseType.isDbH2Type())][e.genConstraintPKDefault()/][/if][/template]
 
 [template public genConstraintPKJointure(databaseType : String, r : environment::Reference, compteur : Integer)]
-  [if (databaseType = null or databaseType.size() = 0)][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbOracleType())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbOracle32Type())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbMsqlType())][r.genConstraintPKJointureMysql(compteur)/][elseif (databaseType.isDbPostgresqlType())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbH2Type())][r.genConstraintPKJointureDefault(compteur)/][/if]
-[/template]
+  [if (databaseType = null or databaseType.size() = 0)][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbOracleType())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbOracle32Type())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbMsqlType())][r.genConstraintPKJointureMysql(compteur)/][elseif (databaseType.isDbPostgresqlType())][r.genConstraintPKJointureDefault(compteur)/][elseif (databaseType.isDbH2Type())][r.genConstraintPKJointureDefault(compteur)/][/if][/template]
 
 [query private genConstraintPKDefault(e : entity::Entity) : String = 'constraint ' + e.nameConstraintPK() + ' primary key (' + e.namePK() + ')'/]
 
@@ -57,18 +51,15 @@
 [query public typeDatabaseHasSequence(databaseType : String) : Boolean = not databaseType.isDbMsqlType()/]
 
 [template public dropConstraint(databaseType : String, tableName : String, constraintName : String)]
-  [if (databaseType = null or databaseType.size() = 0)][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbOracleType())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbOracle32Type())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbMsqlType())][tableName.dropConstraintMysql(constraintName)/][elseif (databaseType.isDbPostgresqlType())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbH2Type())][tableName.dropConstraintDefault(constraintName)/][/if]
-[/template]
+  [if (databaseType = null or databaseType.size() = 0)][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbOracleType())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbOracle32Type())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbMsqlType())][tableName.dropConstraintMysql(constraintName)/][elseif (databaseType.isDbPostgresqlType())][tableName.dropConstraintDefault(constraintName)/][elseif (databaseType.isDbH2Type())][tableName.dropConstraintDefault(constraintName)/][/if][/template]
 
 [query private dropConstraintDefault(tableName : String, constraintName : String) : String = 'alter table ' + tableName + ' drop constraint ' + constraintName + ';'/]
 
 [template public genCommentMysql(a : environment::Attribute)]
-  [if (not (a.description = null) and a.description.size() <> 0)] comment '[a.description.toString().replaceAll('\'', '\'\'')/]'[/if]
-[/template]
+  [if (not (a.description = null) and a.description.size() <> 0)] comment '[a.description.toString().replaceAll('\'', '\'\'')/]'[/if][/template]
 
 [template public genCommentMysql(r : environment::Reference)]
-  [if (not (r.description = null) and r.description.size() <> 0)] comment '[r.description.toString().replaceAll('\'', '\'\'')/]'[/if]
-[/template]
+  [if (not (r.description = null) and r.description.size() <> 0)] comment '[r.description.toString().replaceAll('\'', '\'\'')/]'[/if][/template]
 
 [query private dropConstraintMysql(tableName : String, constraintName : String) : String = 'alter table ' + tableName + ' drop foreign key ' + constraintName + ';'/]
 

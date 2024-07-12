@@ -49,8 +49,7 @@
      * Interface de services appelables par le client.
      * @author [s.getAuthorName()/]
      */
-    public class [s.buildServiceGwtImplementationName(d)/][if (not serviceSeul)] extends GwtRemoteServiceImpl<[s.genPkType()/], [d.buildXtoClassNameFromDto()/], [d.buildDtoClassName()/]>[else] extends SpiRemoteServiceImpl[/if]
-     implements [s.buildServiceGwtInterfaceName(d)/]
+    public class [s.buildServiceGwtImplementationName(d)/][if (not serviceSeul)] extends GwtRemoteServiceImpl<[s.genPkType()/], [d.buildXtoClassNameFromDto()/], [d.buildDtoClassName()/]>[else] extends SpiRemoteServiceImpl[/if] implements [s.buildServiceGwtInterfaceName(d)/]
     {
     
        private static final long serialVersionUID = 1L;
@@ -125,9 +124,7 @@
              [if (o.paramOutXto() <> 'void')]
                      return [if (o.output->first().type.oclIsTypeOf(environment::DTO))]
                               [let return : environment::DTO = o.output->first().type.oclAsType(environment::DTO)]
-                                [o.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]
-                                DtoTo[if (o.output->first().isMultiple())]List[/if]
-                                Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/]));
+                                [o.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]DtoTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/]));
                               [/let]
                             [else]
                               null; /* @TODO : vérifier Pb Type retour inconnu */

@@ -22,8 +22,7 @@
 
 [comment : ??????????????????????????????!!!!!!!!!!!!/]
 [template public mandatory(p : environment::Property)]
-  [if (p.isMandatory())]true[else]false[/if]
-[/template]
+  [if (p.isMandatory())]true[else]false[/if][/template]
 
 [comment : Teste si une propriété (attribut ou référence) est obligatoire. /]
 [query public isMandatory(p : environment::Property) : Boolean = p.isMandatorySoa()/]

@@ -50,7 +50,6 @@
     [/for]
        [req.getServiceRequirementsPrefix()/][req.id/]("[req.name.escape()/]", "[req.version/]")[if (req <> categories->collect(temp1 | temp1.eAllContents(requirement::Requirement))->last())],[else];[/if]
     
-    
   [/for]
      /** Id. */
      private final String ['id'.apply_attributeFinal()/];

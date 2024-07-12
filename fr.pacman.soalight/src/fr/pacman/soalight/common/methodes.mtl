@@ -49,38 +49,30 @@
 [comment Paramètres /]
 [comment -----------/]
 [template public paramOut(o : soa::Operation)]
-  [if (o.output->size() <> 1)]void[else][o.output->first().paramType()/][/if]
-[/template]
+  [if (o.output->size() <> 1)]void[else][o.output->first().paramType()/][/if][/template]
 
 [template public paramsIn(o : soa::Operation)]
   [o.input->asOrderedSet()->paramsIn()->sep(', ')/][/template]
 
 [template public parameterWs(p : soa::Parameter)]
-  [if (not p.type.oclIsKindOf(environment::PrimitiveType))]
-    [p.buildAppliUserMapperGenClassName()/].[('get ' + p.buildMapperClassName()).apply_methodDefault()/] ().convert[if (p.isMultiple())]List[/if]
-    XtoTo[if (p.isMultiple())]List[/if]
-    Entity ([p.name.apply_parameterMethodClassicIn()/])[else][p.name.apply_parameterMethodClassicIn()/][/if]
-[/template]
+  [if (not p.type.oclIsKindOf(environment::PrimitiveType))][p.buildAppliUserMapperGenClassName()/].[('get ' + p.buildMapperClassName()).apply_methodDefault()/] ().convert[if (p.isMultiple())]List[/if]XtoTo[if (p.isMultiple())]List[/if]Entity ([p.name.apply_parameterMethodClassicIn()/])[else][p.name.apply_parameterMethodClassicIn()/][/if][/template]
 
 [query private paramsIn(inputs : OrderedSet(soa::Parameter)) : Sequence(String) = inputs->asSequence()->collect(temp1 | temp1.paramIn())/]
 
 [query public paramIn(param : soa::Parameter) : String = 'final ' + param.paramType() + ' ' + param.name.sanitize().apply_parameterMethodClassicIn()/]
 
 [template private paramType(p : soa::Parameter)]
-  [if (p.multiplicity = environment::MultiplicityKind::ZERO_STAR or p.multiplicity = environment::MultiplicityKind::ONE_STAR)]List<[p.type()/]>[else][p.type()/][/if]
-[/template]
+  [if (p.multiplicity = environment::MultiplicityKind::ZERO_STAR or p.multiplicity = environment::MultiplicityKind::ONE_STAR)]List<[p.type()/]>[else][p.type()/][/if][/template]
 
 [template private type(p : soa::Parameter)]
-  [if (not p.type.oclIsKindOf(environment::PrimitiveType))][p.simpleName().apply_classInterface()/][else][p.type.name.toUpperFirst()/][/if]
-[/template]
+  [if (not p.type.oclIsKindOf(environment::PrimitiveType))][p.simpleName().apply_classInterface()/][else][p.type.name.toUpperFirst()/][/if][/template]
 
 [query public simpleName1(name : String) : String = if name.size() > 3 and name.substring(name.size() - 2).equalsIgnoreCase('dto') then name.substring(1, name.size() - 3).concat('Entity').sanitize() else name.sanitize() endif/]
 
 [query public simpleName(p : soa::Parameter) : String = if p.type.oclIsTypeOf(environment::DTO) then if p.type.name.size() > 3 and p.type.name.substring(p.type.name.size() - 2).equalsIgnoreCase('dto') then p.type.name.substring(1, p.type.name.size() - 3).concat('Entity').sanitize() else p.type.name.sanitize().concat('Entity').sanitize() endif else if p.type.oclIsTypeOf(entity::Entity) then if p.type.name.size() > 6 and p.type.name.substring(p.type.name.size() - 5).equalsIgnoreCase('Entity') then p.type.name.sanitize() else p.type.name.concat('Entity').sanitize() endif else p.type.name.sanitize() endif endif/]
 
 [template private paramTypeXto(p : soa::Parameter)]
-  [if (p.multiplicity = environment::MultiplicityKind::ZERO_STAR or p.multiplicity = environment::MultiplicityKind::ONE_STAR)]List<[p.typeXto()/]>[else][p.typeXto()/][/if]
-[/template]
+  [if (p.multiplicity = environment::MultiplicityKind::ZERO_STAR or p.multiplicity = environment::MultiplicityKind::ONE_STAR)]List<[p.typeXto()/]>[else][p.typeXto()/][/if][/template]
 
 [query public paramOutXto(o : soa::Operation) : String = if o.output->isEmpty() then 'void' else o.output->first().paramTypeXto() endif/]
 
@@ -88,12 +80,10 @@
   [o.input->asOrderedSet()->paramsInXto()->sep(', ')/][/template]
 
 [template public typeXto(p : soa::Parameter)]
-  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][else][p.simpleTypeEntity() + 'Xto'/][/if]
-[/template]
+  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][else][p.simpleTypeEntity() + 'Xto'/][/if][/template]
 
 [template private typeXtoFromEntity(p : soa::Parameter)]
-  [if (p.type.name.typePrimitif())][p.type.name.sanitize()/][else][p.simpleTypeEntity() + 'Xto'/][/if]
-[/template]
+  [if (p.type.name.typePrimitif())][p.type.name.sanitize()/][else][p.simpleTypeEntity() + 'Xto'/][/if][/template]
 
 [query public typePrimitif(s : String) : Boolean = s.equalsIgnoreCase('Integer') or s.equalsIgnoreCase('String') or s.equalsIgnoreCase('Boolean') or s.equalsIgnoreCase('Float') or s.equalsIgnoreCase('Binary') or s.equalsIgnoreCase('Long') or s.equalsIgnoreCase('Double') or s.equalsIgnoreCase('Date')/]
 

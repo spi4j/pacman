@@ -39,7 +39,6 @@
   @XmlRootElement(name = "[e.buildXtoClassNameFromEntity()/]", namespace = "http://[e.getNamespaceXto()/]/xto")
   @XmlAccessorType(XmlAccessType.FIELD)
   public class [e.buildXtoClassNameFromEntity()/] implements Serializable, [e.getClassNameForXto_Itf()/]<[e.genPkType()/]>, RsXto_Itf[if (e.entityIsUser())], User_Itf[/if]
-  
   {
   
      private static final long serialVersionUID = 1L;
@@ -295,11 +294,7 @@
   getClass().getName() + '['['/]' + getId ()  [e.endToString()/]+ ']';[/template]
 
 [template public endToString(e : entity::Entity)]
-  [for (a : environment::Attribute | e.attributes())]
-    + ", " + [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')] getIdentifiant() [else][a.name.normalize().apply_methodGet()/]()[/if]
-      [/for]
-  [for (r : environment::Reference | e.referencesNoStar())]+ ", " + [r.name.normalize().apply_attributeDefault()/][r.namePK_ID()/] [/for]
-[/template]
+  [for (a : environment::Attribute | e.attributes())]+ ", " + [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')] getIdentifiant() [else][a.name.normalize().apply_methodGet()/]()[/if]  [/for][for (r : environment::Reference | e.referencesNoStar())]+ ", " + [r.name.normalize().apply_attributeDefault()/][r.namePK_ID()/] [/for][/template]
 
 [comment : Write all required imports. /]
 [template private writeImports(e : entity::Entity) post(self.trim())]

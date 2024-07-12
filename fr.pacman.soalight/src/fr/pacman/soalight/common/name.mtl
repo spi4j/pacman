@@ -106,8 +106,7 @@
   _[p.nameSimpleProperty()/][/template]
 
 [template public mandatory(p : environment::Property)]
-  [if (p.isMandatory())]true[else]false[/if]
-[/template]
+  [if (p.isMandatory())]true[else]false[/if][/template]
 
 [query public isMandatory(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE or p.multiplicity = environment::MultiplicityKind::ONE_STAR/]
 
@@ -135,5 +134,4 @@
   [r.name.sanitize().toLowerFirst()/][/template]
 
 [template public nameBaseReferenceInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).name.sanitize().toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).name.sanitize().toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if][/template]

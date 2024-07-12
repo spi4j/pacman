@@ -22,16 +22,10 @@
 [template public getFinalWarName(webapp : Boolean) post(self.trim())]
   [if (not webapp)]
     [if ('jsf'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJsfProjectName()/][/if]
-    
-    [if ('jsp'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJspProjectName()/][/if]
-  [else][webapp.getServerProjectName()/][/if]
-[/template]
+    [if ('jsp'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJspProjectName()/][/if][else][webapp.getServerProjectName()/][/if][/template]
 
 [comment : Obtention de la chaine pour le contexte de l'application./]
 [template public getDevWebAppContext(webapp : Boolean) post(self.trim())]
   [if (not webapp)]
     [if ('jsf'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJsfWebappDir()/][/if]
-    
-    [if ('jsp'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJspWebappDir()/][/if]
-  [else][webapp.getWebappDir()/][/if]
-[/template]
+    [if ('jsp'.equalsIgnoreCase(webapp.getClient()))][webapp.getClientJspWebappDir()/][/if][else][webapp.getWebappDir()/][/if][/template]

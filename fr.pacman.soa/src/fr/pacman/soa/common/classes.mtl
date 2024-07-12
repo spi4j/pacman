@@ -67,10 +67,7 @@
 [query public buildServiceTestClassName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.buildSimpleServiceName() + ' service').apply_classTest() else (d.buildSimpleDtoName() + ' service').apply_classTest() endif/]
 
 [template public buildService(s : soa::Service, d : environment::DTO)]
-  [if (not (s = null))][s.buildSimpleServiceName()/][else]
-                                                      [if (not (d = null))][d.buildSimpleDtoName()/][else]NAME NOT FOUND FOR SERVICE AND DTO NULL[/if]
-                                                    [/if]
-[/template]
+  [if (not (s = null))][s.buildSimpleServiceName()/][elseif (not (d = null))][d.buildSimpleDtoName()/][else]NAME NOT FOUND FOR SERVICE AND DTO NULL[/if][/template]
 
 [query public buildUserMatchingGenClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' user matching').apply_classDefault()/]
 
@@ -100,8 +97,7 @@
   [d.specificAnnotation('idAppli').toUpperFirst()/][/template]
 
 [template public specificOrDefaultIdAppli(d : environment::DTO)]
-  [if (d.hasSpecificIdAppli())][d.specificIdAppli()/][else][d.getApplicationName()/][/if]
-[/template]
+  [if (d.hasSpecificIdAppli())][d.specificIdAppli()/][else][d.getApplicationName()/][/if][/template]
 
 [query private specificAnnotation(d : environment::DTO, annotation : String) : String = d.getAnnotationBodyRecursively(annotation)/]
 

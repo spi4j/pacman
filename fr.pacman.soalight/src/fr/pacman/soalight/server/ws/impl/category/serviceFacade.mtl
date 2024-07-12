@@ -60,9 +60,7 @@
         	 [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
             [if (o.paramOutXto() <> 'void')]
                     return [if (not o.output->first().type.oclIsKindOf(environment::PrimitiveType))]
-                             [o.buildAppliUserMapperGenClassName()/].[('get ' + o.output->first().buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]
-                             EntityTo[if (o.output->first().isMultiple())]List[/if]
-                             Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService()/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parameterWs())->sep(', ')/]));	  
+                             [o.buildAppliUserMapperGenClassName()/].[('get ' + o.output->first().buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]EntityTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService()/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parameterWs())->sep(', ')/]));	  
                            [else]
                              [o.buildAppliUserBusinessGenClassName()/].get[s.nameService()/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp2 | temp2.parameterWs())->sep(', ')/]);
                            [/if]

@@ -150,9 +150,7 @@
                     // TODO renseigner donnees de test
               [for (a : environment::Attribute | e.attributesNoPk())]
                 [if (not a.isComputed())]
-                        ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]
-                  ([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]
-                  );
+                        ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
                 [/if]
               [/for]
                     [e.completeTestCreateMethod()/]
@@ -186,9 +184,7 @@
                       // TODO renseigner donnees de test
                 [for (a : environment::Attribute | e.attributesNoPk())]
                   [if (not a.isComputed())]
-                          ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]
-                    ([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else]null[/if]
-                    );
+                          ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else]null[/if]);
                   [/if]
                 [/for]
                       [e.completeTestCreateMethod()/]
@@ -221,11 +217,7 @@
                       // TODO renseigner donnees de test
                 [for (a : environment::Attribute | e.attributesNoPk())]
                   [if (not a.isComputed())]
-                          ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]
-                    ([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else]
-                                                                                                                                                                                                                     [if (a.isMandatory())][a.genPropertyType().defaultValueForColumnType()/][else]null[/if]
-                                                                                                                                                                                                                   [/if]
-                    );
+                          ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[elseif (a.isMandatory())][a.genPropertyType().defaultValueForColumnType()/][else]null[/if]);
                   [/if]
                 [/for]
                       [e.completeTestCreateMethod()/]
@@ -252,7 +244,6 @@
         */
        @Test
        public void ['test find by id'.apply_methodDefault()/] ()[if (not referentiel)] throws Throwable[/if]
-    
        {
     [if (referentiel)]
             // effectuer le findAll avant le findById pour assurer que crudId soit rempli
@@ -292,12 +283,10 @@
             [protected (e.getUserCodeId('findAllFieldInserted create')) startTagPrefix('// ') endTagPrefix('// ')]
                     // TODO renseigner donnees de test
               [for (a : environment::Attribute | e.attributesNoPk())]
-                      ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]
-                );
+                      ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
               [/for]
               [for (a : environment::Attribute | e.getInheritDtoAttributes())]
-                      ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]
-                );
+                      ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
               [/for]
               [if (e.hasAutomaticColumns())]
                 [for (columnProp : String | e.get_automaticColumnsProperties())]
@@ -434,7 +423,6 @@
         */
        @Test
        public void ['test find by column'.apply_methodDefault()/] ()[if (not referentiel)] throws Throwable[/if]
-    
        {
     [if (referentiel)]
             // effectuer le findAll avant le findById pour assurer que crudId soit rempli
@@ -467,7 +455,6 @@
         */
        @Test
        public void ['test find by criteria'.apply_methodDefault()/] ()[if (not referentiel)] throws Throwable[/if]
-    
        {
     [if (referentiel)]
             // effectuer le findAll avant le findById pour assurer que crudId soit rempli
@@ -578,24 +565,17 @@
         // generation des champs
   [if (e.hasAutomaticColumns())]
     [for (columnProp : String | e.get_automaticColumnsProperties())]
-            final [e.get_typeColumn(columnProp)/] [e.get_nameColumn(columnProp).toLower().apply_variableFinal()/] = getRandom[e.get_typeColumn(columnProp)/]([if (e.get_typeColumn(columnProp).isTypeAcceptSize())][e.get_sizeColumn(columnProp)/][/if]
-      );
+            final [e.get_typeColumn(columnProp)/] [e.get_nameColumn(columnProp).toLower().apply_variableFinal()/] = getRandom[e.get_typeColumn(columnProp)/]([if (e.get_typeColumn(columnProp).isTypeAcceptSize())][e.get_sizeColumn(columnProp)/][/if]);
     [/for]
   [/if]
   [for (a : environment::Attribute | e.attributesNoPk())]
     [if (not a.isComputed())]
-            final [a.genPropertyType()/] [a.nameSimpleProperty().apply_variableFinal()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]")[else]
-                                                                                                                                                                                                                                                                                                     getRandom[a.genPropertyTypeNoGenerics()/]([if (a.atributeHasSize() and a.type.name.isTypeAcceptSize())][e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/].getSize()[/if]
-                                                                                                                                                                                                                                                                                                     )[/if]
-      ;
+            final [a.genPropertyType()/] [a.nameSimpleProperty().apply_variableFinal()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]")[else]getRandom[a.genPropertyTypeNoGenerics()/]([if (a.atributeHasSize() and a.type.name.isTypeAcceptSize())][e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/].getSize()[/if])[/if];
     [/if]
   [/for]
   [for (a : environment::Attribute | e.getInheritDtoAttributes())]
     [if (not a.isComputed())]
-            final [a.genPropertyType()/] [a.nameSimpleProperty().apply_variableFinal()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]")[else]
-                                                                                                                                                                                                                                                                                                     getRandom[a.genPropertyTypeNoGenerics()/]([if (a.atributeHasSize() and a.type.name.isTypeAcceptSize())][e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/].getSize()[/if]
-                                                                                                                                                                                                                                                                                                     )[/if]
-      ;
+            final [a.genPropertyType()/] [a.nameSimpleProperty().apply_variableFinal()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]")[else]getRandom[a.genPropertyTypeNoGenerics()/]([if (a.atributeHasSize() and a.type.name.isTypeAcceptSize())][e.buildEntityColumnEnumName()/].[a.nameSimpleProperty().apply_attributeEnum()/].getSize()[/if])[/if];
     [/if]
   [/for]
   [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp9 | temp9.name.toLower()))]
@@ -623,8 +603,7 @@
   [/if]
   [for (a : environment::Attribute | e.attributesNoPk())]
     [if (not a.isComputed())]
-            ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]
-      ([a.nameSimpleProperty().apply_variableFinal()/]);
+            ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([a.nameSimpleProperty().apply_variableFinal()/]);
             ['validate'.apply_methodDefault()/](['entity'.apply_variableDefault()/]);
     [/if]
   [/for]
@@ -709,8 +688,7 @@
             // getRandom_[a.type.name.toUpperFirst()/]
             [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
               
-                    return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
-              ;
+                    return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
               
             [/protected]
       
@@ -730,8 +708,7 @@
 [template private completeTestCreateMethod(e : entity::Entity) post(self.trim())]
   [for (a : environment::Attribute | e.getInheritDtoAttributes())]
     [if (not a.isComputed())]
-      ['entity'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]
-      );
+      ['entity'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
     [/if]
   [/for]
   [if (e.hasAutomaticColumns())]
@@ -760,8 +737,7 @@
   ['set crud id'.apply_methodDefault()/]([s.apply_variableDefault()/].getId());[/template]
 
 [template private defaultValueForColumnType(type : String)]
-  [if (type.equalsIgnoreCase('String'))]"t"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]1[elseif (type.equalsIgnoreCase('XtopSup'))]new XtopSup(DatabaseLineStatus_Enum.active)[elseif (type.equalsIgnoreCase('Long'))]1L[elseif (type.equalsIgnoreCase('Float'))]1F[elseif (type.equalsIgnoreCase('Double'))]1D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Char'))]'t'[elseif (type.equalsIgnoreCase('Binary'))]getRandomBinary()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp(1L)[elseif (type.equalsIgnoreCase('Time'))]new Time(1L)[else]"Type non reconnu : "[type/]![/if]
-[/template]
+  [if (type.equalsIgnoreCase('String'))]"t"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]1[elseif (type.equalsIgnoreCase('XtopSup'))]new XtopSup(DatabaseLineStatus_Enum.active)[elseif (type.equalsIgnoreCase('Long'))]1L[elseif (type.equalsIgnoreCase('Float'))]1F[elseif (type.equalsIgnoreCase('Double'))]1D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Char'))]'t'[elseif (type.equalsIgnoreCase('Binary'))]getRandomBinary()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp(1L)[elseif (type.equalsIgnoreCase('Time'))]new Time(1L)[else]"Type non reconnu : "[type/]![/if][/template]
 
 [comment : Write all required imports. /]
 [template private writeImports(e : entity::Entity, referentiel : Boolean) post(self.trim())]

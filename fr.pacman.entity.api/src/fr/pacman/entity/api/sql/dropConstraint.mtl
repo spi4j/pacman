@@ -15,21 +15,16 @@
   /****************************************************************/
   ['Constraints'.genSlashedLine(r.sizeHeader())/]
   /****************************************************************/
-  [for (n : environment::Namespace | r.ownedNamespaces)][n.dropConstraint(databaseType)/][/for]
-[/template]
+  [for (n : environment::Namespace | r.ownedNamespaces)][n.dropConstraint(databaseType)/][/for][/template]
 
 [template public dropConstraintWithoutComment(r : entity::Root, databaseType : String)]
-  [for (n : environment::Namespace | r.ownedNamespaces)][n.dropConstraint(databaseType)/][/for]
-[/template]
+  [for (n : environment::Namespace | r.ownedNamespaces)][n.dropConstraint(databaseType)/][/for][/template]
 
 [template private dropConstraint(n : environment::Namespace, databaseType : String)]
   [for (sb : environment::Namespace | n.ownedNamespaces)]
     [sb.dropConstraint(databaseType)/]
   [/for]
-  [for (e : entity::Entity | n.types->select(e | e.oclIsKindOf(entity::Entity)))]
-    [if (not e.isNotPersistent() or e.useMatching())][e.dropConstraint(databaseType)/][/if]
-  [/for]
-[/template]
+  [for (e : entity::Entity | n.types->select(e | e.oclIsKindOf(entity::Entity)))][if (not e.isNotPersistent() or e.useMatching())][e.dropConstraint(databaseType)/][/if][/for][/template]
 
 [template private dropConstraint(e : entity::Entity, databaseType : String)]
   [for (a : environment::Attribute | e.attributes())]

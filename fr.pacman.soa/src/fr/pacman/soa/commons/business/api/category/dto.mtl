@@ -36,10 +36,7 @@
 
 [comment encoding = UTF-8 /]
 [template public getExternalUserBusinessGen(d : environment::DTO)]
-  [for (r : environment::Reference | d.references)]
-    [if (r.referencedType.oclAsType(environment::DTO) <> null and not r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen().toString().contains(d.buildImportUserBusinessGen()))][r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen()/][/if]
-  [/for]
-[/template]
+  [for (r : environment::Reference | d.references)][if (r.referencedType.oclAsType(environment::DTO) <> null and not r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen().toString().contains(d.buildImportUserBusinessGen()))][r.referencedType.oclAsType(environment::DTO).buildImportUserBusinessGen()/][/if][/for][/template]
 
 [comment : Generation de la classe commune (application) pour les champs additionnels. /]
 [template public dtoAppliAbs(s : soa::System)]
@@ -115,19 +112,13 @@
 [/template]
 
 [template private getImplementation(d : environment::DTO) post(self.trim())]
-  [if (d.hasAutomaticColumns() and not d.hasParent())]extends [d.buildAppliDtoAbstractClassName()/][/if]
-   [d.getImplementationForNoAutomaticColumns()/][/template]
+  [if (d.hasAutomaticColumns() and not d.hasParent())]extends [d.buildAppliDtoAbstractClassName()/][/if] [d.getImplementationForNoAutomaticColumns()/][/template]
 
 [template private getImplementationForNoAutomaticColumns(d : environment::DTO) post(self.trim())]
-  [if (d.hasParent())]
-    [if (not d.hasAutomaticColumns())] extends[else], [/if]
-    [d.supertype.oclAsType(environment::DTO).buildDtoClassName()/][if (d.useSpi4jSecurity() and d.dtoIsUser())] implements User_Itf[/if]
-  [else][d.getImplementationForSimpleDto()/][/if]
-[/template]
+  [if (d.hasParent())][if (not d.hasAutomaticColumns())] extends[else], [/if][d.supertype.oclAsType(environment::DTO).buildDtoClassName()/][if (d.useSpi4jSecurity() and d.dtoIsUser())] implements User_Itf[/if][else][d.getImplementationForSimpleDto()/][/if][/template]
 
 [template private getImplementationForSimpleDto(d : environment::DTO) post(self.trim())]
-  implements [d.getClassNameForDto_Itf()/]<[d.genPkType()/]>[if (d.useSpi4jSecurity() and d.dtoIsUser())], User_Itf[/if]
-[/template]
+  implements [d.getClassNameForDto_Itf()/]<[d.genPkType()/]>[if (d.useSpi4jSecurity() and d.dtoIsUser())], User_Itf[/if][/template]
 
 [template public dto(d : environment::DTO)]
   [d.licence()/]
@@ -636,18 +627,7 @@
        {
     [if (d.hasMandatoryFields() or d.hasStringFieldWithSize())]
             List<String> ['champs invalides'.apply_variableDefault()/] = prepareValidate();
-      [for (a : environment::Attribute | d.attributesNotComputed())]
-        [if (not a.isPropertyFromParent(d))][d.validProperty(a)/][/if]
-      [/for]
-      [for (r : environment::Reference | d.referencesNoStar())]
-        [if (not r.isPropertyFromParent(d))]
-          [if (r.oppositeOf = null or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable))][d.validProperty(r)/][/if]
-        [/if]
-      [/for]
-      [for (r : environment::Reference | d.referencingStar())]
-        [if (not r.isPropertyFromParent(d))][d.validPropertyInverse(r)/][/if]
-      [/for]
-            // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      [for (a : environment::Attribute | d.attributesNotComputed())][if (not a.isPropertyFromParent(d))][d.validProperty(a)/][/if][/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.isPropertyFromParent(d))][if (r.oppositeOf = null or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable))][d.validProperty(r)/][/if][/if][/for][for (r : environment::Reference | d.referencingStar())][if (not r.isPropertyFromParent(d))][d.validPropertyInverse(r)/][/if][/for]      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
             if (['champs invalides'.apply_variableDefault()/] != null)
             {
                throw new Spi4jValidationException(this, ['champs invalides'.apply_variableDefault()/].toArray(new String['['/]['champs invalides'.apply_variableDefault()/].size()]));
@@ -662,12 +642,7 @@
        {
     [if (d.hasMandatoryFields() or d.hasStringFieldWithSize())]
             List<String> ['champs invalides'.apply_variableDefault()/] = null;
-      [for (a : environment::Attribute | d.attributesNotComputed())][d.validProperty(a)/][/for]
-      [for (r : environment::Reference | d.referencesNoStar())]
-        [if (r.oppositeOf = null or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable))][d.validProperty(r)/][/if]
-      [/for]
-      [for (r : environment::Reference | d.referencingStar())][d.validPropertyInverse(r)/][/for]
-            // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      [for (a : environment::Attribute | d.attributesNotComputed())][d.validProperty(a)/][/for][for (r : environment::Reference | d.referencesNoStar())][if (r.oppositeOf = null or not (r.oppositeOf.isMultiple() and r.oppositeOf.navigable))][d.validProperty(r)/][/if][/for][for (r : environment::Reference | d.referencingStar())][d.validPropertyInverse(r)/][/for]      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
             if (['champs invalides'.apply_variableDefault()/] != null)
             {
                throw new Spi4jValidationException(this, ['champs invalides'.apply_variableDefault()/].toArray(new String['['/]['champs invalides'.apply_variableDefault()/].size()]));
@@ -701,68 +676,46 @@
   }[/template]
 
 [template public resetDtoParametersId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())], final [r.genPkType()/] [r.nameParamId()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())], final [r.genPkType()/] [r.nameParamId()/][/for][/template]
 
 [template public resetCallDtoParametersId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())], [r.nameParamId()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())], [r.nameParamId()/][/for][/template]
 
 [template public resetDtoParameters(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())], final [r.nameDto()/] [r.nameParam()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())], final [r.nameDto()/] [r.nameParam()/][/for][/template]
 
 [template public resetCallDtoParameters(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())], [r.nameParam()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())], [r.nameParam()/][/for][/template]
 
 [template public toString(d : environment::DTO)]
   getClass().getSimpleName() + '['['/]' + [d.namePK_ID()/] [d.endToString()/] + ']';[/template]
 
 [template public endToString(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())]
-    + ", " + [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')] getIdentifiant() [else][a.name.normalize().apply_methodGet()/]()[/if]
-     [/for]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-       [if (not r.isPropertyFromParent(d))] + ", " + [r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ()[/if]
-    [/if]
-  [/for]
-   [for (r : environment::Reference | d.referencingStar())]
-     [if (not r.isPropertyFromParent(d))] + ", " + [r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] () [/if]
-   [/for]
-[/template]
+  [for (a : environment::Attribute | d.attributesNotComputed())]+ ", " + [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')] getIdentifiant() [else][a.name.normalize().apply_methodGet()/]()[/if] [/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())] [if (not r.isPropertyFromParent(d))] + ", " + [r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ()[/if][/if][/for] [for (r : environment::Reference | d.referencingStar())][if (not r.isPropertyFromParent(d))] + ", " + [r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] () [/if][/for][/template]
 
 [template public resetDtoReferencingParamsId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], final [r.genPkType()/] [r.nameParamInverseId()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], final [r.genPkType()/] [r.nameParamInverseId()/][/for][/template]
 
 [template public resetCallDtoReferencingParamsId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], [r.nameParamInverseId()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], [r.nameParamInverseId()/][/for][/template]
 
 [template public resetDtoReferencingParams(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], final [r.containingType.oclAsType(environment::DTO).nameDto()/] [r.nameParamInverse()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], final [r.containingType.oclAsType(environment::DTO).nameDto()/] [r.nameParamInverse()/][/for][/template]
 
 [template public resetCallDtoReferencingParams(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], [r.nameParamInverse()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], [r.nameParamInverse()/][/for][/template]
 
 [template public resetAttributes(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())], final [a.gentTypeAndNameParam()/][/for]
-[/template]
+  [for (a : environment::Attribute | d.attributesNotComputed())], final [a.gentTypeAndNameParam()/][/for][/template]
 
 [template public resetCallAttributes(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())], [a.nameParam()/][/for]
-[/template]
+  [for (a : environment::Attribute | d.attributesNotComputed())], [a.nameParam()/][/for][/template]
 
 [template private validProperty(d : environment::DTO, p : environment::Attribute)]
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = DtoUtil.checkMandatoryField("[p.nameBase()/]", [p.name.toLowerFirst().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [d.validateSize(p)/]
-[/template]
+  [d.validateSize(p)/][/template]
 
 [template private validProperty(d : environment::DTO, p : environment::Reference)]
   [if (p.isMandatory())]
@@ -781,16 +734,10 @@
 [/template]
 
 [template private nameBase(p : environment::Property)]
-  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameBaseAttribute()/][else]
-                                                                                                          [if (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).nameBaseReference()/][/if]
-                                                                                                        [/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameBaseAttribute()/][elseif (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).nameBaseReference()/][/if][/template]
 
 [template private nameProp(p : environment::Property)]
-  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameProperty()/][else]
-                                                                                                     [if (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).namePropertyId()/][/if]
-                                                                                                   [/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameProperty()/][elseif (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).namePropertyId()/][/if][/template]
 
 [template private validateSize(d : environment::DTO, a : environment::Attribute)]
   [if (a.hasSize() and a.type.name = 'String')]
@@ -803,59 +750,40 @@
  * Paramétrage début
 */]
 [template public getResetAttributes(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())], final [a.getTypeAndNameParam()/][/for]
-[/template]
+  [for (a : environment::Attribute | d.attributesNotComputed())], final [a.getTypeAndNameParam()/][/for][/template]
 
 [template public getResetDtoParameters(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [r.name.toLowerFirst().apply_parameterMethodClassicIn()/][/if]
-  [/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [r.name.toLowerFirst().apply_parameterMethodClassicIn()/][/if][/for][/template]
 
 [template public getResetDtoParametersId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], final [r.genPkType()/] [r.name.toLowerFirst().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/if]
-  [/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], final [r.genPkType()/] [r.name.toLowerFirst().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/if][/for][/template]
 
 [template public getResetDtoReferencingParams(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], final [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], final [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][/for][/template]
 
 [template public gresetDtoReferencingParams(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], final [r.containingType.oclAsType(environment::DTO).nameDto()/] [r.nameParamInverse()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], final [r.containingType.oclAsType(environment::DTO).nameDto()/] [r.nameParamInverse()/][/for][/template]
 
 [template public getResetDtoReferencingParamsId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], final [r.genPkType()/] [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/for][/template]
 
 [**
  * Calls
 */]
 [template public getResetCallDtoParametersId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.nameBaseReference().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/if]
-  [/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.nameBaseReference().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/if][/for][/template]
 
 [template public getResetCallAttributes(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_parameterMethodClassicIn()/][/for]
-[/template]
+  [for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_parameterMethodClassicIn()/][/for][/template]
 
 [template public getResetCallDtoReferencingParams(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][/for][/template]
 
 [template public getResetCallDtoReferencingParamsId(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/for]
-[/template]
+  [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/][/for][/template]
 
 [template public getResetCallDtoParameters(d : environment::DTO)]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.nameBaseReference().apply_parameterMethodClassicIn()/][/if]
-  [/for]
-[/template]
+  [for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.nameBaseReference().apply_parameterMethodClassicIn()/][/if][/for][/template]
 
 [comment : Add required imports for app auto fields /]
 [template private writeImports(s : soa::System) post(self.trim())]
@@ -907,10 +835,7 @@
  * Autres
 */]
 [template private getNameProp(p : environment::Property)]
-  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameProperty()/][else]
-                                                                                                     [if (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).namePropertyId()/][/if]
-                                                                                                   [/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][p.oclAsType(environment::Attribute).nameProperty()/][elseif (p.oclIsTypeOf(environment::Reference))][p.oclAsType(environment::Reference).namePropertyId()/][/if][/template]
 
 [template private getNameReferenceVar(r : environment::Reference)]
   [r.name.toLowerFirst().apply_attributeDefault()/][/template]

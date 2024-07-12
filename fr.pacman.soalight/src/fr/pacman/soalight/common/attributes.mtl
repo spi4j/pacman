@@ -29,8 +29,7 @@
  * Paramétrage fin
 */]
 [template public genTypeName(t : environment::Type)]
-  [if (t.oclIsKindOf(environment::Enumeration))][t.name.apply_classEnum()/][t.name.sanitize()/][/if]
-[/template]
+  [if (t.oclIsKindOf(environment::Enumeration))][t.name.apply_classEnum()/][t.name.sanitize()/][/if][/template]
 
 [template public genTypeAndName(a : environment::Attribute) post(self.trim())]
   [a.genPropertyType()/] [a.nameProperty()/][/template]

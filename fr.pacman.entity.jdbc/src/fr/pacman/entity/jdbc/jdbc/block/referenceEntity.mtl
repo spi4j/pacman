@@ -36,9 +36,7 @@
   
   
   [r.comClass(r.roleEntity())/]
-  public class [r.buildReferenceImplClassName()/] [if (r.hasAutomaticColumns())]extends [r.buildAppliEntityAbstractClassName()/]<[r.genPkType()/]> [/if]
-  implements [r.buildReferenceEntityInterfaceName()/][if (r.containingType.oclAsType(entity::Entity).hasVersion())], JdbcOptimistLocked_Itf[/if]
-  
+  public class [r.buildReferenceImplClassName()/] [if (r.hasAutomaticColumns())]extends [r.buildAppliEntityAbstractClassName()/]<[r.genPkType()/]> [/if]implements [r.buildReferenceEntityInterfaceName()/][if (r.containingType.oclAsType(entity::Entity).hasVersion())], JdbcOptimistLocked_Itf[/if]
   {
      // CONSTANTES
   
@@ -172,8 +170,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField("[p.nameSimpleProperty()/]", [p.nameSimpleProperty().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if][/template]
 
 [template private validInverseProperty(e : entity::Entity, r : environment::Reference)]
   [if (r.isMandatory())]
@@ -185,8 +182,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField("[p.nameSimpleProperty()/]", [p.nameSimpleProperty().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if][/template]
 
 [template private validInversePropertyWhenHasAutomaticColumns(e : entity::Entity, r : environment::Reference)]
   [if (r.isMandatory())]

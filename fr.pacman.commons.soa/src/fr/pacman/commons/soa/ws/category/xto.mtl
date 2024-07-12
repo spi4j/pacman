@@ -55,7 +55,6 @@
          	/** [columnProp.getNameColumn().toUpperFirst()/] */
          	@XmlElement(namespace = "", name = "[columnProp.getNameColumn().sanitize().toLowerFirst()/]")
          	[if (columnProp.useWS())]@JsonProperty("[columnProp.getNameColumn().sanitize().toLowerFirst()/]")[/if]
-      
          	private [columnProp.getTypeColumn()/] [columnProp.getNameColumn().apply_attributeDefault()/];[columnProp.lineSeparator()/]
     [/if]
   [/for]
@@ -95,8 +94,7 @@
 [/template]
 
 [template private getImplementation(d : environment::DTO) post(self.trim())]
-  [if (d.hasAutomaticColumns() and not d.hasParent())]extends [d.buildAppliXtoAbstractClassName()/][/if]
-   [d.getImplementationForNoAutomaticColumns()/][/template]
+  [if (d.hasAutomaticColumns() and not d.hasParent())]extends [d.buildAppliXtoAbstractClassName()/][/if] [d.getImplementationForNoAutomaticColumns()/][/template]
 
 [template private getImplementationForNoAutomaticColumns(d : environment::DTO) post(self.trim())]
   [if (d.hasParent())]
@@ -106,14 +104,7 @@
 
 [comment : For REST services, the Xto implements the RsXto_Itf which is just a markup interface. /]
 [template private getImplementationForSimpleXto(d : environment::DTO) post(self.trim())]
-  implements [if (not d.isLibraryRS())]
-               [if (d.hasParent())]
-                 [if (d.useSpi4jSecurity() and d.dtoIsUser())]User_Itf[/if]
-               [else]
-                 [d.getClassNameForXto_Itf()/]<[d.genPkType()/]>, RsXto_Itf[if (d.useSpi4jSecurity() and d.dtoIsUser())], User_Itf[/if]
-               [/if]
-             [else]Serializable[/if]
-[/template]
+  implements [if (not d.isLibraryRS())][if (d.hasParent())][if (d.useSpi4jSecurity() and d.dtoIsUser())]User_Itf[/if][else][d.getClassNameForXto_Itf()/]<[d.genPkType()/]>, RsXto_Itf[if (d.useSpi4jSecurity() and d.dtoIsUser())], User_Itf[/if][/if][else]Serializable[/if][/template]
 
 [comment : No need of persistence for REST services but do not rely on the metadata 'NOT_PERSISTENT'./]
 [template public xto(d : environment::DTO)]
@@ -136,8 +127,7 @@
    */
   @XmlRootElement(name = "[d.buildXtoClassNameFromDto()/]", namespace = "http://[d.getNamespaceXto()/]/xto")
   @XmlAccessorType(XmlAccessType.FIELD)
-  public [if (d.isParent())]abstract [/if]
-  class [d.buildXtoClassNameFromDto()/] [d.getImplementation()/]
+  public [if (d.isParent())]abstract [/if]class [d.buildXtoClassNameFromDto()/] [d.getImplementation()/]
   {
   
      private static final long serialVersionUID = 1L;
@@ -150,7 +140,6 @@
        [protected (d.getUserCodeId('for annotation_' + d.nameENUM_PK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
             @XmlElement(namespace = "", name = "[d.nameENUM_PK_ID()/]")
             [if (d.useWS())]@JsonProperty("[d.nameENUM_PK_ID()/]")[/if]
-         
             private [d.genPkType()/] [d.namePK_ID()/];
        [/protected]
     
@@ -163,7 +152,6 @@
          [protected (d.getUserCodeId('for annotation_' + a.nameBaseAttribute())) startTagPrefix('// ') endTagPrefix('// ')]
               @XmlElement(namespace = "", name = "[a.nameBaseAttribute()/]")
               [if (a.useWS())]@JsonProperty("[a.nameBaseAttribute()/]")[/if]
-           
          [/protected]
       
          [a.getProperty()/];
@@ -178,7 +166,6 @@
            [protected (r.getUserCodeId('for annotation_1_' + r.nameBaseReference() + r.namePK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
                 @XmlElement(namespace = "", name = "[r.nameBaseReference()/][r.namePK_ID()/]")
                 [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/][r.namePK_ID()/]")[/if]
-             
            [/protected]
         
            [r.getXtoReferenceId()/]
@@ -189,7 +176,6 @@
          [protected (r.getUserCodeId('for annotation_' + r.nameBaseReference())) startTagPrefix('// ') endTagPrefix('// ')]
               @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
               [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
-           
          [/protected]
       
          [r.getXtoReference()/]
@@ -203,7 +189,6 @@
          [protected (r.getUserCodeId('for annotation_1_' + r.name.toLowerFirst().apply_attributeMultiple())) startTagPrefix('// ') endTagPrefix('// ')]
               @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
               [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
-           
          [/protected]
       
          [r.getRefListeXto()/]
@@ -217,7 +202,6 @@
          [protected (r.getUserCodeId('for annotation_' + r.name.toLowerFirst().apply_attributeMultiple())) startTagPrefix('// ') endTagPrefix('// ')]
               @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
               [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
-           
          [/protected]
       
          [r.getRefListeXto()/]
@@ -231,7 +215,6 @@
          [protected (r.getUserCodeId('for annotation_' + r.nameBaseReference() + r.namePK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
               @XmlElement(namespace = "", name = "[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")
               [if (r.useWS())]@JsonProperty("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")[/if]
-           
          [/protected]
       
          [r.getXtoReferenceInverseId()/]
@@ -475,15 +458,8 @@
 
 [comment : First part for the ToString() method, for simplication in REST services, we dont have getId ad SetId so send a "NO-ID". /]
 [template private toString(d : environment::DTO)]
-  getClass().getName() + '['['/]' [if (d.isLibraryRS())]+ "NO-ID" [d.endToString()/] [else] + getId () [d.endToString()/] [/if]
-  + ']';[/template]
+  getClass().getName() + '['['/]' [if (d.isLibraryRS())]+ "NO-ID" [d.endToString()/] [else] + getId () [d.endToString()/] [/if]+ ']';[/template]
 
 [comment : Second part of the "toString()" method. /]
 [template private endToString(d : environment::DTO)]
-  [for (a : environment::Attribute | d.attributesNotComputed())]
-     + ", " + [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')] getIdentifiant () [else][a.name.normalize().apply_methodGet()/]()[/if]
-      [/for]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent() and not r.isLibraryRS())] + ", " + [r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ()[/if]
-  [/for]
-[/template]
+  [for (a : environment::Attribute | d.attributesNotComputed())] + ", " + [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')] getIdentifiant () [else][a.name.normalize().apply_methodGet()/]()[/if]  [/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent() and not r.isLibraryRS())] + ", " + [r.name.toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ()[/if][/for][/template]

@@ -136,8 +136,7 @@
 [template private getDispatch(viewState : flow::ViewState, event : view::ViewEvent) post(self.trim())]
   [if (not (viewState.getNextViewStateFromEvent(event) = null))]
     "/[viewState.getNextViewStateFromEvent(event).nameViewStateImplementation()/]", true
-  [else][viewState.getDispatchForInit()/][/if]
-[/template]
+  [else][viewState.getDispatchForInit()/][/if][/template]
 
 [comment : On considere un seul conteneur pour un controleur !  /]
 [template private getDispatchForInit(viewState : flow::ViewState) post(self.trim())]
@@ -148,8 +147,7 @@
 
 [comment : recuperation du routage pour la page d'erreur. /]
 [template private getDispatchForError(any : ecore::EObject) post(self.trim())]
-  [if (any.hasErrorView())]/[any.getErrorState().nameViewStateImplementation()/][else]/defaultErrorView.jsp[/if]
-[/template]
+  [if (any.hasErrorView())]/[any.getErrorState().nameViewStateImplementation()/][else]/defaultErrorView.jsp[/if][/template]
 
 [comment : Write all imports for the dispatcher./]
 [template private writeImports(root : cinematic::CinematicRoot) post(self.trim())]

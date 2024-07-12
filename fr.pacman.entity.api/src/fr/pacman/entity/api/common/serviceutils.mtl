@@ -16,8 +16,7 @@
 [comment encoding = UTF-8 /]
 [template public comParamInverseIdIn(r : environment::Reference)]
       * @param [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
-      *           (In)[if (r.isMandatory())](*)[/if]
-   [r.descriptionInverse(false)/][/template]
+      *           (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
 
 [comment OA : Teste si une propriété (attribut ou référence) est obligatoire/]
 [query public isMandatory(p : environment::Property) : Boolean = p.isMandatorySoa()/]
@@ -35,8 +34,7 @@
   [r.nameBaseReferenceInverse()/] id[/template]
 
 [template public nameBaseReferenceInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).buildSimpleEntityName().toLowerFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).buildSimpleEntityName().toLowerFirst()/][else][r.oppositeOf.nameBaseReference()/][/if][/template]
 
 [template public getImportEnum(e : entity::Entity)]
   import [e.buildPackagePersistenceApiEntity()/].[e.buildEntityColumnEnumName()/];[/template]

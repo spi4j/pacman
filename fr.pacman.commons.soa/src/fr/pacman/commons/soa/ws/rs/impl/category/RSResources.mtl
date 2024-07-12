@@ -108,8 +108,7 @@
 
 [comment : Write the list of packages to scan for jersey. /]
 [template private writePackagesToScan(m : soa::System) post(self.trim())]
-  [m.buildPackageRsResources(false)/][if (m.isCrudApplication())],[m.buildPackageRsResources(true)/][/if]
-[/template]
+  [m.buildPackageRsResources(false)/][if (m.isCrudApplication())],[m.buildPackageRsResources(true)/][/if][/template]
 
 [comment : Write all required imports. /]
 [template private writeImports(m : soa::System, s : String) post(self.trim())]

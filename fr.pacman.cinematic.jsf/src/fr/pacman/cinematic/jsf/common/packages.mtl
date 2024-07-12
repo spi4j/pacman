@@ -22,8 +22,7 @@
  * @param aViewState
 */]
 [template public genFullQualifiedFileName(viewContainer : view::ViewContainer)]
-  /src/main/webapp/pages/[viewContainer.namePackagePagesContainer()/][if (viewContainer.ancestors(cinematic::Package)->notEmpty())]/[/if]
-  [viewContainer.nameViewImplementation()/].xhtml[/template]
+  /src/main/webapp/pages/[viewContainer.namePackagePagesContainer()/][if (viewContainer.ancestors(cinematic::Package)->notEmpty())]/[/if][viewContainer.nameViewImplementation()/].xhtml[/template]
 
 [template public genFullQualifiedFileNameWithoutDot(viewContainer : view::ViewContainer)]
   [viewContainer.genPackage().replace('//', '/')/][/template]

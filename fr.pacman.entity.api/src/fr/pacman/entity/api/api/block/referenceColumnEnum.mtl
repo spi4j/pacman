@@ -24,18 +24,15 @@
 
 [template private enumStruct(a : environment::Attribute)]
      /** [a.nameSimpleProperty().apply_attributeEnum()/]. */
-     [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStruct(r : environment::Reference, compteur : Integer)]
      /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
-     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructInverse(r : environment::Reference, compteur : Integer)]
      /** [r.nameBaseReferenceInverse()/][r.namePK_ID()/]. */
-     [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  , false)[/template]
+     [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [comment sur la base de PersonneColomn_Enum en r97 /]
 [template public referenceColumnEnum(r : environment::Reference)]

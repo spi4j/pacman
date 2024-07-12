@@ -84,8 +84,7 @@
       [/if]
     [/protected]
     
-    public class [e.buildServiceImplClassName()/] [if (not e.isNotPersistent())]extends [e.getClassNameForEntityService_Abs()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/], [e.buildEntityColumnEnumName()/]>[/if]
-     implements [e.buildServiceInterfaceName()/]
+    public class [e.buildServiceImplClassName()/] [if (not e.isNotPersistent())]extends [e.getClassNameForEntityService_Abs()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/], [e.buildEntityColumnEnumName()/]>[/if] implements [e.buildServiceInterfaceName()/]
     {
     
        // Rappel : les services sont sans état.
@@ -241,5 +240,4 @@
 [/template]
 
 [template private defaultValueForColumnType(type : String)]
-  [if (type.equalsIgnoreCase('String'))]"Str"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]2[elseif (type.equalsIgnoreCase('Long'))]2L[elseif (type.equalsIgnoreCase('Float'))]2F[elseif (type.equalsIgnoreCase('Double'))]2D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp(new Date().getTime())[elseif (type.equalsIgnoreCase('Time'))]new Time(new Date().getTime())[elseif (type.equalsIgnoreCase('Binary'))]getRandomBinary()[elseif (type.equalsIgnoreCase('Char'))]'X'[else]null[/if]
-[/template]
+  [if (type.equalsIgnoreCase('String'))]"Str"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]2[elseif (type.equalsIgnoreCase('Long'))]2L[elseif (type.equalsIgnoreCase('Float'))]2F[elseif (type.equalsIgnoreCase('Double'))]2D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp(new Date().getTime())[elseif (type.equalsIgnoreCase('Time'))]new Time(new Date().getTime())[elseif (type.equalsIgnoreCase('Binary'))]getRandomBinary()[elseif (type.equalsIgnoreCase('Char'))]'X'[else]null[/if][/template]

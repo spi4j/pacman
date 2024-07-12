@@ -50,8 +50,7 @@
     
     
     /**
-     * Définit le contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if]
-    .
+     * Définit le contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if].
      * @author [s.getAuthorName()/]
      */
     // Annotations Service
@@ -61,10 +60,7 @@
       [/if]
     [/protected]
     
-    public interface [s.buildServiceInterfaceName(d)/][if (d.hasCrud())]
-                                                         extends [s.getClassNameForService_Itf()/]<[s.genPkType()/], [d.buildDtoClassName()/]>[if (d.isReferentiel())], [s.getClassNameForServiceReferentiel_Itf()/][/if]
-                                                      [else] extends [s.getClassNameForApplicationService_Itf()/][/if]
-    
+    public interface [s.buildServiceInterfaceName(d)/][if (d.hasCrud())] extends [s.getClassNameForService_Itf()/]<[s.genPkType()/], [d.buildDtoClassName()/]>[if (d.isReferentiel())], [s.getClassNameForServiceReferentiel_Itf()/][/if][else] extends [s.getClassNameForApplicationService_Itf()/][/if]
     {
     
     [if (d.hasCrud() and s.isCrudApplication() and false)]
@@ -196,12 +192,7 @@
       [if (not permissions->isEmpty())]
         [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
                                                                                                                                                     @Permissions(value =
-                                                                                                                                                    {[for (s : String | permissions)]
-                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
-                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
-                                                                                                                                                     [/for]
-                                                                                                                                                    })[/if]
-      [/if]
+                                                                                                                                                    {[for (s : String | permissions)][if (not permissions->first().equalsIgnoreCase(s))], [/if][o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if][/for]})[/if][/if]
     [/let]
   [/if]
   [if (o.permissionAnnotationExists('PERMISSIONS_OR'))]
@@ -209,12 +200,7 @@
       [if (not permissions->isEmpty())]
         [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
                                                                                                                                                     @Permissions(value =
-                                                                                                                                                    {[for (s : String | permissions)]
-                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
-                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
-                                                                                                                                                     [/for]
-                                                                                                                                                    }, operator = PermissionsOperator_Enum.OR)[/if]
-      [/if]
+                                                                                                                                                    {[for (s : String | permissions)][if (not permissions->first().equalsIgnoreCase(s))], [/if][o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if][/for]}, operator = PermissionsOperator_Enum.OR)[/if][/if]
     [/let]
   [/if]
   [if (o.permissionAnnotationExists('PERMISSIONS_AND'))]
@@ -222,17 +208,10 @@
       [if (not permissions->isEmpty())]
         [if (permissions->size() = 1)]@Permissions([o.buildAppliPermissionsInterfaceName()/].[permissions->first().apply_attributeFinalStatic()/])[else]
                                                                                                                                                     @Permissions(value =
-                                                                                                                                                    {[for (s : String | permissions)]
-                                                                                                                                                       [if (not permissions->first().equalsIgnoreCase(s))], [/if]
-                                                                                                                                                       [o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if]
-                                                                                                                                                     [/for]
-                                                                                                                                                    }, operator = PermissionsOperator_Enum.AND)[/if]
-      [/if]
+                                                                                                                                                    {[for (s : String | permissions)][if (not permissions->first().equalsIgnoreCase(s))], [/if][o.buildAppliPermissionsInterfaceName()/].[s.apply_attributeFinalStatic()/][if (permissions->last().equalsIgnoreCase(s))] [/if][/for]}, operator = PermissionsOperator_Enum.AND)[/if][/if]
     [/let]
   [/if]
-  [if (o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED'))]@AcceptUnauthentified[/if]
-  [if (o.isPermissionSchemeSecured())]@Permissions([o.buildAppliPermissionsInterfaceName()/].[o.getPermissionSchemeSecured().getSpi4jId().apply_attributeFinalStatic()/])[/if]
-[/template]
+  [if (o.permissionAnnotationExists('ACCEPT_UNAUTHENTIFIED'))]@AcceptUnauthentified[/if][if (o.isPermissionSchemeSecured())]@Permissions([o.buildAppliPermissionsInterfaceName()/].[o.getPermissionSchemeSecured().getSpi4jId().apply_attributeFinalStatic()/])[/if][/template]
 
 [comment : Write all required imports. /]
 [template private writeImports(s : soa::Service, d : environment::DTO) post(self.trim())]

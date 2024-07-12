@@ -17,12 +17,7 @@
 
 [comment : Retourne le nom de la table dans la librairie avec le schema en prefixe. /]
 [template public nameLibraryTableWithSchema(e : entity::Entity) post(self.trim())]
-  [let libName : String = e.getLibraryNameForEntity(e.getApplicationName())]
-    [for (prop : String | e.getAdditionnalLibraries())]
-      [if (prop.index(libName) > 0)][e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][e.physicalName().first(e.maxTableSize())/][/if]
-    [/for]
-  [/let]
-[/template]
+  [let libName : String = e.getLibraryNameForEntity(e.getApplicationName())][for (prop : String | e.getAdditionnalLibraries())][if (prop.index(libName) > 0)][e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][e.physicalName().first(e.maxTableSize())/][/if][/for][/let][/template]
 
 [comment : Retourne le nom de la table sans le schema en prefixe. /]
 [template public nameTable(e : entity::Entity)]
@@ -34,8 +29,7 @@
 
 [comment : getSQLTableSchema() ne peut pas être null ou non défini (on peut enlever le test..). /]
 [template private get_schema(e : entity::Entity)]
-  [if (e.hasSQLTableSchema())][e.getSQLTableSchema()/][/if]
-[/template]
+  [if (e.hasSQLTableSchema())][e.getSQLTableSchema()/][/if][/template]
 
 [template public nameTableJointureWithSchema(r : environment::Reference)]
   [r.get_entity().get_schema()/][r.nameTableJointure()/][/template]
@@ -164,17 +158,14 @@
 
 [comment : unicity also relies to mandatory property (ONE_LITERAL | ONE_STAR_LITERAL). /]
 [template public nameUniqueIndex(e : entity::Entity, compteurX : Integer, compteurY : Integer)]
-  [e.nameTable()/][if (e.isMandatory(e.uniqueIndex()))]_UN[else]_IDX[/if]
-  [compteurX/]_[compteurY/][/template]
+  [e.nameTable()/][if (e.isMandatory(e.uniqueIndex()))]_UN[else]_IDX[/if][compteurX/]_[compteurY/][/template]
 
 [comment : unicity also relies to mandatory property (ONE_LITERAL | ONE_STAR_LITERAL). /]
 [template public nameUniqueIndex(e : entity::Entity, a : environment::Attribute, compteurX : Integer, compteurY : Integer)]
-  [e.nameTable()/][if (a.isMandatory())]_UN[else]_IDX[/if]
-  [compteurX/]_[compteurY/][/template]
+  [e.nameTable()/][if (a.isMandatory())]_UN[else]_IDX[/if][compteurX/]_[compteurY/][/template]
 
 [template public namePK(e : entity::Entity)]
-  [if (e.ownedAttributes->exists(a | a.isIdentifier))][e.ownedAttributes->select(a | a.isIdentifier)->asSequence()->collect(temp2 | temp2.nameColumn())/][else][e.nameEntityPK()/][/if]
-[/template]
+  [if (e.ownedAttributes->exists(a | a.isIdentifier))][e.ownedAttributes->select(a | a.isIdentifier)->asSequence()->collect(temp2 | temp2.nameColumn())/][else][e.nameEntityPK()/][/if][/template]
 
 [template public nameReferenceID(r : environment::Reference)]
   [r.nameTableJointure() + '_ID'/][/template]
@@ -183,8 +174,7 @@
   [e.physicalName().first(e.maxColumnPKSize()) + '_ID'/][/template]
 
 [template public nameIndex(r : environment::Reference, compteur : Integer)]
-  [if (r.isMultiple())][r.referencedType.oclAsType(entity::Entity).nameTableShort().first(r.maxIndexSize())/]_IDX1_[compteur/][else][r.containingType.oclAsType(entity::Entity).nameTableShort().first(r.maxIndexSize())/]_IDX1_[compteur/][/if]
-[/template]
+  [if (r.isMultiple())][r.referencedType.oclAsType(entity::Entity).nameTableShort().first(r.maxIndexSize())/]_IDX1_[compteur/][else][r.containingType.oclAsType(entity::Entity).nameTableShort().first(r.maxIndexSize())/]_IDX1_[compteur/][/if][/template]
 
 [comment : Old = 26 - get_prefix(e).toString().size() /]
 [query private maxSequenceSize(e : entity::Entity) : Integer = e.maxTableSize() - 4/]

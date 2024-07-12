@@ -42,10 +42,7 @@
       [/if]
     [/protected]
     
-    public interface [e.buildServiceInterfaceName()/] extends [if (not e.isNotPersistent())]
-                                                                [e.getClassNameForEntityService_Itf()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/]> [if (e.isReferentiel())], [e.getClassNameForServiceReferentiel_Itf()/][/if]
-                                                              [else]ApplicationService_Itf[/if]
-    
+    public interface [e.buildServiceInterfaceName()/] extends [if (not e.isNotPersistent())][e.getClassNameForEntityService_Itf()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/]> [if (e.isReferentiel())], [e.getClassNameForServiceReferentiel_Itf()/][/if][else]ApplicationService_Itf[/if]
     {
     
     	// Methodes [e.buildServiceInterfaceName()/]

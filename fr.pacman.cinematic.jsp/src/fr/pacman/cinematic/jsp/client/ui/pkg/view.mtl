@@ -52,7 +52,6 @@
     <!-- Référencement des beans utilisés pour la page. -->
     [viewState.writeJspUseBeans('request')/]
     [if (viewContainer.hasToWriteReferential())][viewContainer.writeReferentialLink()/][/if]
-    
     <html>
     	<head>
     		[viewContainer.writeCssLink()/]
@@ -62,11 +61,9 @@
     	<body>		
     		<div id="div_[viewContainer.getApplicationName().toLower()/]_main">
     		[if (viewContainer.hasToWriteHeaderView())][viewContainer.writeHeaderLink()/][/if]
-    
     		[viewContainer.writeViewMessengerLink()/]
     		[viewContainer.writeViewBody(viewState, 'body')/]
     		[if (viewContainer.hasToWriteFooterView())][viewContainer.writeFooterLink()/][/if]
-    
     		</div>
     	</body>
     </html>
@@ -159,7 +156,6 @@
       [for (op : soa::Operation | transition.to.oclAsType(flow::ActionState).getOperationsForActionState())]
         [for (param : soa::Parameter | op.output)]
           [if (param.type.oclIsTypeOf(environment::DTO))][param.writeJspUseBean(param.type.oclAsType(environment::DTO), transition)/][/if]
-          
         [/for]
       [/for]
     [/if]
@@ -182,14 +178,11 @@
 
 [comment : Ecriture pour le referencement d'un bean (DTO) a utiliser pour la page. /]
 [template private writeJspUseBean(p : soa::Parameter, d : environment::DTO, t : flow::Transition) post(self.trim())]
-  <jsp:useBean id="[d.nameBeanImplementation()/]" scope="[t.writeScope()/]" type="[if (p.isMultiple())]java.util.List<[/if]
-  [d.namePackageJspUseBeanType()/][if (p.isMultiple())]>[/if]
-  "/>[/template]
+  <jsp:useBean id="[d.nameBeanImplementation()/]" scope="[t.writeScope()/]" type="[if (p.isMultiple())]java.util.List<[/if][d.namePackageJspUseBeanType()/][if (p.isMultiple())]>[/if]"/>[/template]
 
 [comment : Ecriture du scope pour le bean (en fonction de la metadonnee presente sur la transition). /]
 [template private writeScope(t : flow::Transition) post(self.trim())]
-  [if (t.getScope() = null)]request[else][t.getScope()/][/if]
-[/template]
+  [if (t.getScope() = null)]request[else][t.getScope()/][/if][/template]
 
 [comment : ********************************************************************************************** /]
 [comment : ********************************************************************************************** /]
@@ -300,16 +293,12 @@
 [comment : Ecriture pour l'ouverture d'un conteneur (qui peut aussi etre un formulaire). /]
 [comment : Ici on parle de la representation graphique dans le cas d'un formulaire. /]
 [template private writeBeginContainer(layout : view::Layout, viewState : flow::ViewState, formContainer : Boolean)]
-  [if (formContainer)]
-    <fieldset><legend>&nbsp;[if (not (layout.getLayoutElement() = null) and not (layout.getLayoutElement().label = null))][layout.getLayoutElement().label/][/if]
-    &nbsp;</legend>[/if]
-  <div id="div_[layout.getDivId(viewState.name)/]">[/template]
+  [if (formContainer)]<fieldset><legend>&nbsp;[if (not (layout.getLayoutElement() = null) and not (layout.getLayoutElement().label = null))][layout.getLayoutElement().label/][/if]&nbsp;</legend>[/if]<div id="div_[layout.getDivId(viewState.name)/]">[/template]
 
 [comment : Ecriture pour la fermeture d'un composant conteneur (qui peut aussi etre un formulaire). /]
 [comment : Ici on parle de la representation graphique dans le cas d'un formulaire. /]
 [template private writeEndContainer(layout : view::Layout, formContainer : Boolean)]
-  </div>[if (formContainer)]</fieldset>[/if]
-[/template]
+  </div>[if (formContainer)]</fieldset>[/if][/template]
 
 [comment : Ecriture des conteneurs de positionnement pour les composants (a partir des layouts). /]
 [comment : La premiere et la derniere cellule sont toujours vides (permet de simplifier le code) ! /]
@@ -532,8 +521,7 @@
 
 [comment : Ecriture d'un véritable label devant un champ quelconque (texte, textarea, combo, etc...). /]
 [template private writeLbl(viewElement : view::AbstractViewElement, form : Boolean) post(self.trim())]
-  <label id="[if (form)]lbl_[/if]
-  [viewElement.getViewElementId()/]" [viewElement.writeCustomCode('lbl_')/]>[viewElement.getLabelValue()/] : </label>[/template]
+  <label id="[if (form)]lbl_[/if][viewElement.getViewElementId()/]" [viewElement.writeCustomCode('lbl_')/]>[viewElement.getLabelValue()/] : </label>[/template]
 
 [comment : Ecriture d'un span avec la valeur de l'attribut, on se sert du span simplement pour pouvoir mettre un identifiant. /]
 [comment : Par contre, le span peut etre dans une table ou hors d'une table. /]
@@ -567,7 +555,6 @@
   [viewElement.writeLabel(true)/]
   <select id="[viewElement.getViewElementId()/]"  name="[viewElement.name/]" [viewElement.writeCustomCode()/] 
   [if (not viewElement.events->isEmpty())][viewElement.writeJsRouting(viewContainer, viewState)/][else]>[/if]
-  
   <c:forEach items="${[viewElement.getTargetBeanName()/]}" var="item" varStatus="status">
   <!-- 
   // [viewElement.getViewElementId()/]
@@ -584,11 +571,9 @@
 [comment : Ecriture d'un composant de type 'Bouton radio'. /]
 [template private writeRadio(viewElement : view::AbstractViewElement, viewContainer : view::ViewContainer, viewState : flow::ViewState, attribute : environment::Attribute) post(self.trim())]
   [if (attribute = null)][viewElement.writeLabel(true)/][/if]
-  
   <input type="radio" id="[viewElement.getViewElementId()/]" name="[viewElement.name/]" [viewElement.writeCustomCode()/]
    	value="[if (attribute = null)]
-           [else][attribute.writeValueFromItem()/][/if]
-  "/>[/template]
+           [else][attribute.writeValueFromItem()/][/if]"/>[/template]
 
 [comment : Ecriture d'un composant de type 'Case a cocher'. /]
 [template private writeCheckbox(viewElement : view::AbstractViewElement, viewContainer : view::ViewContainer, viewState : flow::ViewState, attribute : environment::Attribute) post(self.trim())]
@@ -606,22 +591,16 @@
 [template private writeImage(viewElement : view::AbstractViewElement, viewContainer : view::ViewContainer, viewState : flow::ViewState, attribute : environment::Attribute, fromOtherElement : Boolean) post(self.trim())]
   [if (attribute = null)]
     <img src="../img/[viewElement.getImageName().trim()/]"
-    id="[if (fromOtherElement)]img_[/if]
-    [viewElement.getViewElementId()/]" title="[viewElement.getLabelValue()/]" [viewElement.writeCustomCode('img_')/]/>[else]<img src="../img/[attribute.writeValueFromItem().trim()/]" [viewElement.writeCustomCode()/]>[/if]
-[/template]
+    id="[if (fromOtherElement)]img_[/if][viewElement.getViewElementId()/]" title="[viewElement.getLabelValue()/]" [viewElement.writeCustomCode('img_')/]/>[else]<img src="../img/[attribute.writeValueFromItem().trim()/]" [viewElement.writeCustomCode()/]>[/if][/template]
 
 [comment : Ecriture d'un composant de type 'Lien' ou 'Image avec un lien'. /]
 [template private writeLink(viewElement : view::AbstractViewElement, viewContainer : view::ViewContainer, viewState : flow::ViewState, attribute : environment::Attribute, image : Boolean) post(self.trim())]
   <a href="[viewElement.writeUrl(viewState)/][viewElement.writeCustomUrlParams()/]" id="[viewElement.getViewElementId()/]" [viewElement.writeCustomCode()/]>
-  [if (image)][viewElement.writeImage(viewContainer, viewState, attribute, true)/][else]
-                                                                                    [if (not (attribute = null))][attribute.writeValueFromItem()/][else][viewElement.getLabelValue()/][/if]
-                                                                                  [/if]
-  </a>[/template]
+  [if (image)][viewElement.writeImage(viewContainer, viewState, attribute, true)/][elseif (not (attribute = null))][attribute.writeValueFromItem()/][else][viewElement.getLabelValue()/][/if]</a>[/template]
 
 [comment : Ecriture du lien, si pas d'evenement on cherche un binding./]
 [template private writeUrl(viewElement : view::AbstractViewElement, viewState : flow::ViewState) post(self.trim())]
-  [if (viewElement.events->isEmpty())][viewElement.writeBindingUrl(viewState)/][else]./[viewState.nameViewStateImplementation()/]?method=[viewElement.getMethodName()/][/if]
-  	[/template]
+  [if (viewElement.events->isEmpty())][viewElement.writeBindingUrl(viewState)/][else]./[viewState.nameViewStateImplementation()/]?method=[viewElement.getMethodName()/][/if]	[/template]
 
 [template private writeBindingUrl(viewElement : view::AbstractViewElement, viewState : flow::ViewState) post(self.trim())]
 [/template]
@@ -660,8 +639,7 @@
 [comment : Ecriture de la methode javascript de routage pour le composant. /]
 [comment : On rajoute un appel a une methode js pour que le developpeur puisse mettre du code personnel. /]
 [template private writeJsRouting(viewElement : view::AbstractViewElement, viewContainer : view::ViewContainer, viewState : flow::ViewState) post(self.trim())]
-  [for (event : view::ViewEvent | viewElement.events)][event.type.name.toLower()/]="[viewElement.writeJsRoutingMethod(event)/]"[/for]
-  />
+  [for (event : view::ViewEvent | viewElement.events)][event.type.name.toLower()/]="[viewElement.writeJsRoutingMethod(event)/]"[/for]/>
   <script>
   	function [viewElement.name/]CustomMethodJS(event) {
   		<!--
@@ -682,8 +660,7 @@
 
 [comment : Ecriture de la portion de code pour attaquer le formulaire en javascript. /]
 [template private writeJsRoutingMethod(viewElement : view::AbstractViewElement, event : view::ViewEvent) post(self.trim())]
-  [viewElement.writeJsRoutingForm()/].[event.writeJsRoutingValue()/]; [if (viewElement.isButtonSubmit())]return[/if]
-   [viewElement.name/]CustomMethodJS('[event.type.name.toLower()/]');[/template]
+  [viewElement.writeJsRoutingForm()/].[event.writeJsRoutingValue()/]; [if (viewElement.isButtonSubmit())]return[/if] [viewElement.name/]CustomMethodJS('[event.type.name.toLower()/]');[/template]
 
 [comment : Ecriture de la portion de code pour attaquer le formulaire en javascript (suite). /]
 [template private writeJsRoutingForm(viewElement : view::AbstractViewElement) post(self.trim())]
@@ -695,10 +672,7 @@
 
 [comment : Ecriture du nom de la methode a attaquer dans le cadre de la gestion des evenements javascript. /]
 [template private getMethodName(viewElement : view::AbstractViewElement) post(self.trim())]
-  [for (event : view::ViewEvent | viewElement.events)]
-    [if (not (event.type = null) and event.type.name.equalsIgnoreCase('onClick'))][event.getEventName()/][/if]
-  [/for]
-[/template]
+  [for (event : view::ViewEvent | viewElement.events)][if (not (event.type = null) and event.type.name.equalsIgnoreCase('onClick'))][event.getEventName()/][/if][/for][/template]
 
 [comment : Ecriture de la page d'index pour l'application. /]
 [template public viewIndex(root : cinematic::CinematicRoot)]
@@ -710,7 +684,6 @@
 [template private writeViewTechnicalHeader(any : ecore::EObject, writeMessenger : Boolean) post(self.trim())]
   <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" autoFlush="true" %>
   [if (writeMessenger)]<%@ page import="fr.spi4j.ui.jsp.JspControllerMessenger" %>[/if]
-  
   <%@ taglib prefix="c" uri="jakarta.tags.core"%>
   
   <!DOCTYPE html>[/template]

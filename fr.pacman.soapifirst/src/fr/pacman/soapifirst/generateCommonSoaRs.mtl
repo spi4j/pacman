@@ -16,7 +16,6 @@
   
   [if (m.hasBinaryTypeForRsLibrary())][m.genBinaryType()/][/if]
   
-  
   [for (d : environment::DTO | m.eAllContents(environment::DTO)->asSet())]
         [d.genXto()/]
   [/for]

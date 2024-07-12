@@ -61,10 +61,7 @@
         // génération des champs
         final [d.genPkType()/] [d.nameENUM_PK_ID().apply_variableDefault()/] = getRandom[d.genPkType()/]();
   [for (a : environment::Attribute | d.attributesNotComputed())]
-          final [a.genPropertyType()/] [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else]
-                                                                                                                                                                                                                                                               getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/]([if (a.hasSize())][d.buildAttributesEnumName()/].[a.nameBaseAttribute()/].getSize()[/if]
-                                                                                                                                                                                                                                                              )[/if]
-    ;
+          final [a.genPropertyType()/] [a.name.normalize().apply_variableDefault()/] = [if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else] getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/]([if (a.hasSize())][d.buildAttributesEnumName()/].[a.nameBaseAttribute()/].getSize()[/if])[/if];
   [/for]
   [for (r : environment::Reference | d.referencesNoStar())]
     [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
@@ -104,35 +101,15 @@
   [if (d.hasReferencingStar())]
     [if (not d.hasReferencingOneStar())]
             // Appel du constructeur de [d.buildDtoClassName()/], avec les dtos référençants valant null, pour valider le constructeur  	
-            ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
-      [for (r : environment::Reference | d.referencesNoStar())]
-        [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], ([r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/if]
-      [/for]
-      [for (r : environment::Reference | d.referencingStar())], ([r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/for]
-      );
+            ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], ([r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/if][/for][for (r : environment::Reference | d.referencingStar())], ([r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/for]);
     [/if]
           // Appel du constructeur de [d.buildDtoClassName()/], avec des dtos référençants, pour valider le constructeur  	
-          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
-    [for (r : environment::Reference | d.referencesNoStar())]
-      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], ([r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/if]
-    [/for]
-    [for (r : environment::Reference | d.referencingStar())], new [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]()[/for]
-    );
+          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], ([r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]) null[/if][/for][for (r : environment::Reference | d.referencingStar())], new [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]()[/for]);
           // Appel du constructeur de [d.buildDtoClassName()/], avec identifiants pour les dtos référençants; ce dto va être validé	
-          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
-    [for (r : environment::Reference | d.referencesNoStar())]
-      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.name.toLowerFirst().apply_variableDefault()/][/if]
-    [/for]
-    [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_variableDefault()/][/for]
-    );
+          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.name.toLowerFirst().apply_variableDefault()/][/if][/for][for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_variableDefault()/][/for]);
   [else]
           // Appel du constructeur de [d.buildDtoClassName()/]; ce dto va être validé	
-          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for]
-    [for (r : environment::Reference | d.referencesNoStar())]
-      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.name.toLowerFirst().apply_variableDefault()/][/if]
-    [/for]
-    [for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_variableDefault()/][/for]
-    );
+          ['dto'.apply_variableDefault()/] = new [d.buildDtoClassName()/]([d.nameENUM_PK_ID().apply_variableDefault()/][for (a : environment::Attribute | d.attributesNotComputed())], [a.name.normalize().apply_variableDefault()/][/for][for (r : environment::Reference | d.referencesNoStar())][if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())], [r.name.toLowerFirst().apply_variableDefault()/][/if][/for][for (r : environment::Reference | d.referencingStar())], [r.nameBaseReferenceInverse().apply_variableDefault()/][/for]);
   [/if]
   
   [for (r : environment::Reference | d.referencesNoStar())]

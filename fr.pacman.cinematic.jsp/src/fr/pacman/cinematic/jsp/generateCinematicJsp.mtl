@@ -17,7 +17,6 @@
       	[root.genViewIndex()/]
       	[root.genViewMessenger()/]
       	[if (not clientType.hasErrorView())][root.genViewError()/][/if]
-      
       [for (viewState : flow::ViewState | root.eAllContents(flow::ViewState))]
         [for (viewContainer : view::ViewContainer | viewState.viewContainers)]
           [if (viewContainer.isViewPanel())]

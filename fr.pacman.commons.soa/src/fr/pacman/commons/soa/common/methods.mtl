@@ -65,13 +65,11 @@
 
 [comment : Write the correct type and multiplicity for the Xto parameter. /]
 [template public paramTypeXto(p : soa::Parameter)]
-  [if (p.isMultiple())]List<[p.typeXto()/]>[else][p.typeXto()/][/if]
-[/template]
+  [if (p.isMultiple())]List<[p.typeXto()/]>[else][p.typeXto()/][/if][/template]
 
 [comment : Write the correct type for the Xto parameter. /]
 [template public typeXto(p : soa::Parameter)]
-  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name.apply_classEnum()/][else][p.simpleTypeDto() + 'Xto'/][/if]
-[/template]
+  [if (p.type.oclIsKindOf(environment::PrimitiveType))][p.type.name.sanitize()/][elseif (p.type.name <> null and p.type.name.contains('<'))][p.type.name.substring(1, p.type.name.index('<') - 1)/][elseif (p.type.oclIsKindOf(environment::Enumeration))][p.type.name.apply_classEnum()/][else][p.simpleTypeDto() + 'Xto'/][/if][/template]
 
 [comment : /]
 [template public paramsIn(o : soa::Operation)]
@@ -79,13 +77,11 @@
 
 [comment : /]
 [template public paramOut(o : soa::Operation)]
-  [if (o.output->size() <> 1)]void[else][o.output->first().paramType()/][/if]
-[/template]
+  [if (o.output->size() <> 1)]void[else][o.output->first().paramType()/][/if][/template]
 
 [comment : /]
 [template private paramType(p : soa::Parameter)]
-  [if (p.isMultiple())]List<[p.type()/]>[else][p.type()/][/if]
-[/template]
+  [if (p.isMultiple())]List<[p.type()/]>[else][p.type()/][/if][/template]
 
 [comment : /]
 [template private type(p : soa::Parameter)]

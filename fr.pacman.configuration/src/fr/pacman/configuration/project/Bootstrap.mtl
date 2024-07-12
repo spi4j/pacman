@@ -176,7 +176,6 @@
         [/if]
         		
         		[if (any.hasToWriteOtherWebappForApi())]['handlers'.apply_variableDefault()/].addHandler(['webapp api'.apply_variableDefault()/]);[/if]
-        
         		['handlers'.apply_variableDefault()/].addHandler(['webapp'.apply_variableDefault()/]);
         		[any.buildServerNameWithPrefix()/].setHandler(['handlers'.apply_variableDefault()/]);
       [/if]
@@ -353,14 +352,12 @@
 [comment : Construction du type pour le serveur./]
 [template private buildServerType(any : ecore::EObject) post(self.trim())]
   [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]Server[/if]
-  
   [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]Tomcat[/if]
 [/template]
 
 [comment : Construction de la methode d'attente de mise en arret pour le serveur./]
 [template private buildWaitForInterrupt(any : ecore::EObject) post(self.trim())]
   [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]join()[/if]
-  
   [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]getServer().await()[/if]
 [/template]
 

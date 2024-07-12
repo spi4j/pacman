@@ -178,8 +178,7 @@
                             ['entity'.apply_variableFinal()/].setIdentifiant([a.genPropertyType().defaultValueForColumnType()/]);
                     [else]
                       [if (not a.isComputed())]
-                              ['entity'.apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]
-                        );
+                              ['entity'.apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]);
                       [/if]
                     [/if]
                   [/for]
@@ -203,8 +202,7 @@
                       [if (a.useSpi4jSecurity() and not a.useMatching() and r.referencedType.oclAsType(entity::Entity).entityIsUser() and a.name = 'identifiant')]
                               [(r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName() + r.name).apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
                       [else]
-                              [(r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName() + r.name).apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]
-                        );
+                              [(r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName() + r.name).apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]);
                       [/if]
                     [/for]
                           final [r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/] [('created ' + r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName() + r.name).apply_variableFinal()/] = [(r.referencedType.oclAsType(entity::Entity).name + ' service' + r.name).apply_variableFinal()/].save ([(r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName() + r.name).apply_variableFinal()/]);
@@ -311,15 +309,13 @@
 [/template]
 
 [template private defaultValueForColumnType(type : String)]
-  [if (type.equalsIgnoreCase('String'))]"s"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]1[elseif (type.equalsIgnoreCase('Long'))]1L[elseif (type.equalsIgnoreCase('Float'))]1F[elseif (type.equalsIgnoreCase('Double'))]1D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif ('Binary'.equalsIgnoreCase(type))]getRandomBinary()[elseif (type.equalsIgnoreCase('Char'))]'c'[/if]
-[/template]
+  [if (type.equalsIgnoreCase('String'))]"s"[elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))]1[elseif (type.equalsIgnoreCase('Long'))]1L[elseif (type.equalsIgnoreCase('Float'))]1F[elseif (type.equalsIgnoreCase('Double'))]1D[elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif ('Binary'.equalsIgnoreCase(type))]getRandomBinary()[elseif (type.equalsIgnoreCase('Char'))]'c'[/if][/template]
 
 [template public getSetterInverseEntityId(r : environment::Reference)]
   [r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/][/template]
 
 [template public nameBaseReferenceInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).nameSimpleEntity().toLowerFirst() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if]
-[/template]
+  [if (r.oppositeOf = null)][r.containingType.oclAsType(entity::Entity).nameSimpleEntity().toLowerFirst() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if][/template]
 
 [comment : Write all required imports. /]
 [template private writeImports(e : entity::Entity, referentiel : Boolean) post(self.trim())]

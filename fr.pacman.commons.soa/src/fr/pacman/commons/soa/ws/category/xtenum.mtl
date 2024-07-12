@@ -27,7 +27,6 @@
   /**
   * Enumération. 
   * [if (not (e.description = null) and e.description.size() > 0)][e.description/][/if]
-  
   */
   public enum [e.buildClassNameFromEnumForXto()/] {
   
@@ -35,7 +34,6 @@
    	[protected (e.getUserCodeId(e.buildClassNameFromEnumForXto())) startTagPrefix('// ') endTagPrefix('// ')]
       
       [if (not e.literals->isEmpty())] [e.literals->asSequence()->collect(temp1 | temp1.enumStruct(e))->sep(',\r\n')/];[/if]
-      
     [/protected]
   	
   
@@ -57,11 +55,8 @@
 
 [comment : the case for the original enums must not be modified ! -> to be completed /]
 [template private enumStruct(l : environment::Literal, e : environment::Enumeration)]
-     /** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]
-  . */
-     [if (not (l.name = null) and l.name.trim().size() > 0)][l.name.apply_enum()/][else]BLANK[/if]
-  ("[if (not (l.description = null) and l.description.size() > 0)][l.description/][else][l.name/][/if]
-  ")[/template]
+     /** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if]. */
+     [if (not (l.name = null) and l.name.trim().size() > 0)][l.name.apply_enum()/][else]BLANK[/if]("[if (not (l.description = null) and l.description.size() > 0)][l.description/][else][l.name/][/if]")[/template]
 
 [comment : Write all required imports. /]
 [template private writeImports(e : environment::Enumeration) post(self.trim())]

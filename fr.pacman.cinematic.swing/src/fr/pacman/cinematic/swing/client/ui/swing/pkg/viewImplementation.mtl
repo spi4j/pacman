@@ -204,8 +204,7 @@
          [protected (element.getUserCodeId('Getter ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true))) startTagPrefix('// ') endTagPrefix('// ')]
            
               @Override
-              public [if (element.useMatching())] [element.genericType(element.widget.getInterfaceName(), true)/] [else][element.genericTypeEntity(element.widget.getImplementationClass())/] [/if]
-           [element.nameGetterViewElement()/] ()
+              public [if (element.useMatching())] [element.genericType(element.widget.getInterfaceName(), true)/] [else][element.genericTypeEntity(element.widget.getImplementationClass())/] [/if][element.nameGetterViewElement()/] ()
               {
                  return [element.nameVariableElement()/];
               }

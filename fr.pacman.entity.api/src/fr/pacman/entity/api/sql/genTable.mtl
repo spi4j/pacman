@@ -17,29 +17,19 @@
   [databaseType.typeDataBase(r)/][/template]
 
 [template private genColumn(databaseType : String, a : environment::Attribute)]
-  [a.nameColumn()/] [databaseType.genTypeColumn(a)/][if (a.isMandatory())] not null[/if]
-  [if (databaseType.isDbMsqlType())][a.genCommentMysql()/][/if]
-[/template]
+  [a.nameColumn()/] [databaseType.genTypeColumn(a)/][if (a.isMandatory())] not null[/if][if (databaseType.isDbMsqlType())][a.genCommentMysql()/][/if][/template]
 
 [template private genColumnReferenceId(databaseType : String, r : environment::Reference, compteur : Integer)]
-  [r.nameColumnId(compteur)/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
-  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
-[/template]
+  [r.nameColumnId(compteur)/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if][if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if][/template]
 
 [template private genColumnReferenceId(databaseType : String, r : environment::Reference)]
-  [r.nameColumnId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
-  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
-[/template]
+  [r.nameColumnId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if][if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if][/template]
 
 [template private genColumnReferencingId(databaseType : String, r : environment::Reference, compteur : Integer)]
-  [r.nameColumnReferencingId(compteur)/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
-  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
-[/template]
+  [r.nameColumnReferencingId(compteur)/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if][if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if][/template]
 
 [template private genColumnReferencingId(databaseType : String, r : environment::Reference)]
-  [r.nameColumnReferencingId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if]
-  [if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if]
-[/template]
+  [r.nameColumnReferencingId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if][if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if][/template]
 
 [template public genPK(databaseType : String, e : entity::Entity)]
   [e.namePK()/] [databaseType.typeDataBaseID()/][/template]
@@ -72,14 +62,12 @@
           [databaseType.genPK(e)/],
       [for (a : environment::Attribute | e.attributesNoPk())]
         [if (not a.isComputed())]
-              [databaseType.genColumn(a)/][if (a.hasDefaultValue())] DEFAULT '[a.defaultValue()/]'[/if]
-          ,
+              [databaseType.genColumn(a)/][if (a.hasDefaultValue())] DEFAULT '[a.defaultValue()/]'[/if],
         [/if]
       [/for]
       [for (a : environment::Attribute | e.getInheritDtoAttributes())]
         [if (not a.isComputed())]
-              [databaseType.genColumn(a)/][if (a.hasDefaultValue())] DEFAULT '[a.defaultValue()/]'[/if]
-          ,
+              [databaseType.genColumn(a)/][if (a.hasDefaultValue())] DEFAULT '[a.defaultValue()/]'[/if],
         [/if]
       [/for]
       
@@ -102,8 +90,7 @@
           [/for]
         [/if]
       [/for]
-          [if (e.hasAutomaticColumns())][e.get_automaticColumns(databaseType)/][/if]
-      [databaseType.genConstraintPK(e)/]
+          [if (e.hasAutomaticColumns())][e.get_automaticColumns(databaseType)/][/if][databaseType.genConstraintPK(e)/]
       );
       [if (e.hasUniqueIndex())]
         [e.genUniqueIDXOnTable(databaseType, e.get_nbColumnsInUniqueConstraint(e.uniqueIndex()), e.get_counterUN(1))/]
@@ -138,9 +125,7 @@
             [databaseType.genPKJointure(r.containingType.oclAsType(entity::Entity))/],
             [databaseType.genPKJointure(r.referencedType.oclAsType(entity::Entity))/],
             [if (r.hasXdMaj())][r.gen_automaticColumn(databaseType, r.getXdmajKey())/][/if]
-        
             [if (r.hasXtopSup())][r.gen_automaticColumn(databaseType, r.getXtopSuppKey())/][/if]
-        
             [databaseType.genConstraintPKJointure(r, rIndex)/]
         );
       [/for]
@@ -174,11 +159,7 @@
 [/template]
 
 [template private gen_automaticColumn(void : ecore::EObject, databaseType : String, columnProp : String) post(self.trim())]
-  [if (columnProp.hasToWriteColumn())]
-    [void.get_nameColumn(columnProp)/] [void.gen_typeColumn(databaseType, columnProp)/][if (void.columnHasDefault(columnProp))] default [void.get_defaultColumn(columnProp)/][/if]
-    [if (void.columnNotNull(columnProp))] not null[/if]
-    ,[/if]
-[/template]
+  [if (columnProp.hasToWriteColumn())][void.get_nameColumn(columnProp)/] [void.gen_typeColumn(databaseType, columnProp)/][if (void.columnHasDefault(columnProp))] default [void.get_defaultColumn(columnProp)/][/if][if (void.columnNotNull(columnProp))] not null[/if],[/if][/template]
 
 [template private gen_typeColumn(void : ecore::EObject, databaseType : String, columnProp : String)]
   [databaseType.typeDataBase(void.get_typeColumn(columnProp), void.get_sizeColumn(columnProp))/][/template]
@@ -202,8 +183,7 @@
   create index [r.nameIndex(compteur)/] on [e.nameTableWithSchema()/] ([r.nameColumnReferencingId()/])[e.genTableSpace(databaseType)/];[/template]
 
 [template private genComment(e : entity::Entity)]
-  [if (not (e.description = null) and e.description.size() <> 0)]comment on table [e.nameTableWithSchema()/] is '[e.description.toString().replaceAll('\'', '\'\'')/]';[/if]
-[/template]
+  [if (not (e.description = null) and e.description.size() <> 0)]comment on table [e.nameTableWithSchema()/] is '[e.description.toString().replaceAll('\'', '\'\'')/]';[/if][/template]
 
 [template private genComment(e : entity::Entity, a : environment::Attribute)]
   [if (not (a.description = null) and a.description.size() <> 0)]

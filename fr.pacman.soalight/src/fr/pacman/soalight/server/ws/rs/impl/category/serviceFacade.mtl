@@ -40,7 +40,6 @@
     import [s.buildPackageMapper()/].[s.buildAppliUserMapperGenClassName()/];
     [if (s.useWsServiceInjection())]import org.jvnet.hk2.annotations.Service;[/if]
     
-    
     [s.initImports()/]
     [if (s.isDefinedForAuthentication())]
       import fr.spi4j.ws.rs.exception.RsForbiddenException;
@@ -64,7 +63,6 @@
    */
   
   [if (s.useWsServiceInjection())]@Service[/if]
-  
   public class [s.buildServiceFacadeRSClassName(null)/] implements [s.buildServiceFacadeRSInterfaceName(null)/]
   {
   
@@ -83,8 +81,7 @@
   	/**
   	* Constructeur.
   	*/
-  	[if (s.useWsServiceInjection())]public[else]private[/if]
-   [s.buildServiceFacadeRSClassName(null)/](){
+  	[if (s.useWsServiceInjection())]public[else]private[/if] [s.buildServiceFacadeRSClassName(null)/](){
   		super();
   	}
   
@@ -120,11 +117,8 @@
     [if (o.hasParamOutXto())]
       [if (o.output->first() <> null and o.output->first().type.oclIsTypeOf(entity::Entity))]
         
-        [if (not o.output->first().isMultiple())]return [else][o.paramOutXto()/] ['result'.apply_attributeFinal()/] = [/if]
-        [o.buildAppliUserBusinessEntityGenClassName()/].[('get ' + o.output->first().buildMapperClassName()).apply_methodDefault()/] ()
-        	.convert[if (o.output->first().isMultiple())]List[/if]
-        EntityTo[if (o.output->first().isMultiple())]List[/if]
-        Xto( [o.buildAppliUserBusinessEntityGenClassName()/].get[s.nameService()/] ()
+        [if (not o.output->first().isMultiple())]return [else][o.paramOutXto()/] ['result'.apply_attributeFinal()/] = [/if][o.buildAppliUserBusinessEntityGenClassName()/].[('get ' + o.output->first().buildMapperClassName()).apply_methodDefault()/] ()
+        	.convert[if (o.output->first().isMultiple())]List[/if]EntityTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessEntityGenClassName()/].get[s.nameService()/] ()
         	.[o.nameOperation()/]([o.input->asSequence()->collect(temp1 | temp1.parameterWs())->sep(', ')->sep(', ')/][o.paramsInForPagingIfNeeded(false)/]));
         
         [if (o.output->first().isMultiple())]

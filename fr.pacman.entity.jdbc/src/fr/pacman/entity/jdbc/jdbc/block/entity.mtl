@@ -38,9 +38,7 @@
   
   
   [e.comClass(e.roleEntity())/]
-  public class [e.buildEntityImplClassName()/] [if (e.hasAutomaticColumns())]extends [e.buildAppliEntityAbstractClassName()/]<[e.genPkType()/]> [/if]
-  implements [e.buildEntityInterfaceName()/][if (e.hasVersion())], JdbcOptimistLocked_Itf[/if]
-  
+  public class [e.buildEntityImplClassName()/] [if (e.hasAutomaticColumns())]extends [e.buildAppliEntityAbstractClassName()/]<[e.genPkType()/]> [/if]implements [e.buildEntityInterfaceName()/][if (e.hasVersion())], JdbcOptimistLocked_Itf[/if]
   {
      // CONSTANTES
   
@@ -185,30 +183,17 @@
      @Override
      public String toString ()
      {
-        return super.toString () + " : " + [e.nameSimplePropertyID().apply_attributeDefault()/][for (a : environment::Attribute | e.attributesNoPk())] + ", " + [a.nameSimpleProperty().apply_attributeDefault()/][/for]
-  [for (a : environment::Attribute | e.getInheritDtoAttributes())] + ", " + [a.nameSimpleProperty().apply_attributeDefault()/][/for]
-  [for (r : environment::Reference | e.referencesNoStar())] + ", " + [r.nameSimpleProperty().apply_attributeDefault()/][/for]
-  [for (r : environment::Reference | e.referencingStar())] + ", " + [r.nameSimplePropertyInverse().apply_attributeDefault()/][r.namePK_ID()/][/for]
-  ;
+        return super.toString () + " : " + [e.nameSimplePropertyID().apply_attributeDefault()/][for (a : environment::Attribute | e.attributesNoPk())] + ", " + [a.nameSimpleProperty().apply_attributeDefault()/][/for][for (a : environment::Attribute | e.getInheritDtoAttributes())] + ", " + [a.nameSimpleProperty().apply_attributeDefault()/][/for][for (r : environment::Reference | e.referencesNoStar())] + ", " + [r.nameSimpleProperty().apply_attributeDefault()/][/for][for (r : environment::Reference | e.referencingStar())] + ", " + [r.nameSimplePropertyInverse().apply_attributeDefault()/][r.namePK_ID()/][/for];
      }
   
   [if (e.hasAutomaticColumns())]
        @Override
        public void validate () throws Spi4jValidationException
        {
-          [if (not e.hasMandatoryFields())]final [/if]
-    List<String> ['champs invalides'.apply_variableDefault()/] = ['prepare validate'.apply_methodDefault()/] ();
+          [if (not e.hasMandatoryFields())]final [/if]List<String> ['champs invalides'.apply_variableDefault()/] = ['prepare validate'.apply_methodDefault()/] ();
     [if (e.hasMandatoryFields())]
       ['validate '.concat(e.name).initCounter()/]
-      [for (a : environment::Attribute | e.attributesNoPkNoVersion())][e.validPropertyWhenHasAutomaticColumns(a)/][/for]
-      [for (a : environment::Attribute | e.getInheritDtoAttributes())][e.validPropertyWhenHasAutomaticColumns(a)/][/for]
-      [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp5 | temp5.name.toLower()))]
-        [if (r.containingType.oclAsType(entity::Entity) = e)][e.validPropertyWhenHasAutomaticColumns(r)/][/if]
-      [/for]
-      [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp6 | temp6.name.toLower()))]
-        [if (r.oppositeOf = null)][e.validInversePropertyWhenHasAutomaticColumns(r)/][/if]
-      [/for]
-    [/if]
+      [for (a : environment::Attribute | e.attributesNoPkNoVersion())][e.validPropertyWhenHasAutomaticColumns(a)/][/for][for (a : environment::Attribute | e.getInheritDtoAttributes())][e.validPropertyWhenHasAutomaticColumns(a)/][/for][for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp5 | temp5.name.toLower()))][if (r.containingType.oclAsType(entity::Entity) = e)][e.validPropertyWhenHasAutomaticColumns(r)/][/if][/for][for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp6 | temp6.name.toLower()))][if (r.oppositeOf = null)][e.validInversePropertyWhenHasAutomaticColumns(r)/][/if][/for][/if]
           // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
           if (['champs invalides'.apply_variableDefault()/] != null)
           {
@@ -221,15 +206,7 @@
        {
     [if (e.hasMandatoryFields() or e.hasStringFieldWithSize())]
             List<String> ['champs invalides'.apply_variableDefault()/] = null;['validate '.concat(e.name).initCounter()/]
-      [for (a : environment::Attribute | e.attributesNoPkNoVersion())][e.validProperty(a)/][/for]
-      [for (a : environment::Attribute | e.getInheritDtoAttributes())][e.validProperty(a)/][/for]
-      [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp7 | temp7.name.toLower()))]
-        [if (r.containingType.oclAsType(entity::Entity) = e)][e.validProperty(r)/][/if]
-      [/for]
-      [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp8 | temp8.name.toLower()))]
-        [if (r.oppositeOf = null)][e.validInverseProperty(r)/][/if]
-      [/for]
-            // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
+      [for (a : environment::Attribute | e.attributesNoPkNoVersion())][e.validProperty(a)/][/for][for (a : environment::Attribute | e.getInheritDtoAttributes())][e.validProperty(a)/][/for][for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp7 | temp7.name.toLower()))][if (r.containingType.oclAsType(entity::Entity) = e)][e.validProperty(r)/][/if][/for][for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp8 | temp8.name.toLower()))][if (r.oppositeOf = null)][e.validInverseProperty(r)/][/if][/for]      // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
             if (['champs invalides'.apply_variableDefault()/] != null)
             {
                throw new Spi4jValidationException (this, ['champs invalides'.apply_variableDefault()/].toArray (new String['[' + 'champs invalides'.apply_variableDefault() + '.size()]'/]));
@@ -252,8 +229,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField ("[p.nameSimpleProperty()/]", [p.nameSimpleProperty().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if][/template]
 
 [template private validInverseProperty(e : entity::Entity, r : environment::Reference)]
   [if (r.isMandatory())]
@@ -265,8 +241,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = EntityUtil.checkMandatoryField ("[p.nameSimpleProperty()/]", [p.nameSimpleProperty().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if]
-[/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][e.validateSize(p.oclAsType(environment::Attribute))/][/if][/template]
 
 [template private validInversePropertyWhenHasAutomaticColumns(e : entity::Entity, r : environment::Reference)]
   [if (r.isMandatory())]

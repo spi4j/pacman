@@ -25,8 +25,7 @@
 
 [template public enumStruct(a : environment::Attribute, e : entity::Entity)]
      /** [a.nameBaseAttribute()/]. */
-     [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if]
-  )[/template]
+     [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if])[/template]
 
 [template public enumStruct(r : environment::Reference, e : entity::Entity)]
   [if (e.isReferenceNoStar(r))]
@@ -38,23 +37,19 @@
 
 [template public enumStructId(r : environment::Reference)]
   /** [r.nameBaseReference()/][r.namePK_ID()/]. */
-  [r.nameBaseReference()/][r.namePK_ID()/]("[r.nameBaseReference()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  )[/template]
+  [r.nameBaseReference()/][r.namePK_ID()/]("[r.nameBaseReference()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if])[/template]
 
 [template public enumStructReference(r : environment::Reference)]
   /** [r.nameBaseReference()/]. */
-  [r.nameBaseReference()/]("[r.nameBaseReference()/]", "[r.description.escape()/]", [r.referencedType.oclAsType(entity::Entity).buildEntityName()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  )[/template]
+  [r.nameBaseReference()/]("[r.nameBaseReference()/]", "[r.description.escape()/]", [r.referencedType.oclAsType(entity::Entity).buildEntityName()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if])[/template]
 
 [template public enumStructTab(r : environment::Reference)]
   /** [r.nameBaseReferenceTab()/]. */
-  [r.nameBaseReferenceTab()/]("[r.nameBaseReferenceTab()/]", "[r.description.escape()/]", List.class, false, [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  )[/template]
+  [r.nameBaseReferenceTab()/]("[r.nameBaseReferenceTab()/]", "[r.description.escape()/]", List.class, false, [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if])[/template]
 
 [template public enumStructInverseId(r : environment::Reference)]
   /** [r.nameBaseReferenceInverse()/][r.namePK_ID()/]. */
-  [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if]
-  )[/template]
+  [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if])[/template]
 
 [template public attributesEnum(e : entity::Entity)]
   [e.licence()/]

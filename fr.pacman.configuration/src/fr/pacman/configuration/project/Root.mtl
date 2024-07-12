@@ -447,11 +447,9 @@
     		<xstream.version>1.4.20</xstream.version>
             <mockito-core.version>5.3.1</mockito-core.version>
             <ehcache-core.version>2.6.11</ehcache-core.version>
-    [if (any.useEjb())]        <ejb-api.version>3.0-alpha-1</ejb-api.version>[/if]
-            <javamelody-core.version>2.0.0</javamelody-core.version>
+    [if (any.useEjb())]        <ejb-api.version>3.0-alpha-1</ejb-api.version>[/if]        <javamelody-core.version>2.0.0</javamelody-core.version>
     		<jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
-    [if (any.useWS())]		<jakarta-ws-rs-api.version>3.1.0</jakarta-ws-rs-api.version>[/if]
-  [/if]
+    [if (any.useWS())]		<jakarta-ws-rs-api.version>3.1.0</jakarta-ws-rs-api.version>[/if][/if]
           <findbugs-maven-plugin.version>3.0.0</findbugs-maven-plugin.version>
           <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
   		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
@@ -495,11 +493,10 @@
             <gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>
   [elseif ('jsp'.equalsIgnoreCase(any.getClient()))]
     		<jstl-api.version>3.0.0</jstl-api.version>
-    [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]		<jstl.version>11.0.0</jstl.version>[else]<jstl.version>3.0.1</jstl.version>[/if]
-  [elseif ('jsf'.equalsIgnoreCase(any.getClient()))]
-    		<jakarta-faces.version>3.0.0</jakarta-faces.version>
-            <primefaces.version>6.2</primefaces.version>
-  [/if]
+    [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]		<jstl.version>11.0.0</jstl.version>[else]<jstl.version>3.0.1</jstl.version>[/if][elseif ('jsf'.equalsIgnoreCase(any.getClient()))]
+                                                                                                                                                    		<jakarta-faces.version>3.0.0</jakarta-faces.version>
+                                                                                                                                                            <primefaces.version>6.2</primefaces.version>
+                                                                                                                                                  [/if]
   [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
     		<tomcat-dbcp.version>8.5.4</tomcat-dbcp.version>
   [/if]
@@ -533,8 +530,6 @@
 [comment : Get specific version for embedded server (for now always for java 11+)/]
 [template private getHttpEmbeddedVersion(any : ecore::EObject) post(self.trim())]
   [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]11.0.5[/if]
-  
   [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]11.0.0-M1[/if]
-  
   [if ('tomee'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]9.1.0[/if]
-  	[/template]
+[/template]
