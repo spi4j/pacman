@@ -17,14 +17,31 @@
 	<build>
 		<plugins>
 			<plugin>
+				<!-- Eclipse caches current state of update site. -->
+				<!-- So you need to restart, to make it show newer versions. -->
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<!-- Ne pas inclure les dependances transitives. -->
-					<includeAllDependencies>false</includeAllDependencies>
+					<createArtifactRepository>true</createArtifactRepository>
+					<finalName>${project.groupId}-${unqualifiedVersion}.${buildQualifier}</finalName>
 				</configuration>
 			</plugin>
+			 <plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-resources-plugin</artifactId>
+        		<executions>
+          			<execution>
+            			<phase>verify</phase>
+            			<goals>
+              				<goal>resources</goal>
+            			</goals>
+          			</execution>
+        		</executions>
+        		<configuration>
+          			<outputDirectory>${project.build.directory}</outputDirectory>
+        		</configuration>
+      		</plugin>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -36,37 +53,18 @@
 						</goals>
 						<configuration>
 							<target>
-								
-								<!-- Copy the xml file description in site archive. -->
-								<copy file="target/category.xml" 
-									tofile="target/repository/category.xml" />	
-									
-								<!-- Copy the update site folder. -->
-								<copy
-									todir="target/${project.artifactId}_${project.version}">
-									<fileset dir="target/repository" />
-								</copy>
-								
-								<!-- Delete the initial zip file. -->
-								<delete file="target/${project.artifactId}-${project.version}.zip" />
-								
-								<!-- Replace the initial zip file by the new version. -->
-                    			<zip destfile="target/${project.artifactId}_${project.version}.zip" update="true">
-                        			<fileset dir="target/${project.artifactId}_${project.version}" />
-                    			</zip>
-
+								<!-- The category.xml file is not used by tycho for now... -->
 								<!-- Delete the other useless archive. -->
-							
+								<!-- 
 								<delete>
 									<fileset dir="target/">
 										<include name ="*.properties"/>
-										<!-- include name="*.xml" --> 
 									</fileset>
 								</delete>
-							
 								<delete dir="target/targetPlatformRepository" />		
 								<delete dir="target/repository" />						
 								<delete dir="target/antrun" />
+								-->
 							</target>
 						</configuration>
 					</execution>
