@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+    <XMI xmlns:UML = "//org.omg/UML/1.3" xmi.version = "1.1">
+        <XMI.header>
+            <XMI.documentation>
+                <XMI.exporter>PowerAMC</XMI.exporter>
+            </XMI.documentation>
+            <XMI.metamodel xmi.name = "UML" xmi.version = "1.3"/>
+        </XMI.header>
+        <XMI.content>
+            <UML:Model name = "ref" xmi.id = "{18389a4a-9ad5-3957-8469-9cff0ba66c15}">
+                <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue tag = "SchemaNamespace" value = "http://www.w3.org/2001/XMLSchema"/>
+                    <UML:TaggedValue tag = "SoapBindingTransport" value = "http://schemas.xmlsoap.org/soap/http"/>
+                </UML:ModelElement.taggedValue>
+                <UML:Namespace.ownedElement>
+                    <UML:Class name = "AW_Grade" isLeaf = "false" xmi.id = "{ed1c01ed-4bbe-3882-9087-7f07e15cb493}" isAbstract = "false" visibility = "public">
+                        <UML:ModelElement.taggedValue>
+                            <UML:TaggedValue tag = "strictfp" value = "false"/>
+                        </UML:ModelElement.taggedValue>
+                        <UML:Classifier.feature>
+                            <UML:Attribute name = "GRADE_ID" xmi.id = "{91c49ca7-6a3f-3003-b4a3-eb7019c86031}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                                <UML:StructuralFeature.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:StructuralFeature.multiplicity>
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "typeLong"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+                            <UML:Stereotype xmi.id = "{3d0145a8-7491-3d9e-bf6f-9f1f51943c9c}" name = "PK" extendedElement="{91c49ca7-6a3f-3003-b4a3-eb7019c86031}">
+                            </UML:Stereotype>
+                            <UML:Attribute name = "libelle" xmi.id = "{0009fefd-1241-31dc-a197-eaa2c526b7d5}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                                <UML:StructuralFeature.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:StructuralFeature.multiplicity>
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "typeString"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+                            <UML:Attribute name = "trigramme" xmi.id = "{6aa04a5b-4dc6-3c7a-9a4b-bc965c1fd377}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                                <UML:StructuralFeature.multiplicity>
+                                    <UML:Multiplicity>
+                                        <UML:Multiplicity.range>
+                                            <UML:MultiplicityRange>
+                                                <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                            </UML:MultiplicityRange>
+                                        </UML:Multiplicity.range>
+                                    </UML:Multiplicity>
+                                </UML:StructuralFeature.multiplicity>
+                                <UML:StructuralFeature.type>
+                                    <UML:Classifier xmi.idref = "typeString"/>
+                                </UML:StructuralFeature.type>
+                            </UML:Attribute>
+
+                            <UML:Attribute name = "XDMAJ" xmi.id = "{6a5a66e2-5994-3823-a8bb-49cf31496525}" ownerScope = "instance" visibility = "private" changeability = "changeable">                                <UML:StructuralFeature.multiplicity>
+                                                                <UML:Multiplicity>
+                                                                    <UML:Multiplicity.range>
+                                                                        <UML:MultiplicityRange>
+                                                                            <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                                            <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                                                        </UML:MultiplicityRange>
+                                                                    </UML:Multiplicity.range>
+                                                                </UML:Multiplicity>
+                                                            </UML:StructuralFeature.multiplicity>                                <UML:StructuralFeature.type>
+                                                                <UML:Classifier xmi.idref = "typeDate"/>
+                                                            </UML:StructuralFeature.type>
+                                                        </UML:Attribute>
+                                                        <UML:Attribute name = "XTOPSUP" xmi.id = "{839324f7-6070-3e5d-a3dd-5eb8a737d4eb}" ownerScope = "instance" visibility = "private" changeability = "changeable">                                <UML:StructuralFeature.multiplicity>
+                                                                <UML:Multiplicity>
+                                                                    <UML:Multiplicity.range>
+                                                                        <UML:MultiplicityRange>
+                                                                            <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                                            <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                                                        </UML:MultiplicityRange>
+                                                                    </UML:Multiplicity.range>
+                                                                </UML:Multiplicity>
+                                                            </UML:StructuralFeature.multiplicity>                                <UML:StructuralFeature.type>
+                                                                <UML:Classifier xmi.idref = "typeXtopSup1"/>
+                                                            </UML:StructuralFeature.type>
+                                                        </UML:Attribute>
+                                                    </UML:Classifier.feature>
+                    </UML:Class>
+
+                </UML:Namespace.ownedElement>
+            </UML:Model>
+            <UML:Comment name="Le libellé du grade" xmi.id="4ac6a34b-cdae-3bf0-8816-ecb1172a547c">
+                <UML:Comment.annotatedElement>
+                    <UML:ModelElement xmi.idref="{0009fefd-1241-31dc-a197-eaa2c526b7d5}"/>
+                </UML:Comment.annotatedElement>
+            </UML:Comment>
+            <UML:Comment name="Le trigramme du grade" xmi.id="b1de5e4d-be80-3569-b40c-a97d2b20e4be">
+                <UML:Comment.annotatedElement>
+                    <UML:ModelElement xmi.idref="{6aa04a5b-4dc6-3c7a-9a4b-bc965c1fd377}"/>
+                </UML:Comment.annotatedElement>
+            </UML:Comment>
+            <UML:DataType name = "java.lang.String" xmi.id = "typeString"/>
+            <UML:DataType name = "java.lang.Integer" xmi.id = "typeInteger"/>
+            <UML:DataType name = "java.lang.Float" xmi.id = "typeFloat"/>
+            <UML:DataType name = "java.lang.Double" xmi.id = "typeDouble"/>
+            <UML:DataType name = "java.util.Date" xmi.id = "typeDate"/>
+            <UML:DataType name = "java.lang.Boolean" xmi.id = "typeBoolean"/>
+            <UML:DataType name = "java.lang.Long" xmi.id = "typeLong"/>
+            <UML:TaggedValue tag = "persistence" value = "persistent" xmi.id = "Tag.Grade" modelElement = "{ed1c01ed-4bbe-3882-9087-7f07e15cb493}"/>
+            <UML:TaggedValue tag = "persistence" value = "persistent" xmi.id = "Tag.Grade.libelle" modelElement = "{0009fefd-1241-31dc-a197-eaa2c526b7d5}"/>
+            <UML:TaggedValue tag = "persistence" value = "persistent" xmi.id = "Tag.Grade.trigramme" modelElement = "{6aa04a5b-4dc6-3c7a-9a4b-bc965c1fd377}"/>
+        </XMI.content>
+    </XMI>

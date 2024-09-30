@@ -1,0 +1,31 @@
+Log du model check de : E-BookStore
+
+Traitement tache : Buy books
+        1  org.obeonetwork.graal.impl.TaskImpl  Aucun acteur ne contribue à cette tâche.  Nom de l'élément : Buy books
+Fin Cycle
+        3  org.obeonetwork.graal.impl.TaskImpl  Cette tâche n'est utilisée par aucune autre tâche, seule la tâche racine devrait être dans ce cas.  Nom de l'élément : Buy books
+Traitement tache : Proceed to checkout
+        1  org.obeonetwork.graal.impl.TaskImpl  Aucun acteur ne contribue à cette tâche.  Nom de l'élément : Proceed to checkout
+Fin Cycle
+Traitement tache : Login
+        1  org.obeonetwork.graal.impl.TaskImpl  Aucun acteur ne contribue à cette tâche.  Nom de l'élément : Login
+Fin Cycle
+Traitement tache : Enter payment
+informations
+Fin Cycle
+Traitement tache : Constitute shopping
+cart
+Fin Cycle
+Traitement tache : Search books
+        1  org.obeonetwork.graal.impl.TaskImpl  Aucun acteur ne contribue à cette tâche.  Nom de l'élément : Search books
+Fin Cycle
+Traitement tache : Add book to shopping cart
+        1  org.obeonetwork.graal.impl.TaskImpl  Aucun acteur ne contribue à cette tâche.  Nom de l'élément : Add book to shopping cart
+Fin Cycle
+Traitement tache : Remove book from cart
+        1  org.obeonetwork.graal.impl.TaskImpl  Aucun acteur ne contribue à cette tâche.  Nom de l'élément : Remove book from cart
+Fin Cycle
+Traitement tache : Create a customer account
+Fin Cycle
+
+

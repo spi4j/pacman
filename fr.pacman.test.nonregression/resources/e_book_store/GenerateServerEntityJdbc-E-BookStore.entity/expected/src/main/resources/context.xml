@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+<!-- Modifier la datasource avec le nom de la machine hébergeant la base de données, 
+ 	le nom de la base, le nom et le mot de passe utilisateur puis, copier la datasource 
+    correspondante dans le fichier de paramétrage du serveur. -->
+
+
+
+</Context>

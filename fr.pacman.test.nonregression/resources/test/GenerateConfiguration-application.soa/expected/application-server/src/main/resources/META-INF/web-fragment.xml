@@ -1,0 +1,14 @@
+<web-fragment metadata-complete="true" version="6.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+    http://java.sun.com/xml/ns/javaee/web-fragment_6_0.xsd">
+
+	<name>rest-mapping-fragment</name>
+
+  	<servlet-mapping>
+    	<servlet-name>RSServlet</servlet-name>
+    	<url-pattern>/api/*</url-pattern>
+  	</servlet-mapping>
+
+</web-fragment>

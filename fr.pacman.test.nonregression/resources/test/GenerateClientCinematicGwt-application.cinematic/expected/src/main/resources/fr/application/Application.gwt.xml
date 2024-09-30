@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Start of user code Module
+-->
+<module rename-to='application'>
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name='com.google.gwt.user.User'/>
+
+  <!-- Inherit the default GWT style sheet.  You can change       -->
+  <!-- the theme of your GWT application by uncommenting          -->
+  <!-- any one of the following lines.                            -->
+  <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+  <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
+  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+
+  <!-- Other module inherits                                      -->
+  <inherits name='com.google.gwt.i18n.I18N' />
+  <extend-property name="locale" values="fr" />
+  <set-property name="locale" value="fr" />
+
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class='fr.application.client.ui.gwt.GwtLanceur'/>
+
+  <inherits name='fr.application.Application_commons'/>
+  <inherits name='fr.application.Application_business'/>
+
+  <!-- Specify the paths for translatable code                    -->
+  <source path='client'/>
+
+</module>
+<!--
+End of user code
+-->
+

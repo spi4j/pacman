@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<assembly>
+    <id>zipFile</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <!-- On construit un zip pour livraison au centre d'hebergement et contenant :
+        - les fichiers war des webapps a deployer en hebergement
+        - le doc de la procedure d'installation en hebergement
+        (il faut bien sûr que tous ces fichiers existent avec les noms utilises ci-dessous, 
+		ce qui depend largement des differents pom.xml)
+     -->
+      <dependencySets>
+     </dependencySets>
+
+    <fileSets>
+        <fileSet>
+			<directory>../test-server/src/main/resources</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <!-- Exemple de configuration log4j -->
+                <include>log4j2.xml</include>
+				
+				
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>..</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <!-- Procedure d'installation -->
+                <include>*.doc</include>
+            </includes>
+        </fileSet>
+
+		<!--
+		// Start of user code filesets
+		-->
+
+		<!--
+		// End of user code
+		-->
+    </fileSets>
+</assembly>

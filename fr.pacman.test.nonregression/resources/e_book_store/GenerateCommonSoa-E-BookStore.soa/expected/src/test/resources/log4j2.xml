@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Start of user code for log4j 
+-->
+
+<!-- Laisser le retour a la ligne pour la zone 'user code' ! -->
+
+<!-- ********************************************************** -->
+<!-- L'enregistreur d'etat (status) est utilise en interne      -->
+<!-- par les composants log4j2. Il imprime des informations     --> 
+<!-- de debogage sur les composants du plugin log4j2.           -->
+<!-- Laisser a 'WARN' par defaut et mettre a 'TRACE' ou 'DEBUG' -->
+<!-- si il y a des problemes de chargement des loggeurs.        -->
+<!-- ********************************************************** -->
+<Configuration strict="true" status="warn" name="XMLLog4jtest">
+
+	<!-- ********************************************* -->
+	<!-- Definition des proprietes.                    -->
+	<!-- Chemin pour le stockage des fichiers de log.  -->
+	<!-- ********************************************* -->
+	<Properties>
+    	<Property name="LOG_DIR">/applications/test/logs</Property>
+    	<Property name="LOG_PATTERN">%d{dd/MM/yy HH:mm:ss,SSS} [%-5level] %c{3} - %msg%n</Property>
+	</Properties>
+
+	<!-- ******************************************************** -->
+	<!-- Definition de l'ensemble des sorties possibles pour les  -->
+	<!-- differents loggeurs qui vont etre definis par la suite.  -->
+	<!-- Il peut s'agir de sorties de type console, fichiers,     -->
+	<!-- mails, etc...                                            -->
+	<!-- ******************************************************** -->
+	<Appenders>
+		<!-- ********************************************************* -->
+		<!-- Definition de(s) mode(s) de sortie (appenders) direct(s). -->
+		<!-- ********************************************************* -->
+		<Console name="testStdOut" target="SYSTEM_OUT">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout> 
+		</Console>
+
+		<!-- ******************************************************************** -->
+		<!-- Definition de(s) mode(s) de sortie (appenders) fichier(s).           -->
+		<!-- Par defaut a la racine du disque sous le repertoire '/applications'. -->
+		<!-- Roulement base sur un fichier par jour avec suppression des fichiers -->
+		<!-- les plus anciens au dela de 20 fichiers.                             -->
+		<!-- ******************************************************************** -->
+		<RollingFile name="testFile" append="true">
+			<ImmediateFlush>true</ImmediateFlush>
+			<FileName>${LOG_DIR}/test.log</FileName>
+			<FilePattern>${LOG_DIR}/reporting-%d{yyyy-MM-dd}.log</FilePattern>
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+        		<TimeBasedTriggeringPolicy interval="1"/>
+    		</Policies>
+    		<DefaultRolloverStrategy max="20" />
+		</RollingFile>
+		
+
+	</Appenders>
+
+	<!-- ************************************************* -->
+	<!-- Referencement de l'ensemble des modes de sortie,  -->
+	<!-- definition et association des loggeurs aux modes. -->
+	<!-- ************************************************* -->
+	<Loggers>
+		<!-- ********************************************************* -->
+		<!-- Le niveau MINIMAL PAR DEFAUT pour l'ENSEMBLE des sorties  -->
+		<!-- et pour l'ENSEMBLE des loggeurs (application + toutes les --> 
+		<!-- autres librairies externes qui utilisent log4j2 si aucune --> 
+		<!-- configuration n'est trouve (definie) pour un logger.      --> 
+		<!-- Laisser de preference a 'info' pour les autres librairies -->
+		<!-- et surcharger au besoin pour chaque mode de sortie.       -->
+		<!-- ********************************************************* -->
+		<Root level="info">
+			<!-- *************************************************** -->
+			<!-- Enregistrement et surcharge (si besoin) des niveaux -->
+			<!-- pour chaque loggeur par rapport au 'rootLevel' **** -->
+			<!-- *************************************************** -->
+			<AppenderRef ref="testStdOut" level="info" />
+			<AppenderRef ref="testFile" level="info" />
+		</Root>
+
+		<!-- ***************************************************** -->
+		<!-- Enregistrement de(s) loggeur(s) pour l'application.   -->
+		<!-- Les surcharges de niveau PRIMENT sur ceux des sorties -->
+		<!-- En premier, le loggeur principal de l'application.    -->
+		<!-- ***************************************************** -->
+		<Logger name="fr.test" level="debug" additivity="true">
+			<!-- <AppenderRef ref="testStdOut" /> -->
+			<AppenderRef ref="testFile" />
+		</Logger>
+
+		<!-- ********************************* -->
+		<!-- Le monitoring du framework Spi4j. -->
+		<!-- ********************************* -->
+		<Logger name="fr.spi4j" level="warn" additivity="true">
+			<!-- <AppenderRef ref="testStdOut" /> -->
+			<AppenderRef ref="testFile" />
+		</Logger>
+
+		<!-- ************************************ -->
+		<!-- Le monitoring sur les requetes http. -->
+		<!-- ************************************ -->
+		<Logger name="logger.monitoring" level="warn" additivity="true">
+			<!-- <AppenderRef ref="testStdOut" /> -->
+			<AppenderRef ref="testFile" />
+		</Logger>
+		
+
+	</Loggers>
+</Configuration>
+
+<!-- End of user code -->

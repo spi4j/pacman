@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/table/description/1.1.0" xmlns:description_2="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:soa="http://www.obeonetwork.org/dsl/soa/4.0.0" xmlns:table="http://www.eclipse.org/sirius/table/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/table/description/1.1.0 http://www.eclipse.org/sirius/table/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description">
+  <viewpoint:DAnalysis uid="_81SRIJgtEe6QapnYVd7-gw" selectedViews="_827P4JgtEe6QapnYVd7-gw _83l-QJgtEe6QapnYVd7-gw _84D4UJgtEe6QapnYVd7-gw" version="104.1.0">
+    <semanticResources>platform:/plugin/org.obeonetwork.dsl.environment.common/model/obeo.environment</semanticResources>
+    <semanticResources>test.soa</semanticResources>
+    <eAnnotations xmi:type="description:DAnnotationEntry" uid="_81244JgtEe6QapnYVd7-gw" source="FIRST_SESSION_OPENNING_PERFORMED"/>
+    <ownedViews xmi:type="viewpoint:DView" uid="_827P4JgtEe6QapnYVd7-gw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_9SubFJgtEe6QapnYVd7-gw" name="test - DTO PhysicalNames" repPath="#_9So7gJgtEe6QapnYVd7-gw">
+        <description xmi:type="description_1:EditionTableDescription" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']/@ownedRepresentations[name='EV_DTO_PhysicalNames']"/>
+        <target xmi:type="soa:System" href="test.soa#_82kDgJgtEe6QapnYVd7-gw"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+    <ownedViews xmi:type="viewpoint:DView" uid="_83l-QJgtEe6QapnYVd7-gw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_9RbakJgtEe6QapnYVd7-gw" name="test - SOA Diagram" repPath="#_9RHRgJgtEe6QapnYVd7-gw" changeId="a5553c23-65ed-4b0d-a7f3-d7671110ba8f">
+        <description xmi:type="description_2:DiagramDescription" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='SOA%20Diagram']"/>
+        <target xmi:type="soa:System" href="test.soa#_82kDgJgtEe6QapnYVd7-gw"/>
+      </ownedRepresentationDescriptors>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_9SYc0JgtEe6QapnYVd7-gw" name="test - DTO Namespaces Hierarchy" repPath="#_9SXOsJgtEe6QapnYVd7-gw" changeId="f91bbd67-8e76-4fa3-83de-1c6a42251b47">
+        <description xmi:type="description_2:DiagramDescription" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='DTO%20Namespaces%20Hierarchy']"/>
+        <target xmi:type="soa:System" href="test.soa#_82kDgJgtEe6QapnYVd7-gw"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+    <ownedViews xmi:type="viewpoint:DView" uid="_84D4UJgtEe6QapnYVd7-gw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.obeonetwork.dsl.environment.properties/description/environment-properties.odesign#//@ownedViewpoints[name='Environment%20Views']"/>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_9RHRgJgtEe6QapnYVd7-gw">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_9Rym8JgtEe6QapnYVd7-gw" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_9Rym8ZgtEe6QapnYVd7-gw" type="Sirius" element="_9RHRgJgtEe6QapnYVd7-gw" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_9Rym8pgtEe6QapnYVd7-gw"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_9SApYJgtEe6QapnYVd7-gw" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_9SBQcJgtEe6QapnYVd7-gw"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_2:DiagramDescription" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='SOA%20Diagram']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_9RQbcJgtEe6QapnYVd7-gw"/>
+    <activatedLayers xmi:type="description_2:Layer" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='SOA%20Diagram']/@defaultLayer"/>
+    <target xmi:type="soa:System" href="test.soa#_82kDgJgtEe6QapnYVd7-gw"/>
+  </diagram:DSemanticDiagram>
+  <diagram:DSemanticDiagram uid="_9SXOsJgtEe6QapnYVd7-gw">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_9SYc0pgtEe6QapnYVd7-gw" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_9SYc05gtEe6QapnYVd7-gw" type="Sirius" element="_9SXOsJgtEe6QapnYVd7-gw" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_9SYc1JgtEe6QapnYVd7-gw"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_9SejcJgtEe6QapnYVd7-gw" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_9SejcZgtEe6QapnYVd7-gw"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_2:DiagramDescription" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='DTO%20Namespaces%20Hierarchy']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_9SX1wJgtEe6QapnYVd7-gw"/>
+    <activatedLayers xmi:type="description_2:Layer" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='DTO%20Namespaces%20Hierarchy']/@defaultLayer"/>
+    <activatedLayers xmi:type="description_2:AdditionalLayer" href="platform:/plugin/org.obeonetwork.dsl.soa.design/description/soa.odesign#//@ownedViewpoints[name='SOA%20Views']/@ownedRepresentations[name='DTO%20Namespaces%20Hierarchy']/@additionalLayers[name='Dependencies']"/>
+    <target xmi:type="soa:System" href="test.soa#_82kDgJgtEe6QapnYVd7-gw"/>
+  </diagram:DSemanticDiagram>
+  <table:DTable uid="_9So7gJgtEe6QapnYVd7-gw" headerColumnWidth="80">
+    <target xmi:type="soa:System" href="test.soa#_82kDgJgtEe6QapnYVd7-gw"/>
+    <columns xmi:type="table:DFeatureColumn" uid="_9StM8JgtEe6QapnYVd7-gw" label="Size" width="80" featureName="name">
+      <originMapping xmi:type="description_1:FeatureColumnMapping" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']/@ownedRepresentations[name='EV_DTO_PhysicalNames']/@ownedColumnMappings[name='DPN_Size']"/>
+    </columns>
+    <columns xmi:type="table:DFeatureColumn" uid="_9St0AZgtEe6QapnYVd7-gw" label="Check" width="80" featureName="name">
+      <originMapping xmi:type="description_1:FeatureColumnMapping" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']/@ownedRepresentations[name='EV_DTO_PhysicalNames']/@ownedColumnMappings[name='DPN_Check']"/>
+    </columns>
+    <columns xmi:type="table:DFeatureColumn" uid="_9SubEJgtEe6QapnYVd7-gw" label="Unique" width="80" featureName="name">
+      <originMapping xmi:type="description_1:FeatureColumnMapping" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']/@ownedRepresentations[name='EV_DTO_PhysicalNames']/@ownedColumnMappings[name='DPN_Unique']"/>
+    </columns>
+    <columns xmi:type="table:DFeatureColumn" uid="_9SubEpgtEe6QapnYVd7-gw" label="Default" width="80" featureName="name">
+      <originMapping xmi:type="description_1:FeatureColumnMapping" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']/@ownedRepresentations[name='EV_DTO_PhysicalNames']/@ownedColumnMappings[name='DPN_Default']"/>
+    </columns>
+    <description xmi:type="description_1:EditionTableDescription" href="platform:/plugin/org.obeonetwork.is.design/description/safran-is.odesign#//@ownedViewpoints[name='SOA%20(Safr@n%20consolidated%20view)']/@ownedRepresentations[name='EV_DTO_PhysicalNames']"/>
+  </table:DTable>
+</xmi:XMI>

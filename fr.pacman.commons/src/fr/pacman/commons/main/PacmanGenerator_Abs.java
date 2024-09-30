@@ -316,7 +316,7 @@ public abstract class PacmanGenerator_Abs {
 	 * @generated
 	 */
 	protected void printDiagnostics(GenerationResult generationResult) {
-		if (generationResult.getDiagnostic().getSeverity() > Diagnostic.INFO) {
+		if (generationResult != null && generationResult.getDiagnostic().getSeverity() > Diagnostic.INFO) {
 			PrintStream stream;
 			switch (generationResult.getDiagnostic().getSeverity()) {
 			case Diagnostic.WARNING:

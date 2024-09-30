@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ASCII"?>
+<oenv:Environment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oenv="http://www.obeonetwork.org/dsl/environment/3.0.0" xmi:id="_MiUQwDR1EeuqW_sLnF83jw" technicalid="_MiSbkDR1EeuqW_sLnF83jw" createdOn="2020-12-02T09:05:52.201+0100" name="api-first">
+  <priorityDefinitions xmi:id="_MiU30DR1EeuqW_sLnF83jw" technicalid="_MiSbkjR1EeuqW_sLnF83jw" createdOn="2020-12-02T09:05:52.201+0100"/>
+  <typesDefinition xmi:id="_MiU30TR1EeuqW_sLnF83jw" technicalid="_MiSbkTR1EeuqW_sLnF83jw" createdOn="2020-12-02T09:05:52.201+0100" modifiedOn="2020-12-02T10:55:55.190+0100">
+    <types xsi:type="oenv:PrimitiveType" xmi:id="_eCUj0TR1EeuqW_sLnF83jw" technicalid="_eCUj0DR1EeuqW_sLnF83jw" description="" createdOn="2020-12-02T09:07:49.645+0100" modifiedOn="2020-12-02T10:55:44.303+0100" name="Map&lt;String, String>">
+      <metadatas xmi:id="_f_VqITR1EeuqW_sLnF83jw" technicalid="_f_VqIDR1EeuqW_sLnF83jw">
+        <metadatas xsi:type="oenv:Annotation" xmi:id="_f_WRMTR1EeuqW_sLnF83jw" technicalid="_f_WRMDR1EeuqW_sLnF83jw" title="Headers" body="Map"/>
+      </metadatas>
+    </types>
+    <types xsi:type="oenv:PrimitiveType" xmi:id="_kdTFYDSEEeuqW_sLnF83jw" technicalid="_jF_7QTSEEeuqW_sLnF83jw" createdOn="2020-12-02T10:55:55.190+0100" modifiedOn="2020-12-02T10:56:06.086+0100" name="Map&lt;String, Object>"/>
+  </typesDefinition>
+</oenv:Environment>

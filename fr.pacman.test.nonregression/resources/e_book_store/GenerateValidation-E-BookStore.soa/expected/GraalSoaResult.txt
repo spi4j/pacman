@@ -1,0 +1,1 @@
+1  org.obeonetwork.dsl.soa.impl.ParameterImpl  Ce paramètre na pas de type.  Nom de l'élément : ok
