@@ -26,7 +26,6 @@
 
 [comment encoding = UTF-8 /]
 [template public populate(b : environment::Namespace)]
-  [file (b.getServerSourceDir().filename(b.buildPackagePersistenceOverload(), (b.name + ' populate').apply_classDefault() + '.java'), overwrite, 'UTF-8')]
     [b.licence()/]
     package [b.buildPackagePersistenceOverload()/];
     
@@ -161,8 +160,6 @@
       [/if]
     [/for]
     }
-  [/file]
-  
 [/template]
 
 [template private defaultValueForColumnType(o : ecore::EObject, type : String)]

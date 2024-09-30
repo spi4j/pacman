@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2008, 2010 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
 package fr.pacman.start;
 
 import java.io.File;
@@ -19,28 +9,34 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.acceleo.aql.AcceleoUtil;
+import org.eclipse.acceleo.query.ast.TypeLiteral;
+import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironment;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.obeonetwork.dsl.overview.impl.OverviewFactoryImpl;
 
+import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
+import fr.pacman.commons.ui.PacmanGeneratorsReport;
 import fr.pacman.configuration.GenerateConfiguration;
 
 /**
- * Entry point of the 'Entity' generation module.
  * 
- * @generated NOT
+ * @author MINARM
  */
 public class GenerateStart extends PacmanGenerator_Abs {
+
 	/**
 	 * Liste des fichiers binaires qui seront copies par Pacman Start vers le projet
 	 * cible dans le cadre d'un projet SWING.
@@ -67,16 +63,6 @@ public class GenerateStart extends PacmanGenerator_Abs {
 			"src/main/webapp/swagger/swagger-ui-standalone-preset.js.map", "src/main/webapp/swagger/swagger-ui.css",
 			"src/main/webapp/swagger/swagger-ui.css.map", "src/main/webapp/swagger/swagger-ui.js",
 			"src/main/webapp/swagger/swagger-ui.js.map");
-
-	/**
-	 * The name of the module.
-	 */
-	public static final String c_MODULE_FILE_NAME = "generateStart";
-
-	/**
-	 * The name of the templates that are to be generated.
-	 */
-	public static final String[] c_TEMPLATE_NAMES = { "generateStart" };
 
 	public static final String c_PROP_APPLICATION_NAME = "idAppli";
 	public static final String c_PROP_PACKAGE_NAME = "package";
@@ -121,101 +107,92 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	public static final String c_PROP_LIB_ADD_JAR_NAME = "server.jar.additional.{$name}.name";
 	public static final String c_PROP_LIB_ADD_JAR_PACKAGE = "server.jar.additional.{$name}.package";
 	public static final String c_PROP_LIB_ADD_JAR_VERSION = "server.jar.additional.{$name}.version";
-	public static final String c_PROP_LIB_ADD_JAR_DATABASE = "server.jar.additional.{$name}.database";	
+	public static final String c_PROP_LIB_ADD_JAR_DATABASE = "server.jar.additional.{$name}.database";
 	public static final String c_PROP_LIB_ADD_JAR_PREFIX = "server.jar.additional.{$name}.table.prefix";
 	public static final String c_PROP_LIB_ADD_JAR_SCHEMA = "server.jar.additional.{$name}.database.schema";
 	public static final String c_PROP_SQL_ADD_COLUMNS = "server.sql.table.additional_fields";
 	public static final String c_PROP_SQL_ADD_COLUMNS_BASE = "server.sql.table.additional_field.{$name}";
 	public static final String c_PROP_SQL_ADD_COLUMNS_TYPE = "server.sql.table.additional_field.{$name}.type";
 	public static final String c_PROP_SQL_ADD_COLUMNS_DEFAULT = "server.sql.table.additional_field.{$name}.default";
-	public static final String c_PROP_SQL_ADD_COLUMNS_SIZE = "server.sql.table.additional_field.{$name}.size"; 
+	public static final String c_PROP_SQL_ADD_COLUMNS_SIZE = "server.sql.table.additional_field.{$name}.size";
 	public static final String c_PROP_SQL_ADD_COLUMNS_NAME = "server.sql.table.additional_field.{$name}.name";
-	public static final String c_PROP_SQL_ADD_COLUMNS_COMMENT = "server.sql.table.additional_field.{$name}.comment";  
+	public static final String c_PROP_SQL_ADD_COLUMNS_COMMENT = "server.sql.table.additional_field.{$name}.comment";
 	public static final String c_PROP_SQL_ADD_COLUMNS_NOT_NULL = "server.sql.table.additional_field.{$name}.notnull";
-	
+
 	// Evite pour la couche UI d'avoir a faire l'import du plugin configuration.
 	public static final String c_PROP_PROJECT_VERSION = GenerateConfiguration.c_PROP_PROJECT_VERSION;
 
 	private Map<String, String> _startProperties;
 
-	private String _modelPath;
-
 	/**
-	 * Allows the public constructor to be used. Note that a generator created this
-	 * way cannot be used to launch generations before one of initialize(EObject,
-	 * File, List) or initialize(URI, File, List) is called.
-	 * <p>
-	 * The main reason for this constructor is to allow clients of this generation
-	 * to call it from another Java file, as it allows for the retrieval of
-	 * {@link #getProperties()} and {@link #getGenerationListeners()}.
-	 * </p>
-	 */
-	public GenerateStart() {
-		super();
-	}
-
-	/**
-	 * This allows clients to instantiates a generator with all required
-	 * information.
+	 * Constructeur.
 	 * 
-	 * @param p_targetFolder This will be used as the output folder for this
-	 *                       generation : it will be the base path against which all
-	 *                       file block URLs will be resolved.
-	 * @param p_properties   If the template which will be called requires more than
-	 *                       one argument taken from the model, pass them here.
-	 * @throws IOException This can be thrown in three scenarios : the module cannot
-	 *                     be found, it cannot be loaded, or the model cannot be
-	 *                     loaded.
+	 * @param p_targetFolder
+	 * @param p_properties
+	 * @throws IOException
 	 */
 	public GenerateStart(final File p_targetFolder, final Map<String, String> p_properties) throws IOException {
 
 		_startProperties = p_properties;
-		_modelPath = p_targetFolder.getAbsolutePath() + File.separator + _startProperties.get(c_PROP_APPLICATION_NAME)
-				+ "-model";
+		String v_modelPath = p_targetFolder.getAbsolutePath() + File.separator
+				+ _startProperties.get(c_PROP_APPLICATION_NAME) + "-model";
 
-		PacmanPropertiesManager.initProperties(_modelPath, p_properties);
-		initialize((EObject) OverviewFactoryImpl.init().createRoot(), p_targetFolder, Collections.emptyList());
+		setResources(Collections.emptyList());
+		setRootPath(new File(p_targetFolder.getAbsolutePath()).getParent());
+		PacmanPropertiesManager.initProperties(v_modelPath, p_properties);
 	}
 
 	/**
-	 * This can be used to launch the generation from a standalone application.
 	 * 
-	 * @param p_args Arguments of the generation.
+	 * @param p_monitor
 	 */
-	public static void main(final String[] p_args) {
-		try {
-			if (p_args.length < 2) {
-				throw new RuntimeException("Arguments not valid : {model, folder}.");
-			} else {
-				// final URI v_modelURI = URI.createFileURI(p_args[0]);
-				final File v_folder = new File(p_args[1]);
-				final List<String> v_arguments = new ArrayList<String>();
-				v_arguments.add(p_args[0]);
-				for (int v_i = 2; v_i < p_args.length; v_i++) {
-					v_arguments.add(p_args[v_i]);
-				}
-				final Map<String, String> v_startProperties = new HashMap<String, String>();
-				final String v_projectName = System.getProperty("projectName");
-				v_startProperties.put(GenerateStart.c_PROP_APPLICATION_NAME, v_projectName);
-				final GenerateStart v_generator = new GenerateStart(v_folder, v_startProperties);
-
-				v_generator.doGenerate(new BasicMonitor());
-			}
-		} catch (final IOException v_e) {
-			v_e.printStackTrace(); 
-		}
-	}
-
-	@Override
-	public void doGenerate(final Monitor p_monitor) throws IOException {
-
-		super.doGenerate(p_monitor);
+	public void generate(final Monitor p_monitor) {
+		super.generate(new PacmanGeneratorsReport());
 
 		// Copie de fichiers (SWING / EXPORT REST).
-		copyFiles();
+		try {
+			copyFiles();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// Ecriture des proprietes dans les '.properties'.
 		PacmanPropertiesManager.exit();
+	}
+
+	@Override
+	protected List<String> getTemplates() {
+		List<String> v_templates = new ArrayList<>();
+		v_templates.add("generateStart");
+		return v_templates;
+	}
+
+	@Override
+	public String getProjectName() {
+		return ProjectProperties.getApplicationName();
+	}
+
+	@Override
+	public String getModuleQualifiedName() {
+		return "fr::pacman::start::generateStart";
+	}
+
+	@Override
+	protected Map<String, String> getOptions() {
+		Map<String, String> v_res = new LinkedHashMap<>();
+		v_res.put(AcceleoUtil.LOG_URI_OPTION, "acceleo.log");
+		v_res.put(AcceleoUtil.NEW_LINE_OPTION, System.lineSeparator());
+		return v_res;
+	}
+
+	@Override
+	protected List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
+			Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels) {
+
+		final List<EObject> values = new ArrayList<>();
+		values.add(OverviewFactoryImpl.init().createRoot());
+		return values;
 	}
 
 	/**
@@ -226,22 +203,22 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	 */
 	private void copyFiles() throws IOException {
 
-		final File v_targetFolder = getTargetFolder();
-		final String v_targetProject = _startProperties.get(c_PROP_APPLICATION_NAME);
-
-		if ("SWING".equalsIgnoreCase(_startProperties.get(c_PROP_CLIENT_TYPE))) {
-			final File v_folder = new File(v_targetFolder, v_targetProject + "-javawebstart");
-			for (final String v_file : c_SWING_FILES) {
-				copyFile(v_file, v_folder);
-			}
-		}
-
-		if (Boolean.valueOf(_startProperties.get(c_PROP_GEN_WS))) {
-			final File v_folder = new File(v_targetFolder, v_targetProject + "-webapp");
-			for (final String v_file : c_SWAGGER_FILES) {
-				copyFile(v_file, v_folder);
-			}
-		}
+//		final File v_targetFolder = getTargetFolder();
+//		final String v_targetProject = _startProperties.get(c_PROP_APPLICATION_NAME);
+//
+//		if ("SWING".equalsIgnoreCase(_startProperties.get(c_PROP_CLIENT_TYPE))) {
+//			final File v_folder = new File(v_targetFolder, v_targetProject + "-javawebstart");
+//			for (final String v_file : c_SWING_FILES) {
+//				copyFile(v_file, v_folder);
+//			}
+//		}
+//
+//		if (Boolean.valueOf(_startProperties.get(c_PROP_GEN_WS))) {
+//			final File v_folder = new File(v_targetFolder, v_targetProject + "-webapp");
+//			for (final String v_file : c_SWAGGER_FILES) {
+//				copyFile(v_file, v_folder);
+//			}
+//		}
 	}
 
 	/**
@@ -271,29 +248,9 @@ public class GenerateStart extends PacmanGenerator_Abs {
 				v_outputStream.close();
 			}
 		} finally {
-			if(null != v_inputStream) {
+			if (null != v_inputStream) {
 				v_inputStream.close();
 			}
 		}
-	}
-
-	@Override
-	public String[] getModuleTemplates() {
-		return c_TEMPLATE_NAMES;
-	}
-
-	@Override
-	public String getModuleFileName() {
-		return c_MODULE_FILE_NAME;
-	}
-
-	@Override
-	public String getProjectName() {
-		return Activator.c_PLUGIN_ID;
-	}
-
-	@Override
-	public boolean getSwitchQueryCache() {
-		return Boolean.TRUE;
 	}
 }

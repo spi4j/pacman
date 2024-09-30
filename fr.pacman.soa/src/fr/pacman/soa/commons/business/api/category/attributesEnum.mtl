@@ -33,8 +33,8 @@
   XXX attributesEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX[/template]
 
 [template public enumStruct(a : environment::Attribute, s : environment::DTO)]
-     /** [a.nameBaseAttribute()/]. */
-     [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.genClassTypeName()/], [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if])[/template]
+  /** [a.nameBaseAttribute()/]. */
+  [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.genClassTypeName()/], [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if])[/template]
 
 [template public enumStruct(r : environment::Reference, s : environment::DTO)]
   [if (s.isReferenceNoStar(r))]
@@ -90,11 +90,9 @@
     
     
   [/if]
-     /** [d.nameENUM_PK_ID()/]. */
-     [d.nameENUM_PK_ID()/]("[d.nameENUM_PK_ID()/]", "id", [d.genPkType()/].class, true, -1)[if (not d.navigableProperties()->isEmpty())]
-                                                                                             ,
-                                                                                             [d.navigableProperties()->asSequence()->collect(temp1 | temp1.enumStruct(d))->sep(',\r\n')/][/if]
-  ;
+    /** [d.nameENUM_PK_ID()/]. */
+    [d.nameENUM_PK_ID()/]("[d.nameENUM_PK_ID()/]", "id", [d.genPkType()/].class, true, -1)[if (not d.navigableProperties()->isEmpty())],[/if]
+    [d.navigableProperties()->asSequence()->collect(temp1 | temp1.enumStruct(d))->sep(',\r\n')/];
   
      /** Le nom de l'attribut. */
      private final String ['name'.apply_attributeFinal()/];

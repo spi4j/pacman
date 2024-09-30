@@ -24,6 +24,8 @@ public final class EntityFromDtoUtils
    {
       super();
    }
+   
+   public static List<Attribute> getAttributesJavaService (final Entity p_entity) {return getAttributes(p_entity);}
 
    /**
     * Retourne les attributs du DTO ainsi que ceux potentiellement hérités par une entité.

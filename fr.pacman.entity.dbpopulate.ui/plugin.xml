@@ -1,23 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.*"
-            id="fr.pacman.entity.sql.ui.popup.contribution.IFile">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="fr.pacman.entity.dbpopulate.ui.handlers.DbPopulateGeneratorsHandler"
+            commandId="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="fr.pacman.ui.menus.generators"
+               label="Safr@n">
+            <command
+                  commandId="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand"
+                  id="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand" 
+                  icon="icons/safran.png" 
+                  label="Génération Peuplement base de données">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.extension"
+                                 value="entity">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
          </menu>
-         <action
-               class="fr.pacman.entity.dbpopulate.ui.popup.AcceleoGenerateDbPopulateAction"
-               enablesFor="+"
-               id="fr.pacman.entity.sql.ui.popup.AcceleoGenerateDbPopulatelAction"
-               icon="icons/safran.png"
-               label="Génération Peuplement Base de Données"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère les classes Java de peuplement de la base de données"/>
-      </objectContribution>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="fr.pacman.entity.jdbc.ui.commands.generatorsCategory"
+            name="Generators">
+      </category>
+      <command
+            categoryId="fr.pacman.entity.jdbc.ui.commands.generatorsCategory"
+            id="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand"
+            name="fr::pacman::entity::generateServerDbPopulate">
+      </command>
    </extension>
 </plugin>
+

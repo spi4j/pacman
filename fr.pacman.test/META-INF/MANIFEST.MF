@@ -22,8 +22,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.cinematic,
  org.obeonetwork.graal,
  org.obeonetwork.tools.migration,
+ org.eclipse.acceleo.query;bundle-version="8.0.2",
  fr.pacman.commons
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Export-Package: fr.pacman.test

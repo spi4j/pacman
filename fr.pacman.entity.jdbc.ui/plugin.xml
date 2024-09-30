@@ -1,80 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.*"
-            id="fr.pacman.entity.jdbc.ui.popup.contribution.IFile">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcAction"
-               enablesFor="+"
-               id="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcAction"
-               icon="icons/safran.png"
-               label="Génération Persistance JDBC"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère le code JDBC pour le modèle Entity"/>
-      </objectContribution>
-      
-      <!-- Gestion CDO -->
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.emf.cdo.eresource.CDOResource"
-            nameFilter="*"
-            id="fr.pacman.entity.jdbc.ui.popup.contribution.CDOResource">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcActionCDOResource"
-               enablesFor="+"
-               id="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcActionCDOResource"
-               icon="icons/safran.png"
-               label="Génération Persistance JDBC"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère le code JDBC pour le modèle Entity"/>
-      </objectContribution>
-
-      <!-- Génération à partir d'un package Entity (Namespace) -->
-      <!-- objectContribution
-            adaptable="true"
-            objectClass="org.obeonetwork.dsl.environment.Namespace"
-            nameFilter="*"
-            id="fr.pacman.entity.jdbc.ui.popup.contribution.Block">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcActionEObject"
-               enablesFor="+"
-               id="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcActionEObject"
-               icon="icons/safran.png"
-               label="Génération partielle Package Entity"
-               overrideActionId="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcAction"
-               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
-      </objectContribution-->
-
-      <!-- Génération à partir d'une Entity -->
-      <!-- objectContribution
-            adaptable="true"
-            objectClass="org.obeonetwork.dsl.entity.Entity"
-            nameFilter="*"
-            id="fr.pacman.entity.jdbc.ui.popup.contribution.Entity">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcActionEObject"
-               enablesFor="+"
-               id="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcActionEObject"
-               icon="icons/safran.png"
-               label="Génération partielle Entity"
-               overrideActionId="fr.pacman.entity.jdbc.ui.popup.AcceleoGenerateJdbcAction"
-               menubarPath="org.obeonetwork.is.designer.menu/moe_partiel"/>
-      </objectContribution-->
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="fr.pacman.entity.jdbc.ui.handlers.JdbcGeneratorsHandler"
+            commandId="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand">
+      </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="fr.pacman.ui.menus.generators"
+               label="Safr@n">
+            <command
+                  commandId="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand"
+                  id="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand" 
+                  icon="icons/safran.png" 
+                  label="Génération Persistance JDBC">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.extension"
+                                 value="entity">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="fr.pacman.entity.jdbc.ui.commands.generatorsCategory"
+            name="Generators">
+      </category>
+      <command
+            categoryId="fr.pacman.entity.jdbc.ui.commands.generatorsCategory"
+            id="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand"
+            name="fr::pacman::entity::generateServerJdbc">
+      </command>
+   </extension>
+
 </plugin>
+

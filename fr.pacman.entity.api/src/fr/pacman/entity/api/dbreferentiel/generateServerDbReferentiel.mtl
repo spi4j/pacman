@@ -1,0 +1,37 @@
+[module generateServerDbReferentiel('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::dbreferentiel::ReferentielUtils/]
+[import fr::pacman::entity::api::dbreferentiel::DbReferentiel/]
+[import fr::pacman::entity::api::dbreferentiel::genReferentielEntity/]
+[import fr::pacman::entity::api::dbreferentiel::genReferentielReference/]
+
+[comment encoding = UTF-8 /]
+[comment @main/]
+[template public generate(r : entity::Root)]
+  
+  [r.createReferentielUtils()/]
+  
+  [for (b : environment::Namespace | r.eAllContents(environment::Namespace))]
+    
+    [for (e : entity::Entity | b.types->select(el | el.oclIsKindOf(entity::Entity)))]
+      	[e.genReferentielEntity()/]
+    [/for]
+    
+    [for (it : entity::Entity | b.types->select(el | el.oclIsKindOf(entity::Entity)))]
+      [for (ref : environment::Reference | it.references)]
+        [if (ref.navigable)]
+          [if (ref.isRelationN1())]
+            	[ref.genReferentielReference(b)/]
+          [/if]
+        [/if]
+      [/for]
+    [/for]
+    
+    
+        [b.createReferentiel()/]
+    
+  [/for]
+  
+[/template]
+
+[query private isRelationN1(ref : environment::Reference) : Boolean = if ref.multiplicity = environment::MultiplicityKind::ZERO_ONE or ref.multiplicity = environment::MultiplicityKind::ONE then if not (ref.oppositeOf = null) then if ref.oppositeOf.multiplicity = environment::MultiplicityKind::ZERO_STAR or ref.oppositeOf.multiplicity = environment::MultiplicityKind::ONE_STAR then true else false endif else true endif else false endif/]

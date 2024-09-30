@@ -252,7 +252,6 @@
 				<module>fr.pacman.requirement</module>
 				<module>fr.pacman.soa</module>
 				<module>fr.pacman.soapifirst</module>
-				<module>fr.pacman.soalight</module>
 				<module>fr.pacman.commons.soa</module>
 				<module>fr.pacman.cinematic.api</module>
 				<module>fr.pacman.cinematic.gwt</module>
@@ -263,7 +262,7 @@
 				<module>fr.pacman.validation.view</module>
 				<module>fr.pacman.estimation</module>
 				<module>fr.pacman.test</module>
-				<!-- UI modules. -->
+				<!-- UI modules. -->				
 				<module>fr.pacman.configuration.ui</module>
 				<module>fr.pacman.start.ui</module>
 				<module>fr.pacman.environment.ui</module>
@@ -274,7 +273,7 @@
 				<module>fr.pacman.entity.xmi.ui</module>
 				<module>fr.pacman.requirement.ui</module>
 				<module>fr.pacman.requirementsgrouper.ui</module>
-				<module>fr.pacman.soa.ui</module>
+				<module>fr.pacman.soa.ui</module> 
 				<module>fr.pacman.soapifirst.ui</module>
 				<module>fr.pacman.cinematic.gwt.ui</module>
 				<module>fr.pacman.cinematic.jsf.ui</module>
@@ -296,7 +295,6 @@
 				<module>fr.pacman.entity.xmi.ui.feature</module>
 				<module>fr.pacman.soa.ui.feature</module>
 				<module>fr.pacman.soapifirst.ui.feature</module>
-				<module>fr.pacman.soalight.feature</module>
 				<module>fr.pacman.requirement.ui.feature</module>
 				<module>fr.pacman.requirementsgrouper.ui.feature</module>
 				<module>fr.pacman.cinematic.api.feature</module>
@@ -329,7 +327,6 @@
 				<module>fr.pacman.entity.api</module>
 				<!-- module>fr.pacman.entity.jdbc</module> <module>fr.pacman.requirement</module -->
 				<!-- module>fr.pacman.soa</module -->
-				<!-- module>fr.pacman.soalight</module -->
 				<!-- module>fr.pacman.cinematic.api</module> <module>fr.pacman.cinematic.gwt</module> 
 					<module>fr.pacman.cinematic.jsf</module> <module>fr.pacman.cinematic.swing</module> 
 					<module>fr.pacman.validation</module> <module>fr.pacman.estimation</module -->

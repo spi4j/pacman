@@ -9,9 +9,9 @@
 [import fr::pacman::entity::api::files::genEntityItf/]
 [import fr::pacman::entity::api::files::genParamAppli/]
 [import fr::pacman::entity::api::files::genUserPersistenceApp/]
-[import fr::pacman::entity::api::sql::generateSql/]
+[import fr::pacman::entity::api::sql::generateServerSql/]
 [import fr::pacman::entity::api::dbpopulate::DbPopulate/]
-[import fr::pacman::entity::api::xmi::generateXmi/]
+[import fr::pacman::entity::api::xmi::generateServerXmi/]
 
 [comment encoding = UTF-8 /]
 [comment @main/]

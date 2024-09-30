@@ -19,14 +19,14 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 
 /**
  * Entry point of the 'Entity' generation module.
  * 
  * @generated NOT
  */
-public class GenerateCinematicApi extends PacmanGenerator_Abs {
+public class GenerateCinematicApi extends PacmanGeneratorOld_Abs {
 
 	/**
 	 * The name of the module.

@@ -1,0 +1,17 @@
+[module generateServerDbPopulate('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::entity::api::dbpopulate::DbPopulate/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::convention::rule::classRule/]
+
+[comment encoding = UTF-8 /]
+[comment @main/]
+[template public generateDbPopulate(r : entity::Root)]
+  
+  [for (n : environment::Namespace | r.eAllContents(environment::Namespace))]
+  [file (n.getServerSourceDir().filename(n.buildPackagePersistenceOverload(), (n.name + ' populate').apply_classDefault() + '.java'), overwrite, 'UTF-8')]
+        [n.populate()/]  
+  [/file]
+  [/for]
+  
+[/template]

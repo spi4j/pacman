@@ -5,7 +5,7 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             category="org.obeonetwork.dsl.is.ui.categoryID"
-            class="fr.pacman.start.ui.AcceleoGenrateStartAction"
+            class="fr.pacman.start.ui.GenerateStartUIAction"
             helpHref="https://github.com/spi4j/spi4j"
             icon="icons/safran.png"
             id="fr.pacman.start.ui.wizard"

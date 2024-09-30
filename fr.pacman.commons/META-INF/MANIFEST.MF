@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.environment,
  org.obeonetwork.dsl.cinematic,
  org.obeonetwork.dsl.entity,
+ org.obeonetwork.dsl.overview,
  org.obeonetwork.dsl.soa,
  org.eclipse.sirius,
  org.eclipse.emf.ecore,
@@ -25,8 +26,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.ui,
  org.eclipse.jface.text,
  org.eclipse.jdt.core,
- com.google.guava
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+ com.google.guava, 
+ org.eclipse.acceleo.query.ide;bundle-version="[8.0.2,9.0.0)",
+ org.eclipse.acceleo.query;bundle-version="8.0.2",
+ org.eclipse.acceleo.aql;bundle-version="4.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Export-Package: fr.pacman.commons.common,

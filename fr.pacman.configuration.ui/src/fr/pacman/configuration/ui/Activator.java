@@ -1,53 +1,106 @@
 package fr.pacman.configuration.ui;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.common.util.ResourceLocator;
 
 /**
- * The activator class controls the plug-in life cycle
+ * 
+ * @author MINARM
  */
-public class Activator extends AbstractUIPlugin {
-
-	// The plug-in ID
-	public static final String c_PLUGIN_ID = "fr.pacman.configuration.ui";
-
-	// The shared instance
-	private static Activator plugin;
+public class Activator extends EMFPlugin {
 
 	/**
-	 * The constructor
+	 * Plugin's id.
+	 */
+	public static final String PLUGIN_ID = "fr.pacman.configuration.ui";
+
+	/**
+	 * The shared instance.
+	 */
+	public static final Activator INSTANCE = new Activator();
+
+	/**
+	 * The implementation plugin for Eclipse.
+	 */
+	private static Implementation plugin;
+
+	/**
+	 * The constructor.
 	 */
 	public Activator() {
+		super(new ResourceLocator[] {});
+	}
+
+	@Override
+	public ResourceLocator getPluginResourceLocator() {
+		return plugin;
+	}
+
+	public static Implementation getPlugin() {
+		return plugin;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Class implementing the EclipsePlugin instance, instanciated when the code is
+	 * run in an OSGi context.
 	 * 
-	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-	 * @generated
+	 * @author cedric
 	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	public static class Implementation extends EclipsePlugin {
+
+		/**
+		 * Create the Eclipse Implementation.
+		 */
+		public Implementation() {
+			super();
+			plugin = this;
+		}
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-	 * @generated
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
+	 * Returns the shared instance.
 	 *
-	 * @return the shared instance
+	 * @return the shared instance.
 	 */
 	public static Activator getDefault() {
-		return plugin;
+		return INSTANCE;
+	}
+
+	/**
+	 * Logs the given exception as error or warning.
+	 * 
+	 * @param exception The exception to log.
+	 * @param blocker   <code>True</code> if the message must be logged as error,
+	 *                  <code>False</code> to log it as a warning.
+	 */
+	public static void log(Exception exception, boolean blocker) {
+		final int severity;
+		if (blocker) {
+			severity = IStatus.ERROR;
+		} else {
+			severity = IStatus.WARNING;
+		}
+		Activator.INSTANCE.log(new Status(severity, PLUGIN_ID, exception.getMessage(), exception));
+	}
+
+	/**
+	 * Puts the given message in the error log view, as error or warning.
+	 * 
+	 * @param message The message to put in the error log view.
+	 * @param blocker <code>True</code> if the message must be logged as error,
+	 *                <code>False</code> to log it as a warning.
+	 */
+	public static void log(String message, boolean blocker) {
+		int severity = IStatus.WARNING;
+		if (blocker) {
+			severity = IStatus.ERROR;
+		}
+		String errorMessage = message;
+		if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
+			errorMessage = "Logging null message should never happens."; //$NON-NLS-1$
+		}
+		Activator.INSTANCE.log(new Status(severity, PLUGIN_ID, errorMessage));
 	}
 }

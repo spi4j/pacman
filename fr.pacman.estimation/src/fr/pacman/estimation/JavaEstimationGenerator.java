@@ -9,7 +9,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 
-import fr.pacman.commons.main.PacmanGenerator_Abs;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
 import fr.pacman.estimation.services.EstimationCharge_Sce;
 import fr.pacman.estimation.services.IndicatorsEstimation;
 import fr.pacman.estimation.services.complexite_pf.NotReliableException;
@@ -20,7 +20,7 @@ import fr.pacman.estimation.services.complexite_pf.UnsupportedModelException;
  * 
  * @author MINARM
  */
-public class JavaEstimationGenerator extends PacmanGenerator_Abs
+public class JavaEstimationGenerator extends PacmanGeneratorOld_Abs
 {
    /**
     * This allows clients to instantiates a generator with all required information.

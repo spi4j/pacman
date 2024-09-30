@@ -9,10 +9,6 @@
    <includes
       id="fr.pacman.commons.soa.feature"
       version="0.0.0"/>
-      
-   <includes
-      id="fr.pacman.soalight.feature"
-      version="0.0.0"/>
 
    <plugin
          id="fr.pacman.soa"

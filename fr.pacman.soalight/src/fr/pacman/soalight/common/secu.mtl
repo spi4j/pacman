@@ -1,5 +1,0 @@
-[module secu('http://www.obeonetwork.org/dsl/soa/4.0.0', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
-
-[comment encoding = UTF-8 /]
-[template public importUserItf(any : ecore::EObject)]
-  import fr.spi4j.lib.security.User_Itf;[/template]

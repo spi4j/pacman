@@ -1,41 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.*"
-            id="fr.pacman.entity.xmi.ui.popup.contribution.IFile">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.entity.xmi.ui.popup.AcceleoGenerateXmiAction"
-               enablesFor="+"
-               id="fr.pacman.entity.xmi.ui.popup.AcceleoGenerateXmiAction"
-               icon="icons/safran.png"
-               label="Génération XMI pour PowerAMC"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère le fichier XMI pour PowerAMC"/>
-      </objectContribution>
-      
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.emf.cdo.eresource.CDOResource"
-            nameFilter="*"
-            id="fr.pacman.entity.xmi.ui.popup.contribution.CDOResource">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.entity.xmi.ui.popup.AcceleoGenerateXmiActionCDOResource"
-               enablesFor="+"
-               id="fr.pacman.entity.xmi.ui.popup.AcceleoGenerateXmiActionCDOResource"
-               icon="icons/safran.png"
-               label="Génération XMI pour PowerAMC"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère le fichier XMI pour PowerAMC"/>
-      </objectContribution>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="fr.pacman.entity.xmi.ui.handlers.XmiGeneratorsHandler"
+            commandId="fr.pacman.entity.xmi.ui.commands.XmiGeneratorCommand">
+      </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="fr.pacman.ui.menus.generators"
+               label="Safr@n">
+            <command
+                  commandId="fr.pacman.entity.xmi.ui.commands.XmiGeneratorCommand"
+                  id="fr.pacman.entity.xmi.ui.commands.XmiGeneratorCommand" 
+                  icon="icons/safran.png" 
+                  label="Génération XMI pour PowerAMC">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.extension"
+                                 value="entity">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="fr.pacman.entity.xmi.ui.commands.generatorsCategory"
+            name="Generators">
+      </category>
+      <command
+            categoryId="fr.pacman.entity.xmi.ui.commands.generatorsCategory"
+            id="fr.pacman.entity.xmi.ui.commands.XmiGeneratorCommand"
+            name="fr::pacman::entity::api::xmi::generateServerXmi">
+      </command>
+   </extension>
+
 </plugin>
+

@@ -17,13 +17,13 @@ import org.eclipse.emf.cdo.eresource.CDOResource;
 
 import fr.pacman.cinematic.gwt.ui.Activator;
 import fr.pacman.cinematic.gwt.ui.common.GenerateGwtUICDOResource;
-import fr.pacman.commons.ui.AcceleoGenerateSafranAction;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
+import fr.pacman.commons.ui.AcceleoGenerateSafranActionOld;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
 
 /**
  * Entity code generation.
  */
-public class AcceleoGenerateGwtActionCDOResource extends AcceleoGenerateSafranAction<CDOResource>
+public class AcceleoGenerateGwtActionCDOResource extends AcceleoGenerateSafranActionOld<CDOResource>
 {
 
    @Override
@@ -39,7 +39,7 @@ public class AcceleoGenerateGwtActionCDOResource extends AcceleoGenerateSafranAc
    }
 
    @Override
-   protected SafranGenerator_Abs<CDOResource> getSafranGenerator (final CDOResource p_modelURI, final List<? extends Object> p_arguments)
+   protected SafranGeneratorOld_Abs<CDOResource> getSafranGenerator (final CDOResource p_modelURI, final List<? extends Object> p_arguments)
    {
       return new GenerateGwtUICDOResource(p_modelURI, p_arguments);
    }

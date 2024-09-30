@@ -6,6 +6,6 @@ Bundle-SymbolicName: fr.pacman.branding;singleton:=true
 Bundle-Version: 4.4.0.qualifier
 Bundle-Activator: fr.pacman.branding.Activator
 Bundle-Vendor: Safr@n
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.osgi.framework
 Require-Bundle: org.eclipse.equinox.app

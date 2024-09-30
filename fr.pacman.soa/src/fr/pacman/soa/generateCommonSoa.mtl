@@ -29,11 +29,11 @@
 [comment @main/]
 [template public GenerateCommonSystem(m : soa::System)]
   
-      [m.genLog4j()/]
+    [m.genLog4j()/]
   	[m.genPermissionsItf()/]
   	[m.genUserBusiness()/]	
   	[m.genXtos()/]
-      [m.genServicesItfs()/]
+    [m.genServicesItfs()/]
   	[m.genDtos()/]
   	[m.genAppliDtoAbs()/]
   	[m.genAppliXtoAbs()/]

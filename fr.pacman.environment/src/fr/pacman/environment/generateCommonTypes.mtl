@@ -1,0 +1,17 @@
+[module generateCommonTypes('http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[import fr::pacman::commons::types::genTypePrimitif/]
+[import fr::pacman::commons::types::genEnum/]
+
+[comment encoding = UTF-8 /]
+[comment @main/]
+[template public generateTypes(n : environment::TypesDefinition)]
+  [for (primitiveType : environment::PrimitiveType | n.eAllContents(environment::PrimitiveType))]
+    [if (primitiveType.name <> null and not primitiveType.name.contains('<'))]
+      		[primitiveType.genTypePrimitif()/]
+    [/if]
+  [/for]
+  [for (enum : environment::Enumeration | n.eAllContents(environment::Enumeration))]
+    		[enum.genEnum()/]	
+  [/for]
+[/template]

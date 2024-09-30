@@ -20,14 +20,14 @@ import org.eclipse.emf.cdo.eresource.CDOResource;
 import fr.pacman.cinematic.api.GenerateCinematicApi;
 import fr.pacman.cinematic.jsf.GenerateCinematicJsf;
 import fr.pacman.commons.convention.project.ProjectProperties;
-import fr.pacman.commons.main.PacmanGenerator_Abs;
-import fr.pacman.commons.ui.SafranGenerator_Abs;
-import fr.pacman.commons.ui.SafranGenerator_Enum;
+import fr.pacman.commons.main.PacmanGeneratorOld_Abs;
+import fr.pacman.commons.ui.SafranGeneratorOld_Abs;
+import fr.pacman.commons.ui.PacmanGenerator_Enum;
 
 /**
  * Main entry point of the 'Entity' generation module.
  */
-public class GenerateJsfUICDOResource extends SafranGenerator_Abs<CDOResource> {
+public class GenerateJsfUICDOResource extends SafranGeneratorOld_Abs<CDOResource> {
 
 	/**
 	 * Constructeur.
@@ -42,9 +42,9 @@ public class GenerateJsfUICDOResource extends SafranGenerator_Abs<CDOResource> {
 	}
 
 	@Override
-	protected List<PacmanGenerator_Abs> getPacmanGenerators(final CDOResource p_file,
+	protected List<PacmanGeneratorOld_Abs> getPacmanGenerators(final CDOResource p_file,
 			final List<? extends Object> p_arguments) throws IOException {
-		final List<PacmanGenerator_Abs> v_generators = new ArrayList<PacmanGenerator_Abs>();
+		final List<PacmanGeneratorOld_Abs> v_generators = new ArrayList<PacmanGeneratorOld_Abs>();
 		v_generators.add(new GenerateCinematicApi(p_file, getClientJsfProject(), p_arguments));
 		v_generators.add(new GenerateCinematicJsf(p_file, getClientJsfProject(), p_arguments));
 		return v_generators;
@@ -62,7 +62,7 @@ public class GenerateJsfUICDOResource extends SafranGenerator_Abs<CDOResource> {
 	}
 	
 	@Override
-	public List<SafranGenerator_Enum> getValuesOfCompatibleModels() {
-		return Arrays.asList(SafranGenerator_Enum.CINEMATIC);
+	public List<PacmanGenerator_Enum> getValuesOfCompatibleModels() {
+		return Arrays.asList(PacmanGenerator_Enum.CINEMATIC);
 	}
 }
