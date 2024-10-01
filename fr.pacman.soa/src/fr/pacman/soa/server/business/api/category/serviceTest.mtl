@@ -51,7 +51,6 @@
       
     [/protected]
     
-    
     /**
      * Classe de test du service '[s.buildServiceInterfaceName(d)/]'.
      * @author [s.getAuthorName()/]
@@ -59,7 +58,6 @@
     // Annotation for class
     [protected (s.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
     [/protected]
-    
     public class [s.buildServiceTestClassName(d)/]  extends [s.getClassNameForBeanTester_Abs()/]
     { 
     [if (not d.isNotPersistent())]
@@ -103,7 +101,6 @@
           // set up before class
           [protected (s.getUserCodeId('set up before class')) startTagPrefix('// ') endTagPrefix('// ')]
           [/protected]
-    
        }
     
        /**
@@ -119,7 +116,6 @@
           // set up
           [protected (s.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
           [/protected]
-    
        }
     
     [if (d.hasCrud())]
@@ -151,9 +147,8 @@
         
               // findAll assertions
               [protected (s.getUserCodeId('findAll assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-                
+
               [/protected]
-        
            }
         
         [if (not referentiel)]
@@ -169,7 +164,7 @@
           
                 // create
                 [protected (s.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
-                        // TODO renseigner données de test
+                  // TODO renseigner données de test
                   [for (a : environment::Attribute | d.attributesNotComputed())]
                     [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
                             [d.buildDtoClassName().apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
@@ -205,9 +200,8 @@
                           [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].add([('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
                           [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetterListDto()/]([('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
                   [/for]
-                  
+
                 [/protected]
-          
           
                 final [d.buildDtoClassName()/] [('created' + d.buildDtoClassName()).apply_variableFinal()/] = ['service'.apply_attributeStatic()/].save ([d.buildDtoClassName().apply_variableFinal()/]);
           
@@ -217,16 +211,15 @@
           
                 // create assertions
                 [protected (s.getUserCodeId('create assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-                  
+
                   [for (r : environment::Reference | d.referencesStarStar())]
-                    
-                          /* test de la bonne insertion de la référence [r.name/] */
-                          final List <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name + ' read').apply_variableFinal()/] = ['service'.apply_attributeStatic()/].[('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (['crud id'.apply_attributeStatic()/]);
-                          assertTrue(![('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name + ' read').apply_variableFinal()/].isEmpty(), "La relation [r.name/] a bien été créée");
+
+                    /* test de la bonne insertion de la référence [r.name/] */
+                    final List <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name + ' read').apply_variableFinal()/] = ['service'.apply_attributeStatic()/].[('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (['crud id'.apply_attributeStatic()/]);
+                    assertTrue(![('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name + ' read').apply_variableFinal()/].isEmpty(), "La relation [r.name/] a bien été créée");
                   [/for]
-                  
+
                 [/protected]
-          
              }
           
         [/if]
@@ -251,9 +244,8 @@
         
               // findById assertions
               [protected (s.getUserCodeId('findById assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-                
+
               [/protected]
-        
            }
         
         [if (not referentiel)]
@@ -271,7 +263,7 @@
           
                 // update
                 [protected (s.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
-                  
+
                   [for (r : environment::Reference | d.referencesNoStar())]
                     [if (r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
                             ['dto'.apply_variableFinal()/].[r.getNameSetter()/] (new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ());
@@ -280,16 +272,14 @@
                   [/for]
                 [/protected]
           
-          
                 final [d.buildDtoClassName()/] ['updated dto'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].save (['dto'.apply_variableFinal()/]);
           
                 assertNotNull (['updated dto'.apply_variableFinal()/].getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
           
                 // update assertions
                 [protected (s.getUserCodeId('update assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-                  
+
                 [/protected]
-          
              }
           
              /**
@@ -311,9 +301,8 @@
           
                 // delete assertions
                 [protected (s.getUserCodeId('delete assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-                  
+
                 [/protected]
-          
              }
           
         [/if]
@@ -328,10 +317,9 @@
             // getColumn
             [protected (s.getUserCodeId('getColumn')) startTagPrefix('// ') endTagPrefix('// ')]
               [if (d.attributesNotComputed()->size() > 0)]
-                      [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ().getColumn ([d.buildAttributesEnumName()/].[d.attributesNotComputed()->first().name.apply_attributeEnum()/]);
+                [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ().getColumn ([d.buildAttributesEnumName()/].[d.attributesNotComputed()->first().name.apply_attributeEnum()/]);
               [/if]
             [/protected]
-      
          }
       
     [/if]
@@ -347,10 +335,9 @@
            {
               // [o.userCodeForOperation()/]
               [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-                      // TODO : A Implémenter
-                      fail ("Test non implémenté");
+                // TODO : A Implémenter
+                fail ("Test non implémenté");
               [/protected]
-        
            }
         
       [/for]
@@ -368,14 +355,12 @@
           // tear down
           [protected (s.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
           [/protected]
-    
        }
     
        // specific service test
        [protected (s.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-    
     
     }[/let]
 [/template]

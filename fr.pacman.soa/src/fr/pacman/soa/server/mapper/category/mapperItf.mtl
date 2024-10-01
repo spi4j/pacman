@@ -21,7 +21,6 @@
     
   [/protected]
   
-  
   /**
    * L'interface définissant le contrat pour le Mapper (= Dto <-> Xto) sur le type '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -31,9 +30,8 @@
   
      // [d.nameMapperInterface()/]
      [protected (d.getUserCodeId(d.nameMapperInterface())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

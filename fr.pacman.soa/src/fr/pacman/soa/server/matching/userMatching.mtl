@@ -24,7 +24,6 @@
     
   [/protected]
   
-  
   /**
    * Factory permettant de récupérer les instances de classes de matching.
    * @author [m.getAuthorName()/]

@@ -39,7 +39,6 @@
     
   [/protected]
   
-  
   /**
    * Implémentation de la façade du service REST pour le service : [s.name/].
    * @author [s.getAuthorName()/]
@@ -55,8 +54,8 @@
   [/if]
   	// attributs
   	[protected (s.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-     
-   [/protected]
+
+  	[/protected]
   
   
   	/**

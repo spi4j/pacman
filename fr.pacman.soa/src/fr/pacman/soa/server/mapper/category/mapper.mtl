@@ -33,7 +33,6 @@
     
   [/protected]
   
-  
   /**
    * Implémentation pour le Mapper (= Dto <-> Xto) sur le type '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -48,10 +47,9 @@
   
         // convertDtoToXto
         [protected (d.getUserCodeId('convertDtoToXto')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
-  
+
         return ['xto'.apply_variableFinal()/];
      }
   
@@ -62,10 +60,9 @@
   
         // convertXtoToDto
         [protected (d.getUserCodeId('convertXtoToDto')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
-  
+
         return ['dto'.apply_variableFinal()/];
      }
   
@@ -107,9 +104,8 @@
   
      // [d.nameMapper()/]
      [protected (d.getUserCodeId(d.nameMapper())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [comment : Write all required imports. /]

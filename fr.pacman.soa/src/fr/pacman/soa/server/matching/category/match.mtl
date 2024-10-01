@@ -41,7 +41,6 @@
     
   [/protected]
   
-  
   /**
    * Implémentation pour le Matcher (= persistance <-> business) sur le type '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -103,8 +102,8 @@
   
         // convertDtoToEntity
         [protected (d.getUserCodeId('convertDtoToEntity')) startTagPrefix('// ') endTagPrefix('// ')]
-                [('check ' + d.name).apply_methodDefault()/]([d.genPkType()/].class[for (a : environment::Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : environment::Reference | d.referencesNoStar())], [r.nameDto()/].class[/for][for (r : environment::Reference | d.referencingStar())], [r.containingType.oclAsType(environment::DTO).nameDto()/].class[/for]);
-                ['entity'.apply_variableFinal()/].setId(['dto'.apply_parameterMethodClassicIn()/].getId ());
+          [('check ' + d.name).apply_methodDefault()/]([d.genPkType()/].class[for (a : environment::Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : environment::Reference | d.referencesNoStar())], [r.nameDto()/].class[/for][for (r : environment::Reference | d.referencingStar())], [r.containingType.oclAsType(environment::DTO).nameDto()/].class[/for]);
+          ['entity'.apply_variableFinal()/].setId(['dto'.apply_parameterMethodClassicIn()/].getId ());
           [for (a : environment::Attribute | d.attributesNotComputed())]
             [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
                     ['entity'.apply_variableFinal()/].[a.getNameSetter()/] (['dto'.apply_parameterMethodClassicIn()/].getIdentifiant ());
@@ -128,7 +127,6 @@
             [/for]
           [/if]
         [/protected]
-  
   [if (d.hasEntityWithVersion())]
     
           MatchHelper.setVersionValueInEntity (['dto'.apply_parameterMethodClassicIn()/], ['entity'.apply_variableFinal()/]);
@@ -168,8 +166,8 @@
   
         // refreshDtoFromEntity
         [protected (d.getUserCodeId('refreshDtoFromEntity')) startTagPrefix('// ') endTagPrefix('// ')]
-                [('check ' + d.name).apply_methodDefault()/] ([d.genPkType()/].class[for (a : environment::Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : environment::Reference | d.referencesNoStar())], [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/].class[/for][for (r : environment::Reference | d.referencingStar())], [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/].class[/for]);
-                ['dto'.apply_parameterMethodClassicIn()/].setId (['entity'.apply_parameterMethodClassicIn()/].getId ());
+          [('check ' + d.name).apply_methodDefault()/] ([d.genPkType()/].class[for (a : environment::Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : environment::Reference | d.referencesNoStar())], [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/].class[/for][for (r : environment::Reference | d.referencingStar())], [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/].class[/for]);
+          ['dto'.apply_parameterMethodClassicIn()/].setId (['entity'.apply_parameterMethodClassicIn()/].getId ());
           [for (a : environment::Attribute | d.attributesNotComputed())]
             [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
                     ['dto'.apply_parameterMethodClassicIn()/].setIdentifiant (['entity'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/] ());
@@ -193,7 +191,6 @@
             [/for]
           [/if]
         [/protected]
-  
   [if (d.hasEntityWithVersion())]
     
           MatchHelper.setVersionValueInDto (['entity'.apply_parameterMethodClassicIn()/], ['dto'.apply_parameterMethodClassicIn()/]);
@@ -280,7 +277,7 @@
              for (final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ['dto fk'.apply_variableFinal()/] : [r.name.normalize().apply_parameterMethodMultiple()/])
              {
                 ['params'.apply_variableFinal()/].put ("[r.nameSimplePropertyIDInEnum()/]", ['dto fk'.apply_variableFinal()/].getId ());
-    			[if (r.hasXtopSup())]['params'.apply_variableFinal()/].put ("[d.getXtopSupName()/]", ['dto fk'.apply_variableFinal()/].[d.getXtopSupName().apply_methodGet()/]().get_value());[/if] 
+    			[if (r.hasXtopSup())]['params'.apply_variableFinal()/].put ("[d.getXtopSupName()/]", ['dto fk'.apply_variableFinal()/].[d.getXtopSupName().apply_methodGet()/]().get_value());[/if]
                 // insertion en base
                 getDao().executeUpdate ([('query ' + r.name.normalize() + ' insert').apply_variableFinal()/], ['params'.apply_variableFinal()/]);
              }
@@ -321,28 +318,31 @@
   [/for]
      // [d.buildAppliMatchClassName()/]
      [protected (d.getUserCodeId(d.buildAppliMatchClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [comment : ************************************************************************************* /]
 [comment : Comme la construction de la requete est tres longue, on coupe en multiples templates. /]
 [comment : ************************************************************************************* /]
 [template private writeInsertQueryForbiDirectionalRelation(d : environment::DTO, r : environment::Reference)]
-  "insert into " + [d.buildEntityColumnEnumName()/].[('table name ' + d.nameClassDto() + r.name.sanitize()).apply_attributeFinalStatic()/][d.lineSeparator()/][d.writeInsertQueryForbiDirectionalRelation_2(r)/] [/template]
+  "insert into " + [d.buildEntityColumnEnumName()/].[('table name ' + d.nameClassDto() + r.name.sanitize()).apply_attributeFinalStatic()/][d.writeInsertQueryForbiDirectionalRelation_2(r)/] [/template]
 
 [template private writeInsertQueryForbiDirectionalRelation_2(d : environment::DTO, r : environment::Reference)]
    + "(" + [d.buildEntityColumnEnumName()/].[d.nameSimplePropertyIDInEnum()/] + ", " + [r.referencedType.oclAsType(environment::DTO).buildEntityColumnEnumName()/].[r.nameSimplePropertyIDInEnum()/][d.writeInsertQueryForbiDirectionalRelation_3(r)/][/template]
 
-[template private writeInsertQueryForbiDirectionalRelation_3(d : environment::DTO, r : environment::Reference)]
-  [if (d.hasXtopSup())] + ", " + [d.buildAppliColumnClassName()/].[d.getXtopSupName()/][d.lineSeparator()/][/if][if (d.hasXdMaj())] + ", " + [d.buildAppliColumnClassName()/].[d.getXdMajName()/][/if] + ")" [d.writeInsertQueryForbiDirectionalRelation_4(r)/][/template]
+[template private writeInsertQueryForbiDirectionalRelation_3(d : environment::DTO, r : environment::Reference) post(self.removeLineSeparators())]
+  [if (d.hasXtopSup())] + ", " + [d.buildAppliColumnClassName()/].[d.getXtopSupName()/][d.lineSeparator()/][/if]
+  [if (d.hasXdMaj())] + ", " + [d.buildAppliColumnClassName()/].[d.getXdMajName()/][/if]
+   + ")" [d.writeInsertQueryForbiDirectionalRelation_4(r)/][/template]
 
 [template private writeInsertQueryForbiDirectionalRelation_4(d : environment::DTO, r : environment::Reference)]
   + "values (:[d.nameSimplePropertyIDInEnum()/], :[r.nameSimplePropertyIDInEnum()/][d.writeInsertQueryForbiDirectionalRelation_5(r)/][/template]
 
-[template private writeInsertQueryForbiDirectionalRelation_5(d : environment::DTO, r : environment::Reference)]
-  [if (d.hasXtopSup())], :[d.getXtopSupName()/][/if][if (d.hasXdMaj())], :[d.getXdMajName()/][/if])";[/template]
+[template private writeInsertQueryForbiDirectionalRelation_5(d : environment::DTO, r : environment::Reference) post(self.removeLineSeparators())]
+  [if (d.hasXtopSup())], :[d.getXtopSupName()/][/if]
+  [if (d.hasXdMaj())], :[d.getXdMajName()/][/if]
+  )";[/template]
 
 [query public get_automaticColumnsProperties(any : ecore::EObject) : Sequence(String) = any.getSQLTableAdditionalFields().getPropertyAsList(',')/]
 

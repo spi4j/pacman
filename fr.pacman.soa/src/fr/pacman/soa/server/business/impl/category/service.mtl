@@ -67,7 +67,6 @@
 
        [/protected]
     
-    
     [if (s.useServiceRequirements())]
          @SuppressWarnings("all")
          private final [s.buildServiceRequirementsClassName(d)/] ['requirements'.apply_attributeFinal()/] = new [s.buildServiceRequirementsClassName(d)/] (); // NOPMD

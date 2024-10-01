@@ -9,8 +9,9 @@
 
 [query private norme_attributeDefault(value : String) : String = value.norme_attributeDefaultJavaService()/]
 
-[template public apply_attributeEnum(value : String)]
-  [value.norme_attributeEnum()/][/template]
+[template public apply_attributeEnum(value : String) post(self.trim())]
+  [value.norme_attributeEnum()/]
+[/template]
 
 [query private norme_attributeEnum(value : String) : String = value.norme_attributeEnumJavaService()/]
 
@@ -27,7 +28,7 @@
 [template public apply_attributeFinalStatic(value : String)]
   [value.norme_attributeFinalStatic()/][/template]
 
-[query private norme_attributeFinalStatic(value : String) : String = value.norme_attributeFinalStaticJavaService()/]
+[query private norme_attributeFinalStatic(value : String) : String = value.norme_attributeFinalStaticJavaService().trim()/]
 
 [template public apply_attributeStatic(value : String)]
   [value.norme_attributeStatic()/][/template]

@@ -35,7 +35,6 @@
   [/protected]
   
   
-  
   /**
    * Implémentation de la façade du web service.
    * @author [s.getAuthorName()/]
@@ -46,9 +45,8 @@
   
   	// attributs
   	[protected (s.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-     
-   [/protected]
-  
+
+  	[/protected]
   [if (s <> null and not (s.ownedInterface = null))]
     [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
       [if (o.isCXFOperation())]
@@ -62,21 +60,20 @@
            {
         	// [o.userCodeForOperation()/]
         	[protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-           
+
            [if (o.paramOutXto() <> 'void')]
-                   return [if (o.output->first() <> null and o.output->first().type.oclIsTypeOf(environment::DTO))]
-                            [let return : environment::DTO = o.output->first().type.oclAsType(environment::DTO)]
-                              [o.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]DtoTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/]));
-                            [/let]
-                          [else]
-                            [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp2 | temp2.parametersXtoFromDto())->sep(', ')/]);
-                          [/if]
+             return [if (o.output->first() <> null and o.output->first().type.oclIsTypeOf(environment::DTO))]
+                      [let return : environment::DTO = o.output->first().type.oclAsType(environment::DTO)]
+                        [o.buildAppliUserMapperGenClassName()/].[('get ' + return.buildMapperClassName()).apply_methodDefault()/] ().convert[if (o.output->first().isMultiple())]List[/if]DtoTo[if (o.output->first().isMultiple())]List[/if]Xto( [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp1 | temp1.parametersXtoFromDto())->sep(', ')/]));
+                      [/let]
+                    [else]
+                      [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp2 | temp2.parametersXtoFromDto())->sep(', ')/]);
+                    [/if]
            [else]
-                   [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp3 | temp3.parametersXtoFromDto())->sep(', ')/]);
+             [o.buildAppliUserBusinessGenClassName()/].get[s.nameService(null)/] ().[o.nameOperation()/] ([o.input->asSequence()->collect(temp3 | temp3.parametersXtoFromDto())->sep(', ')/]);
            [/if]
-           
+
          [/protected]
-        
            }
         
       [/if]
@@ -84,9 +81,8 @@
   [/if]
      // [s.buildServiceFacadeCXFClassName()/]
      [protected (s.getUserCodeId(s.buildServiceFacadeCXFClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [comment : Write all required imports. /]

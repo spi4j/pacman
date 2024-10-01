@@ -28,7 +28,6 @@
     
   [/protected]
   
-  
   /**
    * Classe abstraite de Matching entre le DTO et l'entity spécifique à l'application en particulier pour 
    * gérer les attributs SQL additionnels tels que xtopsup et xdmaj (par exemple).
@@ -57,24 +56,22 @@
   
      // attributs
      [protected (n.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      @Override
      public void create (final TypeDto ['dto'.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException
      {
         // create
         [protected (n.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-          	  final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
-                [if (n.hasXtopSup())]['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.active));[/if]
-                [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
-                getDao().create(['entity'.apply_variableFinal()/]);
-                refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
-          
+
+          final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
+          [if (n.hasXtopSup())]['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.active));[/if]
+          [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
+          getDao().create(['entity'.apply_variableFinal()/]);
+          refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -82,16 +79,15 @@
      {
         // findById
         [protected (n.getUserCodeId('findById')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['id'.apply_parameterMethodClassicIn()/]);
-                // Si le xtopsup est < 3 on renvoie une exception comme si la donnée n'avait pas été trouvée.
-                if (!DatabaseLineStatus_Enum.forSelect(['entity found'.apply_variableFinal()/].[n.getXtopSupName().apply_methodGet()/]().get_value()))
-                   throw new Spi4jRuntimeException("Donnée non trouvée (id=" + ['id'.apply_parameterMethodClassicIn()/] + ')', "???");
-               
-                return convertEntityToDto(['entity found'.apply_variableFinal()/]);
-          
+
+          final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['id'.apply_parameterMethodClassicIn()/]);
+          // Si le xtopsup est < 3 on renvoie une exception comme si la donnée n'avait pas été trouvée.
+          if (!DatabaseLineStatus_Enum.forSelect(['entity found'.apply_variableFinal()/].[n.getXtopSupName().apply_methodGet()/]().get_value()))
+             throw new Spi4jRuntimeException("Donnée non trouvée (id=" + ['id'.apply_parameterMethodClassicIn()/] + ')', "???");
+
+          return convertEntityToDto(['entity found'.apply_variableFinal()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -99,21 +95,20 @@
      {
         // findAll
         [protected (n.getUserCodeId('findAll')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-          	  final Map<String, String> ['xtopsup status'.apply_variableFinal()/] = new HashMap<>();
-                ['xtopsup status'.apply_variableFinal()/].put("[n.getXtopSupName()/]-param1", DatabaseLineStatus_Enum.active.get_value());
-          	  ['xtopsup status'.apply_variableFinal()/].put("[n.getXtopSupName()/]-param2", DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-          
-                // On recherche toutes les lignes dont le xtopsup est < 3.
-                final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria("where " 
-                    + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param1 or " 
-                    + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param2",
-                         ['xtopsup status'.apply_variableFinal()/]);
-          
-                return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
-          
+
+          final Map<String, String> ['xtopsup status'.apply_variableFinal()/] = new HashMap<>();
+          ['xtopsup status'.apply_variableFinal()/].put("[n.getXtopSupName()/]-param1", DatabaseLineStatus_Enum.active.get_value());
+          ['xtopsup status'.apply_variableFinal()/].put("[n.getXtopSupName()/]-param2", DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+
+          // On recherche toutes les lignes dont le xtopsup est < 3.
+          final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria("where " 
+              + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param1 or " 
+              + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param2",
+                   ['xtopsup status'.apply_variableFinal()/]);
+
+          return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -121,22 +116,21 @@
      {
         // findAllOrberByColumn
         [protected (n.getUserCodeId('findAllOrberByColumn')) startTagPrefix('// ') endTagPrefix('// ')]
-           	  
-                final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = new TableCriteria<>("");
-          
-                // On recherche toutes les lignes dont le xtopsup est < 3.
-                ['table criteria'.apply_variableFinal()/].addCriteria([n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
-                ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-                ['table criteria'.apply_variableFinal()/].addOrderByAsc(['order by column'.apply_parameterMethodClassicIn()/]);
-          
-                @SuppressWarnings({"rawtypes", "unchecked" })
-                final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria((TableCriteria) ['table criteria'.apply_variableFinal()/]);
-                return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
-          
+
+          final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = new TableCriteria<>("");
+
+          // On recherche toutes les lignes dont le xtopsup est < 3.
+          ['table criteria'.apply_variableFinal()/].addCriteria([n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
+          ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+          ['table criteria'.apply_variableFinal()/].addOrderByAsc(['order by column'.apply_parameterMethodClassicIn()/]);
+
+          @SuppressWarnings({"rawtypes", "unchecked" })
+          final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria((TableCriteria) ['table criteria'.apply_variableFinal()/]);
+          return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -144,21 +138,20 @@
      {
         // update
         [protected (n.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-          	  // Si la ligne n'est pas active, on rejete la demande. 
-          	  final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['dto'.apply_parameterMethodClassicIn()/].getId());
-          	  if(null == ['entity found'.apply_variableFinal()/] || !DatabaseLineStatus_Enum.forUpdate(['entity found'.apply_variableFinal()/].[n.getXtopSupName().apply_methodGet()/]().get_value()))
-          			throw new Spi4jRuntimeException("Cette donnée a été supprimée par un autre utilisateur.", "???");
-          
-          	  // On effectue la mise à jour.
-                final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
-                [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
-                [if (n.hasXtoSup_XdMaj())]['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.active));[/if]
-                getDao().update(['entity'.apply_variableFinal()/]);
-                refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
-          
+
+          // Si la ligne n'est pas active, on rejete la demande. 
+          final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['dto'.apply_parameterMethodClassicIn()/].getId());
+          if(null == ['entity found'.apply_variableFinal()/] || !DatabaseLineStatus_Enum.forUpdate(['entity found'.apply_variableFinal()/].[n.getXtopSupName().apply_methodGet()/]().get_value()))
+                throw new Spi4jRuntimeException("Cette donnée a été supprimée par un autre utilisateur.", "???");
+
+          // On effectue la mise à jour.
+          final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
+          [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
+          [if (n.hasXtoSup_XdMaj())]['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.active));[/if]
+          getDao().update(['entity'.apply_variableFinal()/]);
+          refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -166,24 +159,23 @@
      {
         // delete
         [protected (n.getUserCodeId('delete')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
-                final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['entity'.apply_variableFinal()/].getId());
-          
-                // Si ['entity found'.apply_variableFinal()/] est null ou que l'entité à supprimer a déjà le xtopsup > 1 
-                // alors on renvoie une exception indiquant que la donnée a déjà été supprimée.
+
+          final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
+          final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['entity'.apply_variableFinal()/].getId());
+
+          // Si ['entity found'.apply_variableFinal()/] est null ou que l'entité à supprimer a déjà le xtopsup > 1 
+          // alors on renvoie une exception indiquant que la donnée a déjà été supprimée.
           [if (n.hasXtopSup())]
-            	  if (null == ['entity found'.apply_variableFinal()/] || !DatabaseLineStatus_Enum.forDelete(['entity found'.apply_variableFinal()/].[n.getXtopSupName().apply_methodGet()/]().get_value()))
-                     throw new Spi4jRuntimeException("Cette donnée a été supprimée par un autre utilisateur.", "???");
-                 
-             	  ['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.deletedForAll));
+            if (null == ['entity found'.apply_variableFinal()/] || !DatabaseLineStatus_Enum.forDelete(['entity found'.apply_variableFinal()/].[n.getXtopSupName().apply_methodGet()/]().get_value()))
+               throw new Spi4jRuntimeException("Cette donnée a été supprimée par un autre utilisateur.", "???");
+
+            ['entity'.apply_variableFinal()/].[n.getXtopSupName().apply_methodSet()/](new XtopSup(DatabaseLineStatus_Enum.deletedForAll));
           [/if]
-                [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
-                getDao().update(['entity'.apply_variableFinal()/]);
-                refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
-          
+          [if (n.hasXdMaj())]['entity'.apply_variableFinal()/].[n.getXdMajName().apply_methodSet()/](new Date());[/if]
+          getDao().update(['entity'.apply_variableFinal()/]);
+          refreshDtoFromEntity(['entity'.apply_variableFinal()/], ['dto'.apply_parameterMethodClassicIn()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -191,12 +183,11 @@
      {
         // deleteAll
         [protected (n.getUserCodeId('deleteAll')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                // Attention ici on veut probablement faire un vrai deleteAll() et non pas mettre à 1 la colonne xtopsup
-                return super.deleteAll();
-          
+
+          // Attention ici on veut probablement faire un vrai deleteAll() et non pas mettre à 1 la colonne xtopsup
+          return super.deleteAll();
+
         [/protected]
-  
      }
   
      @Override
@@ -204,28 +195,27 @@
      {
         // deleteByCriteria
         [protected (n.getUserCodeId('deleteByCriteria')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                @SuppressWarnings("unchecked")
-                final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = (TableCriteria<[n.getClassNameForColumnsNames_Itf()/]>) ['criteria'.apply_parameterMethodClassicIn()/].clone();
-                
-                // Si entityFound est null ou que l'entité à supprimer a déjà le xtopsup > 1 
-                // alors on renvoie une exception indiquant que la donnée a déjà été supprimée.
-                ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.and, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
-                ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-                
-                final String ['criteria sql'.apply_variableFinal()/] = ['table criteria'.apply_variableFinal()/].getCriteriaSql();
-                final String ['table name'.apply_variableFinal()/] = getDao().getTableName();
-                final String ['query'.apply_variableFinal()/] = "update " + ['table name'.apply_variableFinal()/] + " set " + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/] + " = :xtopsupValue "
-                         + ['criteria sql'.apply_variableFinal()/];
-                final Map<String, Object> ['value by name'.apply_variableMultipleMap()/] = new HashMap<>(['table criteria'.apply_variableFinal()/].getMapValue());
-                ['value by name'.apply_variableMultipleMap()/].put("xtopsupValue", DatabaseLineStatus_Enum.deletedForAll.get_value());
-          
-                return getDao().executeUpdate(['query'.apply_variableFinal()/], ['value by name'.apply_variableMultipleMap()/]);
-               
+
+          @SuppressWarnings("unchecked")
+          final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = (TableCriteria<[n.getClassNameForColumnsNames_Itf()/]>) ['criteria'.apply_parameterMethodClassicIn()/].clone();
+
+          // Si entityFound est null ou que l'entité à supprimer a déjà le xtopsup > 1 
+          // alors on renvoie une exception indiquant que la donnée a déjà été supprimée.
+          ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.and, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
+          ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+
+          final String ['criteria sql'.apply_variableFinal()/] = ['table criteria'.apply_variableFinal()/].getCriteriaSql();
+          final String ['table name'.apply_variableFinal()/] = getDao().getTableName();
+          final String ['query'.apply_variableFinal()/] = "update " + ['table name'.apply_variableFinal()/] + " set " + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/] + " = :xtopsupValue "
+                + ['criteria sql'.apply_variableFinal()/];
+          final Map<String, Object> ['value by name'.apply_variableMultipleMap()/] = new HashMap<>(['table criteria'.apply_variableFinal()/].getMapValue());
+          ['value by name'.apply_variableMultipleMap()/].put("xtopsupValue", DatabaseLineStatus_Enum.deletedForAll.get_value());
+
+          return getDao().executeUpdate(['query'.apply_variableFinal()/], ['value by name'.apply_variableMultipleMap()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -233,22 +223,21 @@
      {
         // findByColumn
         [protected (n.getUserCodeId('findByColumn')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = new TableCriteria<>("");
-          
-                // On recherche toutes les lignes dont le xtopsup est < 3.
-                ['table criteria'.apply_variableFinal()/].addCriteria(['column'.apply_parameterMethodClassicIn()/], Operator_Enum.equals, ['value'.apply_parameterMethodClassicIn()/]);
-                ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.and, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
-                ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-                
-          	  @SuppressWarnings({"rawtypes", "unchecked" })
-                final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria((TableCriteria) ['table criteria'.apply_variableFinal()/]);
-                return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
-                
+
+          final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = new TableCriteria<>("");
+
+          // On recherche toutes les lignes dont le xtopsup est < 3.
+          ['table criteria'.apply_variableFinal()/].addCriteria(['column'.apply_parameterMethodClassicIn()/], Operator_Enum.equals, ['value'.apply_parameterMethodClassicIn()/]);
+          ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.and, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
+          ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+
+          @SuppressWarnings({"rawtypes", "unchecked" })
+          final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria((TableCriteria) ['table criteria'.apply_variableFinal()/]);
+          return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -257,26 +246,25 @@
      {
         // findByCriteriaSql
         [protected (n.getUserCodeId('findByCriteriaSql')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
-                final String ['sql criteria'.apply_variableFinal()/] = ['add xtopsup criteria'.apply_methodDefault()/](['criteria'.apply_parameterMethodClassicIn()/]); // critère sql modifié
-                final Map<String, Object> ['value by name'.apply_variableMultipleMap()/];
-                if (['value name'.apply_parameterMethodMultipleMap()/] == null)
-                {
-                   ['value by name'.apply_variableMultipleMap()/] = new HashMap<>();
-                } else {
-                   ['value by name'.apply_variableMultipleMap()/] = new HashMap<>(['value name'.apply_parameterMethodMultipleMap()/]);
-                }
-                
-            	  // On recherche uniquement les lignes dont le xtopsup est < 3.
-          	  ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param1", DatabaseLineStatus_Enum.active.get_value());
-           	  ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param2", DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-          
-                final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria(['sql criteria'.apply_variableFinal()/], ['value by name'.apply_variableMultipleMap()/]);
-                return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
-            
+
+          // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
+          final String ['sql criteria'.apply_variableFinal()/] = ['add xtopsup criteria'.apply_methodDefault()/](['criteria'.apply_parameterMethodClassicIn()/]); // critère sql modifié
+          final Map<String, Object> ['value by name'.apply_variableMultipleMap()/];
+          if (['value name'.apply_parameterMethodMultipleMap()/] == null)
+          {
+             ['value by name'.apply_variableMultipleMap()/] = new HashMap<>();
+          } else {
+             ['value by name'.apply_variableMultipleMap()/] = new HashMap<>(['value name'.apply_parameterMethodMultipleMap()/]);
+          }
+
+          // On recherche uniquement les lignes dont le xtopsup est < 3.
+          ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param1", DatabaseLineStatus_Enum.active.get_value());
+          ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param2", DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+
+          final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria(['sql criteria'.apply_variableFinal()/], ['value by name'.apply_variableMultipleMap()/]);
+          return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -285,27 +273,26 @@
      {
         // findByCriteriaSqlNbLignes
         [protected (n.getUserCodeId('findByCriteriaSqlNbLignes')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
-                final String ['sql criteria'.apply_variableFinal()/] = ['add xtopsup criteria'.apply_methodDefault()/](['criteria'.apply_parameterMethodClassicIn()/]); // critère sql modifié
-                final Map<String, Object> ['value by name'.apply_variableMultipleMap()/];
-                if (['value name'.apply_parameterMethodMultipleMap()/] == null)
-                {
-                   ['value by name'.apply_variableMultipleMap()/] = new HashMap<>();
-                } else {
-                   ['value by name'.apply_variableMultipleMap()/] = new HashMap<>(['value name'.apply_parameterMethodMultipleMap()/]);
-                }
-          
-          	  // On recherche uniquement les lignes dont le xtopsup est > 3.
-          	  ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param1", DatabaseLineStatus_Enum.active.get_value());
-           	  ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param2", DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-          
-                final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria(['sql criteria'.apply_variableFinal()/], ['value by name'.apply_variableMultipleMap()/], ['nb lignes max'.apply_parameterMethodClassicIn()/],
-                         ['nb lignes start'.apply_parameterMethodClassicIn()/]);
-                return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
-               
+
+          // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
+          final String ['sql criteria'.apply_variableFinal()/] = ['add xtopsup criteria'.apply_methodDefault()/](['criteria'.apply_parameterMethodClassicIn()/]); // critère sql modifié
+          final Map<String, Object> ['value by name'.apply_variableMultipleMap()/];
+          if (['value name'.apply_parameterMethodMultipleMap()/] == null)
+          {
+             ['value by name'.apply_variableMultipleMap()/] = new HashMap<>();
+          } else {
+             ['value by name'.apply_variableMultipleMap()/] = new HashMap<>(['value name'.apply_parameterMethodMultipleMap()/]);
+          }
+
+          // On recherche uniquement les lignes dont le xtopsup est > 3.
+          ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param1", DatabaseLineStatus_Enum.active.get_value());
+          ['value by name'.apply_variableMultipleMap()/].put("[n.getXtopSupName()/]-param2", DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+
+          final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria(['sql criteria'.apply_variableFinal()/], ['value by name'.apply_variableMultipleMap()/], ['nb lignes max'.apply_parameterMethodClassicIn()/],
+                ['nb lignes start'.apply_parameterMethodClassicIn()/]);
+          return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
+
         [/protected]
-  
      }
   
      @Override
@@ -313,63 +300,61 @@
      {
         // findByCriteria
         [protected (n.getUserCodeId('findByCriteria')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                @SuppressWarnings("unchecked")
-                final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = (TableCriteria<[n.getClassNameForColumnsNames_Itf()/]>) ['criteria'.apply_parameterMethodClassicIn()/].clone();
-                
-          	  // On recherche uniquement les lignes dont le xtopsup est < 3.
-          	  ['table criteria'.apply_variableFinal()/].addCriteria([n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
-                ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
-          			Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
-                
-           	  @SuppressWarnings({"rawtypes", "unchecked" })
-                final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria((TableCriteria) ['table criteria'.apply_variableFinal()/]);
-                return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
-             
+
+          @SuppressWarnings("unchecked")
+          final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = (TableCriteria<[n.getClassNameForColumnsNames_Itf()/]>) ['criteria'.apply_parameterMethodClassicIn()/].clone();
+
+          // On recherche uniquement les lignes dont le xtopsup est < 3.
+          ['table criteria'.apply_variableFinal()/].addCriteria([n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.active.get_value());
+          ['table criteria'.apply_variableFinal()/].addCriteria(OperatorLogical_Enum.or, [n.buildAppliColumnClassName()/].[n.getXtopSupName()/], 
+                Operator_Enum.equals, DatabaseLineStatus_Enum.deletedForNewReference.get_value());
+
+          @SuppressWarnings({"rawtypes", "unchecked" })
+          final List<TypeEntity> ['entity'.apply_variableMultipleDefault()/] = getDao().findByCriteria((TableCriteria) ['table criteria'.apply_variableFinal()/]);
+          return convertListEntityToListDto(['entity'.apply_variableMultipleDefault()/]);
+
         [/protected]
-  
      }
   
      // autres methodes
      [protected (n.getUserCodeId('autres methodes')) startTagPrefix('// ') endTagPrefix('// ')]
        
-          /**
-           * @param ['criteria'.apply_parameterMethodClassicIn()/]
-           *           le critère sql auquel il faut ajouter le xtopsup < 3
-           * @return le critère auquel on a ajouté le xtopsup < 3
-           */
-          private String ['add xtopsup criteria'.apply_methodDefault()/] (final String ['criteria'.apply_parameterMethodClassicIn()/])
+       /**
+        * @param ['criteria'.apply_parameterMethodClassicIn()/]
+        *           le critère sql auquel il faut ajouter le xtopsup < 3
+        * @return le critère auquel on a ajouté le xtopsup < 3
+        */
+       private String ['add xtopsup criteria'.apply_methodDefault()/] (final String ['criteria'.apply_parameterMethodClassicIn()/])
+       {
+          // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
+          String ['xtopsup criterium'.apply_variableDefault()/]; // critère à ajouter
+          final String ['table name'.apply_variableFinal()/] = getDao().getTableName();
+          if (['criteria'.apply_parameterMethodClassicIn()/].contains("where"))
           {
-             // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
-             String ['xtopsup criterium'.apply_variableDefault()/]; // critère à ajouter
-             final String ['table name'.apply_variableFinal()/] = getDao().getTableName();
-             if (['criteria'.apply_parameterMethodClassicIn()/].contains("where"))
-             {
-                ['xtopsup criterium'.apply_variableDefault()/] = " and " + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param1 or " 
-                + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param2 ";
-             }
-             else
-             {
-                ['xtopsup criterium'.apply_variableDefault()/] = " where " + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param1 and "
-                + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param2 ";
-             }
-             String ['str criteria'.apply_variableFinal()/]; // critère sql modifié
-             // On sépare le critère sql selon la chaine "order by" pour avoir dans ['sql criteria'.apply_variableMultipleDefault()/]['['/]0] la partie avant le order by et
-             // dans un éventuel ['sqlCriteria'.apply_variableMultipleDefault()/]['['/]1] la partie après le order by s'il existe
-             final String['['/]] ['sqlCriteria'.apply_variableMultipleDefault()/] = ['criteria'.apply_parameterMethodClassicIn()/].split("order by");
-             // On ajoute ici le critère xtopsup avant l'éventuel order by
-             ['str criteria'.apply_variableFinal()/] = ['sql criteria'.apply_variableMultipleDefault()/]['['/]0] + ['xtopsup criterium'.apply_variableDefault()/];
-             // si ['sql criteria'.apply_variableMultipleDefault()/].length > 1 c'est qu'il y avait un order by dans le critère initial : alors on le rajoute à la fin de ['sql criteria'.apply_variableFinal()/]
-             if (['sql criteria'.apply_variableMultipleDefault()/].length > 1)
-             {
-                ['str criteria'.apply_variableFinal()/] += " order by " + ['sql criteria'.apply_variableMultipleDefault()/]['['/]1];
-             }
-             return ['str criteria'.apply_variableFinal()/];
+             ['xtopsup criterium'.apply_variableDefault()/] = " and " + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param1 or " 
+             + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param2 ";
           }
-       
+          else
+          {
+             ['xtopsup criterium'.apply_variableDefault()/] = " where " + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param1 and "
+             + ['table name'.apply_variableFinal()/] + '.' + [n.buildAppliColumnClassName()/].[n.getXtopSupName()/].getPhysicalColumnName() + " = :[n.getXtopSupName()/]-param2 ";
+          }
+          String ['str criteria'.apply_variableFinal()/]; // critère sql modifié
+          // On sépare le critère sql selon la chaine "order by" pour avoir dans ['sql criteria'.apply_variableMultipleDefault()/]['['/]0] la partie avant le order by et
+          // dans un éventuel ['sqlCriteria'.apply_variableMultipleDefault()/]['['/]1] la partie après le order by s'il existe
+          final String['['/]] ['sqlCriteria'.apply_variableMultipleDefault()/] = ['criteria'.apply_parameterMethodClassicIn()/].split("order by");
+          // On ajoute ici le critère xtopsup avant l'éventuel order by
+          ['str criteria'.apply_variableFinal()/] = ['sql criteria'.apply_variableMultipleDefault()/]['['/]0] + ['xtopsup criterium'.apply_variableDefault()/];
+          // si ['sql criteria'.apply_variableMultipleDefault()/].length > 1 c'est qu'il y avait un order by dans le critère initial : alors on le rajoute à la fin de ['sql criteria'.apply_variableFinal()/]
+          if (['sql criteria'.apply_variableMultipleDefault()/].length > 1)
+          {
+             ['str criteria'.apply_variableFinal()/] += " order by " + ['sql criteria'.apply_variableMultipleDefault()/]['['/]1];
+          }
+          return ['str criteria'.apply_variableFinal()/];
+       }
+
      [/protected]
-  
   }[/template]
 
 [comment : Write all required imports. /]

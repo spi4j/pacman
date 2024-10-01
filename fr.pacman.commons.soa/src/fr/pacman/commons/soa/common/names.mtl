@@ -93,8 +93,13 @@
   [r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName().toLowerFirst()/][/template]
 
 [comment : /]
-[template public nameBaseReferenceInverse(r : environment::Reference)]
-  [if (r.oppositeOf = null)][r.containingType.oclAsType(environment::DTO).nameBaseDto() + r.name.toUpperFirst()/][else][r.oppositeOf.nameBaseReference()/][/if][/template]
+[template public nameBaseReferenceInverse(r : environment::Reference) post(self.trim())]
+  [if (r.oppositeOf = null)]
+    [r.containingType.oclAsType(environment::DTO).nameBaseDto() + r.name.toUpperFirst()/]
+  [else]
+    [r.oppositeOf.nameBaseReference()/]
+  [/if]
+[/template]
 
 [comment : /]
 [template public nameBaseReferenceInverseUpperFirst(r : environment::Reference)]

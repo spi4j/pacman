@@ -22,7 +22,6 @@
     
   [/protected]
   
-  
   /**
    * Servlet d'enregistrement des webservices.
    * @author [m.getAuthorName()/]
@@ -45,13 +44,12 @@
     [if (service.hasCXFOperations())]
       	// [service.buildServiceName(null)/]
       	[protected (service.getUserCodeId(service.buildServiceName(null))) startTagPrefix('// ') endTagPrefix('// ')]
-         
-         	  // Déploiement du Webservice  [service.buildServiceName(null)/]
-         	  ['log'.apply_attributeFinalStatic()/].info("Déploiement du WebService : [service.buildServiceName(null)/]");
-         	  deployWebService(new [service.buildServiceFacadeCXFClassName()/](), "/[service.buildServiceName(null)/]");
-         
-       [/protected]
-      
+
+         // Déploiement du Webservice  [service.buildServiceName(null)/]
+         ['log'.apply_attributeFinalStatic()/].info("Déploiement du WebService : [service.buildServiceName(null)/]");
+         deployWebService(new [service.buildServiceFacadeCXFClassName()/](), "/[service.buildServiceName(null)/]");
+
+      	[/protected]
       
     [/if]
   [/for]

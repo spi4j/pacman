@@ -29,7 +29,6 @@
     
   [/protected]
   
-  
   /**
    * L'interface définissant le contrat pour le Matcher (= persistance <-> business) sur le type '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -75,9 +74,8 @@
   [/for]
      // [d.nameMatchInterface()/]
      [protected (d.getUserCodeId(d.nameMatchInterface())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [comment : Write all required imports. /]
