@@ -1,41 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.*"
-            id="fr.pacman.cinematic.jsf.ui.popup.contribution.IFile">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.cinematic.jsf.ui.popup.AcceleoGenerateJsfAction"
-               enablesFor="+"
-               id="fr.pacman.cinematic.jsf.ui.popup.AcceleoGenerateJsfAction"
-               icon="icons/safran.png"
-               label="Génération Cinematic JSF"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère le code JSF pour le modèle Cinematic"/>
-      </objectContribution>
-      
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.emf.cdo.eresource.CDOResource"
-            nameFilter="*"
-            id="fr.pacman.cinematic.jsf.ui.popup.contribution.CDOResource">
-         <menu id="fr.gouv.minarm.safran.menu" label="Safr@n" path="additionsAcceleo">
-               <groupMarker name="acceleo"/> 
-         </menu>
-         <action
-               class="fr.pacman.cinematic.jsf.ui.popup.AcceleoGenerateJsfActionCDOResource"
-               enablesFor="+"
-               id="fr.pacman.cinematic.jsf.ui.popup.AcceleoGenerateJsfActionCDOResource"
-               icon="icons/safran.png"
-               label="Génération Cinematic JSF"
-               menubarPath="org.obeonetwork.is.designer.menu/moe"
-               tooltip="Génère le code JSF pour le modèle Cinematic"/>
-      </objectContribution>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="fr.pacman.cinematic.jsf.ui.handlers.JsfGeneratorsHandler"
+            commandId="fr.pacman.cinematic.jsf.ui.commands.JsfGeneratorCommand">
+      </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="fr.pacman.ui.menus.generators"
+               label="Safr@n">
+            <command
+                  commandId="fr.pacman.cinematic.jsf.ui.commands.JsfGeneratorCommand"
+                  id="fr.pacman.cinematic.jsf.ui.menus.JsfGeneratorCommand" 
+                  icon="icons/safran.png" 
+                  label="Génération Cinematic JSF">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 property="org.eclipse.core.resources.extension"
+                                 value="cinematic">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="fr.pacman.cinematic.jsf.ui.commands.generatorsCategory"
+            name="Generators">
+      </category>
+      <command
+            categoryId="fr.pacman.cinematic.jsf.ui.commands.generatorsCategory"
+            id="fr.pacman.cinematic.jsf.ui.commands.JsfGeneratorCommand"
+            name="fr::pacman::cinematic::jsf::generateClientJsf">
+      </command>
+   </extension>
+
 </plugin>
+

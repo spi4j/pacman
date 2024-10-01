@@ -1,4 +1,4 @@
-[module generateCinematicJsp('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
+[module generateClientCinematicJsp('http://www.obeonetwork.org/dsl/cinematic/3.0.0', 'http://www.obeonetwork.org/dsl/cinematic/view/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/flow/1.0.0', 'http://www.obeonetwork.org/dsl/cinematic/toolkits/1.0.0')/]
 
 [import fr::pacman::commons::common::classes/]
 [import fr::pacman::commons::common::packages/]
