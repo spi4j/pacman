@@ -107,12 +107,12 @@ public abstract class PacmanUIGenerator_Abs {
 	}
 
 	/**
-	 * Get the list of all project names to be refreshed after code generation.
+	 * Get the list of all subproject names to be refreshed after code generation.
 	 * Allows Eclipse IDE to take new or modified files in account.
 	 * 
 	 * @return the list of project to refresh after all generations.
 	 */
-	protected abstract List<String> getProjectsToRefresh();
+	protected abstract List<String> getSubProjectsToRefresh();
 
 	/**
 	 * Get the list of all incompatible properties for code generation. If the
@@ -133,7 +133,7 @@ public abstract class PacmanUIGenerator_Abs {
 	 * 
 	 * @return the list off all compatible model file extensions.
 	 */
-	protected abstract List<PacmanGenerator_Enum> getCompatibleModels();
+	protected abstract List<PacmanUIGenerator_Enum> getCompatibleModels();
 
 	/**
 	 * Flag for automatic import management.
@@ -160,7 +160,7 @@ public abstract class PacmanUIGenerator_Abs {
 	 * Main method for the class. Launches all previously registered generators.
 	 */
 	public void generate() {
-		final PacmanGeneratorsReport v_report = new PacmanGeneratorsReport();
+		final PacmanUIGeneratorsReport v_report = new PacmanUIGeneratorsReport();
 		final IRunnableWithProgress v_operation = new IRunnableWithProgress() {
 			@Override
 			public void run(final IProgressMonitor p_monitor) {
@@ -193,7 +193,7 @@ public abstract class PacmanUIGenerator_Abs {
 		} finally {
 
 			try {
-				updateProjects(v_report);
+				updateIDE(v_report);
 				PacmanPropertiesManager.exit();
 				ErrorGeneration.doIfThrowErrorGenerationException();
 				displayPopUpReport(v_report);
@@ -208,7 +208,7 @@ public abstract class PacmanUIGenerator_Abs {
 	 * 
 	 * @param p_report
 	 */
-	private void displayPopUpReport(final PacmanGeneratorsReport p_report) {
+	private void displayPopUpReport(final PacmanUIGeneratorsReport p_report) {
 		StringBuffer v_report = new StringBuffer();
 		if (p_report.getNbFiles() == 0) {
 			v_report.append("Aucun fichier n'a été généré !");
@@ -322,18 +322,20 @@ public abstract class PacmanUIGenerator_Abs {
 
 	/**
 	 * Refresh all registered projects after code generation. Allows to take new
-	 * created or modified files into account for the Eclipe IDE.
+	 * created or modified files into account for the Eclipe IDE. If the list of
+	 * subprojects is null or empty it means we have to refresh the root project
+	 * with all subprojects.
 	 * 
 	 * @param p_report
 	 */
-	protected void updateProjects(final PacmanGeneratorsReport p_report) throws CoreException {
+	protected void updateIDE(final PacmanUIGeneratorsReport p_report) throws CoreException {
 
-		List<String> v_projectsNamesToRefresh = getProjectsToRefresh();
-		Collections.sort(v_projectsNamesToRefresh);
+		List<String> v_subProjectsNamesToRefresh = getSubProjectsToRefresh();
+		if (v_subProjectsNamesToRefresh == null || v_subProjectsNamesToRefresh.isEmpty())
+			v_subProjectsNamesToRefresh = Collections.singletonList("");
 
-		for (String v_projectToRefresh : v_projectsNamesToRefresh) {
-
-			final File v_targetFolder = new File(_rootPath.getParent() + File.separator + v_projectToRefresh);
+		for (String v_subProjectToRefresh : v_subProjectsNamesToRefresh) {
+			final File v_targetFolder = new File(_rootPath.getParent() + File.separator + v_subProjectToRefresh);
 			final IContainer v_targetWorkspaceContainer = ResourcesPlugin.getWorkspace().getRoot()
 					.getContainerForLocation(new Path(v_targetFolder.getAbsolutePath()));
 
@@ -377,7 +379,7 @@ public abstract class PacmanUIGenerator_Abs {
 		if (null == getCompatibleModels() || _resources.isEmpty())
 			return false;
 
-		for (PacmanGenerator_Enum v_model : getCompatibleModels()) {
+		for (PacmanUIGenerator_Enum v_model : getCompatibleModels()) {
 			if (v_model.get_value().equals(_modelExt))
 				return false;
 		}

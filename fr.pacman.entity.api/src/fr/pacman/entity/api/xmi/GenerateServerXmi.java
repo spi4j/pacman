@@ -29,7 +29,7 @@ public class GenerateServerXmi extends PacmanGenerator_Abs {
 	}
 
 	@Override
-	public String getProjectName() {
+	public String getSubProjectName() {
 		return ProjectProperties.getServerProjectName();
 	}
 

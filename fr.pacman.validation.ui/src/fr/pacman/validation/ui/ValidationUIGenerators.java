@@ -9,7 +9,7 @@ import org.obeonetwork.dsl.soa.System;
 
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
-import fr.pacman.commons.ui.PacmanGenerator_Enum;
+import fr.pacman.commons.ui.PacmanUIGenerator_Enum;
 import fr.pacman.commons.ui.PacmanUIGenerator_Abs;
 import fr.pacman.validation.GenerateJavaValidation;
 
@@ -58,7 +58,7 @@ public class ValidationUIGenerators extends PacmanUIGenerator_Abs {
 	 * @return a list of projects to refresh after code generation.
 	 */
 	@Override
-	protected List<String> getProjectsToRefresh() {
+	protected List<String> getSubProjectsToRefresh() {
 		return Collections.emptyList();
 	}
 
@@ -85,7 +85,7 @@ public class ValidationUIGenerators extends PacmanUIGenerator_Abs {
 	 * @return a list of all compatible model files
 	 */
 	@Override
-	protected List<PacmanGenerator_Enum> getCompatibleModels() {
+	protected List<PacmanUIGenerator_Enum> getCompatibleModels() {
 		return null;
 	}
 

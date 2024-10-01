@@ -6,17 +6,17 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 
-import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
-import fr.pacman.commons.ui.PacmanGenerator_Enum;
 import fr.pacman.commons.ui.PacmanUIGenerator_Abs;
+import fr.pacman.commons.ui.PacmanUIGenerator_Enum;
 import fr.pacman.configuration.GenerateConfiguration;
 
 /**
  * UI Generator for project configuration. No need of any model for code
  * generation but based on ".entity", ".soa" or ".environment" model files to
- * simply add the generator menu.
+ * simply add the generator menu. Here no concept of subproject as the all
+ * project must be refreshed.
  * 
  * @author MINARM
  */
@@ -50,10 +50,8 @@ public class ConfigurationUIGenerators extends PacmanUIGenerator_Abs {
 	 * @return a list of projects to refresh after code generation.
 	 */
 	@Override
-	protected List<String> getProjectsToRefresh() {
-		final List<String> v_projects = new ArrayList<String>();
-		v_projects.add(ProjectProperties.getApplicationName());
-		return v_projects;
+	protected List<String> getSubProjectsToRefresh() {
+		return null;
 	}
 
 	/**
@@ -79,8 +77,9 @@ public class ConfigurationUIGenerators extends PacmanUIGenerator_Abs {
 	 * @return a list of all compatible model files
 	 */
 	@Override
-	protected List<PacmanGenerator_Enum> getCompatibleModels() {
-		return Arrays.asList(PacmanGenerator_Enum.ENTITY, PacmanGenerator_Enum.SOA, PacmanGenerator_Enum.ENVIRONMENT);
+	protected List<PacmanUIGenerator_Enum> getCompatibleModels() {
+		return Arrays.asList(PacmanUIGenerator_Enum.ENTITY, PacmanUIGenerator_Enum.SOA,
+				PacmanUIGenerator_Enum.ENVIRONMENT);
 	}
 
 	/**

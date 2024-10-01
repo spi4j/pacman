@@ -12,10 +12,10 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 
 /**
+ * Here no subproject to declare as the generation must process on the rootPath.
  * 
  * @author MINARM
  */
@@ -25,7 +25,7 @@ public class GenerateConfiguration extends PacmanGenerator_Abs {
 	 * Used by plugins pacman.configuration and pacman.start.
 	 */
 	public static final String c_PROP_PROJECT_VERSION = "version";
-	
+
 	@Override
 	protected List<String> getTemplates() {
 		List<String> v_templates = new ArrayList<>();
@@ -34,8 +34,8 @@ public class GenerateConfiguration extends PacmanGenerator_Abs {
 	}
 
 	@Override
-	public String getProjectName() {
-		return ProjectProperties.getServerProjectName();
+	public String getSubProjectName() {
+		return null;
 	}
 
 	@Override

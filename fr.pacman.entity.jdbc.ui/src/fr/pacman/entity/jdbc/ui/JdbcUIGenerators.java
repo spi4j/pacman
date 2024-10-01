@@ -10,7 +10,7 @@ import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.commons.ui.PacmanUIGenerator_Abs;
-import fr.pacman.commons.ui.PacmanGenerator_Enum;
+import fr.pacman.commons.ui.PacmanUIGenerator_Enum;
 import fr.pacman.entity.api.GenerateCommonEnumEntity;
 import fr.pacman.entity.api.GenerateServerPersistenceApi;
 import fr.pacman.entity.jdbc.GenerateServerEntityJdbc;
@@ -52,7 +52,7 @@ public class JdbcUIGenerators extends PacmanUIGenerator_Abs {
 	 * @return a list of projects to refresh after code generation.
 	 */
 	@Override
-	protected List<String> getProjectsToRefresh() {
+	protected List<String> getSubProjectsToRefresh() {
 		final List<String> v_projects = new ArrayList<String>();
 		v_projects.add(ProjectProperties.getModelProjectName());
 		v_projects.add(ProjectProperties.getServerProjectName());
@@ -83,8 +83,8 @@ public class JdbcUIGenerators extends PacmanUIGenerator_Abs {
 	 * @return a list of all compatible model files
 	 */
 	@Override
-	protected List<PacmanGenerator_Enum> getCompatibleModels() {
-		return Arrays.asList(PacmanGenerator_Enum.ENTITY);
+	protected List<PacmanUIGenerator_Enum> getCompatibleModels() {
+		return Arrays.asList(PacmanUIGenerator_Enum.ENTITY);
 	}
 
 	/**

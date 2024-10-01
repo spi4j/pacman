@@ -15,7 +15,7 @@ package fr.pacman.commons.ui;
  * 
  * @author MinArm.
  */
-public enum PacmanGenerator_Enum {
+public enum PacmanUIGenerator_Enum {
 	
 	ENTITY("entity"), 
 	
@@ -29,7 +29,7 @@ public enum PacmanGenerator_Enum {
 
 	private String _value;
 
-	PacmanGenerator_Enum(String p_value) {
+	PacmanUIGenerator_Enum(String p_value) {
 		_value = p_value;
 	}
 

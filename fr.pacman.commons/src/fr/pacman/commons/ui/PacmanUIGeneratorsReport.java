@@ -7,7 +7,7 @@ import org.eclipse.emf.common.util.Diagnostic;
  * 
  * @author MINARM
  */
-public class PacmanGeneratorsReport {
+public class PacmanUIGeneratorsReport {
 
 	/**
 	 * 

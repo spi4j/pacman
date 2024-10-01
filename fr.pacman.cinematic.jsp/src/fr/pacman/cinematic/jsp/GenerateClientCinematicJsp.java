@@ -29,7 +29,7 @@ public class GenerateClientCinematicJsp extends PacmanGenerator_Abs {
 	}
 
 	@Override
-	public String getProjectName() {
+	public String getSubProjectName() {
 		return ProjectProperties.getClientJspProjectName();
 	}
 

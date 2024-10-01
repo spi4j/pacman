@@ -25,13 +25,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.obeonetwork.dsl.overview.impl.OverviewFactoryImpl;
 
-import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
-import fr.pacman.commons.ui.PacmanGeneratorsReport;
+import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 import fr.pacman.configuration.GenerateConfiguration;
 
 /**
+ * Here no concept of subproject as the creation start at the root path for the
+ * project.
  * 
  * @author MINARM
  */
@@ -138,7 +139,7 @@ public class GenerateStart extends PacmanGenerator_Abs {
 				+ _startProperties.get(c_PROP_APPLICATION_NAME) + "-model";
 
 		setResources(Collections.emptyList());
-		setRootPath(new File(p_targetFolder.getAbsolutePath()).getParent());
+		setRootPath(p_targetFolder.getAbsolutePath());
 		PacmanPropertiesManager.initProperties(v_modelPath, p_properties);
 	}
 
@@ -147,7 +148,7 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	 * @param p_monitor
 	 */
 	public void generate(final Monitor p_monitor) {
-		super.generate(new PacmanGeneratorsReport());
+		super.generate(new PacmanUIGeneratorsReport());
 
 		// Copie de fichiers (SWING / EXPORT REST).
 		try {
@@ -169,8 +170,8 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	}
 
 	@Override
-	public String getProjectName() {
-		return ProjectProperties.getApplicationName();
+	public String getSubProjectName() {
+		return null;
 	}
 
 	@Override

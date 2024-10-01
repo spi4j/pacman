@@ -1,5 +1,6 @@
 package fr.pacman.commons.main;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
@@ -36,7 +37,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
-import fr.pacman.commons.ui.PacmanGeneratorsReport;
+import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 
 /**
  * 
@@ -107,9 +108,9 @@ public abstract class PacmanGenerator_Abs {
 	/**
 	 * Get the name for the project specifically impacted by code generation.
 	 * 
-	 * @return the project name.
+	 * @return the subproject name.
 	 */
-	public abstract String getProjectName();
+	public abstract String getSubProjectName();
 
 	/**
 	 * Get the module full qualified name.
@@ -165,7 +166,7 @@ public abstract class PacmanGenerator_Abs {
 	 */
 	// TODO si on lance plusieurs générateurs certainement déplacer certaines
 	// parties à mutualiser (au niveau UI ?) ailleurs.????
-	public void generate(final PacmanGeneratorsReport p_diagnostics) {
+	public void generate(final PacmanUIGeneratorsReport p_diagnostics) {
 		final String moduleQualifiedName = getModuleQualifiedName();
 		final Map<String, String> options = getOptions();
 		final Object generationKey = new Object();
@@ -199,7 +200,14 @@ public abstract class PacmanGenerator_Abs {
 				Map<String, Object> variables = new LinkedHashMap<>();
 				for (EObject value : values) {
 					variables.put(parameterName, value);
-					URI targetURI = URI.createFileURI(_rootPath + "/" + getProjectName() + "/");
+
+					// TODO a finaliser ---------------------------------
+					StringBuffer v_strUri = new StringBuffer(_rootPath + File.separator);
+					if (null != getSubProjectName() && !getSubProjectName().isEmpty())
+						v_strUri.append(getSubProjectName() + File.separator);
+					URI targetURI = URI.createFileURI(v_strUri.toString());
+					System.out.println("Generation de : " + v_strUri.toString());
+					// ---------------------------------------------------
 					URI logURI = null;
 					AcceleoUtil.generate(template, variables, evaluator, queryEnvironment, strategy, targetURI, logURI);
 				}

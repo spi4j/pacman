@@ -50,7 +50,7 @@ public class GenerateCommonSoaRs extends PacmanGenerator_Abs {
 	 * @return the project name.
 	 */
 	@Override
-	public String getProjectName() {
+	public String getSubProjectName() {
 		return ProjectProperties.getCommonProjectName();
 	}
 
