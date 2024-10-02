@@ -29,7 +29,10 @@
   [e.fullName()/].[s/][/template]
 
 [template public attribute(a : environment::Attribute)]
-                              <UML:Attribute name = "[a.physicalName()/]" xmi.id = "{[a.fullName().nameUUID()/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">[a.attributeMultiplicity()/]
+                              <UML:Attribute name = "[a.physicalName()/]" xmi.id = "{[a.fullName().nameUUID()/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                              [if (a.multiplicity = environment::MultiplicityKind::ONE or a.multiplicity = environment::MultiplicityKind::ONE_STAR)]
+                                [a.attributeMultiplicity()/]
+                              [/if]
                                   <UML:StructuralFeature.type>
                                       <UML:Classifier xmi.idref = "[a.type.name.typeXmiRef(a.metadatas.size())/]"/>
                                   </UML:StructuralFeature.type>
@@ -89,18 +92,16 @@
                       </UML:Class>[/template]
 
 [template public attributeMultiplicity(a : environment::Attribute)]
-  [if (a.multiplicity = environment::MultiplicityKind::ONE or a.multiplicity = environment::MultiplicityKind::ONE_STAR)]
-    
-        <UML:StructuralFeature.multiplicity>
-            <UML:Multiplicity>
-                <UML:Multiplicity.range>
-                    <UML:MultiplicityRange>
-                        <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
-                        <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
-                    </UML:MultiplicityRange>
-                </UML:Multiplicity.range>
-            </UML:Multiplicity>
-        </UML:StructuralFeature.multiplicity>[/if]
+      <UML:StructuralFeature.multiplicity>
+          <UML:Multiplicity>
+              <UML:Multiplicity.range>
+                  <UML:MultiplicityRange>
+                      <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                      <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                  </UML:MultiplicityRange>
+              </UML:Multiplicity.range>
+          </UML:Multiplicity>
+      </UML:StructuralFeature.multiplicity>
 [/template]
 
 [template public multi(r : environment::MultiplicityKind)]
@@ -252,17 +253,19 @@
 [template public genAutomaticColumns(e : entity::Entity)]
   [for (columnProp : String | e.get_automaticColumnsProperties())]
     [if (e.columnHasName(columnProp) and e.columnHasType(columnProp))]
-                                  <UML:Attribute name = "[e.get_nameColumn(columnProp)/]" xmi.id = "{[e.get_nameColumn(columnProp).fullName(e).nameUUID()/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">[if (e.columnNotNull(columnProp))]
-                                                                                                                                                                                                                                                                            <UML:StructuralFeature.multiplicity>
-                                                                                                                                                                                                                                                                                <UML:Multiplicity>
-                                                                                                                                                                                                                                                                                    <UML:Multiplicity.range>
-                                                                                                                                                                                                                                                                                        <UML:MultiplicityRange>
-                                                                                                                                                                                                                                                                                            <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
-                                                                                                                                                                                                                                                                                            <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
-                                                                                                                                                                                                                                                                                        </UML:MultiplicityRange>
-                                                                                                                                                                                                                                                                                    </UML:Multiplicity.range>
-                                                                                                                                                                                                                                                                                </UML:Multiplicity>
-                                                                                                                                                                                                                                                                            </UML:StructuralFeature.multiplicity>[/if]
+                                  <UML:Attribute name = "[e.get_nameColumn(columnProp)/]" xmi.id = "{[e.get_nameColumn(columnProp).fullName(e).nameUUID()/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                                  [if (e.columnNotNull(columnProp))]
+                                        <UML:StructuralFeature.multiplicity>
+                                            <UML:Multiplicity>
+                                                <UML:Multiplicity.range>
+                                                    <UML:MultiplicityRange>
+                                                        <UML:MultiplicityRange.lower>1</UML:MultiplicityRange.lower>
+                                                        <UML:MultiplicityRange.upper>1</UML:MultiplicityRange.upper>
+                                                    </UML:MultiplicityRange>
+                                                </UML:Multiplicity.range>
+                                            </UML:Multiplicity>
+                                        </UML:StructuralFeature.multiplicity>
+                                  [/if]
                                       <UML:StructuralFeature.type>
                                           <UML:Classifier xmi.idref = "[e.xmiIdRefAutoColumns(columnProp)/]"/>
                                       </UML:StructuralFeature.type>

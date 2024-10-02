@@ -25,7 +25,7 @@ import org.junit.runners.Parameterized;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
-import fr.pacman.soa.GenerateServerSoa;
+import fr.pacman.entity.api.xmi.GenerateServerXmi;
 
 @RunWith(Parameterized.class)
 public abstract class AbstractNonRegressionTests {
@@ -161,7 +161,7 @@ public abstract class AbstractNonRegressionTests {
 //		res.computeIfAbsent(GenerateServerPersistenceApi.class, cls -> new ArrayList<>()).add("entity");
 //		res.computeIfAbsent(GenerateServerPersistenceApi.class, cls -> new ArrayList<>()).add("environment");
 //		res.computeIfAbsent(GenerateCommonRequirement.class, cls -> new ArrayList<>()).add("requirement");
-		res.computeIfAbsent(GenerateServerSoa.class, cls -> new ArrayList<>()).add("soa");
+//		res.computeIfAbsent(GenerateServerSoa.class, cls -> new ArrayList<>()).add("soa");
 		// TODO res.computeIfAbsent(GenerateServerSoaLight.class, cls -> new
 		// ArrayList<>()).add("soa");
 //		res.computeIfAbsent(GenerateServerSoaRs.class, cls -> new ArrayList<>()).add("soa");
@@ -172,7 +172,7 @@ public abstract class AbstractNonRegressionTests {
 //		res.computeIfAbsent(GenerateValidation.class, cls -> new ArrayList<>()).add("requirement");
 //		res.computeIfAbsent(GenerateValidation.class, cls -> new ArrayList<>()).add("soa");
 //		res.computeIfAbsent(GenerateValidation.class, cls -> new ArrayList<>()).add("entity");
-//		res.computeIfAbsent(GenerateServerXmi.class, cls -> new ArrayList<>()).add("entity");
+		res.computeIfAbsent(GenerateServerXmi.class, cls -> new ArrayList<>()).add("entity");
 
 		return res;
 	}
