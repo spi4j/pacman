@@ -248,82 +248,82 @@ public class PackageNamingRule extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_packagePersistence);
    }
 
-public static String getPackagePersistenceJavaService(Object object){return getPackagePersistence();}
+   public static String getPackagePersistenceJavaService(Object object){return getPackagePersistence();}
    
    public static String getPackageImplemJdbc ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageImplemJdbc);
    }
 
-public static String getPackageImplemJdbcJavaService(Object object){return getPackageImplemJdbc();}
+   public static String getPackageImplemJdbcJavaService(Object object){return getPackageImplemJdbc();}
    
    public static String getPackageApi ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageApi);
    }
 
-public static String getPackageApiJavaService(Object object){return getPackageApi();}
+   public static String getPackageApiJavaService(Object object){return getPackageApi();}
    
    public static String getPackageOverload ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageOverload);
    }
 
-public static String getPackageOverloadJavaService(Object object){return getPackageOverload();}
+   public static String getPackageOverloadJavaService(Object object){return getPackageOverload();}
    
    public static String getPackageReferentiel ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageReferentiel);
    }
 
-public static String getPackageReferentielJavaService(Object object){return getPackageReferentiel();}
+   public static String getPackageReferentielJavaService(Object object){return getPackageReferentiel();}
    
    public static String getPackageImplemServer ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageImplemServer);
    }
 
-public static String getPackageImplemServerJavaService(Object object){return getPackageImplemServer();}
+   public static String getPackageImplemServerJavaService(Object object){return getPackageImplemServer();}
    
    public static String getPackagePgeJsf ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packagePgeJsf);
    }
 
-public static String getPackagePgeJsfJavaService(Object object){return getPackagePgeJsf();}
+   public static String getPackagePgeJsfJavaService(Object object){return getPackagePgeJsf();}
    
    public static String getPackageMatching ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageMatching);
    }
 
-public static String getPackageMatchingJavaService(Object object){return getPackageMatching();}
+   public static String getPackageMatchingJavaService(Object object){return getPackageMatching();}
    
    public static String getPackageBusiness ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageBusiness);
    }
 
-public static String getPackageBusinessJavaService(Object object){return getPackageBusiness();}
+   public static String getPackageBusinessJavaService(Object object){return getPackageBusiness();}
    
    public static String getPackageRequirement ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packageRequirement);
    }
 
-public static String getPackageRequirementJavaService(Object object){return getPackageRequirement();}
+   public static String getPackageRequirementJavaService(Object object){return getPackageRequirement();}
    
    public static String getPackagePgeSwing ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packagePgeSwing);
    }
 
-public static String getPackagePgeSwingJavaService(Object object){return getPackagePgeSwing();}
+   public static String getPackagePgeSwingJavaService(Object object){return getPackagePgeSwing();}
    
    public static String getPackagePgeGwt ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_packagePgeGwt);
    }
 
-public static String getPackagePgeGwtJavaService(Object object){return getPackagePgeGwt();}
+   public static String getPackagePgeGwtJavaService(Object object){return getPackagePgeGwt();}
 }

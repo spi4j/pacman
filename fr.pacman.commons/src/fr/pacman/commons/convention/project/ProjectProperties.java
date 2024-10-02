@@ -938,427 +938,427 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_appli);
    }
 
-public static String getApplicationNameJavaService(Object object){return getApplicationName();}
+   public static String getApplicationNameJavaService(Object object){return getApplicationName();}
 
    public static String getReportProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_report_project);
    }
 
-public static String getReportProjectNameJavaService(Object object){return getReportProjectName();}
+   public static String getReportProjectNameJavaService(Object object){return getReportProjectName();}
 
    public static String getModelProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_model_project);
    }
 
-public static String getModelProjectNameJavaService(Object object){return getModelProjectName();}
+   public static String getModelProjectNameJavaService(Object object){return getModelProjectName();}
 
    public static String getClientJavaWebStartProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webstart_project);
    }
 
-public static String getClientJavaWebStartProjectNameJavaService(Object object){return getClientJavaWebStartProjectName();}
+   public static String getClientJavaWebStartProjectNameJavaService(Object object){return getClientJavaWebStartProjectName();}
 
    public static String getClientSwingProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_swing_project);
    }
 
-public static String getClientSwingProjectNameJavaService(Object object){return getClientSwingProjectName();}
+   public static String getClientSwingProjectNameJavaService(Object object){return getClientSwingProjectName();}
 
    public static String getClientIntegrationProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_integration_project);
    }
 
-public static String getClientIntegrationProjectNameJavaService(Object object){return getClientIntegrationProjectName();}
+   public static String getClientIntegrationProjectNameJavaService(Object object){return getClientIntegrationProjectName();}
 
    public static String getClientJsfProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_project);
    }
 
-public static String getClientJsfProjectNameJavaService(Object object){return getClientJsfProjectName();}
+   public static String getClientJsfProjectNameJavaService(Object object){return getClientJsfProjectName();}
 
    public static String getClientGwtProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_gwt_project);
    }
 
-public static String getClientGwtProjectNameJavaService(Object object){return getClientGwtProjectName();}
+   public static String getClientGwtProjectNameJavaService(Object object){return getClientGwtProjectName();}
 
    public static String getCommonProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_commons_project);
    }
 
-public static String getCommonProjectNameJavaService(Object object){return getCommonProjectName();}
+   public static String getCommonProjectNameJavaService(Object object){return getCommonProjectName();}
 
    public static String getDeliveryProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_delivery_project);
    }
 
-public static String getDeliveryProjectNameJavaService(Object object){return getDeliveryProjectName();}
+   public static String getDeliveryProjectNameJavaService(Object object){return getDeliveryProjectName();}
 
    public static String getServerProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_project);
    }
 
-public static String getServerProjectNameJavaService(Object object){return getServerProjectName();}
+   public static String getServerProjectNameJavaService(Object object){return getServerProjectName();}
 
    public static String getWebappProjectName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webapp_project);
    }
 
-public static String getWebappProjectNameJavaService(Object object){return getWebappProjectName();}
+   public static String getWebappProjectNameJavaService(Object object){return getWebappProjectName();}
 
    public static String getApplicationPackage ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_package);
    }
 
-public static String getApplicationPackageJavaService(Object object){return getApplicationPackage();}
+   public static String getApplicationPackageJavaService(Object object){return getApplicationPackage();}
 
    public static String getClientJsfSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_source_dir);
    }
 
-public static String getClientJsfSourceDirJavaService(Object object){return getClientJsfSourceDir();}
+   public static String getClientJsfSourceDirJavaService(Object object){return getClientJsfSourceDir();}
 
    public static String getClientJsfResourcesDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_resources_dir);
    }
 
-public static String getClientJsfResourcesDirJavaService(Object object){return getClientJsfResourcesDir();}
+   public static String getClientJsfResourcesDirJavaService(Object object){return getClientJsfResourcesDir();}
 
    public static String getClientJsfWebappDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_webapp_dir);
    }
 
-public static String getClientJsfWebappDirJavaService(Object object){return getClientJsfWebappDir();}
+   public static String getClientJsfWebappDirJavaService(Object object){return getClientJsfWebappDir();}
 
    public static String getClientJsfWebDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_webinf_dir);
    }
 
-public static String getClientJsfWebDirJavaService(Object object){return getClientJsfWebDir();}
+   public static String getClientJsfWebDirJavaService(Object object){return getClientJsfWebDir();}
 
    public static String getClientJsfTestDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_test_dir);
    }
 
-public static String getClientJsfTestDirJavaService(Object object){return getClientJsfTestDir();}
+   public static String getClientJsfTestDirJavaService(Object object){return getClientJsfTestDir();}
 
    public static String getClientJsfContextDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsf_context_dir);
    }
 
-public static String getClientJsfContextDirJavaService(Object object){return getClientJsfContextDir();}
+   public static String getClientJsfContextDirJavaService(Object object){return getClientJsfContextDir();}
 
    public static String getClientGwtSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_gwt_source_dir);
    }
 
-public static String getClientGwtSourceDirJavaService(Object object){return getClientGwtSourceDir();}
+   public static String getClientGwtSourceDirJavaService(Object object){return getClientGwtSourceDir();}
 
    public static String getClientGwtResourcesDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_gwt_resources_dir);
    }
 
-public static String getClientGwtResourcesDirJavaService(Object object){return getClientGwtResourcesDir();}
+   public static String getClientGwtResourcesDirJavaService(Object object){return getClientGwtResourcesDir();}
 
    public static String getClientGwtWebappDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_gwt_webapp_dir);
    }
 
-public static String getClientGwtWebappDirJavaService(Object object){return getClientGwtWebappDir();}
+   public static String getClientGwtWebappDirJavaService(Object object){return getClientGwtWebappDir();}
 
    public static String getClientGwtWebDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_gwt_webinf_dir);
    }
 
-public static String getClientGwtWebDirJavaService(Object object){return getClientGwtWebDir();}
+   public static String getClientGwtWebDirJavaService(Object object){return getClientGwtWebDir();}
 
    public static String getClientGwtTestDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_gwt_test_dir);
    }
 
-public static String getClientGwtTestDirJavaService(Object object){return getClientGwtTestDir();}
+   public static String getClientGwtTestDirJavaService(Object object){return getClientGwtTestDir();}
 
    public static String getClientIntegrationSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_integration_source_dir);
    }
 
-public static String getClientIntegrationSourceDirJavaService(Object object){return getClientIntegrationSourceDir();}
+   public static String getClientIntegrationSourceDirJavaService(Object object){return getClientIntegrationSourceDir();}
 
    public static String getClientIntegrationLauncherPackage ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_integration_launcher_pkg);
    }
 
-public static String getClientIntegrationLauncherPackageJavaService(Object object){return getClientIntegrationLauncherPackage();}
+   public static String getClientIntegrationLauncherPackageJavaService(Object object){return getClientIntegrationLauncherPackage();}
 
    public static String getClientJWebStartWebDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webstart_webinf_dir);
    }
 
-public static String getClientJWebStartWebDirJavaService(Object object){return getClientJWebStartWebDir();}
+   public static String getClientJWebStartWebDirJavaService(Object object){return getClientJWebStartWebDir();}
 
    public static String getClientJWebStartSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webstart_source_dir);
    }
 
-public static String getClientJWebStartSourceDirJavaService(Object object){return getClientJWebStartSourceDir();}
+   public static String getClientJWebStartSourceDirJavaService(Object object){return getClientJWebStartSourceDir();}
 
    public static String getClientJWebStartResourcesDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webstart_resources_dir);
    }
 
-public static String getClientJWebStartResourcesDirJavaService(Object object){return getClientJWebStartResourcesDir();}
+   public static String getClientJWebStartResourcesDirJavaService(Object object){return getClientJWebStartResourcesDir();}
    
    public static String getClientJspProjectName () 
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_project);
    }
 
-public static String getClientJspProjectNameJavaService(Object object){return getClientJspProjectName();}
+   public static String getClientJspProjectNameJavaService(Object object){return getClientJspProjectName();}
 
    public static String getClientJspSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_source_dir);
    }
 
-public static String getClientJspSourceDirJavaService(Object object){return getClientJspSourceDir();}
+   public static String getClientJspSourceDirJavaService(Object object){return getClientJspSourceDir();}
 
    public static String getClientJspTestDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_test_dir);
    }
 
-public static String getClientJspTestDirJavaService(Object object){return getClientJspTestDir();}
+   public static String getClientJspTestDirJavaService(Object object){return getClientJspTestDir();}
 
    public static String getClientJspResourcesDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_resources_dir);
    }
 
-public static String getClientJspResourcesDirJavaService(Object object){return getClientJspResourcesDir();}
+   public static String getClientJspResourcesDirJavaService(Object object){return getClientJspResourcesDir();}
 
    public static String getClientJspWebappDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_webapp_dir);
    }
 
-public static String getClientJspWebappDirJavaService(Object object){return getClientJspWebappDir();}
+   public static String getClientJspWebappDirJavaService(Object object){return getClientJspWebappDir();}
 
    public static String getClientJspWebDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_webinf_dir);
    }
 
-public static String getClientJspWebDirJavaService(Object object){return getClientJspWebDir();}
+   public static String getClientJspWebDirJavaService(Object object){return getClientJspWebDir();}
 
    public static String getClientJWebStartKeyDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webstart_key_dir);
    }
 
-public static String getClientJWebStartKeyDirJavaService(Object object){return getClientJWebStartKeyDir();}
+   public static String getClientJWebStartKeyDirJavaService(Object object){return getClientJWebStartKeyDir();}
 
    public static String getServerSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_source_dir);
    }
 
-public static String getServerSourceDirJavaService(Object object){return getServerSourceDir();}
+   public static String getServerSourceDirJavaService(Object object){return getServerSourceDir();}
 
    public static String getServerResourcesDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_resources_dir);
    }
 
-public static String getServerResourcesDirJavaService(Object object){return getServerResourcesDir();}
+   public static String getServerResourcesDirJavaService(Object object){return getServerResourcesDir();}
 
    public static String getServerTestDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_test_dir);
    }
 
-public static String getServerTestDirJavaService(Object object){return getServerTestDir();}
+   public static String getServerTestDirJavaService(Object object){return getServerTestDir();}
 
    public static String getServerSQLDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_sql_dir);
    }
 
-public static String getServerSQLDirJavaService(Object object){return getServerSQLDir();}
+   public static String getServerSQLDirJavaService(Object object){return getServerSQLDir();}
 
    public static String getServerXMIDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_xmi_dir);
    }
 
-public static String getServerXMIDirJavaService(Object object){return getServerXMIDir();}
+   public static String getServerXMIDirJavaService(Object object){return getServerXMIDir();}
 
    public static String getPackageCFXServer ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_cxf_pkg);
    }
 
-public static String getPackageCFXServerJavaService(Object object){return getPackageCFXServer();}
+   public static String getPackageCFXServerJavaService(Object object){return getPackageCFXServer();}
 
    public static String getCommonsSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_commons_source_dir);
    }
 
-public static String getCommonsSourceDirJavaService(Object object){return getCommonsSourceDir();}
+   public static String getCommonsSourceDirJavaService(Object object){return getCommonsSourceDir();}
 
    public static String getCommonsConfDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_commons_conf_dir);
    }
 
-public static String getCommonsConfDirJavaService(Object object){return getCommonsConfDir();}
+   public static String getCommonsConfDirJavaService(Object object){return getCommonsConfDir();}
 
    public static String getCommonsTestDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_commons_test_dir);
    }
 
-public static String getCommonsTestDirJavaService(Object object){return getCommonsTestDir();}
+   public static String getCommonsTestDirJavaService(Object object){return getCommonsTestDir();}
 
    public static String getCommonsTestResourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_commons_test_resources_dir);
    }
 
-public static String getCommonsTestResourceDirJavaService(Object object){return getCommonsTestResourceDir();}
+   public static String getCommonsTestResourceDirJavaService(Object object){return getCommonsTestResourceDir();}
 
    public static String getWebappWebDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webapp_webinf_dir);
    }
 
-public static String getWebappWebDirJavaService(Object object){return getWebappWebDir();}
+   public static String getWebappWebDirJavaService(Object object){return getWebappWebDir();}
    
    public static String getWebappDir()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webapp_webapp_dir);
    }
 
-public static String getWebappDirJavaService(Object object){return getWebappDir();}
+   public static String getWebappDirJavaService(Object object){return getWebappDir();}
    
    public static String getWebappSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webapp_source_dir);
    }
 
-public static String getWebappSourceDirJavaService(Object object){return getWebappSourceDir();}
+   public static String getWebappSourceDirJavaService(Object object){return getWebappSourceDir();}
 
    public static String getWebappResourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_webapp_resource_dir);
    }
 
-public static String getWebappResourceDirJavaService(Object object){return getWebappResourceDir();}
+   public static String getWebappResourceDirJavaService(Object object){return getWebappResourceDir();}
    
    public static String getClientSwingSourceDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_swing_source_dir);
    }
 
-public static String getClientSwingSourceDirJavaService(Object object){return getClientSwingSourceDir();}
+   public static String getClientSwingSourceDirJavaService(Object object){return getClientSwingSourceDir();}
 
    public static String getClientSwingResourcesDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_swing_resources_dir);
    }
 
-public static String getClientSwingResourcesDirJavaService(Object object){return getClientSwingResourcesDir();}
+   public static String getClientSwingResourcesDirJavaService(Object object){return getClientSwingResourcesDir();}
 
    public static String getClientSwingTestDir ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_swing_test_dir);
    }
 
-public static String getClientSwingTestDirJavaService(Object object){return getClientSwingTestDir();}
+   public static String getClientSwingTestDirJavaService(Object object){return getClientSwingTestDir();}
 
    public static String getClient ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_type);
    }
 
-public static String getClientJavaService(Object object){return getClient();}
+   public static String getClientJavaService(Object object){return getClient();}
 
    public static String getNaming ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_typeNaming);
    }
 
-public static String getNamingJavaService(Object object){return getNaming();}
+   public static String getNamingJavaService(Object object){return getNaming();}
 
    public static String getSpi4JVersion ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_spi4j_version);
    }
 
-public static String getSpi4JVersionJavaService(Object object){return getSpi4JVersion();}
+   public static String getSpi4JVersionJavaService(Object object){return getSpi4JVersion();}
 
    public static String getDataBasesNames ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_database_type);
    }
 
-public static String getDataBasesNamesJavaService(Object object){return getDataBasesNames();}
+   public static String getDataBasesNamesJavaService(Object object){return getDataBasesNames();}
 
    public static String getDelimiter ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_new_line);
    }
 
-public static String getDelimiterJavaService(Object object){return getDelimiter();}
+   public static String getDelimiterJavaService(Object object){return getDelimiter();}
 
    public static String getUseServiceRequirements ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_servicerequirements_enabled);
    }
 
-public static String getUseServiceRequirementsJavaService(Object object){return getUseServiceRequirements();}
+   public static String getUseServiceRequirementsJavaService(Object object){return getUseServiceRequirements();}
 
    public static String getUseEjb ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_ejbservice_enabled);
    }
 
-public static String getUseEjbJavaService(Object object){return getUseEjb();}
+   public static String getUseEjbJavaService(Object object){return getUseEjb();}
 
    public static String getUseTestsCRUD ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_tests_crud_enabled);
    }
 
-public static String getUseTestsCRUDJavaService(Object object){return getUseTestsCRUD();}
+   public static String getUseTestsCRUDJavaService(Object object){return getUseTestsCRUD();}
 
    public static String getAppCRUD ()
    {
@@ -1366,84 +1366,84 @@ public static String getUseTestsCRUDJavaService(Object object){return getUseTest
       return null;
    }
 
-public static String getAppCRUDJavaService(Object object){return getAppCRUD();}
+   public static String getAppCRUDJavaService(Object object){return getAppCRUD();}
 
    public static String getUseMatching ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_matching_layer_enabled);
    }
 
-public static String getUseMatchingJavaService(Object object){return getUseMatching();}
+   public static String getUseMatchingJavaService(Object object){return getUseMatching();}
 
    public static String getUseSpi4jSecurity ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_security_enabled);
    }
 
-public static String getUseSpi4jSecurityJavaService(Object object){return getUseSpi4jSecurity();}
+   public static String getUseSpi4jSecurityJavaService(Object object){return getUseSpi4jSecurity();}
 
    public static String getUseTestBDD ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_tests_bdd_enabled);
    }
 
-public static String getUseTestBDDJavaService(Object object){return getUseTestBDD();}
+   public static String getUseTestBDDJavaService(Object object){return getUseTestBDD();}
 
    public static String getIsLibrary ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_is_library);
    }
 
-public static String getIsLibraryJavaService(Object object){return getIsLibrary();}
+   public static String getIsLibraryJavaService(Object object){return getIsLibrary();}
 
    public static String getIsLibraryRs ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_is_library_rs);
    }
 
-public static String getIsLibraryRsJavaService(Object object){return getIsLibraryRs();}
+   public static String getIsLibraryRsJavaService(Object object){return getIsLibraryRs();}
    
    public static String getHasToGenerateRootFiles ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_rootfiles_generate_enabled);
    }
 
-public static String getHasToGenerateRootFilesJavaService(Object object){return getHasToGenerateRootFiles();}
+   public static String getHasToGenerateRootFilesJavaService(Object object){return getHasToGenerateRootFiles();}
 
    public static String getUseWS ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_ws_enabled);
    }
 
-public static String getUseWSJavaService(Object object){return getUseWS();}
+   public static String getUseWSJavaService(Object object){return getUseWS();}
    
    public static String getUseWMS()
    {
       return PacmanPropertiesManager.get_property(c_idParam_wms_enabled);
    }
 
-public static String getUseWMSJavaService(Object object){return getUseWMS();}
+   public static String getUseWMSJavaService(Object object){return getUseWMS();}
 
    public static String getUseWsServiceInjection ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_ws_hk2_enabled);
    }
 
-public static String getUseWsServiceInjectionJavaService(Object object){return getUseWsServiceInjection();}
+   public static String getUseWsServiceInjectionJavaService(Object object){return getUseWsServiceInjection();}
    
    public static String getWsSecuritySchemeId() 
    {
       return PacmanPropertiesManager.get_property(c_idParam_ws_security_scheme_id);
    }
 
-public static String getWsSecuritySchemeIdJavaService(Object object){return getWsSecuritySchemeId();}
+   public static String getWsSecuritySchemeIdJavaService(Object object){return getWsSecuritySchemeId();}
 
    public static String getVersion ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_version);
    }
 
-public static String getVersionJavaService(Object object){return getVersion();}
+   public static String getVersionJavaService(Object object){return getVersion();}
 
    public static String getValidationConfigFile ()
    {
@@ -1460,133 +1460,133 @@ public static String getVersionJavaService(Object object){return getVersion();}
       return PacmanPropertiesManager.get_property(c_idParam_requirement_category_base_level);
    }
 
-public static String getRequirementCategoryBaseLevelJavaService(Object object){return getRequirementCategoryBaseLevel();}
+   public static String getRequirementCategoryBaseLevelJavaService(Object object){return getRequirementCategoryBaseLevel();}
 
    public static String getSqlTableAdditionalFields ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_sql_table_add_fields);
    }
 
-public static String getSqlTableAdditionalFieldsJavaService(Object object){return getSqlTableAdditionalFields();}
+   public static String getSqlTableAdditionalFieldsJavaService(Object object){return getSqlTableAdditionalFields();}
    
    public static String getLibrariesAdditionalJars ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_libraries);
    }
 
-public static String getLibrariesAdditionalJarsJavaService(Object object){return getLibrariesAdditionalJars();}
+   public static String getLibrariesAdditionalJarsJavaService(Object object){return getLibrariesAdditionalJars();}
 
    public static final String getIsApplicationCrud ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_appli_crud_enabled);
    }
 
-public static final String getIsApplicationCrudJavaService(Object object){return getIsApplicationCrud();}
+   public static final String getIsApplicationCrudJavaService(Object object){return getIsApplicationCrud();}
    
    public static final String getUseConfigFilesSpi4jFrwk() 
    {
       return PacmanPropertiesManager.get_property(c_idParam_use_spi4j_config_frwk);
    }
 
-public static final String getUseConfigFilesSpi4jFrwkJavaService(Object object){return getUseConfigFilesSpi4jFrwk();}
+   public static final String getUseConfigFilesSpi4jFrwkJavaService(Object object){return getUseConfigFilesSpi4jFrwk();}
 
    public static String getUseLog4J ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_log4j_enabled);
    }
 
-public static String getUseLog4JJavaService(Object object){return getUseLog4J();}
+   public static String getUseLog4JJavaService(Object object){return getUseLog4J();}
 
    public static String getAuthorName ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_author);
    }
 
-public static String getAuthorNameJavaService(Object object){return getAuthorName();}
+   public static String getAuthorNameJavaService(Object object){return getAuthorName();}
 
    public static String getRequirementPrefix ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_requirement_prefix);
    }
 
-public static String getRequirementPrefixJavaService(Object object){return getRequirementPrefix();}
+   public static String getRequirementPrefixJavaService(Object object){return getRequirementPrefix();}
 
    public static String getSQLTablePrefix ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_sql_table_prefix);
    }
 
-public static String getSQLTablePrefixJavaService(Object object){return getSQLTablePrefix();}
+   public static String getSQLTablePrefixJavaService(Object object){return getSQLTablePrefix();}
    
    public static String getSQLTableSchema ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_sql_table_schema);
    }
 
-public static String getSQLTableSchemaJavaService(Object object){return getSQLTableSchema();}  
+   public static String getSQLTableSchemaJavaService(Object object){return getSQLTableSchema();}  
    
    public static String getSQLOracleIndexTableSpace ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_server_sql_oracle_index_tablespace);
    }
 
-public static String getSQLOracleIndexTableSpaceJavaService(Object object){return getSQLOracleIndexTableSpace();}
+   public static String getSQLOracleIndexTableSpaceJavaService(Object object){return getSQLOracleIndexTableSpace();}
 
    public static String getUseDeprecatedSOAUserCodeParams ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_deprecated_soa_usercode_params);
    }
 
-public static String getUseDeprecatedSOAUserCodeParamsJavaService(Object object){return getUseDeprecatedSOAUserCodeParams();}
+   public static String getUseDeprecatedSOAUserCodeParamsJavaService(Object object){return getUseDeprecatedSOAUserCodeParams();}
 
    public static String getUseFetchingStrategy ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_fetchingstrategy_enabled);
    }
 
-public static String getUseFetchingStrategyJavaService(Object object){return getUseFetchingStrategy();}
+   public static String getUseFetchingStrategyJavaService(Object object){return getUseFetchingStrategy();}
 
    public static String getJavaVersion ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_java_version);
    }
 
-public static String getJavaVersionJavaService(Object object){return getJavaVersion();}
+   public static String getJavaVersionJavaService(Object object){return getJavaVersion();}
    
    public static String getPagingMode ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_paging_mode);
    }
 
-public static String getPagingModeJavaService(Object object){return getPagingMode();}
+   public static String getPagingModeJavaService(Object object){return getPagingMode();}
    
    public static String getPagingTotalCountKey ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_paging_total_count);
    }
 
-public static String getPagingTotalCountKeyJavaService(Object object){return getPagingTotalCountKey();}
+   public static String getPagingTotalCountKeyJavaService(Object object){return getPagingTotalCountKey();}
    
    public static String getPagingCurrentPageSizeKey ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_paging_current_page_size);
    }
 
-public static String getPagingCurrentPageSizeKeyJavaService(Object object){return getPagingCurrentPageSizeKey();}
+   public static String getPagingCurrentPageSizeKeyJavaService(Object object){return getPagingCurrentPageSizeKey();}
    
    public static String getPagingCurrentPageIdxKey ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_paging_current_page_idx);
    }
 
-public static String getPagingCurrentPageIdxKeyJavaService(Object object){return getPagingCurrentPageIdxKey();}
+   public static String getPagingCurrentPageIdxKeyJavaService(Object object){return getPagingCurrentPageIdxKey();}
    
    public static String getJavaPagingCount ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_paging_page_count);
    }
 
-public static String getJavaPagingCountJavaService(Object object){return getJavaPagingCount();}
+   public static String getJavaPagingCountJavaService(Object object){return getJavaPagingCount();}
    
    public static String getIsDebugMode () 
    {   
@@ -1603,54 +1603,54 @@ public static String getJavaPagingCountJavaService(Object object){return getJava
       return PacmanPropertiesManager.get_property(c_idParam_http_embedded_server);
    }
 
-public static String getHttpEmbeddedServerJavaService(Object object){return getHttpEmbeddedServer();}
+   public static String getHttpEmbeddedServerJavaService(Object object){return getHttpEmbeddedServer();}
    
    public static String getIsClearUserCode () {
       
       return PacmanPropertiesManager.get_property(c_idParam_is_clearUserCode);
    }
 
-public static String getIsClearUserCodeJavaService(Object object){return getIsClearUserCode();}
+   public static String getIsClearUserCodeJavaService(Object object){return getIsClearUserCode();}
    
    public static String getH2EmbeddedDatabase ()
    {
       return PacmanPropertiesManager.get_property(c_idParam_h2_embedded_database);
    }
 
-public static String getH2EmbeddedDatabaseJavaService(Object object){return getH2EmbeddedDatabase();}
+   public static String getH2EmbeddedDatabaseJavaService(Object object){return getH2EmbeddedDatabase();}
 
    public static String getXtoSupName () 
    {
 	   return  PacmanPropertiesManager.get_property(c_idParam_server_sql_table_xtopsup_name);
    }
 
-public static String getXtoSupNameJavaService(Object object){return getXtoSupName();}
+   public static String getXtoSupNameJavaService(Object object){return getXtoSupName();}
    
    public static String getXdMajName () 
    {
 	   return PacmanPropertiesManager.get_property(c_idParam_server_sql_table_xdmaj_name);
    }
 
-public static String getXdMajNameJavaService(Object object){return getXdMajName();} 
+   public static String getXdMajNameJavaService(Object object){return getXdMajName();} 
    
    public static String getClientJspForceTopBottom() 
    {
       return PacmanPropertiesManager.get_property(c_idParam_client_jsp_topbottom_force);
    }
 
-public static String getClientJspForceTopBottomJavaService(Object object){return getClientJspForceTopBottom();}
+   public static String getClientJspForceTopBottomJavaService(Object object){return getClientJspForceTopBottom();}
    
    public static String getXtoSupKey () 
    {
       return  c_idParam_server_sql_table_xtopsup;
    }
 
-public static String getXtoSupKeyJavaService(Object object){return getXtoSupKey();}
+   public static String getXtoSupKeyJavaService(Object object){return getXtoSupKey();}
    
    public static String getXdMajKey () 
    {
       return c_idParam_server_sql_table_xdmaj;
    }
 
-public static String getXdMajKeyJavaService(Object object){return getXdMajKey();} 
+   public static String getXdMajKeyJavaService(Object object){return getXdMajKey();} 
 }
