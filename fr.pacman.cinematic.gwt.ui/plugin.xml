@@ -19,7 +19,7 @@
                   commandId="fr.pacman.cinematic.gwt.ui.commands.GwtGeneratorCommand"
                   id="fr.pacman.cinematic.gwt.ui.menus.GwtGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Cinematic GWT">
+                  label="Génération cinematique GWT">
                <visibleWhen
                      checkEnabled="false">
                   <with

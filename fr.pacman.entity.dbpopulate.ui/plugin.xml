@@ -19,7 +19,7 @@
                   commandId="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand"
                   id="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Peuplement base de données">
+                  label="Génération peuplement base de données">
                <visibleWhen
                      checkEnabled="false">
                   <with

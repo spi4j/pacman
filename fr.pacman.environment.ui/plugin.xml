@@ -19,7 +19,7 @@
                   commandId="fr.pacman.environment.ui.commands.EnvironmentGeneratorCommand"
                   id="fr.pacman.environment.ui.commands.EnvironmentGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Types personnalisés">
+                  label="Génération des types personnalisés">
                <visibleWhen
                      checkEnabled="false">
                   <with

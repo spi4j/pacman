@@ -19,7 +19,7 @@
                   commandId="fr.pacman.configuration.ui.commands.ConfigurationGeneratorCommand"
                   id="fr.pacman.configuration.ui.commands.ConfigurationGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Configuration du projet">
+                  label="Génération configuration du projet">
                <visibleWhen
                      checkEnabled="false">
                   <with
@@ -44,7 +44,7 @@
                   commandId="fr.pacman.configuration.ui.commands.ConfigurationGeneratorCommand"
                   id="fr.pacman.configuration.ui.commands.ConfigurationGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Configuration du projet">
+                  label="Génération configuration du projet">
                <visibleWhen
                      checkEnabled="false">
                   <with
@@ -69,7 +69,7 @@
                   commandId="fr.pacman.configuration.ui.commands.ConfigurationGeneratorCommand"
                   id="fr.pacman.configuration.ui.commands.ConfigurationGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Configuration du projet">
+                  label="Génération configuration du projet">
                <visibleWhen
                      checkEnabled="false">
                   <with

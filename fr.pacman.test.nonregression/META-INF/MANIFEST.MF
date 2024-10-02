@@ -5,7 +5,7 @@ Bundle-Name: Acceleo Non Regression Test Module Runtime Plug-in
 Bundle-SymbolicName: fr.pacman.test.nonregression
 Bundle-Version: 4.4.0.qualifier
 Bundle-Vendor: Safr@n
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Require-Bundle: org.junit,
@@ -22,7 +22,6 @@ Require-Bundle: org.junit,
  fr.pacman.requirement,
  fr.pacman.start,
  fr.pacman.environment,
- fr.pacman.validation,
  org.eclipse.emf.common,
  fr.pacman.commons,
  org.obeonetwork.dsl.environment,

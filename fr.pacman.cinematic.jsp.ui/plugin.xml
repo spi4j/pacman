@@ -19,7 +19,7 @@
                   commandId="fr.pacman.cinematic.jsp.ui.commands.JspGeneratorCommand"
                   id="fr.pacman.cinematic.jsp.ui.menus.JspGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Cinematic JSP">
+                  label="Génération cinematique JSP">
                <visibleWhen
                      checkEnabled="false">
                   <with

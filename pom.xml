@@ -258,10 +258,6 @@
 				<module>fr.pacman.cinematic.jsf</module>
 				<module>fr.pacman.cinematic.jsp</module>
 				<module>fr.pacman.cinematic.swing</module>
-				<module>fr.pacman.validation</module>
-				<module>fr.pacman.validation.view</module>
-				<module>fr.pacman.estimation</module>
-				<module>fr.pacman.test</module>
 				<!-- UI modules. -->				
 				<module>fr.pacman.configuration.ui</module>
 				<module>fr.pacman.start.ui</module>
@@ -270,7 +266,6 @@
 				<module>fr.pacman.entity.dbpopulate.ui</module>
 				<module>fr.pacman.entity.dbreferentiel.ui</module>
 				<module>fr.pacman.entity.sql.ui</module>
-				<module>fr.pacman.entity.xmi.ui</module>
 				<module>fr.pacman.requirement.ui</module>
 				<module>fr.pacman.requirementsgrouper.ui</module>
 				<module>fr.pacman.soa.ui</module> 
@@ -279,8 +274,6 @@
 				<module>fr.pacman.cinematic.jsf.ui</module>
 				<module>fr.pacman.cinematic.jsp.ui</module>
 				<module>fr.pacman.cinematic.swing.ui</module>
-				<module>fr.pacman.validation.ui</module>
-				<module>fr.pacman.estimation.ui</module>
 				<!-- Feature modules. -->
 				<module>fr.pacman.commons.feature</module>
 				<module>fr.pacman.commons.soa.feature</module>
@@ -292,7 +285,6 @@
 				<module>fr.pacman.entity.dbpopulate.ui.feature</module>
 				<module>fr.pacman.entity.dbreferentiel.ui.feature</module>
 				<module>fr.pacman.entity.sql.ui.feature</module>
-				<module>fr.pacman.entity.xmi.ui.feature</module>
 				<module>fr.pacman.soa.ui.feature</module>
 				<module>fr.pacman.soapifirst.ui.feature</module>
 				<module>fr.pacman.requirement.ui.feature</module>
@@ -302,10 +294,10 @@
 				<module>fr.pacman.cinematic.jsf.ui.feature</module>
 				<module>fr.pacman.cinematic.jsp.ui.feature</module>
 				<module>fr.pacman.cinematic.swing.ui.feature</module>
-				<module>fr.pacman.validation.ui.feature</module>
-				<module>fr.pacman.estimation.ui.feature</module>
-				<!-- Update site module. -->
+				<!-- Other modules. -->
+				<module>fr.pacman.test</module>
 				<module>fr.pacman.update</module>
+				<module>fr.pacman.test.nonregression</module>
 			</modules>
 		</profile>
 

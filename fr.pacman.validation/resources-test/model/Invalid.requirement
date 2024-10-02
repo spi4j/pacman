@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<requirement:Repository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:requirement="http://www.obeonetwork.org/dsl/requirement/1.0" xmi:id="_ywBg0Kz5EeK_Pq8o-SOLBA" name="Sample1">
-  <mainCategories xmi:id="_nrZWMcnLEeKqQLlDYrUVyQ" id="RGF">
-    <requirements xmi:id="_uQKqwMnLEeKqQLlDYrUVyQ" name="Le nom doit être en majuscule" id="RGF_001" createdOn="2013-05-31T10:25:45.280+0200" modifiedOn="2013-05-31T10:26:14.793+0200"/>
-    <requirements xmi:id="_xNsL0MnLEeKqQLlDYrUVyQ" name="L'âge ne doit pas dépassé 150 ans" id="RGF_002" createdOn="2013-05-31T10:26:17.699+0200" modifiedOn="2013-05-31T10:56:22.286+0200"/>
-    <requirements xmi:id="_4ai0EMnLEeKqQLlDYrUVyQ" name="Règle en doublon d'id" id="RGF_001" createdOn="2013-05-31T10:27:05.038+0200" modifiedOn="2013-05-31T10:27:20.209+0200"/>
-  </mainCategories>
-</requirement:Repository>

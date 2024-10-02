@@ -19,7 +19,7 @@
                   commandId="fr.pacman.requirement.ui.commands.RequirementGeneratorCommand"
                   id="fr.pacman.requirement.ui.commands.RequirementGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Requirements">
+                  label="Génération requirements">
                <visibleWhen
                      checkEnabled="false">
                   <with

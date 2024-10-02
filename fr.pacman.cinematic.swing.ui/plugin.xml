@@ -19,7 +19,7 @@
                   commandId="fr.pacman.cinematic.swing.ui.commands.SwingGeneratorCommand"
                   id="fr.pacman.cinematic.swing.ui.menus.SwingGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Cinematic SWING">
+                  label="Génération cinematique SWING">
                <visibleWhen
                      checkEnabled="false">
                   <with

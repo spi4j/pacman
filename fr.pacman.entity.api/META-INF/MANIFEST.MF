@@ -24,5 +24,4 @@ Eclipse-LazyStart: true
 Export-Package: fr.pacman.entity.api,
  fr.pacman.entity.api.dbpopulate,
  fr.pacman.entity.api.dbreferentiel,
- fr.pacman.entity.api.sql,
- fr.pacman.entity.api.xmi
+ fr.pacman.entity.api.sql

@@ -19,7 +19,7 @@
                   commandId="fr.pacman.entity.soapifirst.ui.commands.SoapiFirstGeneratorCommand"
                   id="fr.pacman.entity.soapifirst.ui.commands.SoapiFirstGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Import Swagger">
+                  label="Génération import swagger">
                <visibleWhen
                      checkEnabled="false">
                   <with

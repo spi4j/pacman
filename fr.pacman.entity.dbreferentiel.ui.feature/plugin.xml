@@ -15,7 +15,7 @@
                enablesFor="+"
                id="fr.pacman.entity.sql.ui.popup.AcceleoGenerateDbReferentielAction"
                icon="icons/safran.png"
-               label="Génération Import Référentiel"
+               label="Génération import référentiel"
                menubarPath="org.obeonetwork.is.designer.menu/moe"
                tooltip="Génère les classes Java d import de la base de données"/>
       </objectContribution>
