@@ -11,7 +11,6 @@
 [import fr::pacman::entity::api::files::genUserPersistenceApp/]
 [import fr::pacman::entity::api::sql::generateServerSql/]
 [import fr::pacman::entity::api::dbpopulate::DbPopulate/]
-[import fr::pacman::entity::api::xmi::generateServerXmi/]
 
 [comment encoding = UTF-8 /]
 [comment @main/]
@@ -65,7 +64,3 @@
 [comment @main/]
 [template public genPopulate_facade(b : environment::Namespace)]
   [b.populate()/][/template]
-
-[comment @main/]
-[template public genXmi_facade(r : entity::Root)]
-  [r.generate()/][/template]
