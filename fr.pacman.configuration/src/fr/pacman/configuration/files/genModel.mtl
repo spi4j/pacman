@@ -9,8 +9,6 @@
 [comment encoding = UTF-8 /]
 [template public genModel(any : ecore::EObject)]
   
-  [file ('tata.txt', overwrite, 'UTF-8')][/file]
-  
   [file (any.getModelProjectName().filename(any.getModelPropertiesDir(), 'README.txt'), overwrite, 'UTF-8')]
     [any.readMeProperties()/]
   [/file]

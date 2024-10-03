@@ -5,14 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.Logger;
 
 import fr.pacman.cinematic.api.GenerateClientCinematicApi;
 import fr.pacman.cinematic.gwt.GenerateClientCinematicGwt;
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
-import fr.pacman.commons.ui.PacmanUIGenerator_Enum;
 import fr.pacman.commons.ui.PacmanUIGenerator_Abs;
+import fr.pacman.commons.ui.PacmanUIGenerator_Enum;
 
 /**
  * UI Generator for gwt client based on ".cinematic" model file.
@@ -105,5 +106,15 @@ public class GwtUIGenerators extends PacmanUIGenerator_Abs {
 	@Override
 	protected String getPluginId() {
 		return Activator.PLUGIN_ID;
+	}
+
+	/**
+	 * Get the logger for the plugin.
+	 * 
+	 * @return the logger for the plugin.
+	 */
+	@Override
+	protected Logger getLogger() {
+		return Activator.getDefault().getPluginLogger();
 	}
 }

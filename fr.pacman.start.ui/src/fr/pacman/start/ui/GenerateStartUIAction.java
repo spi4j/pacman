@@ -18,13 +18,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import fr.pacman.commons.properties.PacmanPropertiesManager;
+import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 import fr.pacman.start.GenerateStart;
 import fr.pacman.start.ui.exception.PacmanInitModelException;
 import fr.pacman.start.ui.util.ConfigUtil;
@@ -217,14 +218,23 @@ public class GenerateStartUIAction extends Wizard implements INewWizard {
 			Map<String, String> p_properties) throws CoreException {
 
 		try {
-
 			File v_file = new File((p_project).getLocation().toString());
-			GenerateStart v_generator = new GenerateStart(v_file, p_properties);
-			v_generator.generate(new BasicMonitor());
+			final String v_modelPath = v_file.getAbsolutePath() + File.separator
+					+ p_properties.get(GenerateStart.c_PROP_APPLICATION_NAME) + "-model";
+			PacmanPropertiesManager.initProperties(v_modelPath, p_properties);
+			PacmanUIGeneratorsReport.reset();
+			
+			GenerateStart v_generator = new GenerateStart(v_file);
+			v_generator.updateWithSafranProject();
 
 		} catch (IOException e) {
 
 			throw new CoreException(WizardUtil.sendErrorStatus(e, Activator.c_PLUGIN_ID));
+
+		} finally {
+
+			PacmanUIGeneratorsReport.log(true);
+			PacmanPropertiesManager.exit();
 		}
 	}
 

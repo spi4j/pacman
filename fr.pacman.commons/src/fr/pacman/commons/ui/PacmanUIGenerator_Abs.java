@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.acceleo.aql.AcceleoUtil;
-import org.eclipse.acceleo.aql.evaluation.GenerationResult;
 import org.eclipse.acceleo.aql.parser.AcceleoParser;
-import org.eclipse.acceleo.query.ast.ASTNode;
 import org.eclipse.acceleo.query.ide.runtime.impl.namespace.OSGiQualifiedNameResolver;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameResolver;
 import org.eclipse.core.resources.IContainer;
@@ -17,13 +14,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IJavaProject;
@@ -157,29 +154,33 @@ public abstract class PacmanUIGenerator_Abs {
 	protected abstract String getPluginId();
 
 	/**
+	 * Return the specific logger for the plugin
+	 * 
+	 * @return the logger for the plugin.
+	 */
+	protected abstract Logger getLogger();
+
+	/**
 	 * Main method for the class. Launches all previously registered generators.
 	 */
 	public void generate() {
-		final PacmanUIGeneratorsReport v_report = new PacmanUIGeneratorsReport();
+
 		final IRunnableWithProgress v_operation = new IRunnableWithProgress() {
 			@Override
 			public void run(final IProgressMonitor p_monitor) {
 
-				ErrorGeneration.clear();
-
 				PacmanPropertiesManager.initProperties(_rootPath.getPath());
 				ImportsUtils.resetAdditionalTypes();
+				PacmanUIGeneratorsReport.reset();
 
-				if (hasIncompatibleModel() || hasIncompatibleProperties()) {
-					// displayPopUpAlert(null, IStatus.WARNING);
+				if (hasIncompatibleModel() || hasIncompatibleProperties())
 					return;
-				}
 
 				for (PacmanGenerator_Abs v_generator : getGenerators()) {
 					v_generator.setResources(_resources);
 					v_generator.setSelectedEObject(_selectedEObject);
 					v_generator.setRootPath(_rootPath.getParent());
-					v_generator.generate(v_report);
+					v_generator.generate();
 				}
 			}
 		};
@@ -193,10 +194,12 @@ public abstract class PacmanUIGenerator_Abs {
 		} finally {
 
 			try {
-				updateIDE(v_report);
+				updateIDEAfterCodeGeneration();
+				// ErrorGeneration.doIfThrowErrorGenerationException(); Voir si utile doublon
+				// etc....
+				PacmanUIGeneratorsReport.log(true);
+				// ErrorGeneration.clear(); // Voir si utile doublon etc...
 				PacmanPropertiesManager.exit();
-				ErrorGeneration.doIfThrowErrorGenerationException();
-				displayPopUpReport(v_report);
 
 			} catch (Exception p_e) {
 				displayPopUpAlert(p_e);
@@ -206,88 +209,16 @@ public abstract class PacmanUIGenerator_Abs {
 
 	/**
 	 * 
-	 * @param p_report
-	 */
-	private void displayPopUpReport(final PacmanUIGeneratorsReport p_report) {
-		StringBuffer v_report = new StringBuffer();
-		if (p_report.getNbFiles() == 0) {
-			v_report.append("Aucun fichier n'a été généré !");
-		} else {
-			v_report.append(p_report.getNbFiles());
-			v_report.append(" fichiers générés.");
-			if (p_report.getNbLostFiles() > 0) {
-				v_report.append(p_report.getNbLostFiles()).append(" fichiers '.lost' ont été créés.");
-			}
-//		if (p_report.getNbErrors() > 0) {
-//			v_report.append(p_report.getNbErrors());
-//			v_report.append("Des erreurs de génération ont été trouvées ");
-//		}
-//		if (p_report.getNbWarns() > 0) {
-//			v_report.append("");
-//		}
-		}
-		PlugInUtils.displayInformation("Pacman", "Résultat de la génération : \n\r" + v_report.toString());
-	}
-
-	/**
-	 * 
 	 * @param p_e
 	 * @param p_statusCode
 	 */
 	private void displayPopUpAlert(final Exception p_e) {
-		// final IStatus v_status = new Status(IStatus.ERROR, getPluginId(),
-		// p_e.getMessage(), p_e);
-
 		String v_msg = p_e.getMessage();
 		if (p_e.getCause() != null) {
 			v_msg = p_e.getCause().getMessage();
 		}
-		PlugInUtils.displayError("Pacman", "Une erreur a été détectée lors de la génération : " + p_e
+		PlugInUtils.displayError("Pacman", "Une erreur fatale a été détectée lors de la génération : " + p_e
 				+ "\n\rCause de l'erreur : " + v_msg + "\n\rLa génération va être stoppée.");
-	}
-
-	/**
-	 * 
-	 * @param generationResult
-	 */
-	protected void printDiagnostics(GenerationResult generationResult) {
-		if (generationResult.getDiagnostic().getSeverity() > Diagnostic.INFO) {
-			printDiagnostic(generationResult.getDiagnostic());
-		}
-	}
-
-	/**
-	 * 
-	 * @param diagnostic
-	 */
-	protected void printDiagnostic(Diagnostic diagnostic) {
-		if (diagnostic.getMessage() != null) {
-			final String location;
-			if (!diagnostic.getData().isEmpty() && diagnostic.getData().get(0) instanceof ASTNode) {
-				location = AcceleoUtil.getLocation((ASTNode) diagnostic.getData().get(0)) + ": ";
-			} else {
-				location = "";
-			}
-			switch (diagnostic.getSeverity()) {
-			case Diagnostic.INFO:
-				Activator.getDefault().getLog().log(new Status(IStatus.INFO, diagnostic.getSource(),
-						location + diagnostic.getMessage(), diagnostic.getException()));
-				break;
-
-			case Diagnostic.WARNING:
-				Activator.getDefault().getLog().log(new Status(IStatus.WARNING, diagnostic.getSource(),
-						location + diagnostic.getMessage(), diagnostic.getException()));
-				break;
-
-			case Diagnostic.ERROR:
-				Activator.getDefault().getLog().log(new Status(IStatus.ERROR, diagnostic.getSource(),
-						location + diagnostic.getMessage(), diagnostic.getException()));
-				break;
-			}
-		}
-		for (Diagnostic child : diagnostic.getChildren()) {
-			printDiagnostic(child);
-		}
 	}
 
 //	protected boolean beforeGeneration(AcceleoEvaluator evaluator, IQualifiedNameQueryEnvironment queryEnvironment,
@@ -324,11 +255,10 @@ public abstract class PacmanUIGenerator_Abs {
 	 * Refresh all registered projects after code generation. Allows to take new
 	 * created or modified files into account for the Eclipe IDE. If the list of
 	 * subprojects is null or empty it means we have to refresh the root project
-	 * with all subprojects.
-	 * 
-	 * @param p_report
+	 * with all subprojects. Also make the ide organize and complete all imports for
+	 * java classes.
 	 */
-	protected void updateIDE(final PacmanUIGeneratorsReport p_report) throws CoreException {
+	protected void updateIDEAfterCodeGeneration() throws CoreException {
 
 		List<String> v_subProjectsNamesToRefresh = getSubProjectsToRefresh();
 		if (v_subProjectsNamesToRefresh == null || v_subProjectsNamesToRefresh.isEmpty())
@@ -344,7 +274,7 @@ public abstract class PacmanUIGenerator_Abs {
 					v_targetWorkspaceContainer.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 					final IWorkbenchPartSite v_targetSite = getTargetSite();
 					if (Boolean.valueOf(ProjectProperties.getIsFormatImports()) && getOrganizeImports()
-							&& v_targetSite != null && p_report.getNbFiles() > 0) {
+							&& v_targetSite != null && PacmanUIGeneratorsReport.getNbFiles() > 0) {
 						refreshImports(v_targetWorkspaceContainer.getProject(), v_targetSite);
 					}
 				} catch (CoreException p_e) {
@@ -484,7 +414,6 @@ public abstract class PacmanUIGenerator_Abs {
 	 */
 	// TODO a compléter.
 	protected boolean hasView() {
-
 		return false;
 	}
 }

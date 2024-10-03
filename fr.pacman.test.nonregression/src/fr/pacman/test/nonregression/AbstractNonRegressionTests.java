@@ -76,25 +76,26 @@ public abstract class AbstractNonRegressionTests {
 			}
 		}
 
+		PacmanUIGeneratorsReport.reset();
 		PacmanPropertiesManager.initProperties(modelFolder.getAbsolutePath());
+		
 		try {
 			final Constructor<? extends PacmanGenerator_Abs> contructor = cls.getConstructor();
 			final PacmanGenerator_Abs generator = contructor.newInstance();
 
 			final List<String> resources = new ArrayList<>();
 			resources.add(model.getAbsolutePath());
-
-			final PacmanUIGeneratorsReport v_report = new PacmanUIGeneratorsReport();
-
 			generator.setResources(resources);
 			generator.setRootPath(actualTargetFolder.getAbsolutePath());
-			generator.generate(v_report);
+			generator.generate();
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
+			
 			PacmanPropertiesManager.clearProperties();
+			PacmanUIGeneratorsReport.log(false);
 		}
 
 		final StringBuilder message = new StringBuilder();

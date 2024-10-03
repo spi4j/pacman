@@ -19,7 +19,7 @@
                   commandId="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand"
                   id="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération Persistance JDBC">
+                  label="Génération persistance JDBC">
                <visibleWhen
                      checkEnabled="false">
                   <with

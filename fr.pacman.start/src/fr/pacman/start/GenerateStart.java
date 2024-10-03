@@ -19,14 +19,12 @@ import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironmen
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.obeonetwork.dsl.overview.impl.OverviewFactoryImpl;
 
 import fr.pacman.commons.main.PacmanGenerator_Abs;
-import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 import fr.pacman.configuration.GenerateConfiguration;
 
@@ -123,43 +121,24 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	// Evite pour la couche UI d'avoir a faire l'import du plugin configuration.
 	public static final String c_PROP_PROJECT_VERSION = GenerateConfiguration.c_PROP_PROJECT_VERSION;
 
-	private Map<String, String> _startProperties;
-
 	/**
 	 * Constructeur.
 	 * 
 	 * @param p_targetFolder
-	 * @param p_properties
 	 * @throws IOException
 	 */
-	public GenerateStart(final File p_targetFolder, final Map<String, String> p_properties) throws IOException {
-
-		_startProperties = p_properties;
-		String v_modelPath = p_targetFolder.getAbsolutePath() + File.separator
-				+ _startProperties.get(c_PROP_APPLICATION_NAME) + "-model";
-
+	public GenerateStart(final File p_targetFolder) throws IOException {
 		setResources(Collections.emptyList());
 		setRootPath(p_targetFolder.getAbsolutePath());
-		PacmanPropertiesManager.initProperties(v_modelPath, p_properties);
 	}
 
 	/**
-	 * 
-	 * @param p_monitor
+	 * Do the generation for project creation and copy files if needed (SWING /
+	 * EXPORT REST).
 	 */
-	public void generate(final Monitor p_monitor) {
-		super.generate(new PacmanUIGeneratorsReport());
-
-		// Copie de fichiers (SWING / EXPORT REST).
-		try {
-			copyFiles();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Ecriture des proprietes dans les '.properties'.
-		PacmanPropertiesManager.exit();
+	public void updateWithSafranProject() throws IOException {
+		super.generate();
+		copyFiles();
 	}
 
 	@Override

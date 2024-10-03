@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.Logger;
 
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
@@ -102,5 +103,15 @@ public class ConfigurationUIGenerators extends PacmanUIGenerator_Abs {
 	@Override
 	protected String getPluginId() {
 		return Activator.PLUGIN_ID;
+	}
+	
+	/**
+	 * Get the logger for the plugin.
+	 * 
+	 * @return the logger for the plugin.
+	 */
+	@Override
+	protected Logger getLogger() {
+		return Activator.getDefault().getPluginLogger();
 	}
 }

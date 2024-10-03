@@ -2,7 +2,6 @@ package fr.pacman.commons.main;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,7 +13,6 @@ import org.eclipse.acceleo.OpenModeKind;
 import org.eclipse.acceleo.Template;
 import org.eclipse.acceleo.aql.AcceleoUtil;
 import org.eclipse.acceleo.aql.evaluation.AcceleoEvaluator;
-import org.eclipse.acceleo.aql.evaluation.GenerationResult;
 import org.eclipse.acceleo.aql.evaluation.strategy.DefaultGenerationStrategy;
 import org.eclipse.acceleo.aql.evaluation.strategy.DefaultWriterFactory;
 import org.eclipse.acceleo.aql.evaluation.strategy.IAcceleoGenerationStrategy;
@@ -22,14 +20,12 @@ import org.eclipse.acceleo.aql.evaluation.writer.IAcceleoWriter;
 import org.eclipse.acceleo.aql.parser.AcceleoParser;
 import org.eclipse.acceleo.aql.parser.ModuleLoader;
 import org.eclipse.acceleo.query.AQLUtils;
-import org.eclipse.acceleo.query.ast.ASTNode;
 import org.eclipse.acceleo.query.ast.EClassifierTypeLiteral;
 import org.eclipse.acceleo.query.ast.TypeLiteral;
 import org.eclipse.acceleo.query.runtime.impl.namespace.ClassLoaderQualifiedNameResolver;
 import org.eclipse.acceleo.query.runtime.impl.namespace.JavaLoader;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironment;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameResolver;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -158,6 +154,14 @@ public abstract class PacmanGenerator_Abs {
 		return v_templatesToExecute;
 	}
 
+	/**
+	 * 
+	 * @param queryEnvironment
+	 * @param valuesCache
+	 * @param type
+	 * @param resourceSetForModels
+	 * @return
+	 */
 	protected abstract List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
 			final Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels);
 
@@ -166,7 +170,7 @@ public abstract class PacmanGenerator_Abs {
 	 */
 	// TODO si on lance plusieurs générateurs certainement déplacer certaines
 	// parties à mutualiser (au niveau UI ?) ailleurs.????
-	public void generate(final PacmanUIGeneratorsReport p_diagnostics) {
+	public void generate() {
 		final String moduleQualifiedName = getModuleQualifiedName();
 		final Map<String, String> options = getOptions();
 		final Object generationKey = new Object();
@@ -213,11 +217,10 @@ public abstract class PacmanGenerator_Abs {
 				}
 			}
 		} finally {
-
+			
 			AQLUtils.cleanResourceSetForModels(generationKey, resourceSetForModels);
 			AcceleoUtil.cleanServices(queryEnvironment, resourceSetForModels);
-			p_diagnostics.addDiagnostic(evaluator.getGenerationResult());
-			// printDiagnostics(evaluator.getGenerationResult());
+			PacmanUIGeneratorsReport.addCodeGenerationResult(evaluator.getGenerationResult());
 		}
 	}
 
@@ -307,67 +310,5 @@ public abstract class PacmanGenerator_Abs {
 		resolver.addLoader(new JavaLoader(AcceleoParser.QUALIFIER_SEPARATOR, false));
 
 		return evaluator;
-	}
-
-	/**
-	 * Prints the diagnostics for the given {@link GenerationResult}.
-	 * 
-	 * @param generationResult the {@link GenerationResult}
-	 * @generated
-	 */
-	protected void printDiagnostics(GenerationResult generationResult) {
-		if (generationResult != null && generationResult.getDiagnostic().getSeverity() > Diagnostic.INFO) {
-			PrintStream stream;
-			switch (generationResult.getDiagnostic().getSeverity()) {
-			case Diagnostic.WARNING:
-				stream = System.out;
-				stream.println("WARNING");
-				break;
-			case Diagnostic.ERROR:
-				// Fall-through
-			default:
-				// Shouldn't happen as we only show warnings and errors
-				stream = System.err;
-				stream.println("ERROR");
-				break;
-			}
-			printDiagnostic(stream, generationResult.getDiagnostic(), "");
-		}
-	}
-
-	/**
-	 * Prints the given {@link Diagnostic} for the given {@link PrintStream}.
-	 * 
-	 * @param stream      the {@link PrintStream}
-	 * @param diagnostic  the {@link Diagnostic}
-	 * @param indentation the current indentation
-	 * @generated
-	 */
-	protected void printDiagnostic(PrintStream stream, Diagnostic diagnostic, String indentation) {
-		String nextIndentation = indentation;
-		if (diagnostic.getMessage() != null) {
-			stream.print(indentation);
-			switch (diagnostic.getSeverity()) {
-			case Diagnostic.INFO:
-				stream.print("INFO ");
-				break;
-
-			case Diagnostic.WARNING:
-				stream.print("WARNING ");
-				break;
-
-			case Diagnostic.ERROR:
-				stream.print("ERROR ");
-				break;
-			}
-			if (!diagnostic.getData().isEmpty() && diagnostic.getData().get(0) instanceof ASTNode) {
-				stream.print(AcceleoUtil.getLocation((ASTNode) diagnostic.getData().get(0)));
-			}
-			stream.println(": " + diagnostic.getMessage());
-			nextIndentation += "\t";
-		}
-		for (Diagnostic child : diagnostic.getChildren()) {
-			printDiagnostic(stream, child, nextIndentation);
-		}
 	}
 }

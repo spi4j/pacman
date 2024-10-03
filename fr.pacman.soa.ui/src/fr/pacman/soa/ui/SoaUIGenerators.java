@@ -2,10 +2,10 @@ package fr.pacman.soa.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.Logger;
 import org.obeonetwork.dsl.soa.System;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
@@ -123,5 +123,15 @@ public class SoaUIGenerators extends PacmanUIGenerator_Abs {
 	@Override
 	protected String getPluginId() {
 		return Activator.PLUGIN_ID;
+	}
+	
+	/**
+	 * Get the logger for the plugin.
+	 * 
+	 * @return the logger for the plugin.
+	 */
+	@Override
+	protected Logger getLogger() {
+		return Activator.getDefault().getPluginLogger();
 	}
 }
