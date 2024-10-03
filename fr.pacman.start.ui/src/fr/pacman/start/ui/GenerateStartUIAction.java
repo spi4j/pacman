@@ -225,7 +225,7 @@ public class GenerateStartUIAction extends Wizard implements INewWizard {
 			PacmanUIGeneratorsReport.reset();
 			
 			GenerateStart v_generator = new GenerateStart(v_file);
-			v_generator.updateWithSafranProject();
+			v_generator.updateWithSafranProject(p_properties);
 
 		} catch (IOException e) {
 

@@ -25,44 +25,19 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.obeonetwork.dsl.overview.impl.OverviewFactoryImpl;
 
 import fr.pacman.commons.main.PacmanGenerator_Abs;
-import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 import fr.pacman.configuration.GenerateConfiguration;
 
 /**
  * Here no concept of subproject as the creation start at the root path for the
- * project.
+ * project.... Bon anglais ou français ?
  * 
  * @author MINARM
  */
 public class GenerateStart extends PacmanGenerator_Abs {
 
 	/**
-	 * Liste des fichiers binaires qui seront copies par Pacman Start vers le projet
-	 * cible dans le cadre d'un projet SWING.
+	 * Liste des clés de propriétés pour le starter.
 	 */
-	private static final List<String> c_SWING_FILES = Arrays.asList("lib/ant-contrib-0.6.jar", "lib/Pack200Task.jar",
-			"lib/setModificationTimeAntTask.jar", "lib/setModificationTimeFromManifestAntTask.jar",
-			"src/main/webapp/WEB-INF/lib/jnlp-servlet.jar", "src/main/webapp/favicon.ico",
-			"src/main/webapp/safran-big.png", "src/main/webapp/safran-small.png", "src/main/webapp/safran.png");
-
-	/**
-	 * Liste des fichiers qui seront copiés par Pacman Start vers le projet cible
-	 * dans le cadre d'un projet REST (Export uniquement) Pour l'instant pas de Zip,
-	 * éviter de charger encore une dépendance suplémentaire. A voir toutefois si
-	 * plus quant même pas plus propre de copier un zip et de le dézipper dans la
-	 * cible ...
-	 */
-	private static final List<String> c_SWAGGER_FILES = Arrays.asList("src/main/webapp/swagger/favicon-16x16.png",
-			"src/main/webapp/swagger/favicon-32x32.png", "src/main/webapp/swagger/index.html",
-			"src/main/webapp/swagger/oauth2-redirect.html", "src/main/webapp/swagger/swagger-ui-bundle.js",
-			"src/main/webapp/swagger/swagger-ui-bundle.js.map", "src/main/webapp/swagger/swagger-ui-es-bundle-core.js",
-			"src/main/webapp/swagger/swagger-ui-es-bundle-core.js.map",
-			"src/main/webapp/swagger/swagger-ui-es-bundle.js", "src/main/webapp/swagger/swagger-ui-es-bundle.js.map",
-			"src/main/webapp/swagger/swagger-ui-standalone-preset.js",
-			"src/main/webapp/swagger/swagger-ui-standalone-preset.js.map", "src/main/webapp/swagger/swagger-ui.css",
-			"src/main/webapp/swagger/swagger-ui.css.map", "src/main/webapp/swagger/swagger-ui.js",
-			"src/main/webapp/swagger/swagger-ui.js.map");
-
 	public static final String c_PROP_APPLICATION_NAME = "idAppli";
 	public static final String c_PROP_PACKAGE_NAME = "package";
 	public static final String c_PROP_NAMING_TYPE = "naming.type";
@@ -118,8 +93,40 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	public static final String c_PROP_SQL_ADD_COLUMNS_COMMENT = "server.sql.table.additional_field.{$name}.comment";
 	public static final String c_PROP_SQL_ADD_COLUMNS_NOT_NULL = "server.sql.table.additional_field.{$name}.notnull";
 
+	/**
+	 * Liste des fichiers binaires qui seront copies par Pacman Start vers le projet
+	 * cible dans le cadre d'un projet SWING.
+	 */
+	private static final List<String> c_SWING_FILES = Arrays.asList("lib/ant-contrib-0.6.jar", "lib/Pack200Task.jar",
+			"lib/setModificationTimeAntTask.jar", "lib/setModificationTimeFromManifestAntTask.jar",
+			"src/main/webapp/WEB-INF/lib/jnlp-servlet.jar", "src/main/webapp/favicon.ico",
+			"src/main/webapp/safran-big.png", "src/main/webapp/safran-small.png", "src/main/webapp/safran.png");
+
+	/**
+	 * Liste des fichiers qui seront copiés par Pacman Start vers le projet cible
+	 * dans le cadre d'un projet REST (Export uniquement) Pour l'instant pas de Zip,
+	 * éviter de charger encore une dépendance suplémentaire. A voir toutefois si
+	 * plus quant même pas plus propre de copier un zip et de le dézipper dans la
+	 * cible ...
+	 */
+	private static final List<String> c_SWAGGER_FILES = Arrays.asList("src/main/webapp/swagger/favicon-16x16.png",
+			"src/main/webapp/swagger/favicon-32x32.png", "src/main/webapp/swagger/index.html",
+			"src/main/webapp/swagger/oauth2-redirect.html", "src/main/webapp/swagger/swagger-ui-bundle.js",
+			"src/main/webapp/swagger/swagger-ui-bundle.js.map", "src/main/webapp/swagger/swagger-ui-es-bundle-core.js",
+			"src/main/webapp/swagger/swagger-ui-es-bundle-core.js.map",
+			"src/main/webapp/swagger/swagger-ui-es-bundle.js", "src/main/webapp/swagger/swagger-ui-es-bundle.js.map",
+			"src/main/webapp/swagger/swagger-ui-standalone-preset.js",
+			"src/main/webapp/swagger/swagger-ui-standalone-preset.js.map", "src/main/webapp/swagger/swagger-ui.css",
+			"src/main/webapp/swagger/swagger-ui.css.map", "src/main/webapp/swagger/swagger-ui.js",
+			"src/main/webapp/swagger/swagger-ui.js.map");
+
 	// Evite pour la couche UI d'avoir a faire l'import du plugin configuration.
 	public static final String c_PROP_PROJECT_VERSION = GenerateConfiguration.c_PROP_PROJECT_VERSION;
+
+	/**
+	 * 
+	 */
+	public File _copyFileTargetFolder;
 
 	/**
 	 * Constructeur.
@@ -130,15 +137,18 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	public GenerateStart(final File p_targetFolder) throws IOException {
 		setResources(Collections.emptyList());
 		setRootPath(p_targetFolder.getAbsolutePath());
+		_copyFileTargetFolder = p_targetFolder;
 	}
 
 	/**
 	 * Do the generation for project creation and copy files if needed (SWING /
 	 * EXPORT REST).
+	 * 
+	 * @param p_properties
 	 */
-	public void updateWithSafranProject() throws IOException {
+	public void updateWithSafranProject(final Map<String, String> p_properties) throws IOException {
 		super.generate();
-		copyFiles();
+		copyFiles(p_properties);
 	}
 
 	@Override
@@ -179,26 +189,26 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	 * Copie des fichiers binaires a cote des fichiers generes si le projet est de
 	 * type SWING ou si le projet a des services web.
 	 * 
+	 * @param p_properties
 	 * @throws IOException e
 	 */
-	private void copyFiles() throws IOException {
+	private void copyFiles(final Map<String, String> p_properties) throws IOException {
 
-//		final File v_targetFolder = getTargetFolder();
-//		final String v_targetProject = _startProperties.get(c_PROP_APPLICATION_NAME);
-//
-//		if ("SWING".equalsIgnoreCase(_startProperties.get(c_PROP_CLIENT_TYPE))) {
-//			final File v_folder = new File(v_targetFolder, v_targetProject + "-javawebstart");
-//			for (final String v_file : c_SWING_FILES) {
-//				copyFile(v_file, v_folder);
-//			}
-//		}
-//
-//		if (Boolean.valueOf(_startProperties.get(c_PROP_GEN_WS))) {
-//			final File v_folder = new File(v_targetFolder, v_targetProject + "-webapp");
-//			for (final String v_file : c_SWAGGER_FILES) {
-//				copyFile(v_file, v_folder);
-//			}
-//		}
+		final String v_targetProject = p_properties.get(c_PROP_APPLICATION_NAME);
+
+		if ("SWING".equalsIgnoreCase(p_properties.get(c_PROP_CLIENT_TYPE))) {
+			final File v_folder = new File(_copyFileTargetFolder, v_targetProject + "-javawebstart");
+			for (final String v_file : c_SWING_FILES) {
+				copyFile(v_file, v_folder);
+			}
+		}
+
+		if (Boolean.valueOf(p_properties.get(c_PROP_GEN_WS))) {
+			final File v_folder = new File(_copyFileTargetFolder, v_targetProject + "-webapp");
+			for (final String v_file : c_SWAGGER_FILES) {
+				copyFile(v_file, v_folder);
+			}
+		}
 	}
 
 	/**
