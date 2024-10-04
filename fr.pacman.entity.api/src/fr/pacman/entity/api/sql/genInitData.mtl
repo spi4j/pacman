@@ -88,7 +88,7 @@
   [if (e.hasAutomaticColumns())], [e.get_automaticColumnsProperties()->collect(temp3 | temp3.get_nameColumn(e))->sep(', ')/][/if]
 [/template]
 
-[template private valuesEntity(e : entity::Entity)]
+[template private valuesEntity(e : entity::Entity) post(self.removeLineSeparators())]
   1[if (not e.attributesNoPk()->isEmpty())], [e.attributesNoPk()->asSequence()->collect(temp4 | temp4.defaultSQLValue())->sep(', ')/][/if]
   [if (not e.getInheritDtoAttributes()->isEmpty())], [e.getInheritDtoAttributes()->asSequence()->collect(temp5 | temp5.defaultSQLValue())->sep(', ')/][/if]
   [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]

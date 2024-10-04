@@ -90,7 +90,10 @@
           [/for]
         [/if]
       [/for]
-          [if (e.hasAutomaticColumns())][e.get_automaticColumns(databaseType)/][/if][databaseType.genConstraintPK(e)/]
+          [if (e.hasAutomaticColumns())]
+            [e.get_automaticColumns(databaseType)/]
+          [/if]
+          [databaseType.genConstraintPK(e)/]
       );
       [if (e.hasUniqueIndex())]
         [e.genUniqueIDXOnTable(databaseType, e.get_nbColumnsInUniqueConstraint(e.uniqueIndex()), e.get_counterUN(1))/]
