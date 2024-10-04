@@ -22,16 +22,20 @@ import org.eclipse.acceleo.aql.parser.ModuleLoader;
 import org.eclipse.acceleo.query.AQLUtils;
 import org.eclipse.acceleo.query.ast.EClassifierTypeLiteral;
 import org.eclipse.acceleo.query.ast.TypeLiteral;
+import org.eclipse.acceleo.query.ide.runtime.impl.namespace.OSGiQualifiedNameResolver;
 import org.eclipse.acceleo.query.runtime.impl.namespace.ClassLoaderQualifiedNameResolver;
 import org.eclipse.acceleo.query.runtime.impl.namespace.JavaLoader;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameQueryEnvironment;
 import org.eclipse.acceleo.query.runtime.namespace.IQualifiedNameResolver;
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 
@@ -231,8 +235,13 @@ public abstract class PacmanGenerator_Abs {
 	 * @generated
 	 */
 	protected IQualifiedNameResolver createResolver() {
-		return new ClassLoaderQualifiedNameResolver(this.getClass().getClassLoader(),
-				AcceleoParser.QUALIFIER_SEPARATOR);
+		if (EMFPlugin.IS_OSGI_RUNNING) {
+			final Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+			return new OSGiQualifiedNameResolver(bundle, AcceleoParser.QUALIFIER_SEPARATOR);
+		} else {
+			return new ClassLoaderQualifiedNameResolver(this.getClass().getClassLoader(),
+					AcceleoParser.QUALIFIER_SEPARATOR);
+		}
 	}
 
 	/**
