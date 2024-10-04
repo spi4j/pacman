@@ -43,4 +43,5 @@ Export-Package: fr.pacman.commons.common,
  fr.pacman.commons.properties,
  fr.pacman.commons.requests,
  fr.pacman.commons.services,
+ fr.pacman.commons.types,
  fr.pacman.commons.ui

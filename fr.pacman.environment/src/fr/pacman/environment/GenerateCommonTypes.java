@@ -24,7 +24,7 @@ public class GenerateCommonTypes extends PacmanGenerator_Abs {
 	@Override
 	protected List<String> getTemplates() {
 		List<String> v_templates = new ArrayList<>();
-		v_templates.add("generateCommonTypes");
+		v_templates.add("generateTypes");
 		return v_templates;
 	}
 

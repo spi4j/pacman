@@ -12,7 +12,6 @@
     
   [/protected]
   
-  
   /**
    * Type personnalisé '[t.name.toUpperFirst()/]'.
    * @author [t.getAuthorName()/]
@@ -29,15 +28,13 @@
   
      // Attributs
      [protected (t.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   
      // Méthodes
      [protected (t.getUserCodeId('Méthodes')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
