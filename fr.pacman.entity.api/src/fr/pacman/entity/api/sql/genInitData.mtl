@@ -29,7 +29,7 @@
     
     /*
     [protected ('init data')]
-      */
+     */
       
       [r.releaseCounterForConstraints()/]
       [r.dropConstraint(databaseType)/]
@@ -37,10 +37,9 @@
       [for (n : environment::Namespace | r.ownedNamespaces)][n.genInitData()/][/for]
       [r.genConstraint()/]
       
-      /*
+    /*
     [/protected]
-    
-    */
+     */
   [/file]
 [/template]
 
@@ -71,7 +70,7 @@
 [template private writeAdditionnalValues(any : ecore::EObject)]
   [if (any.hasXtopSup())], '0'[/if][if (any.hasXdMaj())], current_date[/if][/template]
 
-[template private columnsEntity(e : entity::Entity)]
+[template private columnsEntity(e : entity::Entity) post(self.removeLineSeparators())]
   [e.namePK()/][if (not e.attributesNoPk()->isEmpty())], [e.attributesNoPk()->asSequence()->collect(temp1 | temp1.nameColumn())->sep(', ')/][/if]
   [if (not e.getInheritDtoAttributes()->isEmpty())], [e.getInheritDtoAttributes()->asSequence()->collect(temp2 | temp2.nameColumn())->sep(', ')/][/if]
   [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]

@@ -125,6 +125,17 @@ public abstract class PacmanGenerator_Abs {
 	 * @return a list of options for code generation.
 	 */
 	protected abstract Map<String, String> getOptions();
+	
+	/**
+	 * 
+	 * @param queryEnvironment
+	 * @param valuesCache
+	 * @param type
+	 * @param resourceSetForModels
+	 * @return
+	 */
+	protected abstract List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
+			final Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels);
 
 	/**
 	 * Creates the {@link ResourceSet} for models.
@@ -157,17 +168,6 @@ public abstract class PacmanGenerator_Abs {
 		}
 		return v_templatesToExecute;
 	}
-
-	/**
-	 * 
-	 * @param queryEnvironment
-	 * @param valuesCache
-	 * @param type
-	 * @param resourceSetForModels
-	 * @return
-	 */
-	protected abstract List<EObject> getValues(IQualifiedNameQueryEnvironment queryEnvironment,
-			final Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels);
 
 	/**
 	 * 
@@ -214,7 +214,6 @@ public abstract class PacmanGenerator_Abs {
 					if (null != getSubProjectName() && !getSubProjectName().isEmpty())
 						v_strUri.append(getSubProjectName() + File.separator);
 					URI targetURI = URI.createFileURI(v_strUri.toString());
-					System.out.println("Generation de : " + v_strUri.toString());
 					// ---------------------------------------------------
 					URI logURI = null;
 					AcceleoUtil.generate(template, variables, evaluator, queryEnvironment, strategy, targetURI, logURI);
@@ -300,7 +299,6 @@ public abstract class PacmanGenerator_Abs {
 		for (String nsURI : new ArrayList<String>(EPackage.Registry.INSTANCE.keySet())) {
 			registerEPackage(queryEnvironment, EPackage.Registry.INSTANCE.getEPackage(nsURI));
 		}
-
 		return queryEnvironment;
 	}
 
@@ -317,7 +315,6 @@ public abstract class PacmanGenerator_Abs {
 		AcceleoEvaluator evaluator = new AcceleoEvaluator(queryEnvironment.getLookupEngine(), System.lineSeparator());
 		resolver.addLoader(new ModuleLoader(new AcceleoParser(), evaluator));
 		resolver.addLoader(new JavaLoader(AcceleoParser.QUALIFIER_SEPARATOR, false));
-
 		return evaluator;
 	}
 }

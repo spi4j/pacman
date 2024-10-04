@@ -185,7 +185,7 @@
 [template private genIDXInverse(e : entity::Entity, r : environment::Reference, databaseType : String, compteur : Integer)]
   create index [r.nameIndex(compteur)/] on [e.nameTableWithSchema()/] ([r.nameColumnReferencingId()/])[e.genTableSpace(databaseType)/];[/template]
 
-[template private genComment(e : entity::Entity)]
+[template private genComment(e : entity::Entity) post(self.removeLineSeparators())]
   [if (not (e.description = null) and e.description.size() <> 0)]comment on table [e.nameTableWithSchema()/] is '[e.description.toString().replaceAll('\'', '\'\'')/]';[/if][/template]
 
 [template private genComment(e : entity::Entity, a : environment::Attribute)]

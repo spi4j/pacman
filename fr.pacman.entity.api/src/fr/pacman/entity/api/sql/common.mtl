@@ -12,20 +12,17 @@
  * Paramétrage PacMan
 */]
 [comment : Retourne le nom de la table avec le schema en prefixe. /]
-[template public nameTableWithSchema(e : entity::Entity)]
-  [e.get_schema()/][e.nameTable()/][/template]
+[template public nameTableWithSchema(e : entity::Entity)][e.get_schema()/][e.nameTable()/][/template]
 
 [comment : Retourne le nom de la table dans la librairie avec le schema en prefixe. /]
 [template public nameLibraryTableWithSchema(e : entity::Entity) post(self.trim())]
   [let libName : String = e.getLibraryNameForEntity(e.getApplicationName())][for (prop : String | e.getAdditionnalLibraries())][if (prop.index(libName) > 0)][e.getLibraryDataBaseSchema(prop)/][e.getLibraryTablePrefix(prop)/][e.physicalName().first(e.maxTableSize())/][/if][/for][/let][/template]
 
 [comment : Retourne le nom de la table sans le schema en prefixe. /]
-[template public nameTable(e : entity::Entity)]
-  [e.get_prefix()/][e.physicalName().first(e.maxTableSize())/][/template]
+[template public nameTable(e : entity::Entity)][e.get_prefix()/][e.physicalName().first(e.maxTableSize())/][/template]
 
 [comment : Retourne le prefixe pour l'ensemble des tables. /]
-[template public get_prefix(e : entity::Entity)]
-  [e.getSQLTablePrefix()/][/template]
+[template public get_prefix(e : entity::Entity)][e.getSQLTablePrefix()/][/template]
 
 [comment : getSQLTableSchema() ne peut pas être null ou non défini (on peut enlever le test..). /]
 [template private get_schema(e : entity::Entity)]

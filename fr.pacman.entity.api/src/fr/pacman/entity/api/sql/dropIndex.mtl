@@ -10,6 +10,7 @@
 
 [comment encoding = UTF-8 /]
 [template public dropIndex(r : entity::Root, databaseType : String)]
+  
   /****************************************************************/
   ['Indexs'.genSlashedLine(r.sizeHeader())/]
   /****************************************************************/

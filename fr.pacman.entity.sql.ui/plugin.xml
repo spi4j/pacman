@@ -19,7 +19,7 @@
                   commandId="fr.pacman.entity.sql.ui.commands.SqlGeneratorCommand"
                   id="fr.pacman.entity.sql.ui.commands.SqlGeneratorCommand" 
                   icon="icons/safran.png" 
-                  label="Génération SQL">
+                  label="Génération scripts SQL">
                <visibleWhen
                      checkEnabled="false">
                   <with

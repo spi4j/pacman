@@ -12,6 +12,7 @@
 
 [comment encoding = UTF-8 /]
 [template public dropConstraint(r : entity::Root, databaseType : String)]
+  
   /****************************************************************/
   ['Constraints'.genSlashedLine(r.sizeHeader())/]
   /****************************************************************/

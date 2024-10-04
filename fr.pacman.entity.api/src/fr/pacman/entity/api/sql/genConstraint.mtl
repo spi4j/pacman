@@ -12,6 +12,7 @@
 
 [comment encoding = UTF-8 /]
 [template public genConstraint(r : entity::Root)]
+  
   /****************************************************************/
   ['Constraints'.genSlashedLine(r.sizeHeader())/]
   /****************************************************************/
