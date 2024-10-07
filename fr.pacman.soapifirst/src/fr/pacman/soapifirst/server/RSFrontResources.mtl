@@ -146,7 +146,6 @@
     
   [/protected]
   
-  
   /**
   * Classe détenant les informations des jetons.
   *
@@ -402,7 +401,6 @@
     
   [/protected]
   
-  
   /**
   * Facade pour la ressource : [s.name/].
   *
@@ -412,10 +410,13 @@
   
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
     
-      	/**
-      	* [o.description/]
-    [o.getComParamsIn()/][o.comParamOut()/][o.comRSFaults()/]    */
-      	public static [o.writeParamOutIfexist()/] [o.name.apply_methodDefault()/]([o.addParamsInXtoIfExists()/]) {
+    	/**
+    	 * [o.description/]
+    	 * [o.getComParamsIn()/]
+    	 * [o.comParamOut()/]
+    	 * [o.comRSFaults()/]
+    	 */
+    	public static [o.writeParamOutIfexist()/] [o.name.apply_methodDefault()/]([o.addParamsInXtoIfExists()/]) {
     		
     		try {
     			[o.writeReturnParamsIfExists()/] [s.buildRSFrontResourceClassName()/].['instance'.apply_methodGet()/]()
@@ -426,7 +427,6 @@
     			throw [o.buildRSFrontExceptionClassName()/].['cast'.apply_methodDefault()/](['exception'.apply_parameterMethodClassicIn()/]);
     		}
     	}[/for]
-  
   }[/template]
 
 [comment : *****************************************************************************/]
@@ -440,7 +440,6 @@
     [s.writeImports('resource')/]
     
   [/protected]
-  
   
   /**
    * Ressource frontale (client) pour le service : '[s.name/]'.
@@ -482,21 +481,23 @@
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
     
       /**
-      * [o.description/]
-    [o.getComParamsIn()/][o.comParamOut()/][o.comRSFaults()/]    */
+       * [o.description/]
+       * [o.getComParamsIn()/]
+       * [o.comParamOut()/]
+       * [o.comRSFaults()/]
+       */
       public [o.writeParamOutIfexist()/] [o.name.apply_methodDefault()/]([o.addParamsInXtoIfExists()/]) {
     
         // for [o.userCodeForOperation()/]
         [protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-          
-              [o.writeReturnParamsIfExists()/] [o.hackHeadClose()/]['target'.apply_methodDefault()/]()
-                [o.addSuggestedMethodsForTarget()/]
-                [o.addResquestOperationAndCookieParamsIfExists()/]
-                [o.addHeaderParamsIfExists()/][o.addSuggestedOperation()/][o.hackHeadCloseEnd()/]
-                [o.addReturnParamIfExists()/][o.addCloseIfNecessary()/]
-          
+
+          [o.writeReturnParamsIfExists()/] [o.hackHeadClose()/]['target'.apply_methodDefault()/]()
+          ['  ' + o.addSuggestedMethodsForTarget()/]
+          ['  ' + o.addResquestOperationAndCookieParamsIfExists()/]
+          ['  ' + o.addHeaderParamsIfExists()/][o.addSuggestedOperation()/][o.hackHeadCloseEnd()/]
+          ['  ' + o.addReturnParamIfExists()/][o.addCloseIfNecessary()/]
+
         [/protected]
-    
       }
     
   [/for]

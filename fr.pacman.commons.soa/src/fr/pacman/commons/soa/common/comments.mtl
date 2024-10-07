@@ -11,14 +11,14 @@
 
 [comment encoding = UTF-8 /]
 [comment :/]
-[template public getComParamsIn(o : soa::Operation)]
+[template public getComParamsIn(o : soa::Operation) post(self.trim())]
   [for (p : soa::Parameter | o.input)]
-        * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
-        *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
+    @param [p.name.normalize().apply_parameterMethodClassicIn()/]
+              (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
   [/for]
   [if (o.isSecured() and o.isRSOperation() and o.isLibraryRS())]
-    	* @param ['token'.apply_parameterMethodClassicIn()/]
-    	*			(In)(*) Ajout par Pacman du jeton d'authentification.
+    @param ['token'.apply_parameterMethodClassicIn()/]
+    			(In)(*) Ajout par Pacman du jeton d'authentification.
   [/if]
 [/template]
 
@@ -41,9 +41,10 @@
 [/template]
 
 [comment : /]
-[template public getComParamIn(p : environment::Property)]
-      * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
-      *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
+[template public getComParamIn(p : environment::Property) post(self.trim())]
+  * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
+  *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
+[/template]
 
 [comment : /]
 [template public getComParamIdIn(r : environment::Reference)]
@@ -105,8 +106,8 @@
 
 [comment : /]
 [template public comParamOut(p : environment::Property)]
-      * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-      *           (Out)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
+  * @param [p.nameParam().apply_parameterMethodClassicIn()/]
+  *           (Out)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
 
 [comment : /]
 [template public comReturn(p : environment::Property)]
@@ -141,13 +142,16 @@
 [/template]
 
 [comment : /]
-[template public comParamOut(o : soa::Operation)]
-  [for (p : soa::Parameter | o.output)]    * @return [p.description(false)/][/for][/template]
+[template public comParamOut(o : soa::Operation) post(self.trim())]
+  [for (p : soa::Parameter | o.output)]
+    @return [p.description(false)/]
+  [/for]
+[/template]
 
 [comment : Specific for REST operations. /]
-[template public comRSFaults(o : soa::Operation)]
+[template public comRSFaults(o : soa::Operation) post(self.trim())]
   [for (p : soa::Parameter | o.fault)]
-        * @throws [p.statusCode/] : [p.description(false)/]
+    @throws [p.statusCode/] : [p.description(false)/]
   [/for]
 [/template]
 

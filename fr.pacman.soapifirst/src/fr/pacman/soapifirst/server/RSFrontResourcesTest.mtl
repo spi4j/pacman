@@ -35,7 +35,6 @@
     
   [/protected]
   
-  
   /**
    * Classe utilitaire pour faciliter l'ensemble des tests JUnit. 
    * Elle permet principalement :
@@ -273,18 +272,17 @@
   	
   		// for pretty error printing
   		[protected (c.getUserCodeId('for pretty error printing')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
-      		
-      		['str builder'.apply_variableFinal()/].append("\n\nCode retour  : ").append(['exception'.apply_parameterMethodClassicIn()/].['status code'.apply_methodGet()/]());
-      		['str builder'.apply_variableFinal()/].append(" - ").append(['exception'.apply_parameterMethodClassicIn()/].getMessage()).append("\nURI          : ");
-      		['str builder'.apply_variableFinal()/].append(['exception'.apply_parameterMethodClassicIn()/].['called uri'.apply_methodGet()/]()).append("\nInformations : ");
-      		['str builder'.apply_variableFinal()/].append(['exception'.apply_parameterMethodClassicIn()/].['additional info'.apply_methodGet()/]()).append("\n\n");
-      		
-      		return ['str builder'.apply_variableFinal()/].toString();
-      	
-    [/protected]
-  
+
+  		  final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+
+  		  ['str builder'.apply_variableFinal()/].append("\n\nCode retour  : ").append(['exception'.apply_parameterMethodClassicIn()/].['status code'.apply_methodGet()/]());
+  		  ['str builder'.apply_variableFinal()/].append(" - ").append(['exception'.apply_parameterMethodClassicIn()/].getMessage()).append("\nURI          : ");
+  		  ['str builder'.apply_variableFinal()/].append(['exception'.apply_parameterMethodClassicIn()/].['called uri'.apply_methodGet()/]()).append("\nInformations : ");
+  		  ['str builder'.apply_variableFinal()/].append(['exception'.apply_parameterMethodClassicIn()/].['additional info'.apply_methodGet()/]()).append("\n\n");
+
+  		  return ['str builder'.apply_variableFinal()/].toString();
+
+  		[/protected]
   	}
   
   	/**
@@ -302,30 +300,29 @@
   		
   		// for display response
   		[protected (c.getUserCodeId('for display response')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		// Parsing de la grappe d'objets sur l'entité retournée.
-      		final Gson ['gson parser'.apply_variableFinal()/] = new GsonBuilder()
-      				.generateNonExecutableJson()
-      				.serializeSpecialFloatingPointValues()
-      				.enableComplexMapKeySerialization()
-      				.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE_WITH_SPACES)
-      				.setLongSerializationPolicy(LongSerializationPolicy.STRING)
-      				.setDateFormat("dd-MM-yyyy'T'HH:mm:ssXXX")
-      				.setPrettyPrinting()
-      				.serializeNulls()
-      				.create(); 
-      
-      		// Création d'une chaine de caractères lisible pour l'utilisateur.
-      		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
-      		['str builder'.apply_variableFinal()/].append(['pretty operation printing'.apply_methodGet()/](['current test method name'.apply_attributeStatic()/]));
-      		['str builder'.apply_variableFinal()/].append(['pretty headers printing'.apply_methodGet()/]([c.buildRSFrontResourcesContextHolder()/].['headers'.apply_methodGet()/]()));
-      		['str builder'.apply_variableFinal()/].append(['pretty entity printing'.apply_methodGet()/](['gson parser'.apply_variableFinal()/].toJson(['entity'.apply_parameterMethodClassicIn()/])));
-      		
-      		// Ecriture de la chaine complète sur la console.
-      		['test log'.apply_attributeFinalStatic()/].info(['str builder'.apply_variableFinal()/].toString());
-      
-    [/protected]
-  
+
+  		  // Parsing de la grappe d'objets sur l'entité retournée.
+  		  final Gson ['gson parser'.apply_variableFinal()/] = new GsonBuilder()
+  		  		.generateNonExecutableJson()
+  		  		.serializeSpecialFloatingPointValues()
+  		  		.enableComplexMapKeySerialization()
+  		  		.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE_WITH_SPACES)
+  		  		.setLongSerializationPolicy(LongSerializationPolicy.STRING)
+  		  		.setDateFormat("dd-MM-yyyy'T'HH:mm:ssXXX")
+  		  		.setPrettyPrinting()
+  		  		.serializeNulls()
+  		  		.create(); 
+
+  		  // Création d'une chaine de caractères lisible pour l'utilisateur.
+  		  final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+  		  ['str builder'.apply_variableFinal()/].append(['pretty operation printing'.apply_methodGet()/](['current test method name'.apply_attributeStatic()/]));
+  		  ['str builder'.apply_variableFinal()/].append(['pretty headers printing'.apply_methodGet()/]([c.buildRSFrontResourcesContextHolder()/].['headers'.apply_methodGet()/]()));
+  		  ['str builder'.apply_variableFinal()/].append(['pretty entity printing'.apply_methodGet()/](['gson parser'.apply_variableFinal()/].toJson(['entity'.apply_parameterMethodClassicIn()/])));
+
+  		  // Ecriture de la chaine complète sur la console.
+  		  ['test log'.apply_attributeFinalStatic()/].info(['str builder'.apply_variableFinal()/].toString());
+
+  		[/protected]
   	}
   
   	/**
@@ -340,37 +337,36 @@
   		
   		// for pretty headers printing
   		[protected (c.getUserCodeId('for pretty headers printing')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		if([c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()){
-      			// Création d'une chaine de caractères lisible pour l'utilisateur.
-      			final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();	
-      			
-      			// Affichage des en-têtes pour le contexte de la requête.
-      			['str builder'.apply_variableFinal()/].append("\nEn-têtes : REQUEST   *************************************************");
-      			for (Entry<String, List<Object>> ['entry'.apply_variableDefault()/] : ['headers'.apply_parameterMethodClassicIn()/]
-      				.['request headers'.apply_methodGet()/]().entrySet() ){
-      				['pretty headers printing'.apply_methodDefault()/](['str builder'.apply_variableDefault()/], ['entry'.apply_variableDefault()/]);
-      			}
-      
-      			// Cas spécifique du serveur injoignable, aucun élément de réponse en provenance du serveur.
-      			if(null == ['headers'.apply_parameterMethodClassicIn()/].['response headers'.apply_methodGet()/]()) {
-      				['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
-      				return ['str builder'.apply_variableFinal()/].toString();
-      			}
-      			
-      			// Affichage des en-têtes pour le contexte de la réponse.
-      			['str builder'.apply_variableFinal()/].append("\nEn-têtes : RESPONSE   *************************************************");
-      			for (Entry<String, List<String>> ['entry'.apply_variableDefault()/] : ['headers'.apply_parameterMethodClassicIn()/]
-      				.['response headers'.apply_methodGet()/]().entrySet() ){
-      				['pretty headers printing'.apply_methodDefault()/](['str builder'.apply_variableDefault()/], ['entry'.apply_variableDefault()/]);
-      			}
-      			['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
-      			return ['str builder'.apply_variableFinal()/].toString();
-      		}
-      		return "";
-      	
-    [/protected]
-  
+
+  		  if([c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()){
+  		  	// Création d'une chaine de caractères lisible pour l'utilisateur.
+  		  	final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();	
+
+  		  	// Affichage des en-têtes pour le contexte de la requête.
+  		  	['str builder'.apply_variableFinal()/].append("\nEn-têtes : REQUEST   *************************************************");
+  		  	for (Entry<String, List<Object>> ['entry'.apply_variableDefault()/] : ['headers'.apply_parameterMethodClassicIn()/]
+  		  		.['request headers'.apply_methodGet()/]().entrySet() ){
+  		  		['pretty headers printing'.apply_methodDefault()/](['str builder'.apply_variableDefault()/], ['entry'.apply_variableDefault()/]);
+  		  	}
+
+  		  	// Cas spécifique du serveur injoignable, aucun élément de réponse en provenance du serveur.
+  		  	if(null == ['headers'.apply_parameterMethodClassicIn()/].['response headers'.apply_methodGet()/]()) {
+  		  		['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
+  		  		return ['str builder'.apply_variableFinal()/].toString();
+  		  	}
+
+  		  	// Affichage des en-têtes pour le contexte de la réponse.
+  		  	['str builder'.apply_variableFinal()/].append("\nEn-têtes : RESPONSE   *************************************************");
+  		  	for (Entry<String, List<String>> ['entry'.apply_variableDefault()/] : ['headers'.apply_parameterMethodClassicIn()/]
+  		  		.['response headers'.apply_methodGet()/]().entrySet() ){
+  		  		['pretty headers printing'.apply_methodDefault()/](['str builder'.apply_variableDefault()/], ['entry'.apply_variableDefault()/]);
+  		  	}
+  		  	['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
+  		  	return ['str builder'.apply_variableFinal()/].toString();
+  		  }
+  		  return "";
+
+  		[/protected]
   	}
   
   	/**
@@ -387,16 +383,15 @@
   	
   		// for pretty headers printing builder
   		[protected (c.getUserCodeId('for pretty headers printing builder')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		['str builder'.apply_parameterMethodClassicIn()/].append("\n           ");
-      		['str builder'.apply_parameterMethodClassicIn()/].append(['entry'.apply_parameterMethodClassicIn()/].getKey());
-      		['str builder'.apply_parameterMethodClassicIn()/].append(" : ");
-      		['str builder'.apply_parameterMethodClassicIn()/].append(['entry'.apply_parameterMethodClassicIn()/].getValue());
-      
-      		return ['str builder'.apply_parameterMethodClassicIn()/];
-      
-    [/protected]
-  
+
+  		  ['str builder'.apply_parameterMethodClassicIn()/].append("\n           ");
+  		  ['str builder'.apply_parameterMethodClassicIn()/].append(['entry'.apply_parameterMethodClassicIn()/].getKey());
+  		  ['str builder'.apply_parameterMethodClassicIn()/].append(" : ");
+  		  ['str builder'.apply_parameterMethodClassicIn()/].append(['entry'.apply_parameterMethodClassicIn()/].getValue());
+
+  		  return ['str builder'.apply_parameterMethodClassicIn()/];
+
+  		[/protected]
   	}
   
   	/**
@@ -408,21 +403,20 @@
   		
   		// for pretty operation printing
   		[protected (c.getUserCodeId('for pretty operation printing')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
-      		['str builder'.apply_variableFinal()/].append("\n\n");
-      		['str builder'.apply_variableFinal()/].append("**********************************************************************\n");
-      		['str builder'.apply_variableFinal()/].append("Classe   : ").append(['current test class name'.apply_attributeStatic()/]).append(".\n");
-      		['str builder'.apply_variableFinal()/].append("Méthode  : ").append(['operation'.apply_parameterMethodClassicIn()/]).append(".");
-      		
-      		if(![c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()) {
-      			['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
-      		}
-      
-      		return ['str builder'.apply_variableFinal()/].toString();
-      
-    [/protected]
-  
+
+  		  final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
+  		  ['str builder'.apply_variableFinal()/].append("\n\n");
+  		  ['str builder'.apply_variableFinal()/].append("**********************************************************************\n");
+  		  ['str builder'.apply_variableFinal()/].append("Classe   : ").append(['current test class name'.apply_attributeStatic()/]).append(".\n");
+  		  ['str builder'.apply_variableFinal()/].append("Méthode  : ").append(['operation'.apply_parameterMethodClassicIn()/]).append(".");
+
+  		  if(![c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()) {
+  		  	['str builder'.apply_variableFinal()/].append("\n**********************************************************************");
+  		  }
+
+  		  return ['str builder'.apply_variableFinal()/].toString();
+
+  		[/protected]
   	}
   
   	/**
@@ -451,23 +445,22 @@
   		 
   		// for pretty entity printing
   		[protected (c.getUserCodeId('for pretty entity printing')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		return ['json serialization'.apply_parameterMethodClassicIn()/]
-      				.trim()
-      				.replace(")]}'\n{", "\n\r")
-      				.replaceAll("\"(.*)\":", "$1 :")
-      				.replaceAll("\n( *)\\},\n *\\{", ['new record'.apply_methodDefault()/]())
-      				.replaceAll("(\\['['/] *\\n)( *)\\{", ['first record'.apply_methodDefault()/]())
-      				.replaceAll("['['/]\\{\\}]", "")
-      				.replaceAll(",(\n)", "$1")
-      				.replaceAll("(null),", "$1")
-      				.replaceAll("\n *\n", "\n")
-      				.replaceAll("(\n *)_", "$1") 		//Si norme SAFRAN.
-      				.replaceAll("<!NLE>|</!NLE>","\n") 	//Espacement pour les listes.
-      				.replaceAll("\\}$", "");
-      
-    [/protected]
-  
+
+  		  return ['json serialization'.apply_parameterMethodClassicIn()/]
+  		  		.trim()
+  		  		.replace(")]}'\n{", "\n\r")
+  		  		.replaceAll("\"(.*)\":", "$1 :")
+  		  		.replaceAll("\n( *)\\},\n *\\{", ['new record'.apply_methodDefault()/]())
+  		  		.replaceAll("(\\['['/] *\\n)( *)\\{", ['first record'.apply_methodDefault()/]())
+  		  		.replaceAll("['['/]\\{\\}]", "")
+  		  		.replaceAll(",(\n)", "$1")
+  		  		.replaceAll("(null),", "$1")
+  		  		.replaceAll("\n *\n", "\n")
+  		  		.replaceAll("(\n *)_", "$1") 		//Si norme SAFRAN.
+  		  		.replaceAll("<!NLE>|</!NLE>","\n") 	//Espacement pour les listes.
+  		  		.replaceAll("\\}$", "");
+
+  		[/protected]
   	}
   	
   	/**
@@ -479,15 +472,14 @@
   		
   		// for new record
   		[protected (c.getUserCodeId('for new record')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		StringBuilder ['str builder'.apply_variableDefault()/] = new StringBuilder();
-      		['str builder'.apply_variableDefault()/].append("<!NLE>\n$1  -----------------------------------------------\n");
-      		['str builder'.apply_variableDefault()/].append("$1  ---------- NOUVEL ELEMENT DE LISTE ------------\n");
-      		['str builder'.apply_variableDefault()/].append("$1  -----------------------------------------------</!NLE>");
-      		return ['str builder'.apply_variableDefault()/].toString();
-      
-    [/protected]
-  
+
+  		  StringBuilder ['str builder'.apply_variableDefault()/] = new StringBuilder();
+  		  ['str builder'.apply_variableDefault()/].append("<!NLE>\n$1  -----------------------------------------------\n");
+  		  ['str builder'.apply_variableDefault()/].append("$1  ---------- NOUVEL ELEMENT DE LISTE ------------\n");
+  		  ['str builder'.apply_variableDefault()/].append("$1  -----------------------------------------------</!NLE>");
+  		  return ['str builder'.apply_variableDefault()/].toString();
+
+  		[/protected]
   	}
   
   	/**
@@ -521,7 +513,6 @@
     
   [/protected]
   
-  
   /**
    * Classe de test JUnit pour la ressource frontale (client) : '[s.buildRSFrontResourceTestClassName()/]'.
    *
@@ -541,17 +532,16 @@
     
     	// for global input parameters declaration
     	[protected (s.getUserCodeId('for global input parameters declaration')) startTagPrefix('// ') endTagPrefix('// ')]
-       
-       [for (p : soa::Parameter | s.ownedInterface.ownedOperations->asSequence()->collect(temp1 | temp1.input)->sortedBy(temp2 | temp2.name))]
-         [let paramName : String = p.getGlobalInputParamName()]
-           [if (not (paramName = null))]
-             	private [p.addInitInputParam(true, true, paramName)/]
-           [/if]
-         [/let]
-       [/for]
-       
-     [/protected]
-    
+
+    	  [for (p : soa::Parameter | s.ownedInterface.ownedOperations->asSequence()->collect(temp1 | temp1.input)->sortedBy(temp2 | temp2.name))]
+    	    [let paramName : String = p.getGlobalInputParamName()]
+    	      [if (not (paramName = null))]
+    	        	private [p.addInitInputParam(true, true, paramName)/]
+    	      [/if]
+    	    [/let]
+    	  [/for]
+
+    	[/protected]
   [/if]
   
   	/**
@@ -563,23 +553,25 @@
   
   		// for init
   		[protected (s.getUserCodeId('for init')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      		[s.buildRSFrontResourceTestHelperClassName()/].['register class'.apply_methodDefault()/](
-      			[s.buildRSFrontResourceTestClassName()/].class);
-      
-      [if (s.isSecured() and not s.isDefinedForAuthentication())]
-        		// Récupération du token applicatif (Hors Passerelle PES).
-        		[s.buildRSFrontResourceTestHelperClassName()/].['authenticate'.apply_methodDefault()/]();
-      [/if]
-      
-    [/protected]
-  
+
+  		  [s.buildRSFrontResourceTestHelperClassName()/].['register class'.apply_methodDefault()/](
+  		  	[s.buildRSFrontResourceTestClassName()/].class);
+
+  		  [if (s.isSecured() and not s.isDefinedForAuthentication())]
+  		    // Récupération du token applicatif (Hors Passerelle PES).
+  		    [s.buildRSFrontResourceTestHelperClassName()/].['authenticate'.apply_methodDefault()/]();
+  		  [/if]
+
+  		[/protected]
   	}
   
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
-       /**
-       * [o.description/]
-     [o.getComParamsIn()/][o.comParamOut()/][o.comRSFaults()/]    */
+    	/**
+    	 * [o.description/]
+    	 * [o.getComParamsIn()/]
+    	 * [o.comParamOut()/]
+    	 * [o.comRSFaults()/]
+    	 */
     	@Test
     	@SuppressWarnings("unused")
     	public void [('test ' + o.name).apply_methodDefault()/]() {
@@ -590,23 +582,21 @@
     	
     			// for [o.userCodeForOperation()/]
     			[protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-         
-         			[o.addInitInputParamsInIfExist(s)/]
-         
-       [/protected]
-    
-    
+
+    			  [o.addInitInputParamsInIfExist(s)/]
+
+    			[/protected]
+
     			[s.writeServiceCallForOperation(o)/]
-    
+
     			[o.writeNotNullAssertion()/]
-    
+
     			// for response [o.userCodeForOperation()/]
     			[protected (o.getUserCodeId('for response ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-         			
-         			[o.writePostMethods()/]
-         
-       [/protected]
-    
+
+    			  [o.writePostMethods()/]
+
+    			[/protected]
     
     		} catch ([o.buildRSFrontExceptionClassName()/] ['exception'.apply_parameterMethodClassicIn()/]) {
     			
@@ -673,8 +663,8 @@
 
 [comment : Write the name of the selected operation for the service class. /]
 [template private writeOperation(o : soa::Operation, b : Boolean, s : soa::Service) post(self.trim())]
-  [o.name.apply_methodDefault()/]([o.addParameterForOperation(b, s)/][if (o.isSecured())][o.addAuthTokenForOperation()/][/if]
-  )[/template]
+  [o.name.apply_methodDefault()/]([o.addParameterForOperation(b, s)/][if (o.isSecured())][o.addAuthTokenForOperation()/][/if])
+[/template]
 
 [comment : Add the specific parameter for token authorization (1/2).  /]
 [template private addAuthTokenForOperation(o : soa::Operation) post(self.trim())]
