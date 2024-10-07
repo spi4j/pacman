@@ -16,9 +16,8 @@
   [r.licence()/]
   package [r.getApplicationPackage()/];
   [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
-    
+
   [/protected]
-  
   
   [r.comClass('Paramétrage de l\'application')/]
   public interface [r.buildParamAppliClassName()/]
@@ -29,8 +28,7 @@
   
      // Constantes
      [protected (r.getUserCodeId('Constantes')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]

@@ -32,7 +32,6 @@
     
   [/protected]
   
-  
   /**
    * Classe de test du dao '[e.buildDaoInterfaceName()/]'.
    * @author [e.getAuthorName()/]
@@ -40,7 +39,6 @@
   // Annotation for class
   [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
-  
   public class [e.buildDaoTestClassName()/] extends [e.getClassNameForBeanTester_Abs()/]
   {
   
@@ -80,7 +78,6 @@
         // set up before class
         [protected (e.getUserCodeId('set up before class')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
-  
      }
   
      /**
@@ -94,7 +91,6 @@
         // set up
         [protected (e.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
-  
      }
   
   [if (e.useTestsCRUD())]
@@ -107,7 +103,6 @@
         */
        @Test
        public void ['test find all'.apply_methodDefault()/] ()[if (not referentiel)] throws Throwable[/if]
-    
        {
     [if (referentiel)]
             final List<[e.buildEntityInterfaceName()/]> ['all'.apply_variableFinal()/] = ['dao'.apply_attributeStatic()/].findAll();
@@ -129,9 +124,8 @@
     [/if]
           // findAll assertions
           [protected (e.getUserCodeId('findAll assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           [/protected]
-    
        }
     
     [if (not referentiel)]
@@ -147,24 +141,22 @@
       
             // create
             [protected (e.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
-                    // TODO renseigner donnees de test
+              // TODO renseigner donnees de test
               [for (a : environment::Attribute | e.attributesNoPk())]
                 [if (not a.isComputed())]
-                        ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
+                  ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
                 [/if]
               [/for]
-                    [e.completeTestCreateMethod()/]
+              [e.completeTestCreateMethod()/]
             [/protected]
-      
       
       	  [e.finalizeTestCreateMethod('entity')/]
       	  assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
       
             // create assertions
             [protected (e.getUserCodeId('create assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-      
          }
       
       [if (e.hasMandatoryFieldsForDaoTest())]
@@ -181,15 +173,14 @@
         
               // create null on mandatory
               [protected (e.getUserCodeId('create null on mandatory')) startTagPrefix('// ') endTagPrefix('// ')]
-                      // TODO renseigner donnees de test
+                // TODO renseigner donnees de test
                 [for (a : environment::Attribute | e.attributesNoPk())]
                   [if (not a.isComputed())]
-                          ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else]null[/if]);
+                    ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else]null[/if]);
                   [/if]
                 [/for]
-                      [e.completeTestCreateMethod()/]
+                [e.completeTestCreateMethod()/]
               [/protected]
-            
         
               try{
                 [e.finalizeTestCreateMethod('entity')/]
@@ -214,24 +205,22 @@
         
               // create with null values
               [protected (e.getUserCodeId('create with null values')) startTagPrefix('// ') endTagPrefix('// ')]
-                      // TODO renseigner donnees de test
+                // TODO renseigner donnees de test
                 [for (a : environment::Attribute | e.attributesNoPk())]
                   [if (not a.isComputed())]
-                          ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[elseif (a.isMandatory())][a.genPropertyType().defaultValueForColumnType()/][else]null[/if]);
+                    ['entity'.apply_variableDefault()/].[if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]setIdentifiant[else][a.nameSimpleProperty().apply_methodSet()/][/if]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[elseif (a.isMandatory())][a.genPropertyType().defaultValueForColumnType()/][else]null[/if]);
                   [/if]
                 [/for]
-                      [e.completeTestCreateMethod()/]
+                [e.completeTestCreateMethod()/]
               [/protected]
-        
-        
+
         	  [e.finalizeTestCreateMethod('entity')/]
         	  assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
-        
+
               // create assertions with null values
               [protected (e.getUserCodeId('create assertions with null values')) startTagPrefix('// ') endTagPrefix('// ')]
-                
+
               [/protected]
-        
            }
       [/if]
     [/if]
@@ -259,12 +248,11 @@
           assertNotNull(['entity'.apply_variableDefault()/], "L'entity devrait exister dans le referentiel");
           assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
           assertNotNull(['entity'.apply_variableDefault()/].toString(), "L'entity creee devrait avoir un toString");
-    
+
           // findById assertions
           [protected (e.getUserCodeId('findById assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           [/protected]
-    
        }
     
     [if (not referentiel)]
@@ -276,141 +264,139 @@
          @Test
          public void ['test all field inserted'.apply_methodDefault()/] () throws Throwable
          {
-      
+
             final [e.buildEntityInterfaceName()/] ['entity insert'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
-      
+
             // findAllFieldInserted create
             [protected (e.getUserCodeId('findAllFieldInserted create')) startTagPrefix('// ') endTagPrefix('// ')]
-                    // TODO renseigner donnees de test
+              // TODO renseigner donnees de test
               [for (a : environment::Attribute | e.attributesNoPk())]
-                      ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
+                ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
               [/for]
               [for (a : environment::Attribute | e.getInheritDtoAttributes())]
-                      ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
+                ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodSet()/]([if (a.type.oclIsTypeOf(environment::Enumeration))][a.genPropertyType()/].['get enum by value'.apply_methodDefault()/]("[a.type.oclAsType(environment::Enumeration).literals->first().name/]")[else][a.genPropertyType().defaultValueForColumnType()/][/if]);
               [/for]
               [if (e.hasAutomaticColumns())]
                 [for (columnProp : String | e.get_automaticColumnsProperties())]
-                        ['entity insert'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodSet()/]([e.get_typeColumn(columnProp).defaultValueForColumnType()/]);
+                  ['entity insert'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodSet()/]([e.get_typeColumn(columnProp).defaultValueForColumnType()/]);
                 [/for]
               [/if]
               [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp1 | temp1.name.toLower()))]
                 [if (r.containingType.oclAsType(entity::Entity) = e)]
-                        ['entity insert'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodSet()/](1L);
+                  ['entity insert'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodSet()/](1L);
                 [/if]
               [/for]
               [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp2 | temp2.name.toLower()))]
                 [if (r.oppositeOf = null)]
-                        ['entity insert'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodSet()/][r.namePK_ID()/](1L);
+                  ['entity insert'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodSet()/][r.namePK_ID()/](1L);
                 [/if]
               [/for]
             [/protected]
-      
-      
+
             ['dao'.apply_attributeStatic()/].create(['entity insert'.apply_variableDefault()/]);
             ['set crud id'.apply_methodDefault()/](['entity insert'.apply_variableDefault()/].getId());
             final [e.buildEntityInterfaceName()/] ['entity read'.apply_variableDefault()/] = ['dao'.apply_attributeStatic()/].findById(crudId);
-      
+
             // findAllFieldInserted assertions
             [protected (e.getUserCodeId('findAllFieldInserted assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-                    HashCodeBuilder ['hash code builder entity insert'.apply_variableDefault()/] = new HashCodeBuilder();
-              
+              HashCodeBuilder ['hash code builder entity insert'.apply_variableDefault()/] = new HashCodeBuilder();
+
               [for (a : environment::Attribute | e.attributesNoPk())]
                 [if (not a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
+                  ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [for (a : environment::Attribute | e.getInheritDtoAttributes())]
                 [if (not a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
+                  ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [if (e.hasAutomaticColumns())]
                 [for (columnProp : String | e.get_automaticColumnsProperties())]
-                        ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/]);
+                  ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/]);
                 [/for]
               [/if]
               [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp3 | temp3.name.toLower()))]
                 [if (r.containingType.oclAsType(entity::Entity) = e)]
-                        ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/]());
+                  ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp4 | temp4.name.toLower()))]
                 [if (r.oppositeOf = null)]
-                        ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/]());
+                  ['hash code builder entity insert'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/]());
                 [/if]
               [/for]
-              
-                    int  ['hash code entity insert'.apply_variableDefault()/] = ['hash code builder entity insert'.apply_variableDefault()/].toHashCode();
-                    HashCodeBuilder ['hash code builder entity read'.apply_variableDefault()/] = new HashCodeBuilder();
-              
+
+              int  ['hash code entity insert'.apply_variableDefault()/] = ['hash code builder entity insert'.apply_variableDefault()/].toHashCode();
+              HashCodeBuilder ['hash code builder entity read'.apply_variableDefault()/] = new HashCodeBuilder();
+
               [for (a : environment::Attribute | e.attributesNoPk())]
                 [if (not a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
+                  ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [for (a : environment::Attribute | e.getInheritDtoAttributes())]
                 [if (not a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
+                  ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [if (e.hasAutomaticColumns())]
                 [for (columnProp : String | e.get_automaticColumnsProperties())]
-                        ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/]);
+                  ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/]);
                 [/for]
               [/if]
               [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp5 | temp5.name.toLower()))]
                 [if (r.containingType.oclAsType(entity::Entity) = e)]
-                        ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/]());
+                  ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp6 | temp6.name.toLower()))]
                 [if (r.oppositeOf = null)]
-                        ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/]());
+                  ['hash code builder entity read'.apply_variableDefault()/].append(['entity read'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/]());
                 [/if]
               [/for]
-              
-                    int  ['hash code entity read'.apply_variableDefault()/] = ['hash code builder entity read'.apply_variableDefault()/].toHashCode();
-                    EqualsBuilder ['equals builder'.apply_variableDefault()/] = new EqualsBuilder();
-              
+
+              int  ['hash code entity read'.apply_variableDefault()/] = ['hash code builder entity read'.apply_variableDefault()/].toHashCode();
+              EqualsBuilder ['equals builder'.apply_variableDefault()/] = new EqualsBuilder();
+
               [for (a : environment::Attribute | e.attributesNoPk())]
                 [if (not a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/](), ['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
+                  ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/](), ['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [for (a : environment::Attribute | e.getInheritDtoAttributes())]
                 [if (not a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/](), ['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
+                  ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/](), ['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [if (e.hasAutomaticColumns())]
                 [for (columnProp : String | e.get_automaticColumnsProperties())]
-                        ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/], ['entity read'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/]);
+                  ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/], ['entity read'.apply_variableDefault()/].[e.get_nameColumn(columnProp).toLower().apply_methodGet()/]()[e.completeXtopSupValue(columnProp)/]);
                 [/for]
               [/if]
               [for (r : environment::Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(temp7 | temp7.name.toLower()))]
                 [if (r.containingType.oclAsType(entity::Entity) = e)]
-                        ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/](), ['entity read'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/]());
+                  ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/](), ['entity read'.apply_variableDefault()/].[r.nameSimpleProperty().apply_methodGet()/]());
                 [/if]
               [/for]
               [for (r : environment::Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(temp8 | temp8.name.toLower()))]
                 [if (r.oppositeOf = null)]
-                        ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/](), ['entity read'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/]());
+                  ['equals builder'.apply_variableDefault()/].append(['entity insert'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/](), ['entity read'.apply_variableDefault()/].[r.nameSimplePropertyInverse().apply_methodGet()/][r.namePK_ID()/]());
                 [/if]
               [/for]
-              
-                    assertEquals(['hash code entity insert'.apply_variableDefault()/],['hash code entity read'.apply_variableDefault()/]);
-                    assertTrue(['equals builder'.apply_variableDefault()/].isEquals());
-              
+
+              assertEquals(['hash code entity insert'.apply_variableDefault()/],['hash code entity read'.apply_variableDefault()/]);
+              assertTrue(['equals builder'.apply_variableDefault()/].isEquals());
+
               [for (a : environment::Attribute | e.attributesNoPk())]
                 [if (a.genPropertyType().equalsIgnoreCase('Binary'))]
-                        byte ['['/]][('entity insert byte ' + a.name).apply_variableDefault()/] = ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]().toByteArray();
-                        Blob [('entity read ' + a.name).apply_variableDefault()/] = ['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]().getBlobSql();
-                        byte ['['/]][('entity read byte ' + a.name).apply_variableDefault()/] = [('entity read ' + a.name).apply_variableDefault()/].getBytes(1, (int)[('entity read ' + a.name).apply_variableDefault()/].length());
-                        assertTrue(Arrays.equals([('entity insert byte ' + a.name).apply_variableDefault()/], [('entity read byte ' + a.name).apply_variableDefault()/]));
+                  byte ['['/]][('entity insert byte ' + a.name).apply_variableDefault()/] = ['entity insert'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]().toByteArray();
+                  Blob [('entity read ' + a.name).apply_variableDefault()/] = ['entity read'.apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]().getBlobSql();
+                  byte ['['/]][('entity read byte ' + a.name).apply_variableDefault()/] = [('entity read ' + a.name).apply_variableDefault()/].getBytes(1, (int)[('entity read ' + a.name).apply_variableDefault()/].length());
+                  assertTrue(Arrays.equals([('entity insert byte ' + a.name).apply_variableDefault()/], [('entity read byte ' + a.name).apply_variableDefault()/]));
                 [/if]
               [/for]
             [/protected]
-      
          }
       
     [/if]
@@ -441,9 +427,8 @@
     
           // findByColumn assertions
           [protected (e.getUserCodeId('findByColumn assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           [/protected]
-    
        }
     
        /**
@@ -477,9 +462,8 @@
     
           // findByCriteria assertions
           [protected (e.getUserCodeId('findByCriteria assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           [/protected]
-    
        }
     
     [if (not referentiel)]
@@ -497,9 +481,8 @@
       
             // update
             [protected (e.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-      
       
             ['dao'.apply_attributeStatic()/].update(['entity'.apply_variableDefault()/]);
       
@@ -507,9 +490,8 @@
       
             // update assertions
             [protected (e.getUserCodeId('update assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-      
          }
       
          /**
@@ -531,9 +513,8 @@
       
             // delete assertions
             [protected (e.getUserCodeId('delete assertions')) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-      
          }
       
     [/if]
@@ -632,9 +613,8 @@
   
         // test validate
         [protected (e.getUserCodeId('test validate')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
         // derniere validation avec entity valide
         try
@@ -675,7 +655,6 @@
         // tear down
         [protected (e.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
-  
      }
   
   [for (a : environment::Attribute | e.attributesNoPk())]
@@ -687,11 +666,10 @@
          {
             // getRandom_[a.type.name.toUpperFirst()/]
             [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
                     return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
-              
+
             [/protected]
-      
       
          }
     [/if]
@@ -699,9 +677,8 @@
   
      // specific service test
      [protected (e.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

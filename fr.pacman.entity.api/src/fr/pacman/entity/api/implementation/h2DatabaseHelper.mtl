@@ -30,7 +30,6 @@
     
   [/protected]
   
-  
   [r.comClass('Classe utilitaire dinitialisation de la base de données à partir des scripts générés (pour H2 a priori)')/]
   public final class [r.buildH2DatabaseHelperClassName()/] extends H2DatabaseHelper
   {
@@ -50,45 +49,44 @@
      {
         // Ajout de scripts
         [protected (r.getUserCodeId('Ajout de scripts')) startTagPrefix('// ') endTagPrefix('// ')]
-                // Il est possible d'aller chercher les scripts SQL en fonction de leur emplacement par rapport au code source de cette classe, avec le code suivant :
-                // (Il faut utiliser autant de fois getParentFile() qu'il n'existe de répertoires entre la racine des sources et la racine du projet)
-                // (Exemple : 2 fois getParentFile() pour des sources dans src/main/java)
-                // final String ['sqlPath'.apply_variableFinal()/] = new File((new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile().getParentFile()), "[r.getServerSQLDir()/]").getPath();
-                // addScript(['sqlPath'.apply_variableFinal()/] + "/create_tables_[r.getApplicationName()/]_H2.sql");
-                // addScript(['sqlPath'.apply_variableFinal()/] + "/init_data_[r.getApplicationName()/].sql");
-          
-                // on ajoute ../[ if r.getServerProjectName() <> null then r.getServerProjectName() else '' endif/] pour que les scripts soient visibles de tous les sous-projets
-          
+          // Il est possible d'aller chercher les scripts SQL en fonction de leur emplacement par rapport au code source de cette classe, avec le code suivant :
+          // (Il faut utiliser autant de fois getParentFile() qu'il n'existe de répertoires entre la racine des sources et la racine du projet)
+          // (Exemple : 2 fois getParentFile() pour des sources dans src/main/java)
+          // final String ['sqlPath'.apply_variableFinal()/] = new File((new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile().getParentFile()), "[r.getServerSQLDir()/]").getPath();
+          // addScript(['sqlPath'.apply_variableFinal()/] + "/create_tables_[r.getApplicationName()/]_H2.sql");
+          // addScript(['sqlPath'.apply_variableFinal()/] + "/init_data_[r.getApplicationName()/].sql");
+
+          // on ajoute ../[ if r.getServerProjectName() <> null then r.getServerProjectName() else '' endif/] pour que les scripts soient visibles de tous les sous-projets
+
           [if (r.useH2EmbeddedDatabase())]
-            	  String sqlPath = new File((new File(getClass().getProtectionDomain().getCodeSource()
-            			  .getLocation().getFile()).getParentFile().getParentFile()), "src/main/sql/").getPath();
-            
-            	  // Permet de retrouver la racine du répertoire une fois l'application déployée,
-            	  // sachant que pour l'instant, le seul serveur embarqué pleinement fonctionnel 
-            	  // est le serveur tomcat.
-            	  if (sqlPath.indexOf("tomcat.") > 0) {
-            		   sqlPath = sqlPath.substring(0, sqlPath.indexOf("tomcat.")) + "conf";
-            	  }
-            	   	
-            	  addScript(sqlPath + "/create_tables_[r.getApplicationName()/]_H2.sql");
-            	  addScript(sqlPath +  "/init_data_[r.getApplicationName()/].sql");
+              String sqlPath = new File((new File(getClass().getProtectionDomain().getCodeSource()
+                 .getLocation().getFile()).getParentFile().getParentFile()), "src/main/sql/").getPath();
+
+              // Permet de retrouver la racine du répertoire une fois l'application déployée,
+              // sachant que pour l'instant, le seul serveur embarqué pleinement fonctionnel 
+              // est le serveur tomcat.
+              if (sqlPath.indexOf("tomcat.") > 0) {
+                 sqlPath = sqlPath.substring(0, sqlPath.indexOf("tomcat.")) + "conf";
+              }
+               	
+              addScript(sqlPath + "/create_tables_[r.getApplicationName()/]_H2.sql");
+              addScript(sqlPath +  "/init_data_[r.getApplicationName()/].sql");
           [else]
             [if (r.hasAdditionnalLibraries())]
-              	  // TODO ajouter les initialisation des scripts des librairies.
+              // TODO ajouter les initialisation des scripts des librairies.
               [for (prop : String | r.getAdditionnalLibraries())]
-                      // [prop.getLibraryName(prop)/]
-                      // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]create_tables_[prop.getLibraryName(prop)/]_H2.sql");
-                      // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]init_data_[prop.getLibraryName(prop)/].sql");
+                // [prop.getLibraryName(prop)/]
+                // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]create_tables_[prop.getLibraryName(prop)/]_H2.sql");
+                // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]init_data_[prop.getLibraryName(prop)/].sql");
               [/for]
             [/if]
-            
-                  // [r.getApplicationName()/]
-                  addScript("../[ if r.getServerProjectName() <> null then r.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][r.getServerSQLDir()/]create_tables_[r.getApplicationName()/]_H2.sql");
-                  addScript("../[ if r.getServerProjectName() <> null then r.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][r.getServerSQLDir()/]init_data_[r.getApplicationName()/].sql");
+
+            // [r.getApplicationName()/]
+            addScript("../[ if r.getServerProjectName() <> null then r.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][r.getServerSQLDir()/]create_tables_[r.getApplicationName()/]_H2.sql");
+            addScript("../[ if r.getServerProjectName() <> null then r.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][r.getServerSQLDir()/]init_data_[r.getApplicationName()/].sql");
           [/if]
-          
+
         [/protected]
-  
      }
   
      /**
@@ -101,8 +99,7 @@
   
      // Methodes
      [protected (r.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]

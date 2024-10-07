@@ -39,7 +39,6 @@
     
   [/protected]
   
-  
   [e.comClass(e.roleEntity())/]
   public class [e.buildEntityImplClassName()/] [if (e.hasAutomaticColumns())]extends [e.buildAppliEntityAbstractClassName()/]<[e.genPkType()/]> [/if]implements [e.buildEntityInterfaceName()/][if (e.hasVersion())], JdbcOptimistLocked_Itf[/if]
   {
@@ -52,9 +51,8 @@
   
      // Constantes [e.buildEntityImplClassName()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // ATTRIBUTS
   
@@ -108,9 +106,8 @@
   
      // Attributs [e.buildEntityImplClassName()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // METHODES
   

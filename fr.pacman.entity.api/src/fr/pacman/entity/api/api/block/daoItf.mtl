@@ -24,7 +24,6 @@
     
   [/protected]
   
-  
   [e.comClass(e.roleDaoItf())/]
   public interface [e.buildDaoInterfaceName()/] extends [e.getClassNameForDao_Itf()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/], [e.buildEntityColumnEnumName()/]>
   {
@@ -32,9 +31,8 @@
   
      // Constantes [e.buildDaoInterfaceName()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildDaoInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // METHODES ABSTRAITES
   
@@ -50,9 +48,8 @@
   [/for]
      // Methodes [e.buildDaoInterfaceName()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildDaoInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [comment  : Write all required imports. /]

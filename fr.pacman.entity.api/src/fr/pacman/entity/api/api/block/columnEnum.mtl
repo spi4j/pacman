@@ -24,24 +24,24 @@
   XXX columnEnum.enumStruct(p : Property) SHOULDN'T BE CALLED XXX[/template]
 
 [template private enumStructAttribute(a : environment::Attribute)]
-     /** [a.nameSimpleProperty().apply_attributeEnum()/]. */
-     [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if], false)[/template]
+  /** [a.nameSimpleProperty().apply_attributeEnum()/]. */
+  [a.nameSimpleProperty().apply_attributeEnum()/]("[a.nameSimpleProperty().apply_attributeEnum()/]", "[a.nameColumn()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferenceId(r : environment::Reference, compteur : Integer)]
-     /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
-     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
+  /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
+  [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferenceId(r : environment::Reference)]
-     /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
-     [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
+  /** [r.nameSimpleProperty().apply_attributeEnum()/]. */
+  [r.nameSimpleProperty().apply_attributeEnum()/]("[r.nameSimpleProperty().apply_attributeEnum()/]", "[r.nameColumnId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferencingId(r : environment::Reference, compteur : Integer)]
-     /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
-     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
+  /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
+  [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId(compteur)/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [template private enumStructReferencingId(r : environment::Reference)]
-     /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
-     [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
+  /** [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]. */
+  [r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse().apply_attributeEnum()/][r.namePK_ID()/]", "[r.nameColumnReferencingId()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if], false)[/template]
 
 [comment sur la base de PersonneColomn_Enum en r97 /]
 [template public colomnEnum(e : entity::Entity)]
@@ -54,32 +54,42 @@
   public enum [e.buildEntityColumnEnumName()/] implements [e.getClassNameForColumnsNames_Itf()/]
   {
      /** [e.nameSimplePropertyID()/]. */
-     [e.nameSimplePropertyID()/]("[e.nameSimplePropertyID().apply_attributeDefault()/]", "[e.namePK()/]", [e.genPkType()/].class, true, -1, true)[if (not e.attributesNoPk()->isEmpty())]
-                                                                                                                                                   ,
-                                                                                                                                                   [e.attributesNoPk()->asSequence()->collect(temp1 | temp1.enumStructAttribute())->sep(',\r\n')/][/if]
-  [if (not e.getInheritDtoAttributes()->isEmpty())]
-    ,
-    [e.getInheritDtoAttributes()->asSequence()->collect(temp2 | temp2.enumStructAttribute())->sep(',\r\n')/][/if]
-  [for (ent : entity::Entity | e.entitiesReferencedOrReferencing())]
-    [if (e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1)]
-      [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
-        [if (r.oppositeOf = null and r.isMultiple())]
-          ,
-          [r.enumStructReferencingId(rIndex)/][elseif (r.containingType.oclAsType(entity::Entity) = e)]
-                                           ,
-                                           [r.enumStructReferenceId(rIndex)/][/if]
-      [/for]
-    [else]
-      [for (r : environment::Reference | e.referencesNoStarAndReferencingStarAllNavigability(ent))]
-        [if (r.oppositeOf = null and r.isMultiple())]
-          ,
-          [r.enumStructReferencingId()/][elseif (r.containingType.oclAsType(entity::Entity) = e)]
-                                          ,
-                                          [r.enumStructReferenceId()/][/if]
-      [/for]
-    [/if]
-  [/for]
-  ;
+     [(Sequence{
+		 e.nameSimplePropertyID() + '("' + e.nameSimplePropertyID().apply_attributeDefault() + '", "' + e.namePK() +'", ' + e.genPkType()+ '.class, true, -1, true)'}
+		 +  e.attributesNoPk()->asSequence().enumStructAttribute()
+		 + e.getInheritDtoAttributes()->asSequence().enumStructAttribute()
+		 + e.entitiesReferencedOrReferencing()->collect(ent |
+		     if e = ent or e.referencesNoStarAndReferencingStarAllNavigability(ent)->size() > 1 then
+		       let references = e.referencesNoStarAndReferencingStarAllNavigability(ent) in
+		         references->collect(r |
+		           if r.oppositeOf = null and r.isMultiple() then
+		             r.enumStructReferencingId(references->indexOf(r))
+		           else
+		             if r.containingType.oclAsType(entity::Entity) = e then
+		               r.enumStructReferenceId(references->indexOf(r))
+		             else
+		               null
+		             endif
+		           endif
+		         endlet
+		       )
+		     else
+		       let references = e.referencesNoStarAndReferencingStarAllNavigability(ent) in
+		         references->collect(r |
+		           if r.oppositeOf = null and r.isMultiple() then
+		             r.enumStructReferencingId()
+		           else
+		             if r.containingType.oclAsType(entity::Entity) = e then
+		               r.enumStructReferenceId()
+		             else
+		               null
+		             endif
+		           endif
+		         endlet
+		       )
+		     endif
+		   )
+	  )->filter(String)->sep(',' + ''.lineSeparator())/];
   
      /**
       * Le nom physique de la table.
