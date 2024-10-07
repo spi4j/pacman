@@ -15,7 +15,7 @@
 
 [comment encoding = UTF-8 /]
 [comment ncode une propriété en Javadoc/]
-[query private encodeJavadoc(label : String, attribute : String) : String = if not (attribute = null) and attribute.size() > 0 then ' <br>\r\n    * ' + label + attribute.replaceAll('\r\n', ' <br>\r\n    * ').replaceAll('\t', '   ').trim() else '' endif/]
+[query private encodeJavadoc(label : String, attribute : String) : String = if not (attribute = null) and attribute.size() > 0 then ' <br>' + ''.lineSeparator() + label + attribute.replaceAll('\r\n', ' <br>' +  + ''.lineSeparator()).replaceAll('\t', '   ').trim() else '' endif/]
 
 [template public reqEnum(racine : requirement::Repository)]
   [racine.reqEnumGenerique(racine.buildPackageRequirement(), 'Enumération des exigences.', 'requirement'.apply_classEnum(), 'requirement version'.apply_classTest(), racine.mainCategories->asSequence(), racine.requirementBaseCategoryLevel() - 1)/][/template]
@@ -40,7 +40,7 @@
   {
   [for (req : requirement::Requirement | categories->asSequence()->findRequirements(profondeurMax))]
        /**
-        * [req.name/] :[''.encodeJavadoc(req.statement)/]['Provenance : '.encodeJavadoc(req.rationale)/]['Critère d\'acceptance : '.encodeJavadoc(req.acceptanceCriteria)/]<br>
+        * [req.name + ' :' + ''.encodeJavadoc(req.statement) + 'Provenance : '.encodeJavadoc(req.rationale) + 'Critère d\'acceptance : '.encodeJavadoc(req.acceptanceCriteria)/]<br>
         * Voir [nomVersionTest/]#testVersion_[req.getServiceRequirementsPrefix()/][req.id/]()
         */
     [for (o : ecore::EObject | req.referencedObject)]
