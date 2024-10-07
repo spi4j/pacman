@@ -38,15 +38,10 @@
 
 [template public enumStruct(r : environment::Reference, s : environment::DTO)]
   [if (s.isReferenceNoStar(r))]
-    [if (not r.isComputed() and not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-         [r.enumStructId()/],
-    [/if]
-       [r.enumStructReference()/][elseif (s.isReferenceStar(r))]
-                                      [r.enumStructTab()/][if (s.isReferencingStar(r))]
-                                                            ,
-                                                               [r.enumStructInverseId()/][/if]
-                                 [elseif (s.isReferencingStar(r))]   [r.enumStructInverseId()/][/if]
-[/template]
+  [if (not r.isComputed() and not r.referencedType.oclAsType(environment::DTO).isNotPersistent())][r.enumStructId()/],[/if]
+  [r.enumStructReference()/][elseif (s.isReferenceStar(r))]
+  [r.enumStructTab()/][if (s.isReferencingStar(r))],[r.enumStructInverseId()/][/if][elseif (s.isReferencingStar(r))]
+  [r.enumStructInverseId()/][/if][/template]
 
 [template public enumStructId(r : environment::Reference)]
   /** [r.nameBaseReference()/][r.namePK_ID()/]. */
@@ -63,7 +58,8 @@
 [template public enumStructInverseId(r : environment::Reference)]
   /** [r.nameBaseReferenceInverse()/][r.namePK_ID()/]. */
   [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if])[/template]
-
+  
+[comment : Le template principal pour le fichier. /]
 [template public attributesEnum(d : environment::DTO)]
   [d.licence()/]
   package [d.buildPackageBusinessApiDto()/];
@@ -74,7 +70,7 @@
     [d.writeImports()/]
     
   [/protected]
-  
+  [d.navigableProperties()->size().iterInit()/]
   
   /**
    * L'énumération définissant les informations de chaque attribut pour le type '[d.nameClassDto()/]'.
@@ -82,17 +78,18 @@
    */
   public enum [d.buildAttributesEnumName()/] implements [d.getClassNameForAttributesNames_Itf()/]
   {
-  [if (d.isNotPersistent() and not d.isParent())]
+  	 [if (d.isNotPersistent() and not d.isParent())]
        // Enumeration Attributs
        [protected (d.getUserCodeId('Enumeration Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]
     
-    
-  [/if]
-    /** [d.nameENUM_PK_ID()/]. */
-    [d.nameENUM_PK_ID()/]("[d.nameENUM_PK_ID()/]", "id", [d.genPkType()/].class, true, -1)[if (not d.navigableProperties()->isEmpty())],[/if]
-    [d.navigableProperties()->asSequence()->collect(temp1 | temp1.enumStruct(d))->sep(',\r\n')/];
+  	 [/if]
+     /** [d.nameENUM_PK_ID()/]. */
+     [d.nameENUM_PK_ID()/]("[d.nameENUM_PK_ID()/]", "id", [d.genPkType()/].class, true, -1)[if (not d.navigableProperties()->isEmpty())],[/if]
+     [for (p : environment::Property | d.navigableProperties())]
+     [p.enumStruct(d)/][if (d.iterNext())],[else];[/if] 
+     [/for]
   
      /** Le nom de l'attribut. */
      private final String ['name'.apply_attributeFinal()/];
