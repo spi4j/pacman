@@ -21,7 +21,6 @@
     
   [/protected]
   
-  
   /**
    * [e.roleEnum()/]
    * @author [e.getAuthorName()/]
@@ -65,9 +64,8 @@
   
       // constructeur
       [protected (e.getUserCodeId('constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
-        	
+
       [/protected]
-  
       }
   
      /**
@@ -93,9 +91,8 @@
       
       		// get [p.substring(1, p.index(':') - 1)/]
       		[protected (e.getUserCodeId('get' + p.substring(1, p.index(':') - 1))) startTagPrefix('// ') endTagPrefix('// ')]
-          	
-        [/protected]
-      
+
+      		[/protected]
       	
       		return [e.getAffectationPrefix()/][p.substring(1, p.index(':') - 1).apply_attributeFinal()/];
       	}
@@ -106,9 +103,8 @@
   
       // specifique
       [protected (e.getUserCodeId('specifique')) startTagPrefix('// ') endTagPrefix('// ')]
-        	
+
       [/protected]
-  
   }[/template]
 
 [comment : Write all required imports. /]
