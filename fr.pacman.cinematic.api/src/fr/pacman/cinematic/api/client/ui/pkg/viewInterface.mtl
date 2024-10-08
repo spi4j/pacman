@@ -19,7 +19,6 @@
     
   [/protected]
   
-  
   /**
    * Interface de vue.
    * @author [viewContainer.getAuthorName()/]
@@ -28,7 +27,6 @@
   [protected (viewContainer.getUserCodeId('annotation class')) startTagPrefix('// ') endTagPrefix('// ')]
     @UserView("[viewContainer.name/]")
   [/protected]
-  
   public interface [viewContainer.nameViewInterface()/] extends View_Itf
   {
   
@@ -36,30 +34,28 @@
     [if (not (clientPropertiesPrefix = 'client.swing' and element.widget.name = 'Button'))]
          // [element.name + '_' + element.widget.getInterfaceName()/]
          [protected (element.getUserCodeId(element.name + '_' + element.widget.getInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
-           
-              /**
+
+           /**
            [if (element.description <> null)]
-                 * @return [element.name/] : [element.description/]
+              * @return [element.name/] : [element.description/]
            [else]
-                 * @return [element.name/]
+              * @return [element.name/]
            [/if]
-               */
-              @Field("[element.name/]")
+            */
+           @Field("[element.name/]")
            [if (element.useWS())]
-                	[element.genericType(element.widget.getInterfaceName(), IsDto)/] [element.nameGetterViewElement()/] ();		
+              [element.genericType(element.widget.getInterfaceName(), IsDto)/] [element.nameGetterViewElement()/] ();		
            [else]
-             	[element.genericTypeEntity(element.widget.getInterfaceName())/] [element.nameGetterViewElement()/] ();	
+              [element.genericTypeEntity(element.widget.getInterfaceName())/] [element.nameGetterViewElement()/] ();	
            [/if]
          [/protected]
-      
       
     [/if]
   [/for]
      // [viewContainer.nameViewInterface()/]
      [protected (viewContainer.getUserCodeId(viewContainer.nameViewInterface())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }
 [/template]

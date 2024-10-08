@@ -17,7 +17,6 @@
     
   [/protected]
   
-  
   /**
    * Enumération des types d'événements possibles dans l'application.
    * @author [any.getAuthorName()/]
@@ -27,14 +26,13 @@
   
      // [any.buildAppliEventTypeEnum()/]
      [protected (any.getUserCodeId(any.buildAppliEventTypeEnum())) startTagPrefix('// ') endTagPrefix('// ')]
-       
-          /** Erreur */
-          ERREUR,
-       
-          /** Information */
-          INFORMATION;
-       
+
+       /** Erreur */
+       ERREUR,
+
+       /** Information */
+       INFORMATION;
+
      [/protected]
-  
   
   }[/template]

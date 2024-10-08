@@ -15,7 +15,6 @@
     
   [/protected]
   
-  
   /**
    * Classe de constantes utilisées dans les attributs des événements. D'autres clés d'attributs peuvent être définies dans les présenteurs. Ici se trouvent les clés qui ont leur place dans plusieurs présenteurs.
    * @author [any.getAuthorName()/]
@@ -25,20 +24,19 @@
   
      // [any.buildAppliEventGlobalAttributesItf()/]
      [protected (any.getUserCodeId(any.buildAppliEventGlobalAttributesItf())) startTagPrefix('// ') endTagPrefix('// ')]
-       
-          /** La clé contenant le DTO */
-          String c_keyAttributeDto = "dto";
-       
-       	/** La clé contenant l'Entity */
-          String c_keyAttributeEntity = "entity";
-       
-          /** La clé contenant l'erreur */
-          String c_keyAttributeError = "error";
-       
-          /** La clé contenant l'information */
-          String c_keyAttributeInformation = "information";
-       
+
+       /** La clé contenant le DTO */
+       String c_keyAttributeDto = "dto";
+
+       /** La clé contenant l'Entity */
+       String c_keyAttributeEntity = "entity";
+
+       /** La clé contenant l'erreur */
+       String c_keyAttributeError = "error";
+
+       /** La clé contenant l'information */
+       String c_keyAttributeInformation = "information";
+
      [/protected]
-  
   
   }[/template]
