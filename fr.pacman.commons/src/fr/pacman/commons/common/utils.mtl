@@ -4,7 +4,6 @@
 [import fr::pacman::commons::services::AnnotationUtils/]
 [import fr::pacman::commons::services::ResourceUtils/]
 [import fr::pacman::commons::services::StringUtils/]
-[import fr::pacman::commons::services::IteratorUtils/]
 
 [comment encoding = UTF-8 /]
 [query public sanitize(msg : String) : String = msg.normalize().sanitizeJavaService()/]
@@ -24,10 +23,6 @@
 [query public getLibraryNameForEntity(e : entity::Entity, s : String) : String = e.getLibraryName(s)/]
 
 [query public toPath(pkg : String) : String = pkg.replaceAll('\\.', '/')/]
-
-[query public iterInit(i :: Integer) : String = i.initIteratorJavaService() /]
-  
-[query public iterNext(any : ecore::EObject) : Boolean = any.nextIteratorJavaService()/]
 
 [query public normalizePath(path : String) : String = path.replaceAll('/+', '/').trim()/]
 

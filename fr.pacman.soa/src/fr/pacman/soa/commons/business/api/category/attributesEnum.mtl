@@ -70,7 +70,6 @@
     [d.writeImports()/]
     
   [/protected]
-  [d.navigableProperties()->size().iterInit()/]
   
   /**
    * L'énumération définissant les informations de chaque attribut pour le type '[d.nameClassDto()/]'.
@@ -86,11 +85,10 @@
     
   	 [/if]
      /** [d.nameENUM_PK_ID()/]. */
-     [d.nameENUM_PK_ID()/]("[d.nameENUM_PK_ID()/]", "id", [d.genPkType()/].class, true, -1)[if (not d.navigableProperties()->isEmpty())],[/if]
-     [for (p : environment::Property | d.navigableProperties())]
-     [p.enumStruct(d)/][if (d.iterNext())],[else];[/if] 
-     [/for]
-  
+     [(Sequence{ d.nameENUM_PK_ID() + '("' + d.nameENUM_PK_ID() + '","id",' + d.genPkType()+'.class, true, -1)' }
+     + d.navigableProperties()->asSequence()->collect(temp1 | temp1.enumStruct(d))
+     )->filter(String)->sep(',' + ''.lineSeparator())/];                                                                                   
+                                                                                             
      /** Le nom de l'attribut. */
      private final String ['name'.apply_attributeFinal()/];
   
