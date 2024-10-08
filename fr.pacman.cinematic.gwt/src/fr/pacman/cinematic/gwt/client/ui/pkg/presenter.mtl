@@ -24,7 +24,6 @@
     
   [/protected]
   
-  
   /**
    * Presenter.
    * @author [viewContainer.getAuthorName()/]
@@ -33,54 +32,51 @@
   [protected (viewContainer.getUserCodeId('Class definition')) startTagPrefix('// ') endTagPrefix('// ')]
     public class [viewContainer.namePresenter()/] extends Presenter_Abs<[viewContainer.nameViewInterface()/], [viewContainer.getTypePresenter()/]>
   [/protected]
-  
   {
   
      // Constructeur(s)
      [protected (viewContainer.getUserCodeId('Constructeur(s)')) startTagPrefix('// ') endTagPrefix('// ')]
-          /**
-           * Constructeur.
-           */
-          public [viewContainer.namePresenter()/] ()
-          {
-             super(null);
-          }
-       
-          /**
-           * Constructeur avec présenteur parent.
-           * 
-           * @param p_parent
-           *           le présenteur parent
-           */
-          public [viewContainer.namePresenter()/] (final Presenter_Abs<? extends View_Itf, ?> p_parent)
-          {
-             super(p_parent);
-          }
+       /**
+        * Constructeur.
+        */
+       public [viewContainer.namePresenter()/] ()
+       {
+          super(null);
+       }
+
+       /**
+        * Constructeur avec présenteur parent.
+        * 
+        * @param p_parent
+        *           le présenteur parent
+        */
+       public [viewContainer.namePresenter()/] (final Presenter_Abs<? extends View_Itf, ?> p_parent)
+       {
+          super(p_parent);
+       }
        [if (viewContainer.getTypePresenter() <> 'Object')]
-         
-            /**
-             * Constructeur avec présenteur parent et DTO (dans le cas d'une interface en GWT, les présenteurs et vues manipulent uniquement des XTO).
-             * @param p_parent
-             *           le présenteur parent
-             * @param p_dto
-             *           le dto de ce présenteur
-             */
-            public [viewContainer.namePresenter()/] (final Presenter_Abs<? extends View_Itf, ?> p_parent, final [viewContainer.getTypePresenter()/] p_obj)
-            {
-               super(p_parent, p_obj);
-            }
+
+         /**
+          * Constructeur avec présenteur parent et DTO (dans le cas d'une interface en GWT, les présenteurs et vues manipulent uniquement des XTO).
+          * @param p_parent
+          *           le présenteur parent
+          * @param p_dto
+          *           le dto de ce présenteur
+          */
+         public [viewContainer.namePresenter()/] (final Presenter_Abs<? extends View_Itf, ?> p_parent, final [viewContainer.getTypePresenter()/] p_obj)
+         {
+            super(p_parent, p_obj);
+         }
        [/if]
      [/protected]
-  
   
      @Override
      public void initView ()
      {
         // Initialisation de la vue
         [protected (viewContainer.getUserCodeId('Initialisation de la vue')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
      }
   
      @Override
@@ -88,9 +84,8 @@
      {
         // Titre de l\'écran
         [protected (viewContainer.getUserCodeId('Titre de l\'écran')) startTagPrefix('// ') endTagPrefix('// ')]
-                return "[viewContainer.name/]";
+          return "[viewContainer.name/]";
         [/protected]
-  
      }
   
   [for (viewState : flow::ViewState | viewContainer.getViewStatesForViewContainer())]
@@ -106,31 +101,28 @@
                @UserAction(UserAction.c_BOUTON + "[event.name/]")
           [else]
                [protected (event.getUserCodeId('Annotation ' + event.name)) startTagPrefix('// ') endTagPrefix('// ')]
-                 
+
                [/protected]
-            
           [/if]
              public void [event.nameActionPresenteur()/]()
              {
                 [protected (event.getUserCodeId('Pre ' + event.name)) startTagPrefix('// ') endTagPrefix('// ')]
                   [if (viewContainer.shouldClosePresenter(transition))]
-                          close();
+                    close();
                   [/if]
-                  
+
                   [if (not transition.to.getAllFollowingStatesWithoutGardOrEvent(false)->union(Sequence{transition.to})->filter(flow::ViewState)->collect(temp1 | temp1.viewContainers)->isEmpty())]
-                          final [viewContainer.getRootPresenterName()/] ['rootPresenter'.apply_variableDefault()/] = getViewManager().getPresenter([viewContainer.getRootPresenterName()/].class);
-                    
+                    final [viewContainer.getRootPresenterName()/] ['rootPresenter'.apply_variableDefault()/] = getViewManager().getPresenter([viewContainer.getRootPresenterName()/].class);
+
                   [/if]
                 [/protected]
-          
-          
+
           [if (not (transition.to = null))]
             [transition.to.gestionTransition(event.name, false)/]
           [/if]
                 [protected (event.getUserCodeId('Post ' + event.name)) startTagPrefix('// ') endTagPrefix('// ')]
-                  
+
                 [/protected]
-          
              }
         [/if]
         
@@ -139,9 +131,8 @@
   [/for]
      // [viewContainer.namePresenter()/]
      [protected (viewContainer.getUserCodeId(viewContainer.namePresenter())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

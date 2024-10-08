@@ -20,7 +20,6 @@
     
   [/protected]
   
-  
   /**
    * Point d'entrée de l'application GWT.
    * @author [root.getAuthorName()/]
@@ -41,30 +40,29 @@
            {
               // Exceptions non interceptées
               [protected (root.getUserCodeId('Exceptions non interceptées')) startTagPrefix('// ') endTagPrefix('// ')]
-                            GWT.log(p_caught.toString(), p_caught);
-                            // Create the popup dialog box
-                            final DialogBox v_dialogBox = new DialogBox();
-                            v_dialogBox.setText("Erreur inconnue");
-                            v_dialogBox.setAnimationEnabled(true);
-                            final Button v_closeButton = new Button("Fermer");
-                            final VerticalPanel v_dialogVPanel = new VerticalPanel();
-                            v_dialogVPanel.add(new HTML(p_caught.toString()));
-                            v_dialogVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-                            v_dialogVPanel.add(v_closeButton);
-                            v_dialogBox.setWidget(v_dialogVPanel);
-                            v_dialogBox.center();
-                
-                            // Add a handler to close the DialogBox
-                            v_closeButton.addClickHandler(new ClickHandler()
-                            {
-                               @Override
-                               public void onClick (final ClickEvent p_event)
-                               {
-                                  v_dialogBox.hide();
-                               }
-                            });
+                GWT.log(p_caught.toString(), p_caught);
+                // Create the popup dialog box
+                final DialogBox v_dialogBox = new DialogBox();
+                v_dialogBox.setText("Erreur inconnue");
+                v_dialogBox.setAnimationEnabled(true);
+                final Button v_closeButton = new Button("Fermer");
+                final VerticalPanel v_dialogVPanel = new VerticalPanel();
+                v_dialogVPanel.add(new HTML(p_caught.toString()));
+                v_dialogVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+                v_dialogVPanel.add(v_closeButton);
+                v_dialogBox.setWidget(v_dialogVPanel);
+                v_dialogBox.center();
+
+                // Add a handler to close the DialogBox
+                v_closeButton.addClickHandler(new ClickHandler()
+                {
+                   @Override
+                   public void onClick (final ClickEvent p_event)
+                   {
+                      v_dialogBox.hide();
+                   }
+                });
               [/protected]
-  
            }
         });
   
@@ -75,17 +73,15 @@
            {
               // Fermeture de l\'application
               [protected (root.getUserCodeId('Fermeture de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
-                            p_event.setMessage("Vous allez quitter l'application blanche. Continuer ?");
+                p_event.setMessage("Vous allez quitter l'application blanche. Continuer ?");
               [/protected]
-  
            }
         });
   
         // Pre initialisation
         [protected (root.getUserCodeId('Pre initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
         // Instanciation d'un Registre de vues dédié à GWT
         MVPUtils.setViewManager(new GWTViewManager());
@@ -97,11 +93,10 @@
   
         // Post initialisation
         [protected (root.getUserCodeId('Post initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
-                // masquer le div de chargement de la page.
-                final RootPanel v_loadingPanel = RootPanel.get("loading");
-                v_loadingPanel.setVisible(false);
+          // masquer le div de chargement de la page.
+          final RootPanel v_loadingPanel = RootPanel.get("loading");
+          v_loadingPanel.setVisible(false);
         [/protected]
-  
      }
   
      /**
@@ -111,31 +106,27 @@
      {
         // Pre Initialisation de l\'application
         [protected (root.getUserCodeId('Pre Initialisation de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
   [for (flow : flow::Flow | root.eAllContents(flow::ViewState)->select(viewState | viewState.viewContainers->exists(view | not (view.widget = null) and view.widget.name = 'MainPanel'))->collect(temp1 | temp1.eContainer(flow::Flow)))]
           [protected (flow.getUserCodeId('Initialisation du flow ' + flow.name)) startTagPrefix('// ') endTagPrefix('// ')]
-                  final [flow.nameFlow()/] v_[flow.nameFlow().toLowerFirst()/] = new [flow.nameFlow()/]();
-                  v_[flow.nameFlow().toLowerFirst()/].start();
+            final [flow.nameFlow()/] v_[flow.nameFlow().toLowerFirst()/] = new [flow.nameFlow()/]();
+            v_[flow.nameFlow().toLowerFirst()/].start();
           [/protected]
-    
     
   [/for]
   
         // Post Initialisation de l\'application
         [protected (root.getUserCodeId('Post Initialisation de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
      }
   
      // GwtLanceur
      [protected (root.getUserCodeId('GwtLanceur')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [comment : Write all required imports. /]

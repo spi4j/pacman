@@ -23,26 +23,23 @@
     
   [/protected]
   
-  
   public class [viewContainer.nameViewImplementation()/] extends [viewContainer.genericType(viewContainer.widget.getImplementationClass())/] implements [viewContainer.nameViewInterface()/]
   {
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
        // Declaration [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
        [protected (element.getUserCodeId('Declaration ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
-         
-            private final [element.genericType(element.widget.getImplementationClass(), false)/] [element.nameVariableElement()/];
-         
+
+         private final [element.genericType(element.widget.getImplementationClass(), false)/] [element.nameVariableElement()/];
+
        [/protected]
-    
     
   [/for]
      // Attributs
      [protected (viewContainer.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-          private final VerticalPanel _content;
-       
+       private final VerticalPanel _content;
+
      [/protected]
-  
      /**
       * Constructeur de la vue.
       * @param p_presenter
@@ -54,25 +51,23 @@
   
         // avant initialisation
         [protected (viewContainer.getUserCodeId('avant initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
-                _content = new VerticalPanel();
-                _content.add(new HTML("<h1>[viewContainer.name/]</h1>"));
-          
+          _content = new VerticalPanel();
+          _content.add(new HTML("<h1>[viewContainer.name/]</h1>"));
+
         [/protected]
-  
   
         // initialisation des composants
   [for (element : view::ViewElement | viewContainer.viewElements)]
           // Parametrage [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
           [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
-            
-                  [element.nameVariableElement()/] = new [element.genericType(element.widget.getImplementationClass(), false)/]([element.paramViewElementInConstructor()/]);
+
+            [element.nameVariableElement()/] = new [element.genericType(element.widget.getImplementationClass(), false)/]([element.paramViewElementInConstructor()/]);
             [if (element.widget.getImplementationClass() = 'SpiButton')]
-                    [element.nameVariableElement()/].setText("[element.name/]");
+              [element.nameVariableElement()/].setText("[element.name/]");
             [/if]
-                  _content.add([element.nameVariableElement()/]);
-            
+            _content.add([element.nameVariableElement()/]);
+
           [/protected]
-    
     
     [for (viewEvent : view::ViewEvent | element.events)]
       [if (not (viewEvent.type = null) and 'onClick'.equalsIgnoreCase(viewEvent.type.name))]
@@ -87,12 +82,11 @@
                  public void onValueChange (final ValueChangeEvent<[element.getElementType()/]> p_event)
       [else]
               [protected (viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name)) startTagPrefix('// ') endTagPrefix('// ')]
-                      [element.nameVariableElement()/].addXXXHandler(new XXXHandler()
-                      {
-                         @Override
-                         public void onXXX (final XXXEvent p_event)
+                [element.nameVariableElement()/].addXXXHandler(new XXXHandler()
+                {
+                   @Override
+                   public void onXXX (final XXXEvent p_event)
               [/protected]
-        
       [/if]
                {
       [if (viewContainer.getViewStatesForViewContainer()->exists(viewState | viewState.getTransitionsFromState(true)->asSequence()->collect(temp1 | temp1.on)->includes(viewEvent)))]
@@ -114,15 +108,14 @@
   [/for]
         // après initialisation
         [protected (viewContainer.getUserCodeId('après initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
-                add(_content);
-          
+          add(_content);
+
           [if (not (viewContainer.widget = null) and viewContainer.widget.name = 'MainPanel')]
-                  // récupération du contenu global
-                  RootPanel.get().add(this);
+            // récupération du contenu global
+            RootPanel.get().add(this);
           [/if]
-          
+
         [/protected]
-  
      }
   
      @Override
@@ -130,23 +123,22 @@
      {
         // addView
         [protected (viewContainer.getUserCodeId('addView')) startTagPrefix('// ') endTagPrefix('// ')]
-                if (p_view instanceof IsWidget)
-                {
-                   if (p_view instanceof DialogBox)
-                   {
-                      ((DialogBox) p_view).center();
-                   }
-                   else
-                   {
-                      _content.add((IsWidget) p_view);
-                   }
-                }
-                else
-                {
-                   Window.alert("Vue inconnue : " + p_view.getClass().getName());
-                }
+          if (p_view instanceof IsWidget)
+          {
+             if (p_view instanceof DialogBox)
+             {
+                ((DialogBox) p_view).center();
+             }
+             else
+             {
+                _content.add((IsWidget) p_view);
+             }
+          }
+          else
+          {
+             Window.alert("Vue inconnue : " + p_view.getClass().getName());
+          }
         [/protected]
-  
      }
   
      @Override
@@ -154,9 +146,8 @@
      {
         // restoreView
         [protected (viewContainer.getUserCodeId('restoreView')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
      }
   
      @Override
@@ -164,44 +155,41 @@
      {
         // removeView
         [protected (viewContainer.getUserCodeId('removeView')) startTagPrefix('// ') endTagPrefix('// ')]
-                if (p_view instanceof IsWidget)
-                {
-                   if (p_view instanceof DialogBox)
-                   {
-                      ((DialogBox) p_view).hide();
-                   }
-                   else
-                   {
-                      _content.remove((IsWidget) p_view);
-                   }
-                }
-                else
-                {
-                   Window.alert("Vue inconnue : " + p_view.getClass().getName());
-                }
+          if (p_view instanceof IsWidget)
+          {
+             if (p_view instanceof DialogBox)
+             {
+                ((DialogBox) p_view).hide();
+             }
+             else
+             {
+                _content.remove((IsWidget) p_view);
+             }
+          }
+          else
+          {
+             Window.alert("Vue inconnue : " + p_view.getClass().getName());
+          }
         [/protected]
-  
      }
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
        // Getter [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
        [protected (element.getUserCodeId('Getter ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
-         
-            @Override
-            public [element.genericType(element.widget.getInterfaceName(), false)/] [element.nameGetterViewElement()/] ()
-            {
-               return [element.nameVariableElement()/];
-            }
-         
+
+         @Override
+         public [element.genericType(element.widget.getInterfaceName(), false)/] [element.nameGetterViewElement()/] ()
+         {
+            return [element.nameVariableElement()/];
+         }
+
        [/protected]
-    
     
   [/for]
      // [viewContainer.nameViewImplementation()/]
      [protected (viewContainer.getUserCodeId(viewContainer.nameViewImplementation())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

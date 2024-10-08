@@ -15,38 +15,35 @@
     [if (state.oclIsKindOf(flow::ViewState))]
             [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(flow::ViewState).name)) startTagPrefix('// ') endTagPrefix('// ')]
               [for (nextView : view::ViewContainer | state.oclAsType(flow::ViewState).viewContainers)]
-                      // affichage de l'écran [nextView.name/]
-                      [nextView.namePresenter()/] [nextView.name.normalize().apply_variableDefault()/];
-                      try {
-                         // on tente d'instancier un nouvel écran
+                // affichage de l'écran [nextView.name/]
+                [nextView.namePresenter()/] [nextView.name.normalize().apply_variableDefault()/];
+                try {
+                   // on tente d'instancier un nouvel écran
                 [if (fromMainPanel)]
-                           [nextView.name.normalize().apply_variableDefault()/] = new [nextView.namePresenter()/]();
+                  [nextView.name.normalize().apply_variableDefault()/] = new [nextView.namePresenter()/]();
                 [else]
-                           [nextView.name.normalize().apply_variableDefault()/] = new [nextView.namePresenter()/](['rootPresenter'.apply_variableDefault()/]);
-                           ['rootPresenter'.apply_variableDefault()/].getView().addView([nextView.name.normalize().apply_variableDefault()/].getView());
+                  [nextView.name.normalize().apply_variableDefault()/] = new [nextView.namePresenter()/](['rootPresenter'.apply_variableDefault()/]);
+                  ['rootPresenter'.apply_variableDefault()/].getView().addView([nextView.name.normalize().apply_variableDefault()/].getView());
                 [/if]
-                      } catch (ViewAlreadyRegisteredException v_e) {
-                         // si l'écran existe déjà on le récupère dans le gestionnaire de vues
-                         [nextView.name.normalize().apply_variableDefault()/] = getViewManager().getPresenter([nextView.namePresenter()/].class);
-                [if (not fromMainPanel)]
-                           ['rootPresenter'.apply_variableDefault()/].getView().restoreView([nextView.name.normalize().apply_variableDefault()/].getView());
-                [/if]
-                      }
+                } catch (ViewAlreadyRegisteredException v_e) {
+                   // si l'écran existe déjà on le récupère dans le gestionnaire de vues
+                   [nextView.name.normalize().apply_variableDefault()/] = getViewManager().getPresenter([nextView.namePresenter()/].class);
+                   [if (not fromMainPanel)]
+                     ['rootPresenter'.apply_variableDefault()/].getView().restoreView([nextView.name.normalize().apply_variableDefault()/].getView());
+                   [/if]
+                }
               [/for]
-              
+
             [/protected]
-      
     [elseif (state.oclIsKindOf(flow::SubflowState))]
             [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(flow::SubflowState).name)) startTagPrefix('// ') endTagPrefix('// ')]
-                    final [state.oclAsType(flow::SubflowState).subflow.nameFlow()/] [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/] = new [state.oclAsType(flow::SubflowState).subflow.nameFlow()/](this);
-                    [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/].start();
+              final [state.oclAsType(flow::SubflowState).subflow.nameFlow()/] [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/] = new [state.oclAsType(flow::SubflowState).subflow.nameFlow()/](this);
+              [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/].start();
             [/protected]
-      
     [elseif (state.oclIsKindOf(flow::ActionState))]
             [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(flow::ActionState).name)) startTagPrefix('// ') endTagPrefix('// ')]
-                    // TODO [state.oclAsType(flow::ActionState).name/]
+              // TODO [state.oclAsType(flow::ActionState).name/]
             [/protected]
-      
       
     [/if]
   [/for]

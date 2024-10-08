@@ -21,7 +21,6 @@
     
   [/protected]
   
-  
   /**
    * Flow [flow.name/].
    * @author [flow.getAuthorName()/]
@@ -31,9 +30,8 @@
   
      // Attributs [flow.nameFlow()/]
      [protected (flow.getUserCodeId('Attributs ' + flow.nameFlow())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   [if (flow.flowHasMainPanel())]
        /**
@@ -60,28 +58,25 @@
      {
         // Pre onStart
         [protected (flow.getUserCodeId('Pre onStart')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
           [if (not flow.getInitialState().getAllFollowingStatesWithoutGardOrEvent(false)->filter(flow::ViewState)->collect(temp1 | temp1.viewContainers)->isEmpty() and not flow.flowHasMainPanel() and flow.hasRootPresenter())]
-                  final [flow.getRootPresenterName()/] ['rootPresenter'.apply_variableDefault()/] = getViewManager().getPresenter([flow.getRootPresenterName()/].class);
+            final [flow.getRootPresenterName()/] ['rootPresenter'.apply_variableDefault()/] = getViewManager().getPresenter([flow.getRootPresenterName()/].class);
           [/if]
         [/protected]
-  
   
   [flow.getInitialState().gestionTransition('onStart', flow.flowHasMainPanel())/]
   
         // Post onStart
         [protected (flow.getUserCodeId('Post onStart')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
      }
   
      // Méthodes [flow.nameFlow()/]
      [protected (flow.getUserCodeId('Méthodes ' + flow.nameFlow())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

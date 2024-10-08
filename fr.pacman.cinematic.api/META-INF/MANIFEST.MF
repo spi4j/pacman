@@ -25,4 +25,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Export-Package: fr.pacman.cinematic.api,
+ fr.pacman.cinematic.api.common,
  fr.pacman.cinematic.api.services

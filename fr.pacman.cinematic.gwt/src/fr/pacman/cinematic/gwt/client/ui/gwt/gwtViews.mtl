@@ -18,7 +18,6 @@
     
   [/protected]
   
-  
   /**
    * Association des vues pour GWT.
    * @author [r.getAuthorName()/]
@@ -45,9 +44,8 @@
   [/for]
         // Vues supplémentaires
         [protected (r.getUserCodeId('Vues supplémentaires')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
         throw new Spi4jRuntimeException("Vue inconnue pour le presenteur : " + p_presenter.getClass().getName(),
                  "Ajouter une association dans GWTViews");
@@ -63,9 +61,8 @@
   
      // GwtViews
      [protected (r.getUserCodeId('GwtViews')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

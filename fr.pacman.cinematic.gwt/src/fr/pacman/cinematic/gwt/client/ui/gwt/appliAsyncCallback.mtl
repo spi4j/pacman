@@ -16,7 +16,6 @@
     
   [/protected]
   
-  
   /**
    * Callback par défaut avec gestion d'erreur en affichant une popup.
    * 
@@ -66,12 +65,11 @@
         }
         // Propagation des erreurs
         [protected (any.getUserCodeId('Propagation des erreurs')) startTagPrefix('// ') endTagPrefix('// ')]
-                // if (p_className.equals(MonException.class.getName()))
-                // {
-                // return new MonException(p_errorMessageContent);
-                // }
+          // if (p_className.equals(MonException.class.getName()))
+          // {
+          // return new MonException(p_errorMessageContent);
+          // }
         [/protected]
-  
         return super.buildException(p_className, p_errorMessageContent);
      }
   
@@ -80,21 +78,19 @@
      {
         // Gestion des erreurs
         [protected (any.getUserCodeId('Gestion des erreurs')) startTagPrefix('// ') endTagPrefix('// ')]
-                // if (p_caught instanceof MonException)
-                // {
-                // ... traitement spécifique ...
-                // }
-                // else
-                // {
-                // super.doOnError(p_caught);
-                // }
+          // if (p_caught instanceof MonException)
+          // {
+          // ... traitement spécifique ...
+          // }
+          // else
+          // {
+          // super.doOnError(p_caught);
+          // }
         [/protected]
-  
      }
   
      // [any.nameAppliAsyncCallback()/]
      [protected (any.getUserCodeId(any.nameAppliAsyncCallback())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
