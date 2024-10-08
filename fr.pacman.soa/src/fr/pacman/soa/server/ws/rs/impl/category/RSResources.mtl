@@ -623,7 +623,7 @@
       [if (o.isRSOperation())]
             /**
             * [o.description/]
-        [o.getComParamsIn()/][o.getEndPointPagingParameters()/][o.comParamOut()/]
+            * [o.getComParamsIn()/][o.getEndPointPagingParameters()/][o.comParamOut()/]
         	*/
            [o.writeAnnotations()/]
         [let auth : Boolean = o.isDefinedForAuthentication()]

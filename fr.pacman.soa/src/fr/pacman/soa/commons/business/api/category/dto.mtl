@@ -48,7 +48,6 @@
     
   [/protected]
   
-  
   /**
    * Classe abstraite contenant les attributs additionnels qui sont communs à tous les dtos.
    *
@@ -65,9 +64,8 @@
   
   	// Constantes
   	[protected (s.getUserCodeId('Constantes')) startTagPrefix('// ') endTagPrefix('// ')]
-     
+
    [/protected]
-  
   
   	// ATTRIBUTS
   [for (columnProp : String | s.get_automaticColumnsProperties())]
@@ -79,9 +77,8 @@
   
   	// Commons Attributs 
   	[protected (s.getUserCodeId('Commons Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-     
+
    [/protected]
-  
   
    	// METHODES
   
@@ -126,12 +123,10 @@
   [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
     [let attributs : OrderedSet(environment::Attribute) = d.getAttributes()]
     [/let]
-    
+
     [d.writeImports()/]
-    
+
   [/protected]
-  
-  
   /**
    * DTO '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -199,12 +194,11 @@
   [if (d.isNotPersistent())]
        // Attributs
        [protected (d.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-         
-            /** L'identifiant. */
-            private [d.genPkType()/] [d.namePK_ID()/];
-         
+
+         /** L'identifiant. */
+         private [d.genPkType()/] [d.namePK_ID()/];
+
        [/protected]
-    
     
   [/if]
      // METHODES
@@ -219,9 +213,8 @@
     
           // Constructeur
           [protected (d.getUserCodeId('Constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           [/protected]
-    
   [/if]
      }
   
@@ -229,17 +222,17 @@
       * Constructeur complet du dto '[d.nameClassDto()/]'.
       * @param [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/]
       *           (In)(*) L'identifiant de [d.nameBaseDto()/].
-  [for (a : environment::Attribute | d.attributesNotComputed())]
-    [a.getComParamIn()/]
-  [/for]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-      [r.getComParamIdIn()/]
-    [/if]
-  [/for]
-  [for (r : environment::Reference | d.referencingStar())]
-    [r.getComParamInverseIdIn()/]
-  [/for]
+      * [for (a : environment::Attribute | d.attributesNotComputed())]
+      *   [a.getComParamIn()/]
+      * [/for]
+      * [for (r : environment::Reference | d.referencesNoStar())]
+      *   [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+      *     [r.getComParamIdIn()/]
+      *   [/if]
+      * [/for]
+      * [for (r : environment::Reference | d.referencingStar())]
+      *   [r.getComParamInverseIdIn()/]
+      * [/for]
       */
      public [d.buildDtoClassName()/] (final [d.genPkType()/] [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/][d.getResetAttributes()/][d.getResetDtoParametersId()/][d.getResetDtoReferencingParamsId()/])
      {
@@ -252,17 +245,17 @@
         * Constructeur complet du dto '[d.nameClassDto()/]'.
         * @param [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/]
         *           (In)(*) L'identifiant de [d.nameBaseDto()/].
-    [for (a : environment::Attribute | d.attributesNotComputed())]
-      [a.getComParamIn()/]
-    [/for]
-    [for (r : environment::Reference | d.referencesNoStar())]
-      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-        [r.getComParamIn()/]
-      [/if]
-    [/for]
-    [for (r : environment::Reference | d.referencingStar())]
-      [r.getComParamInverseIn()/]
-    [/for]
+        * [for (a : environment::Attribute | d.attributesNotComputed())]
+        *   [a.getComParamIn()/]
+        * [/for]
+        * [for (r : environment::Reference | d.referencesNoStar())]
+        *   [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+        *     [r.getComParamIn()/]
+        *   [/if]
+        * [/for]
+        * [for (r : environment::Reference | d.referencingStar())]
+        *   [r.getComParamInverseIn()/]
+        * [/for]
         */
        public [d.buildDtoClassName()/] (final [d.genPkType()/] [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/][d.getResetAttributes()/][d.getResetDtoParameters()/][d.getResetDtoReferencingParams()/])
        {
@@ -278,11 +271,10 @@
     [if (d.isNotPersistent())]
             // getId
             [protected (d.getUserCodeId('getId')) startTagPrefix('// ') endTagPrefix('// ')]
-              
-                    return [d.namePK_ID()/];
-              
+
+              return [d.namePK_ID()/];
+
             [/protected]
-      
     [else]
             return [d.namePK_ID()/];
     [/if]
@@ -294,11 +286,10 @@
     [if (d.isNotPersistent())]
             // setId
             [protected (d.getUserCodeId('setId')) startTagPrefix('// ') endTagPrefix('// ')]
-              
-                    [d.getAffectationPrefix()/][d.namePK_ID()/] = [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/];
-              
+
+              [d.getAffectationPrefix()/][d.namePK_ID()/] = [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/];
+
             [/protected]
-      
     [else]
             [d.getAffectationPrefix()/][d.namePK_ID()/] = [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/];
     [/if]
@@ -308,8 +299,8 @@
   [for (a : environment::Attribute | d.getAttributes())]
     [if (not a.isPropertyFromParent(d))]
          /**
-      [a.comPrefix('Obtenir')/]
-      [a.comReturn()/]
+          * [a.comPrefix('Obtenir')/]
+          * [a.comReturn()/]
           */
       [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
            @Override
@@ -321,10 +312,9 @@
       [if (a.isComputed())]
               // [a.name.apply_attributeDefault()/]
               [protected (a.getUserCodeId(a.name.apply_attributeDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-                      // TODO Calculer l'attribut
-                      return null;
+                // TODO Calculer l'attribut
+                return null;
               [/protected]
-        
       [else]
               return [a.name.normalize().apply_attributeDefault()/];
       [/if]
@@ -332,8 +322,8 @@
       
       [if (not a.isComputed())]
            /**
-        [a.comPrefix('Affecter')/]
-        [a.getComParamIn()/]
+            * [a.comPrefix('Affecter')/]
+            * [a.getComParamIn()/]
             */
         [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
              public void setIdentifiant (final [a.genPropertyType()/] [a.name.normalize().apply_parameterMethodClassicIn()/])
@@ -351,8 +341,8 @@
     [if (not r.isPropertyFromParent(d))]
       [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
            /**
-        [r.comPrefix('Obtenir')/]
-        [r.comReturn()/]
+            * [r.comPrefix('Obtenir')/]
+            * [r.comReturn()/]
             */
            [r.getGetterIdDto()/]
            {
@@ -364,8 +354,8 @@
            }
         
            /**
-        [r.comPrefix('Affecter')/]
-        [r.getComParamIdIn()/]
+            * [r.comPrefix('Affecter')/]
+            * [r.getComParamIdIn()/]
             */
            [r.getSetterIdDto()/]
            {
@@ -375,8 +365,8 @@
         
       [/if]
          /**
-      [r.comPrefix('Obtenir')/]
-      [r.comReturn()/]
+          * [r.comPrefix('Obtenir')/]
+          * [r.comReturn()/]
           */
          [r.getGetter()/]
          {
@@ -390,8 +380,8 @@
          }
       
          /**
-      [r.comPrefix('Affecter')/]
-      [r.getComParamIn()/]
+          * [r.comPrefix('Affecter')/]
+          * [r.getComParamIn()/]
           */
          [r.getSetterDtoReference()/]
          {
@@ -413,8 +403,8 @@
   [for (r : environment::Reference | d.referencesStarStar())]
     [if (not r.isPropertyFromParent(d))]
          /**
-      [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
-      [r.comReturn()/]             
+          * [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
+          * [r.comReturn()/]             
           */
          [r.getGetterListDto()/]
          {
@@ -426,8 +416,8 @@
          }
       
          /**
-      [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
-      [r.getComParamTabIn()/]
+          * [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
+          * [r.getComParamTabIn()/]
           */
          [r.getSetterListDto()/]
          {
@@ -439,8 +429,8 @@
   [for (r : environment::Reference | d.referencesStarNoStar())]
     [if (not r.isPropertyFromParent(d))]
          /**
-      [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
-      [r.comReturn()/]
+          * [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
+          * [r.comReturn()/]
           */
          [r.getGetterListDto()/]
          {
@@ -454,8 +444,8 @@
          }
       
          /**
-      [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
-      [r.getComParamTabIn()/]
+          * [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
+          * [r.getComParamTabIn()/]
           */
          [r.getSetterListDto()/]
          {
@@ -468,7 +458,7 @@
     [if (not r.isPropertyFromParent(d))]
          /**
           * Obtenir [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
-      [r.comReturnInverse()/]
+          *  [r.comReturnInverse()/]
           */
          [r.getGetterInverseIdDto()/]
          {
@@ -477,7 +467,7 @@
       
          /**
           * Affecter [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
-      [r.getComParamInverseIdIn()/]
+          * [r.getComParamInverseIdIn()/]
           */
          [r.getSetterInverseIdDto()/]
          {
@@ -489,8 +479,8 @@
   [for (r : environment::Reference | d.referencesComputedNoStar())]
     [if (not r.isPropertyFromParent(d))]
          /**
-      [r.comPrefix('Obtenir l\'instance de \'' + r.nameClassDto() + '\' calculee :')/]
-      [r.comReturn()/]
+          * [r.comPrefix('Obtenir l\'instance de \'' + r.nameClassDto() + '\' calculee :')/]
+          * [r.comReturn()/]
           */
          [r.getGetter()/]
          {
@@ -507,8 +497,8 @@
   [for (r : environment::Reference | d.referencesComputedStar())]
     [if (not r.isPropertyFromParent(d))]
          /**
-      [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' calculee :')/]
-      [r.comReturn()/]
+          * [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' calculee :')/]
+          * [r.comReturn()/]
           */
          [r.getGetterListDto()/]
          {
@@ -526,17 +516,17 @@
       * Recycler le dto '[d.nameClassDto()/]'.
       * @param [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/]
       *           (In)(*) L'identifiant de [d.nameBaseDto()/].
-  [for (a : environment::Attribute | d.attributesNotComputed())]
-    [a.getComParamIn()/]
-  [/for]
-  [for (r : environment::Reference | d.referencesNoStar())]
-    [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-      [r.getComParamIdIn()/]
-    [/if]
-  [/for]
-  [for (r : environment::Reference | d.referencingStar())]
-    [r.getComParamInverseIdIn()/]
-  [/for]
+      * [for (a : environment::Attribute | d.attributesNotComputed())]
+      * [a.getComParamIn()/]
+      * [/for]
+      * [for (r : environment::Reference | d.referencesNoStar())]
+      *   [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+      *     [r.getComParamIdIn()/]
+      *   [/if]
+      * [/for]
+      * [for (r : environment::Reference | d.referencingStar())]
+      *   [r.getComParamInverseIdIn()/]
+      * [/for]
       */
      public void [d.buildDtoClassName().apply_methodReset()/] (final [d.genPkType()/] [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/][d.getResetAttributes()/][d.getResetDtoParametersId()/][d.getResetDtoReferencingParamsId()/])
      {
@@ -572,17 +562,17 @@
         * Recycler le dto '[d.nameClassDto()/]'.
         * @param [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/]
         *           (In)(*) L'identifiant de [d.nameBaseDto()/].
-    [for (a : environment::Attribute | d.attributesNotComputed())]
-      [a.getComParamIn()/]
-    [/for]
-    [for (r : environment::Reference | d.referencesNoStar())]
-      [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-        [r.getComParamIn()/]
-      [/if]
-    [/for]
-    [for (r : environment::Reference | d.referencingStar())]
-      [r.getComParamInverseIn()/]
-    [/for]
+        * [for (a : environment::Attribute | d.attributesNotComputed())]
+        * [a.getComParamIn()/]
+        * [/for]
+        * [for (r : environment::Reference | d.referencesNoStar())]
+        *   [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
+        *     [r.getComParamIn()/]
+        *   [/if]
+        * [/for]
+        * [for (r : environment::Reference | d.referencingStar())]
+        *   [r.getComParamInverseIn()/]
+        * [/for]
         */
        public void [d.buildDtoClassName().apply_methodReset()/] (final [d.genPkType()/] [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/][d.getResetAttributes()/][d.getResetDtoParameters()/][d.getResetDtoReferencingParams()/])
        {
@@ -658,19 +648,17 @@
      {
         // toString
         [protected (d.getUserCodeId('toString')) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                return [d.toString()/]
-          
+
+          return [d.toString()/]
+
         [/protected]
-  
      }
   
   [if (d.isNotPersistent())]
        // Méthodes
        [protected (d.getUserCodeId('Méthodes')) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-    
     
   [/if]
   }[/template]

@@ -247,8 +247,8 @@
   [for (a : environment::Attribute | d.attributesNotComputed())]
     [if (not a.isPropertyFromParent(d))]
          /**
-      [a.comPrefix('Obtenir')/]
-      [a.comReturn()/]
+          * [a.comPrefix('Obtenir')/]
+          * [a.comReturn()/]
           */
       [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
            @Override
@@ -261,8 +261,8 @@
          }
       
          /**
-      [a.comPrefix('Affecter')/]
-      [a.getComParamIn()/]
+          * [a.comPrefix('Affecter')/]
+          * [a.getComParamIn()/]
           */
       [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
            public void setIdentifiant (final [a.genPropertyType()/] [a.name.normalize().apply_parameterMethodClassicIn()/])
@@ -279,8 +279,8 @@
     [if (not r.isPropertyFromParent(d))]
       [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent() and not r.isLibraryRS())]
            /**
-        [r.comPrefix('Obtenir')/]
-        [r.comReturn()/]
+            * [r.comPrefix('Obtenir')/]
+            * [r.comReturn()/]
             */
            [r.getGetterIdDto()/]
            {
@@ -292,8 +292,8 @@
            }
         
            /**
-        [r.comPrefix('Affecter')/]
-        [r.getComParamIdIn()/]
+            * [r.comPrefix('Affecter')/]
+            * [r.getComParamIdIn()/]
             */
            [r.getSetterIdDto()/]
            {
@@ -313,7 +313,7 @@
       
          /**
           * Affecter [r.nameBaseReference()/] de [d.nameBaseXto()/].
-      [r.getComParamIn()/]
+          * [r.getComParamIn()/]
           */
          [r.getSetterXtoReference()/]
          {
@@ -345,7 +345,7 @@
       
          /**
           * Affecter les [r.nameClassXto()/] de [d.nameBaseXto()/].
-      [r.getComParamTabIn()/]
+          * [r.getComParamTabIn()/]
           */
          [r.getSetterListXto()/]
          {
@@ -367,7 +367,7 @@
       
          /**
           * Affecter les [r.nameClassXto()/] de [d.nameBaseXto()/].
-      [r.getComParamTabIn()/]
+          * [r.getComParamTabIn()/]
           */
          [r.getSetterListXto()/]
          {
@@ -380,7 +380,7 @@
     [if (not r.isPropertyFromParent(d) and not r.isLibraryRS())]
          /**
           * Obtenir [r.nameBaseReferenceInverse()/] de [d.nameBaseXto()/].
-      [r.comReturnInverse()/]
+          * [r.comReturnInverse()/]
           */
          [r.getGetterInverseIdDto()/]
          {
@@ -389,7 +389,7 @@
       
          /**
           * Affecter [r.nameBaseReferenceInverse()/] de [d.nameBaseXto()/].
-      [r.getComParamInverseIdIn()/]
+          * [r.getComParamInverseIdIn()/]
           */
          [r.getSetterInverseIdDto()/]
          {

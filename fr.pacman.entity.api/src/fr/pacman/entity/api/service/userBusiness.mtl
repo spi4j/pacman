@@ -32,7 +32,6 @@
     
   [/protected]
   
-  
   /**
    * Classe permettant de centraliser les factories business de l'application.
    * @author [r.getAuthorName()/]

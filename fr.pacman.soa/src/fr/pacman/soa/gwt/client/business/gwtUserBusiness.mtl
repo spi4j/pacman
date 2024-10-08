@@ -21,24 +21,23 @@
   package [n.buildPackageBusinessGwtClient()/]; // NOPMD
   
   [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
-    
+
     import java.util.HashMap;
     import java.util.Map;
-    
+
     import com.google.gwt.core.shared.GWT;
-    
-    
+
+
     [for (srv : soa::Service | n.eAllContents(soa::Service))]
       [if (srv.serviceSeul())]
         [srv.buildImportServiceInterfaceGwt(null)/]
         [srv.buildImportServiceInterfaceGwtAsync(null)/]
       [/if]
     [/for]
-    
+
     import fr.spi4j.ui.gwt.client.services.GwtUserBusiness_Abs;
-    
+
   [/protected]
-  
   
   /**
    * Classe permettant de centraliser les factories business de l'application.
@@ -96,18 +95,17 @@
   
      // Methodes
      [protected (n.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
-       
-          /**
-           * Affecte un singleton dans le cas des tests d'intégration, qui renverra directement l'instance du service (sans passer par GWT).
-           * @param ['singleton'.apply_parameterMethodClassicIn()/]
-           *           le singleton pour les tests d'intégration
-           */
-          public static void ['set singleton'.apply_methodDefault()/] (final [n.buildGwtUserBusinessClassName()/] ['singleton'.apply_parameterMethodClassicIn()/])
-          {
-             [n.buildGwtUserBusinessClassName()/].['singleton'.apply_attributeStatic()/] = ['singleton'.apply_parameterMethodClassicIn()/];
-          }
-       
+
+       /**
+        * Affecte un singleton dans le cas des tests d'intégration, qui renverra directement l'instance du service (sans passer par GWT).
+        * @param ['singleton'.apply_parameterMethodClassicIn()/]
+        *           le singleton pour les tests d'intégration
+        */
+       public static void ['set singleton'.apply_methodDefault()/] (final [n.buildGwtUserBusinessClassName()/] ['singleton'.apply_parameterMethodClassicIn()/])
+       {
+          [n.buildGwtUserBusinessClassName()/].['singleton'.apply_attributeStatic()/] = ['singleton'.apply_parameterMethodClassicIn()/];
+       }
+
      [/protected]
-  
   
   }[/template]

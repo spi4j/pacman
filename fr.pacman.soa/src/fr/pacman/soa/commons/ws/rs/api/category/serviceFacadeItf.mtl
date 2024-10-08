@@ -33,7 +33,6 @@
     
   [/protected]
   
-  
   /**
    * Definit le contrat de services spécifique pour les services REST.
    * @author [s.getAuthorName()/]
@@ -50,12 +49,13 @@
         
            /**
             * [o.description/].
-        [o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/]
+            * [o.getComParamsIn()/]
+            * [o.getServicePagingParameters()/]
+            * [o.comParamOut()/]
         	*/
             [protected (o.getUserCodeId('Annotations Methode' + o.name)) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-        
            [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/][o.paramsInForPagingIfNeeded(true)/]);
         
            [o.addInterfaceTotalCountForPagingIfNeeded()/]

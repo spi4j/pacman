@@ -23,7 +23,6 @@
     
   [/protected]
   
-  
   /**
    * Listing des permissions.
    * @author [m.getAuthorName()/]
@@ -46,8 +45,7 @@
   
      // [m.buildAppliPermissionsInterfaceName()/] 
      [protected (m.getUserCodeId(m.buildAppliPermissionsInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]

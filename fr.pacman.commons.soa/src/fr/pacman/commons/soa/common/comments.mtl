@@ -25,45 +25,45 @@
 [comment : / Add specific paging parameters for the endPoint. /]
 [template public getEndPointPagingParameters(o : soa::Operation)]
   [if (o.isPagingToken())]
-    	* @param ['page token'.apply_parameterMethodClassicIn()/] : 
-    	*			(In)(*) Jeton de pagination.
+    @param ['page token'.apply_parameterMethodClassicIn()/] : 
+    			(In)(*) Jeton de pagination.
   [/if]
 [/template]
 
 [comment : / Add specific paging parameters for the facade. /]
 [template public getServicePagingParameters(o : soa::Operation)]
   [if (o.paged)]
-    	* @param ['offset'.apply_parameterMethodClassicIn()/] :
-    	*			(In)(*) Numéro de ligne pour débuter la requête dans le cadre de la pagination.
-    	* @param ['limit'.apply_parameterMethodClassicIn()/] :
-    	*			(In)(*) Nombre d'éléments demandés par page dans le cadre de la pagination.
+    @param ['offset'.apply_parameterMethodClassicIn()/] :
+    			(In)(*) Numéro de ligne pour débuter la requête dans le cadre de la pagination.
+    @param ['limit'.apply_parameterMethodClassicIn()/] :
+    			(In)(*) Nombre d'éléments demandés par page dans le cadre de la pagination.
   [/if]
 [/template]
 
 [comment : /]
 [template public getComParamIn(p : environment::Property) post(self.trim())]
-  * @param [p.name.normalize().apply_parameterMethodClassicIn()/]
-  *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
+  @param [p.name.normalize().apply_parameterMethodClassicIn()/]
+            (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
 [/template]
 
 [comment : /]
 [template public getComParamIdIn(r : environment::Reference)]
-      * @param [r.name.normalize().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
+  @param [r.name.normalize().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
 
 [comment : /]
 [template public getComParamInverseIdIn(r : environment::Reference)]
-      * @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
+  @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
 
 [comment : /]
 [template public getComParamInverseIn(r : environment::Reference)]
-      * @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
+  @param [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
 
 [comment : /]
 [template public getComParamTabIn(r : environment::Reference)]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
+            (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
 
 [comment : /]
 [template public comClass(r : String, d : environment::DTO)]
@@ -81,45 +81,45 @@
 
 [comment : /]
 [template public comParamIn(p : environment::Property)]
-      * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-      *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
+  @param [p.nameParam().apply_parameterMethodClassicIn()/]
+            (In)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
 
 [comment : /]
 [template public comParamInverseIn(r : environment::Reference)]
-      * @param [r.nameParamInverse().apply_parameterMethodClassicIn()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
+  @param [r.nameParamInverse().apply_parameterMethodClassicIn()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
 
 [comment : /]
 [template public comParamIdIn(r : environment::Reference)]
-      * @param [r.nameParamId().apply_parameterMethodClassicIn()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
+  @param [r.nameParamId().apply_parameterMethodClassicIn()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
 
 [comment :  /]
 [template public comParamInverseIdIn(r : environment::Reference)]
-      * @param [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
+  @param [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.descriptionInverse(false)/][/template]
 
 [comment : /]
 [template public comParamTabIn(r : environment::Reference)]
-      * @param [r.nameParamTab().apply_parameterMethodClassicIn()/]
-      *           (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
+  @param [r.nameParamTab().apply_parameterMethodClassicIn()/]
+            (In)[if (r.isMandatory())](*)[/if] [r.description(false)/][/template]
 
 [comment : /]
 [template public comParamOut(p : environment::Property)]
-  * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-  *           (Out)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
+  @param [p.nameParam().apply_parameterMethodClassicIn()/]
+            (Out)[if (p.isMandatory())](*)[/if] [p.description(false)/][/template]
 
 [comment : /]
 [template public comReturn(p : environment::Property)]
-      * @return [p.description(false)/][/template]
+  @return [p.description(false)/][/template]
 
 [comment : /]
 [template public comReturnInverse(r : environment::Reference)]
-      * @return [r.descriptionInverse(false)/][/template]
+  @return [r.descriptionInverse(false)/][/template]
 
 [comment : /]
 [template public comPrefix(p : environment::Property, s : String)]
-      * [s/] [p.description(true)/][/template]
+  [s/] [p.description(true)/][/template]
 
 [comment : /]
 [template private description(p : environment::Property, lowerFirst : Boolean)]
@@ -136,8 +136,8 @@
 [comment : /]
 [template public comParamsIn(o : soa::Operation)]
   [for (p : soa::Parameter | o.input)]
-        * @param [p.nameParam().apply_parameterMethodClassicIn()/]
-        *           (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
+    @param [p.nameParam().apply_parameterMethodClassicIn()/]
+              (In)[if (p.isMandatory())](*)[/if] [p.description(false)/]
   [/for]
 [/template]
 
@@ -158,12 +158,12 @@
 [comment : /]
 [template public comParamOutCallback(o : soa::Operation)]
   [if (o.output->isEmpty())]
-        * @param callback
-        *           (Out) le callback
+    @param callback
+              (Out) le callback
   [else]
     [for (p : soa::Parameter | o.output)]
-          * @param callback
-          *           (Out) le callback pour retourner [p.description(false)/]
+      @param callback
+                (Out) le callback pour retourner [p.description(false)/]
     [/for]
   [/if]
 [/template]

@@ -30,7 +30,6 @@
     
   [/protected]
   
-  
   /**
    * Definit le contrat de services spécifiques.
    * @author [s.getAuthorName()/]
@@ -44,13 +43,13 @@
         
            /**
             * [o.description/].
-        [o.getComParamsIn()/][o.comParamOut()/]
-        	*/
+            * [o.getComParamsIn()/]
+            * [o.comParamOut()/]
+            */
             // Annotations Méthode
             [protected (s.getUserCodeId('Annotations Méthode')) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-        
            [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/]);
       [/if]
     [/for]

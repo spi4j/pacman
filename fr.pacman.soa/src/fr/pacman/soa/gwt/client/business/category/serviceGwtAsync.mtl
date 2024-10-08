@@ -56,7 +56,7 @@
       [for (r : environment::Reference | d.referencingStar())]
            /**
             * Obtenir la liste d'objets de type '[d.nameClassDto()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameClassDto()/]'.
-        [r.getComParamInverseIdIn()/]
+            * [r.getComParamInverseIdIn()/]
             * @param callback
             *           le callback pour retourner une liste de [d.buildXtoClassNameFromDto()/] ayant [r.nameBaseReferenceInverse().apply_attributeDefault()/][r.namePK_ID()/] = [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][r.namePK_ID()/]
             */

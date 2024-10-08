@@ -124,8 +124,8 @@
   
   [for (a : environment::Attribute | d.getAttributes())]
        /**
-    [a.comPrefix('Obtenir')/]
-    [a.comReturn()/]
+        * [a.comPrefix('Obtenir')/]
+        * [a.comReturn()/]
         */
     [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
          @Override
@@ -148,8 +148,8 @@
     
     [if (not a.isComputed())]
          /**
-      [a.comPrefix('Affecter')/]
-      [a.getComParamIn()/]
+          * [a.comPrefix('Affecter')/]
+          * [a.getComParamIn()/]
           */
       [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
            public void setIdentifiant (final [a.genPropertyType()/] [a.name.normalize().apply_parameterMethodClassicIn()/])
@@ -165,8 +165,8 @@
   [for (r : environment::Reference | d.referencesNoStar())]
     [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
          /**
-      [r.comPrefix('Obtenir')/]
-      [r.comReturn()/]
+          * [r.comPrefix('Obtenir')/]
+          * [r.comReturn()/]
           */
          [r.getGetterIdDto()/]
          {
@@ -178,8 +178,8 @@
          }
       
          /**
-      [r.comPrefix('Affecter')/]
-      [r.getComParamIdIn()/]
+          * [r.comPrefix('Affecter')/]
+          * [r.getComParamIdIn()/]
           */
          [r.getSetterIdDto()/]
          {
@@ -189,8 +189,8 @@
       
     [/if]
        /**
-    [r.comPrefix('Obtenir')/]
-    [r.comReturn()/]
+        * [r.comPrefix('Obtenir')/]
+        * [r.comReturn()/]
         */
        [r.getGetter()/]
        {
@@ -204,8 +204,8 @@
        }
     
        /**
-    [r.comPrefix('Affecter')/]
-    [r.getComParamIn()/]
+        * [r.comPrefix('Affecter')/]
+        * [r.getComParamIn()/]
         */
        [r.getSetterDtoReference()/]
        {
@@ -225,8 +225,8 @@
   [/for]
   [for (r : environment::Reference | d.referencesStarStar())]
        /**
-    [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
-    [r.comReturn()/]
+        * [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
+        * [r.comReturn()/]
         */
        [r.getGetterListDto()/]
        {
@@ -238,8 +238,8 @@
        }
     
        /**
-    [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
-    [r.getComParamTabIn()/]
+        * [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
+        * [r.getComParamTabIn()/]
         */
        [r.getSetterListDto()/]
        {
@@ -249,8 +249,8 @@
   [/for]
   [for (r : environment::Reference | d.referencesStarNoStar())]
        /**
-    [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
-    [r.comReturn()/]
+        * [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' :')/]
+        * [r.comReturn()/]
         */
        [r.getGetterListDto()/]
        {
@@ -264,8 +264,8 @@
        }
     
        /**
-    [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
-    [r.getComParamTabIn()/]
+        * [r.comPrefix('Affecter la liste de \'' + r.nameClassDto() + '\' :')/]
+        * [r.getComParamTabIn()/]
         */
        [r.getSetterListDto()/]
        {
@@ -276,7 +276,7 @@
   [for (r : environment::Reference | d.referencingStar())]
        /**
         * Obtenir [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
-    [r.comReturnInverse()/]
+        * [r.comReturnInverse()/]
         */
        [r.getGetterInverseIdDto()/]
        {
@@ -285,7 +285,7 @@
     
        /**
         * Affecter [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
-    [r.getComParamInverseIdIn()/]
+        * [r.getComParamInverseIdIn()/]
         */
        [r.getSetterInverseIdDto()/]
        {
@@ -295,8 +295,8 @@
   [/for]
   [for (r : environment::Reference | d.referencesComputedNoStar())]
        /**
-    [r.comPrefix('Obtenir l\'instance de \'' + r.nameClassDto() + '\' calculee :')/]
-    [r.comReturn()/]
+        * [r.comPrefix('Obtenir l\'instance de \'' + r.nameClassDto() + '\' calculee :')/]
+        * [r.comReturn()/]
         */
        [r.getGetter()/]
        {
@@ -311,8 +311,8 @@
   [/for]
   [for (r : environment::Reference | d.referencesComputedStar())]
        /**
-    [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' calculee :')/]
-    [r.comReturn()/]
+        * [r.comPrefix('Obtenir la liste de \'' + r.nameClassDto() + '\' calculee :')/]
+        * [r.comReturn()/]
         */
        [r.getGetterListDto()/]
        {

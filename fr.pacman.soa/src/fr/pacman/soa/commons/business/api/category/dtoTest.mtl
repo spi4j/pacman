@@ -40,7 +40,6 @@
     
   [/protected]
   
-  
   /**
    * Classe de test pour le DTO '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -48,7 +47,6 @@
   // Annotation for class
   [protected (d.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
-  
   public class [d.buildDtoTestClassName()/] extends [d.getClassNameForBeanTester_Abs()/]
   {
   
@@ -122,9 +120,8 @@
   [if (d.isNotPersistent())]
           // getId
           [protected (d.getUserCodeId('getId')) startTagPrefix('// ') endTagPrefix('// ')]
-                  assertEquals([d.nameENUM_PK_ID().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getId(), "Champ id incorrect");
+            assertEquals([d.nameENUM_PK_ID().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getId(), "Champ id incorrect");
           [/protected]
-    
   [else]
           assertEquals([d.nameENUM_PK_ID().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getId(), "Champ id incorrect");
   [/if]
@@ -148,9 +145,8 @@
   
         // Remplissage références du dto
         [protected (d.getUserCodeId('Remplissage références du dto')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
         // appel des champs calculés
   [for (a : environment::Attribute | d.attributesComputed())]
@@ -189,12 +185,11 @@
          {
       	  // getRandom_[a.type.name.toUpperFirst()/]
       	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
-           
+
            		return [if (a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
            ;
-           
+
          [/protected]
-      
       
          }
     [/if]

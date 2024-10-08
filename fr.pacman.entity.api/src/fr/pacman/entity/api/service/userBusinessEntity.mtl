@@ -34,7 +34,6 @@
     
   [/protected]
   
-  
   /**
    * Classe permettant de centraliser les factories business de l'application.
    * @author [r.getAuthorName()/]
@@ -55,20 +54,19 @@
   
   	// Getter de services Crud
   	[protected (r.getUserCodeId('Getter de services Crud')) startTagPrefix('// ') endTagPrefix('// ')]
-     
+
      [for (e : entity::Entity | r.eAllContents(entity::Entity))]
-          /**
-           * Obtenir la façade de services '[e.buildServiceInterfaceName()/]'.
-           * @return L'instance désirée.
-           */
-          public static [e.buildServiceInterfaceName()/] [('get ' + e.buildServiceClassName()).apply_methodDefault()/] ()
-          {
-             return ['singleton'.apply_attributeStatic()/].getBinding([e.buildServiceInterfaceName()/].class);
-          }
-       
+       /**
+        * Obtenir la façade de services '[e.buildServiceInterfaceName()/]'.
+        * @return L'instance désirée.
+        */
+       public static [e.buildServiceInterfaceName()/] [('get ' + e.buildServiceClassName()).apply_methodDefault()/] ()
+       {
+          return ['singleton'.apply_attributeStatic()/].getBinding([e.buildServiceInterfaceName()/].class);
+       }
+
      [/for]
    [/protected]
-  
   
      /**
       * @return le ['singleton'.apply_attributeStatic()/] de cette factory
@@ -119,14 +117,13 @@
   
      // Bingding correspondant aux Services Crud
      [protected (r.getUserCodeId('Bingding correspondant aux Services Crud')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
        [for (e : entity::Entity | r.eAllContents(entity::Entity))]
                final [e.buildServiceInterfaceName()/] [e.buildServiceImplClassName().apply_variableObjectDefault()/] = wrapService([e.buildServiceInterfaceName()/].class, "[e.buildPackageBusinessImplementationServiceEntity()/].[e.buildServiceImplClassName()/]");
                bind([e.buildServiceInterfaceName()/].class, [e.buildServiceImplClassName().apply_variableObjectDefault()/]);
-         
+
        [/for]
      [/protected]
-  
   
      }
   

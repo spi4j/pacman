@@ -48,7 +48,6 @@
       
     [/protected]
     
-    
     /**
      * Définit le contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if].
      * @author [s.getAuthorName()/]
@@ -59,49 +58,45 @@
         @Local
       [/if]
     [/protected]
-    
     public interface [s.buildServiceInterfaceName(d)/][if (d.hasCrud())] extends [s.getClassNameForService_Itf()/]<[s.genPkType()/], [d.buildDtoClassName()/]>[if (d.isReferentiel())], [s.getClassNameForServiceReferentiel_Itf()/][/if][else] extends [s.getClassNameForApplicationService_Itf()/][/if]
     {
     
     [if (d.hasCrud() and s.isCrudApplication() and false)]
          /**
-      	* Lecture d'une instance de type : '[d.buildDtoClassName()/]', à partir de son identifiant.
+          * Lecture d'une instance de type : '[d.buildDtoClassName()/]', à partir de son identifiant.
           *
           * @param ['id'.apply_parameterMethodClassicIn()/] : Identifiant unique pour l'instance à obtenir.
           * @return [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
-      	*/
-      	// Annotations [d.name.sanitize() + '_Read'/]
-      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read')) startTagPrefix('// ') endTagPrefix('// ')]
-         
-       [/protected]
-      
-      	public [d.buildDtoClassName()/] read(final Long ['id'.apply_parameterMethodClassicIn()/]);
-      
+          */
+          // Annotations [d.name.sanitize() + '_Read'/]
+          [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read')) startTagPrefix('// ') endTagPrefix('// ')]
+
+          [/protected]
+          public [d.buildDtoClassName()/] read(final Long ['id'.apply_parameterMethodClassicIn()/]);
+
          /**
-      	* Création d'une nouvelle instance de type : '[d.buildDtoClassName()/]'.
+          * Création d'une nouvelle instance de type : '[d.buildDtoClassName()/]'.
           *
           * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
-      	* @return [d.buildDtoClassName()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
+          * @return [d.buildDtoClassName()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
           * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
-      	*/
-      	// Annotations [d.name.sanitize() + '_Create'/]
-      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create')) startTagPrefix('// ') endTagPrefix('// ')]
-         
-       [/protected]
-      
-      	public [d.buildDtoClassName()/] create(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
+          */
+          // Annotations [d.name.sanitize() + '_Create'/]
+          [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create')) startTagPrefix('// ') endTagPrefix('// ')]
+
+          [/protected]
+          public [d.buildDtoClassName()/] create(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
       
          /**
-      	* Mise à jour d'une instance de type : '[d.buildDtoClassName()/]'.
+          * Mise à jour d'une instance de type : '[d.buildDtoClassName()/]'.
           *
           * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
           * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
-      	*/
-      	// Annotations [d.name.sanitize() + '_Update'/]
-      	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update')) startTagPrefix('// ') endTagPrefix('// ')]
-         
-       [/protected]
-      
+          */
+          // Annotations [d.name.sanitize() + '_Update'/]
+          [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update')) startTagPrefix('// ') endTagPrefix('// ')]
+
+          [/protected]
       	public void update(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
       
          /**
@@ -112,9 +107,8 @@
       	*/
       	// Annotations [d.name.sanitize() + '_Delete'/]
       	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete')) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-      
       	public void remove(final [d.buildDtoClassName()/] [d.name.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException;
     [/if]
     
@@ -122,14 +116,13 @@
       [for (r : environment::Reference | d.referencingStar())]
            /**
             * Obtenir la liste d'objets de type '[d.nameClassDto()/]' associés à l'instance de type '[r.containingType.oclAsType(environment::DTO).nameClassDto()/]'.
-        [r.comParamInverseIdIn()/]
+            * [r.comParamInverseIdIn()/]
             * @return une liste de [d.buildDtoClassName()/] ayant [r.nameParamInverseId().apply_parameterMethodClassicIn()/] = [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
             */
-        	// Annotations [r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn()/]
-        	[protected (r.getUserCodeId('Annotations ' + r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn())) startTagPrefix('// ') endTagPrefix('// ')]
-           
-         [/protected]
-        
+           // Annotations [r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+           [protected (r.getUserCodeId('Annotations ' + r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn())) startTagPrefix('// ') endTagPrefix('// ')]
+
+           [/protected]
            List<[d.buildDtoClassName()/]> [('find list ' + r.name.sanitize() + ' by ' + r.containingType.oclAsType(environment::DTO).buildSimpleDtoName()).apply_methodDefault()/] (final [r.genPkType()/] [r.nameParamInverseId().apply_parameterMethodClassicIn()/]);
         
       [/for]
@@ -164,25 +157,23 @@
       [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
            /**
             * [o.description/]
-        [o.getComParamsIn()/][o.comParamOut()/]
-        	*/
-        	// Annotations [o.userCodeForOperation()/]
-        	[protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
-           
-         [/protected]
-        
-        	[o.generateAnnotationPermission()/]
-            [o.paramOutDto()/] [o.name.sanitize().apply_methodDefault()/] ([o.paramsInDto()/][o.paramsInForPagingIfNeeded(true)/]); 
-        
-        	[o.addInterfaceTotalCountForPagingIfNeeded()/]
-        
+            * [o.getComParamsIn()/][o.comParamOut()/]
+            */
+           // Annotations [o.userCodeForOperation()/]
+           [protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
+
+           [/protected]
+           [o.generateAnnotationPermission()/]
+           [o.paramOutDto()/] [o.name.sanitize().apply_methodDefault()/] ([o.paramsInDto()/][o.paramsInForPagingIfNeeded(true)/]); 
+
+           [o.addInterfaceTotalCountForPagingIfNeeded()/]
+
       [/for]
     [/if]
-        // Méthodes [s.buildServiceInterfaceName(d)/]
-        [protected (d.getUserCodeId('Méthodes ' + s.buildServiceInterfaceName(d))) startTagPrefix('// ') endTagPrefix('// ')]
-          
-        [/protected]
-    
+       // Méthodes [s.buildServiceInterfaceName(d)/]
+       [protected (d.getUserCodeId('Méthodes ' + s.buildServiceInterfaceName(d))) startTagPrefix('// ') endTagPrefix('// ')]
+
+       [/protected]
     }[/let]
 [/template]
 
