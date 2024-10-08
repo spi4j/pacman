@@ -73,12 +73,12 @@
               addScript(sqlPath +  "/init_data_[r.getApplicationName()/].sql");
           [else]
             [if (r.hasAdditionnalLibraries())]
-              // TODO ajouter les initialisation des scripts des librairies.
-              [for (prop : String | r.getAdditionnalLibraries())]
-                // [prop.getLibraryName(prop)/]
-                // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]create_tables_[prop.getLibraryName(prop)/]_H2.sql");
-                // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]init_data_[prop.getLibraryName(prop)/].sql");
-              [/for]
+              	  // TODO ajouter les initialisation des scripts des librairies.
+              	[for (prop : String | r.getAdditionnalLibraries())]
+                   // [prop.getLibraryName(prop)/]
+                   // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]create_tables_[prop.getLibraryName(prop)/]_H2.sql");
+                   // addScript("../[ if prop.getServerProjectName() <> null then prop.getServerProjectName().trim().ensureTrailingSlash() else '' endif/][prop.getServerSQLDir()/]init_data_[prop.getLibraryName(prop)/].sql");
+              	[/for]
             [/if]
 
             // [r.getApplicationName()/]
