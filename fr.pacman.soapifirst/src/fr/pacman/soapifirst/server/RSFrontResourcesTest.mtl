@@ -649,7 +649,9 @@
 
 [comment : Add all the lines for initialisation of input parameters if exists. /]
 [template private addInitInputParamsInIfExist(o : soa::Operation, s : soa::Service) post(self.trim())]
-  [for (p : soa::Parameter | o.input->asSet())][p.addInitInputParam(false, s.hasGlobalInitParams(), null)/][1.c()/][/for]
+  [for (p : soa::Parameter | o.input->asSet())]
+    [p.addInitInputParam(false, s.hasGlobalInitParams(), null)/]
+  [/for]
 [/template]
 
 [comment : Add the specific return parameter if verb is HEAD or OPTIONS. /]
@@ -710,7 +712,7 @@
 
 [comment : Write the list of parameters for the operation (1/4). /]
 [template private addParameterForOperation(o : soa::Operation, b : Boolean, s : soa::Service) post(self.trim())]
-  [o.input->collectNested(temp3 | temp3.addParameterForOperation_2(b, s))->sep(',' + 1.c())/][/template]
+  [o.input.addParameterForOperation_2(b, s)->sep(',')/][/template]
 
 [comment : Write the list of parameters for the operation (2/4)./]
 [template private addParameterForOperation_2(p : soa::Parameter, b : Boolean, s : soa::Service) post(self.trim())]

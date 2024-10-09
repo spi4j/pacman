@@ -92,7 +92,7 @@
   # ----------------------------------------------------------------------------
   # L'URL du serveur pour l'ensemble des resources de la librairie.
   # ----------------------------------------------------------------------------
-  filter.server.url = [c.servers->first().URL/]
+  filter.server.url = [ if not c.servers->isEmpty() then c.servers->first().URL else '' endif/]
   # ----------------------------------------------------------------------------
   # L'URL d'un proxy pour l'appel des resources (si besoin).
   # ----------------------------------------------------------------------------

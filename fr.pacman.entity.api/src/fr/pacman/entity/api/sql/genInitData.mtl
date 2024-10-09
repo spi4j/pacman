@@ -29,7 +29,7 @@
     
     /*
     [protected ('init data')]
-     */
+      */
       
       [r.releaseCounterForConstraints()/]
       [r.dropConstraint(databaseType)/]
@@ -37,9 +37,9 @@
       [for (n : environment::Namespace | r.ownedNamespaces)][n.genInitData()/][/for]
       [r.genConstraint()/]
       
-    /*
+      /*
     [/protected]
-     */
+    */
   [/file]
 [/template]
 
