@@ -157,7 +157,8 @@
       [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
            /**
             * [o.description/]
-            * [o.getComParamsIn()/][o.comParamOut()/]
+            * [o.getComParamsIn()/]
+            * [o.comParamOut()/]
             */
            // Annotations [o.userCodeForOperation()/]
            [protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]

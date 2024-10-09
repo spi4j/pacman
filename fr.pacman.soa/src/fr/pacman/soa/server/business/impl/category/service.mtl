@@ -201,8 +201,8 @@
       [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
            /**
             * [o.description/]
-        [o.comParamsIn()/]
-        [o.comParamOut()/]
+            * [o.comParamsIn()/]
+            * [o.comParamOut()/]
             */
         [let requirements : Sequence(requirement::Requirement) = o.getRequirements()]
           [if (o.useServiceRequirements())]

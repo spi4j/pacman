@@ -621,10 +621,12 @@
   [if (not (s = null))]
     [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
       [if (o.isRSOperation())]
-            /**
+           /**
             * [o.description/]
-            * [o.getComParamsIn()/][o.getEndPointPagingParameters()/][o.comParamOut()/]
-        	*/
+            * [o.getComParamsIn()/]
+            * [o.getEndPointPagingParameters()/]
+            * [o.comParamOut()/]
+            */
            [o.writeAnnotations()/]
         [let auth : Boolean = o.isDefinedForAuthentication()]
              public Response [o.name.apply_methodDefault()/]([o.paramsInXtoRS()/][o.paramsInPaginatorIfNeeded()/]){

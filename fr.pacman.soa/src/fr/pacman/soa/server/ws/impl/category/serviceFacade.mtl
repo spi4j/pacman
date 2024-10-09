@@ -50,10 +50,11 @@
   [if (s <> null and not (s.ownedInterface = null))]
     [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
       [if (o.isCXFOperation())]
-            /**
+           /**
             * [o.description/]
-        [o.getComParamsIn()/][o.comParamOut()/]
-        	*/
+            * [o.getComParamsIn()/]
+            * [o.comParamOut()/]
+            */
            @WebMethod
            @Override
            public [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/])

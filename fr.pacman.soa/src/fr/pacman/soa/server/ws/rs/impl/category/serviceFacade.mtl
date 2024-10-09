@@ -72,10 +72,12 @@
   [if (not (s = null) and not (s.ownedInterface = null))]
     [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
       [if (o.isRSOperation())]
-            /**
+           /**
             * [o.description/]
-            * [o.getComParamsIn()/][o.getServicePagingParameters()/][o.comParamOut()/] 
-        	*/
+            * [o.getComParamsIn()/]
+            * [o.getServicePagingParameters()/]
+            * [o.comParamOut()/]
+            */
            @Override
            public [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/][o.paramsInForPagingIfNeeded(true)/])
            {

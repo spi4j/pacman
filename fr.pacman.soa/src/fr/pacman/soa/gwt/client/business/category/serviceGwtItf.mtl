@@ -81,7 +81,9 @@
              
                 /**
                  * [o.description/].
-             [o.getComParamsIn()/][o.comParamOut()/]    */
+                 * [o.getComParamsIn()/]
+                 * [o.comParamOut()/]
+                 */
                 [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/]);
              
            [/protected]
