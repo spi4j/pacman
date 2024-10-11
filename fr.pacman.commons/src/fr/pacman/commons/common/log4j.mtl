@@ -8,7 +8,7 @@
 [template public log4j(void : ecore::EObject, project : String)]
   <?xml version="1.0" encoding="UTF-8"?>
   
-  [protected ('for log4j') startTagPrefix('<!-- ') endTagPrefix('<!-- ')]
+  [protected ('for log4j ') startTagPrefix('<!-- ') endTagPrefix('<!-- ')]
     -->
     
     <!-- Laisser le retour a la ligne pour la zone 'user code' ! -->

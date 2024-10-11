@@ -106,24 +106,24 @@
           ['entity'.apply_variableFinal()/].setId(['dto'.apply_parameterMethodClassicIn()/].getId ());
           [for (a : environment::Attribute | d.attributesNotComputed())]
             [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
-                    ['entity'.apply_variableFinal()/].[a.getNameSetter()/] (['dto'.apply_parameterMethodClassicIn()/].getIdentifiant ());
+              ['entity'.apply_variableFinal()/].[a.getNameSetter()/] (['dto'.apply_parameterMethodClassicIn()/].getIdentifiant ());
             [else]
               [if (not a.isNotPersistent())]
-                      ['entity'.apply_variableFinal()/].[a.getNameSetter()/] (['dto'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/]());
+                ['entity'.apply_variableFinal()/].[a.getNameSetter()/] (['dto'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/]());
               [/if]
             [/if]
           [/for]
           [for (r : environment::Reference | d.referencesNoStar())]
             [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-                    ['entity'.apply_variableFinal()/].[r.getNameSetterDtoId()/] (['dto'.apply_parameterMethodClassicIn()/].[r.name.normalize().toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ());
+              ['entity'.apply_variableFinal()/].[r.getNameSetterDtoId()/] (['dto'.apply_parameterMethodClassicIn()/].[r.name.normalize().toLowerFirst().apply_methodGet()/][r.namePK_ID()/] ());
             [/if]
           [/for]
           [for (r : environment::Reference | d.referencingStar())]
-                  ['entity'.apply_variableFinal()/].[r.getNameSetterInverseDtoId()/] (['dto'.apply_parameterMethodClassicIn()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] ());
+            ['entity'.apply_variableFinal()/].[r.getNameSetterInverseDtoId()/] (['dto'.apply_parameterMethodClassicIn()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] ());
           [/for]
           [if (d.hasAutomaticColumns())]
             [for (columnProp : String | d.get_automaticColumnsProperties())]
-                    ['entity'.apply_variableFinal()/].[d.get_nameColumn(columnProp).toLower().apply_methodSet()/](['dto'.apply_parameterMethodClassicIn()/].[d.get_nameColumn(columnProp).toLower().apply_methodGet()/]());
+              ['entity'.apply_variableFinal()/].[d.get_nameColumn(columnProp).toLower().apply_methodSet()/](['dto'.apply_parameterMethodClassicIn()/].[d.get_nameColumn(columnProp).toLower().apply_methodGet()/]());
             [/for]
           [/if]
         [/protected]
@@ -170,24 +170,24 @@
           ['dto'.apply_parameterMethodClassicIn()/].setId (['entity'.apply_parameterMethodClassicIn()/].getId ());
           [for (a : environment::Attribute | d.attributesNotComputed())]
             [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
-                    ['dto'.apply_parameterMethodClassicIn()/].setIdentifiant (['entity'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/] ());
+              ['dto'.apply_parameterMethodClassicIn()/].setIdentifiant (['entity'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/] ());
             [else]
               [if (not a.isNotPersistent())]
-                      ['dto'.apply_parameterMethodClassicIn()/].[a.getNameSetter()/] (['entity'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/] ());
+                ['dto'.apply_parameterMethodClassicIn()/].[a.getNameSetter()/] (['entity'.apply_parameterMethodClassicIn()/].[a.getNameGetter()/] ());
               [/if]
             [/if]
           [/for]
           [for (r : environment::Reference | d.referencesNoStar())]
             [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-                    ['dto'.apply_parameterMethodClassicIn()/].[r.name.normalize().toLowerFirst().apply_methodSet()/][r.namePK_ID()/] (['entity'.apply_parameterMethodClassicIn()/].[r.getNameGetterDtoId()/] ());
+              ['dto'.apply_parameterMethodClassicIn()/].[r.name.normalize().toLowerFirst().apply_methodSet()/][r.namePK_ID()/] (['entity'.apply_parameterMethodClassicIn()/].[r.getNameGetterDtoId()/] ());
             [/if]
           [/for]
           [for (r : environment::Reference | d.referencingStar())]
-                  ['dto'.apply_parameterMethodClassicIn()/].[r.getNameSetterInverseDtoId()/] (['entity'.apply_parameterMethodClassicIn()/].[r.getNameGetterInverseDtoId()/] ());
+            ['dto'.apply_parameterMethodClassicIn()/].[r.getNameSetterInverseDtoId()/] (['entity'.apply_parameterMethodClassicIn()/].[r.getNameGetterInverseDtoId()/] ());
           [/for]
           [if (d.hasAutomaticColumns())]
             [for (columnProp : String | d.get_automaticColumnsProperties())]
-                    ['dto'.apply_parameterMethodClassicIn()/].[d.get_nameColumn(columnProp).toLower().apply_methodSet()/](['entity'.apply_parameterMethodClassicIn()/].[d.get_nameColumn(columnProp).toLower().apply_methodGet()/]());
+              ['dto'.apply_parameterMethodClassicIn()/].[d.get_nameColumn(columnProp).toLower().apply_methodSet()/](['entity'.apply_parameterMethodClassicIn()/].[d.get_nameColumn(columnProp).toLower().apply_methodGet()/]());
             [/for]
           [/if]
         [/protected]
