@@ -10,7 +10,7 @@
   
   [for (n : environment::Namespace | r.eAllContents(environment::Namespace))]
   [file (n.getServerSourceDir().filename(n.buildPackagePersistenceOverload(), (n.name + ' populate').apply_classDefault() + '.java'), overwrite, 'UTF-8')]
-        [n.populate()/]  
+    [n.populate()/]
   [/file]
   [/for]
   
