@@ -251,9 +251,8 @@
   
   	  // for reloading caches
   	  [protected (any.getUserCodeId('for reloading caches')) startTagPrefix('// ') endTagPrefix('// ')]
-       
-     [/protected]
-  
+
+  	  [/protected]
   
         ['log'.apply_attributeFinalStatic()/].info("Caches recharges");
      }

@@ -36,10 +36,12 @@
   
         	// contextInitialized
         	[protected (any.getUserCodeId('context initialized')) startTagPrefix('// ') endTagPrefix('// ')]
-           [if (any.useEjb())]        //TransactionInterceptor.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());[/if]        //TransactionFilter.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
-           [if (any.useConfigFileSpi4jFrwk())]		[any.buildConfigProviderClassName()/].init();[/if]
-         [/protected]
-  
+        	  [if (any.useEjb())]
+        	    //TransactionInterceptor.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
+        	  [/if]
+        	  //TransactionFilter.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
+        	  [if (any.useConfigFileSpi4jFrwk())]		[any.buildConfigProviderClassName()/].init();[/if]
+        	[/protected]
      }
   
      @Override
@@ -47,14 +49,12 @@
      {
         	// contextDestroyed
         	[protected (any.getUserCodeId('context destroyed')) startTagPrefix('// ') endTagPrefix('// ')]
-           
-         [/protected]
-  
+
+        	[/protected]
      }
   
      // Methodes
      [protected (any.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]

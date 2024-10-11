@@ -271,11 +271,10 @@
   
   		<!--
   		[protected ('filesets') startTagPrefix('// ') endTagPrefix('// ')]
-      		-->
-      
-      		<!--
-    [/protected]
-  
+  		  -->
+
+  		  <!--
+  		[/protected]
   		-->
       </fileSets>
   </assembly>[/template]

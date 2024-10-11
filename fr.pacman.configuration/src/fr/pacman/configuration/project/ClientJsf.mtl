@@ -225,7 +225,6 @@
     
   [/protected]
   
-  
   /**
   * Converter
   */
@@ -252,9 +251,8 @@
   
      // Attributs
      [protected (any.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   [if (any.useMatching())]
         public String getAsString(final FacesContext context, final UIComponent component, final Object dto) {
             synchronized (dtos) {
@@ -310,9 +308,8 @@
   
      // Methode
      [protected (any.getUserCodeId('Methode')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 
@@ -610,9 +607,8 @@
   
       // Attributs
       [protected (any.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-        
+
       [/protected]
-  
   
   
      /**
@@ -695,8 +691,7 @@
   
       // Methodes
       [protected (any.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
-        
+
       [/protected]
-  
   
   }[/template]
