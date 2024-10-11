@@ -37,7 +37,6 @@
     
   [/protected]
   
-  
   [e.comClass(e.roleDao())/]
   public class [e.buildDaoImplClassName()/] extends [e.getClassNameForDaoJdbc_Abs()/]<[e.buildEntityInterfaceName()/], [e.buildEntityColumnEnumName()/]> implements [e.buildDaoInterfaceName()/]
   {
@@ -45,17 +44,15 @@
   
      // Constantes [e.buildDaoImplClassName()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildDaoImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // ATTRIBUTS
   
      // Attributs [e.buildDaoImplClassName()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildDaoImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // METHODES
   
@@ -186,9 +183,8 @@
   
      // Methodes [e.buildDaoImplClassName()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildDaoImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

@@ -34,7 +34,6 @@
     
   [/protected]
   
-  
   [r.comClass(r.roleEntity())/]
   public class [r.buildReferenceImplClassName()/] [if (r.hasAutomaticColumns())]extends [r.buildAppliEntityAbstractClassName()/]<[r.genPkType()/]> [/if]implements [r.buildReferenceEntityInterfaceName()/][if (r.containingType.oclAsType(entity::Entity).hasVersion())], JdbcOptimistLocked_Itf[/if]
   {
@@ -47,16 +46,14 @@
   
      // Constantes [r.buildReferenceImplClassName()/]
      [protected (r.getUserCodeId('Constantes ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // ATTRIBUTS
     // Methodes [r.buildReferenceImplClassName()/]
     [protected (r.getUserCodeId('Methodes ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-      
+
     [/protected]
-  
    	 /** Id. */
       private [r.genPkType()/] [r.nameSimpleReferencePropertyID().apply_attributeDefault()/];
   
@@ -69,9 +66,8 @@
   
      // Attributs [r.buildReferenceImplClassName()/]
      [protected (r.getUserCodeId('Attributs ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // METHODES
   
@@ -160,9 +156,8 @@
   
      // Methodes 2 [r.buildReferenceImplClassName()/]
      [protected (r.getUserCodeId('Methodes 2 ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

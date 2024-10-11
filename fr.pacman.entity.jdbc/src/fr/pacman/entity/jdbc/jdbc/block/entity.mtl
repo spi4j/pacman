@@ -36,7 +36,6 @@
     
   [/protected]
   
-  
   [e.comClass(e.roleEntity())/]
   public class [e.buildEntityImplClassName()/] [if (e.hasAutomaticColumns())]extends [e.buildAppliEntityAbstractClassName()/]<[e.genPkType()/]> [/if]implements [e.buildEntityInterfaceName()/][if (e.hasVersion())], JdbcOptimistLocked_Itf[/if]
   {
@@ -49,9 +48,8 @@
   
      // Constantes [e.buildEntityImplClassName()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // ATTRIBUTS
   
@@ -59,7 +57,7 @@
      private [e.genPkType()/] [e.nameSimplePropertyID().apply_attributeDefault()/];
   
   [for (a : environment::Attribute | e.attributesNoPk())]
-       /** [a.description(false)/] */
+       ['/** ' + a.description(false)/] */
     [if (a.isVersion())]
          @JdbcVersion
     [/if]
@@ -91,9 +89,8 @@
   [/for]
      // Attributs [e.buildEntityImplClassName()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
      // METHODES
   
@@ -219,9 +216,8 @@
   
      // Methodes [e.buildEntityImplClassName()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   }[/template]
 

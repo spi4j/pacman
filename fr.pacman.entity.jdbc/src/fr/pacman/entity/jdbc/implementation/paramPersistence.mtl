@@ -46,7 +46,6 @@
     
   [/protected]
   
-  
   [r.comClass('Implémentation permettant de centraliser le paramétrage de persistance de l\'application')/]
   public final class [r.buildParamPersistenceClassName()/] extends ParamPersistence_Abs implements [r.buildParamAppliClassName()/]
   {
@@ -54,12 +53,11 @@
   
      // Resources Physiques
      [protected (r.getUserCodeId('Resources Physiques')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
        /** Chemin de la base H2 (test ou base embarquee). */
        private static final String ['chemin base h2'.apply_attributeFinalStatic()/] = "./h2/[r.getApplicationNameUpperFirst()/]";
-       
+
      [/protected]
-  
   
      /** Propriété positionnée à "true" (par maven-surefire-plugin) lorsque l'application est lancée en mode h2. */
      private boolean ['h2 mode'.apply_attributeDefault()/] = Boolean.FALSE;
@@ -85,10 +83,10 @@
   
         // Constructeur
         [protected (r.getUserCodeId('Constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
           // Positionne l'indicateur à "true" si l'application est lancée en mode h2.
           [r.getAffectationPrefix()/]['h2 mode'.apply_attributeDefault()/] = ['check if h2 mode'.apply_methodDefault()/]();
-          
+
           [if (r.isLibrary())]
             if (['default ElemResourceManager'.apply_attributeFinal()/] == null)
             {
@@ -103,13 +101,12 @@
             // La ressource physique SGBD.
             [r.getAffectationPrefix()/]['ElemResourceManager'.apply_attributeFinal()/] = new ElemResourceManager(['id appli'.apply_attributeFinalStatic()/], ['create resource physical'.apply_methodDefault()/]());
           [/if]
-          
+
           [if (r.hasAdditionnalLibraries())]
             [('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault()/]();
           [/if]
-          
+
         [/protected]
-  
      }
   
   	/**
@@ -206,10 +203,10 @@
      {
         // afterInit
         [protected (r.getUserCodeId('afterInit')) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
           // Uniquement si application en mode h2.
           if([r.getAffectationPrefix()/]['h2 mode'.apply_attributeDefault()/]) {
-          
+
               // suppression de l'ancienne base si elle existe encore
               final File ['db file'.apply_variableFinal()/] = new File(['chemin base h2'.apply_attributeFinalStatic()/] + ".mv.db").getAbsoluteFile();
               if (['db file'.apply_variableFinal()/].exists())
@@ -222,17 +219,16 @@
                }
                try
                {
-          			['log'.apply_attributeFinalStatic()/].info("Création de la base (version usine) : " + ['db file'.apply_variableFinal()/].getName());
-                   	[r.buildH2DatabaseHelperClassName()/].['initialize database'.apply_methodDefault()/]();
+                  ['log'.apply_attributeFinalStatic()/].info("Création de la base (version usine) : " + ['db file'.apply_variableFinal()/].getName());
+                  [r.buildH2DatabaseHelperClassName()/].['initialize database'.apply_methodDefault()/]();
                }
                catch (final Throwable ['t'.apply_variableFinal()/])
                {
-                  	['log'.apply_attributeFinalStatic()/].error("Impossible d'initialiser la base de données, "
+                  ['log'.apply_attributeFinalStatic()/].error("Impossible d'initialiser la base de données, "
                             + "vérifier les scripts d'initialisation de la base de données", ['t'.apply_variableFinal()/]);
                }
           }
         [/protected]
-  
      }
   
      /**
@@ -249,13 +245,11 @@
           // ['ElemResourceManager'.apply_attributeFinal()/].addResourcePhysical(['Local resource physical'.apply_attributeFinalStatic()/], fr.spi4j.persistence.Mode_Enum.nomade);
         [/protected]
   
-  
         // Default Dao
         [protected (r.getUserCodeId('Default Dao')) startTagPrefix('// ') endTagPrefix('// ')]
           // Ajouter le paramétrage pour le DAO par défaut
           setDefaultDao(DefaultJdbcDao.class, ['ElemResourceManager'.apply_attributeFinal()/]);
         [/protected]
-  
   
   [for (e : entity::Entity | r.eAllContents(entity::Entity))]
     [if (not e.isNotPersistent() or e.useMatching())]
@@ -266,7 +260,6 @@
                   [e.buildPackagePersistenceImplementationJdbcEntity()/].[e.buildEntityImplClassName()/].class,
                   [e.buildPackagePersistenceImplementationJdbcEntity()/].[e.buildDaoImplClassName()/].class, ['ElemResourceManager'.apply_attributeFinal()/]));
             [/protected]
-      
     [/if]
   [/for]
      }
@@ -278,45 +271,44 @@
      private ResourcePhysical_Abs ['create resource physical'.apply_methodDefault()/] ()
      {
   
-  	  // Creation resource physique
-  	  [protected (r.getUserCodeId('Creation resource physique')) startTagPrefix('// ') endTagPrefix('// ')]
-       
-       	  final ResourcePhysical_Abs ['resource physical'.apply_variableDefault()/];
-            
-             // On regarde si on démarre en mode base h2 embarque ou sur une base externe.
-       	  if(['h2 mode'.apply_attributeDefault()/]){
-       
-       	      // Chargement de la base H2.
-       		  ['log'.apply_attributeFinalStatic()/].info("Démarrage du serveur/application sur base H2.");
-       		  ['resource physical'.apply_variableDefault()/] = new DefaultResourcePhysical("jdbc:h2:" + ['chemin base h2'.apply_attributeFinalStatic()/], "sa", "",
-                         ResourceType_Enum.ressourceH2NonXA);
-       	  } else {
-       [if (r.isWebApplication())]
-         		// Récupération du nom jndi pour la ressource.
-               	final String ['jndi name'.apply_variableDefault()/] = Parameters.getParameter("[r.getApplicationName().toLower()/].datasource", 
-                          "java:comp/env/[r.getApplicationName().toLower()/]/datasource");
-         		try {
-         
-                 	// Chargement de la ressource via son nom jndi.
-                  	['log'.apply_attributeFinalStatic()/].info("Démarrage du serveur en utilisant la datasource : " + ['jndi name'.apply_variableDefault()/]);
-         			['resource physical'.apply_variableDefault()/] = new NonXAJndiResourcePhysical(['jndi name'.apply_variableDefault()/]);
-         
-         		} catch(NamingException ['e'.apply_variableDefault()/]) {
-                 		
-         				throw new Spi4jRuntimeException(['e'.apply_variableDefault()/], "Nom JNDI inconnu : " +  ['jndi name'.apply_variableDefault()/],
-                          "Vérifier le nom JNDI de la DataSource");
-         		}
-       [else]
-         
-         		// Chargement de la ressource.
-         		['log'.apply_attributeFinalStatic()/].info("Démarrage de l'application avec la couche de persistence...");
-         		['resource physical'.apply_variableDefault()/] = new DefaultResourcePhysical("jdbc:", "", "", ResourceType_Enum.ressourceDbcpNonXA);
-       [/if]
-       	  }
-          return ['resource physical'.apply_variableFinal()/];
-          
-     [/protected]
-  
+         // Creation resource physique
+         [protected (r.getUserCodeId('Creation resource physique')) startTagPrefix('// ') endTagPrefix('// ')]
+
+           final ResourcePhysical_Abs ['resource physical'.apply_variableDefault()/];
+
+           // On regarde si on démarre en mode base h2 embarque ou sur une base externe.
+           if(['h2 mode'.apply_attributeDefault()/]){
+
+               // Chargement de la base H2.
+               ['log'.apply_attributeFinalStatic()/].info("Démarrage du serveur/application sur base H2.");
+               ['resource physical'.apply_variableDefault()/] = new DefaultResourcePhysical("jdbc:h2:" + ['chemin base h2'.apply_attributeFinalStatic()/], "sa", "",
+                   ResourceType_Enum.ressourceH2NonXA);
+           } else {
+           [if (r.isWebApplication())]
+                 // Récupération du nom jndi pour la ressource.
+                 final String ['jndi name'.apply_variableDefault()/] = Parameters.getParameter("[r.getApplicationName().toLower()/].datasource", 
+                     "java:comp/env/[r.getApplicationName().toLower()/]/datasource");
+                 try {
+
+                     // Chargement de la ressource via son nom jndi.
+                     ['log'.apply_attributeFinalStatic()/].info("Démarrage du serveur en utilisant la datasource : " + ['jndi name'.apply_variableDefault()/]);
+                     ['resource physical'.apply_variableDefault()/] = new NonXAJndiResourcePhysical(['jndi name'.apply_variableDefault()/]);
+
+                 } catch(NamingException ['e'.apply_variableDefault()/]) {
+
+                     throw new Spi4jRuntimeException(['e'.apply_variableDefault()/], "Nom JNDI inconnu : " +  ['jndi name'.apply_variableDefault()/],
+                         "Vérifier le nom JNDI de la DataSource");
+                 }
+           [else]
+
+                 // Chargement de la ressource.
+                 ['log'.apply_attributeFinalStatic()/].info("Démarrage de l'application avec la couche de persistence...");
+                 ['resource physical'.apply_variableDefault()/] = new DefaultResourcePhysical("jdbc:", "", "", ResourceType_Enum.ressourceDbcpNonXA);
+           [/if]
+           }
+           return ['resource physical'.apply_variableFinal()/];
+
+         [/protected]
      }
   
   [if (r.isLibrary())]
@@ -339,15 +331,15 @@
        {
           // [('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault()/]
           [protected (r.getUserCodeId(('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
             // TODO renseigner le(s) initialisation(s) de paramPersistence des librairies avec celui de [r.getApplicationName()/]
-        	
+
             [for (prop : String | r.getAdditionnalLibraries())]
               [if (prop.isLibraryDatabaseConnected(prop))]
                 	  // [prop.getLibraryPackage(prop)/].persistence.[(prop.getLibraryName(prop) + ' param persistence').apply_classDefault()/].['set ElemResourceManager'.apply_methodDefault()/](['ElemResourceManager'.apply_attributeFinal()/]);
               [/if]
             [/for]
-            	
+
           [/protected]
     
        }
@@ -355,9 +347,8 @@
   
      // Methodes
      [protected (r.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   }[/template]
 
 [template public contextDatasource(r : entity::Root)]

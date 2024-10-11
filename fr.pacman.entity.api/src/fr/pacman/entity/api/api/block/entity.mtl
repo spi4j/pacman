@@ -60,7 +60,7 @@
      private [e.genPkType()/] [e.nameSimplePropertyID().apply_attributeDefault()/];
   
   [for (a : environment::Attribute | e.attributesNoPk())]
-       /** [a.description(false)/] */
+       ['/** ' + a.description(false)/] */
     [if (a.isVersion())]
          @JdbcVersion
     [/if]
