@@ -33,7 +33,6 @@
     
   [/protected]
   
-  
   [e.comClass(e.roleReferentielEntity())/]
   public final class [e.buildReferentielEntityClassName()/]
   {
@@ -56,18 +55,16 @@
   
       // Constantes [e.buildReferentielEntityClassName()/]
       [protected (e.getUserCodeId('Constantes ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-        
+
       [/protected]
-  
   
   
      // ATTRIBUTS
   
      // Attributs [e.buildReferentielEntityClassName()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   
      // METHODES
@@ -155,11 +152,10 @@
           CSVReader ['csv reader'.apply_variableDefault()/] =  new CSVReader (new FileReader( ['nom fic csv complet'.apply_variableDefault()/]), ';', '"', 1);
           String ['['/]] ['csv line'.apply_variableDefault()/];
   
-     	    // PreTraitement [e.buildReferentielEntityClassName()/]
-     	    [protected (e.getUserCodeId('PreTraitement ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-            
+          // PreTraitement [e.buildReferentielEntityClassName()/]
+          [protected (e.getUserCodeId('PreTraitement ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
+
           [/protected]
-  
   
           /** Parcours une à une des lignes du fichier Csv */
           while ( ( ['csv line'.apply_variableDefault()/] = ['csv reader'.apply_variableDefault()/].readNext() ) != null )
@@ -254,7 +250,7 @@
     [/if]
     [if (a.physicalName().toString().contains('_MAJ'))]
                 if ( "S".equals ([(e.name + ' fichier').apply_variableDefault()/].[a.nameSimpleProperty().apply_methodGet()/]()) )
-      		  {
+                {
                   ['suppression enregistrement'.apply_variableDefault()/] = true;
                 }
     [/if]
@@ -266,7 +262,7 @@
     [/if]
     [if (a.physicalName().toString().contains('_DTFIN'))]
                 if ( [(e.name + ' fichier').apply_variableDefault()/] .[a.nameSimpleProperty().apply_methodGet()/]().before(['today'.apply_variableDefault()/]) )
-      		  {
+                {
                   [a.getXtopSupName().apply_variableDefault()/] = DatabaseLineStatus_Enum.active.get_value();
                 }
     [/if]
@@ -320,9 +316,8 @@
   
             // PreSave [e.buildReferentielEntityClassName()/]
             [protected (e.getUserCodeId('PreSave ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-  
   
             /** On recupere les enregistrements en base de l'entite [e.name/] correspondant à la ligne lue */
             final List <[e.buildEntityInterfaceName()/]> [('all ' + e.name).apply_variableFinal()/] =  [(e.name + ' dao').apply_attributeFinalStatic()/].findByCriteria( [('tableCriteria ' + e.name).apply_variableDefault()/] );
@@ -367,9 +362,8 @@
   
             // PostSave [e.buildReferentielEntityClassName()/]
             [protected (e.getUserCodeId('PostSave ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-              
+
             [/protected]
-  
   
           }
           /** Fermeture du reader Csv */
@@ -393,26 +387,24 @@
   
         // PostTraitement [e.buildReferentielEntityClassName()/]
         [protected (e.getUserCodeId('PostTraitement ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-  
   
      }
   
      // Methodes [e.buildReferentielEntityClassName()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildReferentielEntityClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-       
+
      [/protected]
-  
   
   
   }[/template]
 
-[template private valueForColumn(a : environment::Attribute, entityColumnEnum : String, csvLine : String)]
+[template private valueForColumn(a : environment::Attribute, entityColumnEnum : String, csvLine : String) post(self.trim())]
   [if (a.genPropertyType().equalsIgnoreCase('String'))][csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ][elseif (a.genPropertyType().equalsIgnoreCase('Integer'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).intValue()[elseif (a.genPropertyType().equalsIgnoreCase('Long'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).longValue()[elseif (a.genPropertyType().equalsIgnoreCase('Float'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).floatValue()[elseif (a.genPropertyType().equalsIgnoreCase('Double'))]['number format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ]).doubleValue()[elseif (a.genPropertyType().equalsIgnoreCase('Boolean'))]Boolean.parseBoolean([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ])[elseif (a.genPropertyType().equalsIgnoreCase('Date'))]['date format csv'.apply_attributeFinalStatic()/].parse([csvLine/]['['/] [entityColumnEnum/].[a.nameSimpleProperty().apply_attributeEnum()/].ordinal() - 1 ])[elseif (a.genPropertyType().equalsIgnoreCase('Timestamp'))]new Timestamp( ['today'.apply_variableDefault()/].getTime() )[elseif (a.genPropertyType().equalsIgnoreCase('Time'))]new Time( ['today'.apply_variableDefault()/].getTime() )[/if]
 [/template]
 
-[template private defaultValueForColumnType(o : ecore::EObject, type : String)]
+[template private defaultValueForColumnType(o : ecore::EObject, type : String) post(self.trim())]
   [if (type.equalsIgnoreCase('String'))]"s" + ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Boolean'))]false[elseif (type.equalsIgnoreCase('Integer'))](int) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Long'))]['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Float'))](float) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Double'))](double) ['i'.apply_variableDefault()/][elseif (type.equalsIgnoreCase('Date'))]new Date()[elseif (type.equalsIgnoreCase('Timestamp'))]new Timestamp( ['today'.apply_variableDefault()/].getTime() )[elseif (type.equalsIgnoreCase('Time'))]new Time( ['today'.apply_variableDefault()/].getTime() )[elseif (type.equalsIgnoreCase('Char'))]'c'[elseif (type.equalsIgnoreCase('byte[]'))]new byte['['/]0][/if]
 [/template]
 

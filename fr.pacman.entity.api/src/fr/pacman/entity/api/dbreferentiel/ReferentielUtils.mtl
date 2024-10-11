@@ -45,7 +45,6 @@
       
     [/protected]
     
-    
     /**
      * Classe d utilitaires pour le chargement des fichiers dans le referentiel
      */
@@ -59,18 +58,16 @@
     
         // Constantes ['referentiel utils'.apply_classDefault()/]
         [protected (r.getUserCodeId('Constantes ' + 'referentiel utils'.apply_classDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-    
     
     
        // ATTRIBUTS
     
         // Attributs ['referentiel utils'.apply_classDefault()/]
         [protected (r.getUserCodeId('Attributs ' + 'referentiel utils'.apply_classDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-          
+
         [/protected]
-    
     
     
        // METHODES
@@ -214,9 +211,8 @@
     
        // Methodes ['referentiel utils'.apply_classDefault()/]
        [protected (r.getUserCodeId('Methodes ' + 'referentiel utils'.apply_classDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-    
     
     }
   [/file]
