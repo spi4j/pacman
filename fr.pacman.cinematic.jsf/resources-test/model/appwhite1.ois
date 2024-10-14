@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<overview:Root xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:overview="http://www.obeonetwork.org/dsl/overview/2.0.0" xmlns:soa="http://www.obeonetwork.org/dsl/soa/3.0.0" xmi:id="_XN8hMa4nEeGcVP1rrBsv1Q" createdOn="2015-07-28T16:13:20.545+0200" modifiedOn="2015-07-28T16:17:12.939+0200">
-  <ownedElements href="entity/appwhite1.entity#_z6QBIGG9EeCHXp28f7kSY0"/>
-  <ownedElements xsi:type="soa:System" xmi:id="_XOFrIa4nEeGcVP1rrBsv1Q" modifiedOn="2012-10-01T10:31:13.880+0200">
-    <ownedNamespaces href="soa/services.soa#_zvaqYHI1EeC5bZvKOWww9B"/>
-  </ownedElements>
-  <ownedElements href="cinematic/appwhite1.cinematic#_FDHo0Z5rEeGr5amF9i2zgA"/>
-</overview:Root>

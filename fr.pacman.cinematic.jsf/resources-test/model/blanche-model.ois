@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<overview:Root xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:overview="http://www.obeonetwork.org/dsl/overview/2.0.0" xmi:id="_n0rXwfN9EeK-XMCdCf-9Sg" createdOn="2013-07-23T11:52:44.332+0200" modifiedOn="2013-07-23T11:52:44.426+0200">
-  <ownedElements href="blanche-model.entity#_n0-SsPN9EeK-XMCdCf-9Sg"/>
-  <ownedElements href="blanche-model.soa#_n1IDsPN9EeK-XMCdCf-9Sg"/>
-  <ownedElements href="blanche-model.cinematic#_n1IDsfN9EeK-XMCdCf-9Sg"/>
-</overview:Root>

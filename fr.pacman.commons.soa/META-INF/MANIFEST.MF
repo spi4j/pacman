@@ -15,8 +15,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.acceleo.model,
  org.eclipse.acceleo.engine,
  org.obeonetwork.dsl.soa, 
- fr.pacman.commons,
- fr.pacman.test;resolution:=optional
+ fr.pacman.commons
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true

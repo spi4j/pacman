@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: fr.pacman.soa.ui
-Bundle-SymbolicName: fr.pacman.soa.ide.ui;singleton:=true
+Bundle-SymbolicName: fr.pacman.soa.ui;singleton:=true
 Bundle-Version: 4.4.0.qualifier
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.acceleo.aql;bundle-version="[4.0.0,5.0.0)",

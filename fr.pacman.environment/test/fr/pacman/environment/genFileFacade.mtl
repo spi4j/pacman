@@ -1,6 +1,0 @@
-[module genFileFacade('http://www.obeonetwork.org/dsl/requirement/1.0')/]
-
-[comment encoding = UTF-8 /]
-[comment @main/]
-[template public genPrimitiType_facade(r : requirement::Repository)]
-  [r.genPrimitiType_facade()/][/template]
