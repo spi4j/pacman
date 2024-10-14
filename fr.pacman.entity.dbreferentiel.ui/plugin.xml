@@ -4,8 +4,8 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="fr.pacman.entity.jdbc.ui.handlers.JdbcGeneratorsHandler"
-            commandId="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand">
+            class="fr.pacman.entity.dbreferentiel.ui.handlers.DbReferentielGeneratorsHandler"
+            commandId="fr.pacman.entity.dbreferentiel.ui.commands.DbReferentielGeneratorCommand">
       </handler>
    </extension>
    <extension
@@ -16,8 +16,8 @@
                id="fr.pacman.ui.menus.generators"
                label="Safr@n">
             <command
-                  commandId="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand"
-                  id="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand" 
+                  commandId="fr.pacman.entity.dbreferentiel.ui.commands.DbReferentielGeneratorCommand"
+                  id="fr.pacman.entity.dbreferentiel.ui.commands.DbReferentielGeneratorCommand" 
                   icon="icons/safran.png" 
                   label="Génération import référentiel">
                <visibleWhen
@@ -46,13 +46,13 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="fr.pacman.entity.jdbc.ui.commands.generatorsCategory"
+            id="fr.pacman.entity.dbreferentiel.ui.commands.generatorsCategory"
             name="Generators">
       </category>
       <command
-            categoryId="fr.pacman.entity.jdbc.ui.commands.generatorsCategory"
-            id="fr.pacman.entity.jdbc.ui.commands.JdbcGeneratorCommand"
-            name="fr::pacman::entity::generateServerJdbc">
+            categoryId="fr.pacman.entity.dbreferentiel.ui.commands.generatorsCategory"
+            id="fr.pacman.entity.dbreferentiel.ui.commands.DbReferentielGeneratorCommand"
+            name="fr::pacman::entity::generateServerDbReferentiel">
       </command>
    </extension>
 

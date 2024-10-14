@@ -526,6 +526,7 @@
 		<java.version>11</java.version>
 		<tycho-version>1.7.0</tycho-version>
 		<acceleo-version>3.6.4</acceleo-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
 		<central-repository-url>https://repo.maven.apache.org/maven2</central-repository-url>
 		<acceleo-releases_url>https://repo.eclipse.org/content/repositories/acceleo-releases</acceleo-releases_url>
