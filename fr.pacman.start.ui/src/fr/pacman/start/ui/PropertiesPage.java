@@ -344,7 +344,7 @@ public class PropertiesPage extends WizardPage {
 		v_fillLayout.marginHeight = 3;
 		v_group.setLayout(v_fillLayout);
 		v_group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		v_group.setCursor(new Cursor(p_container.getDisplay(), SWT.CURSOR_HAND));
+		//v_group.setCursor(new Cursor(p_container.getDisplay(), SWT.CURSOR_HAND));
 		return v_group;
 	}
 
@@ -362,7 +362,7 @@ public class PropertiesPage extends WizardPage {
 		v_gridLayout.marginTop = 8;
 		GridData v_gridData = new GridData(GridData.FILL_HORIZONTAL);
 		v_group.setLayoutData(v_gridData);
-		v_group.setCursor(new Cursor(p_container.getDisplay(), SWT.CURSOR_HAND));
+		//v_group.setCursor(new Cursor(p_container.getDisplay(), SWT.CURSOR_HAND));
 		return v_group;
 	}
 
@@ -1063,10 +1063,10 @@ public class PropertiesPage extends WizardPage {
 		v_label.setText(TextUtil.c_LBL_SPI4J_VERSION);
 
 		Label v_spi4J = new Label(p_container, SWT.NONE);
-		FontData v_fontData = v_spi4J.getFont().getFontData()[0];
-		Font font = new Font(p_container.getDisplay(),
-				new FontData(v_fontData.getName(), v_fontData.getHeight(), SWT.BOLD));
-		v_spi4J.setFont(font);
+//		FontData v_fontData = v_spi4J.getFont().getFontData()[0];
+//		Font font = new Font(p_container.getDisplay(),
+//				new FontData(v_fontData.getName(), v_fontData.getHeight(), SWT.BOLD));
+//		v_spi4J.setFont(font);
 		v_spi4J.setText(_spi4jVersion);
 	}
 
@@ -3336,5 +3336,11 @@ public class PropertiesPage extends WizardPage {
 		String _prefix = "";
 		String _schema = "";
 		String _useDatabase = PacmanConfig.c_BOOL_STR_NO;
+	}
+
+	@Override
+	public void dispose() {
+		// deallocate SWT resources
+		super.dispose();
 	}
 }
