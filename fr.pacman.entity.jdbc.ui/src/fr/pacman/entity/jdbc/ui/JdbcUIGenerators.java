@@ -48,7 +48,7 @@ public class JdbcUIGenerators extends PacmanUIGenerator_Abs {
 
 	/**
 	 * Get the list for all projects to refresh after the generation. Add here all
-	 * necessary project names issued from the {@link PacmanPropertiesManager}.
+	 * necessary project names issued from the {@link ProjectProperties}.
 	 * 
 	 * @return a list of projects to refresh after code generation.
 	 */
