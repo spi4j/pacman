@@ -30,10 +30,12 @@
   
   	<!--
   	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
-     		
-   [/protected]
-  
+  	  -->
+  	  
+  	  <!--
+  	[/protected]
   	-->
+  	
       <dependencies>
   [if (any.useSpi4jSecurity())]
             <dependency>		
@@ -265,12 +267,15 @@
               <version>${junit.version}</version>
               <scope>test</scope>
           </dependency>
+          
   		<!--
   		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
-      		
-    [/protected]
-  
+  		  -->
+  		  
+  		  <!--
+  		[/protected]
   		-->
+  		
       </dependencies>
   
       <build>
@@ -303,12 +308,15 @@
                       </excludes>
                   </configuration>
               </plugin>
+              
   			<!--
   			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
-       		
-     [/protected]
-  
+  			  -->
+  			  
+  			  <!--
+  			[/protected]
   			-->
+  			
           </plugins>
       </build>
   </project>[/template]

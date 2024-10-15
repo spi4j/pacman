@@ -29,11 +29,10 @@
   
   	<!--
   	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
-     	-->
-     		
-     	<!--
-   [/protected]
-  
+  	  -->
+  	  
+  	  <!--
+  	[/protected]
   	-->
   
       <dependencies>
@@ -68,12 +67,12 @@
       		-->
     [/if]
   [/if]
-          <dependency>
-              <groupId>org.junit.jupiter</groupId>
-              <artifactId>junit-jupiter</artifactId>
-              <version>${junit.version}</version>
-              <scope>test</scope>
-          </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
   		<dependency>
       		<groupId>org.slf4j</groupId>
       		<artifactId>slf4j-api</artifactId>
@@ -129,10 +128,10 @@
     		</dependency>
   [/if]
   
-  		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
-      		-->
-      	
+          <!--
+          [protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+            -->
+            
       [if (any.useConfigFileSpi4jFrwk())]
         		<!-- A décommenter en fonction de l'utilisation des diverses options
         		pour l'utilisation du framework spi4j dans le cas de la gestion des
@@ -153,10 +152,10 @@
         		-->
       [/if]
       
-      		<!--
-    [/protected]
-  
-  		-->
+            <!--
+        [/protected]
+          -->
+  		
       </dependencies>
   
       <build>
@@ -195,12 +194,12 @@
               </plugin>
   			<!--
   			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
-       			-->
-       		
-       			<!--
-     [/protected]
-  
+  			  -->
+  			  
+  			  <!--
+  			[/protected]
   			-->
+  			
           </plugins>
           <pluginManagement>
                 <plugins>
@@ -256,14 +255,15 @@
           <build.projectGroupId>${project.parent.groupId}</build.projectGroupId>
           <build.projectArtifactId>${project.parent.artifactId}</build.projectArtifactId>
           <build.projectVersion>${project.parent.version}</build.projectVersion>
+          
   		<!--
   		[protected ('for properties') startTagPrefix('// ') endTagPrefix('// ')]
-      		-->
-      		
-      		<!--
-    [/protected]
-  
+  		  -->
+  		  
+  		  <!--
+  		[/protected]
   		-->
+  		
       </properties>
   </project>[/template]
 
