@@ -138,11 +138,10 @@
   
         // [any.buildRSContextResolverClassName()/]
         [protected (any.getUserCodeId(any.buildRSContextResolverClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-          
-                super(new JacksonAnnotationIntrospector());
+            
+          super(new JacksonAnnotationIntrospector());
           
         [/protected]
-  
      }
   }[/template]
 
@@ -343,15 +342,14 @@
   	 * @return Le chemin pour le(s) fichier(s) de configuration.
   	 */
    	@Override
-     	protected RsFilterConfigurator initFilterConfig ()
-     	{
+    protected RsFilterConfigurator initFilterConfig ()
+    {
   		// init filter config
   		[protected (any.getUserCodeId('init filter config')) startTagPrefix('// ') endTagPrefix('// ')]
       
-      		return new RsFilterConfigurator("[any.getApplicationName().toUpper()/]").set_debugMode();
+  		  return new RsFilterConfigurator("[any.getApplicationName().toUpper()/]").set_debugMode();
       
-    [/protected]
-  
+    	[/protected]
   	}
   
   	/**
@@ -366,11 +364,10 @@
   	{
   		// init tokens config
   		[protected (any.getUserCodeId('init tokens config')) startTagPrefix('// ') endTagPrefix('// ')]
-      		
-      		return new [any.buildRSTokensConfiguratorClassName()/]();
       
-    [/protected]
-  
+  		  return new [any.buildRSTokensConfiguratorClassName()/]();
+  		  
+  		[/protected]
   	}
   
   	/**
@@ -390,11 +387,10 @@
   	@Override
   	protected void provideClaimsToApplication(final String ['spi4j id'.apply_parameterMethodClassicIn()/], final Claims ['claims'.apply_parameterMethodClassicIn()/])
   	{
-        	// provide claims application
-        	[protected (any.getUserCodeId('provide claims application')) startTagPrefix('// ') endTagPrefix('// ')]
-           
-         [/protected]
-  
+          // provide claims application
+          [protected (any.getUserCodeId('provide claims application')) startTagPrefix('// ') endTagPrefix('// ')]
+            
+		  [/protected]
   	}
   
   	/**
@@ -411,10 +407,9 @@
   	    // build refreshed token reponse
   	    [protected (any.getUserCodeId('build refreshed token reponse')) startTagPrefix('// ') endTagPrefix('// ')]
          
-         		return null;
-         
-       [/protected]
-  	
+  	      return null;
+  	        
+  	    [/protected]
   	}
   	
   	/**
@@ -430,8 +425,7 @@
   		// before filter
   		[protected (any.getUserCodeId('before filter')) startTagPrefix('// ') endTagPrefix('// ')]
       
-    [/protected]
-  
+  		[/protected]
   	}
   
   	/**
@@ -444,13 +438,13 @@
   	@Override
   	protected void afterFilter (final ContainerResponseContext ['response ctx'.apply_parameterMethodClassicIn()/])
   	{
-        	// after filter
-        	[protected (any.getUserCodeId('after filter')) startTagPrefix('// ') endTagPrefix('// ')]
-           
-         [/protected]
+          // after filter
+          [protected (any.getUserCodeId('after filter')) startTagPrefix('// ') endTagPrefix('// ')]
+            
+          [/protected]
   
-  [if (any.useSpi4jSecurity())]
-    		Spi4jSecurity_Abs.getInstance().deconnexion();
-  [/if]
+  		[if (any.useSpi4jSecurity())]
+  		  Spi4jSecurity_Abs.getInstance().deconnexion();
+  		[/if]
   	}
   }[/template]

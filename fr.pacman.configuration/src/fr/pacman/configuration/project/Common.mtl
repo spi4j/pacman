@@ -466,7 +466,6 @@
    * build.projectVersion,
    * etc telles que definies dans le pom.xml)
    */
-  
   public class [any.buildInfoClassName()/] extends BuildInfo_Abs
   {
   
@@ -476,7 +475,7 @@
   
      /**
       * Constructeur.
-     */
+      */
       private [any.buildInfoClassName()/] ()
       {
         super();

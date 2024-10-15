@@ -25,7 +25,6 @@
    * La servlet utilisee pour retourner les informations sur la version deployee de
    * l'application.
    */
-  
   public class [any.buildInfoServletClassName()/] extends BuildInfoServlet
   {
   

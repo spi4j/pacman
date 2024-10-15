@@ -377,9 +377,9 @@
   		// security initialization
   		[protected (any.getUserCodeId('security initialization')) startTagPrefix('// ') endTagPrefix('// ')]
       
-      		Parameters.initServletContext( ['servlet context'.apply_parameterMethodClassicIn()/]);
-      
-    [/protected]
+  		  Parameters.initServletContext( ['servlet context'.apply_parameterMethodClassicIn()/]);
+  		  
+  		[/protected]
   
   	}
   
