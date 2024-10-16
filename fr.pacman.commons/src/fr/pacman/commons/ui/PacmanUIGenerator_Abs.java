@@ -196,7 +196,7 @@ public abstract class PacmanUIGenerator_Abs {
 				updateIDEAfterCodeGeneration();
 				// ErrorGeneration.doIfThrowErrorGenerationException(); Voir si utile doublon
 				// etc....
-				PacmanUIGeneratorsReport.log(true);
+				PacmanUIGeneratorsReport.log(Boolean.valueOf(ProjectProperties.getDisplayGeneratorReport()));
 				// ErrorGeneration.clear(); // Voir si utile doublon etc...
 				PacmanPropertiesManager.exit();
 

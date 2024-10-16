@@ -260,6 +260,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    
    private static final String c_idParam_paging_current_page_size  = "paging.current.page.size.key";
    
+   private static final String c_idParam_generator_display_report = "generator.report.display";
+   
 
    // LEGACY A MODIFIER
 
@@ -295,6 +297,9 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
             
                PacmanProperty.newRequired(c_idParam_author, System.getProperty("user.name", "MINARM"),
                         "L'auteur par defaut des fichiers generes"),
+               
+               PacmanProperty.newRequired(c_idParam_generator_display_report, "true",
+                       "Activation de l'affichage du rapport de generation"),
 
                PacmanProperty.newRequired(c_idParam_package, "com.mycompany.myproject",
                         "Le package racine des sources du projet"),
@@ -1639,6 +1644,11 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    }
 
    public static String getClientJspForceTopBottomJavaService(Object object){return getClientJspForceTopBottom();}
+   
+   public static String getDisplayGeneratorReport () 
+   {
+      return PacmanPropertiesManager.get_property(c_idParam_generator_display_report);
+   }
    
    public static String getXtoSupKey () 
    {
