@@ -686,8 +686,7 @@
   
   
   /**
-  /**
-   * Cette classe est un simple 'capsule' pour la création du gestionnaire de
+   * Cette classe est une simple 'capsule' pour la création du gestionnaire de
    * configuration Spi4j. La méthode "init()" est automatiquement appelée par le
    * listener d'initialisation présent dans le projet client et/ou dans la webapp
    * (si la génération de services web a été demandée).
