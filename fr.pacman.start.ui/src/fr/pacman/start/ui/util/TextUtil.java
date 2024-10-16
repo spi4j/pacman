@@ -39,6 +39,8 @@ public class TextUtil {
 	public static final String c_WZD_MONITOR_PROJECT_SAFRAN = "Mise à jour du projet vers Safr@n";
 	public static final String c_WZD_MONITOR_PROJECT_MAVEN = "Ajout de la nature Maven au projet";
 	public static final String c_WZD_MONITOR_PROJECT_SUB = "Configuration des sous projets";
+	public static final String c_WZD_MONITOR_PROJECT_REF = "Rafraichissement des sous projets";
+	public static final String c_WZD_MONITOR_PROJECT_ORG = "Organisation des sous projets";
 	public static final String c_WZD_MONITOR_PROJECT_EMF = "Ajout de la nature EMF au projet de modélisation";
 	public static final String c_WZD_MONITOR_PROJECT_EMFT = c_WZD_MONITOR_PROJECT_EMF + " - Tentative : ";
 

@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.Logger;
 
+import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.commons.ui.PacmanUIGenerator_Abs;
@@ -48,11 +49,23 @@ public class ConfigurationUIGenerators extends PacmanUIGenerator_Abs {
 	 * Get the list for all projects to refresh after the generation. Add here all
 	 * necessary project names issued from the {@link PacmanPropertiesManager}.
 	 * 
-	 * @return a list of projects to refresh after code generation.
+	 * @return a list of projects to refresh after code generation. Here, add all
+	 *         subprojects available even if the subproject doesn't exist has we
+	 *         check if the project exist before making any operation.
 	 */
 	@Override
 	protected List<String> getSubProjectsToRefresh() {
-		return null;
+		final List<String> v_projects = new ArrayList<String>();
+		v_projects.add(ProjectProperties.getServerProjectName());
+		v_projects.add(ProjectProperties.getCommonProjectName());
+		v_projects.add(ProjectProperties.getClientGwtProjectName());
+		v_projects.add(ProjectProperties.getClientJsfProjectName());
+		v_projects.add(ProjectProperties.getClientJspProjectName());
+		v_projects.add(ProjectProperties.getClientSwingProjectName());
+		v_projects.add(ProjectProperties.getClientJavaWebStartProjectName());
+		v_projects.add(ProjectProperties.getClientIntegrationProjectName());
+		v_projects.add(ProjectProperties.getWebappProjectName());
+		return v_projects;
 	}
 
 	/**
@@ -104,7 +117,7 @@ public class ConfigurationUIGenerators extends PacmanUIGenerator_Abs {
 	protected String getPluginId() {
 		return Activator.PLUGIN_ID;
 	}
-	
+
 	/**
 	 * Get the logger for the plugin.
 	 * 

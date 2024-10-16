@@ -43,6 +43,10 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    private static final String c_idParam_is_formatImports = "pacman.import.format";
    
    private static final String c_idParam_is_clearUserCode = "pacman.userCode.clear";
+   
+   private static final String c_idParam_is_display_report = "pacman.report.display";
+   
+   private static final String c_idParam_is_formatClasses = "pacman.classes.format";
 
    private static final String c_idParam_isLazyLoading = "dsl.entity.isLazyLoading";
 
@@ -259,8 +263,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    private static final String c_idParam_paging_page_count = "paging.page.count.key"; 
    
    private static final String c_idParam_paging_current_page_size  = "paging.current.page.size.key";
-   
-   private static final String c_idParam_generator_display_report = "generator.report.display";
+  
    
 
    // LEGACY A MODIFIER
@@ -297,9 +300,6 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
             
                PacmanProperty.newRequired(c_idParam_author, System.getProperty("user.name", "MINARM"),
                         "L'auteur par defaut des fichiers generes"),
-               
-               PacmanProperty.newRequired(c_idParam_generator_display_report, "true",
-                       "Activation de l'affichage du rapport de generation"),
 
                PacmanProperty.newRequired(c_idParam_package, "com.mycompany.myproject",
                         "Le package racine des sources du projet"),
@@ -344,6 +344,12 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
 
                PacmanProperty.newRequired(c_idParam_is_formatImports, "true",
                         "Flag indiquant si le formattage auto des imports est actif (CTRL + SHIFT + O)"),
+               
+               PacmanProperty.newRequired(c_idParam_is_formatClasses, "true",
+                       "Flag indiquant si le formattage auto des classes java est actif (CTRL + SHIFT + F)"),
+               
+               PacmanProperty.newRequired(c_idParam_is_display_report, "true",
+                       "Flag indiquant si la generation doit afficher un rapport"),
                
                PacmanProperty.newRequired(c_idParam_is_clearUserCode, "false",
                         "Flag indiquant si identifiants de balise user code sont en clair"),               
@@ -1645,9 +1651,14 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
 
    public static String getClientJspForceTopBottomJavaService(Object object){return getClientJspForceTopBottom();}
    
-   public static String getDisplayGeneratorReport () 
+   public static String getIsDisplayGeneratorReport () 
    {
-      return PacmanPropertiesManager.get_property(c_idParam_generator_display_report);
+      return PacmanPropertiesManager.get_property(c_idParam_is_display_report);
+   }
+   
+   public static String getIsFormatJavaClasses () 
+   {
+      return PacmanPropertiesManager.get_property(c_idParam_is_formatClasses);
    }
    
    public static String getXtoSupKey () 

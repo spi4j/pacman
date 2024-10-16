@@ -25,13 +25,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.ui.actions.FormatAllAction;
 import org.eclipse.jdt.ui.actions.OrganizeImportsAction;
+import org.eclipse.jdt.ui.actions.SelectionDispatchAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
@@ -91,6 +92,21 @@ public abstract class PacmanUIGenerator_Abs {
 		_rootPath = new File(p_selectedResource.getLocation().toString()).getParentFile();
 		_modelExt = URI.createPlatformResourceURI(((IFile) p_selectedResource).getFullPath().toString(), true)
 				.fileExtension();
+	}
+
+	/**
+	 * Constructor. This constructor is only used for the benefit of eclipse auto
+	 * format and import organization. This is not very elegant but useful.
+	 * 
+	 * @param p_project the project for creation.
+	 */
+	public PacmanUIGenerator_Abs(IProject p_project) {
+		// _resources =
+		// Collections.singletonList(p_selectedResource.getLocation().toString());
+		_rootPath = new File(p_project.getLocation() + File.separator + p_project.getName() + "-model");
+		// _modelExt = URI.createPlatformResourceURI(((IFile)
+		// p_selectedResource).getFullPath().toString(), true)
+		// .fileExtension();
 	}
 
 	/**
@@ -195,8 +211,7 @@ public abstract class PacmanUIGenerator_Abs {
 			try {
 				updateIDEAfterCodeGeneration();
 				// ErrorGeneration.doIfThrowErrorGenerationException(); Voir si utile doublon
-				// etc....
-				PacmanUIGeneratorsReport.log(Boolean.valueOf(ProjectProperties.getDisplayGeneratorReport()));
+				PacmanUIGeneratorsReport.log(Boolean.valueOf(ProjectProperties.getIsDisplayGeneratorReport()));
 				// ErrorGeneration.clear(); // Voir si utile doublon etc...
 				PacmanPropertiesManager.exit();
 
@@ -268,14 +283,19 @@ public abstract class PacmanUIGenerator_Abs {
 			final IContainer v_targetWorkspaceContainer = ResourcesPlugin.getWorkspace().getRoot()
 					.getContainerForLocation(new Path(v_targetFolder.getAbsolutePath()));
 
-			if (v_targetWorkspaceContainer != null) {
+			if (v_targetWorkspaceContainer != null && v_targetWorkspaceContainer.getProject().exists()) {
 				try {
 					v_targetWorkspaceContainer.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 					final IWorkbenchPartSite v_targetSite = getTargetSite();
 					if (Boolean.valueOf(ProjectProperties.getIsFormatImports()) && getOrganizeImports()
-							&& v_targetSite != null && PacmanUIGeneratorsReport.getNbFiles() > 0) {
-						refreshImports(v_targetWorkspaceContainer.getProject(), v_targetSite);
-					}
+							&& v_targetSite != null && PacmanUIGeneratorsReport.getNbFiles() > 0)
+						doEclipseAction(v_targetWorkspaceContainer.getProject(),
+								new OrganizeImportsAction(v_targetSite));
+
+					if (Boolean.valueOf(ProjectProperties.getIsFormatJavaClasses()) && v_targetSite != null
+							&& PacmanUIGeneratorsReport.getNbFiles() > 0)
+						doEclipseAction(v_targetWorkspaceContainer.getProject(), new FormatAllAction(v_targetSite));
+
 				} catch (CoreException p_e) {
 					Activator.getDefault().getLog().log(new Status(IStatus.ERROR, getPluginId(),
 							"Impossible de rafraîchir " + v_targetWorkspaceContainer.getFullPath(), p_e));
@@ -345,24 +365,24 @@ public abstract class PacmanUIGenerator_Abs {
 	}
 
 	/**
-	 * Organize imports (CTRL + SHIFT + O) over all generated Java classes for
-	 * refreshed projects.
+	 * Run any selected dispatch action for Eclipse IDE (equivalent of any CTRL +
+	 * SHIFT).
 	 * 
 	 * @param p_project
-	 * @param p_targetSite
+	 * @param p_action
 	 * @throws CoreException
 	 */
-	private void refreshImports(final IProject p_project, final IWorkbenchSite p_targetSite) throws CoreException {
+	private void doEclipseAction(final IProject p_project, final SelectionDispatchAction p_action)
+			throws CoreException {
 		Runnable v_job = new Runnable() {
 			@Override
 			public void run() {
-				OrganizeImportsAction v_org = new OrganizeImportsAction(p_targetSite);
 				try {
 					IJavaProject v_prj = null;
 					if (p_project.exists() && p_project.hasNature(JavaCore.NATURE_ID)) {
 						v_prj = JavaCore.create(p_project);
 						IStructuredSelection v_selection = new StructuredSelection(v_prj);
-						v_org.run(v_selection);
+						p_action.run(v_selection);
 					}
 				} catch (CoreException ce) {
 					ce.printStackTrace();

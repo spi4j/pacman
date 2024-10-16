@@ -98,10 +98,14 @@ public class GenerateStartUIAction extends Wizard implements INewWizard {
 					v_subMonitor.setTaskName(TextUtil.c_WZD_MONITOR_PROJECT_SUB);
 					configureSubProjectsWithMaven(v_project);
 
+					v_subMonitor.setTaskName(TextUtil.c_WZD_MONITOR_PROJECT_REF);
 					WizardUtil.refreshProject(v_subMonitor, v_project);
 
 					v_subMonitor.setTaskName(TextUtil.c_WZD_MONITOR_PROJECT_EMF);
 					addEMFNatureToProjectModel(v_subMonitor, v_project, 0);
+
+					v_subMonitor.setTaskName(TextUtil.c_WZD_MONITOR_PROJECT_ORG);
+					updateIDEAfterCodeGeneration(v_subMonitor, v_project);
 
 				} catch (Exception p_e) {
 
@@ -223,7 +227,7 @@ public class GenerateStartUIAction extends Wizard implements INewWizard {
 					+ p_properties.get(GenerateStart.c_PROP_APPLICATION_NAME) + "-model";
 			PacmanPropertiesManager.initProperties(v_modelPath, p_properties);
 			PacmanUIGeneratorsReport.reset();
-			
+
 			GenerateStart v_generator = new GenerateStart(v_file);
 			v_generator.updateWithSafranProject(p_properties);
 
@@ -339,6 +343,24 @@ public class GenerateStartUIAction extends Wizard implements INewWizard {
 
 		// Ajout de toutes les donnees de modelisation.
 		SiriusUtil.addModelingResources(p_monitor, v_project, _pageOne.getApplicationName(), _pageOne.getModelCodes());
+	}
+
+	/**
+	 * Cette methode est un "pis aller" pour récupérer la couche ui generique des
+	 * generateurs et beneficier ainsi de l'organisation automatique des imports
+	 * ainsi que du formattage de l'IDE (factorisation du code). Pour ce faire on
+	 * utilise une classe fille {@link GenerateStartUIGenerators} dont l'unique but
+	 * est de fournir la liste des sous-projets à fournir. Ceci est a rapprocher du
+	 * generateur UI de configuration {@link ConfigurationUIGenerators}
+	 * 
+	 * @param p_monitor
+	 * @param p_project
+	 * @throws CoreException
+	 */
+	private void updateIDEAfterCodeGeneration(final SubMonitor p_monitor, final IProject p_project)
+			throws CoreException {
+
+		new GenerateStartUIGenerators(p_project).updateIDEAfterCodeGeneration();
 	}
 
 	@Override
