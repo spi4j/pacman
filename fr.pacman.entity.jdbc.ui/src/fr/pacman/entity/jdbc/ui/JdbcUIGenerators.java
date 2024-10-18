@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.Logger;
+import org.eclipse.emf.ecore.EObject;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
@@ -29,6 +30,15 @@ public class JdbcUIGenerators extends PacmanUIGenerator_Abs {
 	 * @param p_selected the selected resource, in this case the model file.
 	 */
 	public JdbcUIGenerators(final IFile p_selected) {
+		super(p_selected);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param p_selected the selected resource, in this case any EObject.
+	 */
+	public JdbcUIGenerators(final EObject p_selected) {
 		super(p_selected);
 	}
 
@@ -109,7 +119,7 @@ public class JdbcUIGenerators extends PacmanUIGenerator_Abs {
 	protected String getPluginId() {
 		return Activator.PLUGIN_ID;
 	}
-	
+
 	/**
 	 * Get the logger for the plugin.
 	 * 

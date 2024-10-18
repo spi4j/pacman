@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.acceleo.Module;
 import org.eclipse.acceleo.OpenModeKind;
@@ -34,6 +35,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.obeonetwork.dsl.environment.Namespace;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -46,15 +48,17 @@ import fr.pacman.commons.ui.PacmanUIGeneratorsReport;
 public abstract class PacmanGenerator_Abs {
 
 	/**
-	 * 
+	 * All selected resources (files) for code generation. For now only one resource
+	 * is allowed but the system tends to be designed for multiple resources. If the
+	 * selection is an EObject, the list is empty.
 	 */
 	protected List<String> _resources;
 
 	/**
-	 * The selected (source) EObject for code generation. If the selection is a
-	 * IResource then the EObject is set to null.
+	 * All selected EObjects for code generation. If the selection is a IResource,
+	 * the list is empty. .
 	 */
-	protected EObject _selectedEObject;
+	protected List<EObject> _values;
 
 	/**
 	 * The root base path for code generation.
@@ -91,10 +95,10 @@ public abstract class PacmanGenerator_Abs {
 
 	/**
 	 * 
-	 * @param p_selectedEObject
+	 * @param p_values
 	 */
-	public void setSelectedEObject(EObject p_selectedEObject) {
-		_selectedEObject = p_selectedEObject;
+	public void setValues(List<EObject> p_values) {
+		_values = p_values;
 	}
 
 	/**
@@ -103,7 +107,7 @@ public abstract class PacmanGenerator_Abs {
 	 * 
 	 * @return the list of templates to execute.
 	 */
-	protected abstract List<String> getTemplates();
+	protected abstract Map<String, SelectionType_Enum> getTemplates();
 
 	/**
 	 * Get the name for the project specifically impacted by code generation.
@@ -125,7 +129,7 @@ public abstract class PacmanGenerator_Abs {
 	 * @return a list of options for code generation.
 	 */
 	protected abstract Map<String, String> getOptions();
-	
+
 	/**
 	 * 
 	 * @param queryEnvironment
@@ -152,7 +156,9 @@ public abstract class PacmanGenerator_Abs {
 	}
 
 	/**
-	 * Get the list off all templates to execute for the acceleo module
+	 * Get the list off all templates to execute for the acceleo module. For now,
+	 * don't do anything if the list of templates is empty, a simple message will be
+	 * displayed to the user.
 	 * 
 	 * @param module the acceleo module.
 	 * 
@@ -161,12 +167,42 @@ public abstract class PacmanGenerator_Abs {
 	 */
 	protected List<Template> getTemplatesToExecute(Module p_module) {
 		List<Template> v_templatesToExecute = new ArrayList<>();
+		SelectionType_Enum v_selectionType = getSelectiontTypeForTemplates();
+
 		for (Template v_template : AcceleoUtil.getMainTemplates(p_module)) {
-			if (getTemplates().contains(v_template.getName())) {
-				v_templatesToExecute.add(v_template);
+			for (Entry<String, SelectionType_Enum> v_entry : getTemplates().entrySet()) {
+				if (v_entry.getKey().equals(v_template.getName())) {
+					if (v_entry.getValue() == v_selectionType)
+						v_templatesToExecute.add(v_template);
+				}
 			}
 		}
 		return v_templatesToExecute;
+	}
+
+	/**
+	 * Return the internal type for the user selection. Allow to select the right
+	 * template from the concerned generator. Default value is ROOT, this value is
+	 * notably used for the start project. To be completed when needed.
+	 * 
+	 * @return the type of the initial selection.
+	 */
+	private SelectionType_Enum getSelectiontTypeForTemplates() {
+		SelectionType_Enum v_selectionType;
+
+		if (null != _resources && !_resources.isEmpty()) {
+			v_selectionType = SelectionType_Enum.FILE;
+		} else if (null != _values && !_values.isEmpty()) {
+			EObject v_obj = _values.get(0);
+			if (v_obj instanceof Namespace) {
+				v_selectionType = SelectionType_Enum.NAMESPACE;
+			} else {
+				v_selectionType = SelectionType_Enum.EOBJECT;
+			}
+		} else {
+			v_selectionType = SelectionType_Enum.ROOT;
+		}
+		return v_selectionType;
 	}
 
 	/**
@@ -201,8 +237,9 @@ public abstract class PacmanGenerator_Abs {
 			for (Template template : getTemplatesToExecute(module)) {
 				final EClassifierTypeLiteral eClassifierTypeLiteral = (EClassifierTypeLiteral) template.getParameters()
 						.get(0).getType().getAst();
-				final List<EObject> values = getValues(queryEnvironment, valuesCache, eClassifierTypeLiteral,
-						resourceSetForModels);
+
+				final List<EObject> values = getValuesFromInitialSelection(queryEnvironment, valuesCache,
+						eClassifierTypeLiteral, resourceSetForModels);
 
 				final String parameterName = template.getParameters().get(0).getName();
 				Map<String, Object> variables = new LinkedHashMap<>();
@@ -220,10 +257,27 @@ public abstract class PacmanGenerator_Abs {
 				}
 			}
 		} finally {
-			
+
 			AQLUtils.cleanResourceSetForModels(generationKey, resourceSetForModels);
 			AcceleoUtil.cleanServices(queryEnvironment, resourceSetForModels);
 			PacmanUIGeneratorsReport.addCodeGenerationResult(evaluator.getGenerationResult());
+		}
+	}
+
+	/**
+	 * 
+	 * @param queryEnvironment
+	 * @param valuesCache
+	 * @param type
+	 * @param resourceSetForModels
+	 * @return
+	 */
+	private List<EObject> getValuesFromInitialSelection(IQualifiedNameQueryEnvironment queryEnvironment,
+			final Map<EClass, List<EObject>> valuesCache, TypeLiteral type, ResourceSet resourceSetForModels) {
+		if (null != _values && !_values.isEmpty()) {
+			return _values;
+		} else {
+			return getValues(queryEnvironment, valuesCache, type, resourceSetForModels);
 		}
 	}
 
@@ -277,6 +331,11 @@ public abstract class PacmanGenerator_Abs {
 		}
 	}
 
+	/**
+	 * 
+	 * @param resourceSetForModels
+	 * @param resources
+	 */
 	protected void loadResources(ResourceSet resourceSetForModels, List<String> resources) {
 		for (String resource : resources) {
 			resourceSetForModels.getResource(URI.createFileURI(resource), true);
@@ -316,5 +375,13 @@ public abstract class PacmanGenerator_Abs {
 		resolver.addLoader(new ModuleLoader(new AcceleoParser(), evaluator));
 		resolver.addLoader(new JavaLoader(AcceleoParser.QUALIFIER_SEPARATOR, false));
 		return evaluator;
+	}
+
+	/**
+	 * Internal enumeration for selection types. Namespace and Root are EObject but
+	 * they may behave differently. To be completed as needed.
+	 */
+	public enum SelectionType_Enum {
+		FILE, NAMESPACE, ROOT, COMPONENT, EOBJECT, SERVICE
 	}
 }

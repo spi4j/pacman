@@ -6,8 +6,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.obeonetwork.dsl.soa.System;
 
 import fr.pacman.soa.ui.SoaUIGenerators;
 
@@ -26,8 +26,8 @@ public class SoaGeneratorsHandler extends AbstractHandler {
 			final Object v_selected = v_iterator.next();
 			if (v_selected instanceof IFile) {
 				new SoaUIGenerators((IFile) v_selected).generate();
-			} else if (v_selected instanceof System) {
-				new SoaUIGenerators((System) v_selected).generate();
+			} else if (v_selected instanceof EObject) {
+				new SoaUIGenerators((EObject) v_selected).generate();
 			}
 		}
 		return null;

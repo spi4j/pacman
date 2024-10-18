@@ -6,6 +6,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import fr.pacman.entity.jdbc.ui.JdbcUIGenerators;
@@ -26,6 +27,8 @@ public class JdbcGeneratorsHandler extends AbstractHandler {
 			final Object v_selected = v_iterator.next();
 			if (v_selected instanceof IFile) {
 				new JdbcUIGenerators((IFile) v_selected).generate();
+			} else if (v_selected instanceof EObject) {
+				new JdbcUIGenerators((EObject) v_selected).generate();
 			}
 		}
 		return null;

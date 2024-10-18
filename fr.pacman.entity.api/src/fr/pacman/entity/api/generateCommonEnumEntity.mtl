@@ -1,6 +1,7 @@
 [module generateCommonEnumEntity('http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
 [import fr::pacman::commons::types::genEnum/]
+[import fr::pacman::commons::common::classes/]
 
 [comment encoding = UTF-8 /]
 [comment @main/]
@@ -12,3 +13,13 @@
   [/for]
   
 [/template]
+
+[comment @main/]
+[template public generateEnumEntityNamespace(n : environment::Namespace)]
+  
+  [for (enum : environment::Enumeration | n.eAllContents(environment::Enumeration))]
+    [enum.genEnum()/]
+  [/for]
+  
+[/template]
+

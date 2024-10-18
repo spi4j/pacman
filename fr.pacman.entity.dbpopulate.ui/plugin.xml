@@ -14,6 +14,8 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <menu
                id="fr.pacman.ui.menus.generators"
+               icon="icons/safran.png"
+               tooltip="Liste des générateurs Safr@n"
                label="Safr@n">
             <command
                   commandId="fr.pacman.entity.dbpopulate.ui.commands.DbPopulateGeneratorCommand"

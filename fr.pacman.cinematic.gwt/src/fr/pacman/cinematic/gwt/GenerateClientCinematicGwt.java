@@ -1,6 +1,6 @@
 package fr.pacman.cinematic.gwt;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +20,6 @@ import fr.pacman.commons.main.PacmanGenerator_Abs;
  * @author MINARM
  */
 public class GenerateClientCinematicGwt extends PacmanGenerator_Abs {
-
-	@Override
-	protected List<String> getTemplates() {
-		List<String> v_templates = new ArrayList<>();
-		v_templates.add("generate");
-		return v_templates;
-	}
 
 	@Override
 	public String getSubProjectName() {
@@ -52,5 +45,18 @@ public class GenerateClientCinematicGwt extends PacmanGenerator_Abs {
 		final List<EObject> values = AcceleoUtil.getValues(type, queryEnvironment, resourceSetForModels.getResources(),
 				valuesCache);
 		return values;
+	}
+
+	/**
+	 * Get the list of templates to execute in the selected generator, depending the
+	 * type of the selected object.
+	 * 
+	 * @return the list of templates to execute.
+	 */
+	@Override
+	protected Map<String, SelectionType_Enum> getTemplates() {
+		Map<String, SelectionType_Enum> v_templates = new HashMap<>();
+		v_templates.put("generate", SelectionType_Enum.FILE);
+		return v_templates;
 	}
 }

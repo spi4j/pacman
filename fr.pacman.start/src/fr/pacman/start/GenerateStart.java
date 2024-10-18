@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,9 +153,9 @@ public class GenerateStart extends PacmanGenerator_Abs {
 	}
 
 	@Override
-	protected List<String> getTemplates() {
-		List<String> v_templates = new ArrayList<>();
-		v_templates.add("generateStart");
+	protected Map<String, SelectionType_Enum> getTemplates() {
+		Map<String, SelectionType_Enum> v_templates = new HashMap<>();
+		v_templates.put("generateStart", SelectionType_Enum.ROOT);
 		return v_templates;
 	}
 

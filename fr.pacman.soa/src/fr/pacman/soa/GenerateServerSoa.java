@@ -1,6 +1,6 @@
 package fr.pacman.soa;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,21 +20,6 @@ import fr.pacman.commons.main.PacmanGenerator_Abs;
  * @author MINARM
  */
 public class GenerateServerSoa extends PacmanGenerator_Abs {
-
-	/**
-	 * Get the list of templates to execute in the selected generator, depending the
-	 * type of the selected object.
-	 * 
-	 * @return the list of templates to execute.
-	 */
-	@Override
-	protected List<String> getTemplates() {
-
-		// TODO à modifier / compléter en fonction de la sélection.
-		List<String> v_templates = new ArrayList<>();
-		v_templates.add("GenerateServerSystem");
-		return v_templates;
-	}
 
 	/**
 	 * Get the module full qualified name.
@@ -78,5 +63,21 @@ public class GenerateServerSoa extends PacmanGenerator_Abs {
 		final List<EObject> values = AcceleoUtil.getValues(type, queryEnvironment, resourceSetForModels.getResources(),
 				valuesCache);
 		return values;
+	}
+
+	/**
+	 * Get the list of templates to execute in the selected generator, depending the
+	 * type of the selected object.
+	 * 
+	 * @return the list of templates to execute.
+	 */
+	@Override
+	protected Map<String, SelectionType_Enum> getTemplates() {
+		Map<String, SelectionType_Enum> v_templates = new HashMap<>();
+		v_templates.put("GenerateServerSystem", SelectionType_Enum.FILE);
+		v_templates.put("GenerateServerComponent", SelectionType_Enum.COMPONENT);
+		v_templates.put("GenerateServerService", SelectionType_Enum.SERVICE);
+		v_templates.put("GenerateServerDto", SelectionType_Enum.EOBJECT);
+		return v_templates;
 	}
 }

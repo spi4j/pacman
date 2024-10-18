@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.Logger;
-import org.obeonetwork.dsl.soa.System;
+import org.eclipse.emf.ecore.EObject;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.main.PacmanGenerator_Abs;
@@ -30,7 +30,7 @@ public class SoaUIGenerators extends PacmanUIGenerator_Abs {
 	 * @param p_selected the selected resource, in this case the root EObject for
 	 *                   the model file.
 	 */
-	public SoaUIGenerators(final System p_selected) {
+	public SoaUIGenerators(final EObject p_selected) {
 		super(p_selected);
 	}
 

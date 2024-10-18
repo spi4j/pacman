@@ -138,7 +138,7 @@
 [comment : Get the name for the default context holder for all the front resources. /]
 [query public buildRSFrontResourcesContextHolder(any : ecore::EObject) : String = (any.getApplicationName() + ' front context holder').apply_classDefault()/]
 
-[comment etourne le système racine d'un objet/]
+[comment Retourne le système racine d'un objet/]
 [query public getRoot(any : ecore::EObject) : environment::ObeoDSMObject = any.getRootJavaService().oclAsType(environment::ObeoDSMObject)/]
 
 [comment : Retourne la valeur de la métadonnée 'LIBRARY_NAME' pour le DTO. /]

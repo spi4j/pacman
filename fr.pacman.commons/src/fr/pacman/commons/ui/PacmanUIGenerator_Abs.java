@@ -43,6 +43,7 @@ import fr.pacman.commons.main.PacmanGenerator_Abs;
 import fr.pacman.commons.properties.PacmanPropertiesManager;
 import fr.pacman.commons.services.ImportsUtils;
 import fr.pacman.commons.services.PlugInUtils;
+import fr.pacman.commons.services.StringUtils;
 
 /**
  * Abstract class for all UI generators
@@ -50,11 +51,6 @@ import fr.pacman.commons.services.PlugInUtils;
  * @author MINARM
  */
 public abstract class PacmanUIGenerator_Abs {
-
-	/**
-	 * 
-	 */
-	// protected List<EObject> _values;
 
 	/**
 	 * The root path for the project. Serves as basis for calculation of all other
@@ -69,10 +65,10 @@ public abstract class PacmanUIGenerator_Abs {
 	private String _modelExt;
 
 	/**
-	 * The selected (source) EObject for code generation. If the selection is a
+	 * The selected (source) EObject for code generation. If the selection is an
 	 * IResource then the EObject is set to null.
 	 */
-	private EObject _selectedEObject;
+	private List<EObject> _values;
 
 	/**
 	 * All necessary resources for the generators.
@@ -95,27 +91,27 @@ public abstract class PacmanUIGenerator_Abs {
 	}
 
 	/**
-	 * Constructor. This constructor is only used for the benefit of eclipse auto
-	 * format and import organization. This is not very elegant but useful.
+	 * Constructor. This partial constructor is only used for the benefit of eclipse
+	 * auto format and import organization. It is used in particular by the project
+	 * creation wizard, this is not very elegant but useful.
 	 * 
 	 * @param p_project the project for creation.
 	 */
 	public PacmanUIGenerator_Abs(IProject p_project) {
-		// _resources =
-		// Collections.singletonList(p_selectedResource.getLocation().toString());
 		_rootPath = new File(p_project.getLocation() + File.separator + p_project.getName() + "-model");
-		// _modelExt = URI.createPlatformResourceURI(((IFile)
-		// p_selectedResource).getFullPath().toString(), true)
-		// .fileExtension();
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param p_selectedEObjects the selected....
+	 * @param p_selectedEObject the selected object. For now only one selected
+	 *                          EObject is allowed but the system tends to be
+	 *                          designed for handling a list of EObjects.
 	 */
 	public PacmanUIGenerator_Abs(EObject p_selectedEObject) {
-		_selectedEObject = p_selectedEObject;
+		_values = Collections.singletonList(p_selectedEObject);
+		_rootPath = new File(StringUtils.getModuleFolderFromEObject(p_selectedEObject));
+		_resources = Collections.emptyList();
 	}
 
 	/**
@@ -188,13 +184,13 @@ public abstract class PacmanUIGenerator_Abs {
 				ImportsUtils.resetAdditionalTypes();
 				PacmanUIGeneratorsReport.reset();
 
-				if (hasIncompatibleModel() || hasIncompatibleProperties())
+				if (hasSelectionIncompatibilities())
 					return;
 
 				for (PacmanGenerator_Abs v_generator : getGenerators()) {
-					v_generator.setResources(_resources);
-					v_generator.setSelectedEObject(_selectedEObject);
 					v_generator.setRootPath(_rootPath.getParent());
+					v_generator.setResources(_resources);
+					v_generator.setValues(_values);
 					v_generator.generate();
 				}
 			}
@@ -219,6 +215,16 @@ public abstract class PacmanUIGenerator_Abs {
 				displayPopUpAlert(p_e);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private boolean hasSelectionIncompatibilities() {
+		if (!_resources.isEmpty() && (hasIncompatibleModel() || hasIncompatibleProperties()))
+			return true;
+		return false;
 	}
 
 	/**
