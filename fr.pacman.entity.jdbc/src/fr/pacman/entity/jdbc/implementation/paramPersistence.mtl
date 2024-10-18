@@ -36,6 +36,7 @@
     import fr.spi4j.Parameters;
     import fr.spi4j.exception.Spi4jRuntimeException;
     import fr.spi4j.persistence.ElemResourceManager;
+    import fr.spi4j.persistence.ElemParamPersistence;
     import fr.spi4j.persistence.ParamPersistence_Abs;
     import fr.spi4j.persistence.dao.jdbc.DefaultJdbcDao;
     import fr.spi4j.persistence.resource.DefaultResourcePhysical;

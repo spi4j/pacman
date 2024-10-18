@@ -721,6 +721,7 @@
   [e.initImports()/]
   [e.addImport('java.util.List')/]
   [e.addImport('java.util.Date')/]
+  [e.addImport('fr.spi4j.persistence.DatabaseLineStatus_Enum')/]
   [e.addImport('org.apache.commons.lang3.builder.EqualsBuilder')/]
   [e.addImport('org.apache.commons.lang3.builder.HashCodeBuilder')/]
   [e.addImport('org.junit.jupiter.api.AfterEach')/]

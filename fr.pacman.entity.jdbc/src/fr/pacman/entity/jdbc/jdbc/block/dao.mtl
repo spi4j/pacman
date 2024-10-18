@@ -204,6 +204,7 @@
   [e.addImport(e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityInterfaceName())/]
   [e.addImport(e.getImportForDaoJdbc_Abs())/]
   [e.addImport('java.util.LinkedHashMap')/]
+  [e.addImport('fr.spi4j.type.XtopSup')/]
   [e.addImport('java.util.Map')/]
   [if (not e.referencesStarStarOwned()->isEmpty())]
     	[e.addImport(e.buildPackagePersistence() + '.' + e.buildParamPersistenceClassName())/]
