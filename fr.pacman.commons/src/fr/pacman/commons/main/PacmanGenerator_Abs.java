@@ -229,9 +229,10 @@ public abstract class PacmanGenerator_Abs {
 		final IAcceleoGenerationStrategy strategy = createGenerationStrategy(resourceSetForModels);
 
 		final Module module = (Module) resolver.resolve(moduleQualifiedName);
-		// final URI logURI = AcceleoUtil.getlogURI(targetURI,
-		// options.get(AcceleoUtil.LOG_URI_OPTION));
-
+		final URI targetURI = getTargetUri();
+		//final URI logURI = AcceleoUtil.getlogURI(targetURI, options.get(AcceleoUtil.LOG_URI_OPTION));
+		final URI logURI = null;
+		
 		try {
 			final Map<EClass, List<EObject>> valuesCache = new LinkedHashMap<>();
 			for (Template template : getTemplatesToExecute(module)) {
@@ -245,23 +246,27 @@ public abstract class PacmanGenerator_Abs {
 				Map<String, Object> variables = new LinkedHashMap<>();
 				for (EObject value : values) {
 					variables.put(parameterName, value);
-
-					// TODO a finaliser ---------------------------------
-					StringBuffer v_strUri = new StringBuffer(_rootPath + File.separator);
-					if (null != getSubProjectName() && !getSubProjectName().isEmpty())
-						v_strUri.append(getSubProjectName() + File.separator);
-					URI targetURI = URI.createFileURI(v_strUri.toString());
-					// ---------------------------------------------------
-					URI logURI = null;
 					AcceleoUtil.generate(template, variables, evaluator, queryEnvironment, strategy, targetURI, logURI);
 				}
 			}
 		} finally {
 
+			PacmanUIGeneratorsReport.addGenerationResult(evaluator.getGenerationResult(), getSubProjectName());
 			AQLUtils.cleanResourceSetForModels(generationKey, resourceSetForModels);
 			AcceleoUtil.cleanServices(queryEnvironment, resourceSetForModels);
-			PacmanUIGeneratorsReport.addCodeGenerationResult(evaluator.getGenerationResult());
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private URI getTargetUri() {
+
+		StringBuffer v_strUri = new StringBuffer(_rootPath + File.separator);
+		if (null != getSubProjectName() && !getSubProjectName().isEmpty())
+			v_strUri.append(getSubProjectName() + File.separator);
+		return URI.createFileURI(v_strUri.toString());
 	}
 
 	/**

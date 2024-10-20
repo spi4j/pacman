@@ -1,7 +1,10 @@
 package fr.pacman.commons.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.acceleo.aql.AcceleoUtil;
 import org.eclipse.acceleo.aql.evaluation.GenerationResult;
@@ -47,13 +50,19 @@ public abstract class PacmanUIGeneratorsReport {
 	/**
 	 * 
 	 */
-	private static List<GenerationResult> _generationResults;
+	private static Map<String, Integer> _detailNbFiles = new HashMap<>();
+
+	/**
+	 * 
+	 */
+	private static List<GenerationResult> _generationResults = new ArrayList<>();
 
 	/**
 	 * 
 	 */
 	public static void reset() {
-		_generationResults = new ArrayList<>();
+		_generationResults.clear();
+		_detailNbFiles.clear();
 		_nbErrors = 0;
 		_nbFiles = 0;
 		_nbLostFiles = 0;
@@ -63,8 +72,9 @@ public abstract class PacmanUIGeneratorsReport {
 	/**
 	 * 
 	 * @param p_generationResult
+	 * @param p_subProjectName
 	 */
-	public static void addCodeGenerationResult(final GenerationResult p_generationResult) {
+	public static void addGenerationResult(final GenerationResult p_generationResult, final String p_subProjectName) {
 
 		if (null == p_generationResult)
 			return;// ou exception ?
@@ -72,6 +82,25 @@ public abstract class PacmanUIGeneratorsReport {
 		_generationResults.add(p_generationResult);
 		_nbFiles += p_generationResult.getGeneratedFiles().size();
 		_nbLostFiles += p_generationResult.getLostFiles().size();
+		updateDetailNbFiles(p_generationResult, p_subProjectName);
+	}
+
+	/**
+	 * @param p_generationResult
+	 * @param p_subProjectName
+	 */
+	private static void updateDetailNbFiles(final GenerationResult p_generationResult, final String p_subProjectName) {
+
+		// If no subproject as we are in creation phase.
+		if (null == p_subProjectName)
+			return;
+
+		if (!_detailNbFiles.containsKey(p_subProjectName)) {
+			_detailNbFiles.put(p_subProjectName, p_generationResult.getGeneratedFiles().size());
+		} else {
+			int nbFiles = _detailNbFiles.get(p_subProjectName);
+			_detailNbFiles.put(p_subProjectName, nbFiles += p_generationResult.getGeneratedFiles().size());
+		}
 	}
 
 	/**
@@ -83,7 +112,6 @@ public abstract class PacmanUIGeneratorsReport {
 				log(v_genResult.getDiagnostic());
 			}
 		}
-
 		if (p_displayPopup)
 			PlugInUtils.displayInformation("Pacman", "Rapport de génération\n\r" + getPopUpCodeGenerationReport());
 	}
@@ -136,6 +164,13 @@ public abstract class PacmanUIGeneratorsReport {
 			v_codeGenerationReport.append("Aucun fichier n'a été généré !");
 		} else {
 			v_codeGenerationReport.append(_nbFiles).append(" fichier(s) généré(s).");
+			if (!_detailNbFiles.isEmpty()) {
+				v_codeGenerationReport.append("\n\rDétail du nombre de fichiers par projet : ");
+				for (Entry<String, Integer> v_entry : _detailNbFiles.entrySet()) {
+					v_codeGenerationReport.append("\n\r - " + "Projet " + v_entry.getKey() + " : ");
+					v_codeGenerationReport.append(v_entry.getValue() + " fichier(s).");
+				}
+			}
 		}
 		if (_nbInfos > 0)
 			v_codeGenerationReport
