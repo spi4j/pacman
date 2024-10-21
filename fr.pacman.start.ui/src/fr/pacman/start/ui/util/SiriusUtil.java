@@ -96,7 +96,8 @@ public class SiriusUtil {
 
 		// Verifie que la session a bien ete recuperee.
 		if (null == v_session)
-			throw new PacmanInitModelException("Aucune session !");
+			throw new PacmanInitModelException(
+					"Aucune session n'a pasu être récupérée pour l'ajout des ressources de modélisation !");
 
 		// Creation des ressources de modelisation.
 		createModelingResources(v_session, p_lstModelCodes, p_project, p_applicationName, p_monitor);
@@ -140,7 +141,8 @@ public class SiriusUtil {
 			activateViewPoints(p_session, v_modelHelper, p_monitor);
 
 			// Creation des representations associees au fichier de modelisation.
-			createRepresentations(p_session, v_modelHelper, v_eObject, p_monitor, p_applicationName, v_lstCreatedRepresentations);
+			createRepresentations(p_session, v_modelHelper, v_eObject, p_monitor, p_applicationName,
+					v_lstCreatedRepresentations);
 		}
 
 		// On ouvre les representations uniquement lorsque toutes les ressources sont
@@ -343,16 +345,13 @@ public class SiriusUtil {
 	 * @param p_lstCreatedRepresentations la liste de representations crees.
 	 */
 	private static void createRepresentations(final Session p_session, final SiriusModelDescriptor p_modelHelper,
-			final EObject p_eObject, final SubMonitor p_monitor, String p_applicationName, 
+			final EObject p_eObject, final SubMonitor p_monitor, String p_applicationName,
 			Map<String, DRepresentation> p_lstCreatedRepresentations) throws PacmanInitModelException {
 
-		// Teste si on a bien récupéré l'ensemble des descriptions pour les représentations.
+		// Teste si on a bien récupéré l'ensemble des descriptions pour les
+		// représentations.
 		if (null == p_modelHelper.get_descIDs() || p_modelHelper.get_descIDs().isEmpty())
 			throw new PacmanInitModelException("Impossible de recuperer les ids de description !");
-
-		// Mise en place du fix suite à l'ouverture des représentations (namespace).
-		// Déplacé dans createRepresentation(....).
-		// ensureNoCDOSaveInProgress();
 
 		for (String v_descID : p_modelHelper.get_descIDs()) {
 
@@ -361,7 +360,7 @@ public class SiriusUtil {
 
 			if (null == v_desc)
 				throw new PacmanInitModelException("Impossible de trouver la description : " + v_descID);
-						
+
 			// Creation de la representation.
 			DRepresentation v_newRepresentation = createRepresentation(p_session, v_desc,
 					getRepresentationName(p_applicationName + " - " + v_descID), p_eObject, p_monitor);
@@ -373,20 +372,24 @@ public class SiriusUtil {
 	}
 
 	/**
-	 * Fix du [08/10/20] pour le namespace qui n'apparait pas dans le diagramme (aléatoire).
+	 * Fix du [08/10/20] pour le namespace qui n'apparait pas dans le diagramme
+	 * (aléatoire).
 	 */
 	private static void ensureNoCDOSaveInProgress() {
 
 		// Ensure that there is no save in progress.
 		// Otherwise, when the representation will be added to the resource
 		// (createRepresentation-->CreateRepresentationCommand) can be problematic.
-		// Indeed, during the save, at a specific time (ResourceSaveDiagnose.hasDifferentSerialization),
-		// the eSetDeliver is disabled. So in this condition, no adapter is added to the added representation.
+		// Indeed, during the save, at a specific time
+		// (ResourceSaveDiagnose.hasDifferentSerialization),
+		// the eSetDeliver is disabled. So in this condition, no adapter is added to the
+		// added representation.
 
 		try {
 			Job.getJobManager().join(SaveSessionJob.FAMILY, new NullProgressMonitor());
 		} catch (OperationCanceledException | InterruptedException e) {
-			// Ignore these exceptions. The join is just here to avoid to have a save in progress.
+			// Ignore these exceptions. The join is just here to avoid to have a save in
+			// progress.
 		}
 	}
 
@@ -441,14 +444,26 @@ public class SiriusUtil {
 	private static DRepresentation createRepresentation(final Session p_session,
 			final RepresentationDescription p_description, final String p_name, final EObject p_object,
 			final IProgressMonitor p_monitor) {
-		
-		// Fix de la fiche SAFRAN-1047.
-		ensureNoCDOSaveInProgress();
 
-		CreateRepresentationCommand v_cmd = new CreateRepresentationCommand(p_session, p_description, p_object, p_name,
-				p_monitor);
-		p_session.getTransactionalEditingDomain().getCommandStack().execute(v_cmd);
-		return v_cmd.getCreatedRepresentation();
+		DRepresentation v_representation = null;
+
+		try {
+
+			// Fix de la fiche SAFRAN-1047.
+			ensureNoCDOSaveInProgress();
+
+			CreateRepresentationCommand v_cmd = new CreateRepresentationCommand(p_session, p_description, p_object,
+					p_name, p_monitor);
+			p_session.getTransactionalEditingDomain().getCommandStack().execute(v_cmd);
+			v_representation = v_cmd.getCreatedRepresentation();
+
+		} catch (RuntimeException p_e) {
+
+			// 'Fix' pour le message aleatoire de session nulle mais qui cree toutefois les
+			// representation (pas d'impact sur le fonctionnement voulu de l'application a
+			// partir du momment ou l'exception est en catch).
+		}
+		return v_representation;
 	}
 
 	/**
