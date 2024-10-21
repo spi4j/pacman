@@ -104,20 +104,18 @@
   		// getDefaultHttpPort
   		[protected (any.getUserCodeId('getDefaultHttpPort')) startTagPrefix('// ') endTagPrefix('// ')]
       
-      		Options ['option'.apply_variableDefault()/] = new Options();
-      		['option'.apply_variableDefault()/].addOption("p", true, "Port HTTP du serveur");
-      
-      		CommandLineParser ['parser'.apply_variableDefault()/]  = new DefaultParser();
-      		CommandLine ['line'.apply_variableDefault()/] = ['parser'.apply_variableDefault()/].parse(['option'.apply_variableDefault()/], ['args'.apply_parameterMethodClassicIn()/]);
-      
-      		if (['line'.apply_variableDefault()/].hasOption("p") && null != ['line'.apply_variableDefault()/].getOptionValue("p")) {
-      			return Integer.valueOf(['line'.apply_variableDefault()/].getOptionValue("p").trim());
-      		}
-      
-      		return ['default http port'.apply_attributeFinalStatic()/];
-      
-    [/protected]
-  
+  		  Options ['option'.apply_variableDefault()/] = new Options();
+  		  ['option'.apply_variableDefault()/].addOption("p", true, "Port HTTP du serveur");
+  		  
+  		  CommandLineParser ['parser'.apply_variableDefault()/]  = new DefaultParser();
+  		  CommandLine ['line'.apply_variableDefault()/] = ['parser'.apply_variableDefault()/].parse(['option'.apply_variableDefault()/], ['args'.apply_parameterMethodClassicIn()/]);
+  		  
+  		  if (['line'.apply_variableDefault()/].hasOption("p") && null != ['line'.apply_variableDefault()/].getOptionValue("p")) {
+		      return Integer.valueOf(['line'.apply_variableDefault()/].getOptionValue("p").trim());
+		    }
+		    return ['default http port'.apply_attributeFinalStatic()/];
+		    
+		[/protected]
   	} 
   
   	/**
@@ -129,48 +127,46 @@
   
   		// start
   		[protected (any.getUserCodeId('start')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-      [if ('tomee'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-      [/if]
-      
-      [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-        		// Modifier les paramètres en fonction du besoin.
-        		StandardJarScanner ['jar scanner'.apply_variableDefault()/] = new StandardJarScanner();
-        		['jar scanner'.apply_variableDefault()/].setScanAllDirectories(Boolean.TRUE);
-        		['jar scanner'.apply_variableDefault()/].setScanAllFiles(Boolean.TRUE);
-        		['jar scanner'.apply_variableDefault()/].setScanClassPath(Boolean.TRUE);
-        		['jar scanner'.apply_variableDefault()/].setScanManifest(Boolean.TRUE);
-        		['jar scanner'.apply_variableDefault()/].setScanBootstrapClassPath(Boolean.TRUE);
-      [/if]
-      
-      		[any.buildServerNameWithPrefix()/] = new [any.buildServerType()/]();
-      [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-        		ServerConnector ['connector'.apply_variableDefault()/] = new ServerConnector([any.buildServerNameWithPrefix()/]);
-        		['connector'.apply_variableDefault()/].setPort(getDefaultHttpPort( ['args'.apply_parameterMethodClassicIn()/]));
-        		[any.buildServerNameWithPrefix()/].addConnector(['connector'.apply_variableDefault()/]);
-        		URL ['location'.apply_variableDefault()/] = [any.buildBoostrapClassName()/].class.getProtectionDomain().getCodeSource().getLocation();
-        		URL ['location api'.apply_variableDefault()/] = new URL("file://" + ['location'.apply_variableDefault()/]
-        			.getPath().substring(0, ['location'.apply_variableDefault()/].getPath().lastIndexOf("/") +1 ) + "[any.getServerProjectName()/].war"); 
-        
-        		HandlerCollection ['handlers'.apply_variableDefault()/] = new HandlerCollection(true);
-        		WebAppContext ['webapp'.apply_variableDefault()/] = new WebAppContext();
-        		['webapp'.apply_variableDefault()/].setContextPath("");
-        		// Recherche des annotations dans les sources ou dans le war deployé. 
-        		['webapp'.apply_variableDefault()/].setAttribute(['jetty include jar pattern'.apply_attributeFinalStatic()/], ".*/target/classes/|.*\\.war");
-        		// Prise en compte Jstl pour les Jsp.
-        		['webapp'.apply_variableDefault()/].setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-        				".*/['['/]^/]*servlet-api-['['/]^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/['['/]^/]*taglibs.*\\.jar$");
-        		['webapp'.apply_variableDefault()/].setResourceBase("[webapp.getDevWebAppContext()/]");
-        [if (any.hasToWriteOtherWebappForApi())]
-          		WebAppContext ['webapp api'.apply_variableDefault()/] = new WebAppContext();
-          		['webapp api'.apply_variableDefault()/].setContextPath("/api");
-          		// Recherche des annotations dans les sources ou dans le war deployé. 
-          		['webapp api'.apply_variableDefault()/].setAttribute(['jetty include jar pattern'.apply_attributeFinalStatic()/], ".*/target/classes/|.*\\.war");
-          		['webapp api'.apply_variableDefault()/].setResourceBase("../[any.getWebappProjectName()/]/[any.getWebappDir()/]");
+  		  
+  		  [if ('tomee'.equalsIgnoreCase(any.getHttpEmbeddedServer()))][/if]
+  		  [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+  		    // Modifier les paramètres en fonction du besoin.
+  		    StandardJarScanner ['jar scanner'.apply_variableDefault()/] = new StandardJarScanner();
+  		    ['jar scanner'.apply_variableDefault()/].setScanAllDirectories(Boolean.TRUE);
+  		    ['jar scanner'.apply_variableDefault()/].setScanAllFiles(Boolean.TRUE);
+  		    ['jar scanner'.apply_variableDefault()/].setScanClassPath(Boolean.TRUE);
+  		    ['jar scanner'.apply_variableDefault()/].setScanManifest(Boolean.TRUE);
+  		    ['jar scanner'.apply_variableDefault()/].setScanBootstrapClassPath(Boolean.TRUE);
+  		  [/if]
+  		  
+  		  [any.buildServerNameWithPrefix()/] = new [any.buildServerType()/]();
+  		  [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+  		    ServerConnector ['connector'.apply_variableDefault()/] = new ServerConnector([any.buildServerNameWithPrefix()/]);
+  		    ['connector'.apply_variableDefault()/].setPort(getDefaultHttpPort( ['args'.apply_parameterMethodClassicIn()/]));
+  		    [any.buildServerNameWithPrefix()/].addConnector(['connector'.apply_variableDefault()/]);
+  		    URL ['location'.apply_variableDefault()/] = [any.buildBoostrapClassName()/].class.getProtectionDomain().getCodeSource().getLocation();
+  		    URL ['location api'.apply_variableDefault()/] = new URL("file://" + ['location'.apply_variableDefault()/]
+  		        .getPath().substring(0, ['location'.apply_variableDefault()/].getPath().lastIndexOf("/") +1 ) + "[any.getServerProjectName()/].war"); 
+  		        
+  		    HandlerCollection ['handlers'.apply_variableDefault()/] = new HandlerCollection(true);
+  		    WebAppContext ['webapp'.apply_variableDefault()/] = new WebAppContext();
+  		    ['webapp'.apply_variableDefault()/].setContextPath("");
+  		    // Recherche des annotations dans les sources ou dans le war deployé. 
+  		    ['webapp'.apply_variableDefault()/].setAttribute(['jetty include jar pattern'.apply_attributeFinalStatic()/], ".*/target/classes/|.*\\.war");
+  		    // Prise en compte Jstl pour les Jsp.
+  		    ['webapp'.apply_variableDefault()/].setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+        	    ".*/['['/]^/]*servlet-api-['['/]^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/['['/]^/]*taglibs.*\\.jar$");
+           ['webapp'.apply_variableDefault()/].setResourceBase("[webapp.getDevWebAppContext()/]");
+          [if (any.hasToWriteOtherWebappForApi())]
+            WebAppContext ['webapp api'.apply_variableDefault()/] = new WebAppContext();
+            ['webapp api'.apply_variableDefault()/].setContextPath("/api");
+            // Recherche des annotations dans les sources ou dans le war deployé. 
+            ['webapp api'.apply_variableDefault()/].setAttribute(['jetty include jar pattern'.apply_attributeFinalStatic()/], ".*/target/classes/|.*\\.war");
+            ['webapp api'.apply_variableDefault()/].setResourceBase("../[any.getWebappProjectName()/]/[any.getWebappDir()/]");
         [/if]
-        		
-        		[any.writeComment()/]
-        		//['webapp'.apply_variableDefault()/].setWar(['location'.apply_variableDefault()/].toExternalForm());
+        
+        [any.writeComment()/]
+        //['webapp'.apply_variableDefault()/].setWar(['location'.apply_variableDefault()/].toExternalForm());
         [if (any.hasToWriteOtherWebappForApi())]
           		//['webapp api'.apply_variableDefault()/].setWar(['location api'.apply_variableDefault()/].toExternalForm());
         [/if]
@@ -180,38 +176,37 @@
         		[any.buildServerNameWithPrefix()/].setHandler(['handlers'.apply_variableDefault()/]);
       [/if]
       [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-        		[any.buildServerNameWithPrefix()/].setSilent(true);
-        		[any.buildServerNameWithPrefix()/].setPort(getDefaultHttpPort(['args'.apply_parameterMethodClassicIn()/]));
-        		[any.buildServerNameWithPrefix()/].getServer().addLifecycleListener(new VersionLoggerListener()); 
-        		Path ['path'.apply_variableDefault()/] = Paths.get(new File("").getAbsolutePath() + "/tomcat." 
-        			+ getDefaultHttpPort(['args'.apply_parameterMethodClassicIn()/]) + "/webapps");
-        		Files.createDirectories(['path'.apply_variableDefault()/]);
+        [any.buildServerNameWithPrefix()/].setSilent(true);
+        [any.buildServerNameWithPrefix()/].setPort(getDefaultHttpPort(['args'.apply_parameterMethodClassicIn()/]));
+        [any.buildServerNameWithPrefix()/].getServer().addLifecycleListener(new VersionLoggerListener());
+        Path ['path'.apply_variableDefault()/] = Paths.get(new File("").getAbsolutePath() + "/tomcat." 
+            + getDefaultHttpPort(['args'.apply_parameterMethodClassicIn()/]) + "/webapps");
+        Files.createDirectories(['path'.apply_variableDefault()/]);
         
-        		[any.writeComment()/]
-        		// String ['doc base'.apply_variableDefault()/] = new File("").getAbsolutePath() + "/[webapp.getFinalWarName()/].war";
+        [any.writeComment()/]
+        // String ['doc base'.apply_variableDefault()/] = new File("").getAbsolutePath() + "/[webapp.getFinalWarName()/].war";
         [if (any.hasToWriteOtherWebappForApi())]
-          		// String ['doc base api'.apply_variableDefault()/] = new File("").getAbsolutePath() + "/[true.getFinalWarName()/].war";
+          // String ['doc base api'.apply_variableDefault()/] = new File("").getAbsolutePath() + "/[true.getFinalWarName()/].war";
         [/if]
-        
-        		String ['doc base'.apply_variableDefault()/] =  new File("[webapp.getDevWebAppContext()/]").getAbsolutePath();
-        		Context ['context'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("[true.getContext()/]", ['doc base'.apply_variableDefault()/]);
+        String ['doc base'.apply_variableDefault()/] =  new File("[webapp.getDevWebAppContext()/]").getAbsolutePath();
+        Context ['context'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("[true.getContext()/]", ['doc base'.apply_variableDefault()/]);
         [if (any.hasToWriteOtherWebappForApi())]
-          		String ['doc base api'.apply_variableDefault()/] = new File("../[any.getWebappProjectName()/]/[any.getWebappDir()/]").getAbsolutePath();
-          		Context ['context api'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("[false.getContext()/]", ['doc base api'.apply_variableDefault()/]);
-          		[any.buildServerNameWithPrefix()/].getHost().addChild(['context api'.apply_variableDefault()/]);
+          String ['doc base api'.apply_variableDefault()/] = new File("../[any.getWebappProjectName()/]/[any.getWebappDir()/]").getAbsolutePath();
+          Context ['context api'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("[false.getContext()/]", ['doc base api'.apply_variableDefault()/]);
+          [any.buildServerNameWithPrefix()/].getHost().addChild(['context api'.apply_variableDefault()/]);
         [/if]
-        		['context'.apply_variableDefault()/].setJarScanner(['jar scanner'.apply_variableDefault()/]);
-        		[any.buildServerNameWithPrefix()/].getConnector();
+        ['context'.apply_variableDefault()/].setJarScanner(['jar scanner'.apply_variableDefault()/]);
+        [any.buildServerNameWithPrefix()/].getConnector();
       [/if]
-      		addBasicAuthUsers();
-      		addSpecificXmlContext(['context'.apply_variableDefault()/]);
+      addBasicAuthUsers();
+      addSpecificXmlContext(['context'.apply_variableDefault()/]);
       [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-        		[any.buildServerNameWithPrefix()/].setStopTimeout(0x2710L);
-        		[any.buildServerNameWithPrefix()/].setStopAtShutdown(true);
+        [any.buildServerNameWithPrefix()/].setStopTimeout(0x2710L);
+        [any.buildServerNameWithPrefix()/].setStopAtShutdown(true);
       [/if]
-      		[any.buildServerNameWithPrefix()/].start();
+      [any.buildServerNameWithPrefix()/].start();
       [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-        		[any.buildServerNameWithPrefix()/].dumpStdErr();
+        [any.buildServerNameWithPrefix()/].dumpStdErr();
       [/if]
       
     [/protected]
@@ -262,25 +257,25 @@
   	private void addBasicAuthUsers() {
   
   		// addBasicAuthUsers
-     		[protected (any.getUserCodeId('addBasicAuthUsers')) startTagPrefix('// ') endTagPrefix('// ')]
+  		[protected (any.getUserCodeId('addBasicAuthUsers')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+  		  if(null != [any.buildServerNameWithPrefix()/]) {
+		  [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+		    HashLoginService ['login service'.apply_variableDefault()/] = new HashLoginService("[any.getDefaultRealmParameter()/]");
+		    UserStore ['user store'.apply_variableDefault()/] = new UserStore();
+		    ['user store'.apply_variableDefault()/].addUser("[any.getDefaultAdminParameter()/]", 
+		    Credential.getCredential("[any.getDefaultAdminParameter()/]"), new String['['/]] { "[any.getDefaultAdminParameter()/]" });
+		    ['login service'.apply_variableDefault()/].setUserStore(['user store'.apply_variableDefault()/]);
+		    [any.buildServerNameWithPrefix()/].addBean(['login service'.apply_variableDefault()/]);
+          [/if]
+          [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+            [any.buildServerNameWithPrefix()/].addRole("[any.getDefaultAdminParameter()/]", "[any.getDefaultAdminParameter()/]");
+            [any.buildServerNameWithPrefix()/].addRole("[any.getDefaultAdminParameter()/]", "[any.getDefaultMonitoringParameter()/]");
+            [any.buildServerNameWithPrefix()/].addUser("[any.getDefaultAdminParameter()/]", "[any.getDefaultAdminParameter()/]");
+          [/if]
+      }
          
-         		if(null != [any.buildServerNameWithPrefix()/]) {
-         [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-           			HashLoginService ['login service'.apply_variableDefault()/] = new HashLoginService("[any.getDefaultRealmParameter()/]");
-           			UserStore ['user store'.apply_variableDefault()/] = new UserStore();
-           			['user store'.apply_variableDefault()/].addUser("[any.getDefaultAdminParameter()/]", 
-           			Credential.getCredential("[any.getDefaultAdminParameter()/]"), new String['['/]] { "[any.getDefaultAdminParameter()/]" });
-           			['login service'.apply_variableDefault()/].setUserStore(['user store'.apply_variableDefault()/]);
-           			[any.buildServerNameWithPrefix()/].addBean(['login service'.apply_variableDefault()/]);
-         [/if]
-         [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-           			[any.buildServerNameWithPrefix()/].addRole("[any.getDefaultAdminParameter()/]", "[any.getDefaultAdminParameter()/]");
-           			[any.buildServerNameWithPrefix()/].addRole("[any.getDefaultAdminParameter()/]", "[any.getDefaultMonitoringParameter()/]");
-           			[any.buildServerNameWithPrefix()/].addUser("[any.getDefaultAdminParameter()/]", "[any.getDefaultAdminParameter()/]");
-         [/if]
-         		}
-         
-       [/protected]
+      [/protected]
   
   	}
   
@@ -291,16 +286,16 @@
   	 */
   	public void waitForInterrupt() throws Exception {
   
-  		// waitForInterrupt
-     		[protected (any.getUserCodeId('waitForInterrupt')) startTagPrefix('// ') endTagPrefix('// ')]
-         		
-         		if(System.in.read()!=-1) {
-         			stop();
-         		}
-         		// [any.buildServerNameWithPrefix()/].[any.buildWaitForInterrupt()/];
+       // waitForInterrupt
+       [protected (any.getUserCodeId('waitForInterrupt')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+         if(System.in.read()!=-1) {
+             stop();
+         }
+
+         // [any.buildServerNameWithPrefix()/].[any.buildWaitForInterrupt()/];
          
        [/protected]
-  
   	}
   
   	/**
@@ -310,26 +305,23 @@
   	public void stop() throws Exception {
   
   		// stop
-     		[protected (any.getUserCodeId('stop')) startTagPrefix('// ') endTagPrefix('// ')]
-         
-         		['log'.apply_attributeStatic()/].info("Demande de fermeture pour le serveur [any.getApplicationName()/]...");
-         		if(null != [any.buildServerNameWithPrefix()/]) {
-         			try {
-         				[any.buildServerNameWithPrefix()/].stop();
-         [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-           				[any.buildServerNameWithPrefix()/].destroy();
-         [/if]
-         				[any.buildServerNameWithPrefix()/] = null;
-         				Runtime.getRuntime().halt(0);
-         				// System.exit(0);
-         			} catch (Exception  ['e'.apply_variableDefault()/]) {
-         				['log'.apply_attributeStatic()/].info("Fermeture du serveur OK mais avec un avertissement : " +  ['e'.apply_variableDefault()/]);
-         			}
-         		}
-         		['log'.apply_attributeStatic()/].info("Fermeture du serveur [any.getApplicationName()/] : OK.");
-         		
-       [/protected]
-  
+  		[protected (any.getUserCodeId('stop')) startTagPrefix('// ') endTagPrefix('// ')]
+      
+  		  ['log'.apply_attributeStatic()/].info("Demande de fermeture pour le serveur [any.getApplicationName()/]...");
+  		  if(null != [any.buildServerNameWithPrefix()/]) {
+					  try {
+					  [any.buildServerNameWithPrefix()/].stop();
+					[if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+					  [any.buildServerNameWithPrefix()/].destroy();[/if]
+					  [any.buildServerNameWithPrefix()/] = null;
+					  Runtime.getRuntime().halt(0);
+					  // System.exit(0);
+				  } catch (Exception  ['e'.apply_variableDefault()/]) {
+					  ['log'.apply_attributeStatic()/].info("Fermeture du serveur OK mais avec un avertissement : " +  ['e'.apply_variableDefault()/]);
+				  }}
+		  ['log'.apply_attributeStatic()/].info("Fermeture du serveur [any.getApplicationName()/] : OK.");
+		  
+		  [/protected] 
   	}
   }
 [/template]
