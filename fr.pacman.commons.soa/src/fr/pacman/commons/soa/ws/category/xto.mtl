@@ -211,8 +211,8 @@
   [for (r : environment::Reference | d.referencingStar())]
     [if (not r.isPropertyFromParent(d) and not r.isLibraryRS())]
          /** La FK sur le type '[r.containingType.oclAsType(environment::DTO).nameBaseXtoUP()/]'. */
-         // for annotation_[r.nameBaseReference() + r.namePK_ID()/]
-         [protected (r.getUserCodeId('for annotation_' + r.nameBaseReference() + r.namePK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
+         // for annotation_2[r.nameBaseReferenceInverse() + r.namePK_ID()/]
+         [protected (r.getUserCodeId('for annotation_2' + r.nameBaseReferenceInverse() + r.namePK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
               @XmlElement(namespace = "", name = "[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")
               [if (r.useWS())]@JsonProperty("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")[/if]
          [/protected]
