@@ -420,6 +420,7 @@
   [s.addImport('java.util.Date')/]
   [s.addImport('fr.spi4j.type.XtopSup')/]
   [s.addImport(s.getApplicationPackage() + '.Binary')/]
+  [s.addImport('com.fasterxml.jackson.annotation.JsonProperty')/]
   [s.addImport('jakarta.xml.bind.annotation.XmlAccessType')/]
   [s.addImport('jakarta.xml.bind.annotation.XmlAccessorType')/]
   [s.addImport('jakarta.xml.bind.annotation.XmlRootElement')/]
@@ -440,6 +441,7 @@
   [d.addImport('com.fasterxml.jackson.annotation.JsonProperty', d.hasAttributes() and d.useWS())/]
   [d.addImport('fr.spi4j.lib.security.User_Itf', d.useSpi4jSecurity() and d.dtoIsUser())/]
   [d.addImport('jakarta.xml.bind.annotation.XmlTransient', d.hasEntityWithVersion())/]
+  [d.addImport(d.buildPackageBusiness() + '.' + d.buildAppliXtoAbstractClassName(), d.hasAutomaticColumns() and not d.hasParent())/]
   [d.addImport(d.getImportForXto_Itf(), not d.isLibraryRS())/]
   [d.addImport(d.getImportForRsXto_Itf(), not d.isLibraryRS())/]
   

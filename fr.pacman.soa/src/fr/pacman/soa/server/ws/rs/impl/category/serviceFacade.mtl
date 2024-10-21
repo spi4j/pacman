@@ -195,7 +195,7 @@
   [s.initImports(true)/]
   [s.addImport(s.buildPackageWsApi() + '.' + s.buildServiceFacadeRSInterfaceName(d))/]
   [s.addImport(s.buildPackageBusiness() + '.' + s.buildAppliUserBusinessGenClassName())/]
-  [s.addImport('fr.spi4j.ws.rs.exception.Spi4jValidationException')/]
+  [s.addImport('fr.spi4j.exception.Spi4jValidationException')/]
   [s.addImport('fr.spi4j.ws.rs.exception.RsNoResultException', not s.isDefinedForAuthentication())/]
   [s.addImport(s.buildPackageMapper() + '.' + s.buildAppliUserMapperGenClassName(), not s.isDefinedForAuthentication())/]
   [s.addImport('org.jvnet.hk2.annotations.Service', s.useWsServiceInjection())/]
