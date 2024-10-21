@@ -20,4 +20,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Export-Package: fr.pacman.commons.soa, 
- fr.pacman.commons.soa.common
+ fr.pacman.commons.soa.common,
+ fr.pacman.commons.soa.files
