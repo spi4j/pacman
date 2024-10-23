@@ -236,7 +236,7 @@ public abstract class AbstractNonRegressionTests {
 				final String expectedContents = Files.readString(expected.toPath(), StandardCharsets.UTF_8);
 				if (actual.isFile() && actual.exists()) {
 					final String actualContents = Files.readString(actual.toPath(), StandardCharsets.UTF_8);
-					if (!expectedContents.equals(actual)) {
+					if (!expectedContents.equals(actualContents)) {
 						message.append("differences: " + expected.getAbsolutePath() + "\n");
 						res = 1;
 					}
