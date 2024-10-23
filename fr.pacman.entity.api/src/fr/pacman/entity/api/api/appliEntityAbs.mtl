@@ -40,7 +40,7 @@
       */
      private static final long serialVersionUID = -1;
   
-     // Constantes
+     ['Constantes'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Constantes')) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]
@@ -52,7 +52,7 @@
     [r.getAutomaticAttribut(columnProp)/]
     
   [/for]
-     // Attributs
+     ['Attributs'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]

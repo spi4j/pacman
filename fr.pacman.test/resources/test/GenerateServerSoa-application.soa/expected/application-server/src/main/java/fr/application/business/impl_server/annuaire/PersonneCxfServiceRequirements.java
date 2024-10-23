@@ -4,7 +4,6 @@
  * Apache License 2.0
  */
 package fr.application.business.impl_server.annuaire;
-
 // Start of user code for imports
 
 
@@ -17,7 +16,7 @@ package fr.application.business.impl_server.annuaire;
 public class PersonneCxfServiceRequirements
 {
 
-   // PersonneCxfServiceRequirements
+   
    // Start of user code PersonneCxfServiceRequirements
 
    // End of user code

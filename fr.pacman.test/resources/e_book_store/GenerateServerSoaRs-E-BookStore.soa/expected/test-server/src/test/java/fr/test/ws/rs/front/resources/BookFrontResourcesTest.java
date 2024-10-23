@@ -12,7 +12,6 @@ import fr.test.ws.rs.front.delegates.BookServiceDelegate;
 import fr.test.ws.rs.front.exceptions.TestFrontRsException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,7 @@ public class BookFrontResourcesTest {
 	// suffixés (ex param_1, param_2, etc...)
 	// *****************************************************************
 
-	// for global input parameters declaration
+	
 	// Start of user code 08619449d4a7d8f0eee5227918a18379
 
 	private final String authorId = "S";
@@ -54,7 +53,7 @@ public class BookFrontResourcesTest {
 	@BeforeAll
 	public static void init(){
 
-		// for init
+		
 		// Start of user code 23427ad5c2cfd5b5c1e5febbaf137394
 
 		TestFrontResourcesTestHelper.registerClass(
@@ -77,7 +76,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testGetHomePageBooks");
 	
-			// for getHomePageBooks_Book_books
+			
 			// Start of user code 5ae85e92b53fc219b09cee5732ce20d1
 
 			
@@ -89,7 +88,7 @@ public class BookFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response getHomePageBooks_Book_books
+			
 			// Start of user code 3b69b49b4cc2ac0fb26bc61b3fec56d5
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -114,7 +113,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testGetAllAuthors");
 	
-			// for getAllAuthors_Author_authors
+			
 			// Start of user code 01f8ae9496bf6960b8e03f206df36ed2
 
 			
@@ -126,7 +125,7 @@ public class BookFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response getAllAuthors_Author_authors
+			
 			// Start of user code cb230de459ee5ea13b2bb147836790f7
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -151,7 +150,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testGetAllBookTypes");
 	
-			// for getAllBookTypes_String_types
+			
 			// Start of user code ba29ae7ab9da77f3356350b7c3d7d010
 
 			
@@ -162,7 +161,7 @@ public class BookFrontResourcesTest {
 
 			
 
-			// for response getAllBookTypes_String_types
+			
 			// Start of user code b500d1d4c3003017fbf0a0cea4ba6b62
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -194,12 +193,12 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testSearchBooks");
 	
-			// for searchBooks_Book_books_String_authorId_String_type_String_keywords
+			
 			// Start of user code 06472fd2021c2aee2d59746b7fb73577
 
+			final String type = null;
 			final String authorId = null;
 			final List<String> keywords = null;
-			final String type = null;
 
 			// End of user code
 
@@ -210,7 +209,7 @@ public class BookFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response searchBooks_Book_books_String_authorId_String_type_String_keywords
+			
 			// Start of user code c70ca7d6255229af64be771b710f8597
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -238,7 +237,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testGetBook");
 	
-			// for getBook_Book_book_String_bookId
+			
 			// Start of user code 0803c1d741c6f84bfa77c59c2518dac6
 
 			final String bookId = null;
@@ -250,7 +249,7 @@ public class BookFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response getBook_Book_book_String_bookId
+			
 			// Start of user code 8e4b1c7ebd61a933f8bcbd49d8ea8308
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -278,7 +277,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testCreateBook");
 	
-			// for createBook_Book_createdBook_Book_book
+			
 			// Start of user code 6ee48938bbd3a10e17f553ecdda9c5df
 
 			final BookXto book = null;
@@ -290,7 +289,7 @@ public class BookFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response createBook_Book_createdBook_Book_book
+			
 			// Start of user code a5bcdb9682f8905b926422907fecc521
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -320,7 +319,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testUpdateBook");
 	
-			// for updateBook_Book_updatedBook_String_bookId_Book_book
+			
 			// Start of user code 08c4c657c8493883e4d23b467b685a35
 
 			final BookXto book = null;
@@ -334,7 +333,7 @@ public class BookFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response updateBook_Book_updatedBook_String_bookId_Book_book
+			
 			// Start of user code e279026e7198b47e5b7dd7e987e43604
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);
@@ -362,7 +361,7 @@ public class BookFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testDeleteBook");
 	
-			// for deleteBook_String_bookId
+			
 			// Start of user code 565a22159f372e21e079625cab4e6393
 
 			final String bookId = null;
@@ -373,7 +372,7 @@ public class BookFrontResourcesTest {
 
 			
 
-			// for response deleteBook_String_bookId
+			
 			// Start of user code 087aa693c3e6698d66ce2a164a5bbd78
 			
 			TestFrontResourcesTestHelper.displayResponse("Pas de résultat dans le corps pour cette ressource.");

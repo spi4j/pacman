@@ -520,7 +520,7 @@
      @Override
      public void initBindings ()
      {
-  	  // bin GWT Service
+  	  ['bin GWT Service'.displayClearUserCodeId()/]
   	  [protected (any.getUserCodeId('bin GWT Service')) startTagPrefix('// ') endTagPrefix('// ')]
        	  /** Genererer les bindings de services Gwt
              /** bind(XXXGwtService.class, wrapIntegrationService(XXXGwtServiceAsync.class, new XXXGwtServiceImpl())); */

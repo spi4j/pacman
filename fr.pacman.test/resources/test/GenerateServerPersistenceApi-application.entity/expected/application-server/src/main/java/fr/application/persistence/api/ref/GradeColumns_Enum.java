@@ -6,7 +6,6 @@
 package fr.application.persistence.api.ref;
 
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
-import java.util.Date;
 
 /**
  * L'énumeration définissant les informations de chaque colonne pour le type Grade.

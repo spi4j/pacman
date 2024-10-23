@@ -53,13 +53,13 @@ public class PersonneDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf
    /** La FK sur le Type 'Grade'. */
    private Long _grade_id;
 
-   /** L'instance de 'Invalid' associee à  l'instance de 'Personne' courante. */
+   /** L'instance de 'Grade' associee à  l'instance de 'Personne' courante. */
    private GradeDto _grade;
 
    /** La FK sur le Type 'Personne'. */
    private Long _marieAvec_id;
 
-   /** L'instance de 'Invalid' associee à  l'instance de 'Personne' courante. */
+   /** L'instance de 'Personne' associee à  l'instance de 'Personne' courante. */
    private PersonneDto _marieAvec;
 
    /** La FK sur le type 'Personne'. */
@@ -543,7 +543,7 @@ public class PersonneDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getSimpleName() + '[' + _id + ", " + get_nom() + ", " + get_prenom() + ", " + get_civil() + ", " + get_dateNaissance() + ", " + get_salaire()   + ", " + get_grade_id ()  + ", " + get_marieAvec_id ()  + ", " + get_personneParentDe_id ()  + ']';
@@ -551,4 +551,8 @@ public class PersonneDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf
       // End of user code
    }
 
+   
+   // Start of user code Methodes
+
+   // End of user code
 }

@@ -8,7 +8,7 @@
 
 [query public buildXtoTestClassName(d : environment::DTO) : String = (d.buildSimpleDtoName() + ' xto').apply_classTest()/]
 
-[query public buildRSServicesFacadeFactoryClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' services facade factory').apply_classDefault()/]
+[query public buildBatchClassName(s : soa::Service) : String = (s.name.replaceAll('(?i)batch', '') + ' batch').apply_classDefault()/]
 
 [query public buildServiceFacadeRSClassName(s : soa::Service, d : environment::DTO) : String = if not (s = null) then (s.buildSimpleServiceName() + ' service RS facade').apply_classImplem() else (d.buildSimpleDtoName() + ' CRUD service RS facade').apply_classImplem() endif/]
 

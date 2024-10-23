@@ -8,7 +8,6 @@ package fr.application.business.api.annuaire;
 
 import fr.spi4j.exception.Spi4jValidationException;
 import fr.spi4j.tua.BeanTester_Abs;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test pour le DTO 'Pays'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class PaysDto_Test extends BeanTester_Abs
@@ -63,8 +62,8 @@ public class PaysDto_Test extends BeanTester_Abs
       assertEquals(v_capitale, v_dto.get_capitale(), "Champ capitale incorrect");
       assertEquals(v_personnePays, v_dto.get_personnePays_id(), "Champ pays_id incorrect");
 
-      // Remplissage références du dto
-      // Start of user code Remplissage références du dto
+      
+      // Start of user code Remplissage references du dto
 
       // End of user code
 

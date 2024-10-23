@@ -43,7 +43,7 @@
   [/for]
   
   
-     // [m.buildAppliPermissionsInterfaceName()/] 
+     [m.buildAppliPermissionsInterfaceName().displayClearUserCodeId()/] 
      [protected (m.getUserCodeId(m.buildAppliPermissionsInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

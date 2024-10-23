@@ -9,7 +9,6 @@ package fr.application.server.business.annuaire;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import fr.application.ws.api.annuaire.PersonneXto;
 import fr.spi4j.ui.gwt.client.services.GwtRemoteService;
-import java.util.Date;
 
 // End of user code
 
@@ -25,7 +24,7 @@ public class PersonneGwtServiceImpl extends GwtRemoteServiceImpl<Long, PersonneX
    @Override
    protected PersonneMapper_Itf getMapper ()
    {
-      // Mapper
+      
       // Start of user code Mapper
       // Le Mapper n'est peut-être pas dans Application, il est peut-être dans un autre domaine qui contient les XTO
       return ApplicationUserMapper.getPersonneMapper();
@@ -35,7 +34,7 @@ public class PersonneGwtServiceImpl extends GwtRemoteServiceImpl<Long, PersonneX
    @Override
    protected PersonneService_Itf getService ()
    {
-      // Service
+      
       // Start of user code Service
       return ApplicationUserBusiness.getPersonneService();
       // End of user code
@@ -56,7 +55,7 @@ public class PersonneGwtServiceImpl extends GwtRemoteServiceImpl<Long, PersonneX
                getService ().findListParentDeByPersonne(p_personneParentDe_id));
    }
 
-   // findPersonneById_Personne_personne_Long_identifiant
+   
    // Start of user code findPersonneById_Personne_personne_Long_identifiant
 
    @Override
@@ -68,7 +67,7 @@ public class PersonneGwtServiceImpl extends GwtRemoteServiceImpl<Long, PersonneX
 
    // End of user code
 
-   // findPersonneByName_Personne_personne_String_nom
+   
    // Start of user code findPersonneByName_Personne_personne_String_nom
 
    @Override
@@ -80,7 +79,7 @@ public class PersonneGwtServiceImpl extends GwtRemoteServiceImpl<Long, PersonneX
 
    // End of user code
 
-   // findPersonneByIdFromRest_Personne_personne_Long_identifiant
+   
    // Start of user code findPersonneByIdFromRest_Personne_personne_Long_identifiant
 
    @Override
@@ -92,7 +91,7 @@ public class PersonneGwtServiceImpl extends GwtRemoteServiceImpl<Long, PersonneX
 
    // End of user code
 
-   // PersonneService
+   
    // Start of user code PersonneService
 
    // End of user code

@@ -36,7 +36,7 @@
   
   	// Placer ici des énumérations supplémentaires si besoin.	
   	
-  	// define enumeration sub controllers
+  	['define enumeration sub controllers'.displayClearUserCodeId()/]
   	[protected (root.getUserCodeId('define enumeration sub controllers')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]
@@ -119,7 +119,7 @@
   		
   		// Modifier ici la chaine de routage si besoin.		
   
-  		// ['dispatch'.apply_methodDefault()/]
+  		['dispatch'.displayClearUserCodeId()/]
   		[protected (root.getUserCodeId('dispatch'.apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
       
       		if(['redirect'.apply_methodDefault()/]()){

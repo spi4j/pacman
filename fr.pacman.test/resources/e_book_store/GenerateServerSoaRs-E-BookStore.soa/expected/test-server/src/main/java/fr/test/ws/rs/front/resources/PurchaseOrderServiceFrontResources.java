@@ -11,7 +11,6 @@ import fr.test.ws.rs.front.TestFrontResourcesAbs;
 import jakarta.ws.rs.core.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -50,7 +49,7 @@ public final class PurchaseOrderServiceFrontResources extends TestFrontResources
    */
   private PurchaseOrderServiceFrontResources(){
 
-    super("/ebookstore/purchaseorder");
+    super("/purchaseorder");
   }
 
 
@@ -61,7 +60,7 @@ public final class PurchaseOrderServiceFrontResources extends TestFrontResources
     * @return purchaseOrders.    */
   public List<PurchaseOrderXto> searchPurchaseOrder(final String userId) {
 
-    // for searchPurchaseOrder_PurchaseOrder_purchaseOrders_String_userId
+    
     // Start of user code 18839889d0f726dfc9d5c779306fc8f2
 
     return target()

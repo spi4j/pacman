@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.commons
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Commons
 Bundle-SymbolicName: fr.pacman.commons
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.commons.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,
@@ -18,11 +18,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.sirius,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
  org.eclipse.emf.cdo,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.model,
- org.eclipse.acceleo.engine,
  org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.jface.text,

@@ -20,7 +20,7 @@ import fr.spi4j.ui.gwt.client.services.GwtRemoteService;
 public interface GradeGwtService extends GwtRemoteService<Long, GradeXto>
 {
 
-   // GradeService
+   
    // Start of user code GradeService
 
    // End of user code

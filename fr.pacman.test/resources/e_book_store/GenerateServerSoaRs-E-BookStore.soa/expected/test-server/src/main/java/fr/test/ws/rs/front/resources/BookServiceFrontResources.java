@@ -13,7 +13,6 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -52,7 +51,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
    */
   private BookServiceFrontResources(){
 
-    super("/ebookstore/book");
+    super("/book");
   }
 
 
@@ -62,7 +61,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
         */
   public List<BookXto> getHomePageBooks() {
 
-    // for getHomePageBooks_Book_books
+    
     // Start of user code 5ae85e92b53fc219b09cee5732ce20d1
 
     return target()
@@ -80,7 +79,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
     * @return authors.    */
   public List<AuthorXto> getAllAuthors() {
 
-    // for getAllAuthors_Author_authors
+    
     // Start of user code 01f8ae9496bf6960b8e03f206df36ed2
 
     return target()
@@ -98,7 +97,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
     * @return types.    */
   public List<String> getAllBookTypes() {
 
-    // for getAllBookTypes_String_types
+    
     // Start of user code ba29ae7ab9da77f3356350b7c3d7d010
 
     return target()
@@ -123,7 +122,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
         */
   public List<BookXto> searchBooks(final String authorId, final String type, final List<String> keywords) {
 
-    // for searchBooks_Book_books_String_authorId_String_type_String_keywords
+    
     // Start of user code 06472fd2021c2aee2d59746b7fb73577
 
     return target()
@@ -146,7 +145,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
         */
   public BookXto getBook(final String bookId) {
 
-    // for getBook_Book_book_String_bookId
+    
     // Start of user code 0803c1d741c6f84bfa77c59c2518dac6
 
     return target()
@@ -168,7 +167,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
         */
   public BookXto createBook(final BookXto book) {
 
-    // for createBook_Book_createdBook_Book_book
+    
     // Start of user code 6ee48938bbd3a10e17f553ecdda9c5df
 
     return target()
@@ -191,7 +190,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
         */
   public BookXto updateBook(final String bookId, final BookXto book) {
 
-    // for updateBook_Book_updatedBook_String_bookId_Book_book
+    
     // Start of user code 08c4c657c8493883e4d23b467b685a35
 
     return target()
@@ -213,7 +212,7 @@ public final class BookServiceFrontResources extends TestFrontResourcesAbs
         */
   public void deleteBook(final String bookId) {
 
-    // for deleteBook_String_bookId
+    
     // Start of user code 565a22159f372e21e079625cab4e6393
 
      target()

@@ -4,6 +4,7 @@
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::configuration::common::names/]
 [import fr::pacman::configuration::common::properties/]
 [import fr::pacman::commons::convention::rule::variableRule/]
@@ -28,7 +29,8 @@
       <name>[any.getApplicationName()/] - Partie commune</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
   	  -->
   	  
   	  <!--
@@ -108,17 +110,32 @@
       		</dependency>
     [/for]
   [/if]
-  [if (any.useWS() or any.isLibraryRS())]
+  [if (any.useWS())]
     		<dependency>
         		<groupId>com.fasterxml.jackson.core</groupId>
         		<artifactId>jackson-annotations</artifactId>
         		<version>${jackson.annotation.version}</version>
     		</dependency>
+  [/if]
+  [if (any.useWS() or any.isLibraryRS())]
      		<dependency>
         		<groupId>jakarta.xml.bind</groupId>
         		<artifactId>jakarta.xml.bind-api</artifactId>
         		<version>${jakarta.xml.bind.version}</version>
     		</dependency>
+  [/if]
+  [if (any.isLibraryRS())]
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.annotation.version}</version>
+            </dependency>
+    		<!-- Juste pour la configuration deserialisation Json -->
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${xml.bind.version}</version>
+            </dependency>
   [/if]
   [if (any.hasHttpEmbeddedServer() and 'jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
     		<dependency>
@@ -127,9 +144,17 @@
     			<version>${log4j-slf4j.version}</version>
     		</dependency>
   [/if]
+  [if (any.useHealthApi())]
+            <dependency>
+      			<groupId>org.json</groupId>
+      			<artifactId>json</artifactId>
+      			<version>${json.version}</version> 
+    		</dependency>	
+  [/if]
   
           <!--
-          [protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+          ['for dependencies'.displayClearUserCodeId()/]
+          [protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
             -->
             
       [if (any.useConfigFileSpi4jFrwk())]
@@ -193,7 +218,8 @@
                   </configuration>
               </plugin>
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
   			  -->
   			  
   			  <!--
@@ -257,7 +283,8 @@
           <build.projectVersion>${project.parent.version}</build.projectVersion>
           
   		<!--
-  		[protected ('for properties') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for properties'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for properties')) startTagPrefix('// ') endTagPrefix('// ')]
   		  -->
   		  
   		  <!--
@@ -266,6 +293,10 @@
   		
       </properties>
   </project>[/template]
+
+[template public commonSpotbugsSecurity(any : ecore::EObject) post(self.trim())]
+  <FindBugsFilter>
+  </FindBugsFilter>[/template]
 
 [template public commonCheck_Spi4j(any : ecore::EObject) post(self.trim())]
   <?xml version="1.0" encoding="UTF-8"?>
@@ -466,6 +497,7 @@
    * build.projectVersion,
    * etc telles que definies dans le pom.xml)
    */
+  
   public class [any.buildInfoClassName()/] extends BuildInfo_Abs
   {
   
@@ -557,7 +589,7 @@
       */
      public String getBuildId ()
      {
-        return ['infos'.apply_attributeFinal()/].get("build.id");
+        return [any.getAffectationPrefix()/]['infos'.apply_attributeFinal()/].get("build.id");
      }
   
      /**
@@ -565,25 +597,25 @@
       */
      public String getUniqueId ()
      {
-        return ['infos'.apply_attributeFinal()/].get("build.tag");
+        return [any.getAffectationPrefix()/]['infos'.apply_attributeFinal()/].get("build.tag");
      }
   
      @Override
      public String getNomApplication ()
      {
-        return ['infos'.apply_attributeFinal()/].get("build.projectArtifactId");
+        return [any.getAffectationPrefix()/]['infos'.apply_attributeFinal()/].get("build.projectArtifactId");
      }
   
      @Override
      public String getVersion ()
      {
-        return ['infos'.apply_attributeFinal()/].get("build.projectVersion");
+        return [any.getAffectationPrefix()/]['infos'.apply_attributeFinal()/].get("build.projectVersion");
      }
   
      @Override
      public String getRevision ()
      {
-        return ['infos'.apply_attributeFinal()/].get("build.svnRevision");
+        return [any.getAffectationPrefix()/]['infos'.apply_attributeFinal()/].get("build.svnRevision");
      }
   
      @Override
@@ -686,7 +718,7 @@
   
   
   /**
-   * Cette classe est une simple 'capsule' pour la création du gestionnaire de
+   * Cette classe est un simple 'capsule' pour la création du gestionnaire de
    * configuration Spi4j. La méthode "init()" est automatiquement appelée par le
    * listener d'initialisation présent dans le projet client et/ou dans la webapp
    * (si la génération de services web a été demandée).
@@ -702,7 +734,7 @@
   
   		final Logger ['logger'.apply_variableDefault()/] = LogManager.getLogger([any.buildConfigProviderClassName()/].class);
   
-    	 	// init [any.buildConfigProviderClassName()/]
+    	 	[('init' + any.buildConfigProviderClassName()).displayClearUserCodeId()/]
      		[protected ('init' + any.buildConfigProviderClassName()) startTagPrefix('// ') endTagPrefix('// ')]
          
          		try {

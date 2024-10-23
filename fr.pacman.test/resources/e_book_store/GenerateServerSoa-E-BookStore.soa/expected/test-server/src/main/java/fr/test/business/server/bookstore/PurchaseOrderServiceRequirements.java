@@ -4,7 +4,6 @@
  * Apache License 2.0
  */
 package fr.test.business.server.bookstore;
-
 // Start of user code for imports
 
 
@@ -17,7 +16,7 @@ package fr.test.business.server.bookstore;
 public class PurchaseOrderServiceRequirements
 {
 
-   // PurchaseOrderServiceRequirements
+   
    // Start of user code 5b55d85f617567ff0ea8deaf740b2ccd
 
    // End of user code

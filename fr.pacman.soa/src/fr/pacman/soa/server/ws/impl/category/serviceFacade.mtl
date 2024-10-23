@@ -43,7 +43,7 @@
   public class [s.buildServiceFacadeCXFClassName()/] implements [s.buildServiceFacadeCXFInterfaceName()/]
   {
   
-  	// attributs
+  	['attributs'.displayClearUserCodeId()/]
   	[protected (s.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
   	[/protected]
@@ -59,7 +59,7 @@
            @Override
            public [o.paramOutXto()/] [o.name.apply_methodDefault()/] ([o.paramsInXto()/])
            {
-        	// [o.userCodeForOperation()/]
+        	[o.userCodeForOperation().displayClearUserCodeId()/]
         	[protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
 
            [if (o.paramOutXto() <> 'void')]
@@ -80,7 +80,7 @@
       [/if]
     [/for]
   [/if]
-     // [s.buildServiceFacadeCXFClassName()/]
+     [s.buildServiceFacadeCXFClassName().displayClearUserCodeId()/]
      [protected (s.getUserCodeId(s.buildServiceFacadeCXFClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

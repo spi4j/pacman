@@ -249,7 +249,7 @@ public class AdresseDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getSimpleName() + '[' + _id + ", " + get_rue() + ", " + get_ville() + ", " + get_codePostal()   + ", " + get_personneAdresses_id ()  + ']';
@@ -257,4 +257,8 @@ public class AdresseDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<
       // End of user code
    }
 
+   
+   // Start of user code Methodes
+
+   // End of user code
 }

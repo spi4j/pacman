@@ -37,7 +37,7 @@ public class CompetenceXto extends ApplicationAutoFieldsXto_Abs implements Xto_I
    // ATTRIBUTS
 
    /** L'identifiant. */
-   // for annotation_id
+   
    // Start of user code for annotation_id
    @XmlElement(namespace = "", name = "id")
    @JsonProperty("id")
@@ -45,7 +45,7 @@ public class CompetenceXto extends ApplicationAutoFieldsXto_Abs implements Xto_I
    // End of user code
 
    /** Le libellé de la compétence. */
-   // for annotation_libelle
+   
    // Start of user code for annotation_libelle
    @XmlElement(namespace = "", name = "libelle")
    @JsonProperty("libelle")
@@ -53,7 +53,7 @@ public class CompetenceXto extends ApplicationAutoFieldsXto_Abs implements Xto_I
    private String _libelle;
 
    /** . */
-   // for annotation_typecompetence
+   
    // Start of user code for annotation_typecompetence
    @XmlElement(namespace = "", name = "typecompetence")
    @JsonProperty("typecompetence")
@@ -61,7 +61,7 @@ public class CompetenceXto extends ApplicationAutoFieldsXto_Abs implements Xto_I
    private TypeCompetence_Enum _typecompetence;
 
    /** La liste de type 'Personne' associee a  l'instance de 'Competence' courante. */
-   // for annotation_1__tab_dispose
+   
    // Start of user code for annotation_1__tab_dispose
    @XmlElement(namespace = "", name = "dispose")
    @JsonProperty("dispose")
@@ -141,7 +141,7 @@ public class CompetenceXto extends ApplicationAutoFieldsXto_Abs implements Xto_I
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getName() + '['  + getId ()  + ", " + get_libelle()   + ", " + get_typecompetence()   + ']';

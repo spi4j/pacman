@@ -42,7 +42,7 @@
    */
   public class [viewState.buildJspControllerClassName()/] { 
   
-  	// attributs for controller
+  	['attributs for controller'.displayClearUserCodeId()/]
   	[protected (viewState.getUserCodeId('attributs for controller')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]
@@ -75,14 +75,14 @@
    * 
    * @author [viewState.getAuthorName()/]
    */
-  // [viewState.buildJspControllerClassName()/] annotations
+  [(viewState.buildJspControllerClassName() + ' annotations').displayClearUserCodeId()/]
   [protected (viewState.getUserCodeId(viewState.buildJspControllerClassName() + ' annotations')) startTagPrefix('// ') endTagPrefix('// ')]
     
   [/protected]
   
   public class [viewState.buildJspControllerClassName()/] extends JspController_Abs { 
   
-  	// attributs for controller
+  	['attributs for controller'.displayClearUserCodeId()/]
   	[protected (viewState.getUserCodeId('attributs for controller')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]
@@ -96,7 +96,7 @@
   	 */
   	public [viewState.buildJspControllerClassName()/] () {
   
-  		// default error dispatch
+  		['default error dispatch'.displayClearUserCodeId()/]
   		[protected (viewState.getUserCodeId('default error dispatch')) startTagPrefix('// ') endTagPrefix('// ')]
       
       		super([viewState.buildJspDispatcherClassName()/].['systemViewState_error'.apply_attributeEnum()/]);
@@ -112,7 +112,7 @@
   	public [viewState.buildJspDispatcherClassName()/] ['execute'.apply_methodDefault()/](final HttpServletRequest ['request'.apply_parameterMethodClassicIn()/], 
   		final JspControllerMessenger_Itf ['messenger'.apply_parameterMethodClassicIn()/], final String ['method'.apply_parameterMethodClassicIn()/]) {
   	
-  		// methode ['execute'.apply_methodDefault()/]
+  		[('methode ' + 'execute'.apply_methodDefault()).displayClearUserCodeId()/]
   		[protected (viewState.getUserCodeId('methode ' + 'execute'.apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
       
     [/protected]
@@ -143,7 +143,7 @@
   	public [viewState.buildJspDispatcherClassName()/] ['init'.apply_methodDefault()/](final HttpServletRequest ['request'.apply_parameterMethodClassicIn()/], 
   		final JspControllerMessenger_Itf ['messenger'.apply_parameterMethodClassicIn()/]) {
   
-  		// methode ['init'.apply_methodDefault()/]
+  		[('methode ' + 'init'.apply_methodDefault()).displayClearUserCodeId()/]
   		[protected (viewState.getUserCodeId('methode ' + 'init'.apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
       
       		['init'.writeActionsIfExist(viewState, false)/]
@@ -172,7 +172,7 @@
       	public [event.buildJspDispatcherClassName()/] [event.getEventName()/](final HttpServletRequest ['request'.apply_parameterMethodClassicIn()/], 
       		final JspControllerMessenger_Itf ['messenger'.apply_parameterMethodClassicIn()/]) {
       
-      		// methode [event.getEventName()/]
+      		[('methode ' + event.getEventName()).displayClearUserCodeId()/]
       		[protected (viewState.getUserCodeId('methode ' + event.getEventName())) startTagPrefix('// ') endTagPrefix('// ')]
           
           		[event.getEventName().writeActionsIfExist(viewState, false)/]
@@ -190,7 +190,7 @@
     [/if]
   [/for]
   
-  	// [viewState.buildJspControllerClassName()/]
+  	[viewState.buildJspControllerClassName().displayClearUserCodeId()/]
   	[protected (viewState.getUserCodeId(viewState.buildJspControllerClassName())) startTagPrefix('// ') endTagPrefix('// ')]
      	
    [/protected]
@@ -205,7 +205,7 @@
   	 */
   	 public boolean activateOnLoad() {
   		
-  		// methode activateOnLoad
+  		['methode activateOnLoad'.displayClearUserCodeId()/]
   		[protected (viewState.getUserCodeId('methode activateOnLoad')) startTagPrefix('// ') endTagPrefix('// ')]
       	
       		return Boolean.[if (viewState.isReferentialController())]TRUE[else]FALSE[/if];	

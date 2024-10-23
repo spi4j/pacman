@@ -6,6 +6,7 @@
 package fr.application.matching.annuaire;
 // Start of user code for imports
 
+import fr.application.annuaire.TypeCompetence_Enum;
 import fr.application.business.api.annuaire.CompetenceAttributes_Enum;
 import fr.application.business.api.annuaire.CompetenceDto;
 import fr.application.business.api.annuaire.PersonneDto;
@@ -17,7 +18,6 @@ import fr.application.persistence.api.annuaire.CompetenceColumns_Enum;
 import fr.application.persistence.api.annuaire.CompetenceDao_Itf;
 import fr.application.persistence.api.annuaire.CompetenceEntity_Itf;
 import fr.application.persistence.api.annuaire.PersonneColumns_Enum;
-import fr.application.types.enums.TypeCompetence_Enum;
 import fr.spi4j.exception.Spi4jValidationException;
 import fr.spi4j.persistence.DatabaseLineStatus_Enum;
 import fr.spi4j.type.XtopSup;
@@ -71,7 +71,7 @@ public class CompetenceMatch extends ApplicationMatch_Abs<Long, CompetenceDto, C
       // v_entity.set_libelle(p_dto.get_libelle ());
       // v_entity.set_typecompetence(p_dto.get_typecompetence ());
 
-      // convertDtoToEntity
+      
       // Start of user code convertDtoToEntity
       checkCompetence(Long.class, String.class, TypeCompetence_Enum.class);
       v_entity.setId(p_dto.getId ());
@@ -100,7 +100,7 @@ public class CompetenceMatch extends ApplicationMatch_Abs<Long, CompetenceDto, C
       // p_dto.set_libelle (p_entity.get_libelle ());
       // p_dto.set_typecompetence (p_entity.get_typecompetence ());
 
-      // refreshDtoFromEntity
+      
       // Start of user code refreshDtoFromEntity
       checkCompetence (Long.class, String.class, TypeCompetence_Enum.class);
       p_dto.setId (p_entity.getId ());
@@ -213,7 +213,7 @@ public class CompetenceMatch extends ApplicationMatch_Abs<Long, CompetenceDto, C
       getDao().executeUpdate (v_queryDisposeDelete, v_params);
    }
 
-   // CompetenceMatch
+   
    // Start of user code CompetenceMatch
 
    // End of user code

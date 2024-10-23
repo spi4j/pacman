@@ -3,6 +3,7 @@
 [import fr::pacman::commons::common::licence/]
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::utils/]
 [import fr::pacman::soa::common::imports/]
 [import fr::pacman::soa::common::packages/]
 [import fr::pacman::soa::common::name/]
@@ -33,7 +34,6 @@
   [s.licence()/]
   [let self = if not (s = null) then s else if not (d = null) then d else 'PACKAGE NOT FOUND FOR SERVICE AND DTO NULL' endif endif]
     package [s.buildPackageBusinessImplementationServiceDto(d)/];
-    
     [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
       
       [if (not s.getAllRequirementsForService()->isEmpty())]
@@ -59,18 +59,16 @@
     
     [if (not (s = null))]
       [for (req : requirement::Requirement | s.getAllRequirementsForService())]
-           [protected (req.getUserCodeId(req.getServiceRequirementsPrefix() + req.id + '_javadoc')) startTagPrefix('// ') endTagPrefix('// ')]
-                /**
-                 * Test de l'exigence [req.getServiceRequirementsPrefix()/][req.id/]. <br>
-                 * [req.statement.replaceAll('\r\n', ' <br>\r\n    * ')/]
-                 */
-           [/protected]
-        
+         
+           /**
+            * Test de l'exigence [req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/]. <br>
+            * [if (not (req.statement = null))][req.statement.replaceAll('\r\n', ' <br>\r\n    * ')/][/if]
+            */
            [req.annotationRequirement()/]
            [protected (req.getUserCodeId(req.getServiceRequirementsPrefix() + req.id)) startTagPrefix('// ') endTagPrefix('// ')]
-                public void ['exigence'.apply_methodDefault()/][req.getServiceRequirementsPrefix()/][req.id/] ()
+                public void ['exigence'.apply_methodDefault()/][req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/] ()
                 {
-                   throw new RequirementException(['requirement'.apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id/], "Exigence non implémentée");
+                   throw new RequirementException(['requirement'.apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/], "Exigence non implémentée");
                 }
              
            [/protected]
@@ -78,7 +76,7 @@
         
       [/for]
     [/if]
-       // [s.nameServiceRequirements(d)/]
+       [s.nameServiceRequirements(d).displayClearUserCodeId()/]
        [protected (s.getUserCodeId(s.nameServiceRequirements(d))) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]
@@ -89,4 +87,4 @@
 [query private getAllRequirementsForService(s : soa::Service) : OrderedSet(requirement::Requirement) = s.getAllRequirementsForServiceJavaService()->asOrderedSet()/]
 
 [template private annotationRequirement(req : requirement::Requirement)]
-  [if (req.requirementBaseCategoryLevel() = 0)]@['requirement'.apply_classAnnotation()/](['requirement'.apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id/])[else]@[('requirement ' + req.getBaseCategoryForRequirement().id).apply_classAnnotation()/]([('requirement ' + req.getBaseCategoryForRequirement().id).apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id/])[/if][/template]
+  [if (req.requirementBaseCategoryLevel() = 0)]@['requirement'.apply_classAnnotation()/](['requirement'.apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/])[else]@[('requirement ' + req.getBaseCategoryForRequirement().id).apply_classAnnotation()/]([('requirement ' + req.getBaseCategoryForRequirement().id).apply_classEnum()/].[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/])[/if][/template]

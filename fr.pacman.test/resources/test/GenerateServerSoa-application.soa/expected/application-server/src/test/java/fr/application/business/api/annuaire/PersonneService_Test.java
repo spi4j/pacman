@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du service 'PersonneService_Itf'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class PersonneService_Test  extends BeanTester_Abs
@@ -64,7 +64,7 @@ public class PersonneService_Test  extends BeanTester_Abs
       userPersistence = ApplicationParamPersistence.getUserPersistence ();
       service = ApplicationUserBusiness.getPersonneService ();
 
-      // set up before class
+      
       // Start of user code set up before class
       // End of user code
    }
@@ -77,7 +77,7 @@ public class PersonneService_Test  extends BeanTester_Abs
    {
 	  userPersistence.begin ();
 
-      // set up
+      
       // Start of user code set up
       // End of user code
    }
@@ -96,7 +96,7 @@ public class PersonneService_Test  extends BeanTester_Abs
       assertNotNull(DtoUtil.findInCollectionById (v_all, crudId), 
 			"Le dto n'a pas été trouvé dans la liste de tous les dto");
 
-      // findAll assertions
+      
       // Start of user code findAll assertions
 
       // End of user code
@@ -112,7 +112,7 @@ public class PersonneService_Test  extends BeanTester_Abs
    {
       final PersonneDto v_PersonneDto = new PersonneDto ();
 
-      // create
+      
       // Start of user code create
       // TODO renseigner données de test
       v_PersonneDto.set_nom ("Str");
@@ -132,7 +132,7 @@ public class PersonneService_Test  extends BeanTester_Abs
 
       assertNotNull (v_createdPersonneDto.getId (), "Le dto créé devrait avoir une clé primaire renseignée");
 
-      // create assertions
+      
       // Start of user code create assertions
 
 
@@ -154,7 +154,7 @@ public class PersonneService_Test  extends BeanTester_Abs
       assertNotNull (v_dto.getId (), "Le dto créé devrait avoir une clé primaire renseignée");
       assertNotNull (v_dto.toString (), "Le dto créé devrait avoir un toString");
 
-      // findById assertions
+      
       // Start of user code findById assertions
 
       // End of user code
@@ -172,7 +172,7 @@ public class PersonneService_Test  extends BeanTester_Abs
 
       final PersonneDto v_dto = service.findById (crudId);
 
-      // update
+      
       // Start of user code update
 
       // End of user code
@@ -181,7 +181,7 @@ public class PersonneService_Test  extends BeanTester_Abs
 
       assertNotNull (v_updatedDto.getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
 
-      // update assertions
+      
       // Start of user code update assertions
 
       // End of user code
@@ -204,7 +204,7 @@ public class PersonneService_Test  extends BeanTester_Abs
       assertNull (DtoUtil.findInCollectionById (v_all, crudId), 
 			"Le dto ne devrait plus exister dans la liste de tous les dto");
 
-      // delete assertions
+      
       // Start of user code delete assertions
 
       // End of user code
@@ -217,7 +217,7 @@ public class PersonneService_Test  extends BeanTester_Abs
    public void testGetColumn ()
    {
       ApplicationUserMatching.getPersonneMatch ().getColumn (PersonneAttributes_Enum.id);
-      // getColumn
+      
       // Start of user code getColumn
       ApplicationUserMatching.getPersonneMatch ().getColumn (PersonneAttributes_Enum.nom);
       // End of user code
@@ -231,7 +231,7 @@ public class PersonneService_Test  extends BeanTester_Abs
    @Test
    public void testFindPersonneById_Personne_personne_Long_identifiant () throws Throwable
    {
-      // findPersonneById_Personne_personne_Long_identifiant
+      
       // Start of user code findPersonneById_Personne_personne_Long_identifiant
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -246,7 +246,7 @@ public class PersonneService_Test  extends BeanTester_Abs
    @Test
    public void testFindPersonneByName_Personne_personne_String_nom () throws Throwable
    {
-      // findPersonneByName_Personne_personne_String_nom
+      
       // Start of user code findPersonneByName_Personne_personne_String_nom
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -261,7 +261,7 @@ public class PersonneService_Test  extends BeanTester_Abs
    @Test
    public void testFindPersonneByIdFromRest_Personne_personne_Long_identifiant () throws Throwable
    {
-      // findPersonneByIdFromRest_Personne_personne_Long_identifiant
+      
       // Start of user code findPersonneByIdFromRest_Personne_personne_Long_identifiant
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -276,12 +276,12 @@ public class PersonneService_Test  extends BeanTester_Abs
    {
       userPersistence.rollback ();
 
-      // tear down
+      
       // Start of user code tear down
       // End of user code
    }
 
-   // specific service test
+   
    // Start of user code specific service test
 
    // End of user code

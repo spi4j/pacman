@@ -12,7 +12,6 @@ import fr.spi4j.business.dto.Dto_Itf;
 import fr.spi4j.mapper.Mapper_Abs;
 import fr.spi4j.mapper.Mapper_Itf;
 import fr.spi4j.ws.xto.Xto_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -28,7 +27,7 @@ public class AdresseMapper extends Mapper_Abs<AdresseDto, AdresseXto> implements
    {
       final AdresseXto v_xto = super.convertDtoToXto(p_dto);
 
-      // convertDtoToXto
+      
       // Start of user code convertDtoToXto
 
       // End of user code
@@ -41,7 +40,7 @@ public class AdresseMapper extends Mapper_Abs<AdresseDto, AdresseXto> implements
    {
       final AdresseDto v_dto = super.convertXtoToDto(p_xto);
 
-      // convertXtoToDto
+      
       // Start of user code convertXtoToDto
 
       // End of user code
@@ -67,7 +66,7 @@ public class AdresseMapper extends Mapper_Abs<AdresseDto, AdresseXto> implements
       return super.getSpecificMapper(p_fieldName);
    }
 
-   // AdresseMapper
+   
    // Start of user code AdresseMapper
 
    // End of user code

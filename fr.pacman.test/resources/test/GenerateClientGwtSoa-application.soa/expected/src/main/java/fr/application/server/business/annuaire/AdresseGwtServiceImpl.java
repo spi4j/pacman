@@ -24,7 +24,7 @@ public class AdresseGwtServiceImpl extends GwtRemoteServiceImpl<Long, AdresseXto
    @Override
    protected AdresseMapper_Itf getMapper ()
    {
-      // Mapper
+      
       // Start of user code Mapper
       // Le Mapper n'est peut-être pas dans Application, il est peut-être dans un autre domaine qui contient les XTO
       return ApplicationUserMapper.getAdresseMapper();
@@ -34,7 +34,7 @@ public class AdresseGwtServiceImpl extends GwtRemoteServiceImpl<Long, AdresseXto
    @Override
    protected AdresseService_Itf getService ()
    {
-      // Service
+      
       // Start of user code Service
       return ApplicationUserBusiness.getAdresseService();
       // End of user code
@@ -55,7 +55,7 @@ public class AdresseGwtServiceImpl extends GwtRemoteServiceImpl<Long, AdresseXto
                getService ().findListAdressesByPersonne(p_personneAdresses_id));
    }
 
-   // AdresseService
+   
    // Start of user code AdresseService
 
    // End of user code

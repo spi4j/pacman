@@ -17,7 +17,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques pour un type 'Adresse'.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface AdresseService_Itf extends Service_Itf<Long, AdresseDto>
@@ -30,14 +30,14 @@ public interface AdresseService_Itf extends Service_Itf<Long, AdresseDto>
     *           (In) personne
     * @return une liste de AdresseDto ayant p_personneAdressesId = p_personneAdressesId
     */
-	// Annotations Adressesp_personneAdressesId
+	
 	// Start of user code Annotations Adressesp_personneAdressesId
 
 	// End of user code
    List<AdresseDto> findListAdressesByPersonne (final Long p_personneAdressesId);
 
-    // Méthodes AdresseService_Itf
-    // Start of user code Méthodes AdresseService_Itf
+    
+    // Start of user code Methodes AdresseService_Itf
 
     // End of user code
 }

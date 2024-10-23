@@ -86,7 +86,7 @@
 [comment : Ecriture pour les surcharges de code javascript specifiques a la page. /]
 [template private writeSpecificPageScript(viewContainer : view::ViewContainer) post(self.trim())]
   <script>
-  	// [viewContainer.name/] js
+  	[(viewContainer.name + ' js').displayClearUserCodeId()/]
   	[protected (viewContainer.getUserCodeId(viewContainer.name + ' js')) startTagPrefix('// ') endTagPrefix('// ')]
      	// Placer ici les portions de javascript personnalisées.
      
@@ -128,7 +128,7 @@
   <!-- Placer ici les styles spécifiques pour la page (si besoin) -->
   <style>
   	/* Le double slash n'a pas d'impact dans le style pour les navigateurs actuels...  */
-  	/* [viewContainer.name/] css */
+  	[(viewContainer.name + ' css').displayClearUserCodeId()/]
   	[protected (viewContainer.getUserCodeId(viewContainer.name + ' css')) startTagPrefix('// ') endTagPrefix('// ')]
      
      	[viewContainer.layout.scanViewLayoutsStyle()/]
@@ -140,7 +140,7 @@
 [comment : Ecriture d'une zone protegee dans le corps de la page. /]
 [template private writeProtectedBodyZone(viewContainer : view::ViewContainer, viewState : flow::ViewState, label : String) post(self.trim())]
   <!-- Positionner ici toute la partie de code personnalisé pour la portion de page (si nécessaire).
-  // [viewContainer.name + label/]
+  [(viewContainer.name + ' label').displayClearUserCodeId()/]
   [protected (viewContainer.getUserCodeId(viewContainer.name + label)) startTagPrefix('// ') endTagPrefix('// ')]
     -->
     
@@ -167,7 +167,7 @@
   	 'input_'. Pour voir l'id exact du DTO aller dans la page et 
   	 récupérer l'identifiant du DTO qui a été automatiquement généré
   	 pour le champ. 
-  // [viewState.name/] jsp use bean
+  [(viewState.name + ' jsp use bean').displayClearUserCodeId()/]
   [protected (viewState.getUserCodeId(viewState.name + ' jsp use bean')) startTagPrefix('// ') endTagPrefix('// ')]
     -->
     
@@ -274,7 +274,7 @@
 [comment : Ici on parle de la partie technique (non graphique) pour le formulaire. /]
 [template private writeEndForm(layout : view::Layout, viewState : flow::ViewState)]
   <!-- Positionner ici le code personnalisé pour le formulaire (si nécessaire). 
-  // [layout.getLayoutId(viewState)/] zone formulaire
+  [(layout.getLayoutId(viewState) + ' zone formulaire').displayClearUserCodeId()/]
   [protected (layout.getUserCodeId(layout.getLayoutId(viewState) + ' zone formulaire')) startTagPrefix('// ') endTagPrefix('// ')]
     -->
     
@@ -415,7 +415,7 @@
   	<!-- On profite du laxisme html avec un colspan fixe, possibilité de modifier 
   		 le colspan apres première génération.
   
-  	// [viewElement.getViewElementId()/] zone tableau [dto.name/]
+  	[(viewElement.getViewElementId() + ' zone tableau ' + dto.name).displayClearUserCodeId()/]
   	[protected (viewElement.getUserCodeId(viewElement.getViewElementId() + ' zone tableau' + dto.name)) startTagPrefix('// ') endTagPrefix('// ')]
      	-->
      	
@@ -493,7 +493,7 @@
       [for (attribut : String | attributs)]
         [attribut.trim()/]="
         [attribut.writeCommentBegin()/]
-        // [prefix/][viewElement.getViewElementId()/]_[attribut.trim()/]
+        [(prefix + viewElement.getViewElementId() + '_' + attribut.trim()).displayClearUserCodeId()/]
         [protected (viewElement.getUserCodeId(prefix + viewElement.getViewElementId() + '_' + attribut.trim())) startTagPrefix('// ') endTagPrefix('// ')]
           [attribut.writeCommentEnd()/] 
           
@@ -557,7 +557,7 @@
   [if (not viewElement.events->isEmpty())][viewElement.writeJsRouting(viewContainer, viewState)/][else]>[/if]
   <c:forEach items="${[viewElement.getTargetBeanName()/]}" var="item" varStatus="status">
   <!-- 
-  // [viewElement.getViewElementId()/]
+  [viewElement.getViewElementId().displayClearUserCodeId()/]
   [protected (viewElement.getUserCodeId(viewElement.getViewElementId())) startTagPrefix('// ') endTagPrefix('// ')]
     -->
     <option value="${item.get_value()}">${item.get_label()}</option>
@@ -643,7 +643,7 @@
   <script>
   	function [viewElement.name/]CustomMethodJS(event) {
   		<!--
-  		 // [viewElement.name/]CustomMethodJS
+  		 [(viewElement.name + 'CustomMethodJS').displayClearUserCodeId()/]
   		 [protected (viewElement.getUserCodeId(viewElement.name + 'CustomMethodJS')) startTagPrefix('// ') endTagPrefix('// ')]
        		-->
        [if (viewElement.isButtonSubmit())]

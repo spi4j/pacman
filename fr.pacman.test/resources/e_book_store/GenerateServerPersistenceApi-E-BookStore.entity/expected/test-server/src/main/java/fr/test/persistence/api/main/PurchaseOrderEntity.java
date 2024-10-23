@@ -7,8 +7,7 @@ package fr.test.persistence.api.main;
 // Start of user code for imports
 
 import fr.spi4j.persistence.entity.Entity_Itf;
-import fr.test.types.enums.StatusEnum;
-import java.util.Date;
+import fr.test.main.StatusEnum;
 
 // End of user code
 
@@ -20,7 +19,7 @@ public interface PurchaseOrderEntity extends Entity_Itf<Long>
 {
    // CONSTANTES
 
-   // Constantes PurchaseOrderEntity
+   
    // Start of user code fb2b5d4d79ae8fe942cc20b5d4117df8
 
    // End of user code
@@ -80,7 +79,7 @@ public interface PurchaseOrderEntity extends Entity_Itf<Long>
    void setUser_id (final Long user_id);
 
 
-   // Methodes PurchaseOrderEntity
+   
    // Start of user code 27cf7f8a6fef8405f7bd58dc99821662
 
    // End of user code

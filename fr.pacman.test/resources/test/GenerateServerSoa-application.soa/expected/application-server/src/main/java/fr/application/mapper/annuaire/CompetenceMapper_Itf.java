@@ -11,7 +11,6 @@ import fr.application.ws.api.annuaire.CompetenceXto;
 import fr.spi4j.mapper.Mapper_Itf;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -23,7 +22,7 @@ import java.util.List;
 public interface CompetenceMapper_Itf extends Mapper_Itf<CompetenceDto, CompetenceXto>
 {
 
-   // CompetenceMapper_Itf
+   
    // Start of user code CompetenceMapper_Itf
 
    // End of user code

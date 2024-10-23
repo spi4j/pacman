@@ -61,6 +61,16 @@
       [/for]
     [/if]
   [/if]
+  [if (m.useHealthApi())]
+    	/**
+    	 * Récupération de l'interface pour la facade du service : health. 
+    	 * @return [m.buildRsHealthServiceInterfaceName()/] : L'interface pour le service.
+    	 */
+    	public static [m.buildRsHealthServiceInterfaceName()/] [m.buildRsHealthServiceInterfaceName().apply_methodGet()/](){
+    		
+    		return [m.buildRsHealthServiceClassName()/].['instance'.apply_attributeFinal()/];
+    	}
+  [/if]
   }[/template]
 
 [comment : ***********************************************************************/]
@@ -100,6 +110,9 @@
     [for (d : environment::DTO | m.eAllContents(environment::DTO))]
       				bind([null.buildServiceFacadeRSClassName(d)/].class).to([null.buildServiceFacadeRSInterfaceName(d)/].class);
     [/for]
+  [/if]
+  [if (m.useHealthApi())]
+    				bind([m.buildRsHealthServiceClassName()/].class).to([m.buildRsHealthServiceInterfaceName()/].class);
   [/if]
   			}
   		});

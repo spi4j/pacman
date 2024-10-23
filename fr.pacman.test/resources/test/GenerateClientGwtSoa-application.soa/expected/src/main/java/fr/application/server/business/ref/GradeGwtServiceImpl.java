@@ -24,7 +24,7 @@ public class GradeGwtServiceImpl extends GwtRemoteServiceImpl<Long, GradeXto, Gr
    @Override
    protected GradeMapper_Itf getMapper ()
    {
-      // Mapper
+      
       // Start of user code Mapper
       // Le Mapper n'est peut-être pas dans Application, il est peut-être dans un autre domaine qui contient les XTO
       return ApplicationUserMapper.getGradeMapper();
@@ -34,7 +34,7 @@ public class GradeGwtServiceImpl extends GwtRemoteServiceImpl<Long, GradeXto, Gr
    @Override
    protected GradeService_Itf getService ()
    {
-      // Service
+      
       // Start of user code Service
       return ApplicationUserBusiness.getGradeService();
       // End of user code
@@ -48,7 +48,7 @@ public class GradeGwtServiceImpl extends GwtRemoteServiceImpl<Long, GradeXto, Gr
       return super.doGetSerializationPolicy (request, getServletContext().getInitParameter("moduleBaseURL"), strongName);
    }
 
-   // GradeService
+   
    // Start of user code GradeService
 
    // End of user code

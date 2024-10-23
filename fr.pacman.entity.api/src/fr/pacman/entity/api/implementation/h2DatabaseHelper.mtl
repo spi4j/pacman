@@ -97,7 +97,7 @@
         ['instance'.apply_attributeFinalStatic()/].initDatabase();
      }
   
-     // Methodes
+     ['Methodes'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

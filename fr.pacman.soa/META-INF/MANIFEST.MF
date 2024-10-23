@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: fr.pacman.soa
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - SOA
 Bundle-SymbolicName: fr.pacman.soa
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.soa.Activator
 Bundle-Vendor: Safr@n
 Export-Package: fr.pacman.soa,
@@ -15,10 +16,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.overview,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.model,
- org.eclipse.acceleo.engine,
  fr.pacman.commons,
  fr.pacman.commons.soa,
  org.eclipse.acceleo.aql;bundle-version="4.0.0",
@@ -28,5 +25,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.environment
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
-Automatic-Module-Name: fr.pacman.soa
 Eclipse-LazyStart: true

@@ -36,11 +36,12 @@
   /** [a.nameBaseAttribute()/]. */
   [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.genClassTypeName()/], [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if])[/template]
 
-[template public enumStruct(r : environment::Reference, s : environment::DTO)]
+[template public enumStruct(r : environment::Reference, s : environment::DTO) post(self.trim())]
   [if (s.isReferenceNoStar(r))]
   [if (not r.isComputed() and not r.referencedType.oclAsType(environment::DTO).isNotPersistent())][r.enumStructId()/],[/if]
   [r.enumStructReference()/][elseif (s.isReferenceStar(r))]
-  [r.enumStructTab()/][if (s.isReferencingStar(r))],[r.enumStructInverseId()/][/if][elseif (s.isReferencingStar(r))]
+  [r.enumStructTab()/][if (s.isReferencingStar(r))],[/if]
+  [if (s.isReferencingStar(r))][r.enumStructInverseId()/][/if][elseif (s.isReferencingStar(r))]
   [r.enumStructInverseId()/][/if][/template]
 
 [template public enumStructId(r : environment::Reference)]
@@ -58,8 +59,7 @@
 [template public enumStructInverseId(r : environment::Reference)]
   /** [r.nameBaseReferenceInverse()/][r.namePK_ID()/]. */
   [r.nameBaseReferenceInverse()/][r.namePK_ID()/]("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]", "[r.description.escape()/]", [r.genPkType()/].class, [r.mandatory()/], [if (r.metadatas.hasSize())][r.metadatas.size()/][else]-1[/if])[/template]
-  
-[comment : Le template principal pour le fichier. /]
+
 [template public attributesEnum(d : environment::DTO)]
   [d.licence()/]
   package [d.buildPackageBusinessApiDto()/];
@@ -77,18 +77,18 @@
    */
   public enum [d.buildAttributesEnumName()/] implements [d.getClassNameForAttributesNames_Itf()/]
   {
-  	 [if (d.isNotPersistent() and not d.isParent())]
-       // Enumeration Attributs
+     [if (d.isNotPersistent() and not d.isParent())]
+       ['Enumeration Attributs'.displayClearUserCodeId()/]
        [protected (d.getUserCodeId('Enumeration Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
        [/protected]
-    
-  	 [/if]
+
+     [/if]
      /** [d.nameENUM_PK_ID()/]. */
-     [(Sequence{ d.nameENUM_PK_ID() + '("' + d.nameENUM_PK_ID() + '","id",' + d.genPkType()+'.class, true, -1)' }
+     [(Sequence{ d.nameENUM_PK_ID() + '("' + d.nameENUM_PK_ID() + '", "id", ' + d.genPkType()+'.class, true, -1)' }
      + d.navigableProperties()->asSequence()->collect(temp1 | temp1.enumStruct(d))
-     )->filter(String)->sep(',' + ''.lineSeparator())/];                                                                                   
-                                                                                             
+     )->filter(String)->sep(',' + ''.lineSeparator())/];
+
      /** Le nom de l'attribut. */
      private final String ['name'.apply_attributeFinal()/];
   

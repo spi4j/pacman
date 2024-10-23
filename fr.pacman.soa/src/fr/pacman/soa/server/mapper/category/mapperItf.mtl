@@ -28,7 +28,7 @@
   public interface [d.buildMapperInterfaceName()/] extends [d.getClassNameForMapper_Itf()/]<[d.buildDtoClassName()/], [d.buildXtoClassNameFromDto()/]>
   {
   
-     // [d.nameMapperInterface()/]
+     [d.nameMapperInterface().displayClearUserCodeId()/]
      [protected (d.getUserCodeId(d.nameMapperInterface())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

@@ -23,7 +23,7 @@
    * Interface de vue.
    * @author [viewContainer.getAuthorName()/]
    */
-  // annotation class
+  ['annotation class'.displayClearUserCodeId()/]
   [protected (viewContainer.getUserCodeId('annotation class')) startTagPrefix('// ') endTagPrefix('// ')]
     @UserView("[viewContainer.name/]")
   [/protected]
@@ -32,7 +32,7 @@
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
     [if (not (clientPropertiesPrefix = 'client.swing' and element.widget.name = 'Button'))]
-         // [element.name + '_' + element.widget.getInterfaceName()/]
+         [(element.name + '_' + element.widget.getInterfaceName()).displayClearUserCodeId()/]
          [protected (element.getUserCodeId(element.name + '_' + element.widget.getInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
 
            /**
@@ -44,15 +44,15 @@
             */
            @Field("[element.name/]")
            [if (element.useWS())]
-              [element.genericType(element.widget.getInterfaceName(), IsDto)/] [element.nameGetterViewElement()/] ();		
+             [element.genericType(element.widget.getInterfaceName(), IsDto)/] [element.nameGetterViewElement()/] ();		
            [else]
-              [element.genericTypeEntity(element.widget.getInterfaceName())/] [element.nameGetterViewElement()/] ();	
+             [element.genericTypeEntity(element.widget.getInterfaceName())/] [element.nameGetterViewElement()/] ();	
            [/if]
          [/protected]
       
     [/if]
   [/for]
-     // [viewContainer.nameViewInterface()/]
+     [viewContainer.nameViewInterface().displayClearUserCodeId()/]
      [protected (viewContainer.getUserCodeId(viewContainer.nameViewInterface())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

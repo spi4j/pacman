@@ -32,7 +32,7 @@ public class PersonneMapper extends Mapper_Abs<PersonneDto, PersonneXto> impleme
    {
       final PersonneXto v_xto = super.convertDtoToXto(p_dto);
 
-      // convertDtoToXto
+      
       // Start of user code convertDtoToXto
 
       // End of user code
@@ -45,7 +45,7 @@ public class PersonneMapper extends Mapper_Abs<PersonneDto, PersonneXto> impleme
    {
       final PersonneDto v_dto = super.convertXtoToDto(p_xto);
 
-      // convertXtoToDto
+      
       // Start of user code convertXtoToDto
 
       // End of user code
@@ -91,7 +91,7 @@ public class PersonneMapper extends Mapper_Abs<PersonneDto, PersonneXto> impleme
       return super.getSpecificMapper(p_fieldName);
    }
 
-   // PersonneMapper
+   
    // Start of user code PersonneMapper
 
    // End of user code

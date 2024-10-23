@@ -69,7 +69,7 @@
     	/** Le logger  */
         private static final Logger ['LOG'.apply_attributeFinalStatic()/] = LogManager.getLogger( [b.buildReferentielClassName()/].class );
     
-       // Constantes [b.buildReferentielClassName()/]
+       [('Constantes ' + b.buildReferentielClassName()).displayClearUserCodeId()/]
        [protected (b.getUserCodeId('Constantes ' + b.buildReferentielClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]
@@ -80,7 +80,7 @@
     	/** Le flag indiquant si on commite le traitement */
     	private static boolean ['commit traitement'.apply_attributeStatic()/] = true;
     
-       // Attributs [b.buildReferentielClassName()/]
+       [('Attributs ' + b.buildReferentielClassName()).displayClearUserCodeId()/]
        [protected (b.getUserCodeId('Attributs ' + b.buildReferentielClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]
@@ -203,7 +203,7 @@
     
        }
     
-       // Methodes [b.buildReferentielClassName()/]
+       [('Methodes ' + b.buildReferentielClassName()).displayClearUserCodeId()/]
        [protected (b.getUserCodeId('Methodes ' + b.buildReferentielClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]

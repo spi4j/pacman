@@ -4,7 +4,6 @@
  * Apache License 2.0
  */
 package fr.test.business.server.bookstore;
-
 // Start of user code for imports
 
 
@@ -17,7 +16,7 @@ package fr.test.business.server.bookstore;
 public class LogServiceRequirements
 {
 
-   // LogServiceRequirements
+   
    // Start of user code bdcf780fcde813423c88388c7661379f
 
    // End of user code

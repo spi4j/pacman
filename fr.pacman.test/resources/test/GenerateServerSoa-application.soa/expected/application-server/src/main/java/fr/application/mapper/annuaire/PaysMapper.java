@@ -12,7 +12,6 @@ import fr.spi4j.business.dto.Dto_Itf;
 import fr.spi4j.mapper.Mapper_Abs;
 import fr.spi4j.mapper.Mapper_Itf;
 import fr.spi4j.ws.xto.Xto_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -28,7 +27,7 @@ public class PaysMapper extends Mapper_Abs<PaysDto, PaysXto> implements PaysMapp
    {
       final PaysXto v_xto = super.convertDtoToXto(p_dto);
 
-      // convertDtoToXto
+      
       // Start of user code convertDtoToXto
 
       // End of user code
@@ -41,7 +40,7 @@ public class PaysMapper extends Mapper_Abs<PaysDto, PaysXto> implements PaysMapp
    {
       final PaysDto v_dto = super.convertXtoToDto(p_xto);
 
-      // convertXtoToDto
+      
       // Start of user code convertXtoToDto
 
       // End of user code
@@ -67,7 +66,7 @@ public class PaysMapper extends Mapper_Abs<PaysDto, PaysXto> implements PaysMapp
       return super.getSpecificMapper(p_fieldName);
    }
 
-   // PaysMapper
+   
    // Start of user code PaysMapper
 
    // End of user code

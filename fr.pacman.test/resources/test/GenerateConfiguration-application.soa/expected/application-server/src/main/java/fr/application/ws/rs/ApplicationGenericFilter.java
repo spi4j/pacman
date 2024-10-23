@@ -13,6 +13,7 @@ import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.ext.Provider;
 
 
+import fr.spi4j.ws.rs.RsLogger;
 import fr.spi4j.ws.rs.RsFilter_Abs;
 import fr.spi4j.ws.rs.RsFilterConfigurator;
 import fr.spi4j.ws.rs.RsAuthTokenXtoWrapper;
@@ -77,7 +78,7 @@ public class ApplicationGenericFilter extends RsFilter_Abs
  	@Override
    	protected RsFilterConfigurator initFilterConfig ()
    	{
-		// init filter config
+		
 		// Start of user code init filter config
 
 		return new RsFilterConfigurator("APPLICATION").set_debugMode();
@@ -95,7 +96,7 @@ public class ApplicationGenericFilter extends RsFilter_Abs
 	@Override
 	protected RsTokensConfigurator_Itf initTokensConfig() 
 	{
-		// init tokens config
+		
 		// Start of user code init tokens config
 		
 		return new ApplicationTokensConfig();
@@ -120,7 +121,7 @@ public class ApplicationGenericFilter extends RsFilter_Abs
 	@Override
 	protected void provideClaimsToApplication(final String p_spi4jId, final Claims p_claims)
 	{
-      	// provide claims application
+      	
       	// Start of user code provide claims application
 
  		// End of user code
@@ -137,7 +138,7 @@ public class ApplicationGenericFilter extends RsFilter_Abs
 	@Override
 	protected RsXto_Itf buildRefreshedTokenResponse(RsAuthTokenXtoWrapper p_tokenWrapper) {
 		
-	    // build refreshed token reponse
+	    
 	    // Start of user code build refreshed token reponse
 
 		return null;
@@ -155,7 +156,7 @@ public class ApplicationGenericFilter extends RsFilter_Abs
 	@Override
 	protected void beforeFilter (final ContainerRequestContext p_requestCtx)
 	{
-		// before filter
+		
 		// Start of user code before filter
 
  		// End of user code
@@ -171,8 +172,26 @@ public class ApplicationGenericFilter extends RsFilter_Abs
 	@Override
 	protected void afterFilter (final ContainerResponseContext p_responseCtx)
 	{
-      	// after filter
+      	
       	// Start of user code after filter
+
+ 		// End of user code
+	}
+
+	/**
+	 * Appliquer ici toutes les opérations à effectuer en cas d'erreur lors de
+	 * l'initialisation du filtre.
+	 * 
+	 * @param p_exception : L'exception initiale ayant entrainé l'echec de
+	 *                    l'initialisation du filtre.
+	 */
+	@Override
+	protected void onInitializationFailure(Exception p_exception) 
+	{
+      	
+      	// Start of user code on initialization failure
+
+		RsLogger.get_log().fatal(p_exception, p_exception.getCause());
 
  		// End of user code
 	}

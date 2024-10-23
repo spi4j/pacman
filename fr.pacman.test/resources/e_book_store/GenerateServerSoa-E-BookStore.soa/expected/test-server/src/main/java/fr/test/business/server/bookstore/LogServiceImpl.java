@@ -20,14 +20,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code 674e50e0c74c5b2ab261ee2db581af68
 // End of user code
 public class LogServiceImpl implements LogService
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code 30c346a26df5ef7ff6f1d2298b85c1a5
 
    // End of user code
@@ -48,7 +48,7 @@ public class LogServiceImpl implements LogService
 
       // Appel des exigences en provenance de la modélisation
 
-      // log_String_message
+      
       // Start of user code 4db071299dc05baf236770be7fd6aab7
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -59,7 +59,7 @@ public class LogServiceImpl implements LogService
 
 	
 
-   // LogService
+   
    // Start of user code c6ef9642548f75729bf2383425199c21
 
    // End of user code

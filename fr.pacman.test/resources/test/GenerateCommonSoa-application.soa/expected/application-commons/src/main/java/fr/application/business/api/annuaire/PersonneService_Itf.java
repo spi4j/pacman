@@ -17,7 +17,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques pour un type 'Personne'.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
@@ -30,7 +30,7 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
     *           (In)(*) personne
     * @return une liste de PersonneDto ayant p_personneParentDeId = p_personneParentDeId
     */
-	// Annotations ParentDep_personneParentDeId
+	
 	// Start of user code Annotations ParentDep_personneParentDeId
 
 	// End of user code
@@ -42,7 +42,7 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
     *           (In)(*) identifiant.
     * @return personne.
 	*/
-	// Annotations findPersonneById_Personne_personne_Long_identifiant
+	
 	// Start of user code Annotations findPersonneById_Personne_personne_Long_identifiant
 
 	// End of user code
@@ -57,7 +57,7 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
     *           (In)(*) nom.
     * @return personne.
 	*/
-	// Annotations findPersonneByName_Personne_personne_String_nom
+	
 	// Start of user code Annotations findPersonneByName_Personne_personne_String_nom
 
 	// End of user code
@@ -72,7 +72,7 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
     *           (In)(*) identifiant.
     * @return personne.
 	*/
-	// Annotations findPersonneByIdFromRest_Personne_personne_Long_identifiant
+	
 	// Start of user code Annotations findPersonneByIdFromRest_Personne_personne_Long_identifiant
 
 	// End of user code
@@ -81,8 +81,8 @@ public interface PersonneService_Itf extends Service_Itf<Long, PersonneDto>
 
 	
 
-    // Méthodes PersonneService_Itf
-    // Start of user code Méthodes PersonneService_Itf
+    
+    // Start of user code Methodes PersonneService_Itf
 
     // End of user code
 }

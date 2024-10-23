@@ -1,7 +1,7 @@
 /****************************************************************/
 /* Base de donnees:                                             */
 /* Application:          test                                   */
-/* Date de creation:     01/10/2024 11:49:16                    */
+/* Date de creation:     18/10/2024 11:04:58                    */
 /****************************************************************/
 /****************************************************************/
 /* Sequences                                                    */
@@ -21,9 +21,11 @@ create sequence USER_SEQ start with 1000;
 /****************************************************************/
 create table AUTHOR
 (
+    /* PK de la table AUTHOR */
     AUTHOR_ID NUMBER(19) not null,
     NAME VARCHAR(100) not null,
 
+    /* FK vers la table BOOK */
     BOOK_ID NUMBER(19),
     constraint AUTHOR_PK1_1 primary key (AUTHOR_ID)
 );
@@ -35,12 +37,14 @@ create index AUTHOR_IDX1_1 on AUTHOR (BOOK_ID);
 /****************************************************************/
 create table BOOK
 (
+    /* PK de la table BOOK */
     BOOK_ID NUMBER(19) not null,
     TITLE VARCHAR(100) not null,
     PRICE NUMBER(10) not null,
     IMAGE VARCHAR(100) not null,
     TYPE VARCHAR(100),
 
+    /* FK vers la table AUTHOR */
     AUTHOR_ID NUMBER(19),
     constraint BOOK_PK1_1 primary key (BOOK_ID)
 );
@@ -52,6 +56,7 @@ create index BOOK_IDX1_1 on BOOK (AUTHOR_ID);
 /****************************************************************/
 create table PURCHASEORDER
 (
+    /* PK de la table PURCHASEORDER */
     PURCHASEORDER_ID NUMBER(19) not null,
     CARDNUMBER VARCHAR(100) not null,
     TOTALAMOUNT NUMBER(10) not null,
@@ -69,10 +74,12 @@ create index PURCHASEORDER_IDX1_2 on PURCHASEORDER (USER_ID);
 /****************************************************************/
 create table SHOOPINGCARTLINE
 (
+    /* PK de la table SHOOPINGCARTLINE */
     SHOOPINGCARTLINE_ID NUMBER(19) not null,
     QUANTITY NUMBER(10) not null,
 
     BOOK_ID NUMBER(19) not null,
+    /* FK vers la table SHOPPINGCART */
     SHOPPINGCART_ID NUMBER(19),
     constraint SHOOPINGCARTLINE_PK1_1 primary key (SHOOPINGCARTLINE_ID)
 );
@@ -85,9 +92,11 @@ create index SHOOPINGCARTLINE_IDX1_2 on SHOOPINGCARTLINE (SHOPPINGCART_ID);
 /****************************************************************/
 create table SHOPPINGCART
 (
+    /* PK de la table SHOPPINGCART */
     SHOPPINGCART_ID NUMBER(19) not null,
     STATUS VARCHAR(7) not null,
 
+    /* FK vers la table USER */
     USER_ID NUMBER(19),
     constraint SHOPPINGCART_PK1_1 primary key (SHOPPINGCART_ID)
 );
@@ -99,6 +108,7 @@ create index SHOPPINGCART_IDX1_1 on SHOPPINGCART (USER_ID);
 /****************************************************************/
 create table USER
 (
+    /* PK de la table USER */
     USER_ID NUMBER(19) not null,
     NAME VARCHAR(100) not null,
     EMAIL VARCHAR(100) not null,

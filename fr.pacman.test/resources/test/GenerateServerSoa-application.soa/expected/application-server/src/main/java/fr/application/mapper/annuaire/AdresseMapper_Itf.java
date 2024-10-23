@@ -9,7 +9,6 @@ package fr.application.mapper.annuaire;
 import fr.application.business.api.annuaire.AdresseDto;
 import fr.application.ws.api.annuaire.AdresseXto;
 import fr.spi4j.mapper.Mapper_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -20,7 +19,7 @@ import java.util.Date;
 public interface AdresseMapper_Itf extends Mapper_Itf<AdresseDto, AdresseXto>
 {
 
-   // AdresseMapper_Itf
+   
    // Start of user code AdresseMapper_Itf
 
    // End of user code

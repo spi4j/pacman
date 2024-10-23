@@ -7,7 +7,6 @@ import fr.application.ws.api.annuaire.PersonneServiceRSFacade_Itf;
 import fr.application.ws.api.annuaire.PersonneXto;
 import fr.spi4j.ws.rs.exception.RsNoResultException;
 import fr.spi4j.ws.rs.exception.Spi4jValidationException;
-import java.util.Date;
 import org.jvnet.hk2.annotations.Service;
 
 // End of user code

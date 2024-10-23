@@ -29,6 +29,7 @@
       <name>[any.getApplicationName()/] - Partie serveur</name>
   
   	<!--
+  	['for custom code'.displayClearUserCodeId()/]
   	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
   	  -->
   	  
@@ -251,11 +252,6 @@
                 <version>${commons-collections4.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>javax.mail-api</artifactId>
-                <version>${mail.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
@@ -267,15 +263,34 @@
               <version>${junit.version}</version>
               <scope>test</scope>
           </dependency>
-          
-  		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
-  		  -->
-  		  
-  		  <!--
-  		[/protected]
-  		-->
-  		
+  [if (any.useBatch())]
+            <dependency>
+                <groupId>jakarta.batch</groupId>
+                <artifactId>jakarta.batch-api</artifactId>
+                <version>${jakarta-batch-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jberet</groupId>
+                <artifactId>jberet-core</artifactId>
+                <version>${jberet.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.jberet</groupId>
+               <artifactId>jberet-support</artifactId>
+               <version>${jberet.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.jberet</groupId>
+               <artifactId>jberet-se</artifactId>
+               <version>${jberet.version}</version>
+           </dependency>
+  [/if]
+  	  <!--
+  	  ['for dependencies'.displayClearUserCodeId()/]
+  	  [protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
+
+  	  [/protected]
+  	  -->
       </dependencies>
   
       <build>
@@ -308,9 +323,9 @@
                       </excludes>
                   </configuration>
               </plugin>
-              
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
   			  -->
   			  
   			  <!--
@@ -330,9 +345,11 @@
   
   	<name>rest-mapping-fragment</name>
   
+  	<!-- Ne pas laisser à la valeur par défaut sous peine --> 
+  	<!-- de ne pouvoir accéder au fichier Swagger. -->
     	<servlet-mapping>
       	<servlet-name>RSServlet</servlet-name>
-      	<url-pattern>/api/*</url-pattern>
+      	<url-pattern>/*</url-pattern>
     	</servlet-mapping>
   
   </web-fragment>[/template]
@@ -374,7 +391,7 @@
       */
     	public static void ['initialize'.apply_methodDefault()/] (final ServletContext ['servlet context'.apply_parameterMethodClassicIn()/])
     	{
-  		// security initialization
+  		['security initialization'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('security initialization')) startTagPrefix('// ') endTagPrefix('// ')]
       
   		  Parameters.initServletContext( ['servlet context'.apply_parameterMethodClassicIn()/]);
@@ -412,7 +429,7 @@
   		//	}
   		//});
   
-  		// security server
+  		['security server'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('security server')) startTagPrefix('// ') endTagPrefix('// ')]
       
     [/protected]
@@ -448,7 +465,7 @@
   		final Set<String> ['list perm'.apply_variableFinal()/] = new HashSet<>();
         	boolean ['is super admin'.apply_variableDefault()/] = Boolean.FALSE;
   
-  		// security manager
+  		['security manager'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('security manager')) startTagPrefix('// ') endTagPrefix('// ')]
       
       		final User_Itf ['user'.apply_variableDefault()/] = Spi4jSecurity_Abs.getInstance().getCurrentUser();
@@ -482,7 +499,7 @@
   		[any.buildSecurityInitializationClassName()/].['initialize'.apply_methodDefault()/](['event'.apply_parameterMethodClassicIn()/].getServletContext());
   		[any.buildSecurityInitializationClassName()/].['initialize server security'.apply_methodDefault()/]();
   
-  		// initialization listener
+  		['initialization listener'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('initialization listener')) startTagPrefix('// ') endTagPrefix('// ')]
       
     [/protected]

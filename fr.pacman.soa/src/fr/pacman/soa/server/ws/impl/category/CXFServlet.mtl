@@ -42,7 +42,7 @@
         */
   [for (service : soa::Service | m.eAllContents(soa::Service))]
     [if (service.hasCXFOperations())]
-      	// [service.buildServiceName(null)/]
+      	[service.buildServiceName(null).displayClearUserCodeId()/]
       	[protected (service.getUserCodeId(service.buildServiceName(null))) startTagPrefix('// ') endTagPrefix('// ')]
 
          // Déploiement du Webservice  [service.buildServiceName(null)/]
@@ -95,7 +95,7 @@
         */
   [for (service : soa::Service | component.eAllContents(soa::Service))]
     [if (service.hasCXFOperations())]
-      	 // [service.buildServiceName(null)/]
+      	 [service.buildServiceName(null).displayClearUserCodeId()/]
       	 [protected (service.getUserCodeId(service.buildServiceName(null))) startTagPrefix('// ') endTagPrefix('// ')]
           
                // Déploiement du Webservice  [service.buildServiceName(null)/]
@@ -145,7 +145,7 @@
         * deployWebService(new MonServiceFacade(), "/MonServiceService");
         */
   
-        // [service.buildServiceName(null)/]
+        [service.buildServiceName(null).displayClearUserCodeId()/]
         [protected (service.getUserCodeId(service.buildServiceName(null))) startTagPrefix('// ') endTagPrefix('// ')]
           
                 // Déploiement du Webservice  [service.buildServiceName(null)/]

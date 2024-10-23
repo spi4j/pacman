@@ -19,7 +19,7 @@
    * @param ['id'.apply_parameterMethodClassicIn()/] : Identifiant unique pour l'instance à obtenir.
    * @return [d.buildXtoClassNameFromDto()/] : l'instance de type '[d.buildDtoClassName()/]'.
    */
-   // Annotations [d.name.sanitize() + ' read'/]
+   [('Annotations ' + d.name.sanitize() + ' read').displayClearUserCodeId()/]
    [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' read')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]
@@ -39,7 +39,7 @@
    * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
    * @return [d.buildXtoClassNameFromDto()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
    */
-   // Annotations [d.name.sanitize() + ' create'/]
+   [('Annotations ' + d.name.sanitize() + ' create').displayClearUserCodeId()/]
    [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' create')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]
@@ -65,7 +65,7 @@
    * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
    * @return [d.buildXtoClassNameFromDto()/] : l'instance modifiée de type '[d.buildDtoClassName()/]'.
    */
-   // Annotations [d.name.sanitize() + ' update'/]
+   [('Annotations ' + d.name.sanitize() + ' update').displayClearUserCodeId()/]
    [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' update')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]
@@ -90,7 +90,7 @@
    *
    * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
    */
-   // Annotations [d.name.sanitize() + ' delete'/]
+   [('Annotations ' + d.name.sanitize() + ' delete').displayClearUserCodeId()/]
    [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + ' delete')) startTagPrefix('// ') endTagPrefix('// ')]
      
    [/protected]

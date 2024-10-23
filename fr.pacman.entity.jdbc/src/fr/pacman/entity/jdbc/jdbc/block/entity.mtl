@@ -46,7 +46,7 @@
       */
      private static final long serialVersionUID = -1;
   
-     // Constantes [e.buildEntityImplClassName()/]
+     [('Constantes ' + e.buildEntityImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -87,7 +87,7 @@
       
     [/if]
   [/for]
-     // Attributs [e.buildEntityImplClassName()/]
+     [('Attributs ' + e.buildEntityImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -214,7 +214,7 @@
        }
   [/if]
   
-     // Methodes [e.buildEntityImplClassName()/]
+     [('Methodes ' + e.buildEntityImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

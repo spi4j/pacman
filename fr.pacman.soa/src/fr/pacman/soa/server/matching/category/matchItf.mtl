@@ -72,7 +72,7 @@
         void [('delete ' + r.name.normalize()).apply_methodDefault()/] (final [d.buildDtoClassName()/] ['dto'.apply_parameterMethodClassicIn()/]);
     
   [/for]
-     // [d.nameMatchInterface()/]
+     [d.nameMatchInterface().displayClearUserCodeId()/]
      [protected (d.getUserCodeId(d.nameMatchInterface())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

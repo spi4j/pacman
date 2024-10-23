@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -23,7 +22,7 @@ import java.util.List;
 public interface GradesGwtService extends RemoteService
 {
 
-   // findAllGrades_Grade_grades
+   
    // Start of user code findAllGrades_Grade_grades
 
    /**
@@ -33,7 +32,7 @@ public interface GradesGwtService extends RemoteService
 
    // End of user code
 
-   // findAllPagedGrades_Grade_grades
+   
    // Start of user code findAllPagedGrades_Grade_grades
 
    /**
@@ -43,7 +42,7 @@ public interface GradesGwtService extends RemoteService
 
    // End of user code
 
-   // GradesService
+   
    // Start of user code GradesService
 
    // End of user code

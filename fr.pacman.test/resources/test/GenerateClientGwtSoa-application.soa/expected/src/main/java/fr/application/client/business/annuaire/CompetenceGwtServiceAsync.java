@@ -28,7 +28,7 @@ public interface CompetenceGwtServiceAsync extends GwtRemoteServiceAsync<Long, C
     */
    void findListDisposeByCompetence (final Long p_competence_id, final AsyncCallback<List<PersonneXto>> callback);
 
-   // CompetenceGwtServiceAsync
+   
    // Start of user code CompetenceGwtServiceAsync
 
    // End of user code

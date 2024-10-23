@@ -46,7 +46,7 @@
             * [o.getComParamsIn()/]
             * [o.comParamOut()/]
             */
-            // Annotations Méthode
+            ['Annotations Méthode'.displayClearUserCodeId()/]
             [protected (s.getUserCodeId('Annotations Méthode')) startTagPrefix('// ') endTagPrefix('// ')]
 
             [/protected]

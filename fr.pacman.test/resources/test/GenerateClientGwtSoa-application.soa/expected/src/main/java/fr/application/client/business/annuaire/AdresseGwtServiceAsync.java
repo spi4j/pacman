@@ -28,7 +28,7 @@ public interface AdresseGwtServiceAsync extends GwtRemoteServiceAsync<Long, Adre
     */
    void findListAdressesByPersonne (final Long p_personneAdresses_id, final AsyncCallback<List<AdresseXto>> callback);
 
-   // AdresseGwtServiceAsync
+   
    // Start of user code AdresseGwtServiceAsync
 
    // End of user code

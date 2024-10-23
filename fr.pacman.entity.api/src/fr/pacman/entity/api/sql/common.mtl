@@ -25,7 +25,7 @@
 [template public get_prefix(e : entity::Entity)][e.getSQLTablePrefix()/][/template]
 
 [comment : getSQLTableSchema() ne peut pas être null ou non défini (on peut enlever le test..). /]
-[template private get_schema(e : entity::Entity)]
+[template public get_schema(e : entity::Entity)]
   [if (e.hasSQLTableSchema())][e.getSQLTableSchema()/][/if][/template]
 
 [template public nameTableJointureWithSchema(r : environment::Reference)]
@@ -72,6 +72,8 @@
 [query public get_nameColumn(columnProp : String, void : ecore::EObject) : String = void.get_nameColumn(columnProp)/]
 
 [query public get_defaultColumn(void : ecore::EObject, columnProp : String) : String = columnProp.defaultColumnProperty().getConfigValue()/]
+
+[query public get_description(columnProp : String) : String = columnProp.descriptionColumnProperty().getConfigValue()/]
 
 [query public get_typeColumn(void : ecore::EObject, columnProp : String) : String = columnProp.typeColumnProperty().getConfigValue()/]
 
@@ -198,6 +200,5 @@
 [query private maxColumnReferenceSize(any : ecore::EObject) : Integer = 0.calculMaxSize(0)/]
 
 [comment : Calcul de la taille maximale en fonction de la base de données et de la cible. /]
-[comment : !!!! Attention aux problemes de performance on doit appeler a chaque fois le service Java..
-ce qui n'est absolument pas optimise. /]
-[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = if prefix.isDbOracle32() then 32 - (prefix + suffix) else 128 endif/]
+[comment  Suite a migration packappli, la max est a 30 et non 32 pour compatibilite. /]
+[query private calculMaxSize(prefix : Integer, suffix : Integer) : Integer = if prefix.isDbOracle32() then 30 - (prefix + suffix) else 128 endif/]

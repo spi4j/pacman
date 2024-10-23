@@ -5,7 +5,7 @@
 [import fr::pacman::commons::common::names/]
 
 [comment encoding = UTF-8 /]
-[query public hasHttpEmbeddedServer(any : ecore::EObject) : Boolean = not (any.getHttpEmbeddedServer() = null) and ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()) or 'tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))/]
+[query public hasHttpEmbeddedServer(any : ecore::EObject) : Boolean = not (any.getHttpEmbeddedServer() = null) and any.getHttpEmbeddedServer() != null and ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()) or 'tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))/]
 
 [comment : Verifie si le projet doit generer un client qui necessite une webapp. /]
 [query public hasClientWeb(any : ecore::EObject) : Boolean = any.hasClient() and ('jsp'.equalsIgnoreCase(any.getClient()) or 'jsf'.equalsIgnoreCase(any.getClient()) or 'gwt'.equalsIgnoreCase(any.getClient()))/]

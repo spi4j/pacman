@@ -167,7 +167,7 @@
   	*/
   	public static SSLContext [' SSL context'.apply_methodGet()/]() {
   
-  		//['SSL context'.apply_methodGet()/]
+  		['SSL context'.apply_methodGet().displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('SSL context'.apply_methodGet())) startTagPrefix('//') endTagPrefix('//')]
       
       		SSLContext ['ssl context'.apply_variableDefault()/] = null;
@@ -207,7 +207,7 @@
   	*/
   	private static class [any.buildInternalTrustManager()/] implements X509TrustManager {
   
-  		//[any.buildInternalTrustManager()/]
+  		[any.buildInternalTrustManager().displayClearUserCodeId()/]
   		[protected (any.getUserCodeId(any.buildInternalTrustManager())) startTagPrefix('//') endTagPrefix('//')]
       
       		@Override
@@ -234,7 +234,7 @@
   	*/
   	private static class [any.buildInternalHostnameVerifier()/] implements HostnameVerifier {
   
-  		//[any.buildInternalHostnameVerifier()/]
+  		[any.buildInternalHostnameVerifier().displayClearUserCodeId()/]
   		[protected (any.getUserCodeId(any.buildInternalHostnameVerifier())) startTagPrefix('//') endTagPrefix('//')]
       
       		@Override
@@ -276,7 +276,7 @@
    * @author [any.getAuthorName()/].
    */
   
-  // [any.buildRSFrontExceptionClassName()/]
+  [any.buildRSFrontExceptionClassName().displayClearUserCodeId()/]
   [protected (any.getUserCodeId(any.buildRSFrontExceptionClassName())) startTagPrefix('// ') endTagPrefix('// ')]
     
     public class [any.buildRSFrontExceptionClassName()/] extends RuntimeException {
@@ -462,11 +462,11 @@
   	public Object aroundReadFrom(ReaderInterceptorContext ['context'.apply_parameterMethodClassicIn()/]) 
   			throws IOException, WebApplicationException {
   		
-  		 [protected (any.getUserCodeId(any.buildRSFrontResourcesDefaultInterceptor() + '_aroundReadFrom')) startTagPrefix('//') endTagPrefix('//')]
-       		
-       		return ['context'.apply_parameterMethodClassicIn()/].proceed();
-       
-     [/protected]
+  		[protected (any.getUserCodeId(any.buildRSFrontResourcesDefaultInterceptor() + '_aroundReadFrom')) startTagPrefix('//') endTagPrefix('//')]
+      		
+      		return ['context'.apply_parameterMethodClassicIn()/].proceed();
+      
+    [/protected]
    
   	}
   
@@ -550,6 +550,7 @@
   	@Override
   	public void filter(ClientRequestContext ['request context'.apply_parameterMethodClassicIn()/]) throws IOException {
   
+  		[any.getUserCodeId(any.buildRSFrontResourcesDefaultFilter() + '_ClientRequestContext').displayClearUserCodeId()/]
   		[protected (any.getUserCodeId(any.buildRSFrontResourcesDefaultFilter() + '_ClientRequestContext')) startTagPrefix('// ') endTagPrefix('// ')]
       
       		// Indique que le client converse en Français (si possible).
@@ -583,6 +584,7 @@
   	public void filter(ClientRequestContext ['request context'.apply_parameterMethodClassicIn()/],
   		ClientResponseContext ['response context'.apply_parameterMethodClassicIn()/]) throws IOException {
   
+  		[any.getUserCodeId(any.buildRSFrontResourcesDefaultFilter() + '_ClientResponseFilter').displayClearUserCodeId()/]
   		[protected (any.getUserCodeId(any.buildRSFrontResourcesDefaultFilter() + '_ClientResponseFilter')) startTagPrefix('// ') endTagPrefix('// ')]
       
       		// Si mode débug, on stocke les en-têtes dans le ThreadLocal.
@@ -708,7 +710,7 @@
   				return;
   		}
   
-  		[any.getAffectationPrefix()/].['headers _thread _local'.apply_attributeStatic()/]
+  		['headers _thread _local'.apply_attributeStatic()/]
   				.set(new Headers(['map'.apply_parameterMethodClassicIn()/]));
   	}
   
@@ -736,7 +738,7 @@
   	 */
   	public static Headers ['headers'.apply_methodGet()/]() {
   		
-  		return [any.getAffectationPrefix()/]['headers _thread _local'.apply_attributeStatic()/].get();
+  		return ['headers _thread _local'.apply_attributeStatic()/].get();
   	}
   
   	/**
@@ -744,8 +746,8 @@
   	 */
   	public static void ['remove'.apply_methodDefault()/]() {
   		
-  		[any.getAffectationPrefix()/]['headers _thread _local'.apply_attributeStatic()/].remove();
-  		[any.getAffectationPrefix()/].['headers _thread _local'.apply_attributeStatic()/] = null;
+  		['headers _thread _local'.apply_attributeStatic()/].remove();
+  		['headers _thread _local'.apply_attributeStatic()/] = null;
   	}
   	
   	/**
@@ -818,11 +820,8 @@
 [template public rsFrontTokensConfiguration(any : ecore::EObject)]
   [any.licence()/]
   package [any.buildPackageRsFront()/];
-  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
-    
-    import java.util.Properties;
-    
-  [/protected]
+  
+  import java.util.Properties;
   
   /**
   * Classe détenant les informations des jetons.
@@ -1742,7 +1741,7 @@
      */
     static {
   
-      //static configuration
+      ['static configuration'.displayClearUserCodeId()/]
       [protected (any.getUserCodeId('static configuration')) startTagPrefix('//') endTagPrefix('//')]
         
             // Chargement de la configuration pour l'application.
@@ -1774,7 +1773,7 @@
      */
     protected WebTarget ['target'.apply_methodDefault()/]() {
   
-      //for target
+      ['for target'.displayClearUserCodeId()/]
       [protected (any.getUserCodeId('for target')) startTagPrefix('//') endTagPrefix('//')]
         
             return [any.buildRSClientFactoryClassName()/].['client'.apply_methodGet()/]().target(['base uri'.apply_attributeFinal()/]);
@@ -1808,7 +1807,7 @@
      */
     private String ['build target'.apply_methodDefault()/](final String ['target'.apply_parameterMethodClassicIn()/]){
   
-      //for build target base uri
+      ['for build target base uri'.displayClearUserCodeId()/]
       [protected (any.getUserCodeId('for build target base uri')) startTagPrefix('//') endTagPrefix('//')]
         
             StringBuffer ['sbuff base uri'.apply_variableDefault()/] = new StringBuffer();

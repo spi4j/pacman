@@ -58,7 +58,7 @@
          @Override
          protected [d.buildMapperInterfaceName()/] getMapper ()
          {
-            // Mapper
+            ['Mapper'.displayClearUserCodeId()/]
             [protected (s.getUserCodeId('Mapper')) startTagPrefix('// ') endTagPrefix('// ')]
                     // Le Mapper n'est peut-être pas dans [d.specificOrDefaultIdAppli().toUpperFirst()/], il est peut-être dans un autre domaine qui contient les XTO
                     return [s.buildAppliUserMapperGenClassName()/].[('get ' + d.buildMapperClassName()).apply_methodDefault()/]();
@@ -69,7 +69,7 @@
          @Override
          protected [s.buildServiceInterfaceName(d)/] getService ()
          {
-            // Service
+            ['Service'.displayClearUserCodeId()/]
             [protected (s.getUserCodeId('Service')) startTagPrefix('// ') endTagPrefix('// ')]
                     return [s.buildAppliUserBusinessGenClassName()/].[('get ' + s.buildServiceName(d)).apply_methodDefault()/]();
             [/protected]
@@ -115,7 +115,7 @@
     [/if]
     [if (s <> null and not (s.ownedInterface = null))]
       [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
-           // [o.userCodeForOperation()/]
+           [o.userCodeForOperation().displayClearUserCodeId()/]
            [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
              
                 @Override
@@ -140,7 +140,7 @@
         
       [/for]
     [/if]
-       // [s.nameServiceInterfaceGwt(d)/]
+       [s.nameServiceInterfaceGwt(d).displayClearUserCodeId()/]
        [protected (s.getUserCodeId(s.nameServiceInterfaceGwt(d))) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]

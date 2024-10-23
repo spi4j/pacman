@@ -16,7 +16,6 @@ import fr.application.persistence.api.annuaire.PaysColumns_Enum;
 import fr.application.persistence.api.annuaire.PaysDao_Itf;
 import fr.application.persistence.api.annuaire.PaysEntity_Itf;
 import fr.spi4j.persistence.DatabaseLineStatus_Enum;
-import java.util.Date;
 
 // End of user code
 
@@ -64,7 +63,7 @@ public class PaysMatch extends ApplicationMatch_Abs<Long, PaysDto, PaysEntity_It
       // v_entity.set_capitale(p_dto.get_capitale ());
       // v_entity.set_personnePays_id (p_dto.get_personnePays_id ());
 
-      // convertDtoToEntity
+      
       // Start of user code convertDtoToEntity
       checkPays(Long.class, String.class, String.class, PersonneDto.class);
       v_entity.setId(p_dto.getId ());
@@ -95,7 +94,7 @@ public class PaysMatch extends ApplicationMatch_Abs<Long, PaysDto, PaysEntity_It
       // p_dto.set_capitale (p_entity.get_capitale ());
       // p_dto.set_personnePays_id (p_entity.get_personnePays_id ());
 
-      // refreshDtoFromEntity
+      
       // Start of user code refreshDtoFromEntity
       checkPays (Long.class, String.class, String.class, PersonneDto.class);
       p_dto.setId (p_entity.getId ());
@@ -117,7 +116,7 @@ public class PaysMatch extends ApplicationMatch_Abs<Long, PaysDto, PaysEntity_It
       return PaysColumns_Enum.valueOf (p_attribute.getName ());
    }
 
-   // PaysMatch
+   
    // Start of user code PaysMatch
 
    // End of user code

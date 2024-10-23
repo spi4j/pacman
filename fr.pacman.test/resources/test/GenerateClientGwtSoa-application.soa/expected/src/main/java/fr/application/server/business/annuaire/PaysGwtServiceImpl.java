@@ -24,7 +24,7 @@ public class PaysGwtServiceImpl extends GwtRemoteServiceImpl<Long, PaysXto, Pays
    @Override
    protected PaysMapper_Itf getMapper ()
    {
-      // Mapper
+      
       // Start of user code Mapper
       // Le Mapper n'est peut-être pas dans Application, il est peut-être dans un autre domaine qui contient les XTO
       return ApplicationUserMapper.getPaysMapper();
@@ -34,7 +34,7 @@ public class PaysGwtServiceImpl extends GwtRemoteServiceImpl<Long, PaysXto, Pays
    @Override
    protected PaysService_Itf getService ()
    {
-      // Service
+      
       // Start of user code Service
       return ApplicationUserBusiness.getPaysService();
       // End of user code
@@ -55,7 +55,7 @@ public class PaysGwtServiceImpl extends GwtRemoteServiceImpl<Long, PaysXto, Pays
                getService ().findListPaysByPersonne(p_personnePays_id));
    }
 
-   // PaysService
+   
    // Start of user code PaysService
 
    // End of user code

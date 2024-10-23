@@ -31,6 +31,10 @@
 [template private genColumnReferencingId(databaseType : String, r : environment::Reference)]
   [r.nameColumnReferencingId()/] [databaseType.genTypeColumn(r)/][if (r.isMandatory())] not null[/if][if (databaseType.isDbMsqlType())][r.genCommentMysql()/][/if][/template]
 
+[comment : Pour la table referencee l'entitee n'est pas la bonne mais elle sert juste pour la tracabilite. /]
+[template private genTableReferencingWithSchema(e : entity::Entity, databaseType : String, r : environment::Reference)]
+  [e.get_schema()/][e.get_prefix()/][r.physicalNameReferencing()/][/template]
+
 [template public genPK(databaseType : String, e : entity::Entity)]
   [e.namePK()/] [databaseType.typeDataBaseID()/][/template]
 
@@ -59,6 +63,7 @@
       /****************************************************************/
       create table [e.nameTableWithSchema().toUpper()/]
       (
+          /* PK de la table [e.nameTableWithSchema().toUpper()/] */
           [databaseType.genPK(e)/],
       [for (a : environment::Attribute | e.attributesNoPk())]
         [if (not a.isComputed())]
@@ -85,6 +90,7 @@
             [if (r.containingType.oclAsType(entity::Entity) = e)]
                   [databaseType.genColumnReferenceId(r)/],
             [elseif (r.oppositeOf = null)]
+                  /* FK vers la table [e.genTableReferencingWithSchema(databaseType, r)/] */
                   [databaseType.genColumnReferencingId(r)/],
             [/if]
           [/for]
@@ -127,8 +133,12 @@
         (
             [databaseType.genPKJointure(r.containingType.oclAsType(entity::Entity))/],
             [databaseType.genPKJointure(r.referencedType.oclAsType(entity::Entity))/],
-            [if (r.hasXdMaj())][r.gen_automaticColumn(databaseType, r.getXdmajKey())/][/if]
-            [if (r.hasXtopSup())][r.gen_automaticColumn(databaseType, r.getXtopSuppKey())/][/if]
+            [if (r.hasXdMaj())]
+              [r.gen_automaticColumn(databaseType, r.getXdmajKey())/]
+            [/if]
+            [if (r.hasXtopSup())]
+              [r.gen_automaticColumn(databaseType, r.getXtopSuppKey())/]
+            [/if]
             [databaseType.genConstraintPKJointure(r, rIndex)/]
         );
       [/for]
@@ -162,7 +172,19 @@
 [/template]
 
 [template private gen_automaticColumn(void : ecore::EObject, databaseType : String, columnProp : String) post(self.trim())]
-  [if (columnProp.hasToWriteColumn())][void.get_nameColumn(columnProp)/] [void.gen_typeColumn(databaseType, columnProp)/][if (void.columnHasDefault(columnProp))] default [void.get_defaultColumn(columnProp)/][/if][if (void.columnNotNull(columnProp))] not null[/if],[/if][/template]
+  [if (columnProp.hasToWriteColumn())]
+    /* [columnProp.gen_automaticColumComment_1()/] */
+    [void.get_nameColumn(columnProp)/] [void.gen_typeColumn(databaseType, columnProp)/][if (void.columnHasDefault(columnProp))] default [void.get_defaultColumn(columnProp)/][/if][if (void.columnNotNull(columnProp))] not null[/if],[/if]
+[/template]
+
+[template private gen_automaticColumComment_1(columnProp : String)]
+  [if (columnProp.get_nameColumn(columnProp).equalsIgnoreCase(columnProp.getXtopSupName()))]Indicateur pour savoir si l'enregistrement est valide[else][columnProp.gen_automaticColumComment_2()/][/if][/template]
+
+[template private gen_automaticColumComment_2(columnProp : String)]
+  [if (columnProp.get_nameColumn(columnProp).equalsIgnoreCase(columnProp.getXdMajName()))]Date de mise � jour de la ligne[else][columnProp.gen_automaticColumComment_3()/][/if][/template]
+
+[template private gen_automaticColumComment_3(columnProp : String)]
+  [columnProp.get_description()/][/template]
 
 [template private gen_typeColumn(void : ecore::EObject, databaseType : String, columnProp : String)]
   [databaseType.typeDataBase(void.get_typeColumn(columnProp), void.get_sizeColumn(columnProp))/][/template]

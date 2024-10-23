@@ -25,6 +25,7 @@
    * La servlet utilisee pour retourner les informations sur la version deployee de
    * l'application.
    */
+  
   public class [any.buildInfoServletClassName()/] extends BuildInfoServlet
   {
   
@@ -248,10 +249,10 @@
         ServiceCacheProxy.clearCaches();
         ['log'.apply_attributeFinalStatic()/].info("Caches purges");
   
-  	  // for reloading caches
-  	  [protected (any.getUserCodeId('for reloading caches')) startTagPrefix('// ') endTagPrefix('// ')]
+        ['for reloading caches'.displayClearUserCodeId()/]
+        [protected (any.getUserCodeId('for reloading caches')) startTagPrefix('// ') endTagPrefix('// ')]
 
-  	  [/protected]
+        [/protected]
   
         ['log'.apply_attributeFinalStatic()/].info("Caches recharges");
      }

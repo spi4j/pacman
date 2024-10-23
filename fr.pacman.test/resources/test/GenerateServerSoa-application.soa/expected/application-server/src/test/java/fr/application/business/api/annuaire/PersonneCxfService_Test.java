@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du service 'PersonneCxfService_Itf'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class PersonneCxfService_Test  extends BeanTester_Abs
@@ -50,7 +50,7 @@ public class PersonneCxfService_Test  extends BeanTester_Abs
       userPersistence = ApplicationParamPersistence.getUserPersistence ();
       service = ApplicationUserBusiness.getPersonneCxfService ();
 
-      // set up before class
+      
       // Start of user code set up before class
       // End of user code
    }
@@ -63,7 +63,7 @@ public class PersonneCxfService_Test  extends BeanTester_Abs
    {
 	  userPersistence.begin ();
 
-      // set up
+      
       // Start of user code set up
       // End of user code
    }
@@ -76,7 +76,7 @@ public class PersonneCxfService_Test  extends BeanTester_Abs
    @Test
    public void testFindPersonneByIdFromCxf_Personne_personne_Long_identifiant () throws Throwable
    {
-      // findPersonneByIdFromCxf_Personne_personne_Long_identifiant
+      
       // Start of user code findPersonneByIdFromCxf_Personne_personne_Long_identifiant
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -91,12 +91,12 @@ public class PersonneCxfService_Test  extends BeanTester_Abs
    {
       userPersistence.rollback ();
 
-      // tear down
+      
       // Start of user code tear down
       // End of user code
    }
 
-   // specific service test
+   
    // Start of user code specific service test
 
    // End of user code

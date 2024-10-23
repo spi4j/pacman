@@ -80,7 +80,7 @@
   
   	// ATTRIBUTS
   
-      // Attributs [r.buildReferentielReferenceClassName()/]
+      [('Attributs ' + r.buildReferentielReferenceClassName()).displayClearUserCodeId()/]
       [protected (r.getUserCodeId('Attributs ' + r.buildReferentielReferenceClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
       [/protected]
@@ -138,7 +138,7 @@
   	  ['LOG'.apply_attributeFinalStatic()/].info( "/** DEBUT Import Referentiel Relation [r.name/], update de [r.containingType.name/] depuis [r.referencedType.name/] **/" );
   	  ['LOG'.apply_attributeFinalStatic()/].info( "Import Relation de [r.containingType.name/] depuis [r.referencedType.name/], nom du fkCritere: " + ['nom col fk critere'.apply_variableDefault()/] );
   
-     	  // PreTraitement [r.buildReferentielReferenceClassName()/]
+     	  [('PreTraitement ' + r.buildReferentielReferenceClassName()).displayClearUserCodeId()/]
      	  [protected (r.getUserCodeId('PreTraitement ' + r.buildReferentielReferenceClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      	  [/protected]
@@ -197,7 +197,7 @@
     [/for]
   [/if]
   
-     		  	// PreUpdate [r.buildReferentielReferenceClassName()/]
+     		  	[('PreUpdate ' + r.buildReferentielReferenceClassName()).displayClearUserCodeId()/]
      		  	[protected (r.getUserCodeId('PreUpdate ' + r.buildReferentielReferenceClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      		  	[/protected]
@@ -240,7 +240,7 @@
   			}
   		    ['nb lignes traitees'.apply_variableDefault()/] ++;
   
-     		    // PostUpdate [r.buildReferentielReferenceClassName()/]
+     		    [('PostUpdate ' + r.buildReferentielReferenceClassName()).displayClearUserCodeId()/]
      		    [protected (r.getUserCodeId('PostUpdate ' + r.buildReferentielReferenceClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      		    [/protected]
@@ -279,7 +279,7 @@
   	  /** Log de fin du traitement */
   	  ['LOG'.apply_attributeFinalStatic()/].info( "/** FIN Import Referentiel Relation [r.containingType.name/], update de [r.containingType.name/] depuis [r.referencedType.name/]  **/\n" );
   
-     	  // PostTraitement [r.buildReferentielReferenceClassName()/]
+     	  [('PostTraitement ' + r.buildReferentielReferenceClassName()).displayClearUserCodeId()/]
      	  [protected (r.getUserCodeId(r.getUserCodeId('PostTraitement ' + r.buildReferentielReferenceClassName()))) startTagPrefix('// ') endTagPrefix('// ')]
 
      	  [/protected]

@@ -9,7 +9,6 @@ package fr.application.ws.api.annuaire;
 import fr.spi4j.exception.Spi4jValidationException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -26,6 +25,7 @@ public interface GradesServiceRSFacade_Itf
     * .
     * @return grades.
 	*/
+	
     // Start of user code Annotations MethodefindAllGrades
 
     // End of user code
@@ -41,6 +41,7 @@ public interface GradesServiceRSFacade_Itf
 	*			(In)(*) Nombre d'éléments demandés par page dans le cadre de la pagination.
     * @return grades.
 	*/
+	
     // Start of user code Annotations MethodefindAllPagedGrades
 
     // End of user code
@@ -50,7 +51,7 @@ public interface GradesServiceRSFacade_Itf
    * Méthode spécifique pour la pagination de l'opération : findAllPagedGrades
    * @return le nombre total d'éléments pour l'opération.
    */
-   // Annotations Methode' + o.name + 'total count
+   
    // Start of user code Annotations MethodefindAllPagedGradestotal count
    
    // End of user code

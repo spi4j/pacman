@@ -45,7 +45,7 @@ public class ApplicationTokensConfig implements RsTokensConfigurator_Itf {
 	@Override
 	public void defineRequiredTokens(final RsTokensContainer p_tokensContainer) 
 	{
-		// define required tokens
+		
 		// Start of user code define required tokens
 
 		// End of user code

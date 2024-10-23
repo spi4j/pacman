@@ -54,7 +54,7 @@
            extends [n.getClassNameForMatch_Abs()/]<TypeId, TypeDto, TypeEntity, Columns_Enum>
   {
   
-     // attributs
+     ['attributs'.displayClearUserCodeId()/]
      [protected (n.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -62,7 +62,7 @@
      @Override
      public void create (final TypeDto ['dto'.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException
      {
-        // create
+        ['create'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
 
           final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
@@ -77,7 +77,7 @@
      @Override
      public TypeDto findById (final TypeId ['id'.apply_parameterMethodClassicIn()/])
      {
-        // findById
+        ['findById'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findById')) startTagPrefix('// ') endTagPrefix('// ')]
 
           final TypeEntity ['entity found'.apply_variableFinal()/] = getDao().findById(['id'.apply_parameterMethodClassicIn()/]);
@@ -93,7 +93,7 @@
      @Override
      public List<TypeDto> findAll ()
      {
-        // findAll
+        ['findAll'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findAll')) startTagPrefix('// ') endTagPrefix('// ')]
 
           final Map<String, String> ['xtopsup status'.apply_variableFinal()/] = new HashMap<>();
@@ -114,7 +114,7 @@
      @Override
      public List<TypeDto> findAll (final Columns_Enum ['order by column'.apply_parameterMethodClassicIn()/])
      {
-        // findAllOrberByColumn
+        ['findAllOrberByColumn'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findAllOrberByColumn')) startTagPrefix('// ') endTagPrefix('// ')]
 
           final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = new TableCriteria<>("");
@@ -136,7 +136,7 @@
      @Override
      public void update (final TypeDto ['dto'.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException
      {
-        // update
+        ['update'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
 
           // Si la ligne n'est pas active, on rejete la demande. 
@@ -157,7 +157,7 @@
      @Override
      public void delete (final TypeDto ['dto'.apply_parameterMethodClassicIn()/]) throws Spi4jValidationException
      {
-        // delete
+        ['delete'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('delete')) startTagPrefix('// ') endTagPrefix('// ')]
 
           final TypeEntity ['entity'.apply_variableFinal()/] = convertDtoToEntity(['dto'.apply_parameterMethodClassicIn()/]);
@@ -181,7 +181,7 @@
      @Override
      public int deleteAll ()
      {
-        // deleteAll
+        ['deleteAll'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('deleteAll')) startTagPrefix('// ') endTagPrefix('// ')]
 
           // Attention ici on veut probablement faire un vrai deleteAll() et non pas mettre à 1 la colonne xtopsup
@@ -193,7 +193,7 @@
      @Override
      public int deleteByCriteria (final TableCriteria<Columns_Enum> ['criteria'.apply_parameterMethodClassicIn()/])
      {
-        // deleteByCriteria
+        ['deleteByCriteria'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('deleteByCriteria')) startTagPrefix('// ') endTagPrefix('// ')]
 
           @SuppressWarnings("unchecked")
@@ -221,7 +221,7 @@
      @Override
      public List<TypeDto> findByColumn (final Columns_Enum ['column'.apply_parameterMethodClassicIn()/], final Object ['value'.apply_parameterMethodClassicIn()/])
      {
-        // findByColumn
+        ['findByColumn'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findByColumn')) startTagPrefix('// ') endTagPrefix('// ')]
 
           final TableCriteria<[n.getClassNameForColumnsNames_Itf()/]> ['table criteria'.apply_variableFinal()/] = new TableCriteria<>("");
@@ -244,7 +244,7 @@
      public List<TypeDto> findByCriteria (final String ['criteria'.apply_parameterMethodClassicIn()/],
               final Map<String, ? extends Object> ['value name'.apply_parameterMethodMultipleMap()/])
      {
-        // findByCriteriaSql
+        ['findByCriteriaSql'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findByCriteriaSql')) startTagPrefix('// ') endTagPrefix('// ')]
 
           // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
@@ -271,7 +271,7 @@
      public List<TypeDto> findByCriteria (final String ['criteria'.apply_parameterMethodClassicIn()/],
               final Map<String, ? extends Object> ['value name'.apply_parameterMethodMultipleMap()/], final int ['nb lignes max'.apply_parameterMethodClassicIn()/], final int ['nb lignes start'.apply_parameterMethodClassicIn()/])
      {
-        // findByCriteriaSqlNbLignes
+        ['findByCriteriaSqlNbLignes'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findByCriteriaSqlNbLignes')) startTagPrefix('// ') endTagPrefix('// ')]
 
           // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
@@ -298,7 +298,7 @@
      @Override
      public List<TypeDto> findByCriteria (final TableCriteria<Columns_Enum> ['criteria'.apply_parameterMethodClassicIn()/])
      {
-        // findByCriteria
+        ['findByCriteria'.displayClearUserCodeId()/]
         [protected (n.getUserCodeId('findByCriteria')) startTagPrefix('// ') endTagPrefix('// ')]
 
           @SuppressWarnings("unchecked")
@@ -317,7 +317,7 @@
         [/protected]
      }
   
-     // autres methodes
+     ['autres methodes'.displayClearUserCodeId()/]
      [protected (n.getUserCodeId('autres methodes')) startTagPrefix('// ') endTagPrefix('// ')]
        
        /**

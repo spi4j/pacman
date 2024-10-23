@@ -25,14 +25,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class CompetenceService extends Service_Abs<Long, CompetenceDto, CompetenceColumns_Enum> implements CompetenceService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -88,7 +88,7 @@ public class CompetenceService extends Service_Abs<Long, CompetenceDto, Competen
    }
 
 
-   // CompetenceService
+   
    // Start of user code CompetenceService
 
    // End of user code

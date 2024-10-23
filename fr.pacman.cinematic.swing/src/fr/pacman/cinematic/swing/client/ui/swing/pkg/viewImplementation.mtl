@@ -33,7 +33,7 @@
      private static final long serialVersionUID = 1L;
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
-       // Declaration [element.name + '_' + element.genericType(element.widget.getImplementationClass(), true)/]
+       [('Declaration ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true)).displayClearUserCodeId()/]
        [protected (element.getUserCodeId('Declaration ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true))) startTagPrefix('// ') endTagPrefix('// ')]
          [if (element.useMatching())]
               private final [element.genericType(element.widget.getImplementationClass(), true)/] [element.nameVariableElement()/];
@@ -50,7 +50,7 @@
   [for (element : view::ViewElement | viewContainer.viewElements)]
     [for (viewEvent : view::ViewEvent | element.events)]
       [if (not (viewEvent.type = null) and 'onClick'.equalsIgnoreCase(viewEvent.type.name))]
-           // Parametrage [element.name + '_' + element.genericType(element.widget.getImplementationClass(), true)/]
+           [('Parametrage ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true)).displayClearUserCodeId()/]
            [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true))) startTagPrefix('// ') endTagPrefix('// ')]
                 private transient final ActionListener [element.nameVariableElement()/]Action = new ActionListener()
                 {
@@ -85,7 +85,7 @@
      public [viewContainer.nameViewImplementation()/] (final [viewContainer.namePresenter()/] p_presenter)
      {
         super(p_presenter);
-        // initialize
+        ['initialize'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('initialize')) startTagPrefix('// ') endTagPrefix('// ')]
           [if (not viewContainer.ViewIsMainPanel())]
                   final SpiPanel v_buttonsPanel = new SpiPanel(new GridLayout([viewContainer.viewElements->size()/], 1));
@@ -148,7 +148,7 @@
      @Override
      public void addView (final View_Itf p_view)
      {
-        // addView
+        ['addView'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('addView')) startTagPrefix('// ') endTagPrefix('// ')]
                 if (p_view instanceof SpiViewPanel)
                 {
@@ -165,7 +165,7 @@
      @Override
      public void restoreView (final View_Itf p_view)
      {
-        // restoreView
+        ['restoreView'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('restoreView')) startTagPrefix('// ') endTagPrefix('// ')]
                 if (p_view instanceof SpiViewPanel)
                 {
@@ -183,7 +183,7 @@
      @Override
      public void removeView (final View_Itf p_view)
      {
-        // removeView
+        ['removeView'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('removeView')) startTagPrefix('// ') endTagPrefix('// ')]
                 if (p_view instanceof SpiViewPanel)
                 {
@@ -200,7 +200,7 @@
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
     [if (not (element.widget.name = 'Button'))]
-         // Getter [element.name + '_' + element.genericType(element.widget.getImplementationClass(), true)/]
+         [('Getter ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true)).displayClearUserCodeId()/]
          [protected (element.getUserCodeId('Getter ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), true))) startTagPrefix('// ') endTagPrefix('// ')]
            
               @Override
@@ -221,7 +221,7 @@
         super.beforeClose();
      }
   
-     // [viewContainer.nameViewImplementation()/]
+     [viewContainer.nameViewImplementation().displayClearUserCodeId()/]
      [protected (viewContainer.getUserCodeId(viewContainer.nameViewImplementation())) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]

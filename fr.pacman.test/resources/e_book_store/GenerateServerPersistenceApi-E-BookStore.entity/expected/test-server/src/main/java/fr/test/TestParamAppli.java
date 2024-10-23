@@ -18,7 +18,7 @@ public interface TestParamAppli
    /** L'identifiant de l'application. */
    String IDAPPLI = "test";
 
-   // Constantes
+   
    // Start of user code 4883ab37b42beaf589de2c21e5f4612c
 
    // End of user code

@@ -13,7 +13,6 @@ import fr.spi4j.ui.graal.UserAction;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
 import fr.spi4j.ui.mvp.View_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -21,13 +20,13 @@ import java.util.Date;
  * Presenter.
  * @author safr@n
  */
-// Class definition
+
 // Start of user code Class definition
 public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_Itf, Object>
 // End of user code
 {
 
-   // Constructeur(s)
+   
    // Start of user code Constructeur(s)
    /**
     * Constructeur.
@@ -52,7 +51,7 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
    @Override
    public void initView ()
    {
-      // Initialisation de la vue
+      
       // Start of user code Initialisation de la vue
 
       // End of user code
@@ -61,8 +60,8 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
    @Override
    protected String doGenerateTitle ()
    {
-      // Titre de l\'écran
-      // Start of user code Titre de l'écran
+      
+      // Start of user code Titre de l'ecran
       return "ListePersonnes";
       // End of user code
    }
@@ -81,10 +80,12 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
 
       // End of user code
 
-      // Start of user code actualiser : Action ListerPersonnes
+      
+	  // Start of user code actualiser : Action ListerPersonnes
       // TODO ListerPersonnes
       // End of user code
 
+	  
       // Start of user code actualiser : Affichage de ListePersonnes
       // affichage de l'écran ListePersonnes
       ListePersonnesPresenter v_ListePersonnes;
@@ -119,10 +120,12 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
 
       // End of user code
 
-      // Start of user code selectGrade : Action ListerPersonnes
+      
+	  // Start of user code selectGrade : Action ListerPersonnes
       // TODO ListerPersonnes
       // End of user code
 
+	  
       // Start of user code selectGrade : Affichage de ListePersonnes
       // affichage de l'écran ListePersonnes
       ListePersonnesPresenter v_ListePersonnes;
@@ -158,6 +161,7 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
 
       // End of user code
 
+	  
       // Start of user code créer : Affichage de DetailPersonne
       // affichage de l'écran DetailPersonne
       DetailPersonnePresenter v_DetailPersonne;
@@ -193,10 +197,12 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
 
       // End of user code
 
-      // Start of user code modifier : Action RecupererPersonne
+      
+	  // Start of user code modifier : Action RecupererPersonne
       // TODO RecupererPersonne
       // End of user code
 
+	  
       // Start of user code modifier : Affichage de DetailPersonne
       // affichage de l'écran DetailPersonne
       DetailPersonnePresenter v_DetailPersonne;
@@ -231,10 +237,12 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
 
       // End of user code
 
-      // Start of user code supprimer : Action SupprimerPersonne
+      
+	  // Start of user code supprimer : Action SupprimerPersonne
       // TODO SupprimerPersonne
       // End of user code
 
+	  
       // Start of user code supprimer : Affichage de ListePersonnes
       // affichage de l'écran ListePersonnes
       ListePersonnesPresenter v_ListePersonnes;
@@ -270,10 +278,12 @@ public class ListePersonnesPresenter extends Presenter_Abs<ListePersonnesView_It
 
       // End of user code
 
-      // Start of user code visualiser : Action RecupererPersonne
+      
+	  // Start of user code visualiser : Action RecupererPersonne
       // TODO RecupererPersonne
       // End of user code
 
+	  
       // Start of user code visualiser : Affichage de DetailPersonne
       // affichage de l'écran DetailPersonne
       DetailPersonnePresenter v_DetailPersonne;

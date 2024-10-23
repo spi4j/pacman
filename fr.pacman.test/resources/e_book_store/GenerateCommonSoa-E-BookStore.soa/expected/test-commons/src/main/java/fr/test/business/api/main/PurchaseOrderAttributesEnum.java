@@ -12,9 +12,8 @@ import fr.spi4j.business.dto.AttributesNames_Itf;
 import fr.spi4j.business.dto.DtoAttributeHelper;
 import fr.test.business.api.main.ShoppingCartDto;
 import fr.test.business.api.main.UserDto;
-import fr.test.types.enums.StatusEnum;
+import fr.test.main.StatusEnum;
 import java.lang.reflect.Method;
-import java.util.Date;
 
 // End of user code
 
@@ -24,7 +23,7 @@ import java.util.Date;
  */
 public enum PurchaseOrderAttributesEnum implements AttributesNames_Itf
 {
-   // Enumeration Attributs
+   
    // Start of user code 2a41b154093266d124969adf9885873d
 
    // End of user code

@@ -27,14 +27,14 @@
    * Presenter.
    * @author [viewContainer.getAuthorName()/]
    */
-  // Class definition
+  ['Class definition'.displayClearUserCodeId()/]
   [protected (viewContainer.getUserCodeId('Class definition')) startTagPrefix('// ') endTagPrefix('// ')]
     public class [viewContainer.namePresenter()/] extends Presenter_Abs<[viewContainer.nameViewInterface()/], [viewContainer.getTypePresenter()/]>
   [/protected]
   
   {
   
-     // Constructeur(s)
+     ['Constructeur(s)'.displayClearUserCodeId()/]
      [protected (viewContainer.getUserCodeId('Constructeur(s)')) startTagPrefix('// ') endTagPrefix('// ')]
           /**
            * Constructeur.
@@ -74,7 +74,7 @@
      @Override
      public void initView ()
      {
-        // Initialisation de la vue
+        ['Initialisation de la vue'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('Initialisation de la vue')) startTagPrefix('// ') endTagPrefix('// ')]
           
         [/protected]
@@ -84,8 +84,8 @@
      @Override
      protected String doGenerateTitle ()
      {
-        // Titre de l\'écran
-        [protected (viewContainer.getUserCodeId('Titre de l\'écran')) startTagPrefix('// ') endTagPrefix('// ')]
+        ['Titre de l\'ecran'.displayClearUserCodeId()/]
+        [protected (viewContainer.getUserCodeId('Titre de l\'ecran')) startTagPrefix('// ') endTagPrefix('// ')]
                 return "[viewContainer.name/]";
         [/protected]
   

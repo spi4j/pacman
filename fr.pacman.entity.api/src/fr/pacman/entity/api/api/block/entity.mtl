@@ -49,7 +49,7 @@
       */
      private static final long serialVersionUID = -1;
   
-     // Constantes [e.buildEntityImplClassName()/]
+     [('Constantes ' + e.buildEntityImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -104,7 +104,7 @@
     
   [/for]
   
-     // Attributs [e.buildEntityImplClassName()/]
+     [('Attributs ' + e.buildEntityImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -147,7 +147,7 @@
       [if (not a.isComputed() or a.useMatching())]
               return [a.nameSimpleProperty().apply_attributeDefault()/];
       [else]
-              // Code User [a.gen_getter()/]
+              [('Code User ' + a.gen_getter()).displayClearUserCodeId()/]
               [protected (a.getUserCodeId('Code User ' + a.gen_getter())) startTagPrefix('// ') endTagPrefix('// ')]
                        return null;
               [/protected]
@@ -186,6 +186,7 @@
       [if (not a.isComputed() or a.useMatching())]
               return [a.nameSimpleProperty().apply_attributeDefault()/];
       [else]
+              [a.getUserCodeId('Code User ' + a.gen_getter()).displayClearUserCodeId()/]
               [protected (a.getUserCodeId('Code User ' + a.gen_getter())) startTagPrefix('// ') endTagPrefix('// ')]
                       return null;
               [/protected]
@@ -219,7 +220,7 @@
       [if (not r.isComputed() or r.useMatching())]
               return [r.nameSimpleProperty().apply_attributeDefault()/];
       [else]
-              // Code User [r.gen_getter()/]
+              [('Code User ' + r.gen_getter()).displayClearUserCodeId()/]
               [protected (r.getUserCodeId('Code User ' + r.gen_getter())) startTagPrefix('// ') endTagPrefix('// ')]
                       return null;
               [/protected]
@@ -245,7 +246,7 @@
       [if (not r.isComputed() or r.useMatching())]
               return [r.nameSimplePropertyInverse().apply_attributeDefault()/][r.namePK_ID()/];
       [else]
-              // Code User [r.gen_getterInverse()/]
+              [('Code User ' + r.gen_getterInverse()).displayClearUserCodeId()/]
               [protected (r.getUserCodeId('Code User ' + r.gen_getterInverse())) startTagPrefix('// ') endTagPrefix('// ')]
                       return null;
               [/protected]
@@ -359,7 +360,7 @@
        }
   [/if]
   
-     // Methodes [e.buildEntityImplClassName()/]
+     [('Methodes ' + e.buildEntityImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildEntityImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
        
            /**

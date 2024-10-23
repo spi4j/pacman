@@ -63,7 +63,7 @@
         {
            return null;
         }
-        // Propagation des erreurs
+        ['Propagation des erreurs'.displayClearUserCodeId()/]
         [protected (any.getUserCodeId('Propagation des erreurs')) startTagPrefix('// ') endTagPrefix('// ')]
           // if (p_className.equals(MonException.class.getName()))
           // {
@@ -76,7 +76,7 @@
      @Override
      protected void doOnError (final Throwable p_caught)
      {
-        // Gestion des erreurs
+        ['Gestion des erreurs'.displayClearUserCodeId()/]
         [protected (any.getUserCodeId('Gestion des erreurs')) startTagPrefix('// ') endTagPrefix('// ')]
           // if (p_caught instanceof MonException)
           // {
@@ -89,7 +89,7 @@
         [/protected]
      }
   
-     // [any.nameAppliAsyncCallback()/]
+     [any.nameAppliAsyncCallback().displayClearUserCodeId()/]
      [protected (any.getUserCodeId(any.nameAppliAsyncCallback())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

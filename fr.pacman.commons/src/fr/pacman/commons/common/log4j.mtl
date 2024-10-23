@@ -7,6 +7,11 @@
 [comment encoding = ISO-8859-1 /]
 [template public log4j(void : ecore::EObject, project : String)]
   <?xml version="1.0" encoding="UTF-8"?>
+  
+  [protected ('for log4j ') startTagPrefix('<!-- ') endTagPrefix('<!-- ')]
+    -->
+    
+    <!-- Laisser le retour a la ligne pour la zone 'user code' ! -->
     
     <!-- ********************************************************** -->
     <!-- L'enregistreur d'etat (status) est utilise en interne      -->
@@ -194,4 +199,7 @@
       		</Logger>
     [/if]
     	</Loggers>
-    </Configuration>[/template]
+    </Configuration>
+    
+  [/protected]
+   -->[/template]

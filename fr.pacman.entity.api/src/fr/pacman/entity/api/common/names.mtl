@@ -77,8 +77,9 @@
   [if (r.oppositeOf = null)][r.containingType.name.sanitize().toLowerFirst() + r.name.sanitize().toUpperFirst()/][else][r.oppositeOf.name.sanitize().toLowerFirst()/][/if][/template]
 
 [comment le nom de la clé primaire d'une entitée dans les énumérations/]
+[comment : Avant etait en e.name.sanitize().toUpperFirst() ?/]
 [template public nameSimplePropertyID(e : entity::Entity)]
-  [e.name.sanitize().toLower()/][e.namePK_ID()/][/template]
+  [e.name.sanitize()/][e.namePK_ID()/][/template]
 
 [comment le nom de la clé primaire d'une entitée dans les énumérations/]
 [template public nameSimpleReferencePropertyID(r : environment::Reference)]

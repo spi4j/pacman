@@ -9,7 +9,7 @@
 [import fr::pacman::commons::convention::rule::parameterRule/]
 [import fr::pacman::commons::convention::rule::commonRule/]
 [import fr::pacman::commons::convention::rule::methodRule/]
-[import fr::pacman::requirement::commons/]
+[import fr::pacman::requirement::common::commons/]
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::names/]
 
@@ -41,14 +41,14 @@
   [for (req : requirement::Requirement | categories->asSequence()->findRequirements(profondeurMax))]
        /**
         * [req.name + ' :' + ''.encodeJavadoc(req.statement) + 'Provenance : '.encodeJavadoc(req.rationale) + 'Critère d\'acceptance : '.encodeJavadoc(req.acceptanceCriteria)/]<br>
-        * Voir [nomVersionTest/]#testVersion_[req.getServiceRequirementsPrefix()/][req.id/]()
+        * Voir [nomVersionTest/]#testVersion_[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/]()
         */
     [for (o : ecore::EObject | req.referencedObject)]
       [if (o.oclIsKindOf(soa::Operation))]
            // Exigence utilisée dans : [o.ancestors(soa::Service)->first().name/]Service.[o.oclAsType(soa::Operation).name/]
       [/if]
     [/for]
-       [req.getServiceRequirementsPrefix()/][req.id/]("[req.name.escape()/]", "[req.version/]")[if (req <> categories->collect(temp1 | temp1.eAllContents(requirement::Requirement))->last())],[else];[/if]
+       [req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/]("[req.name.escape()/]", "[req.version/]")[if (req <> categories->collect(temp1 | temp1.eAllContents(requirement::Requirement))->last())],[else];[/if]
     
   [/for]
      /** Id. */

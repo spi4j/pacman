@@ -74,7 +74,7 @@
       */
      public static void init (final String['['/]] p_args)
      {
-        // Initialisation
+        ['Initialisation'.displayClearUserCodeId()/]
         [protected (root.getUserCodeId('Initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
                 // Look and feel Nimbus plutôt qu'Ocean par défaut
                 for (final LookAndFeelInfo v_info : UIManager.getInstalledLookAndFeels())

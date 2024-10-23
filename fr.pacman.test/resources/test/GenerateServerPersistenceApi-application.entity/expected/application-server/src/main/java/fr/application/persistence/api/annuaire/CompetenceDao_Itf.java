@@ -10,7 +10,6 @@ import fr.application.persistence.api.annuaire.PersonneEntity_Itf;
 import fr.spi4j.persistence.dao.Dao_Itf;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -23,7 +22,7 @@ public interface CompetenceDao_Itf extends Dao_Itf<Long, CompetenceEntity_Itf, C
 {
    // CONSTANTES
 
-   // Constantes CompetenceDao_Itf
+   
    // Start of user code Constantes CompetenceDao_Itf
 
    // End of user code
@@ -38,7 +37,7 @@ public interface CompetenceDao_Itf extends Dao_Itf<Long, CompetenceEntity_Itf, C
     */
    List<PersonneEntity_Itf> findListDisposeByCompetence (final Long p_Competence_id);
 
-   // Methodes CompetenceDao_Itf
+   
    // Start of user code Methodes CompetenceDao_Itf
 
    // End of user code

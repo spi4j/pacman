@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * Classe de test pour le XTO 'Personne'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class PersonneXto_Test extends BeanTester_Abs

@@ -56,7 +56,7 @@
         
       [/for]
     [/if]
-       // [e.nameServiceInterfaceGwt()/]
+       [e.nameServiceInterfaceGwt().displayClearUserCodeId()/]
        [protected (e.getUserCodeId(e.nameServiceInterfaceGwt())) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]

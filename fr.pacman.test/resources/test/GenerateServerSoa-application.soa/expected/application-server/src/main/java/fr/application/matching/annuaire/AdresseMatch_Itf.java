@@ -11,7 +11,6 @@ import fr.application.business.api.annuaire.AdresseDto;
 import fr.application.persistence.api.annuaire.AdresseColumns_Enum;
 import fr.application.persistence.api.annuaire.AdresseEntity_Itf;
 import fr.spi4j.matching.Match_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -30,7 +29,7 @@ public interface AdresseMatch_Itf extends Match_Itf<Long, AdresseDto, AdresseEnt
     */
    AdresseColumns_Enum getColumn (final AdresseAttributes_Enum p_attribute);
 
-   // AdresseMatch_Itf
+   
    // Start of user code AdresseMatch_Itf
 
    // End of user code

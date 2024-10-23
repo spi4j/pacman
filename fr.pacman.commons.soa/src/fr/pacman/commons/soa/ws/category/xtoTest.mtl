@@ -35,7 +35,7 @@
    * Classe de test pour le XTO '[d.nameClassXto()/]'.
    * @author [d.getAuthorName()/]
    */
-  // Annotation for class
+  ['Annotation for class'.displayClearUserCodeId()/]
   [protected (d.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
   
@@ -134,7 +134,7 @@
           */
          private [a.type.name.toUpperFirst()/] getRandom[a.genPropertyTypeNoGenerics()/] ()
          {
-      	  // getRandom_[a.type.name.toUpperFirst()/]
+      	  [('getRandom_' + a.type.name.toUpperFirst()).displayClearUserCodeId()/]
       	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
            
            		return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];

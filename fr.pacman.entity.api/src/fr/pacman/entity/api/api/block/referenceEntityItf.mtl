@@ -33,7 +33,7 @@
   {
      // CONSTANTES
   
-     // Constantes [r.buildReferenceEntityInterfaceName()/]
+     [('Constantes ' + r.buildReferenceEntityInterfaceName()).displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Constantes ' + r.buildReferenceEntityInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]

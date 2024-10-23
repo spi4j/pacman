@@ -21,7 +21,8 @@
       <name>[any.getApplicationName()/] - Partie cliente</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
      	-->
      	
      	<!--

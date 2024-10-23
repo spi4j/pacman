@@ -19,7 +19,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface GradesService_Itf extends ApplicationService_Itf
@@ -30,7 +30,7 @@ public interface GradesService_Itf extends ApplicationService_Itf
     * 
     * @return grades.
 	*/
-	// Annotations findAllGrades_Grade_grades
+	
 	// Start of user code Annotations findAllGrades_Grade_grades
 
 	// End of user code
@@ -43,7 +43,7 @@ public interface GradesService_Itf extends ApplicationService_Itf
     * 
     * @return grades.
 	*/
-	// Annotations findAllPagedGrades_Grade_grades
+	
 	// Start of user code Annotations findAllPagedGrades_Grade_grades
 
 	// End of user code
@@ -54,15 +54,15 @@ public interface GradesService_Itf extends ApplicationService_Itf
 	* Méthode spécifique pour la pagination de l'opération : findAllPagedGrades
 	* @return le nombre total d'éléments pour l'opération.
 	*/
-	// Annotations Methode' + o.name + 'total count
+	
 	// Start of user code Annotations MethodefindAllPagedGradestotal count
 	
 	// End of user code
 	int findAllPagedGradesTotalCount();
 	
 
-    // Méthodes GradesService_Itf
-    // Start of user code Méthodes GradesService_Itf
+    
+    // Start of user code Methodes GradesService_Itf
 
     // End of user code
 }

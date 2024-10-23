@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du service 'GradesService_Itf'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class GradesService_Test  extends BeanTester_Abs
@@ -52,7 +52,7 @@ public class GradesService_Test  extends BeanTester_Abs
       userPersistence = ApplicationParamPersistence.getUserPersistence ();
       service = ApplicationUserBusiness.getGradesService ();
 
-      // set up before class
+      
       // Start of user code set up before class
       // End of user code
    }
@@ -65,7 +65,7 @@ public class GradesService_Test  extends BeanTester_Abs
    {
 	  userPersistence.begin ();
 
-      // set up
+      
       // Start of user code set up
       // End of user code
    }
@@ -78,7 +78,7 @@ public class GradesService_Test  extends BeanTester_Abs
    @Test
    public void testFindAllGrades_Grade_grades () throws Throwable
    {
-      // findAllGrades_Grade_grades
+      
       // Start of user code findAllGrades_Grade_grades
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -93,7 +93,7 @@ public class GradesService_Test  extends BeanTester_Abs
    @Test
    public void testFindAllPagedGrades_Grade_grades () throws Throwable
    {
-      // findAllPagedGrades_Grade_grades
+      
       // Start of user code findAllPagedGrades_Grade_grades
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -108,12 +108,12 @@ public class GradesService_Test  extends BeanTester_Abs
    {
       userPersistence.rollback ();
 
-      // tear down
+      
       // Start of user code tear down
       // End of user code
    }
 
-   // specific service test
+   
    // Start of user code specific service test
 
    // End of user code

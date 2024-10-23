@@ -77,7 +77,7 @@
     [/if]
     [if (s <> null and not (s.ownedInterface = null))]
       [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
-           // [o.userCodeForOperation()/]
+           [o.userCodeForOperation().displayClearUserCodeId()/]
            [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
              
                 /**
@@ -90,7 +90,7 @@
         
       [/for]
     [/if]
-       // [s.buildServiceGwtAsyncClassName(d)/]
+       [s.buildServiceGwtAsyncClassName(d).displayClearUserCodeId()/]
        [protected (s.getUserCodeId(s.buildServiceGwtAsyncClassName(d))) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]

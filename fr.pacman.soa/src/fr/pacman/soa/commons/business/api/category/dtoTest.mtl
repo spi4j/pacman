@@ -44,7 +44,7 @@
    * Classe de test pour le DTO '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
    */
-  // Annotation for class
+  ['Annotation for class'.displayClearUserCodeId()/]
   [protected (d.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
   public class [d.buildDtoTestClassName()/] extends [d.getClassNameForBeanTester_Abs()/]
@@ -118,7 +118,7 @@
   [/for]
         // test des valeurs
   [if (d.isNotPersistent())]
-          // getId
+          ['getId'.displayClearUserCodeId()/]
           [protected (d.getUserCodeId('getId')) startTagPrefix('// ') endTagPrefix('// ')]
             assertEquals([d.nameENUM_PK_ID().apply_variableDefault()/], ['dto'.apply_variableDefault()/].getId(), "Champ id incorrect");
           [/protected]
@@ -143,8 +143,8 @@
           assertEquals([r.nameBaseReferenceInverse().apply_variableDefault()/], ['dto'.apply_variableDefault()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/](), "Champ [r.nameSimpleProperty()/] incorrect");
   [/for]
   
-        // Remplissage références du dto
-        [protected (d.getUserCodeId('Remplissage références du dto')) startTagPrefix('// ') endTagPrefix('// ')]
+        ['Remplissage references du dto'.displayClearUserCodeId()/]
+        [protected (d.getUserCodeId('Remplissage references du dto')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
   
@@ -183,11 +183,10 @@
           */   
          private [a.type.name.toUpperFirst()/] getRandom[a.genPropertyTypeNoGenerics().mapTypeFilter()/] ()
          {
-      	  // getRandom_[a.type.name.toUpperFirst()/]
+      	  [('getRandom_' + a.type.name.toUpperFirst()).displayClearUserCodeId()/]
       	  [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
 
-           		return [if (a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if]
-           ;
+           		return [if (a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
 
          [/protected]
       

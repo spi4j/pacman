@@ -7,7 +7,6 @@ package fr.application.persistence.api.ref;
 // Start of user code for imports
 
 import fr.spi4j.persistence.dao.Dao_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -19,14 +18,14 @@ public interface GradeDao_Itf extends Dao_Itf<Long, GradeEntity_Itf, GradeColumn
 {
    // CONSTANTES
 
-   // Constantes GradeDao_Itf
+   
    // Start of user code Constantes GradeDao_Itf
 
    // End of user code
 
    // METHODES ABSTRAITES
 
-   // Methodes GradeDao_Itf
+   
    // Start of user code Methodes GradeDao_Itf
 
    // End of user code

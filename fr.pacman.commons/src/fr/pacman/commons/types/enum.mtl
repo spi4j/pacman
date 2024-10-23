@@ -59,10 +59,10 @@
       */
   	private [e.buildEnumName()/] (final String ['literal'.apply_parameterMethodClassicIn()/][e.writeLiteralParams(1)/]) {
   
-          ['value'.apply_attributeFinal()/] = ['literal'.apply_parameterMethodClassicIn()/];
+          [e.getAffectationPrefix()/]['value'.apply_attributeFinal()/] = ['literal'.apply_parameterMethodClassicIn()/];
   		[e.writeLiteralParams(2)/]
   
-      // constructeur
+      ['constructeur'.displayClearUserCodeId()/]
       [protected (e.getUserCodeId('constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
 
       [/protected]
@@ -89,7 +89,7 @@
       	*/
       	public [p.substring(p.index(':') + 1)/] [p.substring(1, p.index(':') - 1).apply_methodGet()/]() {
       
-      		// get [p.substring(1, p.index(':') - 1)/]
+      		[('get ' + p.substring(1, p.index(':') - 1)).displayClearUserCodeId()/]
       		[protected (e.getUserCodeId('get' + p.substring(1, p.index(':') - 1))) startTagPrefix('// ') endTagPrefix('// ')]
 
       		[/protected]
@@ -101,7 +101,7 @@
   [/if]
   
   
-      // specifique
+      ['specifique'.displayClearUserCodeId()/]
       [protected (e.getUserCodeId('specifique')) startTagPrefix('// ') endTagPrefix('// ')]
 
       [/protected]
@@ -122,7 +122,7 @@
 [comment : construction avec des parametres donnes par le developpeur. /]
 [template private enumStruct(l : environment::Literal, s : String)]
   	/** [if (not (l.name = null) and l.name.trim().size() > 0)][l.name/][else]BLANK[/if] : [l.description/]. */
-  [let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]    [l.name.toUpper()/]("[l.name/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(pIndex, nbParams)/][/for])[/let][/template]
+  [let nbParams : Integer = l.getEnumLiteralParamsValues().tokenize(',')->size()]    [l.name.toUpper()/]("[l.name.trim()/]", [for (p : String | l.getEnumLiteralParamsValues().tokenize(','))][p.writeParamStruct(pIndex, nbParams)/][/for])[/let][/template]
 
 [comment : prepare pour si decide de positionner les guillemets automatiquement a partir de la structure. /]
 [template private writeParamStruct(s : String, i : Integer, nbParams : Integer)]

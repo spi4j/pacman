@@ -11,7 +11,6 @@ import fr.spi4j.business.dto.DtoAttributeHelper;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -27,7 +26,7 @@ public enum CompetenceAttributes_Enum implements AttributesNames_Itf
    /** libelle. */
    libelle("libelle", "Le libellé de la compétence", String.class, true, -1),
    /** typecompetence. */
-   typecompetence("typecompetence", "", String.class, true, -1),
+   typecompetence("typecompetence", "", TypeCompetence_Enum.class, true, -1),
    /** tab_dispose. */
    tab_dispose("tab_dispose", "", List.class, false, -1);
 

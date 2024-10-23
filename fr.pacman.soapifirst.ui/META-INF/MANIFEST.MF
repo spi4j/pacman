@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.soapifirst.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - SOAPIFIRST UI
 Bundle-SymbolicName: fr.pacman.soapifirst.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.soapifirst.ui.Activator$Implementation
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.emf.ecore,
@@ -18,10 +18,6 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.core.resources,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.model,
- org.eclipse.acceleo.engine,
  org.obeonetwork.dsl.soa,
  fr.pacman.commons,
  fr.pacman.soapifirst

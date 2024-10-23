@@ -137,7 +137,7 @@
 [comment : ******************************************/]
 [comment : Create the token(s) configuration object. /]
 [comment : ******************************************/]
-[template public rsFrontTokensConfiguration(c : soa::Component)]
+[template public rsFrontTokensConfiguration(c : soa::Component) post(self.trim())]
   [c.licence()/]
   package [c.buildPackageRsFront()/];
   [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
@@ -347,12 +347,12 @@
     	 */
     	public static String ['build http basic auth token'.apply_methodDefault()/]([c.writeBasicAuthParams()/]) throws UnsupportedEncodingException{
     			 
-    		final byte['['/]] ['password'.apply_variableDefault()/] = ['password'.apply_parameterMethodClassicIn()/].getBytes(Charset.forName("iso-8859-1"));
-    		final byte['['/]] ['prefix'.apply_variableDefault()/] = (p_userName + ":").getBytes(Charset.forName("iso-8859-1"));
-    		final byte['['/]] ['usernamePassword'.apply_variableDefault()/] = new byte['['/]['prefix'.apply_variableDefault()/].length + ['password'.apply_variableDefault()/].length];
+    		final byte['['/]] ['passwd'.apply_variableDefault()/] = ['password'.apply_parameterMethodClassicIn()/].getBytes(Charset.forName("iso-8859-1"));
+    		final byte['['/]] ['prefix'.apply_variableDefault()/] = (['user name'.apply_parameterMethodClassicIn()/] + ":").getBytes(Charset.forName("iso-8859-1"));
+    		final byte['['/]] ['usernamePassword'.apply_variableDefault()/] = new byte['['/]['prefix'.apply_variableDefault()/].length + ['passwd'.apply_variableDefault()/].length];
     
     		System.arraycopy(['prefix'.apply_variableDefault()/], 0, ['usernamePassword'.apply_variableDefault()/], 0, ['prefix'.apply_variableDefault()/].length);
-    		System.arraycopy(['password'.apply_variableDefault()/], 0, ['usernamePassword'.apply_variableDefault()/], ['prefix'.apply_variableDefault()/].length, ['password'.apply_variableDefault()/].length);
+    		System.arraycopy(['password'.apply_variableDefault()/], 0, ['usernamePassword'.apply_variableDefault()/], ['prefix'.apply_variableDefault()/].length, ['password'.apply_variableDefault()/].length());
     		return new String(Base64.getEncoder().encode(['usernamePassword'.apply_variableDefault()/]), "ASCII");
     	} 
   [/if]
@@ -411,7 +411,7 @@
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
     
     	/**
-    	 * [o.description/]
+    	 * [o.description.sanitizeForStars()/]
     	 * [o.getComParamsIn()/]
     	 * [o.comParamOut()/]
     	 * [o.comRSFaults()/]
@@ -481,14 +481,14 @@
   [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
     
       /**
-       * [o.description/]
+       * [o.description.sanitizeForStars()/]
        * [o.getComParamsIn()/]
        * [o.comParamOut()/]
        * [o.comRSFaults()/]
        */
       public [o.writeParamOutIfexist()/] [o.name.apply_methodDefault()/]([o.addParamsInXtoIfExists()/]) {
     
-        // for [o.userCodeForOperation()/]
+        [('for ' + o.userCodeForOperation()).displayClearUserCodeId()/]
         [protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
 
           [o.writeReturnParamsIfExists()/] [o.hackHeadClose()/]['target'.apply_methodDefault()/]()
@@ -538,7 +538,8 @@
 [comment : Add the PATH to the web target. /]
 [template private addSuggestedMethodsForTarget(o : soa::Operation) post(self.trim())]
   [if (not (o.URI = null) and o.URI.size() > 0)].path("[o.URI/]")[/if]
-  [o.addPathParamsIfExists()/][o.addQueryParamsIfExists()/][/template]
+  [o.addPathParamsIfExists()/][o.addQueryParamsIfExists()/]
+[/template]
 
 [comment : Add all the input parameters for the operation (if exists). /]
 [template private addParamsInXtoIfExists(o : soa::Operation) post(self.trim())]
@@ -546,7 +547,12 @@
 
 [comment : Add some PATH parameters. /]
 [template private addPathParamsIfExists(o : soa::Operation)]
-  [for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::PATH)][p.lineSeparator()/][p.addPathParam()/][/if][/for][/template]
+  [for (p : soa::Parameter | o.input)]
+    [if (p.restData.passingMode = soa::ParameterPassingMode::PATH)]
+        [p.addPathParam()/]
+    [/if]
+  [/for]
+[/template]
 
 [comment : Add the request operation and cookies if exists (this format for carriage return)./]
 [template private addResquestOperationAndCookieParamsIfExists(o : soa::Operation) post(self.trim())]
@@ -568,7 +574,8 @@
 
 [comment : Add a PATH parameter. /]
 [template private addPathParam(p : soa::Parameter) post(self.trim())]
-  .resolveTemplate("[p.name/]", [p.addGenericInputParam()/])[/template]
+  .resolveTemplate("[p.name/]", [p.addGenericInputParam()/])
+[/template]
 
 [comment : Add some HEADER parameters. /]
 [template private addHeaderParamsIfExists(o : soa::Operation) post(self.trim())]
@@ -591,7 +598,8 @@
 
 [comment : Add some QUERY parameters. /]
 [template private addQueryParamsIfExists(o : soa::Operation) post(self.trim())]
-  [for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::QUERY)][p.lineSeparator()/][p.addQueryParam()/][/if][/for][if (o.isApiKey() and o.isAuthTokenImportFromQuery())][o.lineSeparator()/][o.addQueryParamForAuthorization()/][/if][/template]
+  [for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::QUERY)][p.lineSeparator()/][p.addQueryParam()/][/if][/for][if (o.isApiKey() and o.isAuthTokenImportFromQuery())][o.lineSeparator()/][o.addQueryParamForAuthorization()/][/if]
+[/template]
 
 [comment : Add a specific query param for the authorization token. /]
 [template private addQueryParamForAuthorization(o : soa::Operation) post(self.trim())]
@@ -687,4 +695,4 @@
 [query private hackForBinary(s : String) : String = s.replaceAll('Binary', 'byte[]')/]
 
 [comment : Duplicate method (private) - check if IDRest defined if so take IDRest.  /]
-[query private addParamForPassingModeXtoRs(param : soa::Parameter) : String = if not (param.restData.restId = null) and param.restData.restId.size() > 0 then param.restData.restId else param.name endif/]
+[query private addParamForPassingModeXtoRs(param : soa::Parameter) : String = if not (param.restData.restId = null) and param.restData.restId.size() > 0 then param.restData.restId else param.name.sanitizeRJK() endif/]

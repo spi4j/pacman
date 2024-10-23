@@ -3,16 +3,12 @@ Automatic-Module-Name: fr.pacman.cinematic.swing
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Cinematic Swing
 Bundle-SymbolicName: fr.pacman.cinematic.swing
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.cinematic.swing.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.model,
- org.eclipse.acceleo.engine,
  org.obeonetwork.dsl.cinematic,
  org.obeonetwork.dsl.overview,
  fr.pacman.commons,

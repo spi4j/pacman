@@ -70,9 +70,6 @@
 [template public mandatory(p : environment::Property)]
   [if (p.isMandatory())]true[else]false[/if][/template]
 
-[template public genTypeName(t : environment::Type)]
-  [if (t.oclIsKindOf(environment::Enumeration))][t.name.apply_classEnum()/][else][t.name.sanitize()/][/if][/template]
-
 [comment : Placé ici car concerne la récupération de l'attribut xtopsup. /]
 [template public completeXtopSupValue(e : entity::Entity, columnProp : String)]
   [if ('xtopsup'.equalsIgnoreCase(e.get_nameColumn(columnProp)))].get_value()[/if][/template]

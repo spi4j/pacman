@@ -6,11 +6,10 @@
 package fr.application.persistence.api.annuaire;
 // Start of user code for imports
 
+import fr.application.annuaire.TypeCompetence_Enum;
 import fr.application.persistence.api.ApplicationAutoFieldsEntity_Itf;
-import fr.application.types.enums.TypeCompetence_Enum;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -23,7 +22,7 @@ public interface CompetenceEntity_Itf extends ApplicationAutoFieldsEntity_Itf<Lo
 {
    // CONSTANTES
 
-   // Constantes CompetenceEntity_Itf
+   
    // Start of user code Constantes CompetenceEntity_Itf
 
    // End of user code
@@ -57,7 +56,7 @@ public interface CompetenceEntity_Itf extends ApplicationAutoFieldsEntity_Itf<Lo
    void set_typecompetence (final TypeCompetence_Enum p_typecompetence);
 
 
-   // Methodes CompetenceEntity_Itf
+   
    // Start of user code Methodes CompetenceEntity_Itf
 
    // End of user code

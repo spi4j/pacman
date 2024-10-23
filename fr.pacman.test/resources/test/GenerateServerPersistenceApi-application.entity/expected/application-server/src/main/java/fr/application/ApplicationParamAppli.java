@@ -18,7 +18,7 @@ public interface ApplicationParamAppli
    /** L'identifiant de l'application. */
    String c_idAppli = "application";
 
-   // Constantes
+   
    // Start of user code Constantes
 
    // End of user code

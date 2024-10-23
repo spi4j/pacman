@@ -7,7 +7,6 @@ package fr.application.persistence.api;
 
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
 import fr.spi4j.type.XtopSup;
-import java.util.Date;
 
 /**
  * L'enumeration definissant les attributs additionels

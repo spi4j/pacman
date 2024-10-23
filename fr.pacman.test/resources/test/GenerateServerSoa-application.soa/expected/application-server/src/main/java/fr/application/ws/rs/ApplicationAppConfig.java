@@ -10,7 +10,6 @@ import fr.application.ws.api.annuaire.GradesServiceRSFacade_Itf;
 import fr.application.ws.api.annuaire.PersonneServiceRSFacade_Itf;
 import fr.application.ws.impl_server.annuaire.GradesServiceRSFacade;
 import fr.application.ws.impl_server.annuaire.PersonneServiceRSFacade;
-import java.util.Date;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -25,7 +24,7 @@ public class ApplicationAppConfig extends ResourceConfig
 {
 	public ApplicationAppConfig() {
 
-		packages("fr.application.ws.rs.resources");
+		packages("fr.application.business.ws.rs.resources");
 
 		register(new AbstractBinder() {
 			@Override

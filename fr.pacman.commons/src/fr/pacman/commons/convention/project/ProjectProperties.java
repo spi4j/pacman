@@ -18,7 +18,7 @@ import fr.pacman.commons.properties.PacmanPropertyTrigger_Enum;
  * 
  * Pour l'instant il y a de nombreuses redondances pour les variables qui 
  * concernent les clients. Cela multiplie le nombre de variables avec souvent 
- * les mêmes valeurs par défaut mais permet de laisser toute latitude sur la 
+ * les memes valeurs par defaut mais permet de laisser toute latitude sur la 
  * valeur par defaut. A voir dans un second temps si on simplifie.
  * 
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -44,10 +44,11 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    
    private static final String c_idParam_is_clearUserCode = "pacman.userCode.clear";
    
-   private static final String c_idParam_is_display_report = "pacman.report.display";
-   
-   private static final String c_idParam_is_formatClasses = "pacman.classes.format";
+   private static final String c_idParam_is_clearUserCodeHash = "pacman.userCode.hash.clear";
 
+   private static final String c_idParam_is_display_report = "pacman.report.display";
+
+   private static final String c_idParam_is_formatClasses = "pacman.classes.format";
    private static final String c_idParam_isLazyLoading = "dsl.entity.isLazyLoading";
 
    private static final String c_idParam_appli = "idAppli";
@@ -61,6 +62,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    private static final String c_idParam_database_type = "database.type";
 
    private static final String c_idParam_client_type = "client.type";
+   
+   private static final String c_idParam_use_batch = "batch.layer.enabled";
    
    private static final String c_idParam_use_spi4j_config_frwk = "config.files.frwk.enabled";
 
@@ -101,10 +104,14 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    private static final String c_idParam_server_sql_table_xtopsup_size = "server.sql.table.additional_field.xtopsup.size";
 
    private static final String c_idParam_server_sql_oracle_index_tablespace = "server.sql.oracle.index.tablespace";
+   
+   private static final String c_idParam_server_sql_idsuffix_enabled = "server.sql.id.suffix_enabled";
 
    private static final String c_idParam_fetchingstrategy_enabled = "fetchingstrategy.enabled";
 
    private static final String c_idParam_servicerequirements_enabled = "servicerequirements.enabled";
+   
+   private static final String c_idParam_enums_package = "commons.enums.package";
 
    private static final String c_idParam_log4j_enabled = "log4j.enabled";
 
@@ -248,6 +255,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    
    private static final String c_idParam_wms_enabled = "wms.layer.enabled";
    
+   private static final String c_idParam_ws_health_enabled = "ws.health.enabled";
+   
    private static final String c_idParam_ws_security_scheme_id = "ws.security.scheme.spi4id";
 
    private static final String c_idParam_ws_hk2_enabled = "ws.layer.hk2.enabled";
@@ -265,7 +274,6 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    private static final String c_idParam_paging_current_page_size  = "paging.current.page.size.key";
   
    
-
    // LEGACY A MODIFIER
 
    public static final String c_idParam_test_requirement_versionning_initial = "test.requirement.versionning.initial";
@@ -311,14 +319,14 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                         "La version de SPI4J utilisee par les generateurs"),
 
                PacmanProperty.newRequired(c_idParam_database_type, "H2",
-                        "Type de la base de donnees, parmi Oracle, H2, Mysql, MariaDB, Postgresql (plusieurs possibles, separes par des virgules)"),
+                        "Type(s) de base(s) de donnees (Oracle / Oracle_32 / H2 / MySQL / MariaDB / PostgreSQL"),
 
                PacmanProperty.newRequired(c_idParam_client_type, "",
-                        "Type de client, pour l'instant uniquement SWING, GWT, JSF, JSP ou vide",
+                        "Type de client (SWING / GWT / JSF / JSP)",
                         new ClientProjectStrategy()),
 
                PacmanProperty.newRequired(c_idParam_typeNaming, "SUN", 
-                        "Norme de nommage pour Java", 
+                        "Norme de nommage pour Java (SUN / SAFRAN / CUSTOM)", 
                         new NormeProjectStrategy()),
 
                PacmanProperty.newRequired(c_idParam_new_line, "\r\n", 
@@ -345,20 +353,26 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                PacmanProperty.newRequired(c_idParam_is_formatImports, "true",
                         "Flag indiquant si le formattage auto des imports est actif (CTRL + SHIFT + O)"),
                
+               PacmanProperty.newRequired(c_idParam_is_clearUserCode, "false",
+                        "Flag indiquant si les identifiants de balise user code sont en clair (non actif par defaut)"),               
+               
+               PacmanProperty.newRequired(c_idParam_is_clearUserCodeHash, "false", 
+                       "Flag indiquant la generation de commentaire pour la balise user code (non actif par defaut et lie avec l'utilisation du hash)"),
+
                PacmanProperty.newRequired(c_idParam_is_formatClasses, "true",
                        "Flag indiquant si le formattage auto des classes java est actif (CTRL + SHIFT + F)"),
                
                PacmanProperty.newRequired(c_idParam_is_display_report, "true",
                        "Flag indiquant si la generation doit afficher un rapport"),
-               
-               PacmanProperty.newRequired(c_idParam_is_clearUserCode, "false",
-                        "Flag indiquant si identifiants de balise user code sont en clair"),               
-                    
+
                PacmanProperty.newRequired(c_idParam_isLazyLoading, "false",
                         "Flag indiquant si la generation de la couche de persistance (= Entity) se fait avec les methodes de LazyLoading"),
 
                PacmanProperty.newRequired(c_idParam_fetchingstrategy_enabled, "false",
                         "Flag indiquant si la fetching strategy doit etre generee dans l'application (non generee par defaut)"),
+               
+               PacmanProperty.newRequired(c_idParam_use_batch, "false",
+            		    "Flag indiquant si des services de traitement automatique doivent etre generes (non genere par defaut)"),
 
                PacmanProperty.newRequired(c_idParam_servicerequirements_enabled, "true",
                         "Flag indiquant si les service requirements doivent etre generes dans l'application (generes par defaut)"),
@@ -390,7 +404,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                
                PacmanProperty.newRequired(c_idParam_rootfiles_generate_enabled, "false",
                         "Flag indiquant si on permet la regeneration des fichiers pom.xml, web.xml et log4j2.xml (non par defaut)"
-                        + "\n# ATTENTION : IL S'AGIT D'UNE RESTAURATION D'USINE ! PERTE DES VERSIONS ET DES AJOUTS." ),
+                        + "\n# ATTENTION : IL S'AGIT D'UNE RESTAURATION D'USINE ! PERTE DES VERSIONS ET DES AJOUTS" ),
 
                PacmanProperty.newRequired(c_idParam_ws_enabled, "false",
                         "Flag indiquant si on veut generer des services web (non genere par defaut)",
@@ -398,6 +412,9 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                
                PacmanProperty.newRequired(c_idParam_wms_enabled, "false",
                         "Flag indiquant si on veut generer des micro services web (non genere par defaut)"),
+               
+               PacmanProperty.newRequired(c_idParam_ws_health_enabled, "false",
+                       "Flag indiquant si on veut generer une api d'observabilite pour l'application (non genere par defaut)"),
 
                PacmanProperty.newRequired(c_idParam_ws_hk2_enabled, "true",
                         "Flag indiquant si on veut utiliser l'injection pour les services web REST (oui par defaut)"),
@@ -410,7 +427,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
 
                PacmanProperty.newRequired(c_idParam_test_requirement_versionning_initial,
                         c_valParam_test_requirement_versionning_initial_none,
-                        "Version initiale (cf. \"set_versionImplem()\") mise lors de la premiere genetration pour les tests de versionning d'exigence (\""
+                        "Version initiale (cf. \"set_versionImplem()\") mise lors de la premiere generation pour " 
+                        		 + "les tests de versionning d'exigence \n# (\""
                                  + c_valParam_test_requirement_versionning_initial_none
                                  + "\" : exigence non implementee ou \""
                                  + c_valParam_test_requirement_versionning_initial_current
@@ -451,6 +469,10 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
 
                PacmanProperty.newRequired(c_idParam_server_cxf_pkg, "ws.servlet",
                         "Package pour la generation des servlets CXF (SOAP)"),
+               
+               PacmanProperty.newRequired(c_idParam_enums_package, "", 
+            		   "Package specifique pour l'ensemble des enumerations modelisees (vide par defaut)"
+            		   + "\n# Si vide les enumerations sont generees au niveau de leur emplacement de modelisation"),                
 
                PacmanProperty.newRequired(c_idParam_commons_project, "{$idAppli}-commons",
                         "Projet Eclipse de la partie commune entre la partie cliente et la partie serveur"),
@@ -480,8 +502,8 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                         "Mise en place d'une base h2 embarque (non actif par defaut)"),
                
                PacmanProperty.newConditional(c_idParam_report_project, "{$idAppli}-report",
-                        "Projet Eclipse pour le reporting"),
-
+                        "Projet Eclipse pour le reporting"),               
+              
                PacmanProperty.newConditional(c_idParam_webapp_project, "{$idAppli}-webapp",
                         "Projet Eclipse de la partie Webapp pour les services Web "),
 
@@ -597,7 +619,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                         "Si application securisee, force l'affichage header-footer sur la premiere page"),
                
                PacmanProperty.newRequired(c_idParam_server_libraries, "", 
-                        "Champs additionnels pour les librairies supplémentaires de l'application"),     
+                        "Champs additionnels pour les librairies supplementaires de l'application"),     
 
                PacmanProperty.newRequired(c_idParam_server_sql_table_add_fields, "",
                         "Champs additionnels pour les tables SQL de l'application", 
@@ -639,21 +661,24 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
                PacmanProperty.newConditional(c_idParam_server_sql_table_xtopsup_size, "1",
                          "Champ additionnel pour les tables SQL"), 
                
+               PacmanProperty.newRequired(c_idParam_server_sql_idsuffix_enabled, "true", 
+            		   	"Ajoute automatiquement le suffixe '_ID' pour le nom physique des references (actif par defaut)"),
+               
                PacmanProperty.newRequired(c_idParam_paging_mode, "",
                         "Mode de fonctionnement pour la pagination (auto, user, vide par defaut)", 
                         new PagingModeStrategy()), 
       
                PacmanProperty.newConditional(c_idParam_paging_total_count, "Resource-Count",
-                        "Propriete dans l'en-tête pour le stockage du nombre total d'occurences"), 
+                        "Propriete dans l'en-tete pour le stockage du nombre total d'occurences"), 
                
                PacmanProperty.newConditional(c_idParam_paging_current_page_idx, "Current-Page",
-                        "Propriete dans l'en-tête pour le stockage de l'index de page courante"), 
+                        "Propriete dans l'en-tete pour le stockage de l'index de page courante"), 
                
                PacmanProperty.newConditional(c_idParam_paging_page_count, "Page-Count",
-                        "Propriete dans l'en-tête pour le stockage du nombre de pages"),
+                        "Propriete dans l'en-tete pour le stockage du nombre de pages"),
                
                PacmanProperty.newConditional(c_idParam_paging_current_page_size, "Current-Page-Size",
-                        "Propriete dans l'en-tête pour le stockage du nombre d'occurences pour la page courante")};
+                        "Propriete dans l'en-tete pour le stockage du nombre d'occurences pour la page courante")};
    }
 
    /**
@@ -661,7 +686,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
     */
 
    /**
-    * Stratégie pour le nommage des sous projets.
+    * Strategie pour le nommage des sous projets.
     */
    private class NameProjectStrategy extends PacmanPropertyStrategy_Abs
    {
@@ -699,7 +724,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    }
 
    /**
-    * Stratégie pour le type de client.
+    * Strategie pour le type de client.
     */
    private class ClientProjectStrategy extends PacmanPropertyStrategy_Abs
    {
@@ -774,7 +799,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    }
    
    /**
-    * Stratégie pour la 
+    * Strategie pour la librairie.
     */
    private class WSLibraryStrategy extends PacmanPropertyStrategy_Abs
    {
@@ -799,7 +824,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    }
 
    /**
-    * Stratégie pour la webapp.
+    * Strategie pour la webapp.
     */
    private class WSProjectStrategy extends PacmanPropertyStrategy_Abs
    {
@@ -830,7 +855,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    }
    
    /**
-    * Stratégie pour la norme de nommage des methodes , classes, proprietes, etc...
+    * Strategie pour la norme de nommage des methodes , classes, proprietes, etc...
     */
    private class NormeProjectStrategy extends PacmanPropertyStrategy_Abs {
 
@@ -862,7 +887,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    }
    
    /**
-    * Stratégie pour la pagination.
+    * Strategie pour la pagination.
     */
    private class PagingModeStrategy extends PacmanPropertyStrategy_Abs {
 
@@ -1604,6 +1629,13 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
       return PacmanPropertiesManager.get_property(c_idParam_is_debug);
    }
    
+   public static String getCommonEnumsPackage () 
+   {
+	   return PacmanPropertiesManager.get_property(c_idParam_enums_package);
+   }
+
+   public static String getCommonEnumsPackageJavaService(Object object){return getCommonEnumsPackage();}
+   
    public static String getIsFormatImports () {
       
       return PacmanPropertiesManager.get_property(c_idParam_is_formatImports);
@@ -1660,7 +1692,36 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    {
       return PacmanPropertiesManager.get_property(c_idParam_is_formatClasses);
    }
+
+   public static String getUseBatch() 
+   {
+      return "false";
+      //return PacmanPropertiesManager.get_property(c_idParam_use_batch);
+   }
+
+   public static String getUseBatchJavaService(Object object){return getUseBatch();}
    
+   public static String isClearUserCodeHash() 
+   {
+      return PacmanPropertiesManager.get_property(c_idParam_is_clearUserCodeHash);
+   }
+
+   public static String isClearUserCodeHashJavaService(Object object){return isClearUserCodeHash();}   
+   
+   public static String getUseIdSqlSuffixForReferences() 
+   {
+      return PacmanPropertiesManager.get_property(c_idParam_server_sql_idsuffix_enabled);
+   }
+
+   public static String getUseIdSqlSuffixForReferencesJavaService(Object object){return getUseIdSqlSuffixForReferences();}
+   
+   public static String getUseHealthApi() 
+   {
+      return PacmanPropertiesManager.get_property(c_idParam_ws_health_enabled);
+   }
+
+   public static String getUseHealthApiJavaService(Object object){return getUseHealthApi();}
+
    public static String getXtoSupKey () 
    {
       return  c_idParam_server_sql_table_xtopsup;

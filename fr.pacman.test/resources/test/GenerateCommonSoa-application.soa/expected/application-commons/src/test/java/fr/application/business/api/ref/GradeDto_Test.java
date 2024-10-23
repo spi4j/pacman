@@ -8,7 +8,6 @@ package fr.application.business.api.ref;
 
 import fr.spi4j.exception.Spi4jValidationException;
 import fr.spi4j.tua.BeanTester_Abs;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test pour le DTO 'Grade'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class GradeDto_Test extends BeanTester_Abs
@@ -55,8 +54,8 @@ public class GradeDto_Test extends BeanTester_Abs
       assertEquals(v_libelle, v_dto.get_libelle(), "Champ libelle incorrect");
       assertEquals(v_trigramme, v_dto.get_trigramme(), "Champ trigramme incorrect");
 
-      // Remplissage références du dto
-      // Start of user code Remplissage références du dto
+      
+      // Start of user code Remplissage references du dto
 
       // End of user code
 

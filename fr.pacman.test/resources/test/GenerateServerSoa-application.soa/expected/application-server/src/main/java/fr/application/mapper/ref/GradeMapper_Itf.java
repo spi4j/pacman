@@ -9,7 +9,6 @@ package fr.application.mapper.ref;
 import fr.application.business.api.ref.GradeDto;
 import fr.application.ws.api.ref.GradeXto;
 import fr.spi4j.mapper.Mapper_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -20,7 +19,7 @@ import java.util.Date;
 public interface GradeMapper_Itf extends Mapper_Itf<GradeDto, GradeXto>
 {
 
-   // GradeMapper_Itf
+   
    // Start of user code GradeMapper_Itf
 
    // End of user code

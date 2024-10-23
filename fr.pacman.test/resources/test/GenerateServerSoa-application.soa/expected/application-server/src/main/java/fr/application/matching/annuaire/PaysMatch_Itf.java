@@ -11,7 +11,6 @@ import fr.application.business.api.annuaire.PaysDto;
 import fr.application.persistence.api.annuaire.PaysColumns_Enum;
 import fr.application.persistence.api.annuaire.PaysEntity_Itf;
 import fr.spi4j.matching.Match_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -30,7 +29,7 @@ public interface PaysMatch_Itf extends Match_Itf<Long, PaysDto, PaysEntity_Itf, 
     */
    PaysColumns_Enum getColumn (final PaysAttributes_Enum p_attribute);
 
-   // PaysMatch_Itf
+   
    // Start of user code PaysMatch_Itf
 
    // End of user code

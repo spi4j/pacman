@@ -14,6 +14,7 @@ import org.obeonetwork.dsl.environment.ObeoDSMObject;
 import org.obeonetwork.dsl.environment.Reference;
 import org.obeonetwork.dsl.environment.StructuredType;
 import org.obeonetwork.dsl.environment.Type;
+import org.obeonetwork.dsl.soa.Component;
 import org.obeonetwork.dsl.soa.Operation;
 import org.obeonetwork.dsl.soa.Parameter;
 import org.obeonetwork.dsl.soa.Service;
@@ -132,6 +133,10 @@ public class ImportsUtils {
 			initWithBasicImports(((Reference) p_object).getContainingType());
 		}
 
+		else if (p_object instanceof Component) {
+			initWithBasicImports((Component) p_object);
+		}
+
 		// For now, in all cases, (must be optimized).
 		// Excess imports will be eliminated by the CTRL + SHIFT + O.
 		initWithAdditionalBasicFieldTypes();
@@ -248,6 +253,15 @@ public class ImportsUtils {
 		}
 		// initWithBasicImports(p_structuredType.getAttributes(),
 		// p_structuredType.getReferences());
+	}
+
+	/**
+	 * 
+	 * @param p_component
+	 */
+	private static void initWithBasicImports(final Component p_component) {
+
+		// RAS for now.
 	}
 
 	/**

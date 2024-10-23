@@ -6,6 +6,7 @@
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::common::utils/]
 [import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::commons::convention::rule::classRule/]
 [import fr::pacman::commons::convention::rule::methodRule/]
 [import fr::pacman::commons::convention::rule::attributeRule/]
@@ -30,7 +31,8 @@
       <name>[any.getApplicationName()/] - Partie integration</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
      	-->
      	
      	<!--
@@ -82,9 +84,9 @@
             </dependency>
   [/if]
           <dependency>
-              <groupId>javax.servlet</groupId>
-              <artifactId>javax.servlet-api</artifactId>
-              <version>${javax-servlet-api.version}</version>
+  			<groupId>jakarta.servlet</groupId>
+  			<artifactId>jakarta.servlet-api</artifactId>
+  			<version>${jakarta-servlet-api.version}</version>
               <scope>provided</scope>
           </dependency>
   		<dependency>
@@ -107,7 +109,8 @@
               <version>${h2.version}</version>
           </dependency>
   		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for dependencies'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
       		-->
       		
       		<!--
@@ -146,7 +149,8 @@
     			[any.jBehaveDependencyPlugin()/]
   [/if]
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
        			-->
        		
        			<!--
@@ -179,12 +183,12 @@
                       </rulesets>
                   </configuration>
               </plugin>
-              <!-- Rapport findbugs -->
+              <!-- Rapport spotbugs (anciennement findbugs) -->
               <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>findbugs-maven-plugin</artifactId>
-                  <version>${findbugs-maven-plugin.version}</version>
-                  <configuration>
+                  <groupId>com.github.spotbugs</groupId>
+                  <artifactId>spotbugs-maven-plugin</artifactId>
+                  <version>${spotbugs-maven-plugin.version}</version>
+              	<configuration>
                       <onlyAnalyze>none</onlyAnalyze>
                   </configuration>
               </plugin>

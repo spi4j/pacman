@@ -78,7 +78,7 @@ public class ApplicationGwtUserBusiness extends GwtUserBusiness_Abs
       bind(PersonneCxfGwtService.class, GWT.create(PersonneCxfGwtService.class));
    }
 
-   // Methodes
+   
    // Start of user code Methodes
 
    /**

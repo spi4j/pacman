@@ -24,7 +24,7 @@ public class CompetenceGwtServiceImpl extends GwtRemoteServiceImpl<Long, Compete
    @Override
    protected CompetenceMapper_Itf getMapper ()
    {
-      // Mapper
+      
       // Start of user code Mapper
       // Le Mapper n'est peut-être pas dans Application, il est peut-être dans un autre domaine qui contient les XTO
       return ApplicationUserMapper.getCompetenceMapper();
@@ -34,7 +34,7 @@ public class CompetenceGwtServiceImpl extends GwtRemoteServiceImpl<Long, Compete
    @Override
    protected CompetenceService_Itf getService ()
    {
-      // Service
+      
       // Start of user code Service
       return ApplicationUserBusiness.getCompetenceService();
       // End of user code
@@ -55,7 +55,7 @@ public class CompetenceGwtServiceImpl extends GwtRemoteServiceImpl<Long, Compete
                getService ().findListDisposeByCompetence(p_competenceId));
    }
 
-   // CompetenceService
+   
    // Start of user code CompetenceService
 
    // End of user code

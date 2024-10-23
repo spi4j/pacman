@@ -17,7 +17,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques pour un type 'Pays'.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface PaysService_Itf extends Service_Itf<Long, PaysDto>
@@ -30,14 +30,14 @@ public interface PaysService_Itf extends Service_Itf<Long, PaysDto>
     *           (In) personne
     * @return une liste de PaysDto ayant p_personnePaysId = p_personnePaysId
     */
-	// Annotations Paysp_personnePaysId
+	
 	// Start of user code Annotations Paysp_personnePaysId
 
 	// End of user code
    List<PaysDto> findListPaysByPersonne (final Long p_personnePaysId);
 
-    // Méthodes PaysService_Itf
-    // Start of user code Méthodes PaysService_Itf
+    
+    // Start of user code Methodes PaysService_Itf
 
     // End of user code
 }

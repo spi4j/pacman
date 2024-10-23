@@ -12,28 +12,27 @@ import fr.spi4j.ui.graal.UserAction;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
 import fr.spi4j.ui.mvp.View_Itf;
-import java.util.Date;
 
 // End of user code
 
 public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_Itf
 {
 
-   // Declaration btConnexion_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btConnexion_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btConnexion;
 
    // End of user code
 
-   // Declaration btDeconnexion_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btDeconnexion_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btDeconnexion;
 
    // End of user code
 
-   // Attributs
+   
    // Start of user code Attributs
    private final VerticalPanel _content;
 
@@ -47,7 +46,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
    {
       super(p_presenter);
 
-      // avant initialisation
+      
       // Start of user code avant initialisation
       _content = new VerticalPanel();
       _content.add(new HTML("<h1>Main</h1>"));
@@ -55,7 +54,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
       // End of user code
 
       // initialisation des composants
-      // Parametrage btConnexion_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btConnexion_ERREUR [ Widget sans nom]
 
       _btConnexion = new ERREUR [ Widget sans nom]();
@@ -63,6 +62,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
 
       // End of user code
 
+	  
       // Start of user code Listener btConnexion_onClicConnexion
       _btConnexion.addXXXHandler(new XXXHandler()
       {
@@ -74,7 +74,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
          }
       });
 
-      // Parametrage btDeconnexion_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btDeconnexion_ERREUR [ Widget sans nom]
 
       _btDeconnexion = new ERREUR [ Widget sans nom]();
@@ -82,6 +82,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
 
       // End of user code
 
+	  
       // Start of user code Listener btDeconnexion_onClicDeconnexion
       _btDeconnexion.addXXXHandler(new XXXHandler()
       {
@@ -93,8 +94,8 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
          }
       });
 
-      // après initialisation
-      // Start of user code après initialisation
+      
+      // Start of user code apres initialisation
       add(_content);
 
 
@@ -104,7 +105,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
    @Override
    public void addView (final View_Itf p_view)
    {
-      // addView
+      
       // Start of user code addView
       if (p_view instanceof IsWidget)
       {
@@ -127,7 +128,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
    @Override
    public void restoreView (final View_Itf p_view)
    {
-      // restoreView
+      
       // Start of user code restoreView
 
       // End of user code
@@ -136,7 +137,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
    @Override
    public void removeView (final View_Itf p_view)
    {
-      // removeView
+      
       // Start of user code removeView
       if (p_view instanceof IsWidget)
       {
@@ -156,7 +157,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
       // End of user code
    }
 
-   // Getter btConnexion_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btConnexion_ERREUR [ Widget sans nom]
 
    @Override
@@ -167,7 +168,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
 
    // End of user code
 
-   // Getter btDeconnexion_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btDeconnexion_ERREUR [ Widget sans nom]
 
    @Override
@@ -178,7 +179,7 @@ public class MainViewGwt extends ERREUR [ Widget sans nom] implements MainView_I
 
    // End of user code
 
-   // MainViewGwt
+   
    // Start of user code MainViewGwt
 
    // End of user code

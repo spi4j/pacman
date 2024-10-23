@@ -30,7 +30,7 @@
    * Bean [viewContainer.nameBeanFirstLower()/]
    * @author [viewContainer.getAuthorName()/]
    */
-  // Annotation
+  ['Annotation'.displayClearUserCodeId()/]
   [protected (viewContainer.getUserCodeId('Annotation')) startTagPrefix('// ') endTagPrefix('// ')]
     @SuppressWarnings("serial")
     @ManagedBean(name="[viewContainer.nameBeanFirstLower()/]")
@@ -72,7 +72,7 @@
     [/if]
   [/for]
   	
-     // Attributs
+     ['Attributs'.displayClearUserCodeId()/]
      [protected (viewContainer.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
            
      [/protected]
@@ -84,7 +84,7 @@
   	 */
   	@PostConstruct
   	public void init() {
-  		// init
+  		['init'.displayClearUserCodeId()/]
   		[protected (viewContainer.getUserCodeId('init')) startTagPrefix('// ') endTagPrefix('// ')]
     [/protected]
   
@@ -136,7 +136,7 @@
           */      
       						
           public void valueChangeChBox[element.name.toUpperFirst()/](ValueChangeEvent e){
-      		// Value Change Event'+'[element.name/]
+      		[('Value Change Event' + '\'' + element.name + '\'').displayClearUserCodeId()/]
       		[protected (element.getUserCodeId('Value Change Event' + '[element.name/]')) startTagPrefix('// ') endTagPrefix('// ')]
           		
         [/protected]
@@ -158,7 +158,7 @@
                   */      
               [if ('onChange'.equalsIgnoreCase(eventElement.type.name))]
                     public void [flowEvent.nameActionBean()/](ValueChangeEvent e){
-                		// Value Change Event
+                		['Value Change Event'.displayClearUserCodeId()/]
                 		[protected (viewContainer.getUserCodeId('Value Change Event With Param')) startTagPrefix('// ') endTagPrefix('// ')]
                     		
                   [/protected]
@@ -169,7 +169,7 @@
                     {		
                 		 // URL de redirection;		
                 		String urlRedirect = "";
-                      // [eventElement.nameActionBean()/]
+                      [eventElement.nameActionBean().displayClearUserCodeId()/]
                       [protected (eventElement.getUserCodeId(eventElement.nameActionBean() + 'flow')) startTagPrefix('// ') endTagPrefix('// ')]
                         		
                       [/protected]
@@ -182,7 +182,7 @@
         [else]
           [if ('onChange'.equalsIgnoreCase(eventElement.type.name))]
                 public void [eventElement.nameActionBean()/](ValueChangeEvent e){
-            		// Value Change Event
+            		['Value Change Event'.displayClearUserCodeId()/]
             		[protected (viewContainer.getUserCodeId('Value Change Event')) startTagPrefix('// ') endTagPrefix('// ')]
                 		
               [/protected]
@@ -193,7 +193,7 @@
                 {
             	    // URL de redirection;		
             		String urlRedirect = "";
-                  // [eventElement.nameActionBean()/]
+                  [eventElement.nameActionBean().displayClearUserCodeId()/]
                   [protected (eventElement.getUserCodeId(eventElement.nameActionBean())) startTagPrefix('// ') endTagPrefix('// ')]
                     		
                   [/protected]
@@ -268,8 +268,8 @@
       * Méthodes utilisateurs
   	*	
       */ 
-     // Méthode
-     [protected (viewContainer.getUserCodeId('Méthode')) startTagPrefix('// ') endTagPrefix('// ')]
+     ['Methode'.displayClearUserCodeId()/]
+     [protected (viewContainer.getUserCodeId('Methode')) startTagPrefix('// ') endTagPrefix('// ')]
            
      [/protected]
   

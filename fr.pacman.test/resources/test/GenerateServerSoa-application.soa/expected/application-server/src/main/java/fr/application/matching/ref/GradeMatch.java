@@ -15,7 +15,6 @@ import fr.application.persistence.api.ref.GradeColumns_Enum;
 import fr.application.persistence.api.ref.GradeDao_Itf;
 import fr.application.persistence.api.ref.GradeEntity_Itf;
 import fr.spi4j.persistence.DatabaseLineStatus_Enum;
-import java.util.Date;
 
 // End of user code
 
@@ -60,7 +59,7 @@ public class GradeMatch extends ApplicationMatch_Abs<Long, GradeDto, GradeEntity
       // v_entity.set_libelle(p_dto.get_libelle ());
       // v_entity.set_trigramme(p_dto.get_trigramme ());
 
-      // convertDtoToEntity
+      
       // Start of user code convertDtoToEntity
       checkGrade(Long.class, String.class, String.class);
       v_entity.setId(p_dto.getId ());
@@ -89,7 +88,7 @@ public class GradeMatch extends ApplicationMatch_Abs<Long, GradeDto, GradeEntity
       // p_dto.set_libelle (p_entity.get_libelle ());
       // p_dto.set_trigramme (p_entity.get_trigramme ());
 
-      // refreshDtoFromEntity
+      
       // Start of user code refreshDtoFromEntity
       checkGrade (Long.class, String.class, String.class);
       p_dto.setId (p_entity.getId ());
@@ -110,7 +109,7 @@ public class GradeMatch extends ApplicationMatch_Abs<Long, GradeDto, GradeEntity
       return GradeColumns_Enum.valueOf (p_attribute.getName ());
    }
 
-   // GradeMatch
+   
    // Start of user code GradeMatch
 
    // End of user code

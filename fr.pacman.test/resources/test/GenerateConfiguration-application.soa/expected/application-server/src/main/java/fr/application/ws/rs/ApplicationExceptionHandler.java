@@ -29,7 +29,7 @@ public class ApplicationExceptionHandler extends RsExceptionHandler_Abs
 	@Override
 	protected void handleException (final Exception p_exception)
 	{
-		// ApplicationExceptionHandler
+		
 		// Start of user code ApplicationExceptionHandler
 
 		// End of user code
@@ -46,7 +46,7 @@ public class ApplicationExceptionHandler extends RsExceptionHandler_Abs
 	@Override
 	protected Exception convertToSpi4jRestException (final Exception p_exception)
 	{
-      	// convertToSpi4jRestException
+      	
       	// Start of user code convertToSpi4jRestException
 
       	// End of user code

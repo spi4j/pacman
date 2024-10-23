@@ -39,7 +39,7 @@
     
        protected [e.buildMapperInterfaceName()/] getMapper ()
        {
-          // Mapper
+          ['Mapper'.displayClearUserCodeId()/]
           [protected (e.getUserCodeId('Mapper')) startTagPrefix('// ') endTagPrefix('// ')]
             
                   return [e.buildAppliUserMapperGenClassName()/].[('get ' + e.buildMapperClassName()).apply_methodDefault()/]();
@@ -49,7 +49,7 @@
     
        protected [e.buildServiceInterfaceName()/] getService ()
        {
-          // Service
+          ['Service'.displayClearUserCodeId()/]
           [protected (e.getUserCodeId('Service')) startTagPrefix('// ') endTagPrefix('// ')]
                   return [e.buildAppliUserBusinessGenClassName()/].[('get ' + e.buildServiceClassName()).apply_methodDefault()/]();
           [/protected]
@@ -111,7 +111,7 @@
     		getService().delete(getMapper().convertXtoItfToEntity(['xto'.apply_parameterMethodClassicIn()/]));		
     	}
     
-       // [e.nameServiceInterfaceGwt()/]
+       [e.nameServiceInterfaceGwt().displayClearUserCodeId()/]
        [protected (e.getUserCodeId(e.nameServiceInterfaceGwt())) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]

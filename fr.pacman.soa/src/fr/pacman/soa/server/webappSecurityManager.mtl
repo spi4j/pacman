@@ -40,7 +40,7 @@
   	 */
   	public static void registerAuthenticatedUser(final User_Itf ['authenticated user'.apply_parameterMethodClassicIn()/])	{
   
-  		// register authenticated user
+  		['register authenticated user'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('register authenticated user')) startTagPrefix('// ') endTagPrefix('// ')]
       
       		// Positionner ici l'ensemble du code nécessaire pour la gestion des permissions de l'utilisateur

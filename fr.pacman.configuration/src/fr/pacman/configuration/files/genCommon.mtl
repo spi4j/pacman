@@ -4,8 +4,10 @@
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::log4j/]
+[import fr::pacman::commons::common::classes/]
 [import fr::pacman::configuration::project::Common/]
 [import fr::pacman::configuration::common::names/]
+[import fr::pacman::configuration::project::RsHealthResources/]
 
 [comment encoding = UTF-8 /]
 [template public genCommon(any : ecore::EObject, fromStarter : Boolean)]
@@ -13,6 +15,14 @@
   [if (fromStarter or any.hasToGenerateRootFiles())]
     [file (any.getCommonProjectName().filename('', 'pom.xml'), overwrite, 'UTF-8')]
       [any.commonPom()/]
+    [/file]
+    
+    [file (any.getCommonProjectName().filename(any.getCommonsConfDir(), 'spotbugs-security-include.xml'), overwrite, 'UTF-8')]
+      [any.commonSpotbugsSecurity()/]
+    [/file]
+    
+    [file (any.getCommonProjectName().filename(any.getCommonsConfDir(), 'spotbugs-security-exclude.xml'), overwrite, 'UTF-8')]
+      [any.commonSpotbugsSecurity()/]
     [/file]
   [/if]
   
@@ -44,4 +54,9 @@
     [/file]
   [/if]
   
+  [if (any.useHealthApi())]
+    [file (any.getCommonProjectName().filename(any.getCommonsSourceDir(), any.buildPackageWsApi(), any.buildRsHealthServiceInterfaceName() + '.java'), overwrite, 'UTF-8')]
+      [any.rsHealthServiceInterface()/]
+    [/file]
+  [/if]
 [/template]

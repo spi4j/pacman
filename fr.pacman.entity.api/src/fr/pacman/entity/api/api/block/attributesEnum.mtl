@@ -25,7 +25,7 @@
 
 [template public enumStruct(a : environment::Attribute, e : entity::Entity)]
      /** [a.nameBaseAttribute()/]. */
-     [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.type.genTypeName()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if])[/template]
+     [a.name.normalize().apply_attributeEnum()/]("[a.name.normalize().apply_attributeEnum()/]", "[a.description.escape()/]", [a.type.genTypeNameWithPreCheck()/].class, [a.mandatory()/], [if (a.metadatas.hasSize())][a.metadatas.size()/][else]-1[/if])[/template]
 
 [template public enumStruct(r : environment::Reference, e : entity::Entity)]
   [if (e.isReferenceNoStar(r))]
@@ -71,14 +71,14 @@
   {
   
      /** [e.nameENUM_PK_ID()/]. */
-  [let eAttributes : OrderedSet(environment::Property) = e.navigableProperties()]
-    [if (not eAttributes->isEmpty())]
-    [/if]
+     [let eAttributes : OrderedSet(environment::Property) = e.navigableProperties()]
+       [if (not eAttributes->isEmpty())]
+       [/if]
        [e.nameENUM_PK_ID()/]("[e.nameENUM_PK_ID()/]", "id", [e.genPkType()/].class, true, -1)[if (not eAttributes->isEmpty())]
                                                                                                ,
                                                                                                [eAttributes->asSequence()->collect(temp1 | temp1.enumStruct(e))->sep(',\r\n')/][/if]
-    ;
-  [/let]
+       ;
+     [/let]
   
      /** Le nom de l'attribut. */
      private final String ['name'.apply_attributeFinal()/];

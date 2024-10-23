@@ -11,7 +11,6 @@ package fr.test.business; // NOPMD
 import fr.spi4j.business.UserBusiness_Abs;
 import fr.spi4j.exception.Spi4jRuntimeException;
 import fr.spi4j.persistence.UserPersistence_Abs;
-import java.util.Date;
 
 // End of user code
 

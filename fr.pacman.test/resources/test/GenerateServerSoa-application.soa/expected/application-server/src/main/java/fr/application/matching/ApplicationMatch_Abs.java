@@ -49,7 +49,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
          extends Match_Abs<TypeId, TypeDto, TypeEntity, Columns_Enum>
 {
 
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -57,7 +57,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public void create (final TypeDto p_dto) throws Spi4jValidationException
    {
-      // create
+      
       // Start of user code create
 
 	  final TypeEntity v_entity = convertDtoToEntity(p_dto);
@@ -72,7 +72,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public TypeDto findById (final TypeId p_id)
    {
-      // findById
+      
       // Start of user code findById
 
       final TypeEntity v_entityFound = getDao().findById(p_id);
@@ -88,7 +88,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public List<TypeDto> findAll ()
    {
-      // findAll
+      
       // Start of user code findAll
 
 	  final Map<String, String> v_xtopsupStatus = new HashMap<>();
@@ -109,7 +109,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public List<TypeDto> findAll (final Columns_Enum p_orderByColumn)
    {
-      // findAllOrberByColumn
+      
       // Start of user code findAllOrberByColumn
  	  
       final TableCriteria<ColumnsNames_Itf> v_tableCriteria = new TableCriteria<>("");
@@ -131,7 +131,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public void update (final TypeDto p_dto) throws Spi4jValidationException
    {
-      // update
+      
       // Start of user code update
 
 	  // Si la ligne n'est pas active, on rejete la demande. 
@@ -152,7 +152,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public void delete (final TypeDto p_dto) throws Spi4jValidationException
    {
-      // delete
+      
       // Start of user code delete
 
       final TypeEntity v_entity = convertDtoToEntity(p_dto);
@@ -174,7 +174,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public int deleteAll ()
    {
-      // deleteAll
+      
       // Start of user code deleteAll
 
       // Attention ici on veut probablement faire un vrai deleteAll() et non pas mettre à 1 la colonne xtopsup
@@ -186,7 +186,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public int deleteByCriteria (final TableCriteria<Columns_Enum> p_criteria)
    {
-      // deleteByCriteria
+      
       // Start of user code deleteByCriteria
 
       @SuppressWarnings("unchecked")
@@ -214,7 +214,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public List<TypeDto> findByColumn (final Columns_Enum p_column, final Object p_value)
    {
-      // findByColumn
+      
       // Start of user code findByColumn
 
       final TableCriteria<ColumnsNames_Itf> v_tableCriteria = new TableCriteria<>("");
@@ -237,7 +237,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    public List<TypeDto> findByCriteria (final String p_criteria,
             final Map<String, ? extends Object> p_map_valueName)
    {
-      // findByCriteriaSql
+      
       // Start of user code findByCriteriaSql
 
       // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
@@ -264,7 +264,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    public List<TypeDto> findByCriteria (final String p_criteria,
             final Map<String, ? extends Object> p_map_valueName, final int p_nbLignesMax, final int p_nbLignesStart)
    {
-      // findByCriteriaSqlNbLignes
+      
       // Start of user code findByCriteriaSqlNbLignes
 
       // On doit ajouter le critère xtopsup < 3 devant un éventuel order by avant d'appeler findByCriteria
@@ -291,7 +291,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
    @Override
    public List<TypeDto> findByCriteria (final TableCriteria<Columns_Enum> p_criteria)
    {
-      // findByCriteria
+      
       // Start of user code findByCriteria
 
       @SuppressWarnings("unchecked")
@@ -310,7 +310,7 @@ public abstract class ApplicationMatch_Abs<TypeId, TypeDto extends Dto_Itf<TypeI
       // End of user code
    }
 
-   // autres methodes
+   
    // Start of user code autres methodes
 
    /**

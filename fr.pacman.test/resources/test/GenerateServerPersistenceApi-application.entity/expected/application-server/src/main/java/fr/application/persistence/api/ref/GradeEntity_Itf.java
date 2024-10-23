@@ -6,9 +6,8 @@
 package fr.application.persistence.api.ref;
 // Start of user code for imports
 
+import fr.application.annuaire.TypeCompetence_Enum;
 import fr.application.persistence.api.ApplicationAutoFieldsEntity_Itf;
-import fr.application.types.enums.TypeCompetence_Enum;
-import java.util.Date;
 
 // End of user code
 
@@ -20,7 +19,7 @@ public interface GradeEntity_Itf extends ApplicationAutoFieldsEntity_Itf<Long>
 {
    // CONSTANTES
 
-   // Constantes GradeEntity_Itf
+   
    // Start of user code Constantes GradeEntity_Itf
 
    // End of user code
@@ -54,7 +53,7 @@ public interface GradeEntity_Itf extends ApplicationAutoFieldsEntity_Itf<Long>
    void set_trigramme (final String p_trigramme);
 
 
-   // Methodes GradeEntity_Itf
+   
    // Start of user code Methodes GradeEntity_Itf
 
    // End of user code

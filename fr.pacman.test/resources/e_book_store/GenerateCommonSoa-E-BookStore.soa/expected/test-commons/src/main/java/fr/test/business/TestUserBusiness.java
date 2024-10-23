@@ -14,7 +14,6 @@ import fr.spi4j.persistence.UserPersistence_Abs;
 import fr.test.business.api.bookstore.BookService;
 import fr.test.business.api.bookstore.LogService;
 import fr.test.business.api.bookstore.PurchaseOrderService;
-import java.util.Date;
 
 // End of user code
 

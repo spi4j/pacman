@@ -114,7 +114,7 @@ public class TestBuildInfo extends BuildInfo_Abs
     */
    public String getBuildId ()
    {
-      return infos.get("build.id");
+      return this.infos.get("build.id");
    }
 
    /**
@@ -122,25 +122,25 @@ public class TestBuildInfo extends BuildInfo_Abs
     */
    public String getUniqueId ()
    {
-      return infos.get("build.tag");
+      return this.infos.get("build.tag");
    }
 
    @Override
    public String getNomApplication ()
    {
-      return infos.get("build.projectArtifactId");
+      return this.infos.get("build.projectArtifactId");
    }
 
    @Override
    public String getVersion ()
    {
-      return infos.get("build.projectVersion");
+      return this.infos.get("build.projectVersion");
    }
 
    @Override
    public String getRevision ()
    {
-      return infos.get("build.svnRevision");
+      return this.infos.get("build.svnRevision");
    }
 
    @Override

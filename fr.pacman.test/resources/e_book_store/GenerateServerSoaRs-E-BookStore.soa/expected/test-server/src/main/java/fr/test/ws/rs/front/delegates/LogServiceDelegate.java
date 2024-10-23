@@ -9,7 +9,6 @@ package fr.test.ws.rs.front.delegates;
 import fr.test.ws.rs.front.exceptions.TestFrontRsException;
 import fr.test.ws.rs.front.resources.LogServiceFrontResources;
 import jakarta.ws.rs.ProcessingException;
-import java.util.Date;
 
 // End of user code
 

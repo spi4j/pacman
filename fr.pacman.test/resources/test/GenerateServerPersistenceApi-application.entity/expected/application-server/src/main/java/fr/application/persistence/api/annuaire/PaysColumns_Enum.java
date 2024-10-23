@@ -6,7 +6,6 @@
 package fr.application.persistence.api.annuaire;
 
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
-import java.util.Date;
 
 /**
  * L'énumeration définissant les informations de chaque colonne pour le type Pays.

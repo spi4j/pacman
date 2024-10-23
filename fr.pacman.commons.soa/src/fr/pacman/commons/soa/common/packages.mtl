@@ -15,6 +15,9 @@
 [query public buildPackageBusinessApiDto(d : environment::DTO) : String = d.buildPackageBusinessApi() + d.categoryHierarchy()/]
 
 [comment : /]
+[query public buildPackageServiceBatch(s : soa::Service) : String = s.buildPackageBusiness() + '.' + s.getPackageBatch() + '.' + s.eContainer().oclAsType(soa::Component).name.toLower()/]
+
+[comment : /]
 [query public getNamespaceXto(d : environment::DTO) : String = (d.getApplicationPackage() + d.categoryHierarchy()).reverse('\\.', '.')/]
 
 [comment :  Try to mutualize ? /]

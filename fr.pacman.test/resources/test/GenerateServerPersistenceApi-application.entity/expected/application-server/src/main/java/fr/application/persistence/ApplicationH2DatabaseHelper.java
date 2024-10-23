@@ -57,7 +57,7 @@ public final class ApplicationH2DatabaseHelper extends H2DatabaseHelper
       c_instance.initDatabase();
    }
 
-   // Methodes
+   
    // Start of user code Methodes
 
    // End of user code

@@ -41,7 +41,7 @@
      * Classe de test du service '[e.buildServiceInterfaceName()/]'.
      * @author [e.getAuthorName()/]
      */
-    // Annotation for class
+    ['Annotation for class'.displayClearUserCodeId()/]
     [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
     [/protected]
     
@@ -60,7 +60,7 @@
     
     [if (not e.isNotPersistent())]
       [if (e.useTestsCRUD())]
-           // Spécifique
+           ['Spécifique'.displayClearUserCodeId()/]
            [protected (e.getUserCodeId('Spécifique')) startTagPrefix('// ') endTagPrefix('// ')]
              
                 /** L'id du '[e.buildEntityInterfaceName()/]' stocké en base. */
@@ -90,7 +90,7 @@
             ['user persistence'.apply_attributeStatic()/] = [e.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]();
             ['service'.apply_attributeStatic()/] = [e.buildAppliUserBusinessEntityGenClassName()/].[('get ' + e.buildServiceClassName()).apply_methodDefault()/]();
       
-            // set up before all
+            ['set up before all'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('set up before all')) startTagPrefix('// ') endTagPrefix('// ')]
             [/protected]
       
@@ -104,7 +104,7 @@
          {
             ['user persistence'.apply_attributeStatic()/].begin();
       
-            // set up
+            ['set up'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
             [/protected]
       
@@ -118,13 +118,13 @@
          {
             ['user persistence'.apply_attributeStatic()/].rollback ();
       
-            // tear down
+            ['tear down'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
             [/protected]
       
          }
       	
-      	// Methodes [e.buildServiceTestClassName()/]
+      	[('Methodes ' + e.buildServiceTestClassName()).displayClearUserCodeId()/]
       	[protected (e.getUserCodeId('Methodes ' + e.buildServiceTestClassName())) startTagPrefix('// ') endTagPrefix('// ')]
          
          
@@ -170,7 +170,7 @@
              {
                 final [e.buildEntityInterfaceName()/] ['entity'.apply_variableFinal()/] = new [e.buildEntityImplClassName()/]();
           
-                // create
+                ['create'.displayClearUserCodeId()/]
                 [protected (e.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
                         // TODO renseigner données de test
                   [for (a : environment::Attribute | e.attributes)]
@@ -220,7 +220,7 @@
           
                 assertNotNull (['created entity'.apply_variableFinal()/].getId (), "Le entity créé devrait avoir une clé primaire renseignée");
           
-                // create assertions
+                ['create assertions'.displayClearUserCodeId()/]
                 [protected (e.getUserCodeId('create assertions')) startTagPrefix('// ') endTagPrefix('// ')]
                   
                   [for (r : environment::Reference | e.referencesStarStar())]

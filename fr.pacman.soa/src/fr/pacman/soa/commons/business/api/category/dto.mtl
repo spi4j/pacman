@@ -62,7 +62,7 @@
   	*/
   	private static final long serialVersionUID = -1;
   
-  	// Constantes
+  	['Constantes'.displayClearUserCodeId()/]
   	[protected (s.getUserCodeId('Constantes')) startTagPrefix('// ') endTagPrefix('// ')]
 
    [/protected]
@@ -72,10 +72,11 @@
     [if (columnProp.hasToWriteColumn())]
          	/** [columnProp.getNameColumn().toUpperFirst()/] */
          	private [columnProp.getTypeColumn()/] [columnProp.getNameColumn().apply_attributeDefault()/];[columnProp.lineSeparator()/]
+
     [/if]
   [/for]
   
-  	// Commons Attributs 
+  	['Commons Attributs'.displayClearUserCodeId()/] 
   	[protected (s.getUserCodeId('Commons Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
    [/protected]
@@ -127,6 +128,7 @@
     [d.writeImports()/]
 
   [/protected]
+
   /**
    * DTO '[d.nameClassDto()/]'.
    * @author [d.getAuthorName()/]
@@ -192,7 +194,7 @@
     
   [/if]
   [if (d.isNotPersistent())]
-       // Attributs
+       ['Attributs'.displayClearUserCodeId()/]
        [protected (d.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
          /** L'identifiant. */
@@ -211,7 +213,7 @@
         super();
   [if (d.isNotPersistent())]
     
-          // Constructeur
+          ['Constructeur'.displayClearUserCodeId()/]
           [protected (d.getUserCodeId('Constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -225,7 +227,7 @@
       * [for (a : environment::Attribute | d.attributesNotComputed())]
           [a.getComParamIn()/]
         [/for]
-       [for (r : environment::Reference | d.referencesNoStar())]
+      * [for (r : environment::Reference | d.referencesNoStar())]
           [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
             [r.getComParamIdIn()/]
           [/if]
@@ -269,7 +271,7 @@
        public [d.genPkType()/] getId ()
        {
     [if (d.isNotPersistent())]
-            // getId
+            ['getId'.displayClearUserCodeId()/]
             [protected (d.getUserCodeId('getId')) startTagPrefix('// ') endTagPrefix('// ')]
 
               return [d.namePK_ID()/];
@@ -284,7 +286,7 @@
        public void setId (final [d.genPkType()/] [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/])
        {
     [if (d.isNotPersistent())]
-            // setId
+            ['setId'.displayClearUserCodeId()/]
             [protected (d.getUserCodeId('setId')) startTagPrefix('// ') endTagPrefix('// ')]
 
               [d.getAffectationPrefix()/][d.namePK_ID()/] = [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/];
@@ -310,7 +312,7 @@
       [/if]
          {
       [if (a.isComputed())]
-              // [a.name.apply_attributeDefault()/]
+              [a.name.apply_attributeDefault().displayClearUserCodeId()/]
               [protected (a.getUserCodeId(a.name.apply_attributeDefault())) startTagPrefix('// ') endTagPrefix('// ')]
                 // TODO Calculer l'attribut
                 return null;
@@ -458,7 +460,7 @@
     [if (not r.isPropertyFromParent(d))]
          /**
           * Obtenir [r.nameBaseReferenceInverse()/] de [d.nameBaseDto()/].
-          *  [r.comReturnInverse()/]
+          * [r.comReturnInverse()/]
           */
          [r.getGetterInverseIdDto()/]
          {
@@ -484,7 +486,7 @@
           */
          [r.getGetter()/]
          {
-            // [r.referencedType.oclAsType(environment::DTO).name.normalize().apply_methodGet()/]
+            [r.referencedType.oclAsType(environment::DTO).name.normalize().apply_methodGet().displayClearUserCodeId()/]
             [protected (r.getUserCodeId(r.referencedType.oclAsType(environment::DTO).name.normalize().apply_methodGet())) startTagPrefix('// ') endTagPrefix('// ')]
                     // TODO Calculer la référence
                     return null;
@@ -502,7 +504,7 @@
           */
          [r.getGetterListDto()/]
          {
-            // [('get' + r.referencedType.oclAsType(environment::DTO).name.normalize().apply_attributeMultiple()).apply_methodDefault()/]
+            [('get' + r.referencedType.oclAsType(environment::DTO).name.normalize().apply_attributeMultiple()).apply_methodDefault().displayClearUserCodeId()/]
             [protected (r.getUserCodeId(('get' + r.referencedType.oclAsType(environment::DTO).name.normalize().apply_attributeMultiple()).apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
                     // TODO Calculer la référence
                     return null;
@@ -646,7 +648,7 @@
      @Override
      public String toString ()
      {
-        // toString
+        ['toString'.displayClearUserCodeId()/]
         [protected (d.getUserCodeId('toString')) startTagPrefix('// ') endTagPrefix('// ')]
 
           return [d.toString()/]
@@ -654,13 +656,10 @@
         [/protected]
      }
   
-  [if (d.isNotPersistent())]
-       // Méthodes
-       [protected (d.getUserCodeId('Méthodes')) startTagPrefix('// ') endTagPrefix('// ')]
+     ['Methodes'.displayClearUserCodeId()/]
+     [protected (d.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
-       [/protected]
-    
-  [/if]
+     [/protected]
   }[/template]
 
 [template public resetDtoParametersId(d : environment::DTO)]
@@ -703,7 +702,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = DtoUtil.checkMandatoryField("[p.nameBase()/]", [p.name.toLowerFirst().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [d.validateSize(p)/][/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][d.validateSize(p.oclAsType(environment::Attribute))/][/if][/template]
 
 [template private validProperty(d : environment::DTO, p : environment::Reference)]
   [if (p.isMandatory())]

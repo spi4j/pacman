@@ -6,9 +6,9 @@
 package fr.application.persistence.api.annuaire;
 // Start of user code for imports
 
+import fr.application.annuaire.TypeCompetence_Enum;
 import fr.application.persistence.ApplicationParamPersistence;
 import fr.application.persistence.ApplicationUserPersistence;
-import fr.application.types.enums.TypeCompetence_Enum;
 import fr.spi4j.exception.Spi4jValidationException;
 import fr.spi4j.persistence.dao.Operator_Enum;
 import fr.spi4j.persistence.dao.TableCriteria;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du dao 'CompetenceDao_Itf'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class CompetenceDao_Test extends BeanTester_Abs
@@ -71,7 +71,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       userPersistence = ApplicationParamPersistence.getUserPersistence();
       dao = userPersistence.getCompetenceDao();
 
-      // set up before class
+      
       // Start of user code set up before class
       // End of user code
    }
@@ -84,7 +84,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
    {
       userPersistence.begin();
 
-      // set up
+      
       // Start of user code set up
       // End of user code
    }
@@ -103,7 +103,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       assertNotNull(EntityUtil.findInCollectionById(v_all, crudId), 
 			"L'entity n'a pas ete trouvee dans la liste de toutes les entitys");
 
-      // findAll assertions
+      
       // Start of user code findAll assertions
 
       // End of user code
@@ -119,7 +119,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
    {
       final CompetenceEntity_Itf v_entity = userPersistence.getCompetenceEntity();
 
-      // create
+      
       // Start of user code create
       // TODO renseigner donnees de test
       v_entity.set_libelle("t");
@@ -132,7 +132,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
 	  setCrudId(v_entity.getId());
 	  assertNotNull(v_entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // create assertions
+      
       // Start of user code create assertions
 
       // End of user code
@@ -149,7 +149,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
    {
       final CompetenceEntity_Itf v_entity = userPersistence.getCompetenceEntity();
 
-      // create null on mandatory
+      
       // Start of user code create null on mandatory
       // TODO renseigner donnees de test
       v_entity.set_libelle(null);
@@ -183,7 +183,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       assertNotNull(v_entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
       assertNotNull(v_entity.toString(), "L'entity creee devrait avoir un toString");
 
-      // findById assertions
+      
       // Start of user code findById assertions
 
       // End of user code
@@ -200,7 +200,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
 
       final CompetenceEntity_Itf v_entityInsert = userPersistence.getCompetenceEntity();
 
-      // findAllFieldInserted create
+      
       // Start of user code findAllFieldInserted create
       // TODO renseigner donnees de test
       v_entityInsert.set_libelle("t");
@@ -213,7 +213,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       setCrudId(v_entityInsert.getId());
       final CompetenceEntity_Itf v_entityRead = dao.findById(crudId);
 
-      // findAllFieldInserted assertions
+      
       // Start of user code findAllFieldInserted assertions
       HashCodeBuilder v_hashCodeBuilderEntityInsert = new HashCodeBuilder();
 
@@ -259,7 +259,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       final CompetenceEntity_Itf v_entity = v_entitys.get(0);
       assertNotNull(v_entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // findByColumn assertions
+      
       // Start of user code findByColumn assertions
 
       // End of user code
@@ -284,7 +284,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       final CompetenceEntity_Itf v_entity = v_entitys.get(0);
       assertNotNull(v_entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // findByCriteria assertions
+      
       // Start of user code findByCriteria assertions
 
       // End of user code
@@ -302,7 +302,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
 
       final CompetenceEntity_Itf v_entity = dao.findById(crudId);
 
-      // update
+      
       // Start of user code update
 
       // End of user code
@@ -311,7 +311,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
 
       assertNotNull(v_entity.getId(), "L'entity mise a jour devrait avoir une cle primaire renseignee");
 
-      // update assertions
+      
       // Start of user code update assertions
 
       // End of user code
@@ -334,7 +334,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       assertNull(EntityUtil.findInCollectionById(v_all, crudId), 
 			"L'entity ne devrait plus exister dans la liste de toutes les entitys");
 
-      // delete assertions
+      
       // Start of user code delete assertions
 
       // End of user code
@@ -381,7 +381,7 @@ public class CompetenceDao_Test extends BeanTester_Abs
       v_entity.set_typecompetence(v_typecompetence);
       validate(v_entity);
 
-      // test validate
+      
       // Start of user code test validate
 
       // End of user code
@@ -422,13 +422,13 @@ public class CompetenceDao_Test extends BeanTester_Abs
    {
       userPersistence.rollback();
 
-      // tear down
+      
       // Start of user code tear down
       // End of user code
    }
 
 
-   // specific service test
+   
    // Start of user code specific service test
 
    // End of user code

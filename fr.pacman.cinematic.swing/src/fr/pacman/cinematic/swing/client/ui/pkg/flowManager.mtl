@@ -28,7 +28,7 @@
   public class [flow.nameFlow()/] extends SpiFlowManager_Abs
   {
   
-     // Attributs [flow.nameFlow()/]
+     [('Attributs ' + flow.nameFlow()).displayClearUserCodeId()/]
      [protected (flow.getUserCodeId('Attributs ' + flow.nameFlow())) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]
@@ -57,7 +57,7 @@
      @Override
      public void onStart ()
      {
-        // Pre onStart
+        ['Pre onStart'.displayClearUserCodeId()/]
         [protected (flow.getUserCodeId('Pre onStart')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
   

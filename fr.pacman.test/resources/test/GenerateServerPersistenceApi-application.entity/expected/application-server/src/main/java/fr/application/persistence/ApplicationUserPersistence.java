@@ -31,8 +31,6 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    }
 
 
-   // getGradeEntity
-   // Start of user code getGradeEntity
    /**
     * Obtenir l'entité 'GradeEntity_Itf'.
     * @return L'instance désirée.
@@ -41,10 +39,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getEntity (fr.application.persistence.api.ref.GradeEntity_Itf.class);
    }
-   // End of user code
 
-   // getGradeDao
-   // Start of user code getGradeDao
+
    /**
     * Obtenir le DAO 'GradeDao_Itf'.
     * @return L'instance désirée.
@@ -53,10 +49,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getDao (fr.application.persistence.api.ref.GradeEntity_Itf.class);
    }
-   // End of user code
 
-   // getCompetenceEntity
-   // Start of user code getCompetenceEntity
+
    /**
     * Obtenir l'entité 'CompetenceEntity_Itf'.
     * @return L'instance désirée.
@@ -65,10 +59,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getEntity (fr.application.persistence.api.annuaire.CompetenceEntity_Itf.class);
    }
-   // End of user code
 
-   // getCompetenceDao
-   // Start of user code getCompetenceDao
+
    /**
     * Obtenir le DAO 'CompetenceDao_Itf'.
     * @return L'instance désirée.
@@ -77,10 +69,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getDao (fr.application.persistence.api.annuaire.CompetenceEntity_Itf.class);
    }
-   // End of user code
 
-   // getPersonneEntity
-   // Start of user code getPersonneEntity
+
    /**
     * Obtenir l'entité 'PersonneEntity_Itf'.
     * @return L'instance désirée.
@@ -89,10 +79,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getEntity (fr.application.persistence.api.annuaire.PersonneEntity_Itf.class);
    }
-   // End of user code
 
-   // getPersonneDao
-   // Start of user code getPersonneDao
+
    /**
     * Obtenir le DAO 'PersonneDao_Itf'.
     * @return L'instance désirée.
@@ -101,10 +89,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getDao (fr.application.persistence.api.annuaire.PersonneEntity_Itf.class);
    }
-   // End of user code
 
-   // getAdresseEntity
-   // Start of user code getAdresseEntity
+
    /**
     * Obtenir l'entité 'AdresseEntity_Itf'.
     * @return L'instance désirée.
@@ -113,10 +99,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getEntity (fr.application.persistence.api.annuaire.AdresseEntity_Itf.class);
    }
-   // End of user code
 
-   // getAdresseDao
-   // Start of user code getAdresseDao
+
    /**
     * Obtenir le DAO 'AdresseDao_Itf'.
     * @return L'instance désirée.
@@ -125,10 +109,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getDao (fr.application.persistence.api.annuaire.AdresseEntity_Itf.class);
    }
-   // End of user code
 
-   // getPaysEntity
-   // Start of user code getPaysEntity
+
    /**
     * Obtenir l'entité 'PaysEntity_Itf'.
     * @return L'instance désirée.
@@ -137,10 +119,8 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getEntity (fr.application.persistence.api.annuaire.PaysEntity_Itf.class);
    }
-   // End of user code
 
-   // getPaysDao
-   // Start of user code getPaysDao
+
    /**
     * Obtenir le DAO 'PaysDao_Itf'.
     * @return L'instance désirée.
@@ -149,5 +129,5 @@ public final class ApplicationUserPersistence extends UserPersistence_Abs
    {
       return getDao (fr.application.persistence.api.annuaire.PaysEntity_Itf.class);
    }
-   // End of user code
+
 }

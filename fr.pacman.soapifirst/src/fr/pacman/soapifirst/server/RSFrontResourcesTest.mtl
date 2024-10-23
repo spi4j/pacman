@@ -168,7 +168,7 @@
     	 */
     	protected static void ['authenticate'.apply_methodDefault()/](){
     		
-    		// for authenticate
+    		['for authenticate'.displayClearUserCodeId()/]
     		[protected (c.getUserCodeId('for authenticate')) startTagPrefix('// ') endTagPrefix('// ')]
         
         		// Tentative de récupération du token.
@@ -270,7 +270,7 @@
   	 */
   	private static String ['pretty error printing'.apply_methodGet()/](final [c.buildRSFrontExceptionClassName()/] ['exception'.apply_parameterMethodClassicIn()/])  {
   	
-  		// for pretty error printing
+  		['for pretty error printing'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for pretty error printing')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
@@ -298,7 +298,7 @@
   	 */
   	protected static void ['display response'.apply_methodDefault()/](final Object ['entity'.apply_parameterMethodClassicIn()/]) {
   		
-  		// for display response
+  		['for display response'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for display response')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  // Parsing de la grappe d'objets sur l'entité retournée.
@@ -335,7 +335,7 @@
   	 */
   	private static String ['pretty headers printing'.apply_methodGet()/](final Headers ['headers'.apply_parameterMethodClassicIn()/]) {
   		
-  		// for pretty headers printing
+  		['for pretty headers printing'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for pretty headers printing')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  if([c.buildRSFrontConfigClassName()/].['is debug display headers'.apply_methodDefault()/]()){
@@ -381,7 +381,7 @@
   	private static StringBuilder ['pretty headers printing'.apply_methodDefault()/](final StringBuilder ['str builder'.apply_parameterMethodClassicIn()/], 
   			final Entry<String, ?> ['entry'.apply_parameterMethodClassicIn()/]) {
   	
-  		// for pretty headers printing builder
+  		['for pretty headers printing builder'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for pretty headers printing builder')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  ['str builder'.apply_parameterMethodClassicIn()/].append("\n           ");
@@ -401,7 +401,7 @@
   	 */
   	private static String ['pretty operation printing'.apply_methodGet()/](final String ['operation'.apply_parameterMethodClassicIn()/]) {
   		
-  		// for pretty operation printing
+  		['for pretty operation printing'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for pretty operation printing')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  final StringBuilder ['str builder'.apply_variableFinal()/] = new StringBuilder();
@@ -443,7 +443,7 @@
   			['json serialization'.apply_parameterMethodClassicIn()/] = ['str buffer'.apply_variableDefault()/].toString();
   		}
   		 
-  		// for pretty entity printing
+  		['for pretty entity printing'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for pretty entity printing')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  return ['json serialization'.apply_parameterMethodClassicIn()/]
@@ -470,7 +470,7 @@
   	 */
   	private static String ['new record'.apply_methodDefault()/]() {
   		
-  		// for new record
+  		['for new record'.displayClearUserCodeId()/]
   		[protected (c.getUserCodeId('for new record')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  StringBuilder ['str builder'.apply_variableDefault()/] = new StringBuilder();
@@ -521,7 +521,7 @@
   public class [s.buildRSFrontResourceTestClassName()/] {
   
   [if (s.hasGlobalInitParams())]
-    [s.resetParamNotAlreadyWrited()/]
+    [ if s.resetParamNotAlreadyWrited() then '' else '' endif/]
     	// *****************************************************************
     	// Liste des paramètres en entrée pour les différents services.
     	// Effectuer ici (si besoin) les initialisations communes  
@@ -530,7 +530,7 @@
     	// suffixés (ex param_1, param_2, etc...)
     	// *****************************************************************
     
-    	// for global input parameters declaration
+    	['for global input parameters declaration'.displayClearUserCodeId()/]
     	[protected (s.getUserCodeId('for global input parameters declaration')) startTagPrefix('// ') endTagPrefix('// ')]
 
     	  [for (p : soa::Parameter | s.ownedInterface.ownedOperations->asSequence()->collect(temp1 | temp1.input)->sortedBy(temp2 | temp2.name))]
@@ -551,7 +551,7 @@
   	@BeforeAll
   	public static void ['init'.apply_methodDefault()/](){
   
-  		// for init
+  		['for init'.displayClearUserCodeId()/]
   		[protected (s.getUserCodeId('for init')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		  [s.buildRSFrontResourceTestHelperClassName()/].['register class'.apply_methodDefault()/](
@@ -580,7 +580,7 @@
     
     			[o.writePreMethods()/]
     	
-    			// for [o.userCodeForOperation()/]
+    			[('for ' + o.userCodeForOperation()).displayClearUserCodeId()/]
     			[protected (o.getUserCodeId('for ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
 
     			  [o.addInitInputParamsInIfExist(s)/]
@@ -591,7 +591,7 @@
 
     			[o.writeNotNullAssertion()/]
 
-    			// for response [o.userCodeForOperation()/]
+    			[('for response ' + o.userCodeForOperation()).displayClearUserCodeId()/]
     			[protected (o.getUserCodeId('for response ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
 
     			  [o.writePostMethods()/]
@@ -726,8 +726,8 @@
 [comment : Write the list of parameters for the operation (4/4)./]
 [comment : b -> global param ? | s : Service for tab parameter reconstruction case of regenereation. /]
 [template private addParameterForOperation_4(p : soa::Parameter, b : Boolean, s : soa::Service) post(self.trim())]
-  [if (b)][p.getAffectationPrefix()/][p.retreiveGlobalInputParamName(s).apply_attributeFinal()/], [/if]
-  [p.name.apply_variableDefault()/][/template]
+  [if (b)][p.getAffectationPrefix()/][p.retreiveGlobalInputParamName(s).apply_attributeFinal()/], [/if][p.name.apply_variableDefault()/]
+[/template]
 
 [comment : Add alls imports for input parameters. (duplicate with RSFrontResourceTest) /]
 [template private addImportForInput(o : soa::Operation, p : soa::Parameter) post(self.trim())]

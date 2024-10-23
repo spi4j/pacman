@@ -12,7 +12,6 @@ import fr.application.ws.api.annuaire.PersonneCxfServiceCXFFacade_Itf;
 import fr.application.ws.api.annuaire.PersonneXto;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
-import java.util.Date;
 
 // End of user code
 
@@ -25,7 +24,7 @@ import java.util.Date;
 public class PersonneCxfServiceCXFFacade implements PersonneCxfServiceCXFFacade_Itf
 {
 
-	// attributs
+	
 	// Start of user code attributs
 
     // End of user code
@@ -39,7 +38,7 @@ public class PersonneCxfServiceCXFFacade implements PersonneCxfServiceCXFFacade_
    @Override
    public PersonneXto findPersonneByIdFromCxf (final Long p_identifiant)
    {
-	// findPersonneByIdFromCxf_Personne_personne_Long_identifiant
+	
 	// Start of user code findPersonneByIdFromCxf_Personne_personne_Long_identifiant
 
       return ApplicationUserMapper.getPersonneMapper ().convertDtoToXto( ApplicationUserBusiness.getPersonneCxfService ().findPersonneByIdFromCxf (p_identifiant));
@@ -47,7 +46,7 @@ public class PersonneCxfServiceCXFFacade implements PersonneCxfServiceCXFFacade_
 	// End of user code
    }
 
-   // PersonneCxfServiceCXFFacade
+   
    // Start of user code PersonneCxfServiceCXFFacade
 
    // End of user code

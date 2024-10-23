@@ -20,14 +20,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class PersonneCxfService implements PersonneCxfService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -48,7 +48,7 @@ public class PersonneCxfService implements PersonneCxfService_Itf
 
       // Appel des exigences en provenance de la modélisation
 
-      // findPersonneByIdFromCxf_Personne_personne_Long_identifiant
+      
       // Start of user code findPersonneByIdFromCxf_Personne_personne_Long_identifiant
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -59,7 +59,7 @@ public class PersonneCxfService implements PersonneCxfService_Itf
 
 	
 
-   // PersonneCxfService
+   
    // Start of user code PersonneCxfService
 
    // End of user code

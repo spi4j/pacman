@@ -55,7 +55,7 @@
      * Classe de test du service '[s.buildServiceInterfaceName(d)/]'.
      * @author [s.getAuthorName()/]
      */
-    // Annotation for class
+    ['Annotation for class'.displayClearUserCodeId()/]
     [protected (s.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
     [/protected]
     public class [s.buildServiceTestClassName(d)/]  extends [s.getClassNameForBeanTester_Abs()/]
@@ -98,7 +98,7 @@
     [/if]
           ['service'.apply_attributeStatic()/] = [s.buildAppliUserBusinessGenClassName()/].[('get ' + s.buildServiceName(d)).apply_methodDefault()/] ();
     
-          // set up before class
+          ['set up before class'.displayClearUserCodeId()/]
           [protected (s.getUserCodeId('set up before class')) startTagPrefix('// ') endTagPrefix('// ')]
           [/protected]
        }
@@ -113,7 +113,7 @@
       	  ['user persistence'.apply_attributeStatic()/].begin ();
     [/if]
     
-          // set up
+          ['set up'.displayClearUserCodeId()/]
           [protected (s.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
           [/protected]
        }
@@ -145,7 +145,7 @@
           			"Le dto n'a pas été trouvé dans la liste de tous les dto");
         [/if]
         
-              // findAll assertions
+              ['findAll assertions'.displayClearUserCodeId()/]
               [protected (s.getUserCodeId('findAll assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
               [/protected]
@@ -162,43 +162,43 @@
              {
                 final [d.buildDtoClassName()/] [d.buildDtoClassName().apply_variableFinal()/] = new [d.buildDtoClassName()/] ();
           
-                // create
+                ['create'.displayClearUserCodeId()/]
                 [protected (s.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
                   // TODO renseigner données de test
                   [for (a : environment::Attribute | d.attributesNotComputed())]
                     [if (a.useSpi4jSecurity() and d.dtoIsUser() and a.name = 'identifiant')]
-                            [d.buildDtoClassName().apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
+                      [d.buildDtoClassName().apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
                     [else]
-                            [d.buildDtoClassName().apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]);
+                      [d.buildDtoClassName().apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]);
                     [/if]
                   [/for]
                   [for (r : environment::Reference | d.referencesNoStar())]
                     [if (not r.referencedType.oclAsType(environment::DTO).isNotPersistent())]
-                            [d.buildDtoClassName().apply_variableFinal()/].[r.name.normalize().toLowerFirst().apply_methodSet()/][r.namePK_ID()/] (1L);
+                      [d.buildDtoClassName().apply_variableFinal()/].[r.name.normalize().toLowerFirst().apply_methodSet()/][r.namePK_ID()/] (1L);
                     [else]
-                            [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetter()/]new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ());
+                      [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetter()/]new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ());
                     [/if]
                   [/for]
                   [for (r : environment::Reference | d.referencingStar())]
-                          [d.buildDtoClassName().apply_variableFinal()/].[r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/] (1L);
+                    [d.buildDtoClassName().apply_variableFinal()/].[r.nameBaseReferenceInverse().apply_methodSet()/][r.namePK_ID()/] (1L);
                   [/for]
                   [for (r : environment::Reference | d.referencesStarStar())]
-                    
-                          /* ajout d un dto pour la référence [r.name/] */
-                          final [s.buildServiceInterfaceName(r.referencedType.oclAsType(environment::DTO))/]  [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/];
-                          [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/] = [r.buildAppliUserBusinessGenClassName()/].[('get ' + r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service').apply_methodDefault()/] ();
-                          final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ();
+
+                    /* ajout d un dto pour la référence [r.name/] */
+                    final [s.buildServiceInterfaceName(r.referencedType.oclAsType(environment::DTO))/]  [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/];
+                    [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/] = [r.buildAppliUserBusinessGenClassName()/].[('get ' + r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service').apply_methodDefault()/] ();
+                    final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = new [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] ();
                     [for (a : environment::Attribute | r.referencedType.oclAsType(environment::DTO).attributesNotComputed())]
                       [if (a.useSpi4jSecurity() and r.referencedType.oclAsType(environment::DTO).dtoIsUser() and a.name = 'identifiant')]
-                              [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
+                        [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].setIdentifiant ([a.genPropertyType().defaultValueForColumnType()/]);
                       [else]
-                              [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]);
+                        [(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].[a.getNameSetter()/] ([if (a.type.oclIsTypeOf(environment::Enumeration))] [a.genPropertyType()/].valueOf ("[a.type.oclAsType(environment::Enumeration).literals->first().name.toUpper()/]") [else][a.genPropertyType().defaultValueForColumnType()/][/if]);
                       [/if]
                     [/for]
-                          final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/].save ([(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
-                          final List <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = new ArrayList <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> ();
-                          [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].add([('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
-                          [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetterListDto()/]([('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
+                    final [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/] [('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = [(r.referencedType.oclAsType(environment::DTO).buildSimpleDtoName() + ' service' + r.name).apply_variableFinal()/].save ([(r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
+                    final List <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/] = new ArrayList <[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> ();
+                    [('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/].add([('created ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
+                    [d.buildDtoClassName().apply_variableFinal()/].[r.getNameSetterListDto()/]([('list ' + r.referencedType.oclAsType(environment::DTO).buildDtoClassName() + r.name).apply_variableFinal()/]);
                   [/for]
 
                 [/protected]
@@ -209,7 +209,7 @@
           
                 assertNotNull ([('created' + d.buildDtoClassName()).apply_variableFinal()/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
           
-                // create assertions
+                ['create assertions'.displayClearUserCodeId()/]
                 [protected (s.getUserCodeId('create assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
                   [for (r : environment::Reference | d.referencesStarStar())]
@@ -242,7 +242,7 @@
               assertNotNull (['dto'.apply_variableFinal()/].getId (), "Le dto créé devrait avoir une clé primaire renseignée");
               assertNotNull (['dto'.apply_variableFinal()/].toString (), "Le dto créé devrait avoir un toString");
         
-              // findById assertions
+              ['findById assertions'.displayClearUserCodeId()/]
               [protected (s.getUserCodeId('findById assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
               [/protected]
@@ -261,7 +261,7 @@
           
                 final [d.buildDtoClassName()/] ['dto'.apply_variableFinal()/] = ['service'.apply_attributeStatic()/].findById (['crud id'.apply_attributeStatic()/]);
           
-                // update
+                ['update'.displayClearUserCodeId()/]
                 [protected (s.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
 
                   [for (r : environment::Reference | d.referencesNoStar())]
@@ -276,7 +276,7 @@
           
                 assertNotNull (['updated dto'.apply_variableFinal()/].getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
           
-                // update assertions
+                ['update assertions'.displayClearUserCodeId()/]
                 [protected (s.getUserCodeId('update assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
                 [/protected]
@@ -299,7 +299,7 @@
                 assertNull (DtoUtil.findInCollectionById (['all'.apply_variableFinal()/], crudId), 
           			"Le dto ne devrait plus exister dans la liste de tous les dto");
           
-                // delete assertions
+                ['delete assertions'.displayClearUserCodeId()/]
                 [protected (s.getUserCodeId('delete assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
                 [/protected]
@@ -314,7 +314,7 @@
          public void ['test get column'.apply_methodDefault()/] ()
          {
             [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ().getColumn ([d.buildAttributesEnumName()/].id);
-            // getColumn
+            ['getColumn'.displayClearUserCodeId()/]
             [protected (s.getUserCodeId('getColumn')) startTagPrefix('// ') endTagPrefix('// ')]
               [if (d.attributesNotComputed()->size() > 0)]
                 [s.buildUserMatchingGenClassName()/].[('get ' + d.buildAppliMatchName()).apply_methodDefault()/] ().getColumn ([d.buildAttributesEnumName()/].[d.attributesNotComputed()->first().name.apply_attributeEnum()/]);
@@ -333,7 +333,7 @@
            @Test
            public void [('test ' + o.userCodeForJavaOperation()).apply_methodDefault()/] () throws Throwable
            {
-              // [o.userCodeForOperation()/]
+              [o.userCodeForOperation().displayClearUserCodeId()/]
               [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
                 // TODO : A Implémenter
                 fail ("Test non implémenté");
@@ -352,12 +352,12 @@
             ['user persistence'.apply_attributeStatic()/].rollback ();
     [/if]
     
-          // tear down
+          ['tear down'.displayClearUserCodeId()/]
           [protected (s.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
           [/protected]
        }
     
-       // specific service test
+       ['specific service test'.displayClearUserCodeId()/]
        [protected (s.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]

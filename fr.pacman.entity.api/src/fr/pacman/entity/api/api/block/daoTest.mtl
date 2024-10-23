@@ -36,7 +36,7 @@
    * Classe de test du dao '[e.buildDaoInterfaceName()/]'.
    * @author [e.getAuthorName()/]
    */
-  // Annotation for class
+  ['Annotation for class'.displayClearUserCodeId()/]
   [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
   public class [e.buildDaoTestClassName()/] extends [e.getClassNameForBeanTester_Abs()/]
@@ -75,7 +75,7 @@
         ['user persistence'.apply_attributeStatic()/] = [e.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]();
         ['dao'.apply_attributeStatic()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildDaoName()).apply_methodDefault()/]();
   
-        // set up before class
+        ['set up before class'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('set up before class')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
      }
@@ -88,7 +88,7 @@
      {
         ['user persistence'.apply_attributeStatic()/].begin();
   
-        // set up
+        ['set up'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
      }
@@ -122,7 +122,7 @@
       			"L'entity n'a pas ete trouvee dans la liste de toutes les entitys");
       
     [/if]
-          // findAll assertions
+          ['findAll assertions'.displayClearUserCodeId()/]
           [protected (e.getUserCodeId('findAll assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -139,7 +139,7 @@
          {
             final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
       
-            // create
+            ['create'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('create')) startTagPrefix('// ') endTagPrefix('// ')]
               // TODO renseigner donnees de test
               [for (a : environment::Attribute | e.attributesNoPk())]
@@ -153,7 +153,7 @@
       	  [e.finalizeTestCreateMethod('entity')/]
       	  assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
       
-            // create assertions
+            ['create assertions'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('create assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
             [/protected]
@@ -171,7 +171,7 @@
            {
               final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
         
-              // create null on mandatory
+              ['create null on mandatory'.displayClearUserCodeId()/]
               [protected (e.getUserCodeId('create null on mandatory')) startTagPrefix('// ') endTagPrefix('// ')]
                 // TODO renseigner donnees de test
                 [for (a : environment::Attribute | e.attributesNoPk())]
@@ -203,7 +203,7 @@
            {
               final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
         
-              // create with null values
+              ['create with null values'.displayClearUserCodeId()/]
               [protected (e.getUserCodeId('create with null values')) startTagPrefix('// ') endTagPrefix('// ')]
                 // TODO renseigner donnees de test
                 [for (a : environment::Attribute | e.attributesNoPk())]
@@ -217,7 +217,7 @@
         	  [e.finalizeTestCreateMethod('entity')/]
         	  assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-              // create assertions with null values
+              ['create assertions with null values'.displayClearUserCodeId()/]
               [protected (e.getUserCodeId('create assertions with null values')) startTagPrefix('// ') endTagPrefix('// ')]
 
               [/protected]
@@ -249,7 +249,7 @@
           assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
           assertNotNull(['entity'.apply_variableDefault()/].toString(), "L'entity creee devrait avoir un toString");
 
-          // findById assertions
+          ['findById assertions'.displayClearUserCodeId()/]
           [protected (e.getUserCodeId('findById assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -267,7 +267,7 @@
 
             final [e.buildEntityInterfaceName()/] ['entity insert'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
 
-            // findAllFieldInserted create
+            ['findAllFieldInserted create'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('findAllFieldInserted create')) startTagPrefix('// ') endTagPrefix('// ')]
               // TODO renseigner donnees de test
               [for (a : environment::Attribute | e.attributesNoPk())]
@@ -297,7 +297,7 @@
             ['set crud id'.apply_methodDefault()/](['entity insert'.apply_variableDefault()/].getId());
             final [e.buildEntityInterfaceName()/] ['entity read'.apply_variableDefault()/] = ['dao'.apply_attributeStatic()/].findById(crudId);
 
-            // findAllFieldInserted assertions
+            ['findAllFieldInserted assertions'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('findAllFieldInserted assertions')) startTagPrefix('// ') endTagPrefix('// ')]
               HashCodeBuilder ['hash code builder entity insert'.apply_variableDefault()/] = new HashCodeBuilder();
 
@@ -420,12 +420,12 @@
             ['test create'.apply_methodDefault()/]();
       
     [/if]
-          final List<[e.buildEntityInterfaceName()/]> ['entitys'.apply_variableDefault()/] = ['dao'.apply_attributeStatic()/].findByColumn([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID()/], crudId);
+          final List<[e.buildEntityInterfaceName()/]> ['entitys'.apply_variableDefault()/] = ['dao'.apply_attributeStatic()/].findByColumn([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID().apply_attributeEnum()/], crudId);
           assertEquals(1, ['entitys'.apply_variableDefault()/].size(), "Il ne devrait exister qu'une entity");
           final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['entitys'.apply_variableDefault()/].get(0);
           assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
     
-          // findByColumn assertions
+          ['findByColumn assertions'.displayClearUserCodeId()/]
           [protected (e.getUserCodeId('findByColumn assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -453,14 +453,14 @@
     [/if]
           final TableCriteria<[e.buildEntityColumnEnumName()/]> ['table'.apply_variableFinal()/] = new TableCriteria<>(
                    "Test 'find by criteria' en cherchant sur l'id");
-          ['table'.apply_variableFinal()/].addCriteria([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID()/], Operator_Enum.equals, ['crud id'.apply_attributeStatic()/]);
-          ['table'.apply_variableFinal()/].addOrderByDesc([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID()/]);
+          ['table'.apply_variableFinal()/].addCriteria([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID().apply_attributeEnum()/], Operator_Enum.equals, ['crud id'.apply_attributeStatic()/]);
+          ['table'.apply_variableFinal()/].addOrderByDesc([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID().apply_attributeEnum()/]);
           final List<[e.buildEntityInterfaceName()/]> ['entitys'.apply_variableDefault()/] = ['dao'.apply_attributeStatic()/].findByCriteria(['table'.apply_variableFinal()/]);
           assertEquals(1, ['entitys'.apply_variableDefault()/].size(), "Il ne devrait exister qu'une entity");
           final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['entitys'.apply_variableDefault()/].get(0);
           assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity creee devrait avoir une cle primaire renseignee");
     
-          // findByCriteria assertions
+          ['findByCriteria assertions'.displayClearUserCodeId()/]
           [protected (e.getUserCodeId('findByCriteria assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -479,7 +479,7 @@
       
             final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['dao'.apply_attributeStatic()/].findById(crudId);
       
-            // update
+            ['update'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('update')) startTagPrefix('// ') endTagPrefix('// ')]
 
             [/protected]
@@ -488,7 +488,7 @@
       
             assertNotNull(['entity'.apply_variableDefault()/].getId(), "L'entity mise a jour devrait avoir une cle primaire renseignee");
       
-            // update assertions
+            ['update assertions'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('update assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
             [/protected]
@@ -511,7 +511,7 @@
             assertNull(EntityUtil.findInCollectionById(['all'.apply_variableFinal()/], crudId), 
       			"L'entity ne devrait plus exister dans la liste de toutes les entitys");
       
-            // delete assertions
+            ['delete assertions'.displayClearUserCodeId()/]
             [protected (e.getUserCodeId('delete assertions')) startTagPrefix('// ') endTagPrefix('// ')]
 
             [/protected]
@@ -611,7 +611,7 @@
     [/if]
   [/for]
   
-        // test validate
+        ['test validate'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('test validate')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
@@ -652,7 +652,7 @@
      {
         ['user persistence'.apply_attributeStatic()/].rollback();
   
-        // tear down
+        ['tear down'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
      }
@@ -664,7 +664,7 @@
           */
          private [a.type.name.toUpperFirst()/] getRandom[a.genPropertyTypeNoGenerics()/] ()
          {
-            // getRandom_[a.type.name.toUpperFirst()/]
+            [('getRandom_' + a.type.name.toUpperFirst()).displayClearUserCodeId()/]
             [protected (a.getUserCodeId('getRandom_' + a.type.name.toUpperFirst())) startTagPrefix('// ') endTagPrefix('// ')]
 
                     return [if (a.type.name <> null and a.type.name.contains('<'))]null[else]new [a.type.name.toUpperFirst()/] ()[/if];
@@ -675,7 +675,7 @@
     [/if]
   [/for]
   
-     // specific service test
+     ['specific service test'.displayClearUserCodeId()/]
      [protected (e.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

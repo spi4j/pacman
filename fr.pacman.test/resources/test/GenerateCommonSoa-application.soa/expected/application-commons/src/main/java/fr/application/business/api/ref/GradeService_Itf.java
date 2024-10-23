@@ -17,15 +17,15 @@ import java.util.List;
  * Définit le contrat de services spécifiques pour un type 'Grade'.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface GradeService_Itf extends Service_Itf<Long, GradeDto>
 {
 
 
-    // Méthodes GradeService_Itf
-    // Start of user code Méthodes GradeService_Itf
+    
+    // Start of user code Methodes GradeService_Itf
 
     // End of user code
 }

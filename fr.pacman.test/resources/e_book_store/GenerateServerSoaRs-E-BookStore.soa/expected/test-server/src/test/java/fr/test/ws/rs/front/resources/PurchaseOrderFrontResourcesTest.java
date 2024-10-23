@@ -11,7 +11,6 @@ import fr.test.ws.rs.front.delegates.PurchaseOrderServiceDelegate;
 import fr.test.ws.rs.front.exceptions.TestFrontRsException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ public class PurchaseOrderFrontResourcesTest {
 	@BeforeAll
 	public static void init(){
 
-		// for init
+		
 		// Start of user code 23427ad5c2cfd5b5c1e5febbaf137394
 
 		TestFrontResourcesTestHelper.registerClass(
@@ -58,7 +57,7 @@ public class PurchaseOrderFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testSearchPurchaseOrder");
 	
-			// for searchPurchaseOrder_PurchaseOrder_purchaseOrders_String_userId
+			
 			// Start of user code 18839889d0f726dfc9d5c779306fc8f2
 
 			final String userId = "S";
@@ -70,7 +69,7 @@ public class PurchaseOrderFrontResourcesTest {
 			assertNotNull(entity, "L'entité retournée est nulle, "
 					+ "vérifier le filtre et / ou l'intercepteur.");
 
-			// for response searchPurchaseOrder_PurchaseOrder_purchaseOrders_String_userId
+			
 			// Start of user code 8a7c85717fec510b6e7a9421a6f7376f
 			
 			TestFrontResourcesTestHelper.displayResponse(entity);

@@ -12,9 +12,9 @@ import fr.spi4j.persistence.dao.TableCriteria;
 import fr.spi4j.persistence.entity.EntityUtil;
 import fr.spi4j.tua.BeanTester_Abs;
 import fr.spi4j.type.XtopSup;
+import fr.test.main.StatusEnum;
 import fr.test.persistence.TestParamPersistence;
 import fr.test.persistence.TestUserPersistence;
-import fr.test.types.enums.StatusEnum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du dao 'ShoppingCartDao'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code 8d11490eb7e3bd7fbe31724d2cea61c5
 // End of user code
 public class ShoppingCartDaoTest extends BeanTester_Abs
@@ -71,7 +71,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
       userPersistence = TestParamPersistence.getUserPersistence();
       dao = userPersistence.getShoppingCartDao();
 
-      // set up before class
+      
       // Start of user code ac28938f801815a863d275d7089501cb
       // End of user code
    }
@@ -84,7 +84,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
    {
       userPersistence.begin();
 
-      // set up
+      
       // Start of user code d5158c215f75d40b3dc3a9efd519b60a
       // End of user code
    }
@@ -103,7 +103,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
       assertNotNull(EntityUtil.findInCollectionById(all, crudId), 
 			"L'entity n'a pas ete trouvee dans la liste de toutes les entitys");
 
-      // findAll assertions
+      
       // Start of user code 8126df93b16b144cf0a284377f8e50e4
 
       // End of user code
@@ -119,7 +119,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
    {
       final ShoppingCartEntity entity = userPersistence.getShoppingCartEntity();
 
-      // create
+      
       // Start of user code 76ea0bebb3c22822b4f0dd9c9fd021c5
       // TODO renseigner donnees de test
       entity.setStatus(StatusEnum.getEnumByValue("pending"));
@@ -130,7 +130,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
 	  setCrudId(entity.getId());
 	  assertNotNull(entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // create assertions
+      
       // Start of user code 5d4b33eba9a2ed1283895b43feb20430
 
       // End of user code
@@ -147,7 +147,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
    {
       final ShoppingCartEntity entity = userPersistence.getShoppingCartEntity();
 
-      // create null on mandatory
+      
       // Start of user code 129c3355781c1f2045ff30413a724b1b
       // TODO renseigner donnees de test
       entity.setStatus(StatusEnum.getEnumByValue("pending"));
@@ -179,7 +179,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
       assertNotNull(entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
       assertNotNull(entity.toString(), "L'entity creee devrait avoir un toString");
 
-      // findById assertions
+      
       // Start of user code 4a1cff273c0585c92941311c7a4da044
 
       // End of user code
@@ -196,7 +196,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
 
       final ShoppingCartEntity entityInsert = userPersistence.getShoppingCartEntity();
 
-      // findAllFieldInserted create
+      
       // Start of user code 46e820cf08b958fef6b9d21521864929
       // TODO renseigner donnees de test
       entityInsert.setStatus(StatusEnum.getEnumByValue("pending"));
@@ -207,7 +207,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
       setCrudId(entityInsert.getId());
       final ShoppingCartEntity entityRead = dao.findById(crudId);
 
-      // findAllFieldInserted assertions
+      
       // Start of user code 0af673d2359f791ebb6e5cd9a4bf0f69
       HashCodeBuilder hashCodeBuilderEntityInsert = new HashCodeBuilder();
 
@@ -242,12 +242,12 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
    {
       testCreate();
 
-      final List<ShoppingCartEntity> entitys = dao.findByColumn(ShoppingCartColumnsEnum.shoppingcart_id, crudId);
+      final List<ShoppingCartEntity> entitys = dao.findByColumn(ShoppingCartColumnsEnum.shoppingCart_id, crudId);
       assertEquals(1, entitys.size(), "Il ne devrait exister qu'une entity");
       final ShoppingCartEntity entity = entitys.get(0);
       assertNotNull(entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // findByColumn assertions
+      
       // Start of user code a0ab12084af498e2779669010048e678
 
       // End of user code
@@ -265,14 +265,14 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
 
       final TableCriteria<ShoppingCartColumnsEnum> table = new TableCriteria<>(
                "Test 'find by criteria' en cherchant sur l'id");
-      table.addCriteria(ShoppingCartColumnsEnum.shoppingcart_id, Operator_Enum.equals, crudId);
-      table.addOrderByDesc(ShoppingCartColumnsEnum.shoppingcart_id);
+      table.addCriteria(ShoppingCartColumnsEnum.shoppingCart_id, Operator_Enum.equals, crudId);
+      table.addOrderByDesc(ShoppingCartColumnsEnum.shoppingCart_id);
       final List<ShoppingCartEntity> entitys = dao.findByCriteria(table);
       assertEquals(1, entitys.size(), "Il ne devrait exister qu'une entity");
       final ShoppingCartEntity entity = entitys.get(0);
       assertNotNull(entity.getId(), "L'entity creee devrait avoir une cle primaire renseignee");
 
-      // findByCriteria assertions
+      
       // Start of user code f13d2cae116e868a852756539a403284
 
       // End of user code
@@ -290,7 +290,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
 
       final ShoppingCartEntity entity = dao.findById(crudId);
 
-      // update
+      
       // Start of user code 3ac340832f29c11538fbe2d6f75e8bcc
 
       // End of user code
@@ -299,7 +299,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
 
       assertNotNull(entity.getId(), "L'entity mise a jour devrait avoir une cle primaire renseignee");
 
-      // update assertions
+      
       // Start of user code 42918cc8d5b612126ea234102c116b19
 
       // End of user code
@@ -322,7 +322,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
       assertNull(EntityUtil.findInCollectionById(all, crudId), 
 			"L'entity ne devrait plus exister dans la liste de toutes les entitys");
 
-      // delete assertions
+      
       // Start of user code e466b9a2682dac21a5f1f61a381478bf
 
       // End of user code
@@ -363,7 +363,7 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
       entity.setUserCarts_id(userCarts);
       validate(entity);
 
-      // test validate
+      
       // Start of user code c9f326acc4088b79803774041e895edc
 
       // End of user code
@@ -404,13 +404,13 @@ public class ShoppingCartDaoTest extends BeanTester_Abs
    {
       userPersistence.rollback();
 
-      // tear down
+      
       // Start of user code b778e9a7588fa49250428a599cf59f97
       // End of user code
    }
 
 
-   // specific service test
+   
    // Start of user code 83c9cfe79a629107e128f8bc9ca9ba12
 
    // End of user code

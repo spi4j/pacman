@@ -20,7 +20,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code a9c64d756071d5bde340c5f2f54001e7
 // End of user code
 public interface BookService extends ApplicationService_Itf
@@ -31,7 +31,7 @@ public interface BookService extends ApplicationService_Itf
     * Get the books of interest to be shown on the homepage of the user.
     * @return The books to be showned on the homepage of the user..
 	*/
-	// Annotations getHomePageBooks_Book_books
+	
 	// Start of user code 34d4f45b937142ca3b4b131baa997066
 
 	// End of user code
@@ -42,7 +42,7 @@ public interface BookService extends ApplicationService_Itf
 	* Méthode spécifique pour la pagination de l'opération : getHomePageBooks
 	* @return le nombre total d'éléments pour l'opération.
 	*/
-	// Annotations Methode' + o.name + 'total count
+	
 	// Start of user code 684833716280d039b4e282cf0cd10323
 	
 	// End of user code
@@ -53,7 +53,7 @@ public interface BookService extends ApplicationService_Itf
     * Gel all authors.
     * @return authors.
 	*/
-	// Annotations getAllAuthors_Author_authors
+	
 	// Start of user code 9cf7e19cb3fb12addd332fefb84023de
 
 	// End of user code
@@ -64,7 +64,7 @@ public interface BookService extends ApplicationService_Itf
 	* Méthode spécifique pour la pagination de l'opération : getAllAuthors
 	* @return le nombre total d'éléments pour l'opération.
 	*/
-	// Annotations Methode' + o.name + 'total count
+	
 	// Start of user code e9dcc6577e45afe45b53a69eb0622c1e
 	
 	// End of user code
@@ -75,7 +75,7 @@ public interface BookService extends ApplicationService_Itf
     * 
     * @return types.
 	*/
-	// Annotations getAllBookTypes_String_types
+	
 	// Start of user code 33c5b0ce60b3ef6489f57d4abbc50f5f
 
 	// End of user code
@@ -94,7 +94,7 @@ public interface BookService extends ApplicationService_Itf
     *           (In) keywords.
     * @return The books maching the search criterias..
 	*/
-	// Annotations searchBooks_Book_books_String_authorId_String_type_String_keywords
+	
 	// Start of user code 4e6d76d0705ec5a6f80cc77f2bab78d6
 
 	// End of user code
@@ -105,7 +105,7 @@ public interface BookService extends ApplicationService_Itf
 	* Méthode spécifique pour la pagination de l'opération : searchBooks
 	* @return le nombre total d'éléments pour l'opération.
 	*/
-	// Annotations Methode' + o.name + 'total count
+	
 	// Start of user code b8be620515d9d05142a713ef3033679f
 	
 	// End of user code
@@ -118,7 +118,7 @@ public interface BookService extends ApplicationService_Itf
     *           (In)(*) The book identifier..
     * @return book.
 	*/
-	// Annotations getBook_Book_book_String_bookId
+	
 	// Start of user code ad20751ce975859088e09e187b25710e
 
 	// End of user code
@@ -133,7 +133,7 @@ public interface BookService extends ApplicationService_Itf
     *           (In)(*) The data structure describing the book to create..
     * @return The created book as it would be returned by the getBook operation..
 	*/
-	// Annotations createBook_Book_createdBook_Book_book
+	
 	// Start of user code 84eabd4398f31a0850cd6c269b5a4e96
 
 	// End of user code
@@ -150,7 +150,7 @@ public interface BookService extends ApplicationService_Itf
     *           (In)(*) book.
     * @return updatedBook.
 	*/
-	// Annotations updateBook_Book_updatedBook_String_bookId_Book_book
+	
 	// Start of user code 63a3903be11dabf3b930c90dea048ae1
 
 	// End of user code
@@ -165,7 +165,7 @@ public interface BookService extends ApplicationService_Itf
     *           (In)(*) bookId.
     * @return ok.
 	*/
-	// Annotations deleteBook_String_bookId
+	
 	// Start of user code 250915d8299ef8355d378547c3208ab5
 
 	// End of user code
@@ -174,8 +174,8 @@ public interface BookService extends ApplicationService_Itf
 
 	
 
-    // Méthodes BookService
-    // Start of user code 79133d2b5a154df861c69398e714283d
+    
+    // Start of user code 38ccead263326c151cfe462b052722c5
 
     // End of user code
 }

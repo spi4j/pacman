@@ -158,7 +158,8 @@
           </dependency>
   		[false.httpEmbeddedServerDependencies()/]
   		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for dependencies'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
       		-->
       		
       		<!--
@@ -172,7 +173,8 @@
   			[any.plugins(false)/]
              	[false.httpEmbeddedServerPlugins()/]
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
        			-->
        		
        			<!--

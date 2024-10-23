@@ -52,7 +52,7 @@
         super();
      }
   
-  	// Getter de services Crud
+  	['Getter de services Crud'.displayClearUserCodeId()/]
   	[protected (r.getUserCodeId('Getter de services Crud')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [for (e : entity::Entity | r.eAllContents(entity::Entity))]
@@ -115,7 +115,7 @@
         // on ne référence pas les classes d'implémentations "serveur" des services
         // pour ne pas avoir d'erreur de compilation (et pour ne pas avoir ClassNotFoundException à l'exécution)
   
-     // Bingding correspondant aux Services Crud
+     ['Bingding correspondant aux Services Crud'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Bingding correspondant aux Services Crud')) startTagPrefix('// ') endTagPrefix('// ')]
 
        [for (e : entity::Entity | r.eAllContents(entity::Entity))]

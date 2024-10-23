@@ -22,14 +22,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code 674e50e0c74c5b2ab261ee2db581af68
 // End of user code
 public class PurchaseOrderServiceImpl implements PurchaseOrderService
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code 30c346a26df5ef7ff6f1d2298b85c1a5
 
    // End of user code
@@ -50,7 +50,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService
 
       // Appel des exigences en provenance de la modélisation
 
-      // searchPurchaseOrder_PurchaseOrder_purchaseOrders_String_userId
+      
       // Start of user code ea25b02247c5f73f7bfd57b8a856eb30
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -61,7 +61,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService
 
 	
 
-   // PurchaseOrderService
+   
    // Start of user code 71a10a013cbbbc1bbd7d418b42a64069
 
    // End of user code

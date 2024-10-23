@@ -26,14 +26,14 @@
   
      // ATTRIBUTS
   
-     // Attributs
+     ['Attributs'.displayClearUserCodeId()/]
      [protected (t.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
   
   
-     // Méthodes
-     [protected (t.getUserCodeId('Méthodes')) startTagPrefix('// ') endTagPrefix('// ')]
+     ['Methodes'.displayClearUserCodeId()/]
+     [protected (t.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
   

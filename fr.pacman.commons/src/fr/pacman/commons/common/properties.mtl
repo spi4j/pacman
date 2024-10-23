@@ -49,6 +49,10 @@
 
 [query private useTestsCRUD_invoke(any : ecore::EObject) : String = any.getUseTestsCRUDJavaService()/]
 
+[query public useHealthApi(any : ecore::EObject) : Boolean = any.useHealthApi_invoke().toBoolean()/]
+
+[query private useHealthApi_invoke(any : ecore::EObject) : String = any.getUseHealthApiJavaService()/]
+
 [query public useFetchingStrategy(any : ecore::EObject) : Boolean = any.useFetchingStrategy_invoke().toBoolean()/]
 
 [query private useFetchingStrategy_invoke(any : ecore::EObject) : String = any.getUseFetchingStrategyJavaService()/]
@@ -61,6 +65,10 @@
 [query public useConfigFileSpi4jFrwk(any : ecore::EObject) : Boolean = any.useConfigFileSpi4jFrwk_invoke().toBoolean()/]
 
 [query private useConfigFileSpi4jFrwk_invoke(any : ecore::EObject) : String = any.getUseConfigFilesSpi4jFrwkJavaService()/]
+
+[query public useBatch(any : ecore::EObject) : Boolean = any.useBatch_invoke().toBoolean()/]
+
+[query private useBatch_invoke(any : ecore::EObject) : String = any.getUseBatchJavaService()/]
 
 [query public useMatching(any : ecore::EObject) : Boolean = any.useMatching_invoke().toBoolean()/]
 
@@ -88,7 +96,7 @@
 
 [query public isClearUserCode(any : ecore::EObject) : Boolean = any.isClearUserCode_invoke().toBoolean()/]
 
-[query public isClearUserCode_invoke(any : ecore::EObject) : String = any.getIsClearUserCodeJavaService()/]
+[query private isClearUserCode_invoke(any : ecore::EObject) : String = any.getIsClearUserCodeJavaService()/]
 
 [query public forceJspTopBottom(any : ecore::EObject) : Boolean = any.forceJspTopBottom_invoke().toBoolean()/]
 
@@ -234,12 +242,22 @@
 [comment : Get the header key for page count property. /]
 [query public getPagingPageCountKey(any : ecore::EObject) : String = any.getPagingPageCountKey_invoke()/]
 
-[query public getPagingPageCountKey_invoke(any : ecore::EObject) : String = any.getJavaPagingCountJavaService()/]
+[query private getPagingPageCountKey_invoke(any : ecore::EObject) : String = any.getJavaPagingCountJavaService()/]
 
 [comment : Get the header key for current page index property. /]
 [query public getPagingCurrentPageIdxKey(any : ecore::EObject) : String = any.getPagingCurrentPageIdxKey_invoke()/]
 
-[query public getPagingCurrentPageIdxKey_invoke(any : ecore::EObject) : String = any.getPagingCurrentPageIdxKeyJavaService()/]
+[query private getPagingCurrentPageIdxKey_invoke(any : ecore::EObject) : String = any.getPagingCurrentPageIdxKeyJavaService()/]
+
+[comment : Display clear value before hashcode for user code, case hashcode is enabled. /]
+[query public isClearUserCodeHash(any : ecore::EObject) : Boolean = any.isClearUserCodeHash_invoke().toBoolean()/]
+
+[query private isClearUserCodeHash_invoke(any : ecore::EObject) : String = any.isClearUserCodeHashJavaService()/]
+
+[comment : . /]
+[query public useIdSqlSuffixForReferences(any : ecore::EObject) : Boolean = any.useIdSqlSuffixForReferences_invoke().toBoolean()/]
+
+[query private useIdSqlSuffixForReferences_invoke(any : ecore::EObject) : String = any.getUseIdSqlSuffixForReferencesJavaService()/]
 
 [comment : Get the header key for current page size property. /]
 [query public getPagingCurrentPageSizeKey(any : ecore::EObject) : String = any.getPagingCurrentPageSizeKey_invoke()/]
@@ -301,6 +319,9 @@
 
 [comment : Recuperation de la clé pour la valeur de defaut de la propriete additionnelle (champ auto). /]
 [query public defaultColumnProperty(columnProp : String) : String = columnProp + '.default'/]
+
+[comment : Recuperation de la clé pour la decription de la propriete additionnelle (champ auto). /]
+[query public descriptionColumnProperty(columnProp : String) : String = columnProp + '.comment'/]
 
 [comment : Recuperation de la clé pour la nullite de la propriete additionnelle (champ auto). /]
 [query public notnullColumnProperty(columnProp : String) : String = columnProp + '.notnull'/]

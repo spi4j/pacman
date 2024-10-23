@@ -27,7 +27,7 @@
   {
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
-       // Declaration [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
+       [('Declaration' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)).displayClearUserCodeId()/]
        [protected (element.getUserCodeId('Declaration ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
 
          private final [element.genericType(element.widget.getImplementationClass(), false)/] [element.nameVariableElement()/];
@@ -35,7 +35,7 @@
        [/protected]
     
   [/for]
-     // Attributs
+     ['Attributs'.displayClearUserCodeId()/]
      [protected (viewContainer.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
        private final VerticalPanel _content;
 
@@ -49,7 +49,7 @@
      {
         super(p_presenter);
   
-        // avant initialisation
+        ['avant initialisation'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('avant initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
           _content = new VerticalPanel();
           _content.add(new HTML("<h1>[viewContainer.name/]</h1>"));
@@ -58,7 +58,7 @@
   
         // initialisation des composants
   [for (element : view::ViewElement | viewContainer.viewElements)]
-          // Parametrage [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
+          [('Parametrage' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)).displayClearUserCodeId()/]
           [protected (element.getUserCodeId('Parametrage ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
 
             [element.nameVariableElement()/] = new [element.genericType(element.widget.getImplementationClass(), false)/]([element.paramViewElementInConstructor()/]);
@@ -81,6 +81,7 @@
                  @Override
                  public void onValueChange (final ValueChangeEvent<[element.getElementType()/]> p_event)
       [else]
+              [viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name).displayClearUserCodeId()/]
               [protected (viewEvent.getUserCodeId('Listener ' + element.name + '_' + viewEvent.name)) startTagPrefix('// ') endTagPrefix('// ')]
                 [element.nameVariableElement()/].addXXXHandler(new XXXHandler()
                 {
@@ -106,8 +107,8 @@
       
     [/for]
   [/for]
-        // après initialisation
-        [protected (viewContainer.getUserCodeId('après initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
+        ['apres initialisation'.displayClearUserCodeId()/]
+        [protected (viewContainer.getUserCodeId('apres initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
           add(_content);
 
           [if (not (viewContainer.widget = null) and viewContainer.widget.name = 'MainPanel')]
@@ -121,7 +122,7 @@
      @Override
      public void addView (final View_Itf p_view)
      {
-        // addView
+        ['addView'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('addView')) startTagPrefix('// ') endTagPrefix('// ')]
           if (p_view instanceof IsWidget)
           {
@@ -144,7 +145,7 @@
      @Override
      public void restoreView (final View_Itf p_view)
      {
-        // restoreView
+        ['restoreView'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('restoreView')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
@@ -153,7 +154,7 @@
      @Override
      public void removeView (final View_Itf p_view)
      {
-        // removeView
+        ['removeView'.displayClearUserCodeId()/]
         [protected (viewContainer.getUserCodeId('removeView')) startTagPrefix('// ') endTagPrefix('// ')]
           if (p_view instanceof IsWidget)
           {
@@ -174,7 +175,7 @@
      }
   
   [for (element : view::ViewElement | viewContainer.viewElements)]
-       // Getter [element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)/]
+       [('Getter' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false)).displayClearUserCodeId()/]
        [protected (element.getUserCodeId('Getter ' + element.name + '_' + element.genericType(element.widget.getImplementationClass(), false))) startTagPrefix('// ') endTagPrefix('// ')]
 
          @Override
@@ -186,7 +187,7 @@
        [/protected]
     
   [/for]
-     // [viewContainer.nameViewImplementation()/]
+     [viewContainer.nameViewImplementation().displayClearUserCodeId()/]
      [protected (viewContainer.getUserCodeId(viewContainer.nameViewImplementation())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

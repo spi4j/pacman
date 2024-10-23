@@ -1,6 +1,7 @@
 [module names('http://www.eclipse.org/ocl/1.1.0/Ecore', 'http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/entity/3.0.0', 'http://www.obeonetwork.org/dsl/entity/2.0.0/utilities', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
 
 [import fr::pacman::commons::common::utils/]
+[import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::convention::project::ProjectProperties/]
 
 [comment encoding = UTF-8 /]
@@ -83,6 +84,9 @@
  * On enlève le 'Service' en fin de nom
 */]
 [query public buildSimpleServiceName(s : soa::Service) : String = if s.name.size() > 7 and s.name.substring(s.name.size() - 6).equalsIgnoreCase('service') then s.name.substring(1, s.name.size() - 7).sanitize() else s.name.sanitize() endif/]
+
+[comment : securite, si pas de presence _id on ajoute a la fin de la reference /]
+[query public buildSimpleReferenceName(s : String) : String = if s.useIdSqlSuffixForReferences() then if s.size() > s.nameSQL_REF_ID().size() + 1 and s.substring(s.size() - s.nameSQL_REF_ID().size() + 1).equalsIgnoreCase(s.nameSQL_REF_ID()) then s else s + s.nameSQL_REF_ID() endif else s endif/]
 
 [comment : Get and write the name for the primary key. /]
 [template public namePK_ID(any : ecore::EObject)]

@@ -13,6 +13,7 @@
 [template public gestionTransition(etat : flow::FlowState, evenement : String, fromMainPanel : Boolean)]
   [for (state : flow::FlowState | Sequence{etat}->union(etat.getAllFollowingStatesWithoutGardOrEvent(false)))]
     [if (state.oclIsKindOf(flow::ViewState))]
+      	    [evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(flow::ViewState).name).displayClearUserCodeId()/]
             [protected (evenement.getUserCodeId(evenement + ' : Affichage de ' + state.oclAsType(flow::ViewState).name)) startTagPrefix('// ') endTagPrefix('// ')]
               [for (nextView : view::ViewContainer | state.oclAsType(flow::ViewState).viewContainers)]
                 // affichage de l'écran [nextView.name/]
@@ -36,11 +37,13 @@
 
             [/protected]
     [elseif (state.oclIsKindOf(flow::SubflowState))]
-            [protected (evenement.getUserCodeId(evenement + ' : Démarrage du Flow ' + state.oclAsType(flow::SubflowState).name)) startTagPrefix('// ') endTagPrefix('// ')]
+      	    [evenement.getUserCodeId(evenement + ' : Demarrage du Flow ' + state.oclAsType(flow::SubflowState).name).displayClearUserCodeId()/]
+            [protected (evenement.getUserCodeId(evenement + ' : Demarrage du Flow ' + state.oclAsType(flow::SubflowState).name)) startTagPrefix('// ') endTagPrefix('// ')]
               final [state.oclAsType(flow::SubflowState).subflow.nameFlow()/] [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/] = new [state.oclAsType(flow::SubflowState).subflow.nameFlow()/](this);
               [state.oclAsType(flow::SubflowState).subflow.nameFlow().normalize().apply_variableDefault()/].start();
             [/protected]
     [elseif (state.oclIsKindOf(flow::ActionState))]
+            [evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(flow::ActionState).name).displayClearUserCodeId()/]
             [protected (evenement.getUserCodeId(evenement + ' : Action ' + state.oclAsType(flow::ActionState).name)) startTagPrefix('// ') endTagPrefix('// ')]
               // TODO [state.oclAsType(flow::ActionState).name/]
             [/protected]

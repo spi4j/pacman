@@ -28,7 +28,7 @@ public interface AdresseGwtService extends GwtRemoteService<Long, AdresseXto>
     */
    List<AdresseXto> findListAdressesByPersonne (final Long p_personneAdresses_id);
 
-   // AdresseService
+   
    // Start of user code AdresseService
 
    // End of user code

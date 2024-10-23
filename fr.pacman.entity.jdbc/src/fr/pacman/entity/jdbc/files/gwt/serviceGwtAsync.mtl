@@ -55,7 +55,7 @@
          void [('find list ' + r.name + ' by ' + r.containingType.oclAsType(entity::Entity).buildSimpleEntityName()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.name.apply_parameterMethodClassicIn()/][r.namePK_ID()/], final AsyncCallback<List<[r.referencedType.oclAsType(entity::Entity).buildXtoClassNameFromEntity()/]>> callback);
       
     [/for]
-       // [e.buildServiceGwtAsyncClassName()/]
+       [e.buildServiceGwtAsyncClassName().displayClearUserCodeId()/]
        [protected (e.getUserCodeId(e.buildServiceGwtAsyncClassName())) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]

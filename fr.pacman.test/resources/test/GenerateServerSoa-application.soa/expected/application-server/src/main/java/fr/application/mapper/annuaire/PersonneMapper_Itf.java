@@ -23,7 +23,7 @@ import java.util.List;
 public interface PersonneMapper_Itf extends Mapper_Itf<PersonneDto, PersonneXto>
 {
 
-   // PersonneMapper_Itf
+   
    // Start of user code PersonneMapper_Itf
 
    // End of user code

@@ -35,7 +35,7 @@
      * Définit le contrat de services spécifiques pour le type : '[e.buildEntityImplClassName()/].
      * @author [e.getAuthorName()/]
      */
-    // Annotations Service
+    ['Annotations Service'.displayClearUserCodeId()/]
     [protected (e.getUserCodeId('Annotations Service')) startTagPrefix('// ') endTagPrefix('// ')]
       [if (e.useEjb())]
         @Local
@@ -45,7 +45,7 @@
     public interface [e.buildServiceInterfaceName()/] extends [if (not e.isNotPersistent())][e.getClassNameForEntityService_Itf()/]<[e.genPkType()/], [e.buildEntityInterfaceName()/]> [if (e.isReferentiel())], [e.getClassNameForServiceReferentiel_Itf()/][/if][else]ApplicationService_Itf[/if]
     {
     
-    	// Methodes [e.buildServiceInterfaceName()/]
+    	[('Methodes ' + e.buildServiceInterfaceName()).displayClearUserCodeId()/]
     	[protected (e.getUserCodeId('Methodes ' + e.buildServiceInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
        
        [if (not e.isNotPersistent())]

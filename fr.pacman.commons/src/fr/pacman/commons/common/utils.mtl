@@ -6,7 +6,12 @@
 [import fr::pacman::commons::services::StringUtils/]
 
 [comment encoding = UTF-8 /]
+[comment : /]
+[query public sanitizeReqID(s : String) : String = if not (s = null) then s.replaceAll('-', '_') else 'ID_INVALID' endif/]
+
 [query public sanitize(msg : String) : String = msg.normalize().sanitizeJavaService()/]
+
+[query public sanitizeRJK(var : String) : String = var.sanitizeJavaKeywords()/]
 
 [query public normalize(msg : String) : String = msg.normalizeJavaService()/]
 
@@ -56,10 +61,10 @@
 [query public isValidObject(e : environment::ObeoDSMObject) : Boolean = not (e = null)/]
 
 [comment : Search for xtsopsup existence. /]
-[query public hasXtopSup(any : ecore::EObject) : Boolean = any.get_automaticColumnsProperties()->collect(temp1 | temp1.contains('xtopsup')) <> false/]
+[query public hasXtopSup(any : ecore::EObject) : Boolean = any.getSQLTableAdditionalFields().contains('xtopsup')/]
 
 [comment : Search for xdmaj existence. /]
-[query public hasXdMaj(any : ecore::EObject) : Boolean = any.get_automaticColumnsProperties()->collect(temp2 | temp2.contains('xdmaj')) <> false/]
+[query public hasXdMaj(any : ecore::EObject) : Boolean = any.getSQLTableAdditionalFields().contains('xdmaj')/]
 
 [comment : Search for xdmaj or xtopsup existence. Must be optimised. /]
 [query public hasXtoSup_XdMaj(any : ecore::EObject) : Boolean = any.hasXtopSup() or any.hasXdMaj()/]

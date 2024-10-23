@@ -17,7 +17,7 @@ import fr.spi4j.ui.mvp.EventType;
 public enum ApplicationEventType_Enum implements EventType
 {
 
-   // ApplicationEventType_Enum
+   
    // Start of user code ApplicationEventType_Enum
 
    /** Erreur */

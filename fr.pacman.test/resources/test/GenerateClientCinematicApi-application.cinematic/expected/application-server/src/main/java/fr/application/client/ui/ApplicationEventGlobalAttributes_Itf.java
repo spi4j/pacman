@@ -9,13 +9,15 @@ package fr.application.client.ui;
 // End of user code
 
 /**
- * Classe de constantes utilisées dans les attributs des événements. D'autres clés d'attributs peuvent être définies dans les présenteurs. Ici se trouvent les clés qui ont leur place dans plusieurs présenteurs.
+ * Classe de constantes utilisées dans les attributs des événements. 
+ * D'autres clés d'attributs peuvent être définies dans les présenteurs. 
+ * Ici se trouvent les clés qui ont leur place dans plusieurs présenteurs.
  * @author safr@n
  */
 public interface ApplicationEventGlobalAttributes_Itf
 {
 
-   // ApplicationEventGlobalAttributes_Itf
+   
    // Start of user code ApplicationEventGlobalAttributes_Itf
 
    /** La clé contenant le DTO */

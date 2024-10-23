@@ -13,63 +13,62 @@ import fr.spi4j.ui.graal.UserAction;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
 import fr.spi4j.ui.mvp.View_Itf;
-import java.util.Date;
 
 // End of user code
 
 public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements ListePersonnesView_Itf
 {
 
-   // Declaration cbGrade_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration cbGrade_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _cbGrade;
 
    // End of user code
 
-   // Declaration table_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration table_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _table;
 
    // End of user code
 
-   // Declaration btActualiser_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btActualiser_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btActualiser;
 
    // End of user code
 
-   // Declaration btCreer_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btCreer_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btCreer;
 
    // End of user code
 
-   // Declaration btModifier_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btModifier_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btModifier;
 
    // End of user code
 
-   // Declaration btVisualiser_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btVisualiser_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btVisualiser;
 
    // End of user code
 
-   // Declaration btSupprimer_ERREUR [ Widget sans nom]
+   
    // Start of user code Declaration btSupprimer_ERREUR [ Widget sans nom]
 
    private final ERREUR [ Widget sans nom] _btSupprimer;
 
    // End of user code
 
-   // Attributs
+   
    // Start of user code Attributs
    private final VerticalPanel _content;
 
@@ -83,7 +82,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
    {
       super(p_presenter);
 
-      // avant initialisation
+      
       // Start of user code avant initialisation
       _content = new VerticalPanel();
       _content.add(new HTML("<h1>ListePersonnes</h1>"));
@@ -91,7 +90,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
       // End of user code
 
       // initialisation des composants
-      // Parametrage cbGrade_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage cbGrade_ERREUR [ Widget sans nom]
 
       _cbGrade = new ERREUR [ Widget sans nom]();
@@ -99,6 +98,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
+	  
       // Start of user code Listener cbGrade_onSelectGrade
       _cbGrade.addXXXHandler(new XXXHandler()
       {
@@ -110,7 +110,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
          }
       });
 
-      // Parametrage table_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage table_ERREUR [ Widget sans nom]
 
       _table = new ERREUR [ Widget sans nom]();
@@ -118,7 +118,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
-      // Parametrage btActualiser_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btActualiser_ERREUR [ Widget sans nom]
 
       _btActualiser = new ERREUR [ Widget sans nom]();
@@ -126,6 +126,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
+	  
       // Start of user code Listener btActualiser_onClicActualiser
       _btActualiser.addXXXHandler(new XXXHandler()
       {
@@ -137,7 +138,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
          }
       });
 
-      // Parametrage btCreer_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btCreer_ERREUR [ Widget sans nom]
 
       _btCreer = new ERREUR [ Widget sans nom]();
@@ -145,6 +146,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
+	  
       // Start of user code Listener btCreer_onClicCreer
       _btCreer.addXXXHandler(new XXXHandler()
       {
@@ -156,7 +158,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
          }
       });
 
-      // Parametrage btModifier_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btModifier_ERREUR [ Widget sans nom]
 
       _btModifier = new ERREUR [ Widget sans nom]();
@@ -164,6 +166,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
+	  
       // Start of user code Listener btModifier_onClicModifier
       _btModifier.addXXXHandler(new XXXHandler()
       {
@@ -175,7 +178,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
          }
       });
 
-      // Parametrage btVisualiser_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btVisualiser_ERREUR [ Widget sans nom]
 
       _btVisualiser = new ERREUR [ Widget sans nom]();
@@ -183,6 +186,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
+	  
       // Start of user code Listener btVisualiser_onClicVisualiser
       _btVisualiser.addXXXHandler(new XXXHandler()
       {
@@ -194,7 +198,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
          }
       });
 
-      // Parametrage btSupprimer_ERREUR [ Widget sans nom]
+      
       // Start of user code Parametrage btSupprimer_ERREUR [ Widget sans nom]
 
       _btSupprimer = new ERREUR [ Widget sans nom]();
@@ -202,6 +206,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
       // End of user code
 
+	  
       // Start of user code Listener btSupprimer_onClicSupprimer
       _btSupprimer.addXXXHandler(new XXXHandler()
       {
@@ -213,8 +218,8 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
          }
       });
 
-      // après initialisation
-      // Start of user code après initialisation
+      
+      // Start of user code apres initialisation
       add(_content);
 
 
@@ -224,7 +229,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
    @Override
    public void addView (final View_Itf p_view)
    {
-      // addView
+      
       // Start of user code addView
       if (p_view instanceof IsWidget)
       {
@@ -247,7 +252,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
    @Override
    public void restoreView (final View_Itf p_view)
    {
-      // restoreView
+      
       // Start of user code restoreView
 
       // End of user code
@@ -256,7 +261,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
    @Override
    public void removeView (final View_Itf p_view)
    {
-      // removeView
+      
       // Start of user code removeView
       if (p_view instanceof IsWidget)
       {
@@ -276,7 +281,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
       // End of user code
    }
 
-   // Getter cbGrade_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter cbGrade_ERREUR [ Widget sans nom]
 
    @Override
@@ -287,7 +292,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // Getter table_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter table_ERREUR [ Widget sans nom]
 
    @Override
@@ -298,7 +303,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // Getter btActualiser_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btActualiser_ERREUR [ Widget sans nom]
 
    @Override
@@ -309,7 +314,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // Getter btCreer_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btCreer_ERREUR [ Widget sans nom]
 
    @Override
@@ -320,7 +325,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // Getter btModifier_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btModifier_ERREUR [ Widget sans nom]
 
    @Override
@@ -331,7 +336,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // Getter btVisualiser_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btVisualiser_ERREUR [ Widget sans nom]
 
    @Override
@@ -342,7 +347,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // Getter btSupprimer_ERREUR [ Widget sans nom]
+   
    // Start of user code Getter btSupprimer_ERREUR [ Widget sans nom]
 
    @Override
@@ -353,7 +358,7 @@ public class ListePersonnesViewGwt extends ERREUR [ Widget sans nom] implements 
 
    // End of user code
 
-   // ListePersonnesViewGwt
+   
    // Start of user code ListePersonnesViewGwt
 
    // End of user code

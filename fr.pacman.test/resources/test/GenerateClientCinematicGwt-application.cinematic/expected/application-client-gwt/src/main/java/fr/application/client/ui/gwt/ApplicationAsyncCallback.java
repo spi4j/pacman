@@ -57,7 +57,7 @@ public class ApplicationAsyncCallback<T> extends DefaultAsyncCallback<T>
       {
          return null;
       }
-      // Propagation des erreurs
+      
       // Start of user code Propagation des erreurs
       // if (p_className.equals(MonException.class.getName()))
       // {
@@ -70,7 +70,7 @@ public class ApplicationAsyncCallback<T> extends DefaultAsyncCallback<T>
    @Override
    protected void doOnError (final Throwable p_caught)
    {
-      // Gestion des erreurs
+      
       // Start of user code Gestion des erreurs
       // if (p_caught instanceof MonException)
       // {
@@ -83,7 +83,7 @@ public class ApplicationAsyncCallback<T> extends DefaultAsyncCallback<T>
       // End of user code
    }
 
-   // ApplicationAsyncCallback
+   
    // Start of user code ApplicationAsyncCallback
 
    // End of user code

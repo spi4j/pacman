@@ -12,7 +12,6 @@ import fr.spi4j.ui.graal.UserAction;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
 import fr.spi4j.ui.mvp.View_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -20,13 +19,13 @@ import java.util.Date;
  * Presenter.
  * @author safr@n
  */
-// Class definition
+
 // Start of user code Class definition
 public class DetailPersonnePresenter extends Presenter_Abs<DetailPersonneView_Itf, Object>
 // End of user code
 {
 
-   // Constructeur(s)
+   
    // Start of user code Constructeur(s)
    /**
     * Constructeur.
@@ -51,7 +50,7 @@ public class DetailPersonnePresenter extends Presenter_Abs<DetailPersonneView_It
    @Override
    public void initView ()
    {
-      // Initialisation de la vue
+      
       // Start of user code Initialisation de la vue
 
       // End of user code
@@ -60,8 +59,8 @@ public class DetailPersonnePresenter extends Presenter_Abs<DetailPersonneView_It
    @Override
    protected String doGenerateTitle ()
    {
-      // Titre de l\'écran
-      // Start of user code Titre de l'écran
+      
+      // Start of user code Titre de l'ecran
       return "DetailPersonne";
       // End of user code
    }
@@ -81,10 +80,12 @@ public class DetailPersonnePresenter extends Presenter_Abs<DetailPersonneView_It
 
       // End of user code
 
-      // Start of user code annuler : Action ListerPersonnes
+      
+	  // Start of user code annuler : Action ListerPersonnes
       // TODO ListerPersonnes
       // End of user code
 
+	  
       // Start of user code annuler : Affichage de ListePersonnes
       // affichage de l'écran ListePersonnes
       ListePersonnesPresenter v_ListePersonnes;
@@ -120,14 +121,17 @@ public class DetailPersonnePresenter extends Presenter_Abs<DetailPersonneView_It
 
       // End of user code
 
-      // Start of user code enregistrer : Action Enregistrer
+      
+	  // Start of user code enregistrer : Action Enregistrer
       // TODO Enregistrer
       // End of user code
 
-      // Start of user code enregistrer : Action ListerPersonnes
+      
+	  // Start of user code enregistrer : Action ListerPersonnes
       // TODO ListerPersonnes
       // End of user code
 
+	  
       // Start of user code enregistrer : Affichage de ListePersonnes
       // affichage de l'écran ListePersonnes
       ListePersonnesPresenter v_ListePersonnes;

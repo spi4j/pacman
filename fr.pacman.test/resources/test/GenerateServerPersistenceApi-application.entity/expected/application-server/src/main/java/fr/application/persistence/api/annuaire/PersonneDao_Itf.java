@@ -22,14 +22,14 @@ public interface PersonneDao_Itf extends Dao_Itf<Long, PersonneEntity_Itf, Perso
 {
    // CONSTANTES
 
-   // Constantes PersonneDao_Itf
+   
    // Start of user code Constantes PersonneDao_Itf
 
    // End of user code
 
    // METHODES ABSTRAITES
 
-   // Methodes PersonneDao_Itf
+   
    // Start of user code Methodes PersonneDao_Itf
 
    // End of user code

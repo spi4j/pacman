@@ -76,7 +76,7 @@
     [/if]
     [if (s <> null and not (s.ownedInterface = null))]
       [for (o : soa::Operation | s.ownedInterface.ownedOperations)]
-           // [o.userCodeForOperation()/]
+           [o.userCodeForOperation().displayClearUserCodeId()/]
            [protected (o.getUserCodeId(o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
              
                 /**
@@ -91,7 +91,7 @@
         
       [/for]
     [/if]
-       // [s.nameServiceInterfaceGwt(d)/]
+       [s.nameServiceInterfaceGwt(d).displayClearUserCodeId()/]
        [protected (s.getUserCodeId(s.nameServiceInterfaceGwt(d))) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]

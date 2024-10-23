@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import fr.spi4j.ui.gwt.client.mvp.GWTViewManager;
 import fr.spi4j.ui.mvp.MVPUtils;
-import java.util.Date;
 
 // End of user code
 
@@ -60,8 +59,8 @@ public class GwtViews extends ViewsAssociation
       {
          return (TypeView) new MainViewGwt((MainPresenter) p_presenter);
       }
-      // Vues supplémentaires
-      // Start of user code Vues supplémentaires
+      
+      // Start of user code Vues supplementaires
 
       // End of user code
 
@@ -77,7 +76,7 @@ public class GwtViews extends ViewsAssociation
                "Ne recherchez pas un présenteur selon son annotation @UserView dans vos écrans");
    }
 
-   // GwtViews
+   
    // Start of user code GwtViews
 
    // End of user code

@@ -52,7 +52,8 @@
             * [o.getComParamsIn()/]
             * [o.getServicePagingParameters()/]
             * [o.comParamOut()/]
-        	*/
+            */
+            [o.getUserCodeId('Annotations Methode' + o.name).displayClearUserCodeId()/]
             [protected (o.getUserCodeId('Annotations Methode' + o.name)) startTagPrefix('// ') endTagPrefix('// ')]
 
             [/protected]

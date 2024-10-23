@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.cinematic.gwt.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Cinematic GWT UI
 Bundle-SymbolicName: fr.pacman.cinematic.gwt.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.cinematic.gwt.ui.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.ui,

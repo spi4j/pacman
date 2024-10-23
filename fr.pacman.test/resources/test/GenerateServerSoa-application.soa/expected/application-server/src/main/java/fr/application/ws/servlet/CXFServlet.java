@@ -8,7 +8,6 @@ package fr.application.ws.servlet;
 
 import fr.application.ws.impl_server.annuaire.PersonneCxfServiceCXFFacade;
 import jakarta.servlet.ServletConfig;
-import java.util.Date;
 
 // End of user code
 
@@ -30,7 +29,7 @@ public class CXFServlet extends CXFServlet_Abs
 	  * Ajouter le deploiement de services selon l'exemple suivant :
       * deployWebService(new MonServiceFacade(), "/MonServiceService");
       */
-	// PersonneCxfService
+	
 	// Start of user code PersonneCxfService
 
 	  // Déploiement du Webservice  PersonneCxfService

@@ -25,14 +25,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class PersonneService extends Service_Abs<Long, PersonneDto, PersonneColumns_Enum> implements PersonneService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -70,7 +70,7 @@ public class PersonneService extends Service_Abs<Long, PersonneDto, PersonneColu
 
       // Appel des exigences en provenance de la modélisation
 
-      // findPersonneById_Personne_personne_Long_identifiant
+      
       // Start of user code findPersonneById_Personne_personne_Long_identifiant
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -93,7 +93,7 @@ public class PersonneService extends Service_Abs<Long, PersonneDto, PersonneColu
 
       // Appel des exigences en provenance de la modélisation
 
-      // findPersonneByName_Personne_personne_String_nom
+      
       // Start of user code findPersonneByName_Personne_personne_String_nom
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -116,7 +116,7 @@ public class PersonneService extends Service_Abs<Long, PersonneDto, PersonneColu
 
       // Appel des exigences en provenance de la modélisation
 
-      // findPersonneByIdFromRest_Personne_personne_Long_identifiant
+      
       // Start of user code findPersonneByIdFromRest_Personne_personne_Long_identifiant
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -127,7 +127,7 @@ public class PersonneService extends Service_Abs<Long, PersonneDto, PersonneColu
 
 	
 
-   // PersonneService
+   
    // Start of user code PersonneService
 
    // End of user code

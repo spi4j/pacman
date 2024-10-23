@@ -34,7 +34,7 @@ public class AdresseXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<
    // ATTRIBUTS
 
    /** L'identifiant. */
-   // for annotation_id
+   
    // Start of user code for annotation_id
    @XmlElement(namespace = "", name = "id")
    @JsonProperty("id")
@@ -42,7 +42,7 @@ public class AdresseXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<
    // End of user code
 
    /** . */
-   // for annotation_rue
+   
    // Start of user code for annotation_rue
    @XmlElement(namespace = "", name = "rue")
    @JsonProperty("rue")
@@ -50,7 +50,7 @@ public class AdresseXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<
    private String _rue;
 
    /** . */
-   // for annotation_ville
+   
    // Start of user code for annotation_ville
    @XmlElement(namespace = "", name = "ville")
    @JsonProperty("ville")
@@ -58,7 +58,7 @@ public class AdresseXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<
    private String _ville;
 
    /** . */
-   // for annotation_codePostal
+   
    // Start of user code for annotation_codePostal
    @XmlElement(namespace = "", name = "codePostal")
    @JsonProperty("codePostal")
@@ -66,7 +66,7 @@ public class AdresseXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<
    private String _codePostal;
 
    /** La FK sur le type 'Personne'. */
-   // for annotation_adresses_id
+   
    // Start of user code for annotation_adresses_id
    @XmlElement(namespace = "", name = "personneAdresses_id")
    @JsonProperty("personneAdresses_id")
@@ -166,7 +166,7 @@ public class AdresseXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getName() + '['  + getId ()  + ", " + get_rue()   + ", " + get_ville()   + ", " + get_codePostal()   + ']';

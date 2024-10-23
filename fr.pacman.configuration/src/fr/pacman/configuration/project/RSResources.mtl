@@ -46,11 +46,21 @@
   [any.getServerResourcesDir()/][any.getApplicationName()/]Application.properties
   --------------------------------------------------------------------------------------------------------
   
-  Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA dans : 
+  Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA : 
   
   --------------------------------------------------------------------------------------------------------
   [any.getServerResourcesDir()/][any.getApplicationName()/]Tokens.properties
   --------------------------------------------------------------------------------------------------------
+  [if (any.useHealthApi())]
+    
+    Deux fichiers de configuration pour l'api de santé de l'application ont été créés : 
+    
+    --------------------------------------------------------------------------------------------------------
+    [any.getServerResourcesDir()/][any.getApplicationName()/]Info.properties
+    [any.getServerResourcesDir()/][any.getApplicationName()/]Health.properties
+    --------------------------------------------------------------------------------------------------------
+  [/if]
+
 [/template]
 
 [comment : *********************************************************/]
@@ -114,7 +124,6 @@
     
   [/protected]
   
-  
   /**
    * Enregistrement du "context resolver" pour les services REST.
    * @author [any.getAuthorName()/].
@@ -136,11 +145,11 @@
         // traiter le même objet différemment selon qu'il soit utilisé en SOAP
         // ou REST.
   
-        // [any.buildRSContextResolverClassName()/]
+        [any.buildRSContextResolverClassName().displayClearUserCodeId()/]
         [protected (any.getUserCodeId(any.buildRSContextResolverClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           super(new JacksonAnnotationIntrospector());
-          
+
         [/protected]
      }
   }[/template]
@@ -163,7 +172,6 @@
     
   [/protected]
   
-  
   /**
    * Mappeur d'exceptions pour les services REST.
    * @author [any.getAuthorName()/].
@@ -181,11 +189,10 @@
   	@Override
   	protected void handleException (final Exception ['exception'.apply_parameterMethodClassicIn()/])
   	{
-  		// [any.buildRSExceptionHandlerClassName()/]
+  		[any.buildRSExceptionHandlerClassName().displayClearUserCodeId()/]
   		[protected (any.getUserCodeId(any.buildRSExceptionHandlerClassName())) startTagPrefix('// ') endTagPrefix('// ')]
-      
-    [/protected]
-  
+
+  		[/protected]
   	}
   
   	/**
@@ -205,11 +212,10 @@
     			return new RsUnauthorizedException(['exception'.apply_parameterMethodClassicIn()/]);
     		}
   [/if]
-        	// convertToSpi4jRestException
+        	['convertToSpi4jRestException'.displayClearUserCodeId()/]
         	[protected (any.getUserCodeId('convertToSpi4jRestException')) startTagPrefix('// ') endTagPrefix('// ')]
-           
-         [/protected]
-  
+
+        	[/protected]
   
         	return ['exception'.apply_parameterMethodClassicIn()/];
   	}
@@ -222,11 +228,58 @@
   [any.licence()/]
   package [any.buildPackageRS()/];
   
+  import org.glassfish.hk2.utilities.binding.AbstractBinder;
   import org.glassfish.jersey.server.ResourceConfig;
+  [if (any.useHealthApi())]
+    import [any.buildPackageWsApi()/].[any.buildRsHealthServiceInterfaceName()/];
+  [/if]
   
   public class [any.buildRSApplicationConfigClassName()/] extends ResourceConfig
   {
-  	//RAS.
+  [if (any.useHealthApi())]
+    	public [any.buildRSApplicationConfigClassName()/]() {
+    
+    		packages("[any.buildPackageRsResources(false)/]");
+    
+    		register(new AbstractBinder() {
+    			@Override
+    			protected void configure() {
+    				bind([any.buildRsHealthServiceClassName()/].class).to([any.buildRsHealthServiceInterfaceName()/].class);
+    			}
+    		});
+    	}		
+  [else]
+    		//RAS.
+  [/if]
+  }[/template]
+
+[comment : ***********************************************************************/]
+[comment : Generate the facade factory for RS health services facade (no @Inject)./]
+[comment : ***********************************************************************/]
+[template public RSServicesFacadeFactory(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.buildPackageRS()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import [any.buildPackageWsApi()/].[any.buildRsHealthServiceInterfaceName()/];
+    
+  [/protected]
+  
+  /**
+   *  Fabrique pour l'ensemble des facades internes.
+   *
+   * @author [any.getAuthorName()/]
+   */
+  public class [any.buildRSServicesFacadeFactoryClassName()/]
+  {
+  	/**
+  	 * Récupération de l'interface pour la facade du service : health. 
+  	 * @return [any.buildRsHealthServiceInterfaceName()/] : L'interface pour le service.
+  	 */
+  	public static [any.buildRsHealthServiceInterfaceName()/] [any.buildRsHealthServiceInterfaceName().apply_methodGet()/](){
+  		
+  		return [any.buildRsHealthServiceClassName()/].['instance'.apply_attributeFinal()/];
+  	}
   }[/template]
 
 [comment : **********************************************************/]
@@ -279,6 +332,7 @@
     import jakarta.ws.rs.ext.Provider;
     
     [if (any.useSpi4jSecurity())]import fr.spi4j.lib.security.Spi4jSecurity_Abs;[/if]
+    import fr.spi4j.ws.rs.RsLogger;
     import fr.spi4j.ws.rs.RsFilter_Abs;
     import fr.spi4j.ws.rs.RsFilterConfigurator;
     import fr.spi4j.ws.rs.RsAuthTokenXtoWrapper;
@@ -287,7 +341,6 @@
     import io.jsonwebtoken.Claims;
     
   [/protected]
-  
   
   /**
    * Filtre pour l'ensemble des resources de l'application. Ce filtre permet entre
@@ -341,15 +394,15 @@
   	 * 
   	 * @return Le chemin pour le(s) fichier(s) de configuration.
   	 */
-   	@Override
-    protected RsFilterConfigurator initFilterConfig ()
-    {
-  		// init filter config
+  	@Override
+  	protected RsFilterConfigurator initFilterConfig ()
+  	{
+  		['init filter config'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('init filter config')) startTagPrefix('// ') endTagPrefix('// ')]
-      
+
   		  return new RsFilterConfigurator("[any.getApplicationName().toUpper()/]").set_debugMode();
-      
-    	[/protected]
+
+  		[/protected]
   	}
   
   	/**
@@ -362,11 +415,11 @@
   	@Override
   	protected RsTokensConfigurator_Itf initTokensConfig() 
   	{
-  		// init tokens config
+  		['init tokens config'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('init tokens config')) startTagPrefix('// ') endTagPrefix('// ')]
-      
+
   		  return new [any.buildRSTokensConfiguratorClassName()/]();
-  		  
+
   		[/protected]
   	}
   
@@ -387,10 +440,10 @@
   	@Override
   	protected void provideClaimsToApplication(final String ['spi4j id'.apply_parameterMethodClassicIn()/], final Claims ['claims'.apply_parameterMethodClassicIn()/])
   	{
-          // provide claims application
+          ['provide claims application'.displayClearUserCodeId()/]
           [protected (any.getUserCodeId('provide claims application')) startTagPrefix('// ') endTagPrefix('// ')]
-            
-		  [/protected]
+
+          [/protected]
   	}
   
   	/**
@@ -404,11 +457,11 @@
   	@Override
   	protected RsXto_Itf buildRefreshedTokenResponse(RsAuthTokenXtoWrapper p_tokenWrapper) {
   		
-  	    // build refreshed token reponse
+  	    ['build refreshed token reponse'.displayClearUserCodeId()/]
   	    [protected (any.getUserCodeId('build refreshed token reponse')) startTagPrefix('// ') endTagPrefix('// ')]
-         
+
   	      return null;
-  	        
+
   	    [/protected]
   	}
   	
@@ -422,9 +475,9 @@
   	@Override
   	protected void beforeFilter (final ContainerRequestContext ['request ctx'.apply_parameterMethodClassicIn()/])
   	{
-  		// before filter
+  		['before filter'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('before filter')) startTagPrefix('// ') endTagPrefix('// ')]
-      
+
   		[/protected]
   	}
   
@@ -438,13 +491,30 @@
   	@Override
   	protected void afterFilter (final ContainerResponseContext ['response ctx'.apply_parameterMethodClassicIn()/])
   	{
-          // after filter
+          ['after filter'.displayClearUserCodeId()/]
           [protected (any.getUserCodeId('after filter')) startTagPrefix('// ') endTagPrefix('// ')]
-            
+
           [/protected]
+  [if (any.useSpi4jSecurity())]
+    		Spi4jSecurity_Abs.getInstance().deconnexion();
+  [/if]
+  	}
   
-  		[if (any.useSpi4jSecurity())]
-  		  Spi4jSecurity_Abs.getInstance().deconnexion();
-  		[/if]
+  	/**
+  	 * Appliquer ici toutes les opérations à effectuer en cas d'erreur lors de
+  	 * l'initialisation du filtre.
+  	 * 
+  	 * @param ['exception'.apply_parameterMethodClassicIn()/] : L'exception initiale ayant entrainé l'echec de
+  	 *                    l'initialisation du filtre.
+  	 */
+  	@Override
+  	protected void onInitializationFailure(Exception ['exception'.apply_parameterMethodClassicIn()/]) 
+  	{
+        	['on initialization failure'.displayClearUserCodeId()/]
+        	[protected (any.getUserCodeId('on initialization failure')) startTagPrefix('// ') endTagPrefix('// ')]
+
+        	  RsLogger.get_log().fatal(['exception'.apply_parameterMethodClassicIn()/], ['exception'.apply_parameterMethodClassicIn()/].getCause());
+
+        	[/protected]
   	}
   }[/template]

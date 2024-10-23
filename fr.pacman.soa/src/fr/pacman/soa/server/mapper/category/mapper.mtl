@@ -45,7 +45,7 @@
      {
         final [d.buildXtoClassNameFromDto()/] ['xto'.apply_variableFinal()/] = super.convertDtoToXto(['dto'.apply_parameterMethodClassicIn()/]);
   
-        // convertDtoToXto
+        ['convertDtoToXto'.displayClearUserCodeId()/]
         [protected (d.getUserCodeId('convertDtoToXto')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
@@ -58,7 +58,7 @@
      {
         final [d.buildDtoClassName()/] ['dto'.apply_variableFinal()/] = super.convertXtoToDto(['xto'.apply_parameterMethodClassicIn()/]);
   
-        // convertXtoToDto
+        ['convertXtoToDto'.displayClearUserCodeId()/]
         [protected (d.getUserCodeId('convertXtoToDto')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
@@ -102,7 +102,7 @@
         return super.getSpecificMapper(['field name'.apply_parameterMethodClassicIn()/]);
      }
   
-     // [d.nameMapper()/]
+     [d.nameMapper().displayClearUserCodeId()/]
      [protected (d.getUserCodeId(d.nameMapper())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

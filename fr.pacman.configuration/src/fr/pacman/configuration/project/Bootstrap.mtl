@@ -26,6 +26,7 @@
     
     import org.apache.logging.log4j.LogManager;
     import org.apache.logging.log4j.Logger;
+    import fr.spi4j.ws.rs.RsFilter_Abs;
     
     [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
       import java.net.URL;
@@ -76,22 +77,16 @@
   
   			[any.buildBoostrapClassName()/] ['bootstrap'.apply_variableDefault()/] = new [any.buildBoostrapClassName()/]();
   			['bootstrap'.apply_variableDefault()/].start(['args'.apply_parameterMethodClassicIn()/]);
-  
-  			['log'.apply_attributeStatic()/].info("Lancement du serveur [any.getApplicationName()/] : OK.");
-  			['log'.apply_attributeStatic()/].info("Appuyez sur n'importe quelle touche pour stopper le serveur...");
-  
   			['bootstrap'.apply_variableDefault()/].waitForInterrupt();
   
-  		} catch (ParseException p_e) {
-  			
+  		} catch (ParseException ['e'.apply_parameterMethodClassicIn()/]) {
+  		
   			['log'.apply_attributeStatic()/].warn(['err parse msg'.apply_attributeFinalStatic()/]);
   
   		} catch (Exception ['e'.apply_parameterMethodClassicIn()/]) {
   
   			['log'.apply_attributeStatic()/].fatal("Lancement du serveur [any.getApplicationName()/] : KO : " + ['e'.apply_parameterMethodClassicIn()/].getMessage());
-  			
   			Runtime.getRuntime().halt(1);
-  			// System.exit(1);
   		}
   	}
   
@@ -101,7 +96,7 @@
   	 */
   	private int getDefaultHttpPort(final String['['/]] ['args'.apply_parameterMethodClassicIn()/]) throws ParseException  {
   	
-  		// getDefaultHttpPort
+  		['getDefaultHttpPort'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('getDefaultHttpPort')) startTagPrefix('// ') endTagPrefix('// ')]
       
   		  Options ['option'.apply_variableDefault()/] = new Options();
@@ -125,7 +120,7 @@
   	 */
   	private void start (final String['['/]] ['args'.apply_parameterMethodClassicIn()/]) throws Exception {
   
-  		// start
+  		['start'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('start')) startTagPrefix('// ') endTagPrefix('// ')]
   		  
   		  [if ('tomee'.equalsIgnoreCase(any.getHttpEmbeddedServer()))][/if]
@@ -159,7 +154,7 @@
            ['webapp'.apply_variableDefault()/].setResourceBase("[webapp.getDevWebAppContext()/]");
           [if (any.hasToWriteOtherWebappForApi())]
             WebAppContext ['webapp api'.apply_variableDefault()/] = new WebAppContext();
-            ['webapp api'.apply_variableDefault()/].setContextPath("/api");
+            ['webapp api'.apply_variableDefault()/].setContextPath("/");
             // Recherche des annotations dans les sources ou dans le war deployé. 
             ['webapp api'.apply_variableDefault()/].setAttribute(['jetty include jar pattern'.apply_attributeFinalStatic()/], ".*/target/classes/|.*\\.war");
             ['webapp api'.apply_variableDefault()/].setResourceBase("../[any.getWebappProjectName()/]/[any.getWebappDir()/]");
@@ -189,7 +184,7 @@
           // String ['doc base api'.apply_variableDefault()/] = new File("").getAbsolutePath() + "/[true.getFinalWarName()/].war";
         [/if]
         String ['doc base'.apply_variableDefault()/] =  new File("[webapp.getDevWebAppContext()/]").getAbsolutePath();
-        Context ['context'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("[true.getContext()/]", ['doc base'.apply_variableDefault()/]);
+        Context ['context'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("", ['doc base'.apply_variableDefault()/]);
         [if (any.hasToWriteOtherWebappForApi())]
           String ['doc base api'.apply_variableDefault()/] = new File("../[any.getWebappProjectName()/]/[any.getWebappDir()/]").getAbsolutePath();
           Context ['context api'.apply_variableDefault()/] = [any.buildServerNameWithPrefix()/].addWebapp("[false.getContext()/]", ['doc base api'.apply_variableDefault()/]);
@@ -199,7 +194,7 @@
         [any.buildServerNameWithPrefix()/].getConnector();
       [/if]
       addBasicAuthUsers();
-      addSpecificXmlContext(['context'.apply_variableDefault()/]);
+      [if (any.useBDD())]addSpecificXmlContext(['context'.apply_variableDefault()/]);[/if]
       [if ('jetty'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
         [any.buildServerNameWithPrefix()/].setStopTimeout(0x2710L);
         [any.buildServerNameWithPrefix()/].setStopAtShutdown(true);
@@ -212,51 +207,51 @@
     [/protected]
   
   	}
-  
-  	/**
-  	 * Récupération (si besoin) et lecture du fichier de configuration externe
-  	 * "context.xml". Si la base de données n'est pas une base embarquée de type H2,
-  	 * il est alors nécessaire de définir une ressource de type jndi dans ce fichier
-  	 * afin de pouvoir se connecter à la base de données.
-  	 *
-  	 * @param ['context'.apply_parameterMethodClassicIn()/] : Le contexte de l'application.
-  	 * @throws MalformedURLException Une erreur de définition pour l'URL du fichier 'context.xml'.
-  	 */
-  	private void addSpecificXmlContext(final Context ['context'.apply_parameterMethodClassicIn()/]) throws MalformedURLException {
-  
-  [if (not any.useH2EmbeddedDatabase())]
-    		File ['ctx'.apply_variableDefault()/] = new File(new File(getClass().getProtectionDomain()
-    			.getCodeSource().getLocation().getFile()).getParentFile()
-    			.getParentFile().getParentFile().getAbsolutePath() 
-    			+ "/[any.getServerProjectName()/]/[any.getServerResourcesDir()/]context.xml");
-    		
-    		// Permet de retrouver la racine du répertoire 
-    		// une fois l'application déployée.
-    		if (['ctx'.apply_variableDefault()/].getAbsolutePath().indexOf("tomcat.") > 0) {
-    			 String ['deployed context path'.apply_variableDefault()/] = ['ctx'.apply_variableDefault()/].getAbsolutePath()
-    				 .substring(0, ['ctx'.apply_variableDefault()/].getAbsolutePath().indexOf("tomcat.")) 
-    				 + "conf/context.xml";
-    			 ['ctx'.apply_variableDefault()/] = new File(['deployed context path'.apply_variableDefault()/]);
-    		}
+  [if (any.useBDD())]
+    	/**
+    	 * Récupération (si besoin) et lecture du fichier de configuration externe
+    	 * "context.xml". Si la base de données n'est pas une base embarquée de type H2,
+    	 * il est alors nécessaire de définir une ressource de type jndi dans ce fichier
+    	 * afin de pouvoir se connecter à la base de données.
+    	 *
+    	 * @param ['context'.apply_parameterMethodClassicIn()/] : Le contexte de l'application.
+    	 * @throws MalformedURLException Une erreur de définition pour l'URL du fichier 'context.xml'.
+    	 */
+    	private void addSpecificXmlContext(final Context ['context'.apply_parameterMethodClassicIn()/]) throws MalformedURLException {
     
-    		if (!['ctx'.apply_variableDefault()/].exists() || !['ctx'.apply_variableDefault()/].canRead()) {
-    			throw new Spi4jRuntimeException("Impossible de lire le fichier context.xml", 
-    					"Vérifier le positionnement du fichier, le fichier est recherché à "
-    					+ "l'emplacement suivant : " + ['ctx'.apply_variableDefault()/].getAbsolutePath());
-    		}
-    		['context'.apply_parameterMethodClassicIn()/].setConfigFile(['ctx'.apply_variableDefault()/].toURI().toURL());
-    		[any.buildServerNameWithPrefix()/].enableNaming();
-  [else]
-    		// RAS : Il s'agit d'une base H2 embarquée.
-  [/if]
-  	} 
+    [if (not any.useH2EmbeddedDatabase())]
+      		File ['ctx'.apply_variableDefault()/] = new File(new File(getClass().getProtectionDomain()
+      			.getCodeSource().getLocation().getFile()).getParentFile()
+      			.getParentFile().getParentFile().getAbsolutePath() 
+      			+ "/[any.getServerProjectName()/]/[any.getServerResourcesDir()/]context.xml");
+      		
+      		// Permet de retrouver la racine du répertoire 
+      		// une fois l'application déployée.
+      		if (['ctx'.apply_variableDefault()/].getAbsolutePath().indexOf("tomcat.") > 0) {
+      			 String ['deployed context path'.apply_variableDefault()/] = ['ctx'.apply_variableDefault()/].getAbsolutePath()
+      				 .substring(0, ['ctx'.apply_variableDefault()/].getAbsolutePath().indexOf("tomcat.")) 
+      				 + "conf/context.xml";
+      			 ['ctx'.apply_variableDefault()/] = new File(['deployed context path'.apply_variableDefault()/]);
+      		}
+      
+      		if (!['ctx'.apply_variableDefault()/].exists() || !['ctx'.apply_variableDefault()/].canRead()) {
+      			throw new Spi4jRuntimeException("Impossible de lire le fichier context.xml", 
+      					"Vérifier le positionnement du fichier, le fichier est recherché à "
+      					+ "l'emplacement suivant : " + ['ctx'.apply_variableDefault()/].getAbsolutePath());
+      		}
+      		['context'.apply_parameterMethodClassicIn()/].setConfigFile(['ctx'.apply_variableDefault()/].toURI().toURL());
+      		[any.buildServerNameWithPrefix()/].enableNaming();
+    [else]
+      		// RAS : Il s'agit d'une base H2 embarquée.
+    [/if]
+    	} [/if]
   
   	/**
   	 * Paramétrage de la liste des utilisateurs dans le serveur embarqué.
   	 */
   	private void addBasicAuthUsers() {
   
-  		// addBasicAuthUsers
+  		['addBasicAuthUsers'.displayClearUserCodeId()/]
   		[protected (any.getUserCodeId('addBasicAuthUsers')) startTagPrefix('// ') endTagPrefix('// ')]
       
   		  if(null != [any.buildServerNameWithPrefix()/]) {
@@ -280,20 +275,29 @@
   	}
   
   	/**
-  	 * Mise en écoute du serveur et tentative d'arrêt 
-  	 * en cas de détection d'un crash de la JVM.
+  	 * Mise en écoute du serveur et tentative d'arrêt en cas de détection d'un crash
+  	 * de la JVM. On place ici un test pour vérifier le bon démarrage du filtre,
+  	 * cela permet de forcer l'arrêt du serveur, codé à la base pour être résilient
+  	 * sur les erreurs d'initialisation des webapps.
+  	 * 
   	 * @throws InterruptedException 
   	 */
   	public void waitForInterrupt() throws Exception {
   
-       // waitForInterrupt
-       [protected (any.getUserCodeId('waitForInterrupt')) startTagPrefix('// ') endTagPrefix('// ')]
+  		['waitForInterrupt'.displayClearUserCodeId()/]
+     		[protected (any.getUserCodeId('waitForInterrupt')) startTagPrefix('// ') endTagPrefix('// ')]
          
-         if(System.in.read()!=-1) {
-             stop();
-         }
-
-         // [any.buildServerNameWithPrefix()/].[any.buildWaitForInterrupt()/];
+         		if (RsFilter_Abs.hasInitializationfailure()) {
+         			['log'.apply_attributeStatic()/].fatal("Lancement du serveur safran : KO. Arrêt du serveur...\n" );
+         			Runtime.getRuntime().halt(1);
+         		} else {
+         			['log'.apply_attributeStatic()/].info("Lancement du serveur [any.getApplicationName()/] : OK.\nAppuyez sur n'importe quelle touche pour stopper le serveur...\n");
+         		}
+         		
+         		if(System.in.read()!=-1) {
+         			stop();
+         		}
+         		// [any.buildServerNameWithPrefix()/].[any.buildWaitForInterrupt()/];
          
        [/protected]
   	}
@@ -304,24 +308,26 @@
   	 */
   	public void stop() throws Exception {
   
-  		// stop
-  		[protected (any.getUserCodeId('stop')) startTagPrefix('// ') endTagPrefix('// ')]
-      
-  		  ['log'.apply_attributeStatic()/].info("Demande de fermeture pour le serveur [any.getApplicationName()/]...");
-  		  if(null != [any.buildServerNameWithPrefix()/]) {
-					  try {
-					  [any.buildServerNameWithPrefix()/].stop();
-					[if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
-					  [any.buildServerNameWithPrefix()/].destroy();[/if]
-					  [any.buildServerNameWithPrefix()/] = null;
-					  Runtime.getRuntime().halt(0);
-					  // System.exit(0);
-				  } catch (Exception  ['e'.apply_variableDefault()/]) {
-					  ['log'.apply_attributeStatic()/].info("Fermeture du serveur OK mais avec un avertissement : " +  ['e'.apply_variableDefault()/]);
-				  }}
-		  ['log'.apply_attributeStatic()/].info("Fermeture du serveur [any.getApplicationName()/] : OK.");
-		  
-		  [/protected] 
+  		['stop'.displayClearUserCodeId()/]
+     		[protected (any.getUserCodeId('stop')) startTagPrefix('// ') endTagPrefix('// ')]
+         
+         		['log'.apply_attributeStatic()/].info("Demande de fermeture pour le serveur [any.getApplicationName()/]...");
+         		if(null != [any.buildServerNameWithPrefix()/]) {
+         			try {
+         				[any.buildServerNameWithPrefix()/].stop();
+         [if ('tomcat'.equalsIgnoreCase(any.getHttpEmbeddedServer()))]
+           				[any.buildServerNameWithPrefix()/].destroy();
+         [/if]
+         				[any.buildServerNameWithPrefix()/] = null;
+         				Runtime.getRuntime().halt(0);
+         			} catch (Exception  ['e'.apply_variableDefault()/]) {
+         				['log'.apply_attributeStatic()/].info("Fermeture du serveur OK mais avec un avertissement : " +  ['e'.apply_variableDefault()/]);
+         			}
+         		}
+         		['log'.apply_attributeStatic()/].info("Fermeture du serveur [any.getApplicationName()/] : OK.");
+         		
+       [/protected]
+  
   	}
   }
 [/template]

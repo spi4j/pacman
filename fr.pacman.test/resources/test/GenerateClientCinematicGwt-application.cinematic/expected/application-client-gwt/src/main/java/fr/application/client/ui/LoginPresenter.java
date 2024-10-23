@@ -13,7 +13,6 @@ import fr.spi4j.ui.graal.UserAction;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
 import fr.spi4j.ui.mvp.View_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -21,13 +20,13 @@ import java.util.Date;
  * Presenter.
  * @author safr@n
  */
-// Class definition
+
 // Start of user code Class definition
 public class LoginPresenter extends Presenter_Abs<LoginView_Itf, Object>
 // End of user code
 {
 
-   // Constructeur(s)
+   
    // Start of user code Constructeur(s)
    /**
     * Constructeur.
@@ -52,7 +51,7 @@ public class LoginPresenter extends Presenter_Abs<LoginView_Itf, Object>
    @Override
    public void initView ()
    {
-      // Initialisation de la vue
+      
       // Start of user code Initialisation de la vue
 
       // End of user code
@@ -61,8 +60,8 @@ public class LoginPresenter extends Presenter_Abs<LoginView_Itf, Object>
    @Override
    protected String doGenerateTitle ()
    {
-      // Titre de l\'écran
-      // Start of user code Titre de l'écran
+      
+      // Start of user code Titre de l'ecran
       return "Login";
       // End of user code
    }
@@ -80,6 +79,7 @@ public class LoginPresenter extends Presenter_Abs<LoginView_Itf, Object>
 
       // End of user code
 
+	  
       // Start of user code onClicAnnuler : Affichage de Home
 
       // End of user code
@@ -102,11 +102,13 @@ public class LoginPresenter extends Presenter_Abs<LoginView_Itf, Object>
 
       // End of user code
 
-      // Start of user code onClicConnecter : Action Connexion
+      
+	  // Start of user code onClicConnecter : Action Connexion
       // TODO Connexion
       // End of user code
 
-      // Start of user code onClicConnecter : Démarrage du Flow annuaire
+	  
+      // Start of user code onClicConnecter : Demarrage du Flow annuaire
       final AnnuaireFlowManager v_AnnuaireFlowManager = new AnnuaireFlowManager(this);
       v_AnnuaireFlowManager.start();
       // End of user code

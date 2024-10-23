@@ -7,7 +7,6 @@ package fr.application.persistence.api;
 
 import fr.spi4j.persistence.entity.Entity_Itf;
 import fr.spi4j.type.XtopSup;
-import java.util.Date;
 
 /**
  * Interface d'entité persistante pour les champs automatiques.

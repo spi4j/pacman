@@ -9,7 +9,6 @@ package fr.application.business.api.annuaire;
 import fr.spi4j.business.dto.AttributesNames_Itf;
 import fr.spi4j.business.dto.DtoAttributeHelper;
 import java.lang.reflect.Method;
-import java.util.Date;
 
 // End of user code
 

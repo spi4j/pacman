@@ -3,7 +3,7 @@ Automatic-Module-Name: fr.pacman.cinematic.swing.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Cinematic Swing UI
 Bundle-SymbolicName: fr.pacman.cinematic.swing.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.cinematic.swing.ui.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.ui,

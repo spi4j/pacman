@@ -19,7 +19,7 @@
   [/protected]
   
   
-  // for library rs binary class
+  ['for library rs binary class'.displayClearUserCodeId()/]
   [protected (any.getUserCodeId('for library rs binary class')) startTagPrefix('// ') endTagPrefix('// ')]
     public class Binary extends InputStream {
     

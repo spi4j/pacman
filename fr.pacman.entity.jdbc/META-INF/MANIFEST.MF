@@ -3,17 +3,13 @@ Automatic-Module-Name: fr.pacman.entity.jdbc
 Bundle-ManifestVersion: 2
 Bundle-Name: PacMan - Persistance JDBC
 Bundle-SymbolicName: fr.pacman.entity.jdbc
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.entity.jdbc.Activator
 Bundle-Vendor: Safr@n
 Require-Bundle: org.eclipse.core.runtime,
  org.obeonetwork.dsl.entity,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.model,
- org.eclipse.acceleo.engine,
  fr.pacman.commons,
  fr.pacman.entity.api,
  org.eclipse.acceleo.aql;bundle-version="4.0.0",

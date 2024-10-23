@@ -34,6 +34,9 @@
 [comment : Flush all the imports to the selected file. /]
 [query public flushImports(e : environment::ObeoDSMObject) : String = e.flushImportsJavaService()/]
 
+[comment : Display user code id in clear. /]
+[query public displayClearUserCodeId(s : String) : String = if not s.isClearUserCode() and s.isClearUserCodeHash() then '// ' + s else '' endif/]
+
 [comment : Create a hash for user code from the id (string parameter). /]
 [query public getUserCodeId(any : ecore::EObject, s : String) : String = if any.isClearUserCode() then s else any.userCodeWithComment(s) endif/]
 

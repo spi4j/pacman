@@ -27,7 +27,7 @@
      @Override
      public void contextInitialized (final ServletContextEvent p_event)
      {
-  		// Context initialized
+  		['Context initialized'.displayClearUserCodeId()/]
   	  	[protected (root.getUserCodeId('context initialized')) startTagPrefix('// ') endTagPrefix('// ')]
         
               	Parameters.initServletContext(p_event.getServletContext());
@@ -42,15 +42,15 @@
      @Override
      public void contextDestroyed (final ServletContextEvent p_event)
      {
-  		// Context destroyed
+  		['Context destroyed'.displayClearUserCodeId()/]
   	  	[protected (root.getUserCodeId('context destroyed')) startTagPrefix('// ') endTagPrefix('// ')]
         
       [/protected]
   
      }
      
-     // Méthodes
-     [protected (root.getUserCodeId('Méthodes')) startTagPrefix('// ') endTagPrefix('// ')]
+     ['Methodes'.displayClearUserCodeId()/]
+     [protected (root.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]
   

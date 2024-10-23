@@ -6,7 +6,6 @@
 package fr.test.ws.rs.front;
 // Start of user code for imports
 
-import java.util.Date;
 import java.util.Properties;
 
 // End of user code

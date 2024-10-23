@@ -6,9 +6,9 @@
 package fr.application.business.api.annuaire;
 // Start of user code for imports
 
+import fr.application.annuaire.TypeCompetence_Enum;
 import fr.application.business.ApplicationAutoFieldsDto_Abs;
 import fr.application.business.ApplicationUserBusiness;
-import fr.application.types.enums.TypeCompetence_Enum;
 import fr.spi4j.business.dto.DtoUtil;
 import fr.spi4j.business.dto.Dto_Itf;
 import fr.spi4j.exception.Spi4jValidationException;
@@ -174,7 +174,7 @@ public class CompetenceDto extends ApplicationAutoFieldsDto_Abs implements Dto_I
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getSimpleName() + '[' + _id + ", " + get_libelle() + ", " + get_typecompetence()   + ']';
@@ -182,4 +182,8 @@ public class CompetenceDto extends ApplicationAutoFieldsDto_Abs implements Dto_I
       // End of user code
    }
 
+   
+   // Start of user code Methodes
+
+   // End of user code
 }

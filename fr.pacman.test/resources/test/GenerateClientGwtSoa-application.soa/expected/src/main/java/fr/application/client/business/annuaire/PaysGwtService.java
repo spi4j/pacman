@@ -28,7 +28,7 @@ public interface PaysGwtService extends GwtRemoteService<Long, PaysXto>
     */
    List<PaysXto> findListPaysByPersonne (final Long p_personnePays_id);
 
-   // PaysService
+   
    // Start of user code PaysService
 
    // End of user code

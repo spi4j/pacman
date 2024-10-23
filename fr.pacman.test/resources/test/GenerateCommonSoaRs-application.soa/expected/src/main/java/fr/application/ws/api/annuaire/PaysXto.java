@@ -34,7 +34,7 @@ public class PaysXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lon
    // ATTRIBUTS
 
    /** L'identifiant. */
-   // for annotation_id
+   
    // Start of user code for annotation_id
    @XmlElement(namespace = "", name = "id")
    @JsonProperty("id")
@@ -42,7 +42,7 @@ public class PaysXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lon
    // End of user code
 
    /** . */
-   // for annotation_nom
+   
    // Start of user code for annotation_nom
    @XmlElement(namespace = "", name = "nom")
    @JsonProperty("nom")
@@ -50,7 +50,7 @@ public class PaysXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lon
    private String _nom;
 
    /** . */
-   // for annotation_capitale
+   
    // Start of user code for annotation_capitale
    @XmlElement(namespace = "", name = "capitale")
    @JsonProperty("capitale")
@@ -58,7 +58,7 @@ public class PaysXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lon
    private String _capitale;
 
    /** La FK sur le type 'Personne'. */
-   // for annotation_pays_id
+   
    // Start of user code for annotation_pays_id
    @XmlElement(namespace = "", name = "personnePays_id")
    @JsonProperty("personnePays_id")
@@ -139,7 +139,7 @@ public class PaysXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lon
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getName() + '['  + getId ()  + ", " + get_nom()   + ", " + get_capitale()   + ']';

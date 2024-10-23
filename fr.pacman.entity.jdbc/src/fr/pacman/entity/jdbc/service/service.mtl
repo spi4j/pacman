@@ -77,7 +77,7 @@
      * Pour rappel, les services sont sans état.
      * @author [e.getAuthorName()/]
      */
-    // Annotations Service
+    ['Annotations Service'.displayClearUserCodeId()/]
     [protected (e.getUserCodeId('Annotations Service')) startTagPrefix('// ') endTagPrefix('// ')]
       [if (e.useEjb())]
         @Stateless
@@ -88,7 +88,7 @@
     {
     
        // Rappel : les services sont sans état.
-       // attributs
+       ['attributs'.displayClearUserCodeId()/]
        [protected (e.getUserCodeId('attributs')) startTagPrefix('// ') endTagPrefix('// ')]
          
        [/protected]
@@ -100,7 +100,7 @@
     [/if]
     
     
-        // Methodes [e.buildServiceClassName()/]
+        [('Methodes ' + e.buildServiceClassName()).displayClearUserCodeId()/]
         [protected (e.getUserCodeId('Methodes ' + e.buildServiceClassName())) startTagPrefix('// ') endTagPrefix('// ')]
           
           [if (not e.isNotPersistent())]

@@ -16,7 +16,6 @@ import fr.application.matching.annuaire.PersonneMatch;
 import fr.application.matching.annuaire.PersonneMatch_Itf;
 import fr.application.matching.ref.GradeMatch;
 import fr.application.matching.ref.GradeMatch_Itf;
-import java.util.Date;
 
 // End of user code
 

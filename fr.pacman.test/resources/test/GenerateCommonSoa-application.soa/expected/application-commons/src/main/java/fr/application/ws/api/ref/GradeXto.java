@@ -34,7 +34,7 @@ public class GradeXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lo
    // ATTRIBUTS
 
    /** L'identifiant. */
-   // for annotation_id
+   
    // Start of user code for annotation_id
    @XmlElement(namespace = "", name = "id")
    @JsonProperty("id")
@@ -42,7 +42,7 @@ public class GradeXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lo
    // End of user code
 
    /** Le libellé du grade. */
-   // for annotation_libelle
+   
    // Start of user code for annotation_libelle
    @XmlElement(namespace = "", name = "libelle")
    @JsonProperty("libelle")
@@ -50,7 +50,7 @@ public class GradeXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lo
    private String _libelle;
 
    /** Le trigramme du grade. */
-   // for annotation_trigramme
+   
    // Start of user code for annotation_trigramme
    @XmlElement(namespace = "", name = "trigramme")
    @JsonProperty("trigramme")
@@ -112,7 +112,7 @@ public class GradeXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf<Lo
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getName() + '['  + getId ()  + ", " + get_libelle()   + ", " + get_trigramme()   + ']';

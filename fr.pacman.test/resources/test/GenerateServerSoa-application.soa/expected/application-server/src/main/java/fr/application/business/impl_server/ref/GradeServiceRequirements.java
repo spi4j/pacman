@@ -4,7 +4,6 @@
  * Apache License 2.0
  */
 package fr.application.business.impl_server.ref;
-
 // Start of user code for imports
 
 
@@ -17,7 +16,7 @@ package fr.application.business.impl_server.ref;
 public class GradeServiceRequirements
 {
 
-   // GradeServiceRequirements
+   
    // Start of user code GradeServiceRequirements
 
    // End of user code

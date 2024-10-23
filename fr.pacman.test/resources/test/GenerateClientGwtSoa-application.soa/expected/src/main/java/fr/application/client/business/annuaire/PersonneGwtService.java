@@ -9,7 +9,6 @@ package fr.application.client.business.annuaire;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import fr.application.ws.api.annuaire.PersonneXto;
 import fr.spi4j.ui.gwt.client.services.GwtRemoteService;
-import java.util.Date;
 
 // End of user code
 
@@ -29,7 +28,7 @@ public interface PersonneGwtService extends GwtRemoteService<Long, PersonneXto>
     */
    List<PersonneXto> findListParentDeByPersonne (final Long p_personneParentDe_id);
 
-   // findPersonneById_Personne_personne_Long_identifiant
+   
    // Start of user code findPersonneById_Personne_personne_Long_identifiant
 
    /**
@@ -41,7 +40,7 @@ public interface PersonneGwtService extends GwtRemoteService<Long, PersonneXto>
 
    // End of user code
 
-   // findPersonneByName_Personne_personne_String_nom
+   
    // Start of user code findPersonneByName_Personne_personne_String_nom
 
    /**
@@ -53,7 +52,7 @@ public interface PersonneGwtService extends GwtRemoteService<Long, PersonneXto>
 
    // End of user code
 
-   // findPersonneByIdFromRest_Personne_personne_Long_identifiant
+   
    // Start of user code findPersonneByIdFromRest_Personne_personne_Long_identifiant
 
    /**
@@ -65,7 +64,7 @@ public interface PersonneGwtService extends GwtRemoteService<Long, PersonneXto>
 
    // End of user code
 
-   // PersonneService
+   
    // Start of user code PersonneService
 
    // End of user code

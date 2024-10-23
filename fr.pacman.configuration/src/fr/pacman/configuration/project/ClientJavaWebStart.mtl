@@ -3,6 +3,7 @@
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::configuration::common::webXml/]
 
 [comment encoding = UTF-8 /]
@@ -21,7 +22,8 @@
       <name>[any.getApplicationName()/] - Packaging webapp JavaWebStart</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
      	-->
      	
      	<!--
@@ -44,9 +46,9 @@
               <version>${javamelody-core.version}</version>
           </dependency>
           <dependency>
-              <groupId>javax.servlet</groupId>
-              <artifactId>javax.servlet-api</artifactId>
-              <version>${javax-servlet-api.version}</version>
+  	      <groupId>jakarta.servlet</groupId>
+  	      <artifactId>jakarta.servlet-api</artifactId>
+  	      <version>${jakarta-servlet-api.version}</version>
               <scope>provided</scope>
           </dependency>
           <dependency>
@@ -55,7 +57,8 @@
               <version>${log4j.version}</version>
           </dependency>
   		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for dependencies'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
       		-->
       		
       		<!--

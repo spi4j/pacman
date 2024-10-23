@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -40,7 +39,7 @@ public class GradesGwtServiceImpl extends SpiRemoteServiceImpl implements Grades
       return super.doGetSerializationPolicy (request, getServletContext().getInitParameter("moduleBaseURL"), strongName);
    }
 
-   // findAllGrades_Grade_grades
+   
    // Start of user code findAllGrades_Grade_grades
 
    @Override
@@ -52,7 +51,7 @@ public class GradesGwtServiceImpl extends SpiRemoteServiceImpl implements Grades
 
    // End of user code
 
-   // findAllPagedGrades_Grade_grades
+   
    // Start of user code findAllPagedGrades_Grade_grades
 
    @Override
@@ -64,7 +63,7 @@ public class GradesGwtServiceImpl extends SpiRemoteServiceImpl implements Grades
 
    // End of user code
 
-   // GradesService
+   
    // Start of user code GradesService
 
    // End of user code

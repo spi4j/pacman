@@ -22,14 +22,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class GradesService implements GradesService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -48,7 +48,7 @@ public class GradesService implements GradesService_Itf
 
       // Appel des exigences en provenance de la modélisation
 
-      // findAllGrades_Grade_grades
+      
       // Start of user code findAllGrades_Grade_grades
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -69,7 +69,7 @@ public class GradesService implements GradesService_Itf
 
       // Appel des exigences en provenance de la modélisation
 
-      // findAllPagedGrades_Grade_grades
+      
       // Start of user code findAllPagedGrades_Grade_grades
       // Appel des exigences
       // TODO Méthode à implémenter
@@ -85,6 +85,7 @@ public class GradesService implements GradesService_Itf
 	@Override
 	public int findAllPagedGradesTotalCount()
 	{
+		
 		// Start of user code findAllPagedGrades
 	
 		// TODO Méthode à implémenter
@@ -94,7 +95,7 @@ public class GradesService implements GradesService_Itf
 	}
 	
 
-   // GradesService
+   
    // Start of user code GradesService
 
    // End of user code

@@ -6,7 +6,6 @@
 package fr.test.persistence.api.main;
 
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
-import java.util.Date;
 
 /**
  * L'énumeration définissant les informations de chaque colonne pour le type ShoopingCartLine.
@@ -14,8 +13,8 @@ import java.util.Date;
  */
 public enum ShoopingCartLineColumnsEnum implements ColumnsNames_Itf
 {
-   /** shoopingcartline_id. */
-   shoopingcartline_id("shoopingcartline_id", "SHOOPINGCARTLINE_ID", Long.class, true, -1, true),
+   /** shoopingCartLine_id. */
+   shoopingCartLine_id("shoopingCartLine_id", "SHOOPINGCARTLINE_ID", Long.class, true, -1, true),
    /** quantity. */
    quantity("quantity", "QUANTITY", Integer.class, true, -1, false),
    /** book_id. */

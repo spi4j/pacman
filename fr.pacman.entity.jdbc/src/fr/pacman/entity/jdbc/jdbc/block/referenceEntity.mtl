@@ -44,13 +44,13 @@
       */
      private static final long serialVersionUID = -1;
   
-     // Constantes [r.buildReferenceImplClassName()/]
+     [('Constantes ' + r.buildReferenceImplClassName()).displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Constantes ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
   
      // ATTRIBUTS
-    // Methodes [r.buildReferenceImplClassName()/]
+    [('Methodes ' + r.buildReferenceImplClassName()).displayClearUserCodeId()/]
     [protected (r.getUserCodeId('Methodes ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
     [/protected]
@@ -64,7 +64,7 @@
       private [r.genPkType()/] [r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/];
   	
   
-     // Attributs [r.buildReferenceImplClassName()/]
+     [('Attributs ' + r.buildReferenceImplClassName()).displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Attributs ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -154,7 +154,7 @@
      }
   
   
-     // Methodes 2 [r.buildReferenceImplClassName()/]
+     [('Methodes 2 ' + r.buildReferenceImplClassName()).displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Methodes 2 ' + r.buildReferenceImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

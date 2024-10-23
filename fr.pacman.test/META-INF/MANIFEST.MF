@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: fr.pacman.test.nonregression
+Automatic-Module-Name: fr.pacman.test
 Bundle-ManifestVersion: 2
-Bundle-Name: Acceleo Non Regression Test Module Runtime Plug-in
+Bundle-Name: Acceleo Test Module Runtime Plug-in
 Bundle-SymbolicName: fr.pacman.test
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: Safr@n
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy

@@ -12,7 +12,6 @@ import fr.spi4j.ui.graal.UserAction;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
 import fr.spi4j.ui.mvp.View_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -20,13 +19,13 @@ import java.util.Date;
  * Presenter.
  * @author safr@n
  */
-// Class definition
+
 // Start of user code Class definition
 public class MainPresenter extends Presenter_Abs<MainView_Itf, Object>
 // End of user code
 {
 
-   // Constructeur(s)
+   
    // Start of user code Constructeur(s)
    /**
     * Constructeur.
@@ -51,7 +50,7 @@ public class MainPresenter extends Presenter_Abs<MainView_Itf, Object>
    @Override
    public void initView ()
    {
-      // Initialisation de la vue
+      
       // Start of user code Initialisation de la vue
 
       // End of user code
@@ -60,8 +59,8 @@ public class MainPresenter extends Presenter_Abs<MainView_Itf, Object>
    @Override
    protected String doGenerateTitle ()
    {
-      // Titre de l\'écran
-      // Start of user code Titre de l'écran
+      
+      // Start of user code Titre de l'ecran
       return "Main";
       // End of user code
    }
@@ -81,6 +80,7 @@ public class MainPresenter extends Presenter_Abs<MainView_Itf, Object>
 
       // End of user code
 
+	  
       // Start of user code connexion : Affichage de Login
       // affichage de l'écran Login
       LoginPresenter v_Login;
@@ -114,6 +114,7 @@ public class MainPresenter extends Presenter_Abs<MainView_Itf, Object>
 
       // End of user code
 
+	  
       // Start of user code déconnexion : Affichage de Home
 
       // End of user code

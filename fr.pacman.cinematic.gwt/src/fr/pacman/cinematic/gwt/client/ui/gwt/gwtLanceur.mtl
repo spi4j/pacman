@@ -38,8 +38,8 @@
            @Override
            public void onUncaughtException (final Throwable p_caught)
            {
-              // Exceptions non interceptées
-              [protected (root.getUserCodeId('Exceptions non interceptées')) startTagPrefix('// ') endTagPrefix('// ')]
+              ['Exceptions non interceptees'.displayClearUserCodeId()/]
+              [protected (root.getUserCodeId('Exceptions non interceptees')) startTagPrefix('// ') endTagPrefix('// ')]
                 GWT.log(p_caught.toString(), p_caught);
                 // Create the popup dialog box
                 final DialogBox v_dialogBox = new DialogBox();
@@ -71,7 +71,7 @@
            @Override
            public void onWindowClosing (final ClosingEvent p_event)
            {
-              // Fermeture de l\'application
+              ['Fermeture de l\'application'.displayClearUserCodeId()/]
               [protected (root.getUserCodeId('Fermeture de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
                 p_event.setMessage("Vous allez quitter l'application blanche. Continuer ?");
               [/protected]
@@ -91,7 +91,7 @@
         // initialisation de l'application
         initApplication();
   
-        // Post initialisation
+        ['Post initialisation'.displayClearUserCodeId()/]
         [protected (root.getUserCodeId('Post initialisation')) startTagPrefix('// ') endTagPrefix('// ')]
           // masquer le div de chargement de la page.
           final RootPanel v_loadingPanel = RootPanel.get("loading");
@@ -104,12 +104,13 @@
       */
      public static void initApplication ()
      {
-        // Pre Initialisation de l\'application
+        ['Pre Initialisation de l\'application'.displayClearUserCodeId()/]
         [protected (root.getUserCodeId('Pre Initialisation de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
   
   [for (flow : flow::Flow | root.eAllContents(flow::ViewState)->select(viewState | viewState.viewContainers->exists(view | not (view.widget = null) and view.widget.name = 'MainPanel'))->collect(temp1 | temp1.eContainer(flow::Flow)))]
+          [('Initialisation du flow ' + flow.name).displayClearUserCodeId()/]
           [protected (flow.getUserCodeId('Initialisation du flow ' + flow.name)) startTagPrefix('// ') endTagPrefix('// ')]
             final [flow.nameFlow()/] v_[flow.nameFlow().toLowerFirst()/] = new [flow.nameFlow()/]();
             v_[flow.nameFlow().toLowerFirst()/].start();
@@ -117,13 +118,13 @@
     
   [/for]
   
-        // Post Initialisation de l\'application
+        ['Post Initialisation de l\'application'.displayClearUserCodeId()/]
         [protected (root.getUserCodeId('Post Initialisation de l\'application')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
      }
   
-     // GwtLanceur
+     ['GwtLanceur'.displayClearUserCodeId()/]
      [protected (root.getUserCodeId('GwtLanceur')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

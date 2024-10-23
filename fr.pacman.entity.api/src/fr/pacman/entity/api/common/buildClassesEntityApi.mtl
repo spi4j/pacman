@@ -66,17 +66,20 @@
 
 [query public physicalName(r : environment::Reference, compteur : Integer) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.referencedType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) + '_' + compteur endif/]
 
-[query public physicalNameId(r : environment::Reference) : String = r.physicalName() + r.nameSQL_REF_ID()/]
+[comment : On ajoute une securite supplementaire sur _id pour les noms des references avec .buildSimpleReferenceName() /]
+[comment : Comme l'ID n'est pas present dans la vue physique, cela permet de s'assurer des erreurs de l'utilisateur /]
+[comment : qui a oublie de rajouter _ID a la fin de la refence pour la cle etrangere. /]
+[query public physicalNameId(r : environment::Reference) : String = r.physicalName().buildSimpleReferenceName()/]
 
-[query public physicalNameId(r : environment::Reference, compteur : Integer) : String = r.physicalName(compteur) + r.nameSQL_REF_ID()/]
+[query public physicalNameId(r : environment::Reference, compteur : Integer) : String = r.physicalName(compteur).buildSimpleReferenceName()/]
+
+[query public physicalNameReferencingId(r : environment::Reference) : String = r.physicalNameReferencing().buildSimpleReferenceName()/]
+
+[query public physicalNameReferencingId(r : environment::Reference, compteur : Integer) : String = r.physicalNameReferencing(compteur).buildSimpleReferenceName()/]
 
 [query public physicalNameReferencing(r : environment::Reference) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.containingType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) endif/]
 
 [query public physicalNameReferencing(r : environment::Reference, compteur : Integer) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.containingType.oclAsType(entity::Entity).physicalName().first(r.maxHalfColumnReferenceSize()) + '_' + compteur endif/]
-
-[query public physicalNameReferencingId(r : environment::Reference) : String = r.physicalNameReferencing() + r.nameSQL_REF_ID()/]
-
-[query public physicalNameReferencingId(r : environment::Reference, compteur : Integer) : String = r.physicalNameReferencing(compteur) + r.nameSQL_REF_ID()/]
 
 [query public physicalNameJointure(r : environment::Reference) : String = if r.hasPhysicalName() then r.getAnnotationBody('PHYSICAL_NAME', false) else r.containingType.oclAsType(entity::Entity).physicalName() + r.name.toUpper() endif/]
 

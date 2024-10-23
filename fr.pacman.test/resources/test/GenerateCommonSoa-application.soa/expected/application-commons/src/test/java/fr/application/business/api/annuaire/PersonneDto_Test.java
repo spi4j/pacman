@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test pour le DTO 'Personne'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class PersonneDto_Test extends BeanTester_Abs
@@ -90,8 +90,8 @@ public class PersonneDto_Test extends BeanTester_Abs
       assertEquals(v_marieAvec, v_dto.get_marieAvec_id(), "Champ marieAvec_id incorrect");
       assertEquals(v_personneParentDe, v_dto.get_personneParentDe_id(), "Champ parentDe_id incorrect");
 
-      // Remplissage références du dto
-      // Start of user code Remplissage références du dto
+      
+      // Start of user code Remplissage references du dto
 
       // End of user code
 

@@ -20,7 +20,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code a9c64d756071d5bde340c5f2f54001e7
 // End of user code
 public interface PurchaseOrderService extends ApplicationService_Itf
@@ -33,7 +33,7 @@ public interface PurchaseOrderService extends ApplicationService_Itf
     *           (In)(*) userId.
     * @return purchaseOrders.
 	*/
-	// Annotations searchPurchaseOrder_PurchaseOrder_purchaseOrders_String_userId
+	
 	// Start of user code 330af4eb709e07fa523a2bc768b5cbfb
 
 	// End of user code
@@ -42,8 +42,8 @@ public interface PurchaseOrderService extends ApplicationService_Itf
 
 	
 
-    // Méthodes PurchaseOrderService
-    // Start of user code 35f3d2b4f8ea968835a2743ef2c56318
+    
+    // Start of user code 725a7870e8a0e49d2403cab1799f84ff
 
     // End of user code
 }

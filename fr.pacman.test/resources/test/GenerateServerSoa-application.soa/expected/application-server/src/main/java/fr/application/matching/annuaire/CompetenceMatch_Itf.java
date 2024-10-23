@@ -14,7 +14,6 @@ import fr.application.persistence.api.annuaire.CompetenceEntity_Itf;
 import fr.spi4j.matching.Match_Itf;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -60,7 +59,7 @@ public interface CompetenceMatch_Itf extends Match_Itf<Long, CompetenceDto, Comp
     */
     void deleteDispose (final CompetenceDto p_dto);
 
-   // CompetenceMatch_Itf
+   
    // Start of user code CompetenceMatch_Itf
 
    // End of user code

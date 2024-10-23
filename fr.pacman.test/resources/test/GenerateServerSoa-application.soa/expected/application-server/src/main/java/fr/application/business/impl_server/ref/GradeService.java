@@ -24,14 +24,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class GradeService extends Service_Abs<Long, GradeDto, GradeColumns_Enum> implements GradeService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -51,7 +51,7 @@ public class GradeService extends Service_Abs<Long, GradeDto, GradeColumns_Enum>
 
 
 
-   // GradeService
+   
    // Start of user code GradeService
 
    // End of user code

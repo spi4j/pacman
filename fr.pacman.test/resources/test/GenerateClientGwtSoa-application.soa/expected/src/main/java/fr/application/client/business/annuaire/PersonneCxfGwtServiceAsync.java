@@ -8,7 +8,6 @@ package fr.application.client.business.annuaire;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import java.util.Date;
 
 // End of user code
 
@@ -19,7 +18,7 @@ import java.util.Date;
 public interface PersonneCxfGwtServiceAsync
 {
 
-   // findPersonneByIdFromCxf_Personne_personne_Long_identifiant
+   
    // Start of user code findPersonneByIdFromCxf_Personne_personne_Long_identifiant
 
    /**
@@ -33,7 +32,7 @@ public interface PersonneCxfGwtServiceAsync
 
    // End of user code
 
-   // PersonneCxfGwtServiceAsync
+   
    // Start of user code PersonneCxfGwtServiceAsync
 
    // End of user code

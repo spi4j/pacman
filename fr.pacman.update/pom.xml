@@ -6,26 +6,42 @@
 	<parent>
 		<groupId>fr.pacman</groupId>
 		<artifactId>pacman-parent</artifactId>
-		<version>4.4.0</version>
+		<version>4.6.0</version>
 	</parent>
 	
 	<artifactId>fr.pacman.update</artifactId>
-	<packaging>eclipse-update-site</packaging>
+	<packaging>eclipse-repository</packaging>
 	<name>fr.pacman.update</name>
 	<description>Update Site Pacman pour Safr@n.</description>
 
 	<build>
 		<plugins>
 			<plugin>
+				<!-- Eclipse caches current state of update site. -->
+				<!-- So you need to restart, to make it show newer versions. -->
 				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-packaging-plugin</artifactId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<!-- <format>${env.BUILD_NUMBER}_${env.BUILD_ID}</format> -->
-					<format>'test'</format>
-					<archiveSite>true</archiveSite>
+					<createArtifactRepository>true</createArtifactRepository>
+					<finalName>${project.groupId}-${unqualifiedVersion}.${buildQualifier}</finalName>
 				</configuration>
 			</plugin>
+			 <plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-resources-plugin</artifactId>
+        		<executions>
+          			<execution>
+            			<phase>verify</phase>
+            			<goals>
+              				<goal>resources</goal>
+            			</goals>
+          			</execution>
+        		</executions>
+        		<configuration>
+          			<outputDirectory>${project.build.directory}</outputDirectory>
+        		</configuration>
+      		</plugin>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -37,22 +53,18 @@
 						</goals>
 						<configuration>
 							<target>
-								<!-- Copy the update site folder. -->
-								<copy
-									todir="target/${project.artifactId}_${project.version}">
-									<fileset dir="target/site" />
-								</copy>
-
-								<!-- Copy the update site archive. -->
-								<copy file="target/site_assembly.zip"
-									tofile="target/${project.artifactId}_${project.version}.zip" />
-
+								<!-- The category.xml file is not used by tycho for now... -->
 								<!-- Delete the other useless archive. -->
-								<delete file="target/site.zip" />
-
-								<!-- Delete the directory created by the antrun plugin. -->
+								<!-- 
+								<delete>
+									<fileset dir="target/">
+										<include name ="*.properties"/>
+									</fileset>
+								</delete>
+								<delete dir="target/targetPlatformRepository" />		
+								<delete dir="target/repository" />						
 								<delete dir="target/antrun" />
-
+								-->
 							</target>
 						</configuration>
 					</execution>

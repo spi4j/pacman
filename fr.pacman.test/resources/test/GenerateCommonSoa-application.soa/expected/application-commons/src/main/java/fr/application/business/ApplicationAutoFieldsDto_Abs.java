@@ -27,7 +27,7 @@ public abstract class ApplicationAutoFieldsDto_Abs {
 	*/
 	private static final long serialVersionUID = -1;
 
-	// Constantes
+	
 	// Start of user code Constantes
 
 	// End of user code
@@ -40,7 +40,7 @@ public abstract class ApplicationAutoFieldsDto_Abs {
    	private XtopSup _xtopsup;
 
 
-	// Commons Attributs 
+	 
 	// Start of user code Commons Attributs
 
 	// End of user code

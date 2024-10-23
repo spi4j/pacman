@@ -35,7 +35,7 @@ public class ApplicationContextResolver extends RsDefaultContextResolver
       // traiter le même objet différemment selon qu'il soit utilisé en SOAP
       // ou REST.
 
-      // ApplicationContextResolver
+      
       // Start of user code ApplicationContextResolver
 
       super(new JacksonAnnotationIntrospector());

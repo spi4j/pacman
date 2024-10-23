@@ -47,7 +47,7 @@
    * Cette classe est générée uniquement car '[e.nameSimpleEntity()/]' est annoté 'Referentiel'.
    * @author [e.getAuthorName()/]
    */
-  // Annotation for class
+  ['Annotation for class'.displayClearUserCodeId()/]
   [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
   
@@ -70,7 +70,7 @@
         ['user persistence'.apply_attributeStatic()/] = [e.buildParamPersistenceClassName()/].['get user persistence'.apply_methodDefault()/]();
         ['dao'.apply_attributeStatic()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildDaoName()).apply_methodDefault()/]();
   
-        // set up before all
+        ['set up before all'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('set up before all')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
   
@@ -84,7 +84,7 @@
      {
         ['user persistence'.apply_attributeStatic()/].begin();
   
-        // set up
+        ['set up'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('set up')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
   
@@ -99,7 +99,7 @@
         assertTrue(['dao'.apply_attributeStatic()/] instanceof [e.buildDaoImplClassName()/], "Le DAO est bien une implémentation JDBC");
         final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = ['user persistence'.apply_attributeStatic()/].[('get ' + e.buildEntityName()).apply_methodDefault()/]();
   
-        // remplissage entity
+        ['remplissage entity'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('remplissage entity')) startTagPrefix('// ') endTagPrefix('// ')]
           
         [/protected]
@@ -110,7 +110,7 @@
         assertNotNull(['map'.apply_variableDefault()/], "La map est vide");
         assertFalse(['map'.apply_variableDefault()/].isEmpty(), "La map est vide");
   
-        // vérification map
+        ['vérification map'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('vérification map')) startTagPrefix('// ') endTagPrefix('// ')]
           
         [/protected]
@@ -125,13 +125,13 @@
      {
         ['user persistence'.apply_attributeStatic()/].rollback();
   
-        // tear down
+        ['tear down'.displayClearUserCodeId()/]
         [protected (e.getUserCodeId('tear down')) startTagPrefix('// ') endTagPrefix('// ')]
         [/protected]
   
      }
   
-     // specific service test
+     ['specific service test'.displayClearUserCodeId()/]
      [protected (e.getUserCodeId('specific service test')) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]

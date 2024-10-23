@@ -24,14 +24,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class PaysService extends Service_Abs<Long, PaysDto, PaysColumns_Enum> implements PaysService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -57,7 +57,7 @@ public class PaysService extends Service_Abs<Long, PaysDto, PaysColumns_Enum> im
    }
 
 
-   // PaysService
+   
    // Start of user code PaysService
 
    // End of user code

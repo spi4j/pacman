@@ -85,7 +85,7 @@ public class ApplicationCacheManager implements ServletContextListener
       ServiceCacheProxy.clearCaches();
       c_log.info("Caches purges");
 
-	  // for reloading caches
+	  
 	  // Start of user code for reloading caches
 
       // End of user code

@@ -16,7 +16,6 @@ import fr.application.persistence.api.annuaire.AdresseColumns_Enum;
 import fr.application.persistence.api.annuaire.AdresseDao_Itf;
 import fr.application.persistence.api.annuaire.AdresseEntity_Itf;
 import fr.spi4j.persistence.DatabaseLineStatus_Enum;
-import java.util.Date;
 
 // End of user code
 
@@ -67,7 +66,7 @@ public class AdresseMatch extends ApplicationMatch_Abs<Long, AdresseDto, Adresse
       // v_entity.set_codePostal(p_dto.get_codePostal ());
       // v_entity.set_personneAdresses_id (p_dto.get_personneAdresses_id ());
 
-      // convertDtoToEntity
+      
       // Start of user code convertDtoToEntity
       checkAdresse(Long.class, String.class, String.class, String.class, PersonneDto.class);
       v_entity.setId(p_dto.getId ());
@@ -100,7 +99,7 @@ public class AdresseMatch extends ApplicationMatch_Abs<Long, AdresseDto, Adresse
       // p_dto.set_codePostal (p_entity.get_codePostal ());
       // p_dto.set_personneAdresses_id (p_entity.get_personneAdresses_id ());
 
-      // refreshDtoFromEntity
+      
       // Start of user code refreshDtoFromEntity
       checkAdresse (Long.class, String.class, String.class, String.class, PersonneDto.class);
       p_dto.setId (p_entity.getId ());
@@ -123,7 +122,7 @@ public class AdresseMatch extends ApplicationMatch_Abs<Long, AdresseDto, Adresse
       return AdresseColumns_Enum.valueOf (p_attribute.getName ());
    }
 
-   // AdresseMatch
+   
    // Start of user code AdresseMatch
 
    // End of user code

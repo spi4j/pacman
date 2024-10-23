@@ -11,7 +11,6 @@ import fr.application.business.api.ref.GradeDto;
 import fr.application.persistence.api.ref.GradeColumns_Enum;
 import fr.application.persistence.api.ref.GradeEntity_Itf;
 import fr.spi4j.matching.Match_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -30,7 +29,7 @@ public interface GradeMatch_Itf extends Match_Itf<Long, GradeDto, GradeEntity_It
     */
    GradeColumns_Enum getColumn (final GradeAttributes_Enum p_attribute);
 
-   // GradeMatch_Itf
+   
    // Start of user code GradeMatch_Itf
 
    // End of user code

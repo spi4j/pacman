@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du service 'GradeService_Itf'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class GradeService_Test  extends BeanTester_Abs
@@ -64,7 +64,7 @@ public class GradeService_Test  extends BeanTester_Abs
       userPersistence = ApplicationParamPersistence.getUserPersistence ();
       service = ApplicationUserBusiness.getGradeService ();
 
-      // set up before class
+      
       // Start of user code set up before class
       // End of user code
    }
@@ -77,7 +77,7 @@ public class GradeService_Test  extends BeanTester_Abs
    {
 	  userPersistence.begin ();
 
-      // set up
+      
       // Start of user code set up
       // End of user code
    }
@@ -96,7 +96,7 @@ public class GradeService_Test  extends BeanTester_Abs
       assertNotNull(DtoUtil.findInCollectionById (v_all, crudId), 
 			"Le dto n'a pas été trouvé dans la liste de tous les dto");
 
-      // findAll assertions
+      
       // Start of user code findAll assertions
 
       // End of user code
@@ -112,7 +112,7 @@ public class GradeService_Test  extends BeanTester_Abs
    {
       final GradeDto v_GradeDto = new GradeDto ();
 
-      // create
+      
       // Start of user code create
       // TODO renseigner données de test
       v_GradeDto.set_libelle ("Str");
@@ -126,7 +126,7 @@ public class GradeService_Test  extends BeanTester_Abs
 
       assertNotNull (v_createdGradeDto.getId (), "Le dto créé devrait avoir une clé primaire renseignée");
 
-      // create assertions
+      
       // Start of user code create assertions
 
 
@@ -148,7 +148,7 @@ public class GradeService_Test  extends BeanTester_Abs
       assertNotNull (v_dto.getId (), "Le dto créé devrait avoir une clé primaire renseignée");
       assertNotNull (v_dto.toString (), "Le dto créé devrait avoir un toString");
 
-      // findById assertions
+      
       // Start of user code findById assertions
 
       // End of user code
@@ -166,7 +166,7 @@ public class GradeService_Test  extends BeanTester_Abs
 
       final GradeDto v_dto = service.findById (crudId);
 
-      // update
+      
       // Start of user code update
 
       // End of user code
@@ -175,7 +175,7 @@ public class GradeService_Test  extends BeanTester_Abs
 
       assertNotNull (v_updatedDto.getId (), "Le dto mis à jour devrait avoir une clé primaire renseignée");
 
-      // update assertions
+      
       // Start of user code update assertions
 
       // End of user code
@@ -198,7 +198,7 @@ public class GradeService_Test  extends BeanTester_Abs
       assertNull (DtoUtil.findInCollectionById (v_all, crudId), 
 			"Le dto ne devrait plus exister dans la liste de tous les dto");
 
-      // delete assertions
+      
       // Start of user code delete assertions
 
       // End of user code
@@ -211,7 +211,7 @@ public class GradeService_Test  extends BeanTester_Abs
    public void testGetColumn ()
    {
       ApplicationUserMatching.getGradeMatch ().getColumn (GradeAttributes_Enum.id);
-      // getColumn
+      
       // Start of user code getColumn
       ApplicationUserMatching.getGradeMatch ().getColumn (GradeAttributes_Enum.libelle);
       // End of user code
@@ -225,12 +225,12 @@ public class GradeService_Test  extends BeanTester_Abs
    {
       userPersistence.rollback ();
 
-      // tear down
+      
       // Start of user code tear down
       // End of user code
    }
 
-   // specific service test
+   
    // Start of user code specific service test
 
    // End of user code

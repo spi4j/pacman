@@ -17,7 +17,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques pour un type 'Competence'.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface CompetenceService_Itf extends Service_Itf<Long, CompetenceDto>
@@ -48,8 +48,8 @@ public interface CompetenceService_Itf extends Service_Itf<Long, CompetenceDto>
     */
     void deleteDispose (final CompetenceDto p_dto) ;
 
-    // Méthodes CompetenceService_Itf
-    // Start of user code Méthodes CompetenceService_Itf
+    
+    // Start of user code Methodes CompetenceService_Itf
 
     // End of user code
 }

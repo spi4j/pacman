@@ -28,7 +28,7 @@ public interface CompetenceGwtService extends GwtRemoteService<Long, CompetenceX
     */
    List<PersonneXto> findListDisposeByCompetence (final Long p_competence_id);
 
-   // CompetenceService
+   
    // Start of user code CompetenceService
 
    // End of user code

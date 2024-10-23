@@ -145,7 +145,7 @@ public class GradeDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<Lo
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getSimpleName() + '[' + _id + ", " + get_libelle() + ", " + get_trigramme()   + ']';
@@ -153,4 +153,8 @@ public class GradeDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<Lo
       // End of user code
    }
 
+   
+   // Start of user code Methodes
+
+   // End of user code
 }

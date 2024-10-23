@@ -57,7 +57,7 @@ public final class TestH2DatabaseHelper extends H2DatabaseHelper
       INSTANCE.initDatabase();
    }
 
-   // Methodes
+   
    // Start of user code 06a25426ca87dd3a2b023b85e8e72986
 
    // End of user code

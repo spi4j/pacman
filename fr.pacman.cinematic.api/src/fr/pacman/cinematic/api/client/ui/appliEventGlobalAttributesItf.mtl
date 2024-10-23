@@ -16,13 +16,15 @@
   [/protected]
   
   /**
-   * Classe de constantes utilisées dans les attributs des événements. D'autres clés d'attributs peuvent être définies dans les présenteurs. Ici se trouvent les clés qui ont leur place dans plusieurs présenteurs.
+   * Classe de constantes utilisées dans les attributs des événements. 
+   * D'autres clés d'attributs peuvent être définies dans les présenteurs. 
+   * Ici se trouvent les clés qui ont leur place dans plusieurs présenteurs.
    * @author [any.getAuthorName()/]
    */
   public interface [any.buildAppliEventGlobalAttributesItf()/]
   {
   
-     // [any.buildAppliEventGlobalAttributesItf()/]
+     [any.buildAppliEventGlobalAttributesItf().displayClearUserCodeId()/]
      [protected (any.getUserCodeId(any.buildAppliEventGlobalAttributesItf())) startTagPrefix('// ') endTagPrefix('// ')]
 
        /** La clé contenant le DTO */

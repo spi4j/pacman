@@ -29,7 +29,7 @@
   {
      // CONSTANTES
   
-     // Constantes [e.buildDaoInterfaceName()/]
+     [('Constantes ' + e.buildDaoInterfaceName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildDaoInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -46,7 +46,7 @@
        List<[r.referencedType.oclAsType(entity::Entity).buildEntityInterfaceName()/]> [('find list ' + r.name.normalize() + ' by ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity()).apply_methodDefault()/] (final [r.genPkType()/] [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_parameterMethodObjectIn()/]);
     
   [/for]
-     // Methodes [e.buildDaoInterfaceName()/]
+     [('Methodes ' + e.buildDaoInterfaceName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildDaoInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

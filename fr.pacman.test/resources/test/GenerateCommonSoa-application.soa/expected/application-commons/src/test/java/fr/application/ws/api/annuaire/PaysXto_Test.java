@@ -8,7 +8,6 @@ package fr.application.ws.api.annuaire;
 
 import fr.application.business.api.annuaire.PaysAttributes_Enum;
 import fr.spi4j.tua.BeanTester_Abs;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Classe de test pour le XTO 'Pays'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class PaysXto_Test extends BeanTester_Abs

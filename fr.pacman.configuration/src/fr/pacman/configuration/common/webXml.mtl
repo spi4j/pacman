@@ -136,7 +136,7 @@
 [template public userCode(any : ecore::EObject)]
   
   <!-- 
-  // Zone libre utilisateur
+  ['Zone libre utilisateur'.displayClearUserCodeId()/]
   [protected (any.getUserCodeId('zone libre utilisateur')) startTagPrefix('// ') endTagPrefix('// ')]
     -->
     

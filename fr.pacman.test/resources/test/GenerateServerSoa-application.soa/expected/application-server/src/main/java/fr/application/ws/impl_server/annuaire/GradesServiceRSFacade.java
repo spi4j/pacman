@@ -9,7 +9,6 @@ import fr.spi4j.ws.rs.exception.RsNoResultException;
 import fr.spi4j.ws.rs.exception.Spi4jValidationException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import org.jvnet.hk2.annotations.Service;
 
@@ -91,6 +90,7 @@ public class GradesServiceRSFacade implements GradesServiceRSFacade_Itf
    @Override
    public int findAllPagedGradesTotalCount()
    {
+   	
    	// Start of user code findAllPagedGrades
    
    	return ApplicationUserBusiness.getGradesService ().findAllPagedGradesTotalCount();

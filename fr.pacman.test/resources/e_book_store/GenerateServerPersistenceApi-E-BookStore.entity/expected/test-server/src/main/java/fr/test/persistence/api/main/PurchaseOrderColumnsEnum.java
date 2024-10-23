@@ -6,7 +6,6 @@
 package fr.test.persistence.api.main;
 
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
-import java.util.Date;
 
 /**
  * L'énumeration définissant les informations de chaque colonne pour le type PurchaseOrder.
@@ -14,8 +13,8 @@ import java.util.Date;
  */
 public enum PurchaseOrderColumnsEnum implements ColumnsNames_Itf
 {
-   /** purchaseorder_id. */
-   purchaseorder_id("purchaseorder_id", "PURCHASEORDER_ID", Long.class, true, -1, true),
+   /** purchaseOrder_id. */
+   purchaseOrder_id("purchaseOrder_id", "PURCHASEORDER_ID", Long.class, true, -1, true),
    /** cardNumber. */
    cardNumber("cardNumber", "CARDNUMBER", String.class, true, -1, false),
    /** totalAmount. */

@@ -6,6 +6,7 @@
 [import fr::pacman::commons::common::attributes/]
 [import fr::pacman::commons::soa::common::attributes/]
 [import fr::pacman::commons::soa::common::names/]
+[import fr::pacman::commons::soa::common::utils/]
 [import fr::pacman::commons::convention::rule::methodRule/]
 [import fr::pacman::commons::convention::rule::parameterRule/]
 [import fr::pacman::commons::convention::rule::attributeRule/]
@@ -58,7 +59,7 @@
 [query private addParamForPassingModeXtoRs(param : soa::Parameter) : String = if not (param.restData.restId = null) and param.restData.restId.size() > 0 then param.restData.restId else param.name endif/]
 
 [comment : /]
-[query public paramInXto(param : soa::Parameter) : String = 'final ' + param.paramTypeXto() + ' ' + param.name.sanitize().apply_parameterMethodClassicIn()/]
+[query public paramInXto(param : soa::Parameter) : String = 'final ' + param.paramTypeXto() + ' ' + param.name.sanitizeRJK().apply_parameterMethodClassicIn()/]
 
 [comment : write the code for operation's out parameter in WS. /]
 [query public paramOutXto(o : soa::Operation) : String = if o.output->size() <> 1 or o.output->first().type = null then 'void' else o.output->first().paramTypeXto() endif/]
@@ -97,7 +98,7 @@
 
 [comment : /]
 [template public parametersXtoRS(p : soa::Parameter)]
-  [p.name.apply_parameterMethodClassicIn()/][/template]
+  [p.name.sanitizeRJK().apply_parameterMethodClassicIn()/][/template]
 
 [comment : /]
 [template public getGetter(a : environment::Attribute)]

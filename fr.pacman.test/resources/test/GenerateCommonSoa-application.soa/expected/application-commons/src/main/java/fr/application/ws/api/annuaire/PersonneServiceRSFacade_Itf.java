@@ -7,7 +7,6 @@ package fr.application.ws.api.annuaire;
 // Start of user code for imports
 
 import fr.spi4j.exception.Spi4jValidationException;
-import java.util.Date;
 
 // End of user code
 
@@ -25,6 +24,7 @@ public interface PersonneServiceRSFacade_Itf
     *           (In)(*) identifiant.
     * @return personne.
 	*/
+	
     // Start of user code Annotations MethodefindPersonneByIdFromRest
 
     // End of user code

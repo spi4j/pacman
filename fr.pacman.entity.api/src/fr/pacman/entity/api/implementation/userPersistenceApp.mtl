@@ -44,30 +44,26 @@
   
   [for (e : entity::Entity | r.eAllContents(entity::Entity))]
     
-       // [('get ' + e.buildEntityName()).apply_methodDefault()/]
-       [protected (e.getUserCodeId(('get ' + e.buildEntityName()).apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-         /**
-          * Obtenir l'entité '[e.buildEntityInterfaceName()/]'.
-          * @return L'instance désirée.
-          */
-         public [e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/] [('get ' + e.buildEntityName()).apply_methodDefault()/] ()
-         {
-            return getEntity ([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class);
-         }
-       [/protected]
+       /**
+        * Obtenir l'entité '[e.buildEntityInterfaceName()/]'.
+        * @return L'instance désirée.
+        */
+       public [e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/] [('get ' + e.buildEntityName()).apply_methodDefault()/] ()
+       {
+          return getEntity ([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class);
+       }
     
     [if (not e.isNotPersistent() or e.useMatching())]
-         // [('get ' + e.buildDaoName()).apply_methodDefault()/]
-         [protected (e.getUserCodeId(('get ' + e.buildDaoName()).apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
-           /**
-            * Obtenir le DAO '[e.buildDaoInterfaceName()/]'.
-            * @return L'instance désirée.
-            */
-           public [e.buildPackagePersistenceApiEntity()/].[e.buildDaoInterfaceName()/] [('get ' + e.buildDaoName()).apply_methodDefault()/] ()
-           {
-              return getDao ([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class);
-           }
-         [/protected]
+      
+         /**
+          * Obtenir le DAO '[e.buildDaoInterfaceName()/]'.
+          * @return L'instance désirée.
+          */
+         public [e.buildPackagePersistenceApiEntity()/].[e.buildDaoInterfaceName()/] [('get ' + e.buildDaoName()).apply_methodDefault()/] ()
+         {
+            return getDao ([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class);
+         }
+      
     [/if]
   [/for]
   }[/template]

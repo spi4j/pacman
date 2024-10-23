@@ -11,8 +11,7 @@ import fr.spi4j.tua.BeanTester_Abs;
 import fr.test.business.api.main.PurchaseOrderAttributesEnum;
 import fr.test.business.api.main.ShoppingCartDto;
 import fr.test.business.api.main.UserDto;
-import fr.test.types.enums.StatusEnum;
-import java.util.Date;
+import fr.test.main.StatusEnum;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test pour le DTO 'PurchaseOrder'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code 8d11490eb7e3bd7fbe31724d2cea61c5
 // End of user code
 public class PurchaseOrderDtoTest extends BeanTester_Abs
@@ -65,7 +64,7 @@ public class PurchaseOrderDtoTest extends BeanTester_Abs
       dto.setUser(user);
 
       // test des valeurs
-      // getId
+      
       // Start of user code 7db1b67f9311bee084851e988f91c89d
       assertEquals(id, dto.getId(), "Champ id incorrect");
       // End of user code
@@ -74,8 +73,8 @@ public class PurchaseOrderDtoTest extends BeanTester_Abs
       assertEquals(shoppingCart, dto.getShoppingCart(), "Champ shoppingCart_id incorrect");
       assertEquals(user, dto.getUser(), "Champ user_id incorrect");
 
-      // Remplissage références du dto
-      // Start of user code acd8fa0455735d0a30c2fa5ea8e46174
+      
+      // Start of user code 8038d34b3c01b4146a122ab622155077
 
       // End of user code
 

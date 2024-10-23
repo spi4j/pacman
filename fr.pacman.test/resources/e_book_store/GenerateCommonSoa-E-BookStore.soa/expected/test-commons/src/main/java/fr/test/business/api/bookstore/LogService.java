@@ -17,7 +17,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code a9c64d756071d5bde340c5f2f54001e7
 // End of user code
 public interface LogService extends ApplicationService_Itf
@@ -30,7 +30,7 @@ public interface LogService extends ApplicationService_Itf
     *           (In)(*) message.
 
 	*/
-	// Annotations log_String_message
+	
 	// Start of user code 7cbc0d29b997b684d5ace434853f55fe
 
 	// End of user code
@@ -39,8 +39,8 @@ public interface LogService extends ApplicationService_Itf
 
 	
 
-    // Méthodes LogService
-    // Start of user code 9fbf6205d8d1f2d4d0353d6a67215f40
+    
+    // Start of user code 3bd52d7b69a18ab454f2dd48bb107fda
 
     // End of user code
 }

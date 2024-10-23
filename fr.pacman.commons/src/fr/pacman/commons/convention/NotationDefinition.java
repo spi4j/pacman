@@ -197,7 +197,7 @@ public final class NotationDefinition
          // Instancier la norme désirée
          @SuppressWarnings("unchecked")
          final Class<Norme_Abs> v_normeClass = (Class<Norme_Abs>) Class.forName(v_prefixClassNorme + p_nameNotation);
-         return (Norme_Abs) v_normeClass.getDeclaredConstructor().newInstance();
+         return (Norme_Abs) v_normeClass.newInstance();
       }
       catch (final Exception v_err)
       {

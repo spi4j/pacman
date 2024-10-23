@@ -21,10 +21,17 @@
 
 [comment : Point d'entree direct par le starter (creation nouveau projet) /]
 [template public genRootConfig(any : ecore::EObject, fromStarter : Boolean)]
-  [any.genModel()/]
   [any.genRoot(fromStarter)/]
+  
   [any.genCommon(fromStarter)/]
+  
+  [any.genModel()/]
+  
   [any.genServer(fromStarter)/]
+  
   [any.genLivraisonHebergement()/]
-  [any.genWebapp(fromStarter)/]  
-  [any.genClient(fromStarter)/][/template]
+  
+  [any.genWebapp(fromStarter)/]
+  
+  [any.genClient(fromStarter)/]
+[/template]

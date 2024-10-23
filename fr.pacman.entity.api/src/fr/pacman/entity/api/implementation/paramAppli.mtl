@@ -26,7 +26,7 @@
      /** L'identifiant de l'application. */
      String ['id appli'.apply_attributeFinalStatic()/] = "[r.getApplicationName()/]";
   
-     // Constantes
+     ['Constantes'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Constantes')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

@@ -24,7 +24,7 @@
   public enum [any.buildAppliEventTypeEnum()/] implements EventType
   {
   
-     // [any.buildAppliEventTypeEnum()/]
+     [any.buildAppliEventTypeEnum().displayClearUserCodeId()/]
      [protected (any.getUserCodeId(any.buildAppliEventTypeEnum())) startTagPrefix('// ') endTagPrefix('// ')]
 
        /** Erreur */

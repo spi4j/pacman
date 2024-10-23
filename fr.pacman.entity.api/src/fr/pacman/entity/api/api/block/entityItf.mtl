@@ -37,7 +37,7 @@
   {
      // CONSTANTES
   
-     // Constantes [e.buildEntityInterfaceName()/]
+     [('Constantes ' + e.buildEntityInterfaceName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildEntityInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -146,7 +146,7 @@
     [/for]
   [/if]
   
-     // Methodes [e.buildEntityInterfaceName()/]
+     [('Methodes ' + e.buildEntityInterfaceName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildEntityInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

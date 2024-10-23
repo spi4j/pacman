@@ -4,7 +4,7 @@
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::convention::project::ProjectProperties/]
-[import fr::pacman::commons::convention::rule::PackageNamingRule/]
+[import fr::pacman::commons::convention::rule::PackageRule/]
 [import fr::pacman::commons::properties::PacmanPropertiesManager/]
 [import fr::pacman::commons::services::AnnotationUtils/]
 
@@ -138,6 +138,10 @@
 [query public getCommonsTestResourceDir(any : ecore::EObject) : String = any.getCommonsTestResourceDir_invoke().trim().toLower().ensureTrailingSlash()/]
 
 [query private getCommonsTestResourceDir_invoke(any : ecore::EObject) : String = any.getCommonsTestResourceDirJavaService()/]
+
+[query public getCommonEnumsPackage(any : ecore::EObject) : String = any.getCommonEnumsPackage_invoke().trim().toLower()/]
+
+[query private getCommonEnumsPackage_invoke(any : ecore::EObject) : String = any.getCommonEnumsPackageJavaService()/]
 
 [query public getWebappResourceDir(any : ecore::EObject) : String = any.getWebappResourceDir_invoke().trim().ensureTrailingSlash()/]
 
@@ -287,7 +291,7 @@
 [query public buildPackageRS(any : ecore::EObject) : String = any.getApplicationPackage() + '.ws.rs'/]
 
 [comment : b : if 'true' then create a package for crud operations. /]
-[query public buildPackageRsResources(any : ecore::EObject, b : Boolean) : String = any.buildPackageRS() + '.resources' + if b then '.administration' else '' endif/]
+[query public buildPackageRsResources(any : ecore::EObject, b : Boolean) : String = any.buildPackageBusiness() + '.ws.rs.resources' + if b then '.administration' else '' endif/]
 
 [query public buildPackageRsFrontResources(any : ecore::EObject) : String = any.buildPackageRsFront() + '.resources'/]
 
@@ -301,7 +305,13 @@
 
 [query public buildPackageWs(any : ecore::EObject) : String = any.getApplicationPackage() + '.ws'/]
 
-[query public buildPackageStories(any : ecore::EObject) : String = any.getApplicationPackage() + 'stories'/]
+[query public buildPackageStories(any : ecore::EObject) : String = any.getApplicationPackage() + '.stories'/]
+
+[query public buildPackageWsApi(any : ecore::EObject) : String = any.buildPackageWs() + '.' + any.getPackageApi()/]
+
+[query public buildPackageBatch(any : ecore::EObject) : String = any.getApplicationName() + '.' + any.getPackageBatch()/]
+
+[query public getPackageBatch(any : ecore::EObject) : String = 'batch'/]
 
 [query public getPackageSteps(any : ecore::EObject) : String = 'steps'/]
 

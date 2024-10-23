@@ -16,7 +16,7 @@ public interface ApplicationPermissions_Itf
 {
 
 
-   // ApplicationPermissions_Itf 
+    
    // Start of user code ApplicationPermissions_Itf
 
    // End of user code

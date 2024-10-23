@@ -1,6 +1,6 @@
 [module commonRule('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
 
-[import fr::pacman::commons::convention::rule::CommonNamingRule/]
+[import fr::pacman::commons::convention::rule::CommonRule/]
 
 [comment encoding = UTF-8 /]
 [query public getListPrefix(any : ecore::EObject) : String = any.getListPrefix_invoke().trim()/]

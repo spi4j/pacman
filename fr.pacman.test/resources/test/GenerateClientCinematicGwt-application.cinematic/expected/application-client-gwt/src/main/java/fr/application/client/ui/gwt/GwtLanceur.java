@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import fr.spi4j.ui.gwt.client.mvp.GWTViewManager;
 import fr.spi4j.ui.mvp.MVPUtils;
-import java.util.Date;
 
 // End of user code
 
@@ -44,8 +43,8 @@ public class GwtLanceur implements EntryPoint
          @Override
          public void onUncaughtException (final Throwable p_caught)
          {
-            // Exceptions non interceptées
-            // Start of user code Exceptions non interceptées
+            
+            // Start of user code Exceptions non interceptees
             GWT.log(p_caught.toString(), p_caught);
             // Create the popup dialog box
             final DialogBox v_dialogBox = new DialogBox();
@@ -77,14 +76,14 @@ public class GwtLanceur implements EntryPoint
          @Override
          public void onWindowClosing (final ClosingEvent p_event)
          {
-            // Fermeture de l\'application
+            
             // Start of user code Fermeture de l'application
             p_event.setMessage("Vous allez quitter l'application blanche. Continuer ?");
             // End of user code
          }
       });
 
-      // Pre initialisation
+      
       // Start of user code Pre initialisation
 
       // End of user code
@@ -97,7 +96,7 @@ public class GwtLanceur implements EntryPoint
       // initialisation de l'application
       initApplication();
 
-      // Post initialisation
+      
       // Start of user code Post initialisation
       // masquer le div de chargement de la page.
       final RootPanel v_loadingPanel = RootPanel.get("loading");
@@ -110,19 +109,19 @@ public class GwtLanceur implements EntryPoint
     */
    public static void initApplication ()
    {
-      // Pre Initialisation de l\'application
+      
       // Start of user code Pre Initialisation de l'application
 
       // End of user code
 
 
-      // Post Initialisation de l\'application
+      
       // Start of user code Post Initialisation de l'application
 
       // End of user code
    }
 
-   // GwtLanceur
+   
    // Start of user code GwtLanceur
 
    // End of user code

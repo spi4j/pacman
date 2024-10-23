@@ -215,7 +215,7 @@ public class PaysDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<Lon
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getSimpleName() + '[' + _id + ", " + get_nom() + ", " + get_capitale()   + ", " + get_personnePays_id ()  + ']';
@@ -223,4 +223,8 @@ public class PaysDto extends ApplicationAutoFieldsDto_Abs implements Dto_Itf<Lon
       // End of user code
    }
 
+   
+   // Start of user code Methodes
+
+   // End of user code
 }

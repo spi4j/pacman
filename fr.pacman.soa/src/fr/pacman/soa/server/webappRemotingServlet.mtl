@@ -37,7 +37,7 @@
    */
   public class WebappRemotingServlet extends fr.spi4j.remoting.RemotingServlet
   {
-     // WebappRemotingServlet
+     ['WebappRemotingServlet'.displayClearUserCodeId()/]
      [protected (any.getUserCodeId('WebappRemotingServlet')) startTagPrefix('// ') endTagPrefix('// ')]
        
           private static final long serialVersionUID = 1L;

@@ -82,7 +82,7 @@ public class PersonneMatch extends ApplicationMatch_Abs<Long, PersonneDto, Perso
       // v_entity.set_MarieAvec_id (p_dto.get_marieAvec_id ());
       // v_entity.set_personneParentDe_id (p_dto.get_personneParentDe_id ());
 
-      // convertDtoToEntity
+      
       // Start of user code convertDtoToEntity
       checkPersonne(Long.class, String.class, String.class, Boolean.class, Date.class, Double.class, GradeDto.class, PersonneDto.class, PersonneDto.class);
       v_entity.setId(p_dto.getId ());
@@ -123,7 +123,7 @@ public class PersonneMatch extends ApplicationMatch_Abs<Long, PersonneDto, Perso
       // p_dto.set_marieAvec_id (p_entity.get_MarieAvec_id ());
       // p_dto.set_personneParentDe_id (p_entity.get_personneParentDe_id ());
 
-      // refreshDtoFromEntity
+      
       // Start of user code refreshDtoFromEntity
       checkPersonne (Long.class, String.class, String.class, Boolean.class, Date.class, Double.class, GradeDto.class, PersonneDto.class, PersonneDto.class);
       p_dto.setId (p_entity.getId ());
@@ -150,7 +150,7 @@ public class PersonneMatch extends ApplicationMatch_Abs<Long, PersonneDto, Perso
       return PersonneColumns_Enum.valueOf (p_attribute.getName ());
    }
 
-   // PersonneMatch
+   
    // Start of user code PersonneMatch
 
    // End of user code

@@ -8,7 +8,6 @@ package fr.test.persistence.api.main;
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,8 +16,8 @@ import java.util.List;
  */
 public enum ShoppingCartColumnsEnum implements ColumnsNames_Itf
 {
-   /** shoppingcart_id. */
-   shoppingcart_id("shoppingcart_id", "SHOPPINGCART_ID", Long.class, true, -1, true),
+   /** shoppingCart_id. */
+   shoppingCart_id("shoppingCart_id", "SHOPPINGCART_ID", Long.class, true, -1, true),
    /** status. */
    status("status", "STATUS", String.class, true, -1, false),
    /** userCarts_id. */

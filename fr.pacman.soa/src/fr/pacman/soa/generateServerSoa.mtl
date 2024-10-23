@@ -23,6 +23,7 @@
 [import fr::pacman::soa::files::genWebappRemotingServlet/]
 [import fr::pacman::soa::files::genCXFServlet/]
 [import fr::pacman::soa::files::genRSResources/]
+[import fr::pacman::soa::files::genBatch/]
 
 [comment encoding = UTF-8 /]
 [comment : ****************************************************************/]
@@ -39,6 +40,7 @@
       [if (m.hasAutomaticColumns())][m.genAppliMatchAbs()/][/if]
   	[m.genMappers()/]
       [m.genServicesImpls()/]
+  	[m.genBatchsImpls()/]
   	[m.genDtos()/]
   
   [if (m.useWS())]
@@ -47,10 +49,10 @@
 	[m.genRsTechnicalTokensResources()/]
 	[m.genRsOAuth2Resources()/]
 	[m.genRsWebXmlServletMappingFragment()/]
+	[if (m.isFacadeHk2Injection())][m.genRSApplicationConfig()/][/if]
+	[if (m.isFacadeFactory())][m.genRSServicesFacadeFactory()/][/if]
+	[m.genCXFServlet()/]
   [/if]
-  	[if (m.useWS())][m.genCXFServlet()/][/if]
-  	[if (m.isFacadeHk2Injection())][m.genRSApplicationConfig()/][/if]
-  	[if (m.isFacadeFactory())][m.genRSServicesFacadeFactory()/][/if]
       [if (m.clientNeedRemotingServlet())][m.genWebappRemotingServlet()/][/if]
   	[if (m.useWebAppSecuritySchemes())][m.genWebAppSecurityHelper()/][/if]
   	[m.genAllOtherSelectedResources()/]
@@ -105,7 +107,7 @@
 [comment : Generation des implementations pour les services. /]
 [template private genServicesImpls(m : soa::System)]
   
-  [for (s : soa::Service | m.eAllContents(soa::Service))][s.genServiceImplementations()/][/for]
+  [for (s : soa::Service | m.getServices())][s.genServiceImplementations()/][/for]
 [/template]
 
 [comment : Generation des implementations pour un seul service. /]
@@ -114,11 +116,29 @@
   [if (s.serviceSeul())]
     [s.genService()/][s.genServiceTest()/]
     [if (s.useServiceRequirements())][s.genServiceRequirements()/][/if][/if]
+  
   [if (s.hasCXFOperations())][s.genServiceCXF()/][/if]
   [if (s.hasRSOperations())]
     [s.genServiceRS(null)/]
     [s.genRSResource(null)/][/if]
   
+[/template]
+
+[comment : Generation des implementations pour les services batch. /]
+[template private genBatchsImpls(m : soa::System)]
+  
+  [if (m.useBatch())]
+    	[m.genJobsOperator()/]
+    	[for (s : soa::Service | m.getBatchs())][s.genBatchImplementations()/][/for]
+  [/if]
+  
+[/template]
+
+[comment : Generation des implementations pour un seul batch. /]
+[template private genBatchImplementations(s : soa::Service)]
+  
+  [s.genBatch()/]
+  [s.genBatchsXml()/]
 [/template]
 
 [comment : Generation des autres ressources (matcher, requirement, etc... ). /]

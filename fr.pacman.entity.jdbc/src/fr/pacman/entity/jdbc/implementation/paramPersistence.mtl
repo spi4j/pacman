@@ -52,7 +52,7 @@
   {
      private static final Logger ['log'.apply_attributeFinalStatic()/] = LogManager.getLogger([r.buildParamPersistenceClassName()/].class);
   
-     // Resources Physiques
+     ['Resources Physiques'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Resources Physiques')) startTagPrefix('// ') endTagPrefix('// ')]
 
        /** Chemin de la base H2 (test ou base embarquee). */
@@ -82,7 +82,7 @@
      {
         super(['id appli'.apply_attributeFinalStatic()/]);
   
-        // Constructeur
+        ['Constructeur'.displayClearUserCodeId()/]
         [protected (r.getUserCodeId('Constructeur')) startTagPrefix('// ') endTagPrefix('// ')]
 
           // Positionne l'indicateur à "true" si l'application est lancée en mode h2.
@@ -202,7 +202,7 @@
      @Override
      protected void ['after init'.apply_methodDefault()/] ()
      {
-        // afterInit
+        ['afterInit'.displayClearUserCodeId()/]
         [protected (r.getUserCodeId('afterInit')) startTagPrefix('// ') endTagPrefix('// ')]
 
           // Uniquement si application en mode h2.
@@ -241,12 +241,12 @@
      protected void initElemParamPersistence () // NOPMD
      {
         // Ajout de différentes ressources au ElemResourceManager
-        // Ajout Resources
+        ['Ajout Resources'.displayClearUserCodeId()/]
         [protected (r.getUserCodeId('Ajout Resources')) startTagPrefix('// ') endTagPrefix('// ')]
           // ['ElemResourceManager'.apply_attributeFinal()/].addResourcePhysical(['Local resource physical'.apply_attributeFinalStatic()/], fr.spi4j.persistence.Mode_Enum.nomade);
         [/protected]
   
-        // Default Dao
+        ['Default Dao'.displayClearUserCodeId()/]
         [protected (r.getUserCodeId('Default Dao')) startTagPrefix('// ') endTagPrefix('// ')]
           // Ajouter le paramétrage pour le DAO par défaut
           setDefaultDao(DefaultJdbcDao.class, ['ElemResourceManager'.apply_attributeFinal()/]);
@@ -254,7 +254,7 @@
   
   [for (e : entity::Entity | r.eAllContents(entity::Entity))]
     [if (not e.isNotPersistent() or e.useMatching())]
-            // [e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityInterfaceName()/]
+            [(e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityInterfaceName()).displayClearUserCodeId()/]
             [protected (e.getUserCodeId(e.buildPackagePersistenceApiEntity() + '.' + e.buildEntityInterfaceName())) startTagPrefix('// ') endTagPrefix('// ')]
               // Ajouter le paramétrage pour l'entité "[e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/]"
               addElemParamPersistence([e.buildPackagePersistenceApiEntity()/].[e.buildEntityInterfaceName()/].class, new ElemParamPersistence(
@@ -272,7 +272,7 @@
      private ResourcePhysical_Abs ['create resource physical'.apply_methodDefault()/] ()
      {
   
-         // Creation resource physique
+         ['Creation resource physique'.displayClearUserCodeId()/]
          [protected (r.getUserCodeId('Creation resource physique')) startTagPrefix('// ') endTagPrefix('// ')]
 
            final ResourcePhysical_Abs ['resource physical'.apply_variableDefault()/];
@@ -330,7 +330,7 @@
         */
        private void [('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault()/] ()
        {
-          // [('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault()/]
+          [('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault().displayClearUserCodeId()/]
           [protected (r.getUserCodeId(('inject ' + r.getApplicationName() + ' ElemResourceManagerInLibraries').apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
 
             // TODO renseigner le(s) initialisation(s) de paramPersistence des librairies avec celui de [r.getApplicationName()/]
@@ -346,7 +346,7 @@
        }
   [/if]
   
-     // Methodes
+     ['Methodes'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

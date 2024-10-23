@@ -10,7 +10,6 @@ import fr.application.client.ui.annuaire.ListePersonnesPresenter;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.SpiFlowManager_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
-import java.util.Date;
 
 // End of user code
 
@@ -21,7 +20,7 @@ import java.util.Date;
 public class AnnuaireFlowManager extends SpiFlowManager_Abs
 {
 
-   // Attributs AnnuaireFlowManager
+   
    // Start of user code Attributs AnnuaireFlowManager
 
    // End of user code
@@ -39,15 +38,17 @@ public class AnnuaireFlowManager extends SpiFlowManager_Abs
    @Override
    public void onStart ()
    {
-      // Pre onStart
+      
       // Start of user code Pre onStart
 
       // End of user code
 
-      // Start of user code onStart : Action ListerPersonnes
+      
+	  // Start of user code onStart : Action ListerPersonnes
       // TODO ListerPersonnes
       // End of user code
 
+	  
       // Start of user code onStart : Affichage de ListePersonnes
       // affichage de l'écran ListePersonnes
       ListePersonnesPresenter v_ListePersonnes;
@@ -64,14 +65,14 @@ public class AnnuaireFlowManager extends SpiFlowManager_Abs
       // End of user code
 
 
-      // Post onStart
+      
       // Start of user code Post onStart
 
       // End of user code
 
    }
 
-   // Méthodes AnnuaireFlowManager
+   
    // Start of user code Méthodes AnnuaireFlowManager
 
    // End of user code

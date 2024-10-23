@@ -47,7 +47,7 @@
 [query public hasGlobalInitParams(s : soa::Service) : Boolean = s.eAllContents(soa::Operation)->size() > 1 and s.eAllContents(soa::Parameter)->select(p | not (p.restData = null))->size() > 3/]
 
 [comment : JUNIT : Reset the service params for avoid duplicates. /]
-[query public resetParamNotAlreadyWrited(any : ecore::EObject) : String = if (any.resetJavaService()) then '' else '' endif/]
+[query public resetParamNotAlreadyWrited(any : ecore::EObject) : Boolean = any.resetJavaService()/]
 
 [comment : JUNIT : Get the name for the global parameter, send null if param already writed. /]
 [query public getGlobalInputParamName(p : soa::Parameter) : String = p.getGlobalParamName()/]

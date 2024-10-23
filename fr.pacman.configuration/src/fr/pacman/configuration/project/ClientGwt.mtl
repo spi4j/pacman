@@ -3,6 +3,7 @@
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::imports/]
 [import fr::pacman::configuration::common::pomXml/]
 [import fr::pacman::configuration::common::webXml/]
 [import fr::pacman::configuration::common::properties/]
@@ -22,7 +23,8 @@
       <name>[any.getApplicationName()/] - Client RIA GWT</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
      	-->
      	
      	<!--
@@ -147,7 +149,8 @@
     [/for]
   [/if]
   		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for dependencies'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
       		-->
       		
       		<!--
@@ -248,7 +251,8 @@
                   </executions>
               </plugin>
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
        			-->
        		
        			<!--

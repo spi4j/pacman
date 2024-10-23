@@ -10,7 +10,7 @@ import fr.spi4j.business.dto.DtoUtil;
 import fr.spi4j.business.dto.Dto_Itf;
 import fr.spi4j.exception.Spi4jValidationException;
 import fr.test.business.TestUserBusiness;
-import fr.test.types.enums.StatusEnum;
+import fr.test.main.StatusEnum;
 import java.util.Date;
 import java.util.List;
 
@@ -32,11 +32,11 @@ public class ShoppingCartLineDto implements Dto_Itf<Long>
    /** . */
    private Integer quantity;
 
-   /** L'instance de 'Invalid' associee à  l'instance de 'ShoppingCartLine' courante. */
+   /** L'instance de 'Book' associee à  l'instance de 'ShoppingCartLine' courante. */
    private BookDto book;
 
 
-   // Attributs
+   
    // Start of user code 93adb82f11146b1c4cb014432cd81b31
 
    /** L'identifiant. */
@@ -53,7 +53,7 @@ public class ShoppingCartLineDto implements Dto_Itf<Long>
    {
       super();
 
-      // Constructeur
+      
       // Start of user code 965ae8f837a266a5bbe195669e5490a4
 
       // End of user code
@@ -75,7 +75,7 @@ public class ShoppingCartLineDto implements Dto_Itf<Long>
    @Override
    public Long getId ()
    {
-      // getId
+      
       // Start of user code 7db1b67f9311bee084851e988f91c89d
 
       return _id;
@@ -86,7 +86,7 @@ public class ShoppingCartLineDto implements Dto_Itf<Long>
    @Override
    public void setId (final Long id)
    {
-      // setId
+      
       // Start of user code 0a8d0673bf66104005f2022f591e0538
 
       this._id = id;
@@ -161,7 +161,7 @@ public class ShoppingCartLineDto implements Dto_Itf<Long>
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code c424b4614133c28bf2c3dee0d0b54f6d
 
       return getClass().getSimpleName() + '[' + _id + ", " + getQuantity()   + ']';
@@ -169,9 +169,8 @@ public class ShoppingCartLineDto implements Dto_Itf<Long>
       // End of user code
    }
 
-   // Méthodes
-   // Start of user code 2987547e053c107ed8efc536be3584ed
+   
+   // Start of user code 06a25426ca87dd3a2b023b85e8e72986
 
    // End of user code
-
 }

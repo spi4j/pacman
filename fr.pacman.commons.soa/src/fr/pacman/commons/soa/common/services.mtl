@@ -9,6 +9,12 @@
 [import fr::pacman::commons::services::AnnotationUtils/]
 
 [comment encoding = UTF-8 /]
+[comment  : Get all services (private / public) but without specific batch services. /]
+[query public getServices(m : soa::System) : Sequence(soa::Service) = if not m.useBatch() then m.eAllContents(soa::Service) else m.eAllContents(soa::Service)->select(s | not s.eContainer().oclAsType(soa::Component).name.equalsIgnoreCase('component2')) endif/]
+
+[comment  : Get all services specificaly dedicated to batch. /]
+[query public getBatchs(m : soa::System) : Sequence(soa::Service) = m.eAllContents(soa::Service)->select(s | s.eContainer().oclAsType(soa::Component).name.equalsIgnoreCase('component2'))/]
+
 [comment : Get the spi4j ID for the security scheme. /]
 [comment : This method exist because of the inversion in swagger between 'key' and 'name' notions. /]
 [comment : Furthermore, the key is only for ApiKey else (Oauth2, OIDC) take the name .... /]
@@ -124,7 +130,10 @@
 [query public hasToExternalizeFacadeMethod(o : soa::Operation) : Boolean = o.isValidOperation() and soa::Verb::GET <> o.verb and soa::Verb::HEAD <> o.verb and (o.output->size() = 0 or not o.output->first().type.oclIsKindOf(environment::DTO))/]
 
 [comment : Return the main URI for the service. /]
-[query public getUri(s : soa::Service) : String = if s.eContainer(soa::Component).URI = null or s.eContainer(soa::Component).URI.size() = 0 then ('/' + s.eContainer(soa::Component).buildUriComponentVersion() + s.URI).normalizePath().trim() else ('/' + s.eContainer(soa::Component).URI + '/' + s.URI).normalizePath().trim() endif/]
+[query public getUri(s : soa::Service) : String = ('/' + s.URI).normalizePath().trim()/]
+
+[comment : Return the main URI for the service. /]
+[query private getUri_old(s : soa::Service) : String = if s.eContainer(soa::Component).URI = null or s.eContainer(soa::Component).URI.size() = 0 then ('/' + s.eContainer(soa::Component).buildUriComponentVersion() + s.URI).normalizePath().trim() else ('/' + s.eContainer(soa::Component).URI + '/' + s.URI).normalizePath().trim() endif/]
 
 [comment : Return the crud URI for the service. /]
 [query public getCrudUri(d : environment::DTO) : String = '/administration/' + d.name.toLower()/]
@@ -216,6 +225,7 @@
     @Override
     public int [(o.name + ' total count').apply_methodDefault()/]()
     {
+    	[o.getUserCodeId(o.name).displayClearUserCodeId()/]
     	[protected (o.getUserCodeId(o.name)) startTagPrefix('// ') endTagPrefix('// ')]
 
     	  [if (b)]
@@ -238,7 +248,7 @@
     * Méthode spécifique pour la pagination de l'opération : [o.name/]
     * @return le nombre total d'éléments pour l'opération.
     */
-    // Annotations Methode' + o.name + 'total count
+    [('Annotations Methode ' + o.name + 'total count').displayClearUserCodeId()/]
     [protected (o.getUserCodeId('Annotations Methode' + o.name + 'total count')) startTagPrefix('// ') endTagPrefix('// ')]
       
     [/protected]

@@ -41,11 +41,19 @@
 
 [query public buildBoostrapClassName(any : ecore::EObject) : String = (any.getHttpEmbeddedServer() + ' boostrap').apply_classDefault()/]
 
+[query public buildBatchsJobsOperatorClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' jobs operator').apply_classDefault()/]
+
+[query public buildHealthExternalServicesClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' health external services').apply_classDefault()/]
+
+[query public buildHealthExternalServiceClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' health external service info').apply_classDefault()/]
+
 [query public buildGwtUserBusinessClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' gwt user business').apply_classDefault()/]
 
 [query public buildCXFServletClassName(any : ecore::EObject) : String = ' CXF servlet'.apply_classDefault()/]
 
 [query public buildRSContextResolverClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' context resolver').apply_classDefault()/]
+
+[query public buildRSServicesFacadeFactoryClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' services facade factory').apply_classDefault()/]
 
 [query public buildRSExceptionHandlerClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' exception handler').apply_classDefault()/]
 
@@ -99,6 +107,15 @@
 
 [query public buildAppliPermissionsInterfaceName(any : ecore::EObject) : String = (any.getApplicationName() + ' permissions').apply_classInterface()/]
 
+[comment : Get the name for specific health facade interface. /]
+[query public buildRsHealthServiceInterfaceName(any : ecore::EObject) : String = (any.getApplicationName() + ' health service').apply_classInterface()/]
+
+[comment : Get the name for specific health facade implementation. /]
+[query public buildRsHealthServiceClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' health application service').apply_classImplem()/]
+
+[comment : Get the name for specific health resource implementation. /]
+[query public buildRsHealthResourceClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' health resource').apply_classDefault()/]
+
 [comment : Get the name for the client factory for Api First import. /]
 [query public buildRSClientFactoryClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' client factory').apply_classDefault()/]
 
@@ -137,6 +154,12 @@
 
 [comment : Get the name for the default context holder for all the front resources. /]
 [query public buildRSFrontResourcesContextHolder(any : ecore::EObject) : String = (any.getApplicationName() + ' front context holder').apply_classDefault()/]
+
+[comment : Le nom du conteneur principal pour l'api d'observabilite (health). /]
+[query public buildHealthDataXtoClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' health xto').apply_classDefault()/]
+
+[comment : Le nom du conteneur principal pour l'api d'observabilite (info). /]
+[query public buildInfoDataXtoClassName(any : ecore::EObject) : String = (any.getApplicationName() + ' info xto').apply_classDefault()/]
 
 [comment Retourne le système racine d'un objet/]
 [query public getRoot(any : ecore::EObject) : environment::ObeoDSMObject = any.getRootJavaService().oclAsType(environment::ObeoDSMObject)/]

@@ -42,8 +42,8 @@
              return (TypeView) new [viewContainer.nameViewImplementation()/](([viewContainer.namePresenter()/]) p_presenter);
           }
   [/for]
-        // Vues supplémentaires
-        [protected (r.getUserCodeId('Vues supplémentaires')) startTagPrefix('// ') endTagPrefix('// ')]
+        ['Vues supplementaires'.displayClearUserCodeId()/]
+        [protected (r.getUserCodeId('Vues supplementaires')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
   
@@ -59,7 +59,7 @@
                  "Ne recherchez pas un présenteur selon son annotation @UserView dans vos écrans");
      }
   
-     // GwtViews
+     ['GwtViews'.displayClearUserCodeId()/]
      [protected (r.getUserCodeId('GwtViews')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

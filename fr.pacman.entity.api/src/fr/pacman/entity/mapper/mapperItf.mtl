@@ -32,7 +32,7 @@
   public interface [e.buildEntityMapperInterfaceName()/] extends [e.getClassNameForEntityMapper_Itf()/]<[e.buildEntityInterfaceName()/], [e.buildXtoClassNameFromEntity()/]>
   {
   
-     // [e.nameMapperInterface()/]
+     [e.nameMapperInterface().displayClearUserCodeId()/]
      [protected (e.getUserCodeId(e.nameMapperInterface())) startTagPrefix('// ') endTagPrefix('// ')]
        
      [/protected]

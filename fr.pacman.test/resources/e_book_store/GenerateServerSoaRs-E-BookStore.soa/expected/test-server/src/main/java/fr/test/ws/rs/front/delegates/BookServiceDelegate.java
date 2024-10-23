@@ -13,7 +13,6 @@ import fr.test.ws.rs.front.resources.BookServiceFrontResources;
 import jakarta.ws.rs.ProcessingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code

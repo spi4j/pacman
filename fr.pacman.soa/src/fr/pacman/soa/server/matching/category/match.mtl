@@ -100,7 +100,7 @@
           // ['entity'.apply_variableFinal()/].[r.getNameSetterInverseDtoId()/] (['dto'.apply_parameterMethodClassicIn()/].[r.nameBaseReferenceInverse().apply_methodGet()/][r.namePK_ID()/] ());
   [/for]
   
-        // convertDtoToEntity
+        ['convertDtoToEntity'.displayClearUserCodeId()/]
         [protected (d.getUserCodeId('convertDtoToEntity')) startTagPrefix('// ') endTagPrefix('// ')]
           [('check ' + d.name).apply_methodDefault()/]([d.genPkType()/].class[for (a : environment::Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : environment::Reference | d.referencesNoStar())], [r.nameDto()/].class[/for][for (r : environment::Reference | d.referencingStar())], [r.containingType.oclAsType(environment::DTO).nameDto()/].class[/for]);
           ['entity'.apply_variableFinal()/].setId(['dto'.apply_parameterMethodClassicIn()/].getId ());
@@ -164,7 +164,7 @@
           // ['dto'.apply_parameterMethodClassicIn()/].[r.getNameSetterInverseDtoId()/] (['entity'.apply_parameterMethodClassicIn()/].[r.getNameGetterInverseDtoId()/] ());
   [/for]
   
-        // refreshDtoFromEntity
+        ['refreshDtoFromEntity'.displayClearUserCodeId()/]
         [protected (d.getUserCodeId('refreshDtoFromEntity')) startTagPrefix('// ') endTagPrefix('// ')]
           [('check ' + d.name).apply_methodDefault()/] ([d.genPkType()/].class[for (a : environment::Attribute | d.attributesNotComputed())], [a.genPropertyClassNoGenerics()/].class[/for][for (r : environment::Reference | d.referencesNoStar())], [r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/].class[/for][for (r : environment::Reference | d.referencingStar())], [r.containingType.oclAsType(environment::DTO).buildDtoClassName()/].class[/for]);
           ['dto'.apply_parameterMethodClassicIn()/].setId (['entity'.apply_parameterMethodClassicIn()/].getId ());
@@ -316,7 +316,7 @@
        }
     
   [/for]
-     // [d.buildAppliMatchClassName()/]
+     [d.buildAppliMatchClassName().displayClearUserCodeId()/]
      [protected (d.getUserCodeId(d.buildAppliMatchClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

@@ -7,10 +7,9 @@ package fr.test.persistence.api.main;
 // Start of user code for imports
 
 import fr.spi4j.persistence.entity.Entity_Itf;
-import fr.test.types.enums.StatusEnum;
+import fr.test.main.StatusEnum;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -23,7 +22,7 @@ public interface ShoppingCartEntity extends Entity_Itf<Long>
 {
    // CONSTANTES
 
-   // Constantes ShoppingCartEntity
+   
    // Start of user code 97038ac49c93afae9b0fd3cc62c432e6
 
    // End of user code
@@ -58,7 +57,7 @@ public interface ShoppingCartEntity extends Entity_Itf<Long>
 
 
 
-   // Methodes ShoppingCartEntity
+   
    // Start of user code f6a38946f921d0920ceab7302b06b708
 
    // End of user code

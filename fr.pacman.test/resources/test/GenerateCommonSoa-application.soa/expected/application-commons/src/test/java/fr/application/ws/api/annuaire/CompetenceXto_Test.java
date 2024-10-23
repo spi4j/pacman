@@ -10,7 +10,6 @@ import fr.application.business.api.annuaire.CompetenceAttributes_Enum;
 import fr.spi4j.tua.BeanTester_Abs;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Classe de test pour le XTO 'Competence'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code Annotation for class
 // End of user code
 public class CompetenceXto_Test extends BeanTester_Abs

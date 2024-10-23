@@ -3,18 +3,14 @@ Automatic-Module-Name: fr.pacman.requirementsgrouper.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Acceleo RequirementsGrouper Module IDE Plug-in
 Bundle-SymbolicName: fr.pacman.requirementsgrouper.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Activator: fr.pacman.requirementsgrouper.ui.Activator
 Bundle-Vendor: Eclipse Modeling Project
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.resources, 
+ org.eclipse.core.resources,
  org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi,
- org.eclipse.ocl,
- org.eclipse.ocl.ecore,
- org.eclipse.acceleo.model,
- org.eclipse.acceleo.engine
+ org.eclipse.emf.ecore.xmi
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true

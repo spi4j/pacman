@@ -30,7 +30,7 @@
   */
   public enum [e.buildClassNameFromEnumForXto()/] {
   
-   	// [e.buildClassNameFromEnumForXto()/]
+   	[e.buildClassNameFromEnumForXto().displayClearUserCodeId()/]
    	[protected (e.getUserCodeId(e.buildClassNameFromEnumForXto())) startTagPrefix('// ') endTagPrefix('// ')]
       
       [if (not e.literals->isEmpty())] [e.literals->asSequence()->collect(temp1 | temp1.enumStruct(e))->sep(',\r\n')/];[/if]

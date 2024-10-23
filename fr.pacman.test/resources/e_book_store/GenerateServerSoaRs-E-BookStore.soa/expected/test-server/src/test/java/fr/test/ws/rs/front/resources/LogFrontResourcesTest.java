@@ -8,7 +8,6 @@ package fr.test.ws.rs.front.resources;
 
 import fr.test.ws.rs.front.delegates.LogServiceDelegate;
 import fr.test.ws.rs.front.exceptions.TestFrontRsException;
-import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,7 +29,7 @@ public class LogFrontResourcesTest {
 	@BeforeAll
 	public static void init(){
 
-		// for init
+		
 		// Start of user code 23427ad5c2cfd5b5c1e5febbaf137394
 
 		TestFrontResourcesTestHelper.registerClass(
@@ -54,7 +53,7 @@ public class LogFrontResourcesTest {
 			// Enregistrement du nom de la méthode pour la sortie console.
 			TestFrontResourcesTestHelper.registerMethod("testLog");
 	
-			// for log_String_message
+			
 			// Start of user code 1b95a23c179d6dc2763e5fdccd2212a4
 
 			final String message = "S";
@@ -65,7 +64,7 @@ public class LogFrontResourcesTest {
 
 			
 
-			// for response log_String_message
+			
 			// Start of user code 048ebe4cf891182cd6767aa758625964
 			
 			TestFrontResourcesTestHelper.displayResponse("Pas de résultat dans le corps pour cette ressource.");

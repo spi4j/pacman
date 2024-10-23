@@ -52,29 +52,34 @@
         [s.getSpi4jId()/].connect.timeout = 15000
         [s.getSpi4jId()/].client.id = ['['/]Placer ici l'identifiant pour le serveur d'authentification]
         [s.getSpi4jId()/].client.secret = ['['/]Placer ici le secret pour le serveur d'authentification] 
-        [s.getSpi4jId()/].endpoint.certs =  ['['/]Placer ici l'uri pour l'obtention des certificats]
+        [if (s.isAuthOidc())]
+          [s.getSpi4jId()/].endpoint.connect = [s.connectURL/]
+        [/if]
+        [if (s.isAuthOauth2())]
+          [s.getSpi4jId()/].endpoint.certs =  ['['/]Placer ici l'uri pour l'obtention des certificats]
+        [/if]
         [for (f : soa::Flow | s.flows)]
           [s.getSpi4jId()/].[f.writeFlowName()/].key = authorization
           [s.getSpi4jId()/].[f.writeFlowName()/].flow = [f.flowType/]
           [s.getSpi4jId()/].[f.writeFlowName().toLower()/].scopes = [f.scopes->asSequence()->collect(temp1 | temp1.name)->sep(' ')/]
-          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.token = [f.tokenURL/]
-          [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.refresh = [f.refreshURL/]
-          [if (f.isAuthCode() and s.isAuthOidc())]
-            [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
-            [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur][s.writeCallback()/]
-            [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo = [s.connectURL/]
+          [if (s.isAuthOauth2())]
+            [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.token = [f.tokenURL/]
+            [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.refresh = [f.refreshURL/]
+            [if (f.isAuthCode())]
+              [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
+            [/if]
           [/if]
-          [if (f.isAuthCode() and s.isAuthOauth2())]
-            [s.getSpi4jId()/].[f.writeFlowName().toLower()/].endpoint.auth = [f.authorizationURL/]
+          [if (f.isAuthCode())]
             [s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback = ['['/]Placer ici l'url du serveur][s.writeCallback()/]
           [/if]
           [if (f.isAuthCredential())]
-            [s.getSpi4jId()/].[f.writeFlowName()/].application.secret = ['['/]Placer ici le secret interne pour l'appleication]
+            [s.getSpi4jId()/].[f.writeFlowName()/].application.secret = ['['/]Placer ici le secret interne pour l'application]
           [/if]
         [/for]
       [/if]
     [/for]
   [/for]
+
 [/template]
 
 [comment : **********************************************************/]
@@ -91,16 +96,8 @@
   
     	<servlet-mapping>
       	<servlet-name>RSServlet</servlet-name>
-      	<url-pattern>/api/*</url-pattern>
+      	<url-pattern>[m.getBaseURI()/]</url-pattern>
     	</servlet-mapping>
-  [for (c : soa::Component | m.eAllContents(soa::Component))]
-    [if (not (c.URI = null) and c.URI.size() > 0)]
-        	<servlet-mapping>
-          	<servlet-name>RSServlet</servlet-name>
-          	<url-pattern>[('/' + c.URI + '/*').normalizePath()/]</url-pattern>
-        	</servlet-mapping>
-    [/if]
-  [/for]
   
   </web-fragment>[/template]
 
@@ -140,7 +137,7 @@
   	 * sécurité.
   	 *
   	 * Récupération de(s) jeton(s) dans le cas d'un protocole d'authentification de
-  	 * type OAUT2 / AUTHORIZATION CODE GRANT. La requête initiale est à effectuer au
+  	 * type OAUTH2 / AUTHORIZATION CODE GRANT. La requête initiale est à effectuer au
   	 * niveau du FRONT afin de récupérer le code temporaire et d'appeler ce service.
   	 * 
   	 * Ne pas oublier que, comme mesure de sécurité supplémentaire, le serveur
@@ -159,7 +156,7 @@
   	@Produces(MediaType.APPLICATION_JSON)
   	public Response auth(@Context UriInfo ['uri info'.apply_parameterMethodClassicIn()/]) {
   
-  		// [s.name/]_[f.writeFlowName()/]
+  		[(s.name + '_' + f.writeFlowName()).displayClearUserCodeId()/]
   		[protected (f.getUserCodeId(s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
       		
       		return RsResponseHelper.responseForTokens(RsTokenHelper
@@ -244,7 +241,7 @@
   		final String ['credentials'.apply_parameterMethodClassicIn()/], 
   		@Context UriInfo ['uri info'.apply_parameterMethodClassicIn()/]) {
   
-  		// [s.name/]_[f.writeFlowName()/]
+  		[(s.name + '_' + f.writeFlowName()).displayClearUserCodeId()/]
   		[protected (f.getUserCodeId(s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
       
       		return RsResponseHelper.responseForTokens(RsTokenHelper
@@ -305,7 +302,7 @@
   	public Response auth(@HeaderParam(RsConstants.c_auth_header_authorization)
   		final String ['application secret'.apply_parameterMethodClassicIn()/]) {
   
-  		// [s.name/]_[f.writeFlowName()/]
+  		[(s.name + '_' + f.writeFlowName()).displayClearUserCodeId()/]
   		[protected (f.getUserCodeId(s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
       
       		return RsResponseHelper.responseForTokens(RsTokenHelper
@@ -334,7 +331,7 @@
     
   [/protected]
   
-  // for path
+  ['for path'.displayClearUserCodeId()/]
   [protected (m.getUserCodeId('for path')) startTagPrefix('// ') endTagPrefix('// ')]
     @Path("/tokens")
   [/protected]
@@ -396,7 +393,7 @@
   	@Override
   	public void defineRequiredTokens(final RsTokensContainer p_tokensContainer) 
   	{
-  		// define required tokens
+  		['define required tokens'.displayClearUserCodeId()/]
   		[protected (m.getUserCodeId('define required tokens')) startTagPrefix('// ') endTagPrefix('// ')]
 
   		[/protected]
@@ -407,7 +404,7 @@
         		// Modifier et compléter le token d'accès si besoin.
         		// Description : [s.description/]
         
-        		// token config [s.name/]
+        		[('token config ' + s.name).displayClearUserCodeId()/]
         		[protected (s.getUserCodeId('token config ' + s.name)) startTagPrefix('// ') endTagPrefix('// ')]
             
             		p_tokensContainer.addAccessToken(
@@ -424,77 +421,65 @@
           [/protected]
         
       [/if]
-      [if (s.isAuthOidc() or s.isAuthOauth2())]
+      [if (s.isAuthOauth2() or s.isAuthOidc())]
         [for (f : soa::Flow | s.flows)]
           		// Modifier et compléter le token d'accès si besoin.
           		// Description : [s.description/]
-          [if (f.isAuthCode() and s.isAuthOidc())]
-            
-            		// token config [s.name/]_[f.writeFlowName()/]
+          [if (f.isAuthCode())]
+            		[('token config ' + s.name + '_' + f.writeFlowName()).displayClearUserCodeId()/]
             		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
-                
-                		p_tokensContainer.addAccessToken(
-                				new RsToken.Builder()
-                					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
-                					.withPassingMode("[s.getSpi4jId()/].key.location")
-                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
-                					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
-                					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-                					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-                					.withUserInfoEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.userInfo")
-                					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
-                					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
-                					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-                					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-                					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
-                					.withClientSecret("[s.getSpi4jId()/].client.secret")
-                					.withClientId("[s.getSpi4jId()/].client.id")
-                					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
-                					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
-                					.withPrefixedBy("Bearer"));
-                
-              [/protected]
-            
-          [/if]
-          [if (f.isAuthCode() and s.isAuthOauth2())]
-            
-            		// token config [s.name/]_[f.writeFlowName()/]
-            		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
-                
-                		p_tokensContainer.addAccessToken(
-                				new RsToken.Builder()
-                					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
-                					.withPassingMode("[s.getSpi4jId()/].key.location")
-                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
-                					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
-                					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
-                					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
-                					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
-                					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
-                					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
-                					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)
-                					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
-                					.withClientSecret("[s.getSpi4jId()/].client.secret")
-                					.withClientId("[s.getSpi4jId()/].client.id")
-                					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
-                					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
-                					.withPrefixedBy("Bearer"));
-                
+                [if (s.isAuthOauth2())]
+                  		p_tokensContainer.addAccessToken(
+                  				new RsToken.Builder()
+                  					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
+                  					.withPassingMode("[s.getSpi4jId()/].key.location")
+                  					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                  					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                  					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
+                  					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
+                  					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
+                  					.withCertificateResourcePath("[s.getSpi4jId()/].endpoint.certs")
+                  					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
+                  					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
+                  					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)	
+                  					.withClientSecret("[s.getSpi4jId()/].client.secret")
+                  					.withClientId("[s.getSpi4jId()/].client.id")
+                  					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
+                  					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
+                  					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
+                  					.withPrefixedBy("Bearer"));
+                [/if]
+                [if (s.isAuthOidc())]
+                  		p_tokensContainer.addAccessToken(
+                  				new RsToken.Builder()
+                  					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
+                  					.withPassingMode("[s.getSpi4jId()/].key.location")
+                  					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                  					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                  					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
+                  					.withConnectEndPoint("[s.getSpi4jId()/].endpoint.connect")
+                  					.withCallbackEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.callback")
+                  					.withSigningKeyAlgorithm(RsSigningAlgo_Enum.asymmetricJsonWebKey)
+                  					.withSigningKeyLoadMode(RsSigningKeysLoad_Enum.http)	
+                  					.withClientSecret("[s.getSpi4jId()/].client.secret")
+                  					.withClientId("[s.getSpi4jId()/].client.id")
+                  					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
+                  					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
+                  					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
+                  					.withPrefixedBy("Bearer"));
+                [/if]
               [/protected]
             
           [/if]
           [if (f.isAuthPassord() or f.isAuthImplicit())]
-            
-            		// token config [s.name/]_[f.writeFlowName()/]
+            		[('token config ' + s.name + '_' + f.writeFlowName()).displayClearUserCodeId()/]
             		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
                 
                 		p_tokensContainer.addAccessToken(
                 				new RsToken.Builder()
                 					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
                 					.withPassingMode("[s.getSpi4jId()/].key.location")
-                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
+                					.withAuthFlow(RsAuthFlow_Enum.authorizationCode)
                 					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
                 					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
                 					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
@@ -513,16 +498,15 @@
             
           [/if]
           [if (f.isAuthCredential())]
-            
-            		// token config [s.name/]_[f.writeFlowName()/]
+            		[('token config ' + s.name + '_' + f.writeFlowName()).displayClearUserCodeId()/]
             		[protected (f.getUserCodeId('token config ' + s.name + '_' + f.writeFlowName())) startTagPrefix('// ') endTagPrefix('// ')]
                 
                 		p_tokensContainer.addAccessToken(
                 				new RsToken.Builder()
                 					.withSpi4jId("[s.getSpi4jId()/]_[f.writeFlowName()/]")
                 					.withPassingMode("[s.getSpi4jId()/].key.location")
-                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
                 					.withCustomKey("[s.getSpi4jId()/].[f.writeFlowName()/].key")
+                					.withAuthFlow("[s.getSpi4jId()/].[f.writeFlowName()/].flow")
                 					.withAuthProtocol([s.writeOidcOauth2Protocol()/])
                 					.withTokenEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.token")
                 					.withRefreshEndPoint("[s.getSpi4jId()/].[f.writeFlowName()/].endpoint.refresh")
@@ -533,7 +517,6 @@
                 					.withClientId("[s.getSpi4jId()/].client.id")
                 					.withConnectTimeout("[s.getSpi4jId()/].connect.timeout")
                 					.withReadTimeout("[s.getSpi4jId()/].read.timeout")
-                					.withScopes("[s.getSpi4jId()/].[f.writeFlowName()/].scopes")
                 					.withApplicationSecret("[s.getSpi4jId()/].[f.writeFlowName()/].application.secret")
                 					.withPrefixedBy("Bearer"));
                 
@@ -543,13 +526,13 @@
           
         [/for]
       [/if]
+      		
       [if (s.type = soa::SecuritySchemeType::HTTP)]
         					
       [/if]
       [if (s.isAuthApiKey())]
         		// Modifier et compléter le token de rafraîchissement si besoin.
-        
-        		// [s.getUserCodeId('token config refresh [s.name/]')/]
+        		[s.getUserCodeId('token config refresh ' + s.name).displayClearUserCodeId()/]
         		[protected (s.getUserCodeId('token config refresh ' + s.name)) startTagPrefix('// ') endTagPrefix('// ')]
             
             		p_tokensContainer.addRefreshToken(
@@ -631,7 +614,7 @@
         [let auth : Boolean = o.isDefinedForAuthentication()]
              public Response [o.name.apply_methodDefault()/]([o.paramsInXtoRS()/][o.paramsInPaginatorIfNeeded()/]){
           
-          		// [o.userCodeForOperation()/]
+          		[o.userCodeForOperation().displayClearUserCodeId()/]
           		[protected (o.getUserCodeId(o.getUserCodeId(o.userCodeForOperation()))) startTagPrefix('// ') endTagPrefix('// ')]
 
           		  [o.writeFullOperation(s.isAsynchronous(), auth)/]
@@ -663,7 +646,7 @@
 
 [comment : Write secured annotation if needed (only with access tokens..). /]
 [template private addSecured(o : soa::Operation) post(self.trim())]
-  @RsSecured(tokens = "[o.writeAuthenticationTokens()/]")[/template]
+  @RsSecured(tokens = "[o.writeAuthenticationTokens()/]", scopes = "[o.writeAuthenticationScopes()/]")[/template]
 
 [comment : Write path annotation if needed. /]
 [template private addPath(o : soa::Operation) post(self.trim())]
@@ -700,16 +683,33 @@
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (1/4). /]
 [comment : *************************************************************************************/]
 [template private writeFullOperation(o : soa::Operation, async : Boolean, auth : Boolean) post(self.trim())]
-  [if (auth)][o.addCommentForSecurityToken()/][2.c()/][/if]
-  [o.writeFullOperation_2(async)/][/template]
+  [if (auth)]
+    [o.addCommentForSecurityToken()/]
+
+
+  [/if]
+  [o.writeFullOperation_2(async)/]
+[/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (2/4). /]
 [template private writeFullOperation_2(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (o.paged)][o.addNewPaginator()/][2.c()/][/if][o.writeFullOperation_3(async)/][/template]
+  [if (o.paged)]
+    [o.addNewPaginator()/]
+
+
+  [/if]
+  [o.writeFullOperation_3(async)/]
+[/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (3/4). /]
 [template private writeFullOperation_3(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (o.hasToExternalizeFacade())][o.writeFullOperation_4(async)/];[2.c()/][/if][o.writeResponse(async)/][/template]
+  [if (o.hasToExternalizeFacade())]
+    [o.writeFullOperation_4(async)/];
+
+
+  [/if]
+  [o.writeResponse(async)/]
+[/template]
 
 [comment : Main template for writing the full operation (avoid unwanted carriage return) (4/4). /]
 [template private writeFullOperation_4(o : soa::Operation, async : Boolean) post(self.trim())]
@@ -721,11 +721,13 @@
 
 [comment : Add a new paginator for the Response object (if needed) (1/3). /]
 [template private addNewPaginator(o : soa::Operation) post(self.trim())]
-  final RsPaginatorHelper ['paginator'.apply_variableFinal()/] = new RsPaginatorHelper[o.addNewPaginator_2()/][/template]
+  final RsPaginatorHelper ['paginator'.apply_variableFinal()/] = new RsPaginatorHelper[o.addNewPaginator_2()/]
+[/template]
 
 [comment : Add a new paginator for the Response object  (2/3). /]
 [template private addNewPaginator_2(o : soa::Operation) post(self.trim())]
-  ([o.addNewPaginatorParams()/])[1.c()/][o.addNewPaginatorParamTotalCount()/][if (o.isPagingUser())][1.c()/][o.addNewPaginatorPageParamNames()/][/if];[/template]
+  ([o.addNewPaginatorParams()/])[o.addNewPaginatorParamTotalCount()/][if (o.isPagingUser())][o.addNewPaginatorPageParamNames()/][/if];
+[/template]
 
 [comment : Add the parameters for the new paginator (1/3). /]
 [template private addNewPaginatorParams(o : soa::Operation) post(self.trim())]
@@ -764,15 +766,18 @@
 
 [comment : Main method for Response signature. /]
 [template private writeResponse(o : soa::Operation, async : Boolean) post(self.trim())]
-  return RsResponseHelper.response[o.writeResponseOperation(async)/][/template]
+  return RsResponseHelper.response[o.writeResponseOperation(async)/]
+[/template]
 
 [comment : Check first if the operation must be synchronous or asynchronous (depends of service). /]
 [template private writeResponseOperation(o : soa::Operation, async : Boolean) post(self.trim())]
-  [if (async)][o.writeASynchronousOperation()/][else][o.writeSynchronousOperation()/][/if];[/template]
+  [if (async)][o.writeASynchronousOperation()/][else][o.writeSynchronousOperation()/][/if];
+[/template]
 
 [comment : Set the name and signature for the response builder asynchronous operation. /]
 [template private writeASynchronousOperation(o : soa::Operation) post(self.trim())]
-  ForAsynchronous([o.addLocationURIIfAsyncOperation()/][1.c()/][o.addCustomStatus()/])[/template]
+  ForAsynchronous([o.addLocationURIIfAsyncOperation()/][o.addCustomStatus()/])
+[/template]
 
 [comment : Set the name and signature for the response builder synchronous operation. /]
 [template private writeSynchronousOperation(o : soa::Operation) post(self.trim())]
@@ -804,11 +809,12 @@
 
 [comment : Add the parameters in the response operation signature (for paged and not paged operations). /]
 [template private addOperationParameters(o : soa::Operation) post(self.trim())]
-  [if (o.paged)][o.writePagedOperation()/][else][o.writeNonPagedOperation()/][/if][1.c()/][o.addCustomStatus()/][o.addHeaderXdatasIfNeeded()/][/template]
+  [if (o.paged)][o.writePagedOperation()/][else][o.writeNonPagedOperation()/][/if][o.addCustomStatus()/][o.addHeaderXdatasIfNeeded()/]
+[/template]
 
 [comment : Write an operation with return paged list. /]
 [template private writePagedOperation(o : soa::Operation) post(self.trim())]
-  ['paginator'.apply_variableFinal()/].completeWithPagedList([1.c()/][o.writeFacadeMethod()/])[/template]
+  ['paginator'.apply_variableFinal()/].completeWithPagedList([o.writeFacadeMethod()/])[/template]
 
 [comment : Write an operation with a non paged return list or anything else. /]
 [template private writeNonPagedOperation(o : soa::Operation) post(self.trim())]
@@ -857,7 +863,8 @@
 
 [comment : Add a default URI for GET operation after an asynchronous operation. /]
 [template private addLocationURIIfAsyncOperation(o : soa::Operation) post(self.trim())]
-  UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[1.c()/].build([o.writeFacadeMethod()/])[/template]
+  UriBuilder.fromPath([o.addURI()/]  + "<UriFragment>/{id}")[1.c()/].build([o.writeFacadeMethod()/])
+[/template]
 
 [comment : Add the base fragment for the URI for the GET next operation after a create or asynchronous. /]
 [template private addURI(o : soa::Operation) post(self.trim())]
@@ -880,6 +887,10 @@
 [comment : /]
 [template private writeFlowName(f : soa::Flow) post(self.trim())]
   [f.flowType.toString().substring(1, 2).toLower()/][/template]
+
+[comment : Write all scopes for the operation. (scope name is unique.)/]
+[template private writeAuthenticationScopes(o : soa::Operation) post(self.trim())]
+  [for (s : soa::Scope | o.getAllSecurityApplications()->asSequence()->collect(temp3 | temp3.scopes))][if (sIndex > 1)],[/if] [s.name/][/for][/template]
 
 [comment : Write all tokens spi4j ids (part 1) /]
 [template private writeAuthenticationTokens(o : soa::Operation) post(self.trim())]
@@ -915,7 +926,7 @@
   
    public Response read(@PathParam("id") final Long ['id'.apply_parameterMethodClassicIn()/]){
   
-  	// [d.name/] read crud operation
+  	[(d.name + ' read crud operation').displayClearUserCodeId()/]
   	[protected (d.getUserCodeId(d.name + ' read crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
 
          return RsResponseHelper.responseForEntity(['service facade'.apply_attributeFinal()/].read(['id'.apply_parameterMethodClassicIn()/]));
@@ -935,14 +946,14 @@
    @POST
    @Consumes(RsMediaType.c_application_json_utf8)
    @Produces(RsMediaType.c_application_json_utf8)
-   // [d.name/] create annotations crud operation
+   [(d.name + ' create annotations crud operation').displayClearUserCodeId()/]
    [protected (d.getUserCodeId(d.name + ' create annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
       
    [/protected]
   
    public Response create(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]){
   
-  	// [d.name/] create crud operation
+  	[(d.name + ' create crud operation').displayClearUserCodeId()/]
   	[protected (d.getUserCodeId(d.name + ' create crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
 
   	  return RsResponseHelper.responseForCreate(['service facade'.apply_attributeFinal()/].create([d.name.apply_parameterMethodClassicIn()/]));
@@ -962,7 +973,7 @@
    @PUT
    @Consumes(RsMediaType.c_application_json_utf8)
    @Produces(RsMediaType.c_text_plain_utf8)
-   // [d.name/] update annotations crud operation
+   [(d.name + ' update annotations crud operation').displayClearUserCodeId()/]
    [protected (d.getUserCodeId(d.name + ' update annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
       
    [/protected]
@@ -989,14 +1000,14 @@
    @DELETE
    @Consumes(RsMediaType.c_application_json_utf8)
    @Produces(RsMediaType.c_text_plain_utf8)
-   // [d.name/] delete annotations crud operation
-   [protected (d.getUserCodeId(d.name + ' delete annotattions crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
+   [(d.name + ' delete annotations crud operation').displayClearUserCodeId()/]
+   [protected (d.getUserCodeId(d.name + ' delete annotations crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
       
    [/protected]
   
    public Response delete(final [d.buildXtoClassNameFromDto()/] [d.name.apply_parameterMethodClassicIn()/]){
   
-  	// [d.name/] delete crud operation
+  	[(d.name + ' delete crud operation').displayClearUserCodeId()/]
   	[protected (d.getUserCodeId(d.name + ' delete crud operation')) startTagPrefix('// ') endTagPrefix('// ')]
      
      	['service facade'.apply_attributeFinal()/].delete([d.name.apply_parameterMethodClassicIn()/]);

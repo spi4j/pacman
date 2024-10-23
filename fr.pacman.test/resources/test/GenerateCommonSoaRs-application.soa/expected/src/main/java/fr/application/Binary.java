@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 // End of user code
 
-// for library rs binary class
+
 // Start of user code for library rs binary class
 public class Binary extends InputStream {
 

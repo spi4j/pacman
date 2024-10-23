@@ -15,7 +15,6 @@ import fr.spi4j.mapper.Mapper_Itf;
 import fr.spi4j.ws.xto.Xto_Itf;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -32,7 +31,7 @@ public class CompetenceMapper extends Mapper_Abs<CompetenceDto, CompetenceXto> i
    {
       final CompetenceXto v_xto = super.convertDtoToXto(p_dto);
 
-      // convertDtoToXto
+      
       // Start of user code convertDtoToXto
 
       // End of user code
@@ -45,7 +44,7 @@ public class CompetenceMapper extends Mapper_Abs<CompetenceDto, CompetenceXto> i
    {
       final CompetenceDto v_dto = super.convertXtoToDto(p_xto);
 
-      // convertXtoToDto
+      
       // Start of user code convertXtoToDto
 
       // End of user code
@@ -75,7 +74,7 @@ public class CompetenceMapper extends Mapper_Abs<CompetenceDto, CompetenceXto> i
       return super.getSpecificMapper(p_fieldName);
    }
 
-   // CompetenceMapper
+   
    // Start of user code CompetenceMapper
 
    // End of user code

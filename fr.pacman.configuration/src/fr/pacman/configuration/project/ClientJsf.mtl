@@ -31,13 +31,13 @@
       <name>[any.getApplicationName()/] - Client JSF</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
   	  -->
   	  
   	  <!--	
-    [/protected]
-      -->
-     
+  	[/protected]
+  	-->
       <dependencies>
           <dependency>
               <groupId>[any.getApplicationPackage()/]</groupId>
@@ -150,9 +150,9 @@
   [/if]
           </dependency>
   		[false.httpEmbeddedServerDependencies()/]
-  		
   		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for dependencies'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
   		  -->
   		  
   		  <!--
@@ -164,15 +164,14 @@
           <plugins>
   			[any.plugins(false)/]
   			[false.httpEmbeddedServerPlugins()/]
-  			
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
   			  -->
   			  
   			  <!--
   			[/protected]
   			-->
-  			  
           </plugins>
       </build>
   </project>[/template]
@@ -250,7 +249,7 @@
         private static Map<String, Object> entities = new HashMap<String, Object>();
   [/if]
   
-     // Attributs
+     ['Attributs'.displayClearUserCodeId()/]
      [protected (any.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -307,7 +306,7 @@
           return (clazz.toString() + id.toString()).replace(" ", "");
       }
   
-     // Methode
+     ['Methode'.displayClearUserCodeId()/]
      [protected (any.getUserCodeId('Methode')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -606,7 +605,7 @@
       /** Log applicatifs */
       private static final Logger ['log'.apply_attributeFinalStatic()/] = LogManager.getLogger([any.buildJsfBeanAbstractName()/].class);
   
-      // Attributs
+      ['Attributs'.displayClearUserCodeId()/]
       [protected (any.getUserCodeId('Attributs')) startTagPrefix('// ') endTagPrefix('// ')]
 
       [/protected]
@@ -690,7 +689,7 @@
       }
   
   
-      // Methodes
+      ['Methodes'.displayClearUserCodeId()/]
       [protected (any.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
       [/protected]

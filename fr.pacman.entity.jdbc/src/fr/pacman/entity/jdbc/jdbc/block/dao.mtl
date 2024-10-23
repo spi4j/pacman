@@ -42,14 +42,14 @@
   {
      // CONSTANTES
   
-     // Constantes [e.buildDaoImplClassName()/]
+     [('Constantes ' + e.buildDaoImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Constantes ' + e.buildDaoImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
   
      // ATTRIBUTS
   
-     // Attributs [e.buildDaoImplClassName()/]
+     [('Attributs ' + e.buildDaoImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Attributs ' + e.buildDaoImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -75,10 +75,11 @@
        {
           // utilisation de la table de jointure de la relation N-N
           final String ['jointure sql'.apply_variableFinal()/] = " inner join " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[('table name ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.sanitize()).apply_attributeFinalStatic()/] + " on "
-                   + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].['table name'.apply_attributeFinalStatic()/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID()/] + " = "
-                   + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[('table name ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.sanitize()).apply_attributeFinalStatic()/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID()/]
-                   + " where " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[('table name ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.sanitize()).apply_attributeFinalStatic()/] + "." + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[r.containingType.oclAsType(entity::Entity).nameSimplePropertyID()/] + " = :[r.containingType.oclAsType(entity::Entity).nameSimplePropertyID()/]";
-          final Map<String, Long> ['params'.apply_variableFinal()/] = Collections.singletonMap ("[r.containingType.oclAsType(entity::Entity).nameSimplePropertyID()/]", [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_parameterMethodObjectIn()/]);
+                   + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].['table name'.apply_attributeFinalStatic()/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeEnum()/] + " = "
+                   + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[('table name ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.sanitize()).apply_attributeFinalStatic()/] + "." + [r.referencedType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[r.referencedType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeEnum()/]
+                   + " where " + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[('table name ' + r.containingType.oclAsType(entity::Entity).nameSimpleEntity() + r.name.sanitize()).apply_attributeFinalStatic()/] + "." + [r.containingType.oclAsType(entity::Entity).buildEntityColumnEnumName()/].[r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeEnum()/] 
+                   + " = :[r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]";
+          final Map<String, Long> ['params'.apply_variableFinal()/] = Collections.singletonMap ("[r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_attributeDefault()/]", [r.containingType.oclAsType(entity::Entity).nameSimplePropertyID().apply_parameterMethodObjectIn()/]);
           return [r.referencedType.oclAsType(entity::Entity).buildParamPersistenceClassNameForEntity()/].['get user persistence'.apply_methodDefault()/]().[('get ' + r.referencedType.oclAsType(entity::Entity).buildDaoName()).apply_methodDefault()/]().findByCriteria (['jointure sql'.apply_variableFinal()/], ['params'.apply_variableFinal()/]);
        }
     
@@ -87,17 +88,17 @@
      protected Map<String, Object> getMapValueByLogicalNameFromEntity (final [e.buildEntityInterfaceName()/] ['entity'.apply_parameterMethodObjectIn()/])
      {
         final Map<String, Object> ['value by column name'.apply_variableMultipleMap()/] = new LinkedHashMap<>();
-        ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].getId());
+        ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].getId());
   [for (a : environment::Attribute | e.attributesNoPk())]
     [if (not a.isComputed())]
-      [if (a.type.genTypeName() = 'Binary')]
+      [if (a.type.genTypeNameWithPreCheck() = 'Binary')]
               if (['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()==null)
               {
                  ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), null);
               }
               else
               {
-                 ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.genTypeName() = 'Binary')].getInputStream()[/if]);
+                 ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.genTypeNameWithPreCheck() = 'Binary')].getInputStream()[/if]);
               }
       [else]
               ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if]);
@@ -105,14 +106,14 @@
     [/if]
   [/for]
   [for (a : environment::Attribute | e.getInheritDtoAttributes())]
-    [if (a.type.genTypeName() = 'Binary')]
+    [if (a.type.genTypeNameWithPreCheck() = 'Binary')]
             if (['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()==null)
             {
                ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), null);
             }
             else
             {
-               ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if][if (a.type.genTypeName() = 'Binary')].getInputStream()[/if]);
+               ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]()[if (a.type.oclIsTypeOf(environment::Enumeration))].getValue()[/if][if (a.type.genTypeNameWithPreCheck() = 'Binary')].getInputStream()[/if]);
             }
     [else]
             ['value by column name'.apply_variableMultipleMap()/].put([e.buildEntityColumnEnumName()/].[a.nameColumnProperty().apply_attributeEnum()/].getLogicalColumnName(), ['entity'.apply_parameterMethodObjectIn()/].[a.nameSimpleProperty().apply_methodGet()/]());
@@ -142,7 +143,7 @@
      protected [e.buildEntityInterfaceName()/] getEntityFromMapValueByLogicalName (final Map<String, Object> ['value by column name'.apply_parameterMethodMultipleMap()/])
      {
         final [e.buildEntityInterfaceName()/] ['entity'.apply_variableDefault()/] = new [e.buildEntityImplClassName()/] ();
-        ['entity'.apply_variableDefault()/].setId(([e.genPkType()/]) ['value by column name'.apply_parameterMethodMultipleMap()/].get([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID()/].getLogicalColumnName()));
+        ['entity'.apply_variableDefault()/].setId(([e.genPkType()/]) ['value by column name'.apply_parameterMethodMultipleMap()/].get([e.buildEntityColumnEnumName()/].[e.nameSimplePropertyID().apply_attributeEnum()/].getLogicalColumnName()));
   [for (a : environment::Attribute | e.attributesNoPk())]
     [if (not a.isComputed())]
       [if (a.useSpi4jSecurity() and not a.useMatching() and e.entityIsUser() and a.name = 'identifiant')]
@@ -181,7 +182,7 @@
         return ['entity'.apply_variableDefault()/];
      }
   
-     // Methodes [e.buildDaoImplClassName()/]
+     [('Methodes ' + e.buildDaoImplClassName()).displayClearUserCodeId()/]
      [protected (e.getUserCodeId('Methodes ' + e.buildDaoImplClassName())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

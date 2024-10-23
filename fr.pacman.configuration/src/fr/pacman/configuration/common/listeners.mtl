@@ -34,7 +34,7 @@
      {
         	Parameters.initServletContext(['event'.apply_parameterMethodClassicIn()/].getServletContext());
   
-        	// contextInitialized
+        	['contextInitialized'.displayClearUserCodeId()/]
         	[protected (any.getUserCodeId('context initialized')) startTagPrefix('// ') endTagPrefix('// ')]
         	  [if (any.useEjb())]
         	    //TransactionInterceptor.initUserPersistence([any.buildParamPersistenceClassName()/].getUserPersistence());
@@ -47,13 +47,13 @@
      @Override
      public void contextDestroyed (final ServletContextEvent ['event'.apply_parameterMethodClassicIn()/])
      {
-        	// contextDestroyed
+        	['contextDestroyed'.displayClearUserCodeId()/]
         	[protected (any.getUserCodeId('context destroyed')) startTagPrefix('// ') endTagPrefix('// ')]
 
         	[/protected]
      }
   
-     // Methodes
+     ['Methodes'.displayClearUserCodeId()/]
      [protected (any.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

@@ -1,0 +1,39 @@
+[module genBatch('http://www.obeonetwork.org/dsl/environment/3.0.0', 'http://www.obeonetwork.org/dsl/soa/4.0.0')/]
+
+[import fr::pacman::commons::soa::common::packages/]
+[import fr::pacman::commons::soa::common::classes/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::soa::server::batch::batch/]
+
+[comment encoding = UTF-8 /]
+[comment : /]
+[template public genBatch(s : soa::Service)]
+  [file (s.getServerSourceDir().filename(s.buildPackageServiceBatch(), s.buildBatchClassName() + '.java'), overwrite, 'UTF-8')]
+    [s.batch()/]
+  [/file]
+[/template]
+
+[comment : /]
+[template public genBatchsXml(m : soa::System)]
+  
+  [file (m.getServerResourcesDir().filename('META-INF', 'batch-jobs.xml'), overwrite, 'UTF-8')][m.batchsXml()/][/file]
+  
+[/template]
+
+[comment : /]
+[template public genBatchsXml(s : soa::Service)]
+  
+  [file (s.getServerResourcesDir().filename('META-INF/batch-jobs', s.name.toLower() + '.xml'), overwrite, 'UTF-8')][s.batchsXml()/][/file]
+  
+[/template]
+
+[comment : /]
+[template public genJobsOperator(m : soa::System)]
+  
+  [file (m.getServerSourceDir().filename(m.buildPackageBatch(), m.buildBatchsJobsOperatorClassName() + '.java'), overwrite, 'UTF-8')]
+  [/file]
+  
+[/template]

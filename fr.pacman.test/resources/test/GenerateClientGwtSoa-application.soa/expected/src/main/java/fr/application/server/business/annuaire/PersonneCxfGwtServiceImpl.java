@@ -8,7 +8,6 @@ package fr.application.server.business.annuaire;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import java.util.Date;
 
 // End of user code
 
@@ -37,7 +36,7 @@ public class PersonneCxfGwtServiceImpl extends SpiRemoteServiceImpl implements P
       return super.doGetSerializationPolicy (request, getServletContext().getInitParameter("moduleBaseURL"), strongName);
    }
 
-   // findPersonneByIdFromCxf_Personne_personne_Long_identifiant
+   
    // Start of user code findPersonneByIdFromCxf_Personne_personne_Long_identifiant
 
    @Override
@@ -49,7 +48,7 @@ public class PersonneCxfGwtServiceImpl extends SpiRemoteServiceImpl implements P
 
    // End of user code
 
-   // PersonneCxfService
+   
    // Start of user code PersonneCxfService
 
    // End of user code

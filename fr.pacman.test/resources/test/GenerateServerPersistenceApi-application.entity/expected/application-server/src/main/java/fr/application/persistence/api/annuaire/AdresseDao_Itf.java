@@ -7,7 +7,6 @@ package fr.application.persistence.api.annuaire;
 // Start of user code for imports
 
 import fr.spi4j.persistence.dao.Dao_Itf;
-import java.util.Date;
 
 // End of user code
 
@@ -19,14 +18,14 @@ public interface AdresseDao_Itf extends Dao_Itf<Long, AdresseEntity_Itf, Adresse
 {
    // CONSTANTES
 
-   // Constantes AdresseDao_Itf
+   
    // Start of user code Constantes AdresseDao_Itf
 
    // End of user code
 
    // METHODES ABSTRAITES
 
-   // Methodes AdresseDao_Itf
+   
    // Start of user code Methodes AdresseDao_Itf
 
    // End of user code

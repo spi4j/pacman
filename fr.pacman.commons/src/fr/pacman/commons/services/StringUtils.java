@@ -46,6 +46,11 @@ public final class StringUtils
             + "\u00C3\u00E3\u00D5\u00F5\u00D1\u00F1"
             + "\u00C4\u00E4\u00CB\u00EB\u00CF\u00EF\u00D6\u00F6\u00DC\u00FC\u0178\u00FF" + "\u00C5\u00E5"
             + "\u00C7\u00E7" + "\u0150\u0151\u0170\u0171" + "\u002D\u2212\u2012";
+   
+   private static final String c_RESERVED_KEYWORDS = "|abstract|assert|boolean|break|byte|case|catch|char|class"
+		   	+ "|continue|default|do|double|else|enum|extends|false|final|finally|float|for|if|implements|import|instanceof"
+		   	+ "|int|interface|long|native|new|null|package|private|protected|public|return|short|static|strictfp|super|switch"
+		   	+ "|synchronized|this|throw|throws|transient|try|true|void|volatile|while";
 
    /**
     * Constructeur privé.
@@ -392,4 +397,19 @@ public static String escapeJavaService(final String p_str){return escape(p_str);
       }
    }
 
+   /**
+    * Ajoute "_1" au nom de la variable si cette dernière est un mot clé de Java. 
+    * Cette méthode est utilisé lors de la fabrication du client pour la librairie REST.
+    * Comme le fournisseur de ressources peut utiliser un autre langage, il existe des cas 
+    * ou ces noms de variable ne conviennent pas dans le cadre de la génération Java.
+    *  
+    * @param p_varName
+    * @return
+    */
+   public static String sanitizeJavaKeywords(final String p_varName) {
+	   if(c_RESERVED_KEYWORDS.indexOf("|" + p_varName.toLowerCase() + "|") > 0){
+		   return p_varName + "_1";
+	   }
+	   return sanitize(p_varName);
+   }
 }

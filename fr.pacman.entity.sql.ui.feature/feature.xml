@@ -2,7 +2,7 @@
 <feature
       id="fr.pacman.entity.sql.ui.feature"
       label="PacMan - SQL"
-      version="4.4.0.qualifier"
+      version="4.6.0.qualifier"
       provider-name="Safr@n"
       plugin="fr.pacman.branding">
          

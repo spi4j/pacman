@@ -6,11 +6,24 @@
 
 	<groupId>fr.pacman</groupId>
 	<artifactId>pacman-parent</artifactId>
-	<version>4.4.0</version>
+	<version>4.6.0</version>
 	<packaging>pom</packaging>
 	<name>pacman-parent</name>
 	<description>Projet parent aux generateurs Pacman pour Safr@n.</description>
 
+	<properties>
+		<java.version>17</java.version>
+		<tycho-version>4.0.8</tycho-version>
+		<acceleo-version>3.6.4</acceleo-version>
+		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+		<central-repository-url>https://repo.maven.apache.org/maven2</central-repository-url>
+		<acceleo-releases_url>https://repo.eclipse.org/content/repositories/acceleo-releases</acceleo-releases_url>
+		<odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.9/community/11.9.0/repository/</odc-updatesite-url>
+		<is-updatesite-url>https://www.obeosoft.com/download/release/informationsystem/5.1.0/design/repository/</is-updatesite-url>
+		<eclipse-updatesite-url>http://download.eclipse.org/releases/2023-03/</eclipse-updatesite-url> 
+		<!-- <eclipse-updatesite-url>http://download.eclipse.org/releases/2020-06/</eclipse-updatesite-url>  -->
+	</properties>
+	
 	<repositories>
 		<repository>
 			<id>odc-updatesite</id>
@@ -80,29 +93,12 @@
 							<artifactId>junit-jupiter</artifactId>
 							<version>5.9.3</version>
 						</extraClasspathElement>
-						<extraClasspathElement>
+						<!-- <extraClasspathElement>
 							<groupId>fr.pacman</groupId>
 							<artifactId>fr.pacman.test</artifactId>
 							<version>${project.version}</version>
-						</extraClasspathElement>
+						</extraClasspathElement> -->
 					</extraClasspathElements>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<resolver>p2</resolver>
-					<!-- <target> <artifact> <groupId>fr.pacman</groupId> <artifactId>fr.pacman.target-definition</artifactId> 
-						<version>${project.parent.version}</version> </artifact> </target> -->
-					<environments>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -258,7 +254,7 @@
 				<module>fr.pacman.cinematic.jsf</module>
 				<module>fr.pacman.cinematic.jsp</module>
 				<module>fr.pacman.cinematic.swing</module>
-				<!-- UI modules. -->				
+				<!-- UI modules. -->
 				<module>fr.pacman.configuration.ui</module>
 				<module>fr.pacman.start.ui</module>
 				<module>fr.pacman.environment.ui</module>
@@ -268,7 +264,7 @@
 				<module>fr.pacman.entity.sql.ui</module>
 				<module>fr.pacman.requirement.ui</module>
 				<module>fr.pacman.requirementsgrouper.ui</module>
-				<module>fr.pacman.soa.ui</module> 
+				<module>fr.pacman.soa.ui</module>
 				<module>fr.pacman.soapifirst.ui</module>
 				<module>fr.pacman.cinematic.gwt.ui</module>
 				<module>fr.pacman.cinematic.jsf.ui</module>
@@ -297,7 +293,16 @@
 				<!-- Other modules. -->
 				<module>fr.pacman.test</module>
 				<module>fr.pacman.update</module>
-				<module>fr.pacman.test.nonregression</module>
+			</modules>
+		</profile>
+		
+		<!-- Juste utile pour tester l'update site. -->
+		<profile>
+			<id>updatesite</id>
+			<modules>
+				<module>fr.pacman.branding</module>
+				<!-- Update site module. -->
+				<module>fr.pacman.update</module>				
 			</modules>
 		</profile>
 
@@ -323,15 +328,6 @@
 					<module>fr.pacman.cinematic.jsf</module> <module>fr.pacman.cinematic.swing</module> 
 					<module>fr.pacman.validation</module> <module>fr.pacman.estimation</module -->
 			</modules>
-
-			<dependencies>
-				<dependency>
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-					<version>4.10</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
 
 			<build>
 				<plugins>
@@ -522,18 +518,4 @@
 		</profile>
 	</profiles>
 
-	<properties>
-		<java.version>11</java.version>
-		<tycho-version>1.7.0</tycho-version>
-		<acceleo-version>3.6.4</acceleo-version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
-		<central-repository-url>https://repo.maven.apache.org/maven2</central-repository-url>
-		<acceleo-releases_url>https://repo.eclipse.org/content/repositories/acceleo-releases</acceleo-releases_url>
-		<odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.3/community/11.3.2/repository/</odc-updatesite-url>
-		<odc-updatesite-url>http://www.obeo.fr/download/release/designer/11.6/community/11.6.0/repository/</odc-updatesite-url>
-		<!-- <is-updatesite-url>file:///C:/Travail/updateSiteDeltaPack-4.1.0</is-updatesite-url> -->
-		<eclipse-updatesite-url>http://download.eclipse.org/releases/2019-06/</eclipse-updatesite-url> 
-		<!-- <eclipse-updatesite-url>http://download.eclipse.org/releases/2020-06/</eclipse-updatesite-url>  -->
-	</properties>
 </project>

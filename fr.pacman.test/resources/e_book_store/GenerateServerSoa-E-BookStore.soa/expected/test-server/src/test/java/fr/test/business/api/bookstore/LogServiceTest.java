@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Classe de test du service 'LogService'.
  * @author safr@n
  */
-// Annotation for class
+
 // Start of user code 8d11490eb7e3bd7fbe31724d2cea61c5
 // End of user code
 public class LogServiceTest  extends BeanTester_Abs
@@ -45,7 +45,7 @@ public class LogServiceTest  extends BeanTester_Abs
    {  
       service = TestUserBusiness.getLogService ();
 
-      // set up before class
+      
       // Start of user code ac28938f801815a863d275d7089501cb
       // End of user code
    }
@@ -57,7 +57,7 @@ public class LogServiceTest  extends BeanTester_Abs
    public void setUp ()
    {
 
-      // set up
+      
       // Start of user code d5158c215f75d40b3dc3a9efd519b60a
       // End of user code
    }
@@ -70,7 +70,7 @@ public class LogServiceTest  extends BeanTester_Abs
    @Test
    public void testLog_String_message () throws Throwable
    {
-      // log_String_message
+      
       // Start of user code 4db071299dc05baf236770be7fd6aab7
       // TODO : A Implémenter
       fail ("Test non implémenté");
@@ -84,12 +84,12 @@ public class LogServiceTest  extends BeanTester_Abs
    public void tearDown ()
    {
 
-      // tear down
+      
       // Start of user code b778e9a7588fa49250428a599cf59f97
       // End of user code
    }
 
-   // specific service test
+   
    // Start of user code 83c9cfe79a629107e128f8bc9ca9ba12
 
    // End of user code

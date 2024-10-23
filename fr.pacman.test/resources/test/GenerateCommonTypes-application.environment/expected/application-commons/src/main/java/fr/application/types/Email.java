@@ -18,14 +18,14 @@ public class Email
 
    // ATTRIBUTS
 
-   // Attributs
+   
    // Start of user code Attributs
 
    // End of user code
 
 
-   // Méthodes
-   // Start of user code Méthodes
+   
+   // Start of user code Methodes
 
    // End of user code
 

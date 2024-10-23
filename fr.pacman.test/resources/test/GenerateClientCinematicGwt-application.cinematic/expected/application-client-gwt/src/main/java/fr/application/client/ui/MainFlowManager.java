@@ -10,7 +10,6 @@ import fr.application.client.ui.MainPresenter;
 import fr.spi4j.ui.mvp.Presenter_Abs;
 import fr.spi4j.ui.mvp.SpiFlowManager_Abs;
 import fr.spi4j.ui.mvp.ViewAlreadyRegisteredException;
-import java.util.Date;
 
 // End of user code
 
@@ -21,7 +20,7 @@ import java.util.Date;
 public class MainFlowManager extends SpiFlowManager_Abs
 {
 
-   // Attributs MainFlowManager
+   
    // Start of user code Attributs MainFlowManager
 
    // End of user code
@@ -39,11 +38,12 @@ public class MainFlowManager extends SpiFlowManager_Abs
    @Override
    public void onStart ()
    {
-      // Pre onStart
+      
       // Start of user code Pre onStart
 
       // End of user code
 
+	  
       // Start of user code onStart : Affichage de MainView
       // affichage de l'écran Main
       MainPresenter v_Main;
@@ -60,14 +60,14 @@ public class MainFlowManager extends SpiFlowManager_Abs
       // End of user code
 
 
-      // Post onStart
+      
       // Start of user code Post onStart
 
       // End of user code
 
    }
 
-   // Méthodes MainFlowManager
+   
    // Start of user code Méthodes MainFlowManager
 
    // End of user code

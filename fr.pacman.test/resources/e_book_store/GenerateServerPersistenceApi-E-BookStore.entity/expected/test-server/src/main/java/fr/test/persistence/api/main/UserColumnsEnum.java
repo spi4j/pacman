@@ -8,7 +8,6 @@ package fr.test.persistence.api.main;
 import fr.spi4j.persistence.entity.ColumnsNames_Itf;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**

@@ -85,7 +85,7 @@ public class TestCacheManager implements ServletContextListener
       ServiceCacheProxy.clearCaches();
       LOG.info("Caches purges");
 
-	  // for reloading caches
+	  
 	  // Start of user code 2a8c3b09df4c65db0fab193d280792c5
 
       // End of user code

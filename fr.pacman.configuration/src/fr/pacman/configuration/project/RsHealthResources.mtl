@@ -1,0 +1,430 @@
+[module RsHealthResources('http://www.eclipse.org/ocl/1.1.0/Ecore')/]
+
+[import fr::pacman::commons::common::licence/]
+[import fr::pacman::commons::common::packages/]
+[import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::names/]
+[import fr::pacman::commons::common::properties/]
+[import fr::pacman::commons::common::imports/]
+[import fr::pacman::commons::convention::rule::methodRule/]
+[import fr::pacman::commons::convention::rule::attributeRule/]
+[import fr::pacman::commons::convention::rule::variableRule/]
+[import fr::pacman::commons::convention::rule::classRule/]
+[import fr::pacman::commons::convention::rule::commonRule/]
+[import fr::pacman::commons::convention::rule::parameterRule/]
+[import fr::pacman::configuration::common::names/]
+
+[comment encoding = UTF-8 /]
+[comment : Generation d'un fichier vide pour l'api d'observabilite (info)/]
+[template public rsInfoProperties(any : ecore::EObject)]
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!-- Creez ici votre structure avec l'ensemble des informations -->
+  <!-- Exemple de structure a modifier et completer selon les besoins -->
+  <info>
+  	<data>
+  		<system>
+  			<nom>[any.getApplicationName().toUpper()/]</nom>
+  			<description>Description pour l'application</description>
+  			<version>1.0.0-SNAPSHOT</version>
+  		</system>
+  		<environnement>developpement</environnement>
+  	</data>
+  </info>[/template]
+
+[comment : Generation d'un fichier vide pour l'api d'observabilite (sante)/]
+[template public rsHealthProperties(any : ecore::EObject)]
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!-- Creez ici votre structure avec l'ensemble des informations -->
+  <!-- Exemple de structure a modifier et completer selon les besoins -->
+  <health>
+  	<data>
+  		<system>
+  			<nom>[any.getApplicationName().toUpper()/]</nom>
+  			<description>Description pour l'application</description>
+  			<version>1.0.0-SNAPSHOT</version>
+  		</system>
+  		<services/>
+  	</data>
+  </health>[/template]
+
+[comment : /]
+[template public rsHealthServiceInterface(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.buildPackageWsApi()/];
+  
+  import org.json.JSONObject;
+  
+  /**
+   * Definit le contrat de services spécifiques pour l'api REST d'observabilité de
+   * l'application '[any.getApplicationName()/]' et de ses différents services externes.
+   * 
+   * @author [any.getAuthorName()/].
+   */
+  public interface [any.buildRsHealthServiceInterfaceName()/] {
+  
+  	/**
+  	 * Retourne les données d'information pour l'application.
+  	 * 
+  	 * @return les données d'information pour l'application '[any.getApplicationName()/]'.
+  	 */
+  	JSONObject ['application info'.apply_methodGet()/]();
+  
+  	/**
+  	 * Retourne les données de santé pour l'application.
+  	 * 
+  	 * @return les données de santé pour l'application '[any.getApplicationName()/]'.
+  	 */
+  	JSONObject ['application health'.apply_methodGet()/]();
+  }[/template]
+
+[comment : /]
+[template public rsHealthServiceImplementation(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.buildPackageRS()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import java.io.IOException;
+    import java.nio.file.Files;
+    import java.nio.file.Path;
+    
+    import org.json.JSONObject;
+    import org.json.XML;
+    import org.jvnet.hk2.annotations.Service;
+    
+    import [any.buildPackageWsApi()/].[any.buildRsHealthServiceInterfaceName()/]; 
+    import fr.spi4j.exception.Spi4jConfigException;
+    import fr.spi4j.ws.rs.RsConstants;
+    
+  [/protected]
+  
+  
+  /**
+   * Implémentation des services pour l'api REST d'observabilité de
+   * l'application '[any.getApplicationName()/]' et de ses différents services externes.
+   * 
+   * @author [any.getAuthorName()/].
+   */
+  @Service
+  public class [any.buildRsHealthServiceClassName()/] implements [any.buildRsHealthServiceInterfaceName()/]  {
+  	
+  [if (not any.useWsServiceInjection())]
+    	/**
+    	* Instance du singleton pour le service.
+    	*/
+    	public final static [any.buildRsHealthServiceClassName()/] ['instance'.apply_attributeFinal()/] = new [any.buildRsHealthServiceClassName()/]();
+  [/if]
+  
+  	/**
+  	 * Contient la structure xml pour les informations du SI.
+  	 */
+  	private static String ['xml info data'.apply_attributeStatic()/];
+  
+  	/**
+  	 * Contient la structure xml pour les informations de santé du SI.
+  	 */
+  	private static String ['xml health data'.apply_attributeStatic()/];
+  
+  	/**
+  	 * Chargement des structures pour les fichiers des spécifications de santé et
+  	 * d'information pour l'application.
+  	 */
+  	static {
+  
+  		try {
+  
+  			Path ['path'.apply_variableDefault()/] = Path.of(System.getenv("[any.getApplicationName().toUpper()/]" 
+  						+ RsConstants.c_conf_filter_properties_file) 
+  						+ "/[any.getApplicationName().toLower()/]Info.properties");
+  
+  			['xml info data'.apply_attributeStatic()/] = Files.readString(['path'.apply_variableDefault()/]);
+  	
+  			['path'.apply_variableDefault()/] = Path.of(System.getenv("[any.getApplicationName().toUpper()/]" 
+  						+ RsConstants.c_conf_filter_properties_file) 
+  						+ "/[any.getApplicationName().toLower()/]Health.properties");
+  
+  			['xml health data'.apply_attributeStatic()/] = Files.readString(['path'.apply_variableDefault()/]);
+  	
+  		} catch (IOException e) {
+  			throw new Spi4jConfigException("Impossible de charger et/ou de "
+  					+ "lire les fichiers de santé pour l'application.");
+  		}
+  	}
+  
+  	/**
+  	 * Retourne les données d'information pour l'application.
+  	 *
+  	 * @return les données d'information pour l'application.
+  	 */
+  	@Override
+  	public JSONObject ['application info'.apply_methodGet()/]() {
+  
+  		JSONObject ['application info'.apply_variableDefault()/] = XML.toJSONObject(['xml info data'.apply_attributeStatic()/]);
+  		['application info'.apply_methodGet().displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('application info')) startTagPrefix('//') endTagPrefix('//')]
+      		
+    [/protected]
+  
+  		
+  		return ['application info'.apply_variableDefault()/];
+  	}
+  
+  	/**
+  	 * Retourne les données de santé pour l'application. Afin de pouvoir injecter le
+  	 * flux json des services dans le json principal, récupérer la propriété devant
+  	 * contenir la liste des services et lui injecter le flux json à l'aide de la
+  	 * méthode {@code put()}.
+  	 *
+  	 * @return les données de santé pour l'application.
+  	 */
+  	@Override
+  	public JSONObject ['application health'.apply_methodGet()/]() {
+  		
+  		JSONObject ['application health'.apply_variableDefault()/] = XML.toJSONObject(['xml health data'.apply_attributeStatic()/]);
+  		['application health'.apply_methodGet().displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('application health')) startTagPrefix('//') endTagPrefix('//')]
+      		
+      		JSONObject ['health node'.apply_variableDefault()/] = (JSONObject) ['application health'.apply_variableDefault()/].get("health");
+      		JSONObject ['data node'.apply_variableDefault()/] = (JSONObject) ['health node'.apply_variableDefault()/].get("data");
+      		['data node'.apply_variableDefault()/].put("services", [any.buildHealthExternalServicesClassName()/].['info external services'.apply_methodGet()/]());
+      
+    [/protected]
+  
+  
+  		return ['application health'.apply_variableDefault()/];
+  	}
+  }
+[/template]
+
+[comment : /]
+[template public rsHealthServices(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.buildPackageRS()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('//')]
+    
+    import org.json.JSONArray;
+    import org.json.JSONObject;
+    
+  [/protected]
+  
+  
+  /**
+   * Liste et prépare l'ensemble des informations de santé pour tous les services
+   * externes qui sont utilisés par l'application '[any.getApplicationName()/]'.
+   * 
+   * @author [any.getAuthorName()/].
+   */
+  class [any.buildHealthExternalServicesClassName()/] {
+  
+  	/**
+  	 * Retourne les informations de santé pour l'ensemble des services externes dont
+  	 * a besoin l'application pour pouvoir fonctionner. Compléter la structure
+  	 * désirée au niveau de la classe {@code [any.buildHealthExternalServiceClassName()/]} puis, 
+       * pour chaque service renseigner la structure avant de l'ajouter au tableau json à 
+  	 * l'aide de la méthode {@code put()}.
+  	 *  
+  	 * @return la liste des informations de santé pour chaque service externe.
+  	 */
+  	static JSONArray [' info external services'.apply_methodGet()/]() {
+  
+  		JSONArray ['info external services'.apply_variableDefault()/] = new JSONArray();
+  		['info external services'.apply_methodGet().displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId(' info external services'.apply_methodGet())) startTagPrefix('//') endTagPrefix('//')]
+      
+      		// Code à reproduire pour chaque service concerné.
+      		[any.buildHealthExternalServiceClassName()/] ['info external service'.apply_variableDefault()/] = new [any.buildHealthExternalServiceClassName()/]();
+      		['info external service'.apply_variableDefault()/].['name'.apply_methodSet()/]("un service externe");
+      		['info external service'.apply_variableDefault()/].['status'.apply_methodSet()/]("up");
+      		['info external service'.apply_variableDefault()/].['response time'.apply_methodSet()/](1L);
+      		['info external services'.apply_variableDefault()/].put(new JSONObject(['info external service'.apply_variableDefault()/]));
+      
+    [/protected]
+  
+  
+  		return ['info external services'.apply_variableDefault()/];
+  	}
+  }[/template]
+
+[comment : /]
+[template public rsHealthService(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.buildPackageRS()/];
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('//')]
+    
+    import org.json.JSONPropertyName;
+    
+  [/protected]
+  
+  
+  /**
+   * Structure pour l'ensemble des informations de santé pour chaque service
+   * externe dont a besoin l'application '[any.getApplicationName()/]' afin de 
+   * pouvoir fonctionner correctement.
+   * <p>
+   * Définir ici la structure (variables et assesseurs) pour l'ensemble des
+   * informations à renvoyer sur l'api de santé pour l'application.
+   *
+   * @author [any.getAuthorName()/].
+   */
+  public class [any.buildHealthExternalServiceClassName()/] {
+  
+  	/**
+  	 * Nom du service externe.
+  	 */ 
+  	private String ['name'.apply_attributeDefault()/];
+  
+  	/**
+  	 * Etat du service externe.
+  	 */ 
+  	private String ['status'.apply_attributeDefault()/];
+  
+  	/**
+  	 * Temps de réponse du service externe.
+  	 */
+  	private Long ['response time'.apply_attributeDefault()/];
+  
+  	[any.buildHealthExternalServiceClassName().displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId(any.buildHealthExternalServiceClassName())) startTagPrefix('//') endTagPrefix('//')]
+     
+     	// Définir ici la liste des attributs et des assesseurs pour compléter la
+     	// structure de l'état de santé d'un service externe avec lequel l'application
+     	// doit converser.
+     
+   [/protected]
+  
+  
+  	['name'.apply_methodGet().displayClearUserCodeId()/]
+  	/**
+  	 * Retourne le nom du service externe
+  	 * 
+  	 * @return le nom du service externe
+  	 */
+  	[protected (any.getUserCodeId('name'.apply_methodGet())) startTagPrefix('//') endTagPrefix('//')]
+     	@JSONPropertyName("nom")
+   [/protected]
+  
+  	public String ['name'.apply_methodGet()/]() {
+  		return [any.getAffectationPrefix()/]['name'.apply_attributeDefault()/];
+  	}
+  
+  	/**
+  	 * Positionne le nom du service externe
+  	 * 
+  	 * @param ['name'.apply_parameterMethodClassicIn()/] le nom du service externe
+  	 */
+  	public void ['name'.apply_methodSet()/](final String ['name'.apply_parameterMethodClassicIn()/]) {
+  		[any.getAffectationPrefix()/]['name'.apply_attributeDefault()/] = ['name'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	['status'.apply_methodGet().displayClearUserCodeId()/]
+  	/**
+  	 * Retourne le statut du service externe
+  	 * 
+  	 * @return le statut du service externe
+  	 */
+  	[protected (any.getUserCodeId('status'.apply_methodGet())) startTagPrefix('//') endTagPrefix('//')]
+     	@JSONPropertyName("statut")
+   [/protected]
+  
+  	public String ['status'.apply_methodGet()/]() {
+  		return [any.getAffectationPrefix()/]['status'.apply_attributeDefault()/];
+  	}
+  
+  	/**
+  	 * Positionne le statut du service externe
+  	 * 
+  	 * @param ['status'.apply_parameterMethodClassicIn()/] le statut du service externe
+  	 */
+  	public void ['status'.apply_methodSet()/](final String ['status'.apply_parameterMethodClassicIn()/]) {
+  		[any.getAffectationPrefix()/]['status'.apply_attributeDefault()/] = ['status'.apply_parameterMethodClassicIn()/];
+  	}
+  
+  	['response time'.apply_methodGet().displayClearUserCodeId()/]
+  	/**
+  	 * Retourne le temps de réponse pour le service externe
+  	 * 
+  	 * @return le temps de réponse pour le service externe
+  	 */
+  	[protected ('response time'.apply_methodGet()) startTagPrefix('//') endTagPrefix('//')]
+     	@JSONPropertyName("tempsReponse")
+   [/protected]
+  
+  	public Long ['response time'.apply_methodGet()/]() {
+  		return [any.getAffectationPrefix()/]['response time'.apply_attributeDefault()/];
+  	}
+  
+  	/**
+  	 * Positionne le temps de réponse pour le service externe
+  	 * 
+  	 * @param ['response time'.apply_parameterMethodClassicIn()/] le temps de réponse pour le service externe
+  	 */
+  	public void ['response time'.apply_methodSet()/](final Long ['response time'.apply_parameterMethodClassicIn()/]) {
+  		[any.getAffectationPrefix()/]['response time'.apply_attributeDefault()/] = ['response time'.apply_parameterMethodClassicIn()/];
+  	}
+  }[/template]
+
+[comment : /]
+[template public rsHealthResource(any : ecore::EObject)]
+  [any.licence()/]
+  package [any.buildPackageRsResources(false)/];
+  
+  import [any.buildPackageWsApi()/].[any.buildRsHealthServiceInterfaceName()/];
+  [if (not any.useWsServiceInjection())]import [any.buildPackageRS()/].[any.buildRSServicesFacadeFactoryClassName()/];[/if]
+  import fr.spi4j.ws.rs.RsMediaType;
+  import fr.spi4j.ws.rs.RsResponseHelper;
+  import fr.spi4j.ws.rs.RsStatusType;
+  import jakarta.inject.Inject;
+  import jakarta.ws.rs.GET;
+  import jakarta.ws.rs.Path;
+  import jakarta.ws.rs.Produces;
+  import jakarta.ws.rs.core.Context;
+  import jakarta.ws.rs.core.Response;
+  
+  /**
+   * Ressource pour les différents services d'information et de santé pour
+   * l'application '[any.getApplicationName()/]'.
+   * 
+   * @author [any.getAuthorName()/].
+   */
+  @Path("/")
+  public class [any.buildRsHealthResourceClassName()/] {
+  
+  	/**
+  	 * Récupération du singleton pour la façade du service.
+  	 */
+  [if (any.useWsServiceInjection())]
+    	@Inject
+    	[any.buildRsHealthServiceInterfaceName()/] ['health service'.apply_attributeDefault()/];
+  [else]
+        final [any.buildRsHealthServiceInterfaceName()/] ['health service '.apply_attributeDefault()/] = [any.buildRSServicesFacadeFactoryClassName()/]
+    		.[(any.getApplicationName() + ' health service').apply_classInterface().apply_methodGet()/]();
+  [/if]
+  
+  	/**
+  	 * Retourne les informations principales pour l'application.
+  	 *
+  	 * @return les informations principales pour l'application.
+  	 */
+  	@GET
+  	@Path("/info")
+  	@Produces(RsMediaType.c_application_json_utf8)
+  	public Response ['application info'.apply_methodGet()/]() {
+  	
+  		return RsResponseHelper.responseForJSONObject(['health service'.apply_attributeDefault()/].['application info'.apply_methodGet()/]()
+  				, RsStatusType.create(200, "OK"));
+  	}
+  
+  	/**
+  	 * Retourne les informations de santé pour l'application.
+  	 *
+  	 * @return les informations de santé pour l'application.
+  	 */
+  	@GET
+  	@Path("/health")
+  	@Produces(RsMediaType.c_application_json_utf8)
+  	public Response ['application health'.apply_methodGet()/]() {
+  
+  		return RsResponseHelper.responseForJSONObject(['health service'.apply_attributeDefault()/].['application health'.apply_methodGet()/]()
+  				, RsStatusType.create(200, "OK"));
+  	}
+  }
+[/template]

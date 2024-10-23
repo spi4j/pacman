@@ -7,10 +7,9 @@ package fr.test.persistence.api.main;
 // Start of user code for imports
 
 import fr.spi4j.persistence.entity.Entity_Itf;
-import fr.test.types.enums.StatusEnum;
+import fr.test.main.StatusEnum;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 // End of user code
@@ -23,7 +22,7 @@ public interface AuthorEntity extends Entity_Itf<Long>
 {
    // CONSTANTES
 
-   // Constantes AuthorEntity
+   
    // Start of user code 1986c53f3818b4f7c1db7984994eda82
 
    // End of user code
@@ -58,7 +57,7 @@ public interface AuthorEntity extends Entity_Itf<Long>
 
 
 
-   // Methodes AuthorEntity
+   
    // Start of user code 47caeee15e4569ce33279a4c76d6288b
 
    // End of user code

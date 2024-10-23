@@ -52,7 +52,7 @@
      * Définit le contrat de services spécifiques[if (d.hasCrud())] pour un type '[d.nameClassDto()/]'[/if].
      * @author [s.getAuthorName()/]
      */
-    // Annotations Service
+    ['Annotations Service'.displayClearUserCodeId()/]
     [protected (d.getUserCodeId('Annotations Service')) startTagPrefix('// ') endTagPrefix('// ')]
       [if (s.useEjb())]
         @Local
@@ -68,7 +68,7 @@
           * @param ['id'.apply_parameterMethodClassicIn()/] : Identifiant unique pour l'instance à obtenir.
           * @return [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
           */
-          // Annotations [d.name.sanitize() + '_Read'/]
+          [('Annotations ' + d.name.sanitize() + '_Read').displayClearUserCodeId()/]
           [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Read')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -81,7 +81,7 @@
           * @return [d.buildDtoClassName()/] : la nouvelle instance de type '[d.buildDtoClassName()/]'.
           * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
           */
-          // Annotations [d.name.sanitize() + '_Create'/]
+          [('Annotations ' + d.name.sanitize() + '_Create').displayClearUserCodeId()/]
           [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Create')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -93,7 +93,7 @@
           * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
           * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
           */
-          // Annotations [d.name.sanitize() + '_Update'/]
+          [('Annotations ' + d.name.sanitize() + '_Update').displayClearUserCodeId()/]
           [protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Update')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [/protected]
@@ -105,7 +105,7 @@
           * @param [d.name.apply_parameterMethodClassicIn()/] : l'instance de type '[d.buildDtoClassName()/]'.
           * @throws Spi4jValidationException : Une erreur de validation pour l'instance de type '[d.buildDtoClassName()/]'.
       	*/
-      	// Annotations [d.name.sanitize() + '_Delete'/]
+      	[('Annotations ' + d.name.sanitize() + '_Delete').displayClearUserCodeId()/]
       	[protected (d.getUserCodeId('Annotations ' + d.name.sanitize() + '_Delete')) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]
@@ -119,7 +119,7 @@
             * [r.comParamInverseIdIn()/]
             * @return une liste de [d.buildDtoClassName()/] ayant [r.nameParamInverseId().apply_parameterMethodClassicIn()/] = [r.nameParamInverseId().apply_parameterMethodClassicIn()/]
             */
-           // Annotations [r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn()/]
+           [('Annotations ' + r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn()).displayClearUserCodeId()/]
            [protected (r.getUserCodeId('Annotations ' + r.name.sanitize() + r.nameParamInverseId().apply_parameterMethodClassicIn())) startTagPrefix('// ') endTagPrefix('// ')]
 
            [/protected]
@@ -160,7 +160,7 @@
             * [o.getComParamsIn()/]
             * [o.comParamOut()/]
             */
-           // Annotations [o.userCodeForOperation()/]
+           [('Annotations ' + o.userCodeForOperation()).displayClearUserCodeId()/]
            [protected (o.getUserCodeId('Annotations ' + o.userCodeForOperation())) startTagPrefix('// ') endTagPrefix('// ')]
 
            [/protected]
@@ -171,8 +171,8 @@
 
       [/for]
     [/if]
-       // Méthodes [s.buildServiceInterfaceName(d)/]
-       [protected (d.getUserCodeId('Méthodes ' + s.buildServiceInterfaceName(d))) startTagPrefix('// ') endTagPrefix('// ')]
+       [('Methodes ' + s.buildServiceInterfaceName(d)).displayClearUserCodeId()/]
+       [protected (d.getUserCodeId('Methodes ' + s.buildServiceInterfaceName(d))) startTagPrefix('// ') endTagPrefix('// ')]
 
        [/protected]
     }[/let]

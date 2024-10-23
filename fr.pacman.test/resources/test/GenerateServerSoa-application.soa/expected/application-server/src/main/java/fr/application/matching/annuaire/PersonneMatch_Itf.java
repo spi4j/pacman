@@ -33,7 +33,7 @@ public interface PersonneMatch_Itf extends Match_Itf<Long, PersonneDto, Personne
     */
    PersonneColumns_Enum getColumn (final PersonneAttributes_Enum p_attribute);
 
-   // PersonneMatch_Itf
+   
    // Start of user code PersonneMatch_Itf
 
    // End of user code

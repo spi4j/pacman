@@ -9,8 +9,10 @@
 [import fr::pacman::configuration::project::CXFServlet/]
 [import fr::pacman::configuration::project::RSResources/]
 [import fr::pacman::configuration::project::RsFrontResources/]
-[import fr::pacman::configuration::common::names/]
+[import fr::pacman::configuration::project::RsHealthResources/]
 [import fr::pacman::configuration::project::Servlets/]
+[import fr::pacman::configuration::project::Batch/]
+[import fr::pacman::configuration::common::names/]
 
 [comment encoding = UTF-8 /]
 [template public genServer(any : ecore::EObject, fromStarter : Boolean)]
@@ -61,6 +63,12 @@
       [any.administrationServlet()/]
     [/file]
     
+    [if (any.useBatch())]
+      [file (any.getServerProjectName().filename(any.getServerResourcesDir(), 'jberet.properties'), overwrite, 'UTF-8')]
+        [any.jberetConfigFile()/]
+      [/file]
+    [/if]
+    
   [/if]
   
   [if (any.useWS())]
@@ -92,6 +100,12 @@
     [if (any.useWsServiceInjection())]
       [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRS(), any.buildRSApplicationConfigClassName() + '.java'), overwrite, 'UTF-8')]
         [any.rsApplicationConfig()/]
+      [/file]
+    [/if]
+    
+    [if (not any.useWsServiceInjection() and any.useHealthApi())]
+      [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRS(), any.buildRSServicesFacadeFactoryClassName() + '.java'), overwrite, 'UTF-8')]
+        [any.RSServicesFacadeFactory()/]
       [/file]
     [/if]
     
@@ -142,7 +156,33 @@
     [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRsFront(), any.buildRSFrontResourcesAbstractClassName() + '.java'), overwrite, 'UTF-8')]
       [any.rsFrontResourceAbstract()/]
     [/file]
+  [/if]
+  
+  [if (any.useHealthApi())]
     
+    [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRS(), any.buildRsHealthServiceClassName() + '.java'), overwrite, 'UTF-8')]
+      [any.rsHealthServiceImplementation()/]
+    [/file]
+    
+    [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRsResources(false), any.buildRsHealthResourceClassName() + '.java'), overwrite, 'UTF-8')]
+      [any.rsHealthResource()/]
+    [/file]
+    
+    [file (any.getServerProjectName().filename(any.getServerResourcesDir(), '', any.getApplicationName() + 'Health.properties'), overwrite, 'UTF-8')]
+      [any.rsHealthProperties()/]
+    [/file]
+    
+    [file (any.getServerProjectName().filename(any.getServerResourcesDir(), '', any.getApplicationName() + 'Info.properties'), overwrite, 'UTF-8')]
+      [any.rsInfoProperties()/]
+    [/file]
+    
+    [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRS(), any.buildHealthExternalServicesClassName() + '.java'), overwrite, 'UTF-8')]
+      [any.rsHealthServices()/]
+    [/file]
+    
+    [file (any.getServerProjectName().filename(any.getServerSourceDir(), any.buildPackageRS(), any.buildHealthExternalServiceClassName() + '.java'), overwrite, 'UTF-8')]
+      [any.rsHealthService()/]
+    [/file]
   [/if]
   
 [/template]

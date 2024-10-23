@@ -131,7 +131,7 @@
 
 [comment : /]
 [template private description(p : soa::Parameter, lowerFirst : Boolean)]
-  [if (p.description = null)][p.name/].[else][if (lowerFirst)][p.description.toLowerFirst()/][else][p.description/][/if].[/if][/template]
+  [if (p.description = null)][p.name/].[else][if (lowerFirst)][p.description.toLowerFirst().sanitizeForStars()/][else][p.description.sanitizeForStars()/][/if].[/if][/template]
 
 [comment : /]
 [template public comParamsIn(o : soa::Operation)]
@@ -170,3 +170,6 @@
 
 [comment : Check if a parameter is mandatory (specific for comments). /]
 [query private isMandatory(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE or p.multiplicity = environment::MultiplicityKind::ONE_STAR/]
+
+[comment : remove all '*' from description. /]
+[query public sanitizeForStars(s : String) : String = if not (s = null) then s.replaceAll('\\*+', '\'') else '' endif/]

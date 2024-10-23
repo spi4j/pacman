@@ -3,11 +3,12 @@
 [import fr::pacman::commons::common::licence/]
 [import fr::pacman::commons::common::packages/]
 [import fr::pacman::commons::common::classes/]
+[import fr::pacman::commons::common::utils/]
 [import fr::pacman::commons::convention::rule::classRule/]
 [import fr::pacman::commons::convention::rule::attributeRule/]
 [import fr::pacman::commons::convention::rule::parameterRule/]
 [import fr::pacman::commons::convention::rule::methodRule/]
-[import fr::pacman::requirement::commons/]
+[import fr::pacman::requirement::common::commons/]
 [import fr::pacman::commons::common::properties/]
 [import fr::pacman::commons::common::names/]
 [import fr::pacman::commons::common::imports/]
@@ -40,16 +41,16 @@
   {
   [for (req : requirement::Requirement | categories->asSequence()->findRequirements(profondeurMax))]
        /**
-        * Vérifier que la version de l'exigence [req.getServiceRequirementsPrefix()/][req.id/] est la même entre la modèlisation et l'implémentation courante.
-        * @see [nomReqEnum/]#[req.getServiceRequirementsPrefix()/][req.id/]
+        * Vérifier que la version de l'exigence [req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/] est la même entre la modèlisation et l'implémentation courante.
+        * @see [nomReqEnum/]#[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/]
         */
        @Test
-       public void testVersion_[req.getServiceRequirementsPrefix()/][req.id/] ()
+       public void testVersion_[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/] ()
        {
           // Version de la modélisation : "[req.version/]"
-          [protected (e.getUserCodeId('testVersion_' + req.getServiceRequirementsPrefix() + req.id)) startTagPrefix('// ') endTagPrefix('// ')]
+          [protected (e.getUserCodeId('testVersion_' + req.getServiceRequirementsPrefix() + req.id.sanitizeReqID())) startTagPrefix('// ') endTagPrefix('// ')]
             // TODO Affecter le No de la version d'implémentation lorsque celle-ci sera conforme avec celle de la modélisation
-            [nomReqEnum/].[req.getServiceRequirementsPrefix()/][req.id/].set_versionImplem([req.getTestRequirementVersionningInitial()/]);
+            [nomReqEnum/].[req.getServiceRequirementsPrefix()/][req.id.sanitizeReqID()/].set_versionImplem([req.getTestRequirementVersionningInitial()/]);
           [/protected]
        }
     

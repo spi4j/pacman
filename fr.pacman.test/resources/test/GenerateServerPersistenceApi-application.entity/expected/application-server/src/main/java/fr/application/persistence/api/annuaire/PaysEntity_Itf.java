@@ -6,9 +6,8 @@
 package fr.application.persistence.api.annuaire;
 // Start of user code for imports
 
+import fr.application.annuaire.TypeCompetence_Enum;
 import fr.application.persistence.api.ApplicationAutoFieldsEntity_Itf;
-import fr.application.types.enums.TypeCompetence_Enum;
-import java.util.Date;
 
 // End of user code
 
@@ -20,7 +19,7 @@ public interface PaysEntity_Itf extends ApplicationAutoFieldsEntity_Itf<Long>
 {
    // CONSTANTES
 
-   // Constantes PaysEntity_Itf
+   
    // Start of user code Constantes PaysEntity_Itf
 
    // End of user code
@@ -68,7 +67,7 @@ public interface PaysEntity_Itf extends ApplicationAutoFieldsEntity_Itf<Long>
 
 
 
-   // Methodes PaysEntity_Itf
+   
    // Start of user code Methodes PaysEntity_Itf
 
    // End of user code

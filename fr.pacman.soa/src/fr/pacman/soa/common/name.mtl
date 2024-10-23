@@ -54,10 +54,10 @@
 
 [comment le nom de la clé primaire dans les énumérations/]
 [template public nameSimplePropertyIDInEnum(d : environment::DTO)]
-  [d.nameBaseDto().toLower()/][d.namePK_ID()/][/template]
+  [(d.nameBaseDto() + d.namePK_ID()).apply_attributeEnum()/][/template]
 
 [template public nameSimplePropertyIDInEnum(r : environment::Reference)]
-  [r.nameBaseDto().toLower()/][r.namePK_ID()/][/template]
+  [(r.nameBaseDto() + r.namePK_ID()).apply_attributeEnum()/][/template]
 
 [template private nameBaseService(s : soa::Service)]
   [s.buildSimpleServiceName().toLowerFirst()/][/template]
@@ -254,8 +254,7 @@ dans les attributs d'un dto/]
   [s.nameBaseDto()/][s.namePK_ID()/][/template]
 
 [template public mandatory(p : environment::Property)]
-  [if (p.isMandatory())]true[else]false[/if]
-[/template]
+  [if (p.isMandatory())]true[else]false[/if][/template]
 
 [query public isMandatory(p : soa::Parameter) : Boolean = p.multiplicity = environment::MultiplicityKind::ONE or p.multiplicity = environment::MultiplicityKind::ONE_STAR/]
 

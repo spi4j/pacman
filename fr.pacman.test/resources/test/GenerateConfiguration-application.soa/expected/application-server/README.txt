@@ -12,7 +12,7 @@ Un fichier de configuration par défaut pour l'application a été créé dans :
 src/main/resources/applicationApplication.properties
 --------------------------------------------------------------------------------------------------------
 
-Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA dans : 
+Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA : 
 
 --------------------------------------------------------------------------------------------------------
 src/main/resources/applicationTokens.properties

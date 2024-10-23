@@ -8,7 +8,6 @@ package fr.test.ws.rs.front.resources;
 
 import fr.test.ws.rs.front.TestFrontResourcesAbs;
 import jakarta.ws.rs.core.*;
-import java.util.Date;
 
 // End of user code
 
@@ -46,7 +45,7 @@ public final class LogServiceFrontResources extends TestFrontResourcesAbs
    */
   private LogServiceFrontResources(){
 
-    super("/ebookstore/");
+    super("/");
   }
 
 
@@ -57,7 +56,7 @@ public final class LogServiceFrontResources extends TestFrontResourcesAbs
     */
   public void log(final String message) {
 
-    // for log_String_message
+    
     // Start of user code 1b95a23c179d6dc2763e5fdccd2212a4
 
      target()

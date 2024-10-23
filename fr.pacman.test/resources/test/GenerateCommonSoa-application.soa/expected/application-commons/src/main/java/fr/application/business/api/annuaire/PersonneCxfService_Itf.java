@@ -17,7 +17,7 @@ import java.util.List;
  * Définit le contrat de services spécifiques.
  * @author safr@n
  */
-// Annotations Service
+
 // Start of user code Annotations Service
 // End of user code
 public interface PersonneCxfService_Itf extends ApplicationService_Itf
@@ -30,7 +30,7 @@ public interface PersonneCxfService_Itf extends ApplicationService_Itf
     *           (In)(*) identifiant.
     * @return personne.
 	*/
-	// Annotations findPersonneByIdFromCxf_Personne_personne_Long_identifiant
+	
 	// Start of user code Annotations findPersonneByIdFromCxf_Personne_personne_Long_identifiant
 
 	// End of user code
@@ -39,8 +39,8 @@ public interface PersonneCxfService_Itf extends ApplicationService_Itf
 
 	
 
-    // Méthodes PersonneCxfService_Itf
-    // Start of user code Méthodes PersonneCxfService_Itf
+    
+    // Start of user code Methodes PersonneCxfService_Itf
 
     // End of user code
 }

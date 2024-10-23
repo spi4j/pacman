@@ -28,7 +28,7 @@
   public class [flow.nameFlow()/] extends SpiFlowManager_Abs
   {
   
-     // Attributs [flow.nameFlow()/]
+     [('Attributs' + flow.nameFlow()).displayClearUserCodeId()/]
      [protected (flow.getUserCodeId('Attributs ' + flow.nameFlow())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]
@@ -56,7 +56,7 @@
      @Override
      public void onStart ()
      {
-        // Pre onStart
+        ['Pre onStart'.displayClearUserCodeId()/]
         [protected (flow.getUserCodeId('Pre onStart')) startTagPrefix('// ') endTagPrefix('// ')]
 
           [if (not flow.getInitialState().getAllFollowingStatesWithoutGardOrEvent(false)->filter(flow::ViewState)->collect(temp1 | temp1.viewContainers)->isEmpty() and not flow.flowHasMainPanel() and flow.hasRootPresenter())]
@@ -66,14 +66,14 @@
   
   [flow.getInitialState().gestionTransition('onStart', flow.flowHasMainPanel())/]
   
-        // Post onStart
+        ['Post onStart'.displayClearUserCodeId()/]
         [protected (flow.getUserCodeId('Post onStart')) startTagPrefix('// ') endTagPrefix('// ')]
 
         [/protected]
   
      }
   
-     // Méthodes [flow.nameFlow()/]
+     [('Méthodes ' + flow.nameFlow()).displayClearUserCodeId()/]
      [protected (flow.getUserCodeId('Méthodes ' + flow.nameFlow())) startTagPrefix('// ') endTagPrefix('// ')]
 
      [/protected]

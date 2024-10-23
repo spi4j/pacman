@@ -26,7 +26,7 @@ public abstract class ApplicationAutoFieldsXto_Abs {
 
 	// CONSTANTES
 
-	// Constantes
+	
 	// Start of user code Constantes
 
 	// End of user code
@@ -43,7 +43,7 @@ public abstract class ApplicationAutoFieldsXto_Abs {
    	private XtopSup _xtopsup;
 
 
-	// Commons Attributs 
+	 
 	// Start of user code Commons Attributs
 
 	// End of user code

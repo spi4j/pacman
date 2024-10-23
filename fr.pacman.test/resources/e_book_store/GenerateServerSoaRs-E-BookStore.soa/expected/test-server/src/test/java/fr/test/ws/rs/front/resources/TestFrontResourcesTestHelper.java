@@ -23,7 +23,6 @@ import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.MediaType;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -195,7 +194,7 @@ public abstract class TestFrontResourcesTestHelper {
 	 */
 	private static String getPrettyErrorPrinting(final TestFrontRsException exception)  {
 	
-		// for pretty error printing
+		
 		// Start of user code a5eb451c1fd531fdfc988f82a537db83
 
 		final StringBuilder strBuilder = new StringBuilder();
@@ -223,7 +222,7 @@ public abstract class TestFrontResourcesTestHelper {
 	 */
 	protected static void displayResponse(final Object entity) {
 		
-		// for display response
+		
 		// Start of user code 321e903ed6f27d8ada10954d673166b2
 
 		// Parsing de la grappe d'objets sur l'entité retournée.
@@ -260,7 +259,7 @@ public abstract class TestFrontResourcesTestHelper {
 	 */
 	private static String getPrettyHeadersPrinting(final Headers headers) {
 		
-		// for pretty headers printing
+		
 		// Start of user code 5483a5d85eaba8f8574572b1518af968
 
 		if(TestFrontConfiguration.isDebugDisplayHeaders()){
@@ -306,7 +305,7 @@ public abstract class TestFrontResourcesTestHelper {
 	private static StringBuilder prettyHeadersPrinting(final StringBuilder strBuilder, 
 			final Entry<String, ?> entry) {
 	
-		// for pretty headers printing builder
+		
 		// Start of user code ff05592c516f13d6fa84ce61c7744174
 
 		strBuilder.append("\n           ");
@@ -326,7 +325,7 @@ public abstract class TestFrontResourcesTestHelper {
 	 */
 	private static String getPrettyOperationPrinting(final String operation) {
 		
-		// for pretty operation printing
+		
 		// Start of user code 1017ff3bf1ef506215d39a27e4096552
 
 		final StringBuilder strBuilder = new StringBuilder();
@@ -368,7 +367,7 @@ public abstract class TestFrontResourcesTestHelper {
 			jsonSerialization = strBuffer.toString();
 		}
 		 
-		// for pretty entity printing
+		
 		// Start of user code 44e054c8405261345b0f5717d98fc663
 
 		return jsonSerialization
@@ -395,7 +394,7 @@ public abstract class TestFrontResourcesTestHelper {
 	 */
 	private static String newRecord() {
 		
-		// for new record
+		
 		// Start of user code fb502e183823bc486278fee3d0942f80
 
 		StringBuilder strBuilder = new StringBuilder();

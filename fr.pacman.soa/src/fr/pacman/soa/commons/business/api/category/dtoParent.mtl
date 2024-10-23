@@ -135,7 +135,7 @@
     [/if]
        {
     [if (a.isComputed())]
-            // [a.name.apply_attributeDefault()/]
+            [a.name.apply_attributeDefault().displayClearUserCodeId()/]
             [protected (a.getUserCodeId(a.name.apply_attributeDefault())) startTagPrefix('// ') endTagPrefix('// ')]
                     // TODO Calculer l'attribut
                     return null;
@@ -300,7 +300,7 @@
         */
        [r.getGetter()/]
        {
-          // [r.name.normalize().apply_methodGet()/]
+          [r.name.normalize().apply_methodGet().displayClearUserCodeId()/]
           [protected (r.getUserCodeId(r.name.normalize().apply_methodGet())) startTagPrefix('// ') endTagPrefix('// ')]
                   // TODO Calculer la référence
                   return null;
@@ -316,7 +316,7 @@
         */
        [r.getGetterListDto()/]
        {
-          // [('get' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault()/]
+          [('get' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault().displayClearUserCodeId()/]
           [protected (r.getUserCodeId(('get' + r.name.normalize().apply_attributeMultiple()).apply_methodDefault())) startTagPrefix('// ') endTagPrefix('// ')]
                   // TODO Calculer la référence
                   return null;
@@ -347,7 +347,7 @@
   [if (p.isMandatory())]
           ['champs invalides'.apply_variableDefault()/] = DtoUtil.checkMandatoryField("[p.nameBase()/]", [p.name.normalize().apply_attributeDefault()/], ['champs invalides'.apply_variableDefault()/]);
   [/if]
-  [d.validateSize(p)/][/template]
+  [if (p.oclIsTypeOf(environment::Attribute))][d.validateSize(p.oclAsType(environment::Attribute))/][/if][/template]
 
 [template private validProperty(d : environment::DTO, p : environment::Reference)]
   [if (p.isMandatory())]

@@ -40,7 +40,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    // ATTRIBUTS
 
    /** L'identifiant. */
-   // for annotation_id
+   
    // Start of user code for annotation_id
    @XmlElement(namespace = "", name = "id")
    @JsonProperty("id")
@@ -48,7 +48,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    // End of user code
 
    /** . */
-   // for annotation_nom
+   
    // Start of user code for annotation_nom
    @XmlElement(namespace = "", name = "nom")
    @JsonProperty("nom")
@@ -56,7 +56,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private String _nom;
 
    /** . */
-   // for annotation_prenom
+   
    // Start of user code for annotation_prenom
    @XmlElement(namespace = "", name = "prenom")
    @JsonProperty("prenom")
@@ -64,7 +64,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private String _prenom;
 
    /** . */
-   // for annotation_civil
+   
    // Start of user code for annotation_civil
    @XmlElement(namespace = "", name = "civil")
    @JsonProperty("civil")
@@ -72,7 +72,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private Boolean _civil;
 
    /** . */
-   // for annotation_dateNaissance
+   
    // Start of user code for annotation_dateNaissance
    @XmlElement(namespace = "", name = "dateNaissance")
    @JsonProperty("dateNaissance")
@@ -80,7 +80,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private Date _dateNaissance;
 
    /** . */
-   // for annotation_salaire
+   
    // Start of user code for annotation_salaire
    @XmlElement(namespace = "", name = "salaire")
    @JsonProperty("salaire")
@@ -88,15 +88,15 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private Double _salaire;
 
    /** La FK sur le Type 'Grade'. */
-   // for annotation_1_grade_id
+   
    // Start of user code for annotation_1_grade_id
    @XmlElement(namespace = "", name = "grade_id")
    @JsonProperty("grade_id")
    // End of user code
    private Long _grade_id;
 
-   /** L'instance de 'Invalid' associee a  l'instance de 'Personne' courante. */
-   // for annotation_grade
+   /** L'instance de 'Grade' associee a  l'instance de 'Personne' courante. */
+   
    // Start of user code for annotation_grade
    @XmlElement(namespace = "", name = "grade")
    @JsonProperty("grade")
@@ -104,15 +104,15 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private GradeXto _grade;
 
    /** La FK sur le Type 'Personne'. */
-   // for annotation_1_marieAvec_id
+   
    // Start of user code for annotation_1_marieAvec_id
    @XmlElement(namespace = "", name = "marieAvec_id")
    @JsonProperty("marieAvec_id")
    // End of user code
    private Long _marieAvec_id;
 
-   /** L'instance de 'Invalid' associee a  l'instance de 'Personne' courante. */
-   // for annotation_marieAvec
+   /** L'instance de 'Personne' associee a  l'instance de 'Personne' courante. */
+   
    // Start of user code for annotation_marieAvec
    @XmlElement(namespace = "", name = "marieAvec")
    @JsonProperty("marieAvec")
@@ -120,7 +120,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private PersonneXto _marieAvec;
 
    /** La liste de type 'Adresse' associee a  l'instance de 'Personne' courante. */
-   // for annotation__tab_adresses
+   
    // Start of user code for annotation__tab_adresses
    @XmlElement(namespace = "", name = "adresses")
    @JsonProperty("adresses")
@@ -128,7 +128,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private List<AdresseXto> _tab_adresses;
 
    /** La liste de type 'Personne' associee a  l'instance de 'Personne' courante. */
-   // for annotation__tab_parentDe
+   
    // Start of user code for annotation__tab_parentDe
    @XmlElement(namespace = "", name = "parentDe")
    @JsonProperty("parentDe")
@@ -136,7 +136,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private List<PersonneXto> _tab_parentDe;
 
    /** La liste de type 'Pays' associee a  l'instance de 'Personne' courante. */
-   // for annotation__tab_pays
+   
    // Start of user code for annotation__tab_pays
    @XmlElement(namespace = "", name = "pays")
    @JsonProperty("pays")
@@ -144,7 +144,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    private List<PaysXto> _tab_pays;
 
    /** La FK sur le type 'Personne'. */
-   // for annotation_parentDe_id
+   
    // Start of user code for annotation_parentDe_id
    @XmlElement(namespace = "", name = "personneParentDe_id")
    @JsonProperty("personneParentDe_id")
@@ -438,7 +438,7 @@ public class PersonneXto extends ApplicationAutoFieldsXto_Abs implements Xto_Itf
    @Override
    public String toString ()
    {
-      // toString
+      
       // Start of user code toString
 
       return getClass().getName() + '['  + getId ()  + ", " + get_nom()   + ", " + get_prenom()   + ", " + get_civil()   + ", " + get_dateNaissance()   + ", " + get_salaire()   + ", " + get_grade_id () + ", " + get_marieAvec_id () + ']';

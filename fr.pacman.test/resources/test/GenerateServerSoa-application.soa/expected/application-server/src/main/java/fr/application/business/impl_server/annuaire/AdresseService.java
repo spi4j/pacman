@@ -24,14 +24,14 @@ import java.util.List;
  * Pour rappel, les services sont sans état.
  * @author safr@n
  */
-// annotations service
+
 // Start of user code annotations service
 // End of user code
 public class AdresseService extends Service_Abs<Long, AdresseDto, AdresseColumns_Enum> implements AdresseService_Itf
 {
 
    // Rappel : les services sont sans état.
-   // attributs
+   
    // Start of user code attributs
 
    // End of user code
@@ -57,7 +57,7 @@ public class AdresseService extends Service_Abs<Long, AdresseDto, AdresseColumns
    }
 
 
-   // AdresseService
+   
    // Start of user code AdresseService
 
    // End of user code

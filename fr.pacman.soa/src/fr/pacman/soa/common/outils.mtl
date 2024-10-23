@@ -24,6 +24,8 @@
 
 [query public listeServicesFromSystem(m : soa::System) : OrderedSet(soa::Service) = m.eAllContents(soa::Service)->listeServices()/]
 
+[query public getBaseURI(m : soa::System) : String = m.eAllContents(soa::Component)->buildBaseUri()/]
+
 [query public clientNeedXto(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('GWT'))/]
 
 [query public clientNeedRemotingServlet(any : ecore::EObject) : Boolean = any.getClientTypes()->exists(client | client.equalsIgnoreCase('SWING'))/]

@@ -28,7 +28,7 @@ public interface PaysGwtServiceAsync extends GwtRemoteServiceAsync<Long, PaysXto
     */
    void findListPaysByPersonne (final Long p_personnePays_id, final AsyncCallback<List<PaysXto>> callback);
 
-   // PaysGwtServiceAsync
+   
    // Start of user code PaysGwtServiceAsync
 
    // End of user code

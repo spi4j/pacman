@@ -93,7 +93,7 @@
   [/for]
      }
   
-     // Methodes
+     ['Methodes'.displayClearUserCodeId()/]
      [protected (n.getUserCodeId('Methodes')) startTagPrefix('// ') endTagPrefix('// ')]
 
        /**

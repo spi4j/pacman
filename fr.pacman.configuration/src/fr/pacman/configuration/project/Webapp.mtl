@@ -27,7 +27,8 @@
       <name>[any.getApplicationName()/] - Packaging webapp serveur</name>
   
   	<!--
-  	[protected ('for custom code') startTagPrefix('// ') endTagPrefix('// ')]
+  	['for custom code'.displayClearUserCodeId()/]
+  	[protected (any.getUserCodeId('for custom code')) startTagPrefix('// ') endTagPrefix('// ')]
      	-->
      		
      	<!--
@@ -97,7 +98,8 @@
           </dependency>
   		[true.httpEmbeddedServerDependencies()/]
   		<!--
-  		[protected ('for dependencies') startTagPrefix('// ') endTagPrefix('// ')]
+  		['for dependencies'.displayClearUserCodeId()/]
+  		[protected (any.getUserCodeId('for dependencies')) startTagPrefix('// ') endTagPrefix('// ')]
       		-->
       		
       		<!--
@@ -110,7 +112,8 @@
   			[any.plugins(true)/]
   			[true.httpEmbeddedServerPlugins()/]
   			<!--
-  			[protected ('for plugins') startTagPrefix('// ') endTagPrefix('// ')]
+  			['for plugins'.displayClearUserCodeId()/]
+  			[protected (any.getUserCodeId('for plugins')) startTagPrefix('// ') endTagPrefix('// ')]
        			-->
        		
        			<!--
@@ -189,7 +192,7 @@
     	</filter>
     	<filter-mapping>
       		<filter-name>CorsFilter</filter-name>
-      		<url-pattern>/api/*</url-pattern>
+      		<url-pattern>/*</url-pattern>
     	</filter-mapping>
     	-->
   [/if]

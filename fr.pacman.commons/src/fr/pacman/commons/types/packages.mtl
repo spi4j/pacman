@@ -12,7 +12,7 @@
  /][/comment]
 [query public buildPackageTypePrimitif(any : ecore::EObject) : String = any.getApplicationPackage() + '.types'/]
 
-[query public buildPackageEnum(e : environment::Enumeration) : String = e.buildPackageTypePrimitif() + '.enums'/]
+[query public buildPackageEnum(e : environment::Enumeration) : String = if not (e.getCommonEnumsPackage() = null) and e.getCommonEnumsPackage().size() > 0 then e.getApplicationPackage() + '.' + e.getCommonEnumsPackage() else e.getApplicationPackage() + e.blockHierarchy() endif/]
 
 [**
  * Paramétrage Fin
@@ -20,6 +20,6 @@
 [template public blockHierarchy(e : environment::Enumeration) post(self.trim())]
   [if (e.ancestors(environment::Namespace)->size() < 1)]
   [else]
-    .[e.ancestors(environment::Namespace)->select(temp1 | not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.')/]
+    .[e.ancestors(environment::Namespace)->select(temp1 | temp1.oclIsTypeOf(environment::Namespace) and not (temp1.name = null))->reverse()->collect(temp2 | temp2.oclAsType(environment::Namespace))->collect(temp3 | temp3.name)->collect(temp4 | temp4.sanitize())->collect(temp5 | temp5.toLower())->sep('.')/]
   [/if]
 [/template]
