@@ -24,7 +24,7 @@
 
 [**
  * Generer les composants pour permettre de prendre en compte la
- * Politique Generale d'Ergonomie (PGE) de l'application.
+ * Politique Generale d'ergonomie (PGE) de l'application.
 */]
 [template public generatePge(any : ecore::EObject)]
   [for (clientType : String | any.getClientTypes())]

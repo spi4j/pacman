@@ -16,14 +16,14 @@ import java.util.Properties;
 
 import fr.pacman.commons.convention.project.ProjectProperties;
 import fr.pacman.commons.convention.project.Spi4jProperties;
-import fr.pacman.commons.convention.rule.AttributeRule;
-import fr.pacman.commons.convention.rule.ClassRule;
-import fr.pacman.commons.convention.rule.CommonRule;
-import fr.pacman.commons.convention.rule.MethodRule;
-import fr.pacman.commons.convention.rule.PackageRule;
-import fr.pacman.commons.convention.rule.PageRule;
-import fr.pacman.commons.convention.rule.ParameterRule;
-import fr.pacman.commons.convention.rule.VariableRule;
+import fr.pacman.commons.convention.rule.AttributeNamingRule;
+import fr.pacman.commons.convention.rule.ClassNamingRule;
+import fr.pacman.commons.convention.rule.CommonNamingRule;
+import fr.pacman.commons.convention.rule.MethodNamingRule;
+import fr.pacman.commons.convention.rule.PackageNamingRule;
+import fr.pacman.commons.convention.rule.PageNamingRule;
+import fr.pacman.commons.convention.rule.ParameterNamingRule;
+import fr.pacman.commons.convention.rule.VariableNamingRule;
 import fr.pacman.commons.services.LoggerUtils;
 import fr.pacman.commons.services.PlugInUtils;
 
@@ -82,8 +82,8 @@ public final class PacmanPropertiesManager
            new ProjectProperties(), new Spi4jProperties(),
 
            // Proprietes de nommage du code genere du projet (ex : p_[CamelCase/], pour un parametre)
-           new AttributeRule(), new MethodRule(), new ClassRule(), new VariableRule(), new ParameterRule(),
-           new PackageRule(), new CommonRule(), new PageRule() };
+           new AttributeNamingRule(), new MethodNamingRule(), new ClassNamingRule(), new VariableNamingRule(), new ParameterNamingRule(),
+           new PackageNamingRule(), new CommonNamingRule(), new PageNamingRule() };
    }
 
    /**

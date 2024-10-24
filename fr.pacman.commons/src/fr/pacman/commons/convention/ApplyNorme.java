@@ -1,12 +1,12 @@
 package fr.pacman.commons.convention;
 
-import fr.pacman.commons.convention.rule.AttributeRule;
-import fr.pacman.commons.convention.rule.ClassRule;
-import fr.pacman.commons.convention.rule.MethodRule;
-import fr.pacman.commons.convention.rule.PackageRule;
-import fr.pacman.commons.convention.rule.PageRule;
-import fr.pacman.commons.convention.rule.ParameterRule;
-import fr.pacman.commons.convention.rule.VariableRule;
+import fr.pacman.commons.convention.rule.AttributeNamingRule;
+import fr.pacman.commons.convention.rule.ClassNamingRule;
+import fr.pacman.commons.convention.rule.MethodNamingRule;
+import fr.pacman.commons.convention.rule.PackageNamingRule;
+import fr.pacman.commons.convention.rule.PageNamingRule;
+import fr.pacman.commons.convention.rule.ParameterNamingRule;
+import fr.pacman.commons.convention.rule.VariableNamingRule;
 
 /**
  * Classe Point d'entre des queries acceleo qui concernent l'application des conventions de nommage du projet.
@@ -33,7 +33,7 @@ public final class ApplyNorme
     */
    public static String norme_packagePersistence (final String p_value)
    {
-      return PackageRule.applyNorme_packagePersistence(p_value);
+      return PackageNamingRule.applyNorme_packagePersistence(p_value);
    }
 
 public static String norme_packagePersistenceJavaService(final String p_value){return norme_packagePersistence(p_value);}
@@ -48,7 +48,7 @@ public static String norme_packagePersistenceJavaService(final String p_value){r
     */
    public static String norme_packageImplemJdbc (final String p_value)
    {
-      return PackageRule.applyNorme_packageImplemJdbc(p_value);
+      return PackageNamingRule.applyNorme_packageImplemJdbc(p_value);
    }
 
 public static String norme_packageImplemJdbcJavaService(final String p_value){return norme_packageImplemJdbc(p_value);}
@@ -62,7 +62,7 @@ public static String norme_packageImplemJdbcJavaService(final String p_value){re
     */
    public static String norme_packageImplemServer (final String p_value)
    {
-      return PackageRule.applyNorme_packageImplemServer(p_value);
+      return PackageNamingRule.applyNorme_packageImplemServer(p_value);
    }
 
 public static String norme_packageImplemServerJavaService(final String p_value){return norme_packageImplemServer(p_value);}
@@ -76,7 +76,7 @@ public static String norme_packageImplemServerJavaService(final String p_value){
     */
    public static String norme_packageMatching (final String p_value)
    {
-      return PackageRule.applyNorme_packageMatching(p_value);
+      return PackageNamingRule.applyNorme_packageMatching(p_value);
    }
 
 public static String norme_packageMatchingJavaService(final String p_value){return norme_packageMatching(p_value);}
@@ -90,7 +90,7 @@ public static String norme_packageMatchingJavaService(final String p_value){retu
     */
    public static String norme_packageApi (final String p_value)
    {
-      return PackageRule.applyNorme_packageApi(p_value);
+      return PackageNamingRule.applyNorme_packageApi(p_value);
    }
 
 public static String norme_packageApiJavaService(final String p_value){return norme_packageApi(p_value);}
@@ -104,7 +104,7 @@ public static String norme_packageApiJavaService(final String p_value){return no
     */
    public static String norme_packageBusiness (final String p_value)
    {
-      return PackageRule.applyNorme_packageBusiness(p_value);
+      return PackageNamingRule.applyNorme_packageBusiness(p_value);
    }
 
 public static String norme_packageBusinessJavaService(final String p_value){return norme_packageBusiness(p_value);}
@@ -118,7 +118,7 @@ public static String norme_packageBusinessJavaService(final String p_value){retu
     */
    public static String norme_packageRequirement (final String p_value)
    {
-      return PackageRule.applyNorme_packageRequirement(p_value);
+      return PackageNamingRule.applyNorme_packageRequirement(p_value);
    }
 
 public static String norme_packageRequirementJavaService(final String p_value){return norme_packageRequirement(p_value);}
@@ -133,7 +133,7 @@ public static String norme_packageRequirementJavaService(final String p_value){r
     */
    public static String norme_attributeDefault (final String p_value)
    {
-      return AttributeRule.applyNorme_attributeDefault(p_value);
+      return AttributeNamingRule.applyNorme_attributeDefault(p_value);
    }
 
 public static String norme_attributeDefaultJavaService(final String p_value){return norme_attributeDefault(p_value);}
@@ -148,7 +148,7 @@ public static String norme_attributeDefaultJavaService(final String p_value){ret
     */
    public static String norme_attributeEnum (final String p_value)
    {
-      return AttributeRule.applyNorme_attributeEnum(p_value);
+      return AttributeNamingRule.applyNorme_attributeEnum(p_value);
    }
 
 public static String norme_attributeEnumJavaService(final String p_value){return norme_attributeEnum(p_value);}
@@ -163,7 +163,7 @@ public static String norme_attributeEnumJavaService(final String p_value){return
     */
    public static String norme_attributeMultiple (final String p_value)
    {
-      return AttributeRule.applyNorme_attributeMultiple(p_value);
+      return AttributeNamingRule.applyNorme_attributeMultiple(p_value);
    }
 
 public static String norme_attributeMultipleJavaService(final String p_value){return norme_attributeMultiple(p_value);}
@@ -178,7 +178,7 @@ public static String norme_attributeMultipleJavaService(final String p_value){re
     */
    public static String norme_attributeFinal (final String p_value)
    {
-      return AttributeRule.applyNorme_attributeFinal(p_value);
+      return AttributeNamingRule.applyNorme_attributeFinal(p_value);
    }
 
 public static String norme_attributeFinalJavaService(final String p_value){return norme_attributeFinal(p_value);}
@@ -193,7 +193,7 @@ public static String norme_attributeFinalJavaService(final String p_value){retur
     */
    public static String norme_attributeFinalStatic (final String p_value)
    {
-      return AttributeRule.applyNorme_attributeFinalStatic(p_value);
+      return AttributeNamingRule.applyNorme_attributeFinalStatic(p_value);
    }
 
 public static String norme_attributeFinalStaticJavaService(final String p_value){return norme_attributeFinalStatic(p_value);}
@@ -208,7 +208,7 @@ public static String norme_attributeFinalStaticJavaService(final String p_value)
     */
    public static String norme_attributeStatic (final String p_value)
    {
-      return AttributeRule.applyNorme_attributeStatic(p_value);
+      return AttributeNamingRule.applyNorme_attributeStatic(p_value);
    }
 
 public static String norme_attributeStaticJavaService(final String p_value){return norme_attributeStatic(p_value);}
@@ -223,7 +223,7 @@ public static String norme_attributeStaticJavaService(final String p_value){retu
     */
    public static String norme_classAbstract (final String p_value)
    {
-      return ClassRule.applyNorme_classAbstract(p_value);
+      return ClassNamingRule.applyNorme_classAbstract(p_value);
    }
 
 public static String norme_classAbstractJavaService(final String p_value){return norme_classAbstract(p_value);}
@@ -238,7 +238,7 @@ public static String norme_classAbstractJavaService(final String p_value){return
     */
    public static String norme_classDefault (final String p_value)
    {
-      return ClassRule.applyNorme_classDefault(p_value);
+      return ClassNamingRule.applyNorme_classDefault(p_value);
    }
 
 public static String norme_classDefaultJavaService(final String p_value){return norme_classDefault(p_value);}
@@ -253,7 +253,7 @@ public static String norme_classDefaultJavaService(final String p_value){return 
     */
    public static String norme_pageDefault (final String p_value)
    {
-      return PageRule.applyNorme_pageDefault(p_value);
+      return PageNamingRule.applyNorme_pageDefault(p_value);
    }
 
 public static String norme_pageDefaultJavaService(final String p_value){return norme_pageDefault(p_value);}
@@ -268,7 +268,7 @@ public static String norme_pageDefaultJavaService(final String p_value){return n
     */
    public static String norme_classAnnotation (final String p_value)
    {
-      return ClassRule.applyNorme_classAnnotation(p_value);
+      return ClassNamingRule.applyNorme_classAnnotation(p_value);
    }
 
 public static String norme_classAnnotationJavaService(final String p_value){return norme_classAnnotation(p_value);}
@@ -283,7 +283,7 @@ public static String norme_classAnnotationJavaService(final String p_value){retu
     */
    public static String norme_classEnum (final String p_value)
    {
-      return ClassRule.applyNorme_classEnum(p_value);
+      return ClassNamingRule.applyNorme_classEnum(p_value);
    }
 
 public static String norme_classEnumJavaService(final String p_value){return norme_classEnum(p_value);}
@@ -298,7 +298,7 @@ public static String norme_classEnumJavaService(final String p_value){return nor
     */
    public static String norme_classImplem (final String p_value)
    {
-      return ClassRule.applyNorme_classImplem(p_value);
+      return ClassNamingRule.applyNorme_classImplem(p_value);
    }
 
 public static String norme_classImplemJavaService(final String p_value){return norme_classImplem(p_value);}
@@ -313,7 +313,7 @@ public static String norme_classImplemJavaService(final String p_value){return n
     */
    public static String norme_classInterface (final String p_value)
    {
-      return ClassRule.applyNorme_classInterface(p_value);
+      return ClassNamingRule.applyNorme_classInterface(p_value);
    }
 
 public static String norme_classInterfaceJavaService(final String p_value){return norme_classInterface(p_value);}
@@ -328,7 +328,7 @@ public static String norme_classInterfaceJavaService(final String p_value){retur
     */
    public static String norme_classTest (final String p_value)
    {
-      return ClassRule.applyNorme_classTest(p_value);
+      return ClassNamingRule.applyNorme_classTest(p_value);
    }
 
 public static String norme_classTestJavaService(final String p_value){return norme_classTest(p_value);}
@@ -343,7 +343,7 @@ public static String norme_classTestJavaService(final String p_value){return nor
     */
    public static String norme_methodDefault (final String p_value)
    {
-      return MethodRule.applyNorme_methodDefault(p_value);
+      return MethodNamingRule.applyNorme_methodDefault(p_value);
    }
 
 public static String norme_methodDefaultJavaService(final String p_value){return norme_methodDefault(p_value);}
@@ -358,7 +358,7 @@ public static String norme_methodDefaultJavaService(final String p_value){return
     */
    public static String norme_methodMultiple (final String p_value)
    {
-      return MethodRule.applyNorme_methodMultiple(p_value);
+      return MethodNamingRule.applyNorme_methodMultiple(p_value);
    }
 
 public static String norme_methodMultipleJavaService(final String p_value){return norme_methodMultiple(p_value);}
@@ -373,7 +373,7 @@ public static String norme_methodMultipleJavaService(final String p_value){retur
     */
    public static String norme_methodGet (final String p_value)
    {
-      return MethodRule.applyNorme_methodGet(p_value);
+      return MethodNamingRule.applyNorme_methodGet(p_value);
    }
 
 public static String norme_methodGetJavaService(final String p_value){return norme_methodGet(p_value);}
@@ -388,7 +388,7 @@ public static String norme_methodGetJavaService(final String p_value){return nor
     */
    public static String norme_methodReset (final String p_value)
    {
-      return MethodRule.applyNorme_methodReset(p_value);
+      return MethodNamingRule.applyNorme_methodReset(p_value);
    }
 
 public static String norme_methodResetJavaService(final String p_value){return norme_methodReset(p_value);}
@@ -403,7 +403,7 @@ public static String norme_methodResetJavaService(final String p_value){return n
     */
    public static String norme_methodSet (final String p_value)
    {
-      return MethodRule.applyNorme_methodSet(p_value);
+      return MethodNamingRule.applyNorme_methodSet(p_value);
    }
 
 public static String norme_methodSetJavaService(final String p_value){return norme_methodSet(p_value);}
@@ -418,7 +418,7 @@ public static String norme_methodSetJavaService(final String p_value){return nor
     */
    public static String norme_parameterMethodClassicIn (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodClassicIn(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodClassicIn(p_value);
    }
 
 public static String norme_parameterMethodClassicInJavaService(final String p_value){return norme_parameterMethodClassicIn(p_value);}
@@ -433,7 +433,7 @@ public static String norme_parameterMethodClassicInJavaService(final String p_va
     */
    public static String norme_parameterMethodMultiple (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodMultiple(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodMultiple(p_value);
    }
 
 public static String norme_parameterMethodMultipleJavaService(final String p_value){return norme_parameterMethodMultiple(p_value);}
@@ -448,7 +448,7 @@ public static String norme_parameterMethodMultipleJavaService(final String p_val
     */
    public static String norme_parameterMethodMultipleMap (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodMultipleMap(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodMultipleMap(p_value);
    }
 
 public static String norme_parameterMethodMultipleMapJavaService(final String p_value){return norme_parameterMethodMultipleMap(p_value);}
@@ -463,7 +463,7 @@ public static String norme_parameterMethodMultipleMapJavaService(final String p_
     */
    public static String norme_parameterMethodObjectIn (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodObjectIn(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodObjectIn(p_value);
    }
 
 public static String norme_parameterMethodObjectInJavaService(final String p_value){return norme_parameterMethodObjectIn(p_value);}
@@ -478,7 +478,7 @@ public static String norme_parameterMethodObjectInJavaService(final String p_val
     */
    public static String norme_parameterMethodClassicInOut (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodClassicInOut(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodClassicInOut(p_value);
    }
 
 public static String norme_parameterMethodClassicInOutJavaService(final String p_value){return norme_parameterMethodClassicInOut(p_value);}
@@ -493,7 +493,7 @@ public static String norme_parameterMethodClassicInOutJavaService(final String p
     */
    public static String norme_parameterMethodObjectInOut (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodObjectInOut(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodObjectInOut(p_value);
    }
 
 public static String norme_parameterMethodObjectInOutJavaService(final String p_value){return norme_parameterMethodObjectInOut(p_value);}
@@ -508,7 +508,7 @@ public static String norme_parameterMethodObjectInOutJavaService(final String p_
     */
    public static String norme_parameterMethodClassicOut (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodClassicOut(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodClassicOut(p_value);
    }
 
 public static String norme_parameterMethodClassicOutJavaService(final String p_value){return norme_parameterMethodClassicOut(p_value);}
@@ -523,7 +523,7 @@ public static String norme_parameterMethodClassicOutJavaService(final String p_v
     */
    public static String norme_parameterMethodObjectOut (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodObjectOut(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodObjectOut(p_value);
    }
 
 public static String norme_parameterMethodObjectOutJavaService(final String p_value){return norme_parameterMethodObjectOut(p_value);}
@@ -538,7 +538,7 @@ public static String norme_parameterMethodObjectOutJavaService(final String p_va
     */
    public static String norme_parameterMethodReset (final String p_value)
    {
-      return ParameterRule.applyNorme_parameterMethodReset(p_value);
+      return ParameterNamingRule.applyNorme_parameterMethodReset(p_value);
    }
 
 public static String norme_parameterMethodResetJavaService(final String p_value){return norme_parameterMethodReset(p_value);}
@@ -553,7 +553,7 @@ public static String norme_parameterMethodResetJavaService(final String p_value)
     */
    public static String norme_variableDefault (final String p_value)
    {
-      return VariableRule.applyNorme_variableDefault(p_value);
+      return VariableNamingRule.applyNorme_variableDefault(p_value);
    }
 
 public static String norme_variableDefaultJavaService(final String p_value){return norme_variableDefault(p_value);}
@@ -568,7 +568,7 @@ public static String norme_variableDefaultJavaService(final String p_value){retu
     */
    public static String norme_variableMultipleDefault (final String p_value)
    {
-      return VariableRule.applyNorme_variableMultipleDefault(p_value);
+      return VariableNamingRule.applyNorme_variableMultipleDefault(p_value);
    }
 
 public static String norme_variableMultipleDefaultJavaService(final String p_value){return norme_variableMultipleDefault(p_value);}
@@ -583,7 +583,7 @@ public static String norme_variableMultipleDefaultJavaService(final String p_val
     */
    public static String norme_variableMultipleMap (final String p_value)
    {
-      return VariableRule.applyNorme_variableMultipleMap(p_value);
+      return VariableNamingRule.applyNorme_variableMultipleMap(p_value);
    }
 
 public static String norme_variableMultipleMapJavaService(final String p_value){return norme_variableMultipleMap(p_value);}
@@ -598,7 +598,7 @@ public static String norme_variableMultipleMapJavaService(final String p_value){
     */
    public static String norme_variableFinal (final String p_value)
    {
-      return VariableRule.applyNorme_variableFinal(p_value);
+      return VariableNamingRule.applyNorme_variableFinal(p_value);
    }
 
 public static String norme_variableFinalJavaService(final String p_value){return norme_variableFinal(p_value);}
@@ -613,7 +613,7 @@ public static String norme_variableFinalJavaService(final String p_value){return
     */
    public static String norme_variableObjectDefault (final String p_value)
    {
-      return VariableRule.applyNorme_variableObjectDefault(p_value);
+      return VariableNamingRule.applyNorme_variableObjectDefault(p_value);
    }
 
 public static String norme_variableObjectDefaultJavaService(final String p_value){return norme_variableObjectDefault(p_value);}
@@ -628,7 +628,7 @@ public static String norme_variableObjectDefaultJavaService(final String p_value
     */
    public static String norme_variableObjectFinal (final String p_value)
    {
-      return VariableRule.applyNorme_variableObjectFinal(p_value);
+      return VariableNamingRule.applyNorme_variableObjectFinal(p_value);
    }
 
 public static String norme_variableObjectFinalJavaService(final String p_value){return norme_variableObjectFinal(p_value);}

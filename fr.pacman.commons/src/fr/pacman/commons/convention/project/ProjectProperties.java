@@ -49,6 +49,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    private static final String c_idParam_is_display_report = "pacman.report.display";
 
    private static final String c_idParam_is_formatClasses = "pacman.classes.format";
+   
    private static final String c_idParam_isLazyLoading = "dsl.entity.isLazyLoading";
 
    private static final String c_idParam_appli = "idAppli";

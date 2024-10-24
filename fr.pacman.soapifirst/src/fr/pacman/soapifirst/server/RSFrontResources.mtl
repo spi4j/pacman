@@ -538,8 +538,7 @@
 [comment : Add the PATH to the web target. /]
 [template private addSuggestedMethodsForTarget(o : soa::Operation) post(self.trim())]
   [if (not (o.URI = null) and o.URI.size() > 0)].path("[o.URI/]")[/if]
-  [o.addPathParamsIfExists()/][o.addQueryParamsIfExists()/]
-[/template]
+  [o.addPathParamsIfExists()/][o.addQueryParamsIfExists()/][/template]
 
 [comment : Add all the input parameters for the operation (if exists). /]
 [template private addParamsInXtoIfExists(o : soa::Operation) post(self.trim())]
@@ -547,12 +546,7 @@
 
 [comment : Add some PATH parameters. /]
 [template private addPathParamsIfExists(o : soa::Operation)]
-  [for (p : soa::Parameter | o.input)]
-    [if (p.restData.passingMode = soa::ParameterPassingMode::PATH)]
-        [p.addPathParam()/]
-    [/if]
-  [/for]
-[/template]
+  [for (p : soa::Parameter | o.input)][if (p.restData.passingMode = soa::ParameterPassingMode::PATH)][p.lineSeparator()/][p.addPathParam()/][/if][/for][/template]
 
 [comment : Add the request operation and cookies if exists (this format for carriage return)./]
 [template private addResquestOperationAndCookieParamsIfExists(o : soa::Operation) post(self.trim())]
@@ -574,8 +568,7 @@
 
 [comment : Add a PATH parameter. /]
 [template private addPathParam(p : soa::Parameter) post(self.trim())]
-  .resolveTemplate("[p.name/]", [p.addGenericInputParam()/])
-[/template]
+  .resolveTemplate("[p.name/]", [p.addGenericInputParam()/])[/template]
 
 [comment : Add some HEADER parameters. /]
 [template private addHeaderParamsIfExists(o : soa::Operation) post(self.trim())]

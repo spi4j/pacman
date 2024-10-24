@@ -12,7 +12,7 @@ import fr.pacman.commons.properties.PacmanProperty;
  *
  * @author MINARM
  */
-public class ParameterRule extends PacmanPropertiesCategory_Abs
+public class ParameterNamingRule extends PacmanPropertiesCategory_Abs
 {
 
    private static final String c_idParam_parameterMethodClassicIn = "parameterMethodClassicIn";

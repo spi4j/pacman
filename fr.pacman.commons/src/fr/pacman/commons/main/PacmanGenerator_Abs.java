@@ -313,7 +313,7 @@ public abstract class PacmanGenerator_Abs {
 			@Override
 			public IAcceleoWriter createWriterFor(URI uri, OpenModeKind openMode, Charset charset, String lineDelimiter)
 					throws IOException {
-				 System.out.println(uri.toString());
+				// System.out.println(uri.toString());
 				return super.createWriterFor(uri, openMode, charset, lineDelimiter);
 			}
 		};

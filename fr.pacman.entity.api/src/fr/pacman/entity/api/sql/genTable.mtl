@@ -181,7 +181,7 @@
   [if (columnProp.get_nameColumn(columnProp).equalsIgnoreCase(columnProp.getXtopSupName()))]Indicateur pour savoir si l'enregistrement est valide[else][columnProp.gen_automaticColumComment_2()/][/if][/template]
 
 [template private gen_automaticColumComment_2(columnProp : String)]
-  [if (columnProp.get_nameColumn(columnProp).equalsIgnoreCase(columnProp.getXdMajName()))]Date de mise � jour de la ligne[else][columnProp.gen_automaticColumComment_3()/][/if][/template]
+  [if (columnProp.get_nameColumn(columnProp).equalsIgnoreCase(columnProp.getXdMajName()))]Date de mise a jour de la ligne[else][columnProp.gen_automaticColumComment_3()/][/if][/template]
 
 [template private gen_automaticColumComment_3(columnProp : String)]
   [columnProp.get_description()/][/template]

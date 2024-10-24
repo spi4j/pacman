@@ -63,14 +63,14 @@
       * @param [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/]
       *           (In)(*) L'identifiant de [d.nameBaseDto()/].
       * [for (a : environment::Attribute | d.attributesNotComputed())]
-          [a.getComParamIn()/]
-        [/for]
+      *   [a.getComParamIn()/]
+      * [/for]
       * [for (r : environment::Reference | d.referencesNoStar())]
-          [r.getComParamIn()/]
-        [/for]
+      *   [r.getComParamIn()/]
+      * [/for]
       * [for (r : environment::Reference | d.referencingStar())]
-          [r.getComParamInverseIn()/]
-        [/for]
+      *   [r.getComParamInverseIn()/]
+      * [/for]
       */
      private void [('check ' + d.name).apply_methodDefault()/] (final Class<[d.genPkType()/]> [d.nameENUM_PK_ID().apply_parameterMethodClassicIn()/][for (a : environment::Attribute | d.attributesNotComputed())], final Class<[a.genPropertyClassNoGenerics()/]> [a.name.normalize().apply_parameterMethodClassicIn()/][/for][for (r : environment::Reference | d.referencesNoStar())], final Class<[r.referencedType.oclAsType(environment::DTO).buildDtoClassName()/]> [r.name.normalize().apply_parameterMethodClassicIn()/][/for][for (r : environment::Reference | d.referencingStar())], final Class<[r.containingType.oclAsType(environment::DTO).buildDtoClassName()/]> [r.nameBaseReferenceInverse().apply_parameterMethodClassicIn()/][/for])
      {

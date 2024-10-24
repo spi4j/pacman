@@ -14,7 +14,7 @@ import fr.pacman.commons.properties.PacmanProperty;
  *
  * @author MINARM
  */
-public class CommonRule extends PacmanPropertiesCategory_Abs
+public class CommonNamingRule extends PacmanPropertiesCategory_Abs
 {
 
    private static final String c_idParam_listPrefix = "listPrefix";

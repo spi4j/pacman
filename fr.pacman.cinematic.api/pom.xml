@@ -59,54 +59,7 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
-	
-	 	<!-- Test profile. -->
-		<profile>
-			<id>test</id>
-			<activation>
-				<property>
-					<name>pacman.test</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.acceleo</groupId>
-						<artifactId>org.eclipse.acceleo.maven</artifactId>
-						<version>${acceleo-version}</version>
-						<configuration>
-							<useBinaryResources>false</useBinaryResources>
-							<usePlatformResourcePath>true</usePlatformResourcePath>
-							<failOnError>true</failOnError>
-							<acceleoProject>
-								<root>${project.basedir}</root>
-								<entries>
-									<entry>
-										<input>src</input>
-										<output>target/classes</output>
-									</entry>
-									<entry>
-										<input>test</input>
-										<output>target/test-classes</output>
-									</entry>
-								</entries>
-								<jars>
-									<jar>fr.pacman:fr.pacman.commons</jar>
-								</jars>
-							</acceleoProject>
-							<packagesToRegister>
-								<packageToRegister>org.obeonetwork.dsl.environment.EnvironmentPackage</packageToRegister>
-								<packageToRegister>org.obeonetwork.dsl.cinematic.CinematicPackage</packageToRegister>
-								<packageToRegister>org.obeonetwork.dsl.soa.SoaPackage</packageToRegister>
-								<packageToRegister>org.obeonetwork.dsl.entity.EntityPackage</packageToRegister>
-							</packagesToRegister>
-							<!-- <uriHandler>org.eclipse.acceleo.maven.AcceleoURIHandler</uriHandler> -->
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+		</profile>		
 	</profiles>
 
 	<build>

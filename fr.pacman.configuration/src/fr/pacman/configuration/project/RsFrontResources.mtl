@@ -710,7 +710,7 @@
   				return;
   		}
   
-  		['headers _thread _local'.apply_attributeStatic()/]
+  		[any.getAffectationPrefix()/].['headers _thread _local'.apply_attributeStatic()/]
   				.set(new Headers(['map'.apply_parameterMethodClassicIn()/]));
   	}
   
@@ -738,7 +738,7 @@
   	 */
   	public static Headers ['headers'.apply_methodGet()/]() {
   		
-  		return ['headers _thread _local'.apply_attributeStatic()/].get();
+  		return [any.getAffectationPrefix()/]['headers _thread _local'.apply_attributeStatic()/].get();
   	}
   
   	/**
@@ -746,8 +746,8 @@
   	 */
   	public static void ['remove'.apply_methodDefault()/]() {
   		
-  		['headers _thread _local'.apply_attributeStatic()/].remove();
-  		['headers _thread _local'.apply_attributeStatic()/] = null;
+  		[any.getAffectationPrefix()/]['headers _thread _local'.apply_attributeStatic()/].remove();
+  		[any.getAffectationPrefix()/].['headers _thread _local'.apply_attributeStatic()/] = null;
   	}
   	
   	/**
@@ -820,8 +820,11 @@
 [template public rsFrontTokensConfiguration(any : ecore::EObject)]
   [any.licence()/]
   package [any.buildPackageRsFront()/];
-  
-  import java.util.Properties;
+  [protected ('for imports') startTagPrefix('// ') endTagPrefix('// ')]
+    
+    import java.util.Properties;
+    
+  [/protected]
   
   /**
   * Classe détenant les informations des jetons.

@@ -46,7 +46,7 @@
   [any.getServerResourcesDir()/][any.getApplicationName()/]Application.properties
   --------------------------------------------------------------------------------------------------------
   
-  Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA : 
+  Un fichier de configuration pour les jetons sera complété si besoin lors de la génération SOA dans : 
   
   --------------------------------------------------------------------------------------------------------
   [any.getServerResourcesDir()/][any.getApplicationName()/]Tokens.properties
