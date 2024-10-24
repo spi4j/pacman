@@ -293,7 +293,16 @@
 				<!-- Other modules. -->
 				<module>fr.pacman.test</module>
 				<module>fr.pacman.update</module>
-				<module>fr.pacman.test</module>
+			</modules>
+		</profile>
+		
+		<!-- Juste utile pour tester l'update site. -->
+		<profile>
+			<id>updatesite</id>
+			<modules>
+				<module>fr.pacman.branding</module>
+				<!-- Update site module. -->
+				<module>fr.pacman.update</module>				
 			</modules>
 		</profile>
 
