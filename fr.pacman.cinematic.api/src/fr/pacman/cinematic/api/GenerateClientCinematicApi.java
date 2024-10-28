@@ -51,6 +51,6 @@ public class GenerateClientCinematicApi extends PacmanGenerator_Abs {
 	protected Map<String, SelectionType_Enum> getTemplates() {
 		Map<String, SelectionType_Enum> v_templates = new HashMap<>();
 		v_templates.put("generate", SelectionType_Enum.FILE);
-		return null;
+		return v_templates;
 	}
 }
