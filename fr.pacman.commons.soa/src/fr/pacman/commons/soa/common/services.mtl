@@ -245,9 +245,9 @@
 [template public addInterfaceTotalCountForPagingIfNeeded(o : soa::Operation)]
   [if (o.paged)]
     /**
-    * Méthode spécifique pour la pagination de l'opération : [o.name/]
-    * @return le nombre total d'éléments pour l'opération.
-    */
+     * Méthode spécifique pour la pagination de l'opération : [o.name/]
+     * @return le nombre total d'éléments pour l'opération.
+     */
     [('Annotations Methode ' + o.name + 'total count').displayClearUserCodeId()/]
     [protected (o.getUserCodeId('Annotations Methode' + o.name + 'total count')) startTagPrefix('// ') endTagPrefix('// ')]
       

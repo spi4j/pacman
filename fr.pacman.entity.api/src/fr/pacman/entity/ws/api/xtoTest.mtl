@@ -28,7 +28,6 @@
     
   [/protected]
   
-  
   /**
    * Classe de test pour le XTO '[e.nameClassXto()/]'.
    * @author [e.getAuthorName()/]
@@ -36,7 +35,6 @@
   ['Annotation for class'.displayClearUserCodeId()/]
   [protected (e.getUserCodeId('Annotation for class')) startTagPrefix('// ') endTagPrefix('// ')]
   [/protected]
-  
   public class [e.buildXtoTestClassName()/] extends [e.getClassNameForBeanTester_Abs()/]
   {
   

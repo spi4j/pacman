@@ -116,7 +116,6 @@
     
   [/protected]
   
-  
   /**
   [if (d.isParent())]
      * XTO abstrait pour le type '[d.nameClassDto()/]'.
@@ -138,11 +137,10 @@
        /** L'identifiant. */
        [('for annotation_' + d.nameENUM_PK_ID()).displayClearUserCodeId()/]
        [protected (d.getUserCodeId('for annotation_' + d.nameENUM_PK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
-            @XmlElement(namespace = "", name = "[d.nameENUM_PK_ID()/]")
-            [if (d.useWS())]@JsonProperty("[d.nameENUM_PK_ID()/]")[/if]
-            private [d.genPkType()/] [d.namePK_ID()/];
+         @XmlElement(namespace = "", name = "[d.nameENUM_PK_ID()/]")
+         [if (d.useWS())]@JsonProperty("[d.nameENUM_PK_ID()/]")[/if]
+         private [d.genPkType()/] [d.namePK_ID()/];
        [/protected]
-    
     
   [/if]
   [for (a : environment::Attribute | d.attributesNotComputed())]
@@ -150,10 +148,9 @@
          /** [a.description/]. */
          [('for annotation_' + a.nameBaseAttribute()).displayClearUserCodeId()/]
          [protected (d.getUserCodeId('for annotation_' + a.nameBaseAttribute())) startTagPrefix('// ') endTagPrefix('// ')]
-              @XmlElement(namespace = "", name = "[a.nameBaseAttribute()/]")
-              [if (a.useWS())]@JsonProperty("[a.nameBaseAttribute()/]")[/if]
+           @XmlElement(namespace = "", name = "[a.nameBaseAttribute()/]")
+           [if (a.useWS())]@JsonProperty("[a.nameBaseAttribute()/]")[/if]
          [/protected]
-      
          [a.getProperty()/];
       
     [/if]
@@ -164,20 +161,18 @@
            /** La FK sur le Type '[r.nameClassXto()/]'. */
            [('for annotation_1_' + r.nameBaseReference() + r.namePK_ID()).displayClearUserCodeId()/]
            [protected (r.getUserCodeId('for annotation_1_' + r.nameBaseReference() + r.namePK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
-                @XmlElement(namespace = "", name = "[r.nameBaseReference()/][r.namePK_ID()/]")
-                [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/][r.namePK_ID()/]")[/if]
+             @XmlElement(namespace = "", name = "[r.nameBaseReference()/][r.namePK_ID()/]")
+             [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/][r.namePK_ID()/]")[/if]
            [/protected]
-        
            [r.getXtoReferenceId()/]
       [/if]
       
          /** L'instance de '[r.referencedType.oclAsType(environment::DTO).genTypeName()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
          [('for annotation_' + r.nameBaseReference()).displayClearUserCodeId()/]
          [protected (r.getUserCodeId('for annotation_' + r.nameBaseReference())) startTagPrefix('// ') endTagPrefix('// ')]
-              @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
-              [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
+           @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
+           [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
          [/protected]
-      
          [r.getXtoReference()/]
       
     [/if]
@@ -187,10 +182,9 @@
          /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
          [('for annotation_1_' + r.name.toLowerFirst().apply_attributeMultiple()).displayClearUserCodeId()/]
          [protected (r.getUserCodeId('for annotation_1_' + r.name.toLowerFirst().apply_attributeMultiple())) startTagPrefix('// ') endTagPrefix('// ')]
-              @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
-              [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
+           @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
+           [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
          [/protected]
-      
          [r.getRefListeXto()/]
       
     [/if]
@@ -200,10 +194,9 @@
          /** La liste de type '[r.nameClassXto()/]' associee a  l'instance de '[d.nameClassXto()/]' courante. */
          [('for annotation_' + r.name.toLowerFirst().apply_attributeMultiple()).displayClearUserCodeId()/]
          [protected (r.getUserCodeId('for annotation_' + r.name.toLowerFirst().apply_attributeMultiple())) startTagPrefix('// ') endTagPrefix('// ')]
-              @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
-              [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
+           @XmlElement(namespace = "", name = "[r.nameBaseReference()/]")
+           [if (r.useWS())]@JsonProperty("[r.nameBaseReference()/]")[/if]
          [/protected]
-      
          [r.getRefListeXto()/]
       
     [/if]
@@ -213,10 +206,9 @@
          /** La FK sur le type '[r.containingType.oclAsType(environment::DTO).nameBaseXtoUP()/]'. */
          [('for annotation_2' + r.nameBaseReference() + r.namePK_ID()).displayClearUserCodeId()/]
          [protected (r.getUserCodeId('for annotation_2' + r.nameBaseReference() + r.namePK_ID())) startTagPrefix('// ') endTagPrefix('// ')]
-              @XmlElement(namespace = "", name = "[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")
-              [if (r.useWS())]@JsonProperty("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")[/if]
+           @XmlElement(namespace = "", name = "[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")
+           [if (r.useWS())]@JsonProperty("[r.nameBaseReferenceInverse()/][r.namePK_ID()/]")[/if]
          [/protected]
-      
          [r.getXtoReferenceInverseId()/]
       
     [/if]
@@ -404,11 +396,10 @@
        {
           ['toString'.displayClearUserCodeId()/]
           [protected (d.getUserCodeId('toString')) startTagPrefix('// ') endTagPrefix('// ')]
-            
-                  return [d.toString()/]
-            
+
+            return [d.toString()/]
+
           [/protected]
-    
        }
   [/if]
   }[/template]
@@ -425,7 +416,8 @@
   [s.addImport('jakarta.xml.bind.annotation.XmlAccessorType')/]
   [s.addImport('jakarta.xml.bind.annotation.XmlRootElement')/]
   [s.addImport('jakarta.xml.bind.annotation.XmlElement')/]
-  [s.flushImports()/][/template]
+  [s.flushImports()/]
+[/template]
 
 [comment : Write all the required imports. /]
 [template private writeImports(d : environment::DTO) post(self.trim())]
@@ -456,7 +448,8 @@
   [for (r : environment::Reference | d.referencesStarNoStar())]
     [d.addImport(r.referencedType.oclAsType(environment::DTO).buildPackageWsApiDto() + '.' + r.referencedType.oclAsType(environment::DTO).buildXtoClassNameFromDto(), not r.isPropertyFromParent(d))/]
   [/for]
-  [d.flushImports()/][/template]
+  [d.flushImports()/]
+[/template]
 
 [comment : First part for the ToString() method, for simplication in REST services, we dont have getId ad SetId so send a "NO-ID". /]
 [template private toString(d : environment::DTO)]
