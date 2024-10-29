@@ -564,10 +564,6 @@
 		<!-- <quartz.version>2.5.0-rc1</quartz.version> -->
 		<!-- <snakeyaml.version>2.1</snakeyaml.version>-->
 		[/if]
-		[if useBatch()]
-		<jakarta-batch-api.version>1.0.1</jakarta-batch-api.version>
-		<jberet.version>1.0.2.Final</jberet.version>
-		[/if]
 
 		<!--
 		// [/protected]

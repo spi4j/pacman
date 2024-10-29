@@ -3,6 +3,7 @@
 			    'http://www.obeonetwork.org/dsl/entity/3.0.0',
                 'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
 
+[import fr::pacman::commons::common::names /]
 [import fr::pacman::commons::common::packages /]
 [import fr::pacman::commons::common::utils /]
 
@@ -23,7 +24,7 @@
 
 [comment : /]
 [query public buildPackageServiceBatch(s: Service) : String =
-   buildPackageBusiness() + '.' + getPackageBatch() + '.'  + s.eContainer().oclAsType(Component).name.toLower()
+   buildPackageImplBusiness() + '.' + getPackageBatch() + '.'  + s.getComponentName()
 /]
 
 [comment : /]

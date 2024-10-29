@@ -32,6 +32,9 @@ import fr.pacman.commons.properties.PacmanPropertyTrigger_Enum;
  */
 public class ProjectProperties extends PacmanPropertiesCategory_Abs
 {
+	
+   private static final String c_idParam_profiler_enabled = "profiler.enabled";
+ 
    private static final String c_idParam_version = "version";
 
    private static final String c_idParam_java_version = "java.version";
@@ -485,6 +488,9 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
 
                PacmanProperty.newRequired(c_idParam_delivery_project, "{$idAppli}-livraison-hebergement",
                         "Projet Eclipse de la partie livraison de l'application"),
+               
+               PacmanProperty.newRequired(c_idParam_profiler_enabled, "false", 
+                       "Enclanche le profiler pour gestion de la performance (non actif par defaut)"),
                
                PacmanProperty.newConditional(c_idParam_http_embedded_server, "", 
                         "Mise en place d'un serveur http embarque (jetty, tomcat)"),
@@ -1478,8 +1484,7 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    
    public static String getUseBatch() 
    {
-	   return "false";
-	   //return PacmanPropertiesManager.get_property(c_idParam_use_batch);
+	   return PacmanPropertiesManager.get_property(c_idParam_use_batch);
    }
    
    public static String isClearUserCodeHash() 
@@ -1490,6 +1495,11 @@ public class ProjectProperties extends PacmanPropertiesCategory_Abs
    public static String getUseIdSqlSuffixForReferences() 
    {
 	   return PacmanPropertiesManager.get_property(c_idParam_server_sql_idsuffix_enabled);
+   }
+   
+   public static String getIsProfilerEnabled() 
+   {
+	   return PacmanPropertiesManager.get_property(c_idParam_profiler_enabled);
    }
    
    public static String getUseHealthApi() 

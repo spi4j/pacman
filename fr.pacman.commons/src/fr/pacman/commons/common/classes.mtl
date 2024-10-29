@@ -77,8 +77,8 @@
 	apply_classDefault(getHttpEmbeddedServer() + ' boostrap')
 /]
 
-[query public buildBatchsJobsOperatorClassName (any : OclAny) : String = 
-	apply_classDefault(getApplicationName() + ' jobs operator')
+[query public buildBatchsTaskManagerClassName (any : OclAny) : String = 
+	apply_classDefault(getApplicationName() + ' batchs handler')
 /]
 
 [query public buildHealthExternalServicesClassName(any : OclAny) : String =

@@ -43,6 +43,11 @@ import fr.pacman.commons.services.StringUtils;
 public abstract class SafranGenerator_Abs<Type> {
 
 	/**
+	 * The profiler for performance tuning.
+	 */
+	protected SafranAcceleoProfiler _profiler;
+
+	/**
 	 * The input of generation (IFile or EObject).
 	 */
 	protected final Type _input;
@@ -74,6 +79,7 @@ public abstract class SafranGenerator_Abs<Type> {
 	 * @throws IOException Thrown when the output cannot be saved.
 	 */
 	public void doGenerate(final IProgressMonitor p_monitor) throws IOException {
+
 		// RAZ des erreurs eventuelles dans le "Error Log"
 		ErrorGeneration.clear();
 
@@ -83,10 +89,13 @@ public abstract class SafranGenerator_Abs<Type> {
 		// Reinitialisation de certains services.
 		resetListOfStaticServices();
 
-		// Check if the type of model or type of project is compatible with the
-		// generator else stop.
+		// verifie si le modele est compatible avec le(s) generateur(s), sinon stoppe.
 		if (hasIncompatibleModel() || hasIncompatibleProperties())
 			return;
+
+		// Active le profiler pour le controle des performances.
+		if (isModeProfiler())
+			_profiler = new SafranAcceleoProfiler();
 
 		// Enregistrement et lancement de l'ensemble des generateurs.
 		for (final PacmanGenerator_Abs v_generator : getPacmanGenerators(_input, _arguments)) {
@@ -102,7 +111,11 @@ public abstract class SafranGenerator_Abs<Type> {
 			v_generator.doGenerate(BasicMonitor.toMonitor(p_monitor));
 		}
 
-		// Exit for the properties manager (if the generation launched).
+		// Ecriture des informations de performance (si besoin).
+		if (isModeProfiler())
+			_profiler.write();
+
+		// Fin d'execution pour le gestionnaire de proprietes.
 		PacmanPropertiesManager.exit();
 
 		// Ajout des erreurs eventuelles dans le "Error Log"
@@ -263,9 +276,17 @@ public abstract class SafranGenerator_Abs<Type> {
 	 * 
 	 * @return true si mode debug.
 	 */
-	protected Boolean isModeDebug() {
-
+	protected boolean isModeDebug() {
 		return Boolean.valueOf(ProjectProperties.getIsDebugMode());
+	}
+
+	/**
+	 * Indique si le generateur fonctionne avec le profiler actif.
+	 * 
+	 * @return true si le profiler est actif.
+	 */
+	protected boolean isModeProfiler() {
+		return Boolean.valueOf(ProjectProperties.getIsProfilerEnabled());
 	}
 
 	/**

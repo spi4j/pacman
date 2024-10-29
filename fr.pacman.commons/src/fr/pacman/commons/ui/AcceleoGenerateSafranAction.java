@@ -121,7 +121,11 @@ public abstract class AcceleoGenerateSafranAction<Type> extends ActionDelegate i
 
 							if (v_generator != null) {
 								try {
+									// Positionne le projet pour le profiler (meme si non utilise).
+									SafranAcceleoProfiler.set_project(v_modelProject);
+									// Lance les generations. 
 									v_generator.doGenerate(p_monitor);
+
 								} catch (final IOException v_e) {
 									final IStatus v_status = new Status(IStatus.ERROR, getPluginId(), v_e.getMessage(),
 											v_e);

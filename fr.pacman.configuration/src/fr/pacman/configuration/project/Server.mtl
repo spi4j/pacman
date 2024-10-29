@@ -263,25 +263,10 @@
         </dependency>
 		[if useBatch()]
         <dependency>
-            <groupId>jakarta.batch</groupId>
-            <artifactId>jakarta.batch-api</artifactId>
-            <version>${jakarta-batch-api.version}</version>
+            <groupId>fr.spi4j</groupId>
+            <artifactId>spi4j-batch</artifactId>
+            <version>${spi4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jberet</groupId>
-            <artifactId>jberet-core</artifactId>
-            <version>${jberet.version}</version>
-       </dependency>
-       <dependency>
-           <groupId>org.jberet</groupId>
-           <artifactId>jberet-support</artifactId>
-           <version>${jberet.version}</version>
-       </dependency>
-       <dependency>
-           <groupId>org.jberet</groupId>
-           <artifactId>jberet-se</artifactId>
-           <version>${jberet.version}</version>
-       </dependency>
 	  [/if]
 	  <!--
 	  [displayClearUserCodeId ('for dependencies')/]

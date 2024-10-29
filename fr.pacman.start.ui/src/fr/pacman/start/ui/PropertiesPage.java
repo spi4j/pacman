@@ -183,7 +183,7 @@ public class PropertiesPage extends WizardPage {
 		addTextRequirementPrefix(v_containers.get(c_VARIOUS));
 		addTextRequirementLevel(v_containers.get(c_VARIOUS));
 		addRadioRequirementVersion(v_containers.get(c_VARIOUS));
-		// addRadioGenBatch(v_containers.get(c_GENERATE));
+		addRadioGenBatch(v_containers.get(c_GENERATE));
 		manageInitialDeactivations();
 		setControl(v_container);
 		resize(v_containers.get(c_TABFLD));

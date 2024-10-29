@@ -13,12 +13,22 @@
 [comment  : Get all services (private / public) but without specific batch services. /]
 [query public getServices (m : System) : Sequence(Service) = 
 	if not useBatch() then  m.eAllContents(Service) else  m.eAllContents(Service)
-	->select(s : Service | not s.eContainer().oclAsType(Component).name.equalsIgnoreCase('component2')) endif
+	->select(s : Service | s.isRegularService()) endif
 /]
 
 [comment  : Get all services specificaly dedicated to batch. /]
 [query public getBatchs (m : System) : Sequence(Service) = 
-	m.eAllContents(Service)->select(s : Service | s.eContainer().oclAsType(Component).name.equalsIgnoreCase('component2')) 
+	m.eAllContents(Service)->select(s : Service | s.isBatchService()) 
+/]
+
+[comment : Check if service is a regular service. /]
+[query private isRegularService(s : Service) : Boolean = 
+	s.kind = soa::InterfaceKind::provided
+/]
+
+[comment : Check if service is a batch service. /]
+[query private isBatchService(s : Service) : Boolean = 
+	s.kind = soa::InterfaceKind::required
 /]
 
 [comment : Get the spi4j ID for the security scheme. /]
@@ -191,6 +201,34 @@
     invoke( 'fr.pacman.commons.services.AnnotationUtils',
     'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
     Sequence{o.metadatas, 'AUTH_TOKEN'})	
+/]
+
+[comment : Return the value of the metadata 'RESULT'for batch service. /]
+[query public getResult (s : Service) :  String =
+    invoke( 'fr.pacman.commons.services.AnnotationUtils',
+    'getAnnotationBody(org.obeonetwork.dsl.environment.MetaDataContainer, java.lang.String)',
+    Sequence{s.metadatas, 'RESULT'})	
+/]
+
+[comment : Check if a batch operation is for reading. /]
+[query public isForRead (o : Operation) :  Boolean =
+    invoke( 'fr.pacman.commons.services.AnnotationUtils',
+    'annotationExists(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{o, 'READ', false})	
+/]
+
+[comment : Check if a batch operation is for writing. /]
+[query public isForWrite (o : Operation) :  Boolean =
+    invoke( 'fr.pacman.commons.services.AnnotationUtils',
+    'annotationExists(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{o, 'WRITE', false})	
+/]
+
+[comment : Check if a batch operation is for processing. /]
+[query public isForprocess (o : Operation) :  Boolean =
+    invoke( 'fr.pacman.commons.services.AnnotationUtils',
+    'annotationExists(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
+    Sequence{o, 'PROCESS', false})	
 /]
 
 [comment : Get the specific internal operation in a dedicated authentication service. /]

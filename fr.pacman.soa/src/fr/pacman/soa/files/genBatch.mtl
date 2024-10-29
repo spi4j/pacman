@@ -37,7 +37,8 @@
 [comment : /]
 [template public genJobsOperator(m : System)]
 
-[file (filename(m.getServerSourceDir(), m.buildPackageBatch() , buildBatchsJobsOperatorClassName() + '.java'), false, 'UTF-8')]
+[file (filename(m.getServerSourceDir(), m.buildPackageBatch() , buildBatchsTaskManagerClassName() + '.java'), false, 'UTF-8')]
+[m.batchsJobOperator()/]
 [/file]
 
 [/template]

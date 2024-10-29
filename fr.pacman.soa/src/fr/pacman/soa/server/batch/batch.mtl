@@ -5,19 +5,239 @@
 
 [import fr::pacman::commons::common::licence /]
 [import fr::pacman::commons::common::classes /]
+[import fr::pacman::commons::common::packages /]
+[import fr::pacman::commons::common::imports /]
+[import fr::pacman::commons::common::names /]
+[import fr::pacman::commons::common::utils /]
 
 [import fr::pacman::commons::soa::common::packages /]
 [import fr::pacman::commons::soa::common::classes /]
 [import fr::pacman::commons::soa::common::services /]
 
+[import fr::pacman::soa::common::methodes /]
+
+[import fr::pacman::commons::convention::rule::classRule /]
+[import fr::pacman::commons::convention::rule::parameterRule /]
+[import fr::pacman::commons::convention::rule::variableRule /]
+[import fr::pacman::commons::convention::rule::attributeRule /]
+
 [comment : Create the batch. /]
 [template public batch(s : Service)]
 [licence()/]
 package [s.buildPackageServiceBatch()/];
+// [protected ('for imports')]
 
-public class [s.buildBatchClassName()/] {
+[comment : Write all required imports. /]
+[s.writeImports()/]
 
+// [/protected]
+
+/**
+ * Traitement automatique.
+ * 
+ * @author [getAuthorName()/]
+ */
+public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]> {
+
+	/**
+	 * Le logger pour le traitement automatique.
+	 */
+	final static Logger [apply_attributeFinalStatic('logger')/] = LogManager.getLogger([s.buildBatchClassName()/].class);
+
+	/**
+	 * Constructeur pour le service de traitement automatique.
+	 * 
+	 * @param [apply_parameterMethodClassicIn('job name')/] : le nom du traitement automatique pour identification dans les
+	 *               logs.
+     * @param [apply_parameterMethodClassicIn('expiration delay')/] : le temps pour le délai d'expiration du traitement.
+	 *
+	 * @param [apply_parameterMethodClassicIn('expiration time unit')/] : l'unité de temps pour le délai d'expiration du traitement.
+	 */
+	public [s.buildBatchClassName()/](final String [apply_parameterMethodClassicIn('job name')/], final int [apply_parameterMethodClassicIn('expiration delay')/],
+		final TimeUnit [apply_parameterMethodClassicIn('expiration time unit')/]) 
+	{
+		super([apply_parameterMethodClassicIn('job name')/], [apply_parameterMethodClassicIn('expiration delay')/], [apply_parameterMethodClassicIn('expiration time unit')/]);
+	}
+
+	/**
+	 * Placer ici l'ensemble du code pour le traitement automatique.
+	 * <p>
+	 * Les différentes opérations modélisées peuvent être appelées ici dans l'ordre
+	 * désiré par le développeur. Chaque opération ne doit effectuer qu'une et une
+	 * seule tâche, soit en lecture, soit écriture, soit en traitement.
+	 */
+	@Override
+	protected void execute() throws Throwable 
+	{
+		[for (o : Operation | s.ownedInterface.ownedOperations)]
+		[apply_classDefault(o.name)/] [o.name.toLowerFirst()/] = ([apply_classDefault(o.name)/]) register ([apply_classDefault(o.name)/].class);
+		[/for]
+   		[displayClearUserCodeId ('run')/]
+
+   		// [protected (s.getUserCodeId('run'))]
+	
+   		// [/protected]
+	}
+
+	/**
+	 * Indiquer ici si le traitement doit effectuer des transactions sur une base de
+	 * données.
+	 */
+	@Override
+	protected boolean hasTransaction() 
+	{
+		return false;
+	}
+
+	/**
+	 * Placer ici le traitement à effectuer en cas d'erreur d'execution pour le
+	 * traitement automatique.
+	 */
+    @Override
+    protected void doOnException (final Throwable [apply_parameterMethodClassicIn('ex')/])
+    {
+   		[displayClearUserCodeId ('doOnException')/]
+   		// [protected (s.getUserCodeId('doOnException'))]
+
+   		// [/protected]
+    }
+
+	/**
+	 * Placer ici le code pour obtenir la classe de persistance de l'application (ou
+	 * de manière plus générale de la persistance qui va être utilisée par le
+	 * traitement automatique).
+	 */
+	@Override
+	protected UserPersistence_Abs getUserPersistence() 
+	{
+		return null;
+	}
+
+	[for (o : Operation | s.ownedInterface.ownedOperations)]
+	/**
+	 * Step '[o.name/]' de type : '[o.writeOperationType()/]'.
+	 */
+	private static class [apply_classDefault(o.name)/] implements [o.writeImplementation()/]<[o.writeInAndOut()/]>
+	{
+		[o.writeOperationBody()/]
+
+   		[displayClearUserCodeId (o.name)/]
+   		// [protected (s.getUserCodeId(o.name))]
+
+   		// [/protected]
+	}
+
+	[/for]
+   [displayClearUserCodeId (s.buildBatchClassName())/]
+   // [protected (s.getUserCodeId(s.buildBatchClassName()))]
+
+   // [/protected]
 }
+[/template]
+
+[comment : /]
+[template private writeOperationType(o : Operation)]
+[if o.isForRead()]lecture[/if][if o.isForWrite()]écriture[/if][if o.isForprocess()]exécution[/if]
+[/template]
+
+[comment : /]
+[template private writeOperationBody (o : Operation)]
+[if o.isForRead()][o.writeReadBody()/][/if][if o.isForWrite()][o.writeWriteBody()/][/if][if o.isForprocess()][o.writeProcessBody()/][/if]
+[/template]
+
+[comment : /]
+[template private writeReadBody (o : Operation)]
+@Override
+public void close() throws IOException 
+{
+   [displayClearUserCodeId (o.name + 'close')/]
+   // [protected (o.getUserCodeId(o.name + 'close'))]
+
+   // [/protected]			
+}
+
+@Override
+public void init() 
+{
+   [displayClearUserCodeId (o.name + 'init')/]
+   // [protected (o.getUserCodeId(o.name + 'init'))]
+
+   // [/protected]			
+}
+
+@Override
+public [o.paramOutDtoForBatch()/] read() 
+{
+   [displayClearUserCodeId (o.name + 'read')/]
+   // [protected (o.getUserCodeId(o.name + 'read'))]
+
+	return null;
+
+   // [/protected]
+}
+[/template]
+
+[comment : /]
+[template private writeWriteBody (o : Operation)]
+
+@Override
+public void init() 
+{
+   [displayClearUserCodeId (o.name + 'init')/]
+   // [protected (o.getUserCodeId(o.name + 'init'))]
+
+   // [/protected]						
+}
+
+@Override
+public void write([o.paramInDtoForBatch()/] [apply_parameterMethodClassicIn(o.input->first().name)/]) 
+{
+   [displayClearUserCodeId (o.name + 'write')/]
+   // [protected (o.getUserCodeId(o.name + 'write'))]
+
+   // [/protected]						
+}
+
+@Override
+public void close() throws IOException 
+{
+   [displayClearUserCodeId (o.name + 'close')/]
+   // [protected (o.getUserCodeId(o.name + 'close'))]
+
+   // [/protected]						
+}
+[/template]
+
+[comment : /]
+[template private writeProcessBody (o : Operation)]
+@Override
+public [o.paramOutDtoForBatch()/] process([o.paramInDtoForBatch()/] [apply_parameterMethodClassicIn(o.input->first().name)/]) 
+{
+   [displayClearUserCodeId (o.name + 'process')/]
+   // [protected (o.getUserCodeId(o.name + 'process'))]
+		
+	return null;
+   
+   // [/protected]				
+}
+[/template]
+
+[comment : /]
+[template private writeImplementation (o : Operation) post (trim())]
+[if o.isForRead()]ItemReader_Itf[else][if o.isForWrite()]ItemWriter_Itf[else]ItemProcessor_Itf[/if][/if]
+[/template]
+
+[comment :/]
+[template private writeInAndOut (o : Operation) post (trim())]
+[if o.isForWrite() or o.isForprocess()][o.writeIn()/][else][o.writeOut()/][/if]
+[/template]
+
+[template private writeIn (o : Operation) post (trim())]
+[o.paramInDtoForBatch()/][if o.isForprocess()], [o.writeOut()/][/if]
+[/template]
+
+[template private writeOut (o : Operation) post (trim())]
+[o.paramOutDtoForBatch()/]
 [/template]
 
 [comment : Create the xml definition file for all specified batchs. /]
@@ -41,8 +261,78 @@ public class [s.buildBatchClassName()/] {
 [/template]
 
 [comment : /]
-[template public batchsJobOperator()]
+[template public batchsJobOperator(m : System)]
+[licence()/]
+package [m.buildPackageBatch()/];
+// [protected ('for imports')]
 
-public class [buildBatchsJobsOperatorClassName()/] {
+[comment : Write all required imports. /]
+[m.writeImports()/]
+
+// [/protected]
+public class [buildBatchsTaskManagerClassName()/] extends SpiBatchJobsHandler {
+
+	/**
+	 * Demande de démarrage pour l'ensemble des traitements automatiques. Chaque
+	 * traitement bénéficie de son propre "scheduler".
+	 */
+	public static void start() 
+	{
+		[buildBatchsTaskManagerClassName()/] [apply_variableDefault('batchs handler')/] = new [buildBatchsTaskManagerClassName()/]();
+		[for (s : Service | m.getBatchs())]
+   		[displayClearUserCodeId (apply_variableDefault('job_' + i))/]
+   		// [protected (s.getUserCodeId(apply_variableDefault('job_' + i)))]
+		
+		// Entrer le nom du traitement, le délai avant expiration et l'unité de temps pour le délai.
+		[s.buildBatchClassName()/] [apply_variableDefault('job_' + i)/] = new [s.buildBatchClassName()/]("[s.name/]", 10, TimeUnit.MINUTES);
+
+		// Exemples de planification. Décommenter et modifier selon les besoins.
+		// [apply_variableDefault('job_' + i)/].scheduleEverySecond(5);
+		// [apply_variableDefault('job_' + i)/].scheduleDaily(12);
+		// [apply_variableDefault('job_' + i)/].scheduleWeekly(5, 10, 30);
+		// etc...
+
+		[apply_variableDefault('batchs handler')/].register([apply_variableDefault('job_' + i)/]);
+   		// [/protected]
+		[/for]
+
+		// Mise en attente pour demande d'arrêt.
+		[apply_variableDefault('batchs handler')/].waitForInterrupt();
+	}
+
+	/**
+	 * Possibilité de démarrage du gestionnaire des traitements automatiques en
+	 * ligne de commande.
+	 * 
+	 * @param args une liste d'arguments.
+	 */
+	public static void main(String['[]'/] args) {
+
+		[displayClearUserCodeId ('methode main')/]
+   		// [protected (m.getUserCodeId('methode main'))]
+
+		start();
+
+		// [/protected]
+	}
 }
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(s : Service) post(trim())]
+[s.initImports(true)/]
+[s.addImport('org.apache.logging.log4j.LogManager')/]
+[s.addImport('org.apache.logging.log4j.Logger')/]
+[s.addImport('fr.spi4j.batch.SpiBatchJob_Abs')/]
+[s.addImport('fr.spi4j.persistence.UserPersistence_Abs')/]
+[s.addImport('java.util.concurrent.TimeUnit')/]
+[s.flushImports()/]
+[/template]
+
+[comment : Write all required imports. /]
+[template private writeImports(m : System) post(trim())]
+[m.initImports(true)/]
+[m.addImport('java.util.concurrent.TimeUnit')/]
+[m.addImport('fr.spi4j.batch.SpiBatchJobsHandler')/]
+[m.flushImports()/]
 [/template]

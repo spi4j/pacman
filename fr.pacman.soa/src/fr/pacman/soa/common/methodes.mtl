@@ -191,6 +191,14 @@ void[else]
 [paramsInDto(o.input)->sep(', ')/]
 [/template]
 
+[template public paramOutDtoForBatch(o : Operation)]
+[if o.output->size() = 1][o.output->first().paramTypeDto()/][else]NO PARAM[/if]
+[/template]
+
+[template public paramInDtoForBatch(o : Operation)]
+[if o.input->size() = 1][o.input->first().paramTypeDto()/][else]NO PARAM[/if]
+[/template]
+
 [comment : /]
 [template public parametersXtoFromDto (p : Parameter)]
 [if p.type.oclIsTypeOf(DTO)]

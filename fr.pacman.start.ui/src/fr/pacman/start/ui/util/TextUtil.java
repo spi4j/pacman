@@ -80,7 +80,7 @@ public class TextUtil {
 	public static final String c_LBL_BT_UNSELECT_ALL = "Tout désélectionner";
 	public static final String c_LBL_MODEL = "Fichiers de modélisation à générer";
 	public static final String c_LBL_TU_CRUD = "Tests unitaires pour les services CRUD";
-	public static final String c_LBL_GEN_BATCH = "Implémentation de traitements batchs";
+	public static final String c_LBL_GEN_BATCH = "Génération de traitements batchs";
 	public static final String c_LBL_CREATE_GE = "Création d'application de gestion des entités (CRUD)";
 	public static final String c_LBL_SIMPLE_ARCH = "Architecture Simplifiée (Sans couche DTO)";
 	public static final String c_LBL_REQUIREMENTS = "Implémentation des services des exigences";

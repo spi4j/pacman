@@ -13,7 +13,6 @@
 [import fr::pacman::configuration::project::RsFrontResources /]
 [import fr::pacman::configuration::project::RsHealthResources /]
 [import fr::pacman::configuration::project::Servlets]
-[import fr::pacman::configuration::project::Batch /]
 
 [import fr::pacman::configuration::common::names]
 
@@ -73,14 +72,6 @@
 [file (filename(getServerProjectName(), getServerSourceDir(), getApplicationPackage(), buildAdministrationServletClassName() + '.java'), false, 'UTF-8')]
 [administrationServlet()/]
 [/file]
-
-[comment : Generate jberet.properties /]
-[if useBatch()]
-[file (filename(getServerProjectName(), getServerResourcesDir(), 'jberet.properties'), false, 'UTF-8')]
-[jberetConfigFile()/]
-[/file]
-[/if]
-
 [/if]
 
 [comment : If export for web services, generate all generic expected classes./]

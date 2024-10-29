@@ -609,7 +609,7 @@
 /]
 
 [query public buildPackageBatch(any : OclAny) : String =
-   getApplicationName() + '.' + getPackageBatch()
+   getApplicationPackage() + '.' + getPackageBatch()
 /]
 
 [query public getPackageBatch(any : OclAny) : String =

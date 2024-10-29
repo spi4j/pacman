@@ -21,7 +21,6 @@
 [template public userMapper(xtoAGenerer : Set(DTO), n : Namespace)]
 [licence()/]
 package [n.buildPackageMapper()/]; // NOPMD
-
 // [protected ('for imports')]
 
 [for (d : DTO | xtoAGenerer)]
