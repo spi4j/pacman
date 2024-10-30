@@ -20,6 +20,7 @@
 [import fr::pacman::commons::convention::rule::parameterRule /]
 [import fr::pacman::commons::convention::rule::variableRule /]
 [import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::convention::rule::commonRule /]
 
 [comment : Create the batch. /]
 [template public batch(s : Service)]
@@ -103,14 +104,22 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
     }
 
 	/**
-	 * Placer ici le code pour obtenir la classe de persistance de l'application (ou
-	 * de manière plus générale de la persistance qui va être utilisée par le
-	 * traitement automatique).
+	 * Placer ici le code pour obtenir la classe de persistance de l'application si
+	 * utilisation d'une base de données.
 	 */
 	@Override
 	protected UserPersistence_Abs getUserPersistence() 
 	{
 		return null;
+	}
+
+	/**
+	 * Retourne le résultat du traitement automatique pour la couche appelante.
+	 * return le résultat du traitement automatique.
+	 */
+	@Override
+	public [s.getResult()/] get_result() {
+		return [getAffectationPrefix()/][apply_attributeDefault('result')/];
 	}
 
 	[for (o : Operation | s.ownedInterface.ownedOperations)]
@@ -130,6 +139,8 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
 	[/for]
    [displayClearUserCodeId (s.buildBatchClassName())/]
    // [protected (s.getUserCodeId(s.buildBatchClassName()))]
+
+   [s.getResult()/] [apply_attributeDefault('result')/];
 
    // [/protected]
 }
@@ -157,7 +168,7 @@ public void close() throws IOException
 }
 
 @Override
-public void init() 
+public void init() throws Exception 
 {
    [displayClearUserCodeId (o.name + 'init')/]
    // [protected (o.getUserCodeId(o.name + 'init'))]
@@ -166,7 +177,7 @@ public void init()
 }
 
 @Override
-public [o.paramOutDtoForBatch()/] read() 
+public [o.paramOutDtoForBatch()/] read() throws Exception 
 {
    [displayClearUserCodeId (o.name + 'read')/]
    // [protected (o.getUserCodeId(o.name + 'read'))]
@@ -181,7 +192,7 @@ public [o.paramOutDtoForBatch()/] read()
 [template private writeWriteBody (o : Operation)]
 
 @Override
-public void init() 
+public void init() throws Exception 
 {
    [displayClearUserCodeId (o.name + 'init')/]
    // [protected (o.getUserCodeId(o.name + 'init'))]
@@ -190,7 +201,7 @@ public void init()
 }
 
 @Override
-public void write([o.paramInDtoForBatch()/] [apply_parameterMethodClassicIn(o.input->first().name)/]) 
+public void write([o.paramInDtoForBatch()/] [apply_parameterMethodClassicIn(o.input->first().name)/]) throws Exception 
 {
    [displayClearUserCodeId (o.name + 'write')/]
    // [protected (o.getUserCodeId(o.name + 'write'))]
@@ -211,7 +222,7 @@ public void close() throws IOException
 [comment : /]
 [template private writeProcessBody (o : Operation)]
 @Override
-public [o.paramOutDtoForBatch()/] process([o.paramInDtoForBatch()/] [apply_parameterMethodClassicIn(o.input->first().name)/]) 
+public [o.paramOutDtoForBatch()/] process([o.paramInDtoForBatch()/] [apply_parameterMethodClassicIn(o.input->first().name)/]) throws Exception 
 {
    [displayClearUserCodeId (o.name + 'process')/]
    // [protected (o.getUserCodeId(o.name + 'process'))]
