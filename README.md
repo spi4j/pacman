@@ -7,7 +7,9 @@ Spi4J est composé d'une partie principale et de modules optionnels. Une applica
 
 Ces projets sont opensource en licence Apache (ASL v2).
 
-Ces projets ont été créés avec la participation de **[Bull]** et sont encore en cours en Janvier 2024 (version courante : Pacman 4.3.2 & Spi4J 4.3.2).
+Ces projets ont été créés avec la participation de **[Bull]** et sont encore en cours en Mars 2024 (version courante : Pacman 4.5.0 & Spi4J 4.5.0).
+
+NB : Cette version de pacman fonctionne avec **Spi4J version 4.5.0** au minimum.
 
 ### Principaux éléments techniques directeurs de l'architecture ###
   * Architecture JavaEE
@@ -34,7 +36,7 @@ Ces projets ont été créés avec la participation de **[Bull]** et sont encore
   * [DSL Implémentation Requirement 2](https://drive.google.com/file/d/0B_CIqBpjpa16bUxXOGtDTzRkRFU/edit?usp=sharing)
 
 ### Modélisation ###
-Pour créer les modèles (Cinematic, SOA/DTO, Entity, Database, Requirements, Graal, State Machine & Interaction), le Ministère des Armées dispose d'un bundle Eclipse **Safr@n Studio**. Ce bundle inclut les designers graphiques et hiérarchiques pour créer les modèles ainsi qu'Acceleo pour la génération MDA. Les designers et les fichiers des DSL (méta-modèles) sur lesquels s’appuient les modèles sont publiés en opensource sur [gitHub/ObeoNetwork](https://github.com/ObeoNetwork/InformationSystem).
+Pour créer les modèles (Cinematic, SOA/DTO, Entity, Database, Requirements, Graal, State Machine & Interaction), le Ministère des Armées dispose du logiciel **IS-Designer TE**. Ce logiciel inclut les designers graphiques et hiérarchiques pour créer les modèles ainsi qu'Acceleo pour la génération MDA. Les designers et les fichiers des DSL (méta-modèles) sur lesquels s’appuient les modèles sont publiés en opensource sur [gitHub/ObeoNetwork](https://github.com/ObeoNetwork/InformationSystem).
 
-Si vous ne disposez pas de **Safr@n Studio**, il est possible d'utiliser le studio [IS Designer (Information System Designer)](https://www.isdesigner.org/)
+Si vous ne disposez pas de **IS-Designer TE**, il est possible d'utiliser la version open-source [IS-Designer CE](https://www.isdesigner.org/)
 
