@@ -50,6 +50,10 @@
 alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJointure1(r)/] foreign key ([namePK(r.containingType.oclAsType(entity::Entity))/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
 alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJointure2(r)/] foreign key ([namePK(r.referencedType.oclAsType(entity::Entity))/]) references [referencedNameTableWithSchema(r)/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
 [/for]
+[for (r : Reference | e.referencesRecursiveStar())]
+alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJointure1(r)/] foreign key ([namePK(r.containingType.oclAsType(entity::Entity))/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
+alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJointure2(r)/] foreign key ([namePK(r.referencedType.oclAsType(entity::Entity), '_1')/]) references [referencedNameTableWithSchema(r)/] ([namePK(r.referencedType.oclAsType(entity::Entity), '_1')/]);
+[/for]
 [/template]
 
 [comment : construction du nom la table en fonction de l'entite externe (librairie) ou interne pour les relations bi-directionnelles. /]
@@ -74,22 +78,22 @@ alter table [nameTableJointureWithSchema(r)/] add constraint [nameConstraintJoin
 
 [comment]references[/comment]
 [template private genFKMultiple(e : Entity, r : Reference, compteur : Integer, i : Integer)]
-alter table [nameTableWithSchema(e)/] add constraint [nameConstraint(e, r, compteur)/] foreign key ([nameColumnId(r,i)/]) references [nameTableWithSchema(r.referencedType.oclAsType(entity::Entity))/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
+alter table [nameTableWithSchema(e)/] add constraint [r.get_prefix()/][nameConstraint(e, r, compteur)/] foreign key ([r.get_prefix()/][nameColumnId(r,i)/]) references [nameTableWithSchema(r.referencedType.oclAsType(entity::Entity))/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
 [/template]
 
 [comment]referencing[/comment]
 [template private genFKMultipleInverse(e : Entity, r : Reference, compteur : Integer, i : Integer)]
-alter table [nameTableWithSchema(e)/] add constraint [nameConstraintInverse(e, r, compteur)/] foreign key ([nameColumnReferencingId(r,i)/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
+alter table [nameTableWithSchema(e)/] add constraint [r.get_prefix()/][nameConstraintInverse(e, r, compteur)/] foreign key ([r.get_prefix()/][nameColumnReferencingId(r,i)/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
 [/template]
 
 [comment]references[/comment]
 [template private genFK(e : Entity, r : Reference, compteur : Integer)]
-alter table [nameTableWithSchema(e)/] add constraint [nameConstraint(e, r, compteur)/] foreign key ([nameColumnId(r)/]) references [nameTableWithSchema(r.referencedType.oclAsType(entity::Entity))/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
+alter table [nameTableWithSchema(e)/] add constraint [r.get_prefix()/][nameConstraint(e, r, compteur)/] foreign key ([r.get_prefix()/][nameColumnId(r)/]) references [nameTableWithSchema(r.referencedType.oclAsType(entity::Entity))/] ([namePK(r.referencedType.oclAsType(entity::Entity))/]);
 [/template]
 
 [comment]referencing[/comment]
 [template private genFKInverse(e : Entity, r : Reference, compteur : Integer)]
-alter table [nameTableWithSchema(e)/] add constraint [nameConstraintInverse(e, r, compteur)/] foreign key ([nameColumnReferencingId(r)/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
+alter table [nameTableWithSchema(e)/] add constraint [r.get_prefix()/][nameConstraintInverse(e, r, compteur)/] foreign key ([r.get_prefix()/][nameColumnReferencingId(r)/]) references [nameTableWithSchema(r.containingType.oclAsType(entity::Entity))/] ([namePK(r.containingType.oclAsType(entity::Entity))/]);
 [/template]
 
 [template private genCK(e : Entity, a : Attribute , compteur : Integer)]

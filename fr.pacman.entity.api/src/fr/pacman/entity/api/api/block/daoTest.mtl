@@ -17,6 +17,7 @@
 [import fr::pacman::entity::api::common::packages /]
 [import fr::pacman::entity::api::common::names /]
 [import fr::pacman::entity::api::common::attributes /]
+[import fr::pacman::entity::api::common::references /]
 [import fr::pacman::entity::api::sql::common /]
 [import fr::pacman::entity::api::common::serviceutils /]
 [import fr::pacman::entity::api::common::buildClassesEntityApi /]
@@ -290,7 +291,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
   [/if]
   [/for]
   [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-  [if r.oppositeOf.oclIsUndefined()]
+  [comment elimine les recursives multiples/]
+  [if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
       [apply_variableDefault('entity insert')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/](1L);
   [/if]
   [/for]
@@ -325,7 +327,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
   [/if]
   [/for]
   [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-  [if r.oppositeOf.oclIsUndefined()]
+  [comment elimine les recursives multiples/]
+  [if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
       [apply_variableDefault('hash code builder entity insert')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
   [/if]
   [/for]
@@ -354,7 +357,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
   [/if]
   [/for]
   [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-  [if r.oppositeOf.oclIsUndefined()]
+  [comment elimine les recursives multiples/]
+  [if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
       [apply_variableDefault('hash code builder entity read')/].append([apply_variableDefault('entity read')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
   [/if]
   [/for]
@@ -383,7 +387,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
   [/if]
   [/for]
   [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-  [if r.oppositeOf.oclIsUndefined()]
+  [comment elimine les recursives multiples/]
+  [if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
       [apply_variableDefault('equals builder')/].append([apply_variableDefault('entity insert')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/](), [apply_variableDefault('entity read')/].[apply_methodGet(nameSimplePropertyInverse(r))/][namePK_ID()/]());
   [/if]
   [/for]
@@ -555,12 +560,12 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 [comment : all attributs and references. /]
 [for (a : Attribute | e.attributesNoPk())]
     [if (not a.isComputed())]
-      final [a.genPropertyType()/] [apply_variableFinal(nameSimpleProperty(a))/] = [if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]")[else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.atributeHasSize() and isTypeAcceptSize(a.type.name)][e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize()[/if])[/if];
+      final [a.genPropertyType()/] [apply_variableFinal(nameSimpleProperty(a))/] = [if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/][else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.atributeHasSize() and isTypeAcceptSize(a.type.name)][e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize()[/if])[/if];
     [/if]
 [/for]
 [for (a : Attribute | e.getInheritDtoAttributes())]
     [if (not a.isComputed())]
-      final [a.genPropertyType()/] [apply_variableFinal(nameSimpleProperty(a))/] = [if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[apply_methodDefault('get enum by value')/]("[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/]")[else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.atributeHasSize() and isTypeAcceptSize(a.type.name)][e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize()[/if])[/if];
+      final [a.genPropertyType()/] [apply_variableFinal(nameSimpleProperty(a))/] = [if a.type.oclIsTypeOf(Enumeration)][a.genPropertyType()/].[a.type.oclAsType(Enumeration).literals->first().name.toUpper()/][else]getRandom[a.genPropertyTypeNoGenerics()/]([if a.atributeHasSize() and isTypeAcceptSize(a.type.name)][e.buildEntityColumnEnumName()/].[apply_attributeEnum(a.nameSimpleProperty())/].getSize()[/if])[/if];
     [/if]
 [/for]
 [for (r : Reference | e.referencesNoStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
@@ -571,7 +576,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 [/if]
 [/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if (r.oppositeOf.oclIsUndefined())]
+[comment elimine les recursives multiples/]
+[if (r.oppositeOf.oclIsUndefined() and not r.isRCMultiple())]
     [if (not r.isComputed())]
       final [genPkType()/] [apply_variableFinal(nameSimplePropertyInverse(r))/] = getRandom[genPkType()/]();
     [/if]
@@ -606,7 +612,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 [/if]
 [/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if (r.oppositeOf.oclIsUndefined())]
+[comment elimine les recursives multiples/]
+[if (r.oppositeOf.oclIsUndefined() and not r.isRCMultiple())]
     [if (not r.isComputed())]
       [apply_variableDefault('entity')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/]([apply_variableFinal(nameSimplePropertyInverse(r))/]);
       [apply_methodDefault('validate')/]([apply_variableDefault('entity')/]);
@@ -701,7 +708,8 @@ public class [buildDaoTestClassName(e)/] extends [getClassNameForBeanTester_Abs(
 [apply_variableDefault('entity')/].[apply_methodSet(nameSimpleProperty(r))/](1L);
 [/if][/if][/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
+[comment elimine les recursives multiples/]
+[if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
 [if (not r.isComputed())]
 [apply_variableDefault('entity')/].[apply_methodSet(nameSimplePropertyInverse(r))/][namePK_ID()/](1L);
 [/if][/if][/for]

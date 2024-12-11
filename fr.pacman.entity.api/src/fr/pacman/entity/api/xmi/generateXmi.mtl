@@ -71,7 +71,7 @@
 [/template]
 
 [template public entityPK(e : Entity)]
-                            <UML:Attribute name = "[nameEntityPK(e)/]" xmi.id = "{[nameUUID(e.fullName()+'ID')/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
+                            <UML:Attribute name = "[nameEntityPK(e, '')/]" xmi.id = "{[nameUUID(e.fullName()+'ID')/]}" ownerScope = "instance" visibility = "private" changeability = "changeable">
                                 <UML:StructuralFeature.multiplicity>
                                     <UML:Multiplicity>
                                         <UML:Multiplicity.range>

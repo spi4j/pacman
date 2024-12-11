@@ -23,9 +23,9 @@
 
 [template private dropIndex(n : environment::Namespace, databaseType : String)]
 [for (e : Entity | n.types->select(el|el.oclIsKindOf(entity::Entity)))]
-[if hasUniqueIndex(e)]
-[dropUniqueIDXOnTable(e, databaseType, get_nbColumnsInUniqueConstraint(uniqueIndex(e)),e.get_counterUN(1)) /]
-[/if]
+[if hasUniqueIndex(e)][for (s : String | uniqueIndex(e).get_tableUniqueIndexs())]
+[dropUniqueIDXOnTable(e, databaseType, get_nbColumnsInUniqueConstraint(s),e.get_counterUN(1)) /]
+[/for][/if]
 [for (a : Attribute | e.attributes())]
 [if isUniqueIndex(a)]
 [dropUniqueIDX(e, a, databaseType, e.get_counterUN(1))  /]

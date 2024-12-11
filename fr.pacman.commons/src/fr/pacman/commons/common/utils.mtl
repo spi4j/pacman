@@ -14,6 +14,10 @@
     invoke('fr.pacman.commons.services.StringUtils', 'sanitize(java.lang.String)', Sequence{msg.normalize()})
 /]
 
+[query public deleteSpecialChars(msg : String) : String =
+    invoke('fr.pacman.commons.services.StringUtils', 'deleteSpecialChars(java.lang.String)', Sequence{msg.normalize()})
+/]
+
 [query public sanitizeRJK(var : String) : String =
     invoke('fr.pacman.commons.services.StringUtils', 'sanitizeJavaKeywords(java.lang.String)', Sequence{var})
 /]

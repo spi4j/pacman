@@ -19,6 +19,7 @@
 [import fr::pacman::entity::api::common::methodes /]
 [import fr::pacman::entity::api::common::commentaires /]
 [import fr::pacman::entity::api::common::serviceutils /]
+[import fr::pacman::entity::api::common::references /]
 [import fr::pacman::entity::api::sql::common/]
 [import fr::pacman::entity::api::common::buildClassesEntityApi /]
 
@@ -116,7 +117,8 @@ public interface [buildEntityInterfaceName(e)/] extends [if hasAutomaticColumns(
 
 [/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
+[comment elimine les recursives multiples/]
+[if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
    /**
 [comPrefixInverse(r, 'Obtenir')/]
 [comReturnInverse(r)/]

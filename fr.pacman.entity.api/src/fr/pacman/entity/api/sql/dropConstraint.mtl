@@ -46,6 +46,10 @@
 [dropConstraint(databaseType, nameTableJointureWithSchema(r), nameConstraintJointure1(r))/]
 [dropConstraint(databaseType, nameTableJointureWithSchema(r), nameConstraintJointure2(r))/]
 [/for]
+[for (r : Reference | e.referencesRecursiveStar())]
+[dropConstraint(databaseType, nameTableJointureWithSchema(r), nameConstraintJointure1(r))/]
+[dropConstraint(databaseType, nameTableJointureWithSchema(r), nameConstraintJointure2(r))/]
+[/for]
 [/template]
 
 [template private dropFK(e : Entity, ent : Entity, databaseType : String, compteur : Integer)]
@@ -67,10 +71,10 @@ alter table [nameTableWithSchema(e)/] drop constraint [nameConstraintCK(e, compt
 [/template]
 
 [template private dropFk(e : Entity, r : Reference, databaseType : String , compteur : Integer)]
-[dropConstraint(databaseType, nameTableWithSchema(e), nameConstraint(e, r, compteur))/]
+[dropConstraint(databaseType, nameTableWithSchema(e), e.get_prefix() + nameConstraint(e, r, compteur))/]
 [/template]
 
 [template private dropFkInverse(e : Entity, r : Reference, databaseType : String , compteur : Integer)]
-[dropConstraint(databaseType, nameTableWithSchema(e), nameConstraintInverse(e, r, compteur))/]
+[dropConstraint(databaseType, nameTableWithSchema(e), e.get_prefix() + nameConstraintInverse(e, r, compteur))/]
 [/template]
 

@@ -235,6 +235,10 @@ invoke('fr.pacman.commons.services.AnnotationUtils',
 /]
 
 [query public defaultValue(a : Attribute) : String =
+    a.defaultValue_invoke().trim().replaceAll('^\'', '').replaceAll('\'$', '')
+/]
+
+[query private defaultValue_invoke(a : Attribute) : String =
     invoke('fr.pacman.commons.services.AnnotationUtils',
         'getAnnotationBody(org.obeonetwork.dsl.environment.ObeoDSMObject, java.lang.String, boolean)',
         Sequence{a, 'PHYSICAL_DEFAULT', false})

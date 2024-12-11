@@ -22,23 +22,23 @@
 [/template]
 
 [template private genColumn(databaseType : String, a : Attribute)]
-[nameColumn(a)/] [genTypeColumn(databaseType, a)/][if a.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(a)/][/if]
+[nameColumn(a)/] [genTypeColumn(databaseType, a).toUpper()/][if a.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(a)/][/if]
 [/template]
 
 [template private genColumnReferenceId(databaseType : String, r : Reference , compteur : Integer)]
-[nameColumnId(r, compteur)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[r.get_prefix()/][nameColumnId(r, compteur).toUpper()/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
 [/template]
 
 [template private genColumnReferenceId(databaseType : String, r : Reference)]
-[nameColumnId(r)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[r.get_prefix()/][nameColumnId(r).toUpper()/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
 [/template]
 
 [template private genColumnReferencingId(databaseType : String, r : Reference, compteur : Integer)]
-[nameColumnReferencingId(r,compteur)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[r.get_prefix()/][nameColumnReferencingId(r,compteur).toUpper()/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
 [/template]
 
 [template private genColumnReferencingId(databaseType : String, r : Reference)]
-[nameColumnReferencingId(r)/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
+[r.get_prefix()/][nameColumnReferencingId(r).toUpper()/] [genTypeColumn(databaseType, r)/][if r.isMandatory()] not null[/if][if databaseType.isDbMsqlType()][genCommentMysql(r)/][/if]
 [/template] 
 
 [comment : Pour la table referencee l'entitee n'est pas la bonne mais elle sert juste pour la tracabilite. /]
@@ -48,6 +48,10 @@
 
 [template public genPK(databaseType : String, e : Entity)]
 [namePK(e)/] [typeDataBaseID(databaseType)/]
+[/template]
+
+[template public genPKJointure(databaseType : String, e : Entity, optionnalSuffix : String)]
+[namePK(e, optionnalSuffix)/] [typeDataBaseIDJointure(databaseType)/]
 [/template]
 
 [template public genPKJointure(databaseType : String, e : Entity)]
@@ -79,7 +83,7 @@
 create table [nameTableWithSchema(e).toUpper()/]
 (
     /* PK de la table [nameTableWithSchema(e).toUpper()/] */
-    [genPK(databaseType, e)/],
+    [genPK(databaseType, e)/][if databaseType.isDbMsqlType()][e.genCommentMysqlPk()/][/if],
 [for (a : Attribute | e.attributesNoPk())]
 [if (not a.isComputed())]
     [genColumn(databaseType, a)/][if hasDefaultValue(a)] DEFAULT '[defaultValue(a)/]'[/if],
@@ -113,9 +117,9 @@ create table [nameTableWithSchema(e).toUpper()/]
 [/for]
     [if hasAutomaticColumns()][get_automaticColumns(databaseType)/][/if][genConstraintPK(databaseType, e)/]
 );
-[if hasUniqueIndex(e)]
-[genUniqueIDXOnTable(e, databaseType, get_nbColumnsInUniqueConstraint(uniqueIndex(e)),e.get_counterUN(1))/]
-[/if]
+[if hasUniqueIndex(e)][for (s : String | uniqueIndex(e).get_tableUniqueIndexs())]
+[genUniqueIDXOnTable(e, s, databaseType, get_nbColumnsInUniqueConstraint(s),e.get_counterUN(1))/]
+[/for][/if]
 [for (a : Attribute | e.attributes())]
 [if (not a.isComputed() and isUniqueIndex(a))]
 [genUniqueIDX(e, a, databaseType, e.get_counterUN(1))/]
@@ -137,7 +141,8 @@ create table [nameTableWithSchema(e).toUpper()/]
 [for (ent : Entity | entitiesReferencedOrReferencing() )]
 [for (r : Reference | referencesNoStarAndReferencingStarAllNavigability(e, ent))]
 [if r.containingType.oclAsType(entity::Entity) = e][comment]references[/comment]
-[genCommentReferenceId(e, r)/][elseif r.oppositeOf.oclIsUndefined()]
+[comment controle de multiplicite suite aux recursives pour mettre l'index dans le nom des champs./]
+[if not (r.referencedType.oclAsType(entity::Entity) = e)][genCommentReferenceId(e, r)/][else][genCommentReferenceId(e, r, i)/][/if][elseif r.oppositeOf.oclIsUndefined()]
 [comment]referencing[/comment]
 [genCommentReferencingId(e, r)/][/if]
 [/for]
@@ -156,6 +161,23 @@ create table [nameTableJointureWithSchema(r).toUpper()/]
     [if hasXdMaj()][r.gen_automaticColumn(databaseType, getXdmajKey())/][/if]
     [if hasXtopSup()][r.gen_automaticColumn(databaseType, getXtopSuppKey())/][/if]
     [genConstraintPKJointure(databaseType, r,i)/]
+);
+[/for]
+
+[comment : Ajout specifique pour les relations recursives de type (0,*)./]
+[for (r : Reference | e.referencesRecursiveStar())]
+
+/****************************************************************/
+[genSlashedLine(headerTableJointure(r), sizeHeader())/]
+/****************************************************************/
+create table [nameTableJointureWithSchema(r).toUpper()/]
+(
+    [genPKJointure(databaseType, r.containingType.oclAsType(entity::Entity))/],
+    [genPKJointure(databaseType, r.containingType.oclAsType(entity::Entity), '_1')/],
+	[comment : On ne prend que xdmaj et xtopsupp/]
+    [if hasXdMaj()][r.gen_automaticColumn(databaseType, getXdmajKey())/][/if]
+    [if hasXtopSup()][r.gen_automaticColumn(databaseType, getXtopSuppKey())/][/if]
+    [genConstraintPKJointure(databaseType, r,i, '_1')/]
 );
 [/for]
 [/if]
@@ -194,7 +216,7 @@ create table [nameTableJointureWithSchema(r).toUpper()/]
 [/template]
 
 [template private gen_automaticColumComment_2(columnProp : String)] [comment : 2/3 /]
-[if get_nameColumn(columnProp).equalsIgnoreCase(getXdMajName())]Date de mise � jour de la ligne[else][columnProp.gen_automaticColumComment_3()/][/if]
+[if get_nameColumn(columnProp).equalsIgnoreCase(getXdMajName())]Date de mise à jour de la ligne[else][columnProp.gen_automaticColumComment_3()/][/if]
 [/template]
 
 [template private gen_automaticColumComment_3(columnProp : String)] [comment : 3/3 /]
@@ -205,8 +227,8 @@ create table [nameTableJointureWithSchema(r).toUpper()/]
 [typeDataBase(databaseType, get_typeColumn(columnProp), get_sizeColumn(columnProp))/]
 [/template]
 
-[template private genUniqueIDXOnTable(e : Entity, databaseType : String, nbCol : Integer, compteur : Integer)]
-create unique index [nameUniqueIndex(e, nbCol, compteur)/] on [nameTableWithSchema(e)/] ([uniqueIndex(e).replaceAll(':',' ')/])[genTableSpace(e, databaseType)/];
+[template private genUniqueIDXOnTable(e : Entity, index : String,  databaseType : String, nbCol : Integer, compteur : Integer)]
+create unique index [nameUniqueIndex(e, nbCol, compteur)/] on [nameTableWithSchema(e)/] ([index.replaceAll(':',' ')/])[genTableSpace(e, databaseType)/];
 [/template]
 
 [template private genUniqueIDX(e : Entity, a : Attribute, databaseType : String, compteur : Integer)]
@@ -214,24 +236,29 @@ create unique index [nameUniqueIndex(e, a, 1, compteur)/] on [nameTableWithSchem
 [/template]
 
 [template private genIDXMultiple(e : Entity, r : Reference, databaseType : String, compteur : Integer, i : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnId(r,i)/])[genTableSpace(e, databaseType)/];
+create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([r.get_prefix()/][nameColumnId(r,i)/])[genTableSpace(e, databaseType)/];
 [/template]
 
 [template private genIDXSimple(e : Entity, r : Reference, databaseType : String, compteur : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnId(r)/])[genTableSpace(e, databaseType)/];
+create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([r.get_prefix()/][nameColumnId(r)/])[genTableSpace(e, databaseType)/];
 [/template]
 
 [template private genIDXMultipleInverse(e : Entity, r : Reference, databaseType : String, compteur : Integer, i : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnReferencingId(r, i)/])[genTableSpace(e, databaseType)/];
+create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([r.get_prefix()/][nameColumnReferencingId(r, i)/])[genTableSpace(e, databaseType)/];
 [/template]
 
 [template private genIDXInverse(e : Entity, r : Reference, databaseType : String, compteur : Integer)]
-create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([nameColumnReferencingId(r)/])[genTableSpace(e, databaseType)/];
+create index [nameIndex(r,compteur)/] on [nameTableWithSchema(e)/] ([r.get_prefix()/][nameColumnReferencingId(r)/])[genTableSpace(e, databaseType)/];
 [/template]
 
 [template private genComment(e : Entity)]
 [if (not e.description.oclIsUndefined() and e.description.size() <> 0)]
 comment on table [nameTableWithSchema(e)/] is '[e.description.toString().replaceAll('\'', '\'\'')/]';[/if]
+[lineSeparator()/][e.genCommentPK()/]
+[/template]
+
+[template private genCommentPK(e : Entity)]
+comment on column [nameTableWithSchema(e)/].[e.namePK()/] is 'Clé primaire pour la table [nameTableWithSchema(e)/]'; 
 [/template]
 
 [template private genComment(e : Entity, a : Attribute)]
@@ -242,13 +269,19 @@ comment on column [nameTableWithSchema(e)/].[nameColumn(a)/] is '[a.description.
 
 [template private genCommentReferenceId(e : Entity, r : Reference)]
 [if (not r.description.oclIsUndefined() and r.description.size() <> 0)]
-comment on column [nameTableWithSchema(e)/].[nameColumnId(r)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
+comment on column [nameTableWithSchema(e)/].[r.get_prefix()/][nameColumnId(r)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
+[/if]
+[/template]
+
+[template private genCommentReferenceId(e : Entity, r : Reference, compteur : Integer)]
+[if (not r.description.oclIsUndefined() and r.description.size() <> 0)]
+comment on column [nameTableWithSchema(e)/].[r.get_prefix()/][nameColumnId(r, compteur)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
 [/if]
 [/template]
 
 [template private genCommentReferencingId(e : Entity, r : Reference)]
 [if (not r.description.oclIsUndefined() and r.description.size() <> 0)]
-comment on column [nameTableWithSchema(e)/].[nameColumnReferencingId(r)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
+comment on column [nameTableWithSchema(e)/].[r.get_prefix()/][nameColumnReferencingId(r)/] is '[r.description.toString().replaceAll('\'', '\'\'')/]';
 [/if]
 [/template]
 

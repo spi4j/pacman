@@ -184,13 +184,16 @@ endif endif endif endif endif endif endif endif endif endif endif endif endif en
 [/template]
 
 [template public genConstraintPKJointure(databaseType : String, r : Reference, compteur : Integer)]
+[databaseType.genConstraintPKJointure(r, compteur, '')/][/template]
+
+[template public genConstraintPKJointure(databaseType : String, r : Reference, compteur : Integer, optionnalSuffix : String)]
 [if databaseType.oclIsUndefined() or databaseType.size() = 0]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbOracleType()]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbOracle32Type()]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbMsqlType()]
-[genConstraintPKJointureMysql(r, compteur)/][elseif databaseType.isDbPostgresqlType()]
-[genConstraintPKJointureDefault(r, compteur)/][elseif databaseType.isDbH2Type()]
-[genConstraintPKJointureDefault(r, compteur)/][/if]
+[genConstraintPKJointureDefault(r, compteur, optionnalSuffix)/][elseif databaseType.isDbOracleType()]
+[genConstraintPKJointureDefault(r, compteur, optionnalSuffix)/][elseif databaseType.isDbOracle32Type()]
+[genConstraintPKJointureDefault(r, compteur, optionnalSuffix)/][elseif databaseType.isDbMsqlType()]
+[genConstraintPKJointureMysql(r, compteur, optionnalSuffix)/][elseif databaseType.isDbPostgresqlType()]
+[genConstraintPKJointureDefault(r, compteur, optionnalSuffix)/][elseif databaseType.isDbH2Type()]
+[genConstraintPKJointureDefault(r, compteur, optionnalSuffix)/][/if]
 [/template]
 
 [query private genConstraintPKDefault(e : Entity) : String =
@@ -205,12 +208,14 @@ endif endif endif endif endif endif endif endif endif endif endif endif endif en
     nameTable(e).first(maxConstraintPkSize()) + '_PK1_1'
 /]
 
-[query private genConstraintPKJointureDefault(r : Reference, compteur : Integer) : String =
-    'constraint ' + nameConstraintPKJointure(r, compteur) + ' primary key (' + namePK(r.containingType.oclAsType(Entity)) + ', ' + namePK(r.referencedType.oclAsType(Entity)) + ')'
+[query private genConstraintPKJointureDefault(r : Reference, compteur : Integer, optionnalSuffix : String) : String =
+    'constraint ' + nameConstraintPKJointure(r, compteur) + ' primary key (' + namePK(r.containingType.oclAsType(Entity)) 
+	+ ', ' + namePK(r.referencedType.oclAsType(Entity), optionnalSuffix) + ')'
 /]
 
-[query private genConstraintPKJointureMysql(r : Reference, compteur : Integer) : String =
-    'primary key (' + namePK(r.containingType.oclAsType(Entity)) + ', ' + namePK(r.referencedType.oclAsType(Entity)) + ')'
+
+[query private genConstraintPKJointureMysql(r : Reference, compteur : Integer, optionnalSuffix : String) : String =
+    'primary key (' + namePK(r.containingType.oclAsType(Entity)) + ', ' + namePK(r.referencedType.oclAsType(Entity), optionnalSuffix) + ')'
 /]
 
 [query private nameConstraintPKJointure(r : Reference, compteur : Integer) : String =
@@ -239,6 +244,10 @@ endif endif endif endif endif endif endif endif endif endif endif endif endif en
 [template public genCommentMysql(a : Attribute)]
 [if (not a.description.oclIsUndefined() and a.description.size() <> 0)]
  comment '[a.description.toString().replaceAll('\'', '\'\'')/]'[/if]
+[/template]
+
+[template public genCommentMysqlPk(e : Entity)]
+ comment 'Clé primaire pour la table [nameTableWithSchema(e)/]'
 [/template]
 
 [template public genCommentMysql(r : Reference)]

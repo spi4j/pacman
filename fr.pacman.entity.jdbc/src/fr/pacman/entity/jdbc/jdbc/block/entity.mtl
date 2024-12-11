@@ -18,6 +18,7 @@
 [import fr::pacman::entity::api::common::methodes /]
 [import fr::pacman::entity::api::common::commentaires /]
 [import fr::pacman::entity::api::common::classesEntity /]
+[import fr::pacman::entity::api::common::references /]
 [import fr::pacman::entity::api::sql::common/]
 [import fr::pacman::entity::api::common::buildClassesEntityApi /]
 
@@ -85,7 +86,8 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
 [/if]
 [/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
+[comment elimine les recursives multiples/]
+[if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
    /** [descriptionInverse(r, true)/] */
    [getPropertyInverse(r)/];
 
@@ -166,7 +168,8 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
 [/if]
 [/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
+[comment elimine les recursives multiples/]
+[if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
    @Override
    [gen_getterInverse(r)/]
    {
@@ -184,7 +187,7 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
    @Override
    public String toString ()
    {
-      return super.toString () + " : " + [apply_attributeDefault(nameSimplePropertyID(e))/][for (a : Attribute | e.attributesNoPk())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (a : Attribute | e.getInheritDtoAttributes())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (r : Reference | e.referencesNoStar())] + ", " + [apply_attributeDefault(nameSimpleProperty(r))/][/for][for (r : Reference | e.referencingStar())] + ", " + [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/][/for];
+      return super.toString () + " : " + [apply_attributeDefault(nameSimplePropertyID(e))/][for (a : Attribute | e.attributesNoPk())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (a : Attribute | e.getInheritDtoAttributes())] + ", " + [apply_attributeDefault(nameSimpleProperty(a))/][/for][for (r : Reference | e.referencesNoStar())] + ", " + [apply_attributeDefault(nameSimpleProperty(r))/][/for][for (r : Reference | e.referencingStar())][if not (r.referencedType = e)] + ", " + [apply_attributeDefault(nameSimplePropertyInverse(r))/][namePK_ID()/][/if][/for];
    }
 
 [if hasAutomaticColumns()]
@@ -201,7 +204,8 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
 [if r.containingType.oclAsType(entity::Entity) = e]
 [validPropertyWhenHasAutomaticColumns(e, r)/][/if][/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
+[comment elimine les recursives multiples/]
+[if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
 [validInversePropertyWhenHasAutomaticColumns(e, r)/][/if][/for]
 [/if]
       // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
@@ -224,7 +228,8 @@ public class [buildEntityImplClassName(e)/] [if hasAutomaticColumns()]extends [b
 [if r.containingType.oclAsType(entity::Entity) = e]
 [validProperty(e, r)/][/if][/for]
 [for (r : Reference | e.referencingStarAllNavigability()->asOrderedSet()->sortedBy(name.toLower()))]
-[if r.oppositeOf.oclIsUndefined()]
+[comment elimine les recursives multiples/]
+[if r.oppositeOf.oclIsUndefined() and not r.isRCMultiple()]
 [validInverseProperty(e, r)/][/if][/for]
       // si la liste des champs invalides n'est pas nulle, elle ne peut pas être vide à cet endroit
       if ([apply_variableDefault('champs invalides')/] != null)

@@ -1,0 +1,7 @@
+[comment encoding = UTF-8 /]
+[module references('http://www.obeonetwork.org/dsl/entity/3.0.0',
+                   'http://www.obeonetwork.org/dsl/environment/3.0.0')/]
+
+[comment permet de gerer les recursives multiples./]
+[comment  r.referencedType = r.containingType/]
+[query public isRCMultiple(r : Reference) : Boolean = r.referencedType = r.containingType/]

@@ -111,12 +111,21 @@ List<[genPropertyTypeOrPK(a)/]>
 
 [comment] les références d'une entité sans multiplicité et les références multiple vers cette entité , navigables ou non[/comment]
 [query public referencesNoStarAndReferencingStarAllNavigability(e : Entity) : OrderedSet(Reference) =
-    e.referencesNoStarAllNavigability()->union(e.referencingStarAllNavigability())->asOrderedSet()->sortedBy(name.toLower())
+    (e.referencesNoStarAllNavigability()->union(e.referencingStarAllNavigability()))
+	->asOrderedSet()->sortedBy(name.toLower())
 /]
 
 [comment] les références d'une entité sans multiplicité et les références multiple vers cette entité , navigables ou non, pour une entité fk donnée[/comment]
 [query public referencesNoStarAndReferencingStarAllNavigability(e : Entity, entFk : Entity) : OrderedSet(Reference) =
-    referencesNoStarAllNavigability(e, entFk)->union(referencingStarAllNavigability(e, entFk))->asOrderedSet()->sortedBy(name.toLower())
+    (referencesNoStarAllNavigability(e, entFk)->union(referencingStarAllNavigability(e, entFk)))
+	->select(tmp | not e.referencesRecursiveStar()->includes(tmp))
+	->asOrderedSet()->sortedBy(name.toLower())
+/]
+
+[comment : Ajout specifique pour les relations recursives de type (0,*)./]
+[query public referencesRecursiveStar(e : Entity) : OrderedSet(Reference) =
+    e.references->select(r : Reference | isMultiple(r) and r.referencedType = e and r.oppositeOf.oclIsUndefined() 
+	and r.referencedType = r.containingType)->asOrderedSet()->sortedBy(name.toLower())
 /]
 
 [comment] les références d'une entité sans multiplicité [/comment]
@@ -160,8 +169,11 @@ if (e.eContainer(Root).oclIsUndefined()) then
     Sequence{}->asOrderedSet()
 else
     e.eContainer(Root).eAllContents(Reference)
-            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and (r.containingType = entReferencante) and (r.oppositeOf.oclIsUndefined()))
-    ->asOrderedSet()->sortedBy(name.toLower())
+		->select(r : Reference | isMultiple(r) 
+		and (r.referencedType = e) 
+		and (r.containingType = entReferencante) 
+		and (r.oppositeOf.oclIsUndefined()))
+		->asOrderedSet()->sortedBy(name.toLower())
 endif
 /]
 
@@ -171,11 +183,13 @@ if (e.eContainer(Root).oclIsUndefined()) then
     Sequence{}->asOrderedSet()
 else
     e.eContainer(Root).eAllContents(Reference)
-            ->select(r : Reference | isMultiple(r) and (r.referencedType = e) and (r.oppositeOf.oclIsUndefined() or not r.oppositeOf.isMultiple()))
-    ->asOrderedSet()->sortedBy(name.toLower())
+		->select(r : Reference | isMultiple(r) 
+		and (r.referencedType = e) 
+		and (r.oppositeOf.oclIsUndefined() 
+		or not r.oppositeOf.isMultiple()))
+    	->asOrderedSet()->sortedBy(name.toLower())
 endif
 /]
-
 
 [query public referencesStarStar(e : Entity) : OrderedSet(Reference) =
     e.references->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())
@@ -197,6 +211,7 @@ endif
     e.ownedReferences->select(r : Reference | isMultiple(r) and r.navigable and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())
     ->asOrderedSet()->sortedBy(name.toLower())
 /]
+
 
 [query private referencesStarStarAllNavigability(e : Entity) : OrderedSet(Reference) =
     e.references->select(r : Reference | isMultiple(r) and not r.oppositeOf.oclIsUndefined() and r.oppositeOf.isMultiple())

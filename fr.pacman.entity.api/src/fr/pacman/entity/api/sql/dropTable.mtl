@@ -32,6 +32,15 @@ drop table [nameTableWithSchema(e)/];
 drop table [nameTableJointureWithSchema(r)/];
 
 [/for]
+
+[comment : Ajout specifique pour les relations recursives de type (0,*)./]
+[for (r : Reference | e.referencesRecursiveStar())]
+/****************************************************************/
+[genSlashedLine(headerTableJointure(r), sizeHeader())/]
+/****************************************************************/
+drop table [nameTableJointureWithSchema(r)/];
+
+[/for]
 [/if]
 [/for]
 [/template]

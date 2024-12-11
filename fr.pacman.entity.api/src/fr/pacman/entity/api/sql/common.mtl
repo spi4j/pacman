@@ -29,7 +29,7 @@
 [/template]
 
 [comment : Retourne le prefixe pour l'ensemble des tables. /]
-[template public get_prefix(e : Entity)]
+[template public get_prefix(any : ObeoDSMObject)]
 [getSQLTablePrefix()/]
 [/template]
 
@@ -61,6 +61,11 @@
 r.containingType.oclAsType(entity::Entity)
 /]
 
+[comment get all unique indexs for table./]
+[query public get_tableUniqueIndexs(s : String) : Sequence(String) = 
+invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getListOfUniqueIndexs(java.lang.String)', Sequence{s})
+/]
+
 [comment : Get the counter for foreign keys. /]
 [query public get_counterFK(e : Entity, nbRef : Integer) : Integer =
 invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNextCounterForFK(org.obeonetwork.dsl.entity.Entity, int)', Sequence{e, nbRef})
@@ -89,6 +94,10 @@ invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'resetCounterForConstraints(j
 [comment : get the number of columns for the unicity constrainte. /]
 [query public get_nbColumnsInUniqueConstraint(void : OclAny, lstColumns : String) : Integer =
 invoke('fr.pacman.entity.api.sql.ConstraintUtils', 'getNbColumnsInUniqueIndex(java.lang.String)', Sequence{lstColumns})
+/]
+
+[query public addComment(s : String, dbType : String) : String = 
+	invoke('fr.pacman.entity.api.sql.CommentUtils', 'addComment(java.lang.String, java.lang.String)', Sequence{s, dbType})
 /]
 
 [query public get_hasXtopsup(any : OclAny) : Boolean =
@@ -163,39 +172,39 @@ endif
 /]
 
 [template public nameColumn(a : Attribute)]
-[physicalName(a).first(maxColumnSize())/]
+[physicalName(a).sanitize().first(maxColumnSize())/]
 [/template]
 
 [template public nameColumn(r : Reference)]
-[physicalName(r) /]
+[physicalName(r).sanitize() /]
 [/template]
 
 [template public nameColumn(r : Reference, compteur : Integer)]
-[physicalName(r, compteur) /]
+[physicalName(r, compteur).sanitize() /]
 [/template]
 
 [template public nameColumnId(r : Reference)]
-[physicalNameId(r) /]
+[physicalNameId(r).sanitize() /]
 [/template]
 
 [template public nameColumnId(r : Reference, compteur : Integer)]
-[physicalNameId(r, compteur) /]
+[physicalNameId(r, compteur).sanitize() /]
 [/template]
 
 [template public nameColumnReferencing(r : Reference)]
-[physicalNameReferencing(r) /]
+[physicalNameReferencing(r).sanitize() /]
 [/template]
 
 [template public nameColumnReferencing(r : Reference, compteur : Integer)]
-[physicalNameReferencing(r,compteur) /]
+[physicalNameReferencing(r,compteur).sanitize() /]
 [/template]
 
 [template public nameColumnReferencingId(r : Reference)]
-[physicalNameReferencingId(r) /]
+[physicalNameReferencingId(r).sanitize() /]
 [/template]
 
 [template public nameColumnReferencingId(r : Reference, compteur : Integer)]
-[physicalNameReferencingId(r, compteur) /]
+[physicalNameReferencingId(r, compteur).sanitize() /]
 [/template]
 
 [template public nameSequence(e : Entity)]
@@ -245,18 +254,22 @@ endif
 [nameTable(e)/][if a.isMandatory()]_UN[else]_IDX[/if][compteurX/]_[compteurY/]
 [/template]
 
-[template public namePK(e : Entity)]
-[if e.ownedAttributes->exists(a : environment::Attribute | a.isIdentifier)]
+[template public namePK(e : Entity, optionnalSuffix : String)]
+[e.get_prefix()/][if e.ownedAttributes->exists(a : environment::Attribute | a.isIdentifier)]
 [e.ownedAttributes->select(a : environment::Attribute | a.isIdentifier).nameColumn()/][else]
-[nameEntityPK(e)/][/if]
+[nameEntityPK(e, optionnalSuffix)/][/if]
+[/template]
+
+[template public namePK(e : Entity)]
+[e.namePK('')/]
 [/template]
 
 [template public nameReferenceID(r : Reference)]
 [nameTableJointure(r)+'_ID'/]
 [/template]
 
-[template public nameEntityPK(e : Entity)]
-[physicalName(e).first(maxColumnPKSize()) + '_ID' /]
+[template public nameEntityPK(e : Entity, optionnalSuffix : String)]
+[physicalName(e).first(maxColumnPKSize()) + optionnalSuffix + '_ID' /]
 [/template]
 
 [template public nameIndex(r : Reference, compteur : Integer )]

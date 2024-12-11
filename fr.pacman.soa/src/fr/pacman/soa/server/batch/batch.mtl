@@ -50,9 +50,9 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
 	 * 
 	 * @param [apply_parameterMethodClassicIn('job name')/] : le nom du traitement automatique pour identification dans les
 	 *               logs.
-     * @param [apply_parameterMethodClassicIn('expiration delay')/] : le temps pour le délai d'expiration du traitement.
+     * @param [apply_parameterMethodClassicIn('expiration delay')/] : le temps pour le dÃ©lai d'expiration du traitement.
 	 *
-	 * @param [apply_parameterMethodClassicIn('expiration time unit')/] : l'unité de temps pour le délai d'expiration du traitement.
+	 * @param [apply_parameterMethodClassicIn('expiration time unit')/] : l'unitÃ© de temps pour le dÃ©lai d'expiration du traitement.
 	 */
 	public [s.buildBatchClassName()/](final String [apply_parameterMethodClassicIn('job name')/], final int [apply_parameterMethodClassicIn('expiration delay')/],
 		final TimeUnit [apply_parameterMethodClassicIn('expiration time unit')/]) 
@@ -63,9 +63,9 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
 	/**
 	 * Placer ici l'ensemble du code pour le traitement automatique.
 	 * <p>
-	 * Les différentes opérations modélisées peuvent être appelées ici dans l'ordre
-	 * désiré par le développeur. Chaque opération ne doit effectuer qu'une et une
-	 * seule tâche, soit en lecture, soit écriture, soit en traitement.
+	 * Les diffÃ©rentes opÃ©rations modÃ©lisÃ©es peuvent Ãªtre appelÃ©es ici dans l'ordre
+	 * dÃ©sirÃ© par le dÃ©veloppeur. Chaque opÃ©ration ne doit effectuer qu'une et une
+	 * seule tÃ¢che, soit en lecture, soit Ã©criture, soit en traitement.
 	 */
 	@Override
 	protected void execute() throws Throwable 
@@ -82,16 +82,21 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
 
 	/**
 	 * Indiquer ici si le traitement doit effectuer des transactions sur une base de
-	 * données.
+	 * donnÃ©es.
 	 */
 	@Override
 	protected boolean hasTransaction() 
 	{
+
+		// [protected (s.getUserCodeId('hasTransaction'))]
+
 		return false;
+
+		// [/protected]
 	}
 
 	/**
-	 * Placer ici le traitement à effectuer en cas d'erreur d'execution pour le
+	 * Placer ici le traitement Ã  effectuer en cas d'erreur d'execution pour le
 	 * traitement automatique.
 	 */
     @Override
@@ -104,18 +109,8 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
     }
 
 	/**
-	 * Placer ici le code pour obtenir la classe de persistance de l'application si
-	 * utilisation d'une base de données.
-	 */
-	@Override
-	protected UserPersistence_Abs getUserPersistence() 
-	{
-		return null;
-	}
-
-	/**
-	 * Retourne le résultat du traitement automatique pour la couche appelante.
-	 * return le résultat du traitement automatique.
+	 * Retourne le rÃ©sultat du traitement automatique pour la couche appelante.
+	 * return le rÃ©sultat du traitement automatique.
 	 */
 	@Override
 	public [s.getResult()/] get_result() {
@@ -126,7 +121,7 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
 	/**
 	 * Step '[o.name/]' de type : '[o.writeOperationType()/]'.
 	 */
-	private static class [apply_classDefault(o.name)/] implements [o.writeImplementation()/]<[o.writeInAndOut()/]>
+	private class [apply_classDefault(o.name)/] implements [o.writeImplementation()/]<[o.writeInAndOut()/]>
 	{
 		[o.writeOperationBody()/]
 
@@ -148,7 +143,7 @@ public class [s.buildBatchClassName()/] extends SpiBatchJob_Abs<[s.getResult()/]
 
 [comment : /]
 [template private writeOperationType(o : Operation)]
-[if o.isForRead()]lecture[/if][if o.isForWrite()]écriture[/if][if o.isForprocess()]exécution[/if]
+[if o.isForRead()]lecture[/if][if o.isForWrite()]Ã©criture[/if][if o.isForprocess()]exÃ©cution[/if]
 [/template]
 
 [comment : /]
@@ -284,8 +279,8 @@ package [m.buildPackageBatch()/];
 public class [buildBatchsTaskManagerClassName()/] extends SpiBatchJobsHandler {
 
 	/**
-	 * Demande de démarrage pour l'ensemble des traitements automatiques. Chaque
-	 * traitement bénéficie de son propre "scheduler".
+	 * Demande de dÃ©marrage pour l'ensemble des traitements automatiques. Chaque
+	 * traitement bÃ©nÃ©ficie de son propre "scheduler".
 	 */
 	public static void start() 
 	{
@@ -294,10 +289,10 @@ public class [buildBatchsTaskManagerClassName()/] extends SpiBatchJobsHandler {
    		[displayClearUserCodeId (apply_variableDefault('job_' + i))/]
    		// [protected (s.getUserCodeId(apply_variableDefault('job_' + i)))]
 		
-		// Entrer le nom du traitement, le délai avant expiration et l'unité de temps pour le délai.
+		// Entrer le nom du traitement, le dÃ©lai avant expiration et l'unitÃ© de temps pour le dÃ©lai.
 		[s.buildBatchClassName()/] [apply_variableDefault('job_' + i)/] = new [s.buildBatchClassName()/]("[s.name/]", 10, TimeUnit.MINUTES);
 
-		// Exemples de planification. Décommenter et modifier selon les besoins.
+		// Exemples de planification. DÃ©commenter et modifier selon les besoins.
 		// [apply_variableDefault('job_' + i)/].scheduleEverySecond(5);
 		// [apply_variableDefault('job_' + i)/].scheduleDaily(12);
 		// [apply_variableDefault('job_' + i)/].scheduleWeekly(5, 10, 30);
@@ -307,12 +302,12 @@ public class [buildBatchsTaskManagerClassName()/] extends SpiBatchJobsHandler {
    		// [/protected]
 		[/for]
 
-		// Mise en attente pour demande d'arrêt.
+		// Mise en attente pour demande d'arrÃªt.
 		[apply_variableDefault('batchs handler')/].waitForInterrupt();
 	}
 
 	/**
-	 * Possibilité de démarrage du gestionnaire des traitements automatiques en
+	 * PossibilitÃ© de dÃ©marrage du gestionnaire des traitements automatiques en
 	 * ligne de commande.
 	 * 
 	 * @param args une liste d'arguments.
