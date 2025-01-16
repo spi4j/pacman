@@ -20,7 +20,7 @@
     <possibleEvents xmi:id="_5OiQ0K8bEeGs4sAdxwacjg" technicalid="_mO-2lGBFEe2pbbWWOVDFxA" name="onChange"/>
     <possibleEvents xmi:id="_z3UWsGBUEe2wPIzd36qDKg" technicalid="_zWEDwGBUEe2wPIzd36qDKg" name="onFocus"/>
     <possibleEvents xmi:id="_z3UWsWBUEe2wPIzd36qDKg" technicalid="_zWEDwWBUEe2wPIzd36qDKg" name="onBlur"/>
-    <style xmi:id="_5ii6oGsJEe2DmIjdPzrWsw" technicalid="_5T9sEWsJEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/date.svg" defaultWidth="300" defaultHeight="50"/>
+    <style xmi:id="_5ii6oGsJEe2DmIjdPzrWsw" technicalid="_5T9sEWsJEe2DmIjdPzrWsw" decorator="/fr.pacman.cinematic.api/icons/Date.svg" defaultWidth="300" defaultHeight="50"/>
     <metadataDefinitions xmi:id="_urjzsW_PEe2Y552iT6IWaA" technicalid="_s7QTsG_PEe2Y552iT6IWaA" title="CUSTOM_CODE" help="Code libre a attacher au widget, mettre les noms des attributs (séparés par une virgule) sur lesquels rattacher le code."/>
     <metadataDefinitions xmi:id="_EjZpsW_QEe2Y552iT6IWaA" technicalid="_EMu2IG_QEe2Y552iT6IWaA" title="DEFAULT_VALUE" help="Une valeur par défaut."/>
   </widgets>
