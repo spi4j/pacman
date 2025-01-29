@@ -14,6 +14,7 @@
 [import fr::pacman::commons::soa::common::utils /]
 [import fr::pacman::commons::convention::rule::methodRule /]
 [import fr::pacman::commons::convention::rule::attributeRule /]
+[import fr::pacman::commons::common::utils/]
 
 
 [comment : ****************************************************************/]
@@ -109,9 +110,9 @@ public class [buildRSApplicationConfigClassName()/] extends ResourceConfig
 				[for (s : Service | m.eAllContents(Service))][if s.hasRSOperations()]
 				bind([s.buildServiceFacadeRSClassName(null)/].class).to([s.buildServiceFacadeRSInterfaceName(null)/].class);
 				[/if][/for]
-				[if m.isCrudApplication()][for (d : DTO | m.eAllContents(DTO))]
+				[if m.isCrudApplication()][for (d : DTO | m.eAllContents(DTO))][if not d.isNotPersistent()]
 				bind([buildServiceFacadeRSClassName(null, d)/].class).to([buildServiceFacadeRSInterfaceName(null, d)/].class);
-				[/for][/if]
+				[/if][/for][/if]
 				[if useHealthApi()]
 				bind([buildRsHealthServiceClassName()/].class).to([buildRsHealthServiceInterfaceName()/].class);
 				[/if]

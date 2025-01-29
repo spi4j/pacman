@@ -20,4 +20,11 @@
                tooltip="Génère tout le code de configuration en fonction du .properties"/>
 		</objectContribution>
    </extension>
+   <extension 
+ 			point="org.obeonetwork.dsl.environment.providedMetaDataDefinitionsModels">
+ 		<model
+  			name="Metadata definitions for Pacman generators"
+  			uri="platform:/plugin/fr.pacman.configuration.ui/resources/pacman.metadatadef">
+ 		</model>
+	</extension>
 </plugin>
